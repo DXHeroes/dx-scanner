@@ -67,6 +67,27 @@ describe('GitInspector', () => {
       ]);
     });
 
+    it('returns repository commits between sha and HEAD', async () => {
+      await testDir.gitInit({ name: 'test', email: 'test@example.com' });
+      await testDir.gitCommit('msg1');
+      const commit1 = (await testDir.gitLog()).latest;
+      await testDir.gitCommit('msg2');
+      const commit2 = (await testDir.gitLog()).latest;
+      const gitInspector = new GitInspector(testDir.path);
+
+      const { items } = await gitInspector.getCommits({ filter: { sha: commit1.hash } });
+
+      expect(items).toStrictEqual([
+        {
+          sha: commit2.hash,
+          date: new Date(commit2.date),
+          message: 'msg2\n',
+          author: { name: 'test', email: 'test@example.com' },
+          commiter: undefined,
+        },
+      ]);
+    });
+
     it('returns selected repository commits', async () => {
       await testDir.gitInit({ name: 'test', email: 'test@example.com' });
       await testDir.gitCommit('msg1');
@@ -205,20 +226,12 @@ describe('GitInspector', () => {
       await expect(gitInspector.getCommits({})).rejects.toThrow("fatal: your current branch 'master' does not have any commits yet");
     });
 
-    it('throws an error if filtering is requested', async () => {
-      await testDir.gitInit();
-      await testDir.gitCommit();
-      const gitInspector = new GitInspector(testDir.path);
-
-      await expect(gitInspector.getCommits({ filter: {} })).rejects.toThrow('filtering and sorting not implemented');
-    });
-
     it('throws an error if sorting is requested', async () => {
       await testDir.gitInit();
       await testDir.gitCommit();
       const gitInspector = new GitInspector(testDir.path);
 
-      await expect(gitInspector.getCommits({ sort: {} })).rejects.toThrow('filtering and sorting not implemented');
+      await expect(gitInspector.getCommits({ sort: {} })).rejects.toThrow('sorting not implemented');
     });
   });
 
