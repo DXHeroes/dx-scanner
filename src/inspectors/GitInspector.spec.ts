@@ -88,6 +88,27 @@ describe('GitInspector', () => {
       ]);
     });
 
+    it('returns repository commits containing a path', async () => {
+      await testDir.gitInit({ name: 'test', email: 'test@example.com' });
+      await testDir.gitCommit('msg1');
+      await testDir.gitAddFile('file.txt');
+      await testDir.gitCommit('msg2');
+      const expected = (await testDir.gitLog()).latest;
+      const gitInspector = new GitInspector(testDir.path);
+
+      const { items } = await gitInspector.getCommits({ filter: { path: 'file.txt' } });
+
+      expect(items).toStrictEqual([
+        {
+          sha: expected.hash,
+          date: new Date(expected.date),
+          message: 'msg2\n',
+          author: { name: 'test', email: 'test@example.com' },
+          commiter: undefined,
+        },
+      ]);
+    });
+
     it('returns selected repository commits', async () => {
       await testDir.gitInit({ name: 'test', email: 'test@example.com' });
       await testDir.gitCommit('msg1');
@@ -436,6 +457,11 @@ class TestDir {
     await git(this.path).init();
     await git(this.path).addConfig('user.name', user.name);
     await git(this.path).addConfig('user.email', user.email);
+  }
+
+  async gitAddFile(repoPath: string) {
+    await fs.promises.writeFile(path.join(this.path, repoPath), '');
+    await git(this.path).add(repoPath);
   }
 
   async gitCommit(message?: string, author?: string) {
