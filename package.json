@@ -18,6 +18,9 @@
     "test:watch": "jest --watch",
     "validate": "yarn install && yarn build && yarn lint && yarn test"
   },
+  "publishConfig": {
+    "access": "public"
+  },
   "dependencies": {
     "@oclif/command": "^1",
     "@oclif/config": "^1",
