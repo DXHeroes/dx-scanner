@@ -4,7 +4,7 @@ Scan your project for possible DX recommendations.
 
 [![Version](https://img.shields.io/npm/v/dx-scanner.svg)](https://npmjs.org/package/dx-scanner)
 [![Downloads/week](https://img.shields.io/npm/dw/dx-scanner.svg)](https://npmjs.org/package/dx-scanner)
-[![License](https://img.shields.io/npm/l/dx-scanner.svg)](https://github.com/dxheroes/dx-scanner/blob/master/package.json)
+[![License: CC BY-NC-SA 4.0](https://img.shields.io/badge/License-CC%20BY--NC--SA%204.0-lightgrey.svg)](https://creativecommons.org/licenses/by-nc-sa/4.0/)
 [![oclif](https://img.shields.io/badge/cli-oclif-brightgreen.svg)](https://oclif.io)
 [![Twitter Follow](https://img.shields.io/twitter/follow/dxheroes?style=social)](https://twitter.com/DX_Heroes)
 
