@@ -27,5 +27,5 @@ jobs:
         secure: FnGn7PfjJHXYjdhho/zk2U8nN1D4+69zUbbqO2DTrfPVICylAfHYwX6RjKhD6pnoGnpw69r1Ea4a9v2JAi25gtUJ7+SNANHPmgYxbprY5cWWxTzBKZYXnCwY9E/LuOnAtmUA18yA5ONtbvr5Tb7a95HQMnaRJHUnr5vU8qenYTlc7kLPbZYT7kT4EKKaTOpnHkZ/FpUEpGpVJXk1AQRYQ410Pa/9E0N7JZx6+n2aolghzIaqjAPu4yt+UFHH+tPDzqOZXyWiyfcERdwondJjH1iwpPZuBNQwtzhmAFvmXW40eHlGMIuevP8uSRpgNvtEDHC+a+jEmaxnRUNtbFKbW0UHLhaGL4edXs9rPXKegxdES9tMGtcYqC7YxEXdvPurai65ketwXEiSCddalmUMeetbO2TrHL5CBHefPBSiB803OjhLthBJOsMQwGBMD36y+96qyfUyrhd24UApAIZ4ni+FxzCw9rEkFh0nhDQBQU+SfMquJl5qXX+fq0/gsb5QLihiabSwOfsK2afAw05hP/lU+oKOObDeTzW7PRNuB+ALknfVai65GR1c5XOyiz2DvLS6WKXRCv+BgBwuS/IjUZi3aWeYbn0FpddZfXUvgYGSrGuWPkeYF3Fymseu0tCdjkArt/ucKuzzd36J08/VB0sPrrBa3r9cfVqnsZTSTSc=
       on:
         tags: true
-        repo: prokopsimek/open-source-npm-package-template
+        repo: DXHeroes/dx-scanner
       skip_cleanup: true
