@@ -1,0 +1,18 @@
+cache:
+  paths:
+    - node_modules/
+
+stages:
+  - test
+
+job_lint_and_test:
+  image: node
+  stage: test
+  before_script:
+    - yarn
+    - yarn build
+  script:
+    - ./bin/run --version
+    - ./bin/run --help
+    - yarn lint
+    - yarn test --coverage
