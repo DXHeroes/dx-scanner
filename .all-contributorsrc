@@ -1,0 +1,23 @@
+{
+  "files": [
+    "README.md"
+  ],
+  "imageSize": 100,
+  "commit": false,
+  "contributors": [
+    {
+      "login": "adelkahomolova",
+      "name": "adelkah",
+      "avatar_url": "https://avatars2.githubusercontent.com/u/53510747?v=4",
+      "profile": "https://github.com/adelkahomolova",
+      "contributions": [
+        "code"
+      ]
+    }
+  ],
+  "contributorsPerLine": 7,
+  "projectName": "dx-scanner",
+  "projectOwner": "DXHeroes",
+  "repoType": "github",
+  "repoHost": "https://github.com"
+}
