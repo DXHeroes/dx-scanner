@@ -29,11 +29,10 @@ class DXScannerCommand extends Command {
     // }
 
     const scanPath = args.path || process.cwd();
+    cli.action.start(`Scanning URI: ${scanPath}`);
 
     const container = createRootContainer({ uri: scanPath });
     const scanner = container.get(Scanner);
-
-    cli.action.start(`Scanning on path: ${scanPath}`);
 
     await scanner.scan();
 
