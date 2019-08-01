@@ -3,11 +3,17 @@
 Scan your project for possible DX recommendations.
 
 [![Version](https://img.shields.io/npm/v/dx-scanner.svg)](https://npmjs.org/package/dx-scanner)
+[![License: CC BY-NC-SA 4.0](https://img.shields.io/badge/License-CC%20BY--NC--SA%204.0-lightgrey.svg)](https://creativecommons.org/licenses/by-nc-sa/4.0/) 
+![Codecov](https://img.shields.io/codecov/c/github/DXHeroes/dx-scanner)
+![last commit](https://img.shields.io/github/last-commit/DXHeroes/dx-scanner)
+[![Travis](https://travis-ci.org/DXHeroes/dx-scanner.png)](https://travis-ci.org/DXHeroes/dx-scanner)
+![Libraries.io dependency status for GitHub repo](https://img.shields.io/librariesio/github/DXHeroes/dx-scanner)
 [![Downloads/week](https://img.shields.io/npm/dw/dx-scanner.svg)](https://npmjs.org/package/dx-scanner)
 [![License](https://img.shields.io/npm/l/dx-scanner.svg)](https://github.com/dxheroes/dx-scanner/blob/master/package.json)
 [![All Contributors](https://img.shields.io/badge/all_contributors-1-orange.svg?style=flat-square)](#contributors)
 [![oclif](https://img.shields.io/badge/cli-oclif-brightgreen.svg)](https://oclif.io)
-
+![npm](https://img.shields.io/npm/dm/dx-scanner)
+[![Twitter Follow](https://img.shields.io/twitter/follow/dxheroes?style=social)](https://twitter.com/DX_Heroes)
 
 ## Getting Started
 
