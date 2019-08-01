@@ -9,6 +9,7 @@ Scan your project for possible DX recommendations.
 [![Twitter Follow](https://img.shields.io/twitter/follow/dxheroes?style=social)](https://twitter.com/DX_Heroes)
 ![last commit](https://img.shields.io/github/last-commit/DXHeroes/dx-scanner)
 ![Codecov](https://img.shields.io/codecov/c/github/DXHeroes/dx-scanner)
+[![Travis](https://travis-ci.org/DXHeroes/dx-scanner.png)](https://travis-ci.org/DXHeroes/dx-scanner)
 
 ## Getting Started
 
