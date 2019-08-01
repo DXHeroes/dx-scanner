@@ -10,6 +10,7 @@ Scan your project for possible DX recommendations.
 ![last commit](https://img.shields.io/github/last-commit/DXHeroes/dx-scanner)
 ![Codecov](https://img.shields.io/codecov/c/github/DXHeroes/dx-scanner)
 [![Travis](https://travis-ci.org/DXHeroes/dx-scanner.png)](https://travis-ci.org/DXHeroes/dx-scanner)
+![npm](https://img.shields.io/npm/dm/dx-scanner)
 
 ## Getting Started
 
