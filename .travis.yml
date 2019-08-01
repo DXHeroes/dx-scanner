@@ -9,11 +9,19 @@ cache:
     - lib
     - node_modules
 
+install:
+  - yarn add codecov
+
 script:
   - yarn build
   - yarn test --coverage
   - yarn lint
   - bin/run -v
+  - istanbul cover ./node_modules/jest/bin/jest --reporter lcovonly -- -R spec
+  - yarn add codecov
+
+after_success:
+  - codecov
 
 jobs:
   include:
