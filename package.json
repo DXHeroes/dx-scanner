@@ -73,6 +73,7 @@
   },
   "main": "lib/index.js",
   "bin": {
+    "dxscanner": "./bin/run",
     "dxs": "./bin/run"
   },
   "files": [
@@ -80,7 +81,7 @@
     "/lib"
   ],
   "oclif": {
-    "bin": "dxs"
+    "bin": "dxscanner"
   },
   "keywords": [
     "oclif",
