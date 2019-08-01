@@ -47,11 +47,11 @@ dxscanner [path]
 
 ## Contributing
 
-Feel free to contribute to the DX Knowledge Base. If you want to contribute, please follow our [Contribution Guide](CONTRIBUTING.md).
+Feel free to contribute to the DX Scanner. If you want to contribute, please follow our [Contribution Guide](CONTRIBUTING.md).
 
 ## License
 
-The DX Knowledge Base open source project is licensed under the [Attribution-NonCommercial-ShareAlike 4.0 International License](https://creativecommons.org/licenses/by-nc-sa/4.0/).
+The DX Scanner open source project is licensed under the [Attribution-NonCommercial-ShareAlike 4.0 International License](https://creativecommons.org/licenses/by-nc-sa/4.0/).
 
 ## Contributors ✨
 
