@@ -74,6 +74,7 @@
   "main": "lib/index.js",
   "bin": {
     "dxscanner": "./bin/run",
+    "dx-scanner": "./bin/run",
     "dxs": "./bin/run"
   },
   "files": [
