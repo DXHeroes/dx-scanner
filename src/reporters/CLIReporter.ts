@@ -87,9 +87,12 @@ export class CLIReporter implements IReporter {
     //     const ownerAndRepo = GitHubUrlParser.getOwnerAndRepoName(pac.component.githubUrl!);
     //     findingPath = `at: ${ownerAndRepo.owner}/${ownerAndRepo.repoName}`;
     // }
-    return [
-      reset(color(`- ${bold(pac.practice.name)} - ${italic(pac.practice.suggestion)}`)),
-      color(italic(`${findingPath}(${pac.practice.url})`)),
-    ].join('\n');
+
+    let practiceLineTexts = [reset(color(`- ${bold(pac.practice.name)} - ${italic(pac.practice.suggestion)}`))];
+    if (pac.practice.url) {
+      practiceLineTexts.push(color(italic(`${findingPath}(${pac.practice.url})`)));
+    }
+
+    return practiceLineTexts.join(' ');
   }
 }

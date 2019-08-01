@@ -98,10 +98,10 @@ export interface PracticeMetadata {
 }
 
 export enum PracticeImpact {
+  high = 'high',
   medium = 'medium',
   small = 'small',
   hint = 'hint',
-  high = 'high',
 }
 
 export enum PracticeEvaluationResult {
