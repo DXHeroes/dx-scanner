@@ -24,17 +24,17 @@ Scan your project for possible DX recommendations.
 
 **Scan repository**
 ```
-dxs https://github.com/DXHeroes/dx-scanner
+dxscanner https://github.com/DXHeroes/dx-scanner
 ```
 **Scan local path**
 ```
-dxs ~/my-project
+dxscanner ~/my-project
 ```
 
 **All options**
 
 ```
-dxs [path]
+dxscanner [path]
 ```
 
 
