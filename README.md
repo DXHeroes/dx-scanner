@@ -8,6 +8,7 @@ Scan your project for possible DX recommendations.
 [![oclif](https://img.shields.io/badge/cli-oclif-brightgreen.svg)](https://oclif.io)
 [![Twitter Follow](https://img.shields.io/twitter/follow/dxheroes?style=social)](https://twitter.com/DX_Heroes)
 ![last commit](https://img.shields.io/github/last-commit/DXHeroes/dx-scanner)
+![Codecov](https://img.shields.io/codecov/c/github/DXHeroes/dx-scanner)
 
 ## Getting Started
 
