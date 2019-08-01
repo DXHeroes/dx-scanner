@@ -12,6 +12,7 @@ Scan your project for possible DX recommendations.
 [![License](https://img.shields.io/npm/l/dx-scanner.svg)](https://github.com/dxheroes/dx-scanner/blob/master/package.json)
 [![All Contributors](https://img.shields.io/badge/all_contributors-1-orange.svg?style=flat-square)](#contributors)
 [![oclif](https://img.shields.io/badge/cli-oclif-brightgreen.svg)](https://oclif.io)
+[![Greenkeeper badge](https://badges.greenkeeper.io/DXHeroes/dx-scanner.svg)](https://greenkeeper.io/)
 ![npm](https://img.shields.io/npm/dm/dx-scanner)
 [![Twitter Follow](https://img.shields.io/twitter/follow/dxheroes?style=social)](https://twitter.com/DX_Heroes)
 
