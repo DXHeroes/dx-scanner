@@ -32,7 +32,6 @@
     "git-url-parse": "^11.1.2",
     "glob": "^7.1.4",
     "inversify": "^5.0.1",
-    "istanbul": "^0.4.5",
     "lodash": "^4.17.15",
     "normalize-path": "^3.0.0",
     "npm-check-updates": "^3.1.20",
@@ -64,7 +63,6 @@
     "eslint-plugin-prettier": "^3.1.0",
     "jest": "^24.8.0",
     "nock": "^10.0.6",
-    "nyc": "^14.1.1",
     "prettier": "^1.18.2",
     "rimraf": "^2.6.3",
     "ts-jest": "^24.0.2"
@@ -93,9 +91,5 @@
     "developer experience",
     "dxheroes",
     "code analysis"
-  ],
-  "jest": {
-    "coverageDirectory": "./coverage/",
-    "collectCoverage": true
-  }
+  ]
 }
