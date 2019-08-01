@@ -11,6 +11,7 @@ Scan your project for possible DX recommendations.
 ![Codecov](https://img.shields.io/codecov/c/github/DXHeroes/dx-scanner)
 [![Travis](https://travis-ci.org/DXHeroes/dx-scanner.png)](https://travis-ci.org/DXHeroes/dx-scanner)
 ![npm](https://img.shields.io/npm/dm/dx-scanner)
+![Libraries.io dependency status for GitHub repo](https://img.shields.io/librariesio/github/DXHeroes/dx-scanner)
 
 ## Getting Started
 
