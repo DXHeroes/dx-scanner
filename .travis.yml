@@ -17,8 +17,8 @@ script:
   - yarn test --coverage
   - yarn lint
   - bin/run -v
-  - istanbul cover ./node_modules/jest/bin/jest --reporter lcovonly -- -R spec
   - yarn add codecov
+  - yarn codecov -t 880f291b-c196-4388-bffa-a4b92c2eac32
 
 after_success:
   - codecov

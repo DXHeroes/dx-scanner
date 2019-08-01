@@ -16,7 +16,6 @@
     "start": "./bin/run",
     "test": "jest",
     "test:watch": "jest --watch",
-    "coverage": "nyc yarn test",
     "validate": "yarn install && yarn build && yarn lint && yarn test"
   },
   "publishConfig": {
