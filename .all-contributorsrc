@@ -6,6 +6,15 @@
   "commit": false,
   "contributors": [
     {
+      "login": "prokopsimek",
+      "name": "Prokop Simek",
+      "avatar_url": "https://avatars2.githubusercontent.com/u/5487217?v=4",
+      "profile": "https://github.com/prokopsimek",
+      "contributions": [
+        "code"
+      ]
+    },
+    {
       "login": "adelkahomolova",
       "name": "adelkah",
       "avatar_url": "https://avatars2.githubusercontent.com/u/53510747?v=4",
