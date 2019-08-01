@@ -14,6 +14,7 @@ script:
   - yarn test --coverage
   - yarn lint
   - bin/run -v
+  - yarn codecov
 
 jobs:
   include:
