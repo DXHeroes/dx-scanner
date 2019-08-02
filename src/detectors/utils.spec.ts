@@ -1,5 +1,6 @@
-import { sharedSubpath, dirPath } from './utils';
+import { sharedSubpath, dirPath, hasOneOfPackages } from './utils';
 import { MetadataType } from '../services/model';
+import { PackageManagement, PackageManagementFramework } from '../model';
 
 describe('DetectorUtils', () => {
   describe('#dirPath', () => {
@@ -75,6 +76,23 @@ describe('DetectorUtils', () => {
     it('works with relative paths - mixed in absolute path', () => {
       // @todo improve sharedSubpath so it can resolve relative paths to absolute ones. Considered edge case for now.
       expect(sharedSubpath(['./foo', '/foo', './foo/bar'])).toEqual('/');
+    });
+  });
+
+  describe('#hasOneOfPackages', () => {
+    it('returns true if it has one of the packages', () => {
+      const pkg = ['@types/node'];
+      const pkgManag: PackageManagement = {
+        framework: PackageManagementFramework.NPM,
+        hasLockfile: true,
+        packages: {
+          '@types/node': {
+            name: '',
+          },
+        },
+      };
+      const result = hasOneOfPackages(pkg, pkgManag);
+      expect(result).toEqual(true);
     });
   });
 });
