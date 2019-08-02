@@ -1,5 +1,5 @@
 [![Version](https://img.shields.io/npm/v/dx-scanner.svg)](https://npmjs.org/package/dx-scanner)
-[![Travis](https://travis-ci.org/DXHeroes/dx-scanner.png)](https://travis-ci.org/DXHeroes/dx-scanner/master)
+[![Travis (.org)](https://img.shields.io/travis/DXHeroes/dx-scanner)](https://travis-ci.org/DXHeroes/dx-scanner)
 ![Codecov](https://img.shields.io/codecov/c/github/DXHeroes/dx-scanner)
 ![Libraries.io dependency status for GitHub repo](https://img.shields.io/librariesio/github/DXHeroes/dx-scanner)
 ![last commit](https://img.shields.io/github/last-commit/DXHeroes/dx-scanner)
@@ -9,11 +9,14 @@
 [![All Contributors](https://img.shields.io/badge/all_contributors-5-orange.svg?style=flat-square)](#contributors-)
 [![License: CC BY-NC-SA 4.0](https://img.shields.io/badge/License-CC%20BY--NC--SA%204.0-lightgrey.svg)](https://creativecommons.org/licenses/by-nc-sa/4.0/) 
 [![oclif](https://img.shields.io/badge/cli-oclif-brightgreen.svg)](https://oclif.io)
+![TypeScript](https://img.shields.io/badge/%3C%2F%3E-Typescript-blue)
 [![Twitter Follow](https://img.shields.io/twitter/follow/DX_Heroes?style=social)](https://twitter.com/DX_Heroes)
 
 # DX Scanner
 
-Scan your project for possible DX recommendations.
+#### Scan your project for possible DX recommendations.
+
+DX Scanner allows you to “measure” Developer Experience directly based on your source code and will recommend practices to adopt that will help you to improve your product development.
 
 ## Getting Started
 
