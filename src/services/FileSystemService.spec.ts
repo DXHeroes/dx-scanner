@@ -131,7 +131,7 @@ describe('FileSystemService', () => {
       const finalContent = await fileSystemService.readFile(mockFilePath);
       expect(finalContent).toEqual(stringToWrite);
 
-      fileSystemService.deleteFile(mockFilePath);
+      await fileSystemService.deleteFile(mockFilePath);
     });
 
     it('correctly rewrites a file', async () => {
@@ -145,7 +145,7 @@ describe('FileSystemService', () => {
       const finalContent = await fileSystemService.readFile(mockFileToRewrite);
       expect(finalContent).toEqual(stringToWrite);
 
-      fileSystemService.writeFile(mockFileToRewrite, previousContent);
+      await fileSystemService.writeFile(mockFileToRewrite, previousContent);
     });
 
     it('correctly writes to a symbolic link', async () => {
@@ -160,7 +160,7 @@ describe('FileSystemService', () => {
       const finalContent = await fileSystemService.readFile(mockFileToWrite);
       expect(finalContent).toEqual(stringToWrite);
 
-      fileSystemService.writeFile(mockFileToWrite, previousContent);
+      await fileSystemService.writeFile(mockFileToWrite, previousContent);
     });
 
     it('correctly writes to a broken symbolic link', async () => {
@@ -174,7 +174,7 @@ describe('FileSystemService', () => {
       const finalContent = await fileSystemService.readFile(mockFileToWrite);
       expect(finalContent).toEqual(stringToWrite);
 
-      fileSystemService.deleteFile(mockFileToWrite);
+      await fileSystemService.deleteFile(mockFileToWrite);
     });
 
     it("throws an error if the parent directory doesn't exist", async () => {
@@ -213,7 +213,7 @@ describe('FileSystemService', () => {
       const finalContent = await fileSystemService.readFile(mockFilePath);
       expect(finalContent).toEqual(stringToWrite);
 
-      fileSystemService.deleteFile(mockFilePath);
+      await fileSystemService.deleteFile(mockFilePath);
     });
 
     it('appends data to a file if it exists already', async () => {
@@ -227,7 +227,7 @@ describe('FileSystemService', () => {
       const finalContent = await fileSystemService.readFile(mockFile);
       expect(finalContent).toEqual(previousContent + stringToWrite);
 
-      fileSystemService.writeFile(mockFile, previousContent);
+      await fileSystemService.writeFile(mockFile, previousContent);
     });
 
     it('appends data to a symbolic link', async () => {
@@ -242,7 +242,7 @@ describe('FileSystemService', () => {
       const finalContent = await fileSystemService.readFile(mockFileToWrite);
       expect(finalContent).toEqual(previousContent + stringToWrite);
 
-      fileSystemService.writeFile(mockFileToWrite, previousContent);
+      await fileSystemService.writeFile(mockFileToWrite, previousContent);
     });
 
     it('creates a file if the symbolic link is broken', async () => {
@@ -256,7 +256,7 @@ describe('FileSystemService', () => {
       const finalContent = await fileSystemService.readFile(mockFileToWrite);
       expect(finalContent).toEqual(stringToWrite);
 
-      fileSystemService.deleteFile(mockFileToWrite);
+      await fileSystemService.deleteFile(mockFileToWrite);
     });
 
     it("throws an error if the parent directory doesn't exist", async () => {

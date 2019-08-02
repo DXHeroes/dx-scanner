@@ -60,7 +60,7 @@ export class FileSystemService implements IProjectFilesBrowserService {
   }
 
   async getMetadata(path: string): Promise<Metadata> {
-    if (!this.exists(path)) {
+    if (!(await this.exists(path))) {
       throw ErrorFactory.newInternalError("File doesn't exist");
     }
 
