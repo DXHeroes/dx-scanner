@@ -11,7 +11,8 @@
       "avatar_url": "https://avatars2.githubusercontent.com/u/5487217?v=4",
       "profile": "https://github.com/prokopsimek",
       "contributions": [
-        "code"
+        "code",
+        "platform"
       ]
     },
     {
@@ -20,13 +21,43 @@
       "avatar_url": "https://avatars2.githubusercontent.com/u/53510747?v=4",
       "profile": "https://github.com/adelkahomolova",
       "contributions": [
+        "code",
+        "platform"
+      ]
+    },
+        {
+      "login": "PyDeq",
+      "name": "Radek Holý",
+      "avatar_url": "https://avatars3.githubusercontent.com/u/7268060?v=4",
+      "profile": "https://github.com/PyDeq",
+      "contributions": [
+        "code"
+      ]
+    },
+    {
+      "login": "Vratislav",
+      "name": "Vratislav Kalenda",
+      "avatar_url": "https://avatars2.githubusercontent.com/u/346066?v=4",
+      "profile": "http://www.applifting.cz",
+      "contributions": [
+        "code",
+        "ideas"
+      ]
+    },
+    {
+      "login": "vnenkpet",
+      "name": "Petr Vnenk",
+      "avatar_url": "https://avatars2.githubusercontent.com/u/1933654?v=4",
+      "profile": "http://www.petrvnenk.com",
+      "contributions": [
         "code"
       ]
     }
   ],
-  "contributorsPerLine": 7,
+  "contributorsPerLine": 14,
   "projectName": "dx-scanner",
   "projectOwner": "DXHeroes",
   "repoType": "github",
-  "repoHost": "https://github.com"
+  "repoHost": "https://github.com",
+  "commitConvention": "none"
 }
