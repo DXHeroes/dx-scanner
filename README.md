@@ -24,16 +24,14 @@ DX Scanner is a free and open-source library which scan your repository to detec
 ### Which language are supported?
 Language | Supported
 ------------ | -------------
-JavaScript | ✅
-TypeScript | ✅
+JavaScript/TypeScript | ✅
 Ruby | 🔄
 C# | 🔄
 Java | 🔄
-Kotlin | 🔄
 Python | 🔄
 C++ | 🔄
 
-## Getting Started
+## Getting Started 🏁
 
 ### Installation
 
@@ -60,9 +58,8 @@ dxscanner ~/my-project
 ```
 dxscanner [path]
 ```
-
 ## Contributing
-
+👩‍💻 👨‍💻
 Feel free to contribute to the DX Scanner. If you want to contribute, please follow our [Contribution Guide](CONTRIBUTING.md).
 
 ## License
