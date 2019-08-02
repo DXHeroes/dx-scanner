@@ -5,7 +5,7 @@ import { PracticeContext } from '../../contexts/practice/PracticeContext';
 
 @DxPractice({
   id: 'JavaScript.BackendTestingFrameworkUsed',
-  name: 'JsBackendTestingFrameworkUsed',
+  name: 'Using JS Backend Testing Framework',
   impact: PracticeImpact.high,
   suggestion:
     'Use a tests to point out the defects and errors that were made during the development phases. Jest and Mocha are the most widely used testing frameworks in the JavaScript community.',

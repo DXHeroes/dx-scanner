@@ -7,7 +7,7 @@ import ncu from 'npm-check-updates';
 
 @DxPractice({
   id: 'LanguageIndependent.DependenciesVersion',
-  name: 'DependenciesVersionPractice',
+  name: 'Have Dependencies Version Updated',
   impact: PracticeImpact.high,
   suggestion: '',
   reportOnlyOnce: true,

@@ -5,7 +5,7 @@ import { PracticeContext } from '../../contexts/practice/PracticeContext';
 
 @DxPractice({
   id: 'JavaScript.GitignoreCorrectlySet',
-  name: 'JsGitignoreCorrectlySet',
+  name: 'Set .gitignore Correctly',
   impact: PracticeImpact.high,
   suggestion: 'Set the .gitignore correctly.',
   reportOnlyOnce: true,

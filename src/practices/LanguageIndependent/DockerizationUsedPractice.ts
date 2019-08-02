@@ -5,7 +5,7 @@ import { PracticeContext } from '../../contexts/practice/PracticeContext';
 
 @DxPractice({
   id: 'LanguageIndependent.DockerizationUsed',
-  name: 'DockerizationUsed',
+  name: 'Using Docker',
   impact: PracticeImpact.small,
   suggestion: 'Use docker to create, deploy, and run applications easier by using containers.',
   reportOnlyOnce: true,
