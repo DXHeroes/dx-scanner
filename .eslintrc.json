@@ -77,6 +77,12 @@
         "accessibility": "no-public"
       }
     ],
+    "@typescript-eslint/no-misused-promises": [
+      "error"
+    ],
+    "@typescript-eslint/no-floating-promises": [
+      "error"
+    ],
     "prettier/prettier": [
       "warn",
       {

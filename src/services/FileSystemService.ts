@@ -8,7 +8,7 @@ import { IProjectFilesBrowserService, Metadata, MetadataType } from './model';
 export class FileSystemService implements IProjectFilesBrowserService {
   async exists(path: string) {
     try {
-      await fs.promises.access(path, fs.constants.F_OK);
+      await fs.promises.lstat(path);
       return true;
     } catch (error) {
       return false;
@@ -60,8 +60,8 @@ export class FileSystemService implements IProjectFilesBrowserService {
   }
 
   async getMetadata(path: string): Promise<Metadata> {
-    if (!this.exists(path)) {
-      throw ErrorFactory.newInternalError("File doesn't exist");
+    if (!(await this.exists(path))) {
+      throw ErrorFactory.newInternalError(`File doesn't exist (${path})`);
     }
 
     const extension = nodePath.posix.extname(path);
