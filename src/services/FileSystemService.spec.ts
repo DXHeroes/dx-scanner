@@ -14,7 +14,7 @@ describe('FileSystemService', () => {
     it('returns true if the file exists', async () => {
       const mockFilePath = path.resolve(__dirname, '__MOCKS__/mockFolder/mockFile.ts');
       const result = await fileSystemService.exists(mockFilePath);
-      expect(result).toBeTruthy();
+      expect(result).toEqual(true);
     });
 
     it('returns true if the directory exists', async () => {
@@ -26,13 +26,13 @@ describe('FileSystemService', () => {
     it('returns true if the symbolic link exists', async () => {
       const mockFilePath = path.resolve(__dirname, '__MOCKS__/mockFolder/mockFileSL.ts');
       const result = await fileSystemService.exists(mockFilePath);
-      expect(result).toBeTruthy();
+      expect(result).toEqual(true);
     });
 
-    it('returns false if the broken symbolic link exists', async () => {
+    it('returns true if the broken symbolic link exists', async () => {
       const mockFilePath = path.resolve(__dirname, '__MOCKS__/mockFolder/mockFileSLbroken.ln');
       const result = await fileSystemService.exists(mockFilePath);
-      expect(result).toBeFalsy();
+      expect(result).toEqual(true);
     });
 
     it("returns false if the file doesn't exists", async () => {
@@ -466,9 +466,7 @@ describe('FileSystemService', () => {
     it("throws an error if the target doesn't exist", async () => {
       const mockFolderPath = path.resolve(__dirname, '__MOCKS__/notExistingMockFolder');
 
-      await expect(fileSystemService.getMetadata(mockFolderPath)).rejects.toThrow(
-        "ENOENT: no such file or directory, lstat '" + mockFolderPath + "'",
-      );
+      await expect(fileSystemService.getMetadata(mockFolderPath)).rejects.toThrow(`File doesn't exist (${mockFolderPath})`);
     });
   });
 
