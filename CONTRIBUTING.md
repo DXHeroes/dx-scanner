@@ -1,6 +1,6 @@
 # Contributing to DX Scanner
 
-It seems you want to participate on DX Scanner - that's great! We welcome contributions to our [open source project on Github](http://github.com/DXHeroes/dx-scanner).
+It seems you want to participate on DX Scanner - that's great! We welcome contributions to our [open source project on GitHub](http://github.com/DXHeroes/dx-scanner).
 
 ## Introduction
 We're glad you're interested in DX Scanner in the way of contributing. We value the pro-community developers as you are.
@@ -12,13 +12,9 @@ We're glad you're interested in DX Scanner in the way of contributing. We value 
 4) Contribute Documentation 📝
 5) Provide Support on Issues ℹ️
 
-## Request Support
+## Need a help?
 
 If you have any question about this project, how to use it, or just need clarification about anything open an Issue at https://github.com/DXHeroes/dx-scanner/issues .
-
-## Issues
-
-Feel free to submit issues and enhancement requests.
 
 ## Contributing
 
@@ -38,18 +34,26 @@ NOTE: Be sure to merge the latest from "upstream" before making a pull request.
 
 ## Contribute Code
 ### Practices
-Practices check your repository for 
-#### Javascript
-Check [Javascript Practices](https://github.com/DXHeroes/dx-scanner/tree/master/src/practices/JavaScript) to see, what's the pattern of implementation your own practice.
+Practices check your repository for using tooling, which improves product development.
 
-#### Other Language
+#### JavaScript/TypeScript
+We have more than 10 JS/TS practices for now! If you want to add more, you're more than welcome. Check [JavaScript Practices](https://github.com/DXHeroes/dx-scanner/tree/master/src/practices/JavaScript) to see, what's the pattern of implementation of your own practice.
+
+#### Other Languages
 Other languages are not supported yet. If you want to contribute, check [Practices](https://github.com/DXHeroes/dx-scanner/tree/master/src/practices). Get inspired by [Javascript Practices](https://github.com/DXHeroes/dx-scanner/tree/master/src/practices/JavaScript) implementation.
 
 ## Inspectors
+Inspectors indirectly works with Git code hosting providers APIs. They use common interfaces provided by services so you don't have to which API to use.
 
 ## Services
+There is a [File System Service](https://github.com/DXHeroes/dx-scanner/tree/master/src/services) working with files.
+
+### Git
+Services convert API responses to the own interface, so Inspectors can use them. They indirectly use Octokit via Clients. Only the GitHub Service is implemented for now. If you need e.g. GitLab Service, you can contribute! First of all you will also need to implement GitLab Client. Then you can implement GitLab Service. Get inspired by [GitHub Service](https://github.com/DXHeroes/dx-scanner/blob/master/src/services/git/GitHubService.ts)
 
 ## Clients
+Clients directly use Git code hosting providers APIs. They getting responses and check the rate limits.
+Only GitHub Client is implemented for now. If you need e.g. GitLab Client, you can contribute! Get inspired by [GitHub Client](https://github.com/DXHeroes/dx-scanner/tree/master/src/services/git).
 
 ## Copyright and Licensing
 
