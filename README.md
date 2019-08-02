@@ -18,6 +18,21 @@
 
 DX Scanner allows you to “measure” Developer Experience directly based on your source code and will recommend practices to adopt that will help you to improve your product development.
 
+### What is DX Scanner?
+DX Scanner is a free and open-source library which scan your repository to detect practices you use and recommend you the best ones to improve your code and developer experience.
+
+### Which language are supported?
+Language | Supported
+------------ | -------------
+JavaScript | ✅
+TypeScript | ✅
+Ruby | 🔄
+C# | 🔄
+Java | 🔄
+Kotlin | 🔄
+Python | 🔄
+C++ | 🔄
+
 ## Getting Started
 
 ### Installation
