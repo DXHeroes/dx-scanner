@@ -51,11 +51,11 @@ export class Scanner {
   }
 
   async scan(): Promise<void> {
-    let scanStretgy = await this.scanStrategyDetector.detect();
-    this.scanDebug(`Scan strategy: ${inspect(scanStretgy)}`);
-    scanStretgy = await this.preprocessData(scanStretgy);
-    this.scanDebug(`Scan strategy (after preprocessing): ${inspect(scanStretgy)}`);
-    const scannerContext = this.scannerContextFactory(scanStretgy);
+    let scanStrategy = await this.scanStrategyDetector.detect();
+    this.scanDebug(`Scan strategy: ${inspect(scanStrategy)}`);
+    scanStrategy = await this.preprocessData(scanStrategy);
+    this.scanDebug(`Scan strategy (after preprocessing): ${inspect(scanStrategy)}`);
+    const scannerContext = this.scannerContextFactory(scanStrategy);
     const languagesAtPaths = await this.detectLanguagesAtPaths(scannerContext);
     this.scanDebug(`LanguagesAtPaths:`, inspect(languagesAtPaths));
     const projectComponents = await this.detectProjectComponents(languagesAtPaths, scannerContext);
