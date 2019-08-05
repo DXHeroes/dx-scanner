@@ -5,7 +5,7 @@ import { PracticeContext } from '../../contexts/practice/PracticeContext';
 
 @DxPractice({
   id: 'Javascript.PackageJsonConfigurationSetCorrectly',
-  name: 'Set package.json configuration correctly',
+  name: 'Scripts in package.json set as usual',
   impact: PracticeImpact.medium,
   suggestion:
     'Use right configuration to automate repetitive tasks. Use build to automate the build process, lint for linting your code, test for testing and start to run your project.',
