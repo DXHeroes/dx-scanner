@@ -33,21 +33,29 @@ export class GitInspector implements IGitInspector {
    * @returns The specified commits.
    * @throws Throws an arror if there are no commits in the repository (the path does not exist, the path is not a repository, no commits in the repository) or if sorting is required.
    */
-  async getCommits(options: ListGetterOptions<{ path?: string; sha?: string }>): Promise<Paginated<Commit>> {
+  async getCommits(options: ListGetterOptions<{ author?: string; path?: string; sha?: string }>): Promise<Paginated<Commit>> {
     if (options.sort !== undefined) {
       throw ErrorFactory.newInternalError('sorting not implemented');
     }
 
     const logOptions: git.LogOptions = {
       multiLine: true,
-      to: 'HEAD',
+      '--fixed-strings': true,
     };
     if (options.filter !== undefined) {
-      if (options.filter.path !== undefined) {
-        logOptions.file = options.filter.path;
+      if (options.filter.author !== undefined) {
+        logOptions['--author'] = options.filter.author;
       }
+    }
+
+    // a workaround for https://github.com/steveukx/git-js/issues/389
+    if (options.filter !== undefined) {
       if (options.filter.sha !== undefined) {
-        logOptions.from = options.filter.sha;
+        logOptions[`${options.filter.sha}...HEAD`] = null;
+      }
+      if (options.filter.path !== undefined) {
+        logOptions['--'] = null;
+        logOptions[options.filter.path] = null;
       }
     }
 

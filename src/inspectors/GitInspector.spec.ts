@@ -67,6 +67,26 @@ describe('GitInspector', () => {
       ]);
     });
 
+    it('returns repository commits containing an author', async () => {
+      await testDir.gitInit();
+      await testDir.gitCommit('msg1', 'test1 <test1@example.com>');
+      await testDir.gitCommit('msg2', 'test2 <test2@example.com>');
+      const expected = (await testDir.gitLog()).latest;
+      const gitInspector = new GitInspector(testDir.path);
+
+      const { items } = await gitInspector.getCommits({ filter: { author: 'test2@example.com' } });
+
+      expect(items).toStrictEqual([
+        {
+          sha: expected.hash,
+          date: new Date(expected.date),
+          message: 'msg2\n',
+          author: { name: 'test2', email: 'test2@example.com' },
+          commiter: undefined,
+        },
+      ]);
+    });
+
     it('returns repository commits between sha and HEAD', async () => {
       await testDir.gitInit({ name: 'test', email: 'test@example.com' });
       await testDir.gitCommit('msg1');
