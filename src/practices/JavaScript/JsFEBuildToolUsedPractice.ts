@@ -5,7 +5,7 @@ import { PracticeContext } from '../../contexts/practice/PracticeContext';
 
 @DxPractice({
   id: 'JavaScript.FEBuildtoolUsed',
-  name: 'Using JS FE Build Tool',
+  name: 'Using JS Frontend Build Tool',
   impact: PracticeImpact.medium,
   suggestion: 'Use a build tools to to automate all the menial and error prone tasks in web development.',
   reportOnlyOnce: true,
