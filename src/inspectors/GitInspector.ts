@@ -33,7 +33,7 @@ export class GitInspector implements IGitInspector {
    * @returns The specified commits.
    * @throws Throws an arror if there are no commits in the repository (the path does not exist, the path is not a repository, no commits in the repository) or if sorting is required.
    */
-  async getCommits(options: ListGetterOptions<{ author?: string; path?: string; sha?: string }>): Promise<Paginated<Commit>> {
+  async getCommits(options: ListGetterOptions<{ author?: string; path?: string; sha?: string; since?: Date }>): Promise<Paginated<Commit>> {
     if (options.sort !== undefined) {
       throw ErrorFactory.newInternalError('sorting not implemented');
     }
@@ -45,6 +45,9 @@ export class GitInspector implements IGitInspector {
     if (options.filter !== undefined) {
       if (options.filter.author !== undefined) {
         logOptions['--author'] = options.filter.author;
+      }
+      if (options.filter.since !== undefined) {
+        logOptions['--since'] = options.filter.since.toString();
       }
     }
 

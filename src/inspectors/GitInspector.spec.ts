@@ -129,6 +129,27 @@ describe('GitInspector', () => {
       ]);
     });
 
+    it('returns repository commits after a date', async () => {
+      await testDir.gitInit({ name: 'test', email: 'test@example.com' });
+      await testDir.gitCommit('msg1');
+      await new Promise((resolve) => setTimeout(resolve, 1000)); // sleep 1 s
+      await testDir.gitCommit('msg2');
+      const expected = (await testDir.gitLog()).latest;
+      const gitInspector = new GitInspector(testDir.path);
+
+      const { items } = await gitInspector.getCommits({ filter: { since: new Date(expected.date) } });
+
+      expect(items).toStrictEqual([
+        {
+          sha: expected.hash,
+          date: new Date(expected.date),
+          message: 'msg2\n',
+          author: { name: 'test', email: 'test@example.com' },
+          commiter: undefined,
+        },
+      ]);
+    });
+
     it('returns selected repository commits', async () => {
       await testDir.gitInit({ name: 'test', email: 'test@example.com' });
       await testDir.gitCommit('msg1');
