@@ -5,7 +5,7 @@ import { PracticeContext } from '../../contexts/practice/PracticeContext';
 
 @DxPractice({
   id: 'JavaScript.DeprecatedTSLint',
-  name: 'Using TSLint',
+  name: 'Using Deprecated TSLint',
   impact: PracticeImpact.medium,
   suggestion:
     'TS Lint is deprecated. Use a linter to catch dangerous code constructs. ESLint is the most widely used linter in the JavaScript community.',
