@@ -5,7 +5,7 @@ import { PracticeContext } from '../../contexts/practice/PracticeContext';
 
 @DxPractice({
   id: 'LanguageIndependent.ReadmeIsPresent',
-  name: 'ReadmeIsPresent',
+  name: 'Having a Readme file',
   impact: PracticeImpact.high,
   suggestion: 'Add Readme to tell other people why your project is useful, what they can do with your project, and how they can use it.',
   reportOnlyOnce: true,

@@ -5,7 +5,7 @@ import { PracticeContext } from '../../contexts/practice/PracticeContext';
 
 @DxPractice({
   id: 'JavaScript.TypeScriptUsed',
-  name: 'TypescriptUsed',
+  name: 'Writing in Typescript',
   impact: PracticeImpact.medium,
   suggestion:
     'Start writing in TypeScript to catch many errors at compile-time. TypeScript simplifies JavaScript code, making it easier to read and debug.',

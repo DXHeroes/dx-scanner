@@ -5,7 +5,7 @@ import { PracticeContext } from '../../contexts/practice/PracticeContext';
 
 @DxPractice({
   id: 'JavaScript.LoggerUsed',
-  name: 'JsLoggerUsed',
+  name: 'Using JS Logger',
   impact: PracticeImpact.small,
   suggestion:
     'Use a logger to help cut down on errors and even cyber attacks. Winston is the most widely used logging library in the JavaScript community.',

@@ -5,7 +5,7 @@ import { PracticeContext } from '../../contexts/practice/PracticeContext';
 
 @DxPractice({
   id: 'JavaScript.PrettierUsed',
-  name: 'PrettierUsed',
+  name: 'Using Prettier',
   impact: PracticeImpact.small,
   suggestion: 'Use Prettier for code formatting. To save time and energy and to have a consistent code style with JavaScript community.',
   reportOnlyOnce: true,

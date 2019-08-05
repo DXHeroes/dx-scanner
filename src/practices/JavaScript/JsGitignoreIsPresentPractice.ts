@@ -5,7 +5,7 @@ import { PracticeContext } from '../../contexts/practice/PracticeContext';
 
 @DxPractice({
   id: 'LanguageIndependent.GitignoreIsPresent',
-  name: 'JsGitignoreIsPresent',
+  name: 'Having a .gitignore',
   impact: PracticeImpact.high,
   suggestion:
     'Add gitignore which allow you to ignore files, such as editor backup files, build products or local configuration overrides that you never want to commit into a repository.',

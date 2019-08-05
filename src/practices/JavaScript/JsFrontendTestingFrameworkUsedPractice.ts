@@ -5,7 +5,7 @@ import { PracticeContext } from '../../contexts/practice/PracticeContext';
 
 @DxPractice({
   id: 'JavaScript.FrontendTestingFrameworkUsed',
-  name: 'JsFrontendTestingFrameworkUsed',
+  name: 'Using JS Frontend Testing Framework',
   impact: PracticeImpact.medium,
   suggestion:
     'Use a tests to catch to point out the defects and errors that were made during the development phases. Jest is the most widely used testing framework in the JavaScript community.',

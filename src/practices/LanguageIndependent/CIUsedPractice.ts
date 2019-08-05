@@ -5,7 +5,7 @@ import { PracticeContext } from '../../contexts/practice/PracticeContext';
 
 @DxPractice({
   id: 'LanguageIndependent.CIUsedPractice',
-  name: 'CIUsedPractice',
+  name: 'Using Continuous Integration',
   impact: PracticeImpact.high,
   suggestion:
     'Continuous Integration (CI) is a practice of daily integrating code changes. Use CI to reduce the integration risk, improve code quality and more.',

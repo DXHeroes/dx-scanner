@@ -5,7 +5,7 @@ import { PracticeContext } from '../../contexts/practice/PracticeContext';
 
 @DxPractice({
   id: 'LanguageIndependent.LockfileIsPresent',
-  name: 'LockfileIsPresent',
+  name: 'Having a Lockfile',
   impact: PracticeImpact.high,
   suggestion: 'Commit lockfile to git to have reliable assmebly across developers and environments',
   reportOnlyOnce: true,
