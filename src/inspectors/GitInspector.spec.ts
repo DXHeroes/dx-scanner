@@ -129,7 +129,7 @@ describe('GitInspector', () => {
       ]);
     });
 
-    it('returns repository commits after a date', async () => {
+    it('returns repository commits since a date', async () => {
       await testDir.gitInit({ name: 'test', email: 'test@example.com' });
       await testDir.gitCommit('msg1');
       await new Promise((resolve) => setTimeout(resolve, 1000)); // sleep 1 s
@@ -150,7 +150,7 @@ describe('GitInspector', () => {
       ]);
     });
 
-    it('returns repository commits before a date', async () => {
+    it('returns repository commits until a date', async () => {
       await testDir.gitInit({ name: 'test', email: 'test@example.com' });
       await testDir.gitCommit('msg1');
       const expected = (await testDir.gitLog()).latest;
