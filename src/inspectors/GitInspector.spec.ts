@@ -7,6 +7,7 @@ import path from 'path';
 import rimraf from 'rimraf';
 import util from 'util';
 import { Container } from 'inversify';
+import { delay } from '../lib/delay';
 
 describe('GitInspector', () => {
   let testDir: TestDir;
@@ -132,7 +133,7 @@ describe('GitInspector', () => {
     it('returns repository commits since a date', async () => {
       await testDir.gitInit({ name: 'test', email: 'test@example.com' });
       await testDir.gitCommit('msg1');
-      await new Promise((resolve) => setTimeout(resolve, 1000)); // sleep 1 s
+      await delay(1000);
       await testDir.gitCommit('msg2');
       const expected = (await testDir.gitLog()).latest;
       const gitInspector = new GitInspector(testDir.path);
@@ -154,7 +155,7 @@ describe('GitInspector', () => {
       await testDir.gitInit({ name: 'test', email: 'test@example.com' });
       await testDir.gitCommit('msg1');
       const expected = (await testDir.gitLog()).latest;
-      await new Promise((resolve) => setTimeout(resolve, 1000)); // sleep 1 s
+      await delay(1000);
       await testDir.gitCommit('msg2');
       const gitInspector = new GitInspector(testDir.path);
 
