@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/explicit-member-accessibility */
 import { Repository } from '../../model';
 import { GitHubClient } from './GitHubClient';
 import { GitHubUrlParser } from './GitHubUrlParser';
@@ -20,29 +19,22 @@ export class Git {
     this.cache = cache;
   }
 
-  //should be explicit-member-accessibility disabled? There is just a warning
   async listDirectory(path: string): Promise<(GitHubFile | GitHubDir)[]> {
-    return this.cache.getOrSet(this.contentCacheKey(path), async () => {
-      const params = GitHubUrlParser.getOwnerAndRepoName(this.repository.url);
-      const result = await this.gitHubClient.getRepoContent(params.owner, params.repoName, path);
-      if (isArray(result)) {
-        return result;
-      } else {
-        throw ErrorFactory.newInternalError(`${path} is not a directory`);
-      }
-    });
+    const result = await this.getRepoContent(path);
+    if (result !== null && isArray(result)) {
+      return result;
+    } else {
+      throw ErrorFactory.newInternalError(`${path} is not a directory`);
+    }
   }
 
   async getFile(path: string) {
-    return this.cache.getOrSet(this.contentCacheKey(path), async () => {
-      const params = GitHubUrlParser.getOwnerAndRepoName(this.repository.url);
-      const result = await this.gitHubClient.getRepoContent(params.owner, params.repoName, path);
-      if (!isArray(result)) {
-        return result;
-      } else {
-        throw ErrorFactory.newInternalError(`${path} is not a file`);
-      }
-    });
+    const result = await this.getRepoContent(path);
+    if (result !== null && !isArray(result)) {
+      return result;
+    } else {
+      throw ErrorFactory.newInternalError(`${path} is not a file`);
+    }
   }
 
   async getContributorCount(): Promise<number> {
@@ -69,8 +61,20 @@ export class Git {
     });
   }
 
-  private contentCacheKey(path: string): string {
+  private getRepoContent(path: string) {
     const params = GitHubUrlParser.getOwnerAndRepoName(this.repository.url);
-    return `${params.owner}:${params.repoName}:content:${path}`;
+    const key = `${params.owner}:${params.repoName}:content:${path}`;
+
+    return this.cache.getOrSet(key, async () => {
+      try {
+        return await this.gitHubClient.getRepoContent(params.owner, params.repoName, path);
+      } catch (e) {
+        if (e.name !== 'HttpError' || e.status !== 404) {
+          throw e;
+        }
+
+        return null;
+      }
+    });
   }
 }

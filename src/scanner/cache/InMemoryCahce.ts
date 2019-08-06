@@ -26,7 +26,7 @@ export class InMemoryCache implements ICache {
 
   async getOrSet<T>(key: string, setter: () => Promise<T>): Promise<T> {
     const previous = this.get(key);
-    if (previous) {
+    if (previous !== undefined) {
       return previous as T;
     }
     const newValue = await setter();
