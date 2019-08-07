@@ -31,14 +31,43 @@ export class GitInspector implements IGitInspector {
    *
    * @param options Options specifying a subset of all the repository commits.
    * @returns The specified commits.
-   * @throws Throws an arror if there are no commits in the repository (the path does not exist, the path is not a repository, no commits in the repository) or if filtering or sorting is required.
+   * @throws Throws an arror if there are no commits in the repository (the path does not exist, the path is not a repository, no commits in the repository) or if sorting is required.
    */
-  async getCommits(options: ListGetterOptions): Promise<Paginated<Commit>> {
-    if (options.filter !== undefined || options.sort !== undefined) {
-      throw ErrorFactory.newInternalError('filtering and sorting not implemented');
+  async getCommits(
+    options: ListGetterOptions<{ author?: string; path?: string; sha?: string; since?: Date; until?: Date }>,
+  ): Promise<Paginated<Commit>> {
+    if (options.sort !== undefined) {
+      throw ErrorFactory.newInternalError('sorting not implemented');
     }
 
-    const log = await this.git.log({ multiLine: true });
+    const logOptions: git.LogOptions = {
+      multiLine: true,
+      '--fixed-strings': true,
+    };
+    if (options.filter !== undefined) {
+      if (options.filter.author !== undefined) {
+        logOptions['--author'] = options.filter.author;
+      }
+      if (options.filter.since !== undefined) {
+        logOptions['--since'] = options.filter.since.toString();
+      }
+      if (options.filter.until !== undefined) {
+        logOptions['--until'] = options.filter.until.toString();
+      }
+    }
+
+    // a workaround for https://github.com/steveukx/git-js/issues/389
+    if (options.filter !== undefined) {
+      if (options.filter.sha !== undefined) {
+        logOptions[`${options.filter.sha}...HEAD`] = null;
+      }
+      if (options.filter.path !== undefined) {
+        logOptions['--'] = null;
+        logOptions[options.filter.path] = null;
+      }
+    }
+
+    const log = await this.git.log(logOptions);
     return paginate(
       log.all.map((commit) => {
         return {
