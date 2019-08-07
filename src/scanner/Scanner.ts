@@ -59,7 +59,7 @@ export class Scanner {
     const scannerContext = this.scannerContextFactory(scanStrategy);
     const languagesAtPaths = await this.detectLanguagesAtPaths(scannerContext);
     this.scanDebug(`LanguagesAtPaths:`, inspect(languagesAtPaths));
-    const projectComponents = await this.detectProjectComponents(languagesAtPaths, scannerContext);
+    const projectComponents = await this.detectProjectComponents(languagesAtPaths, scannerContext, scanStrategy);
     this.scanDebug(`Components:`, inspect(projectComponents));
     const identifiedPractices = await this.detectPractices(projectComponents);
     await this.report(identifiedPractices);
@@ -96,7 +96,7 @@ export class Scanner {
     return languagesAtPaths;
   }
 
-  private async detectProjectComponents(languagesAtPaths: LanguageAtPath[], context: ScannerContext) {
+  private async detectProjectComponents(languagesAtPaths: LanguageAtPath[], context: ScannerContext, strategy: ScanningStrategy) {
     let components: ProjectComponentAndLangContext[] = [];
     for (const langAtPath of languagesAtPaths) {
       const langContext = context.getLanguageContext(langAtPath);
@@ -104,6 +104,9 @@ export class Scanner {
       const detectors = langContext.getProjectComponentDetectors();
       for (const componentDetector of detectors) {
         const componentsWithContext = (await componentDetector.detectComponent(langAtPath)).map((c) => {
+          if (strategy.remoteUrl) {
+            c.repositoryPath = strategy.remoteUrl;
+          }
           return {
             component: c,
             languageContext: langContext,
