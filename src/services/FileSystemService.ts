@@ -15,7 +15,14 @@ export class FileSystemService implements IProjectFilesBrowserService {
     }
   }
 
-  readDirectory(path: string) {
+  async readDirectory(path: string) {
+    if (process.platform === 'win32') {
+      const isSymlink = await this.isSymbolicLink(path);
+      if (isSymlink) {
+        path = await fs.promises.readlink(path);
+      }
+    }
+
     return fs.promises.readdir(path);
   }
 
