@@ -24,6 +24,7 @@ import { inspect } from 'util';
 import { ScannerUtils } from './ScannerUtils';
 import { ArgumentsProvider } from '../inversify.config';
 import { IPracticeWithMetadata } from '../practices/DxPracticeDecorator';
+import filterAsync from 'node-filter-async';
 
 @injectable()
 export class Scanner {
@@ -51,11 +52,11 @@ export class Scanner {
   }
 
   async scan(): Promise<void> {
-    let scanStretgy = await this.scanStrategyDetector.detect();
-    this.scanDebug(`Scan strategy: ${inspect(scanStretgy)}`);
-    scanStretgy = await this.preprocessData(scanStretgy);
-    this.scanDebug(`Scan strategy (after preprocessing): ${inspect(scanStretgy)}`);
-    const scannerContext = this.scannerContextFactory(scanStretgy);
+    let scanStrategy = await this.scanStrategyDetector.detect();
+    this.scanDebug(`Scan strategy: ${inspect(scanStrategy)}`);
+    scanStrategy = await this.preprocessData(scanStrategy);
+    this.scanDebug(`Scan strategy (after preprocessing): ${inspect(scanStrategy)}`);
+    const scannerContext = this.scannerContextFactory(scanStrategy);
     const languagesAtPaths = await this.detectLanguagesAtPaths(scannerContext);
     this.scanDebug(`LanguagesAtPaths:`, inspect(languagesAtPaths));
     const projectComponents = await this.detectProjectComponents(languagesAtPaths, scannerContext);
@@ -139,7 +140,9 @@ export class Scanner {
       await componentContext.init();
       const practiceContext = componentContext.getPracticeContext();
 
-      const applicablePractices = this.practices.filter(async (p) => await p.isApplicable(practiceContext));
+      const applicablePractices = await filterAsync(this.practices, async (p) => {
+        return await p.isApplicable(practiceContext);
+      });
 
       const orderedApplicablePractices = ScannerUtils.sortPractices(applicablePractices);
       for (const practice of orderedApplicablePractices) {

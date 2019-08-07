@@ -4,7 +4,6 @@ import { GitHubUrlParser } from '../services/git/GitHubUrlParser';
 import { IReporter } from './IReporter';
 import { injectable } from 'inversify';
 import { uniq, compact } from 'lodash';
-// import {} from '../'
 
 @injectable()
 export class CLIReporter implements IReporter {

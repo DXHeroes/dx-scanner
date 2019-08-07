@@ -13,7 +13,7 @@ describe('TypeScriptUsedPractice', () => {
     practice = containerCtx.container.get('TypeScriptUsedPractice');
   });
 
-  it('Returns true if the language is JavaScript', async () => {
+  it('Returns true if the language is TypeScript', async () => {
     const result = await practice.isApplicable(containerCtx.practiceContext);
     expect(result).toEqual(true);
   });
