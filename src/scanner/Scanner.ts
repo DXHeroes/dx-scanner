@@ -24,6 +24,7 @@ import { inspect } from 'util';
 import { ScannerUtils } from './ScannerUtils';
 import { ArgumentsProvider } from '../inversify.config';
 import { IPracticeWithMetadata } from '../practices/DxPracticeDecorator';
+import filterAsync from 'node-filter-async';
 
 @injectable()
 export class Scanner {
@@ -139,7 +140,9 @@ export class Scanner {
       await componentContext.init();
       const practiceContext = componentContext.getPracticeContext();
 
-      const applicablePractices = this.practices.filter(async (p) => await p.isApplicable(practiceContext));
+      const applicablePractices = await filterAsync(this.practices, async (p) => {
+        return await p.isApplicable(practiceContext);
+      });
 
       const orderedApplicablePractices = ScannerUtils.sortPractices(applicablePractices);
       for (const practice of orderedApplicablePractices) {
