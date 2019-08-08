@@ -23,59 +23,58 @@ export class VirtualFileSystemService implements IProjectFilesBrowserService {
   }
 
   private pathAsStructureArray(path: string): string[] {
-    path = nodePath.resolve(path);
+    path = nodePath.posix.resolve(path);
 
     let pathAsArray = [];
-    const root = nodePath.parse(path).root;
+    const root = nodePath.posix.parse(path).root;
 
     while (path !== root) {
-      pathAsArray.unshift('children', nodePath.basename(path));
-      path = nodePath.dirname(path);
+      pathAsArray.unshift('children', nodePath.posix.basename(path));
+      path = nodePath.posix.dirname(path);
     }
 
     // Append the non-Posix root
-    if (root !== nodePath.sep) {
+    if (root !== nodePath.posix.sep) {
       pathAsArray.unshift('children', root);
     }
     return pathAsArray;
   }
 
-  private followSymLinks(path: string, directory?: VirtualDirectory): string {
-    directory = directory !== undefined ? directory : this.structure;
-    if (directory === undefined) {
-      throw ErrorFactory.newInternalError('structure is undefined');
-    }
+  // private followSymLinks(path: string, directory?: VirtualDirectory): string {
+  //   directory = directory !== undefined ? directory : this.structure;
+  //   if (directory === undefined) {
+  //     throw ErrorFactory.newInternalError('structure is undefined');
+  //   }
 
-    let name: string, child: VirtualFileSystemEntry;
-    path = nodePath.normalize(path);
-    // In case of an absolute path, name should be the root including the path separator
-    name = nodePath.isAbsolute(path) ? nodePath.parse(path).root : path.split(nodePath.sep)[0];
-    path = nodePath.relative(name, path);
-    // In case of the Posix root, the child is the structure (Windows roots/drives are also handled as plain directories)
-    child = name === nodePath.sep ? directory : directory.children[name];
+  //   let name: string, child: VirtualFileSystemEntry;
+  //   path = nodePath.posix.normalize(path);
+  //   // In case of an absolute path, name should be the root including the path separator
+  //   name = nodePath.posix.isAbsolute(path) ? nodePath.posix.parse(path).root : path.split(nodePath.posix.sep)[0];
+  //   path = nodePath.posix.relative(name, path);
+  //   // In case of the Posix root, the child is the structure (Windows roots/drives are also handled as plain directories)
+  //   child = name === nodePath.posix.sep ? directory : directory.children[name];
 
-    if (child !== undefined) {
-      switch (child.type) {
-        case MetadataType.file:
-          break;
-        case MetadataType.dir:
-          if (path.length === 0) {
-            break;
-          }
-          path = this.followSymLinks(path, child);
-          break;
-      }
-    }
-    return nodePath.join(name, path);
-  }
+  //   if (child !== undefined) {
+  //     switch (child.type) {
+  //       case MetadataType.file:
+  //         break;
+  //       case MetadataType.dir:
+  //         if (path.length === 0) {
+  //           break;
+  //         }
+  //         path = this.followSymLinks(path, child);
+  //         break;
+  //     }
+  //   }
+  //   return nodePath.posix.join(name, path);
+  // }
 
   private findEntry(path: string): VirtualFileSystemEntry {
     if (this.structure === undefined) {
       throw ErrorFactory.newInternalError('structure is undefined');
     }
 
-    path = nodePath.normalize('/' + path);
-    path = this.followSymLinks(path);
+    path = nodePath.posix.normalize('/' + path);
 
     const structurePath = this.pathAsStructureArray(path);
     if (structurePath.length === 0) {
@@ -89,8 +88,7 @@ export class VirtualFileSystemService implements IProjectFilesBrowserService {
       throw ErrorFactory.newInternalError('structure is undefined');
     }
 
-    path = nodePath.resolve(path);
-    path = this.followSymLinks(path);
+    path = nodePath.posix.resolve(path);
     // Throws an error if the parent is not a directory
     this.findParentEntry(path);
 
@@ -99,7 +97,7 @@ export class VirtualFileSystemService implements IProjectFilesBrowserService {
 
   private unsetEntry(path: string) {
     const parentEntry = this.findParentEntry(path);
-    const name = nodePath.basename(path);
+    const name = nodePath.posix.basename(path);
     if (name === undefined) {
       throw ErrorFactory.newInternalError('no such file or directory');
     }
@@ -108,7 +106,7 @@ export class VirtualFileSystemService implements IProjectFilesBrowserService {
 
   private findEntryNoFollow(path: string): VirtualFileSystemEntry | undefined {
     const parentEntry = this.findParentEntry(path);
-    const name = nodePath.basename(path);
+    const name = nodePath.posix.basename(path);
     if (name === undefined) {
       throw ErrorFactory.newInternalError('no such file or directory');
     }
@@ -120,7 +118,7 @@ export class VirtualFileSystemService implements IProjectFilesBrowserService {
       throw ErrorFactory.newInternalError('structure is undefined');
     }
 
-    const dirName = nodePath.dirname(path);
+    const dirName = nodePath.posix.dirname(path);
     if (dirName === path) {
       return this.structure;
     }
@@ -220,7 +218,7 @@ export class VirtualFileSystemService implements IProjectFilesBrowserService {
   }
 
   async getMetadata(path: string): Promise<Metadata> {
-    const name = nodePath.basename(path);
+    const name = nodePath.posix.basename(path);
     const splitName = name.split('.');
 
     // dotfiles doesn't have an extension
@@ -235,13 +233,6 @@ export class VirtualFileSystemService implements IProjectFilesBrowserService {
       size: 0,
     };
 
-    if (await this.isFile(path)) {
-      return {
-        ...metadata,
-        type: MetadataType.file,
-      };
-    }
-
     if (await this.isDirectory(path)) {
       return {
         ...metadata,
@@ -250,13 +241,16 @@ export class VirtualFileSystemService implements IProjectFilesBrowserService {
       };
     }
 
-    throw ErrorFactory.newInternalError("It's not file, dir nor symlink");
-  }
+    return {
+      ...metadata,
+      type: MetadataType.file,
+    };
+}
 
   async flatTraverse(path: string, fn: (meta: Metadata) => void | boolean) {
     const dirContent = await this.readDirectory(path);
     for (const cnt of dirContent) {
-      const cntPath = nodePath.join(path, cnt);
+      const cntPath = nodePath.posix.join(path, cnt);
       const metadata = await this.getMetadata(cntPath);
 
       const lambdaResult = fn(metadata);

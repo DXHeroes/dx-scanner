@@ -27,15 +27,28 @@ export class FileSystemService implements IProjectFilesBrowserService {
     return fs.promises.writeFile(path, content);
   }
 
-  createDirectory(path: string) {
+  async createDirectory(path: string) {
+  if (!(await this.isDirectory(nodePath.dirname(path)))) {
+    throw ErrorFactory.newArgumentError("No such directory")
+  }
+
     return fs.promises.mkdir(path);
   }
 
-  deleteDirectory(path: string) {
+  async deleteDirectory(path: string) {
+    const exists = await this.exists(path)
+    if (!exists || (exists && !(await this.isDirectory(path)))) {
+      throw ErrorFactory.newArgumentError("No such directory")
+    }
+
     return fs.promises.rmdir(path);
   }
 
-  createFile(path: string, data: string) {
+  async createFile(path: string, data: string) {
+    if (!(await this.isDirectory(nodePath.dirname(path)))) {
+      throw ErrorFactory.newArgumentError("No such directory")
+    }
+  
     //append data to a file, creating the file if it does not yet exist
     return fs.promises.appendFile(path, data);
   }
@@ -59,13 +72,13 @@ export class FileSystemService implements IProjectFilesBrowserService {
       throw ErrorFactory.newInternalError(`File doesn't exist (${path})`);
     }
 
-    const extension = nodePath.posix.extname(path);
+    const extension = nodePath.extname(path);
     const stats = await fs.promises.lstat(path);
 
     const metadata: Omit<Metadata, 'type'> = {
       path,
-      name: nodePath.posix.basename(path),
-      baseName: nodePath.posix.basename(path, extension),
+      name: nodePath.basename(path),
+      baseName: nodePath.basename(path, extension),
       extension: extension === '' ? undefined : extension,
       //return size in bytes
       size: stats.size,

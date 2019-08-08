@@ -2,7 +2,7 @@ import { MetadataType } from './model';
 import { VirtualFileSystemService } from './VirtualFileSystemService';
 import { VirtualDirectory } from './IVirtualFileSystemService';
 
-describe('FileSystemService', () => {
+describe('VirtualFileSystemService', () => {
   let service: VirtualFileSystemService;
 
   beforeAll(async () => {
