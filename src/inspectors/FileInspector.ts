@@ -38,10 +38,6 @@ export class FileInspector implements IFileInspector {
     return this.projectFilesBrowser.isDirectory(this.normalizePath(path));
   }
 
-  isSymbolicLink(path: string) {
-    return this.projectFilesBrowser.isSymbolicLink(this.normalizePath(path));
-  }
-
   getMetadata(path: string) {
     return this.projectFilesBrowser.getMetadata(this.normalizePath(path));
   }

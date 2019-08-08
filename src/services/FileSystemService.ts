@@ -16,13 +16,6 @@ export class FileSystemService implements IProjectFilesBrowserService {
   }
 
   async readDirectory(path: string) {
-    if (process.platform === 'win32') {
-      const isSymlink = await this.isSymbolicLink(path);
-      if (isSymlink) {
-        path = await fs.promises.readlink(path);
-      }
-    }
-
     return fs.promises.readdir(path);
   }
 
@@ -61,11 +54,6 @@ export class FileSystemService implements IProjectFilesBrowserService {
     return stats.isDirectory();
   }
 
-  async isSymbolicLink(path: string) {
-    const stats = await fs.promises.lstat(path);
-    return stats.isSymbolicLink();
-  }
-
   async getMetadata(path: string): Promise<Metadata> {
     if (!(await this.exists(path))) {
       throw ErrorFactory.newInternalError(`File doesn't exist (${path})`);
@@ -83,25 +71,18 @@ export class FileSystemService implements IProjectFilesBrowserService {
       size: stats.size,
     };
 
-    if (await this.isFile(path)) {
-      return {
-        ...metadata,
-        type: MetadataType.file,
-      };
-    } else if (await this.isDirectory(path)) {
+    if (await this.isDirectory(path)) {
       return {
         ...metadata,
         extension: undefined,
         type: MetadataType.dir,
       };
-    } else if (await this.isSymbolicLink(path)) {
-      return {
-        ...metadata,
-        type: MetadataType.symlink,
-      };
     }
 
-    throw ErrorFactory.newInternalError("It's not file, dir nor symlink");
+    return {
+      ...metadata,
+      type: MetadataType.file,
+    };
   }
 
   async flatTraverse(path: string, fn: (meta: Metadata) => void | boolean) {
