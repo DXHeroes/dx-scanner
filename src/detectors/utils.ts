@@ -2,9 +2,10 @@ import { PackageManagement } from '../model';
 import { intersection, keys } from 'lodash';
 import { Metadata } from '../services/model';
 import { GitHubFile } from '../services/git/IGitHubService';
+import * as nodePath from "path"
 
 export const dirPath = (file: GitHubFile | Metadata): string => {
-  const isRelative = file.path.startsWith('/') ? true : false;
+  const isRelative = !nodePath.isAbsolute(file.path)
   const prefix = isRelative ? '/' : './';
   let path = !file.path.startsWith(prefix) ? `${prefix}${file.path}` : file.path;
   if (file.path.startsWith(`./${file.name}`) || file.path.startsWith(`${file.name}`)) {

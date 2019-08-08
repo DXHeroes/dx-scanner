@@ -40,35 +40,6 @@ export class VirtualFileSystemService implements IProjectFilesBrowserService {
     return pathAsArray;
   }
 
-  // private followSymLinks(path: string, directory?: VirtualDirectory): string {
-  //   directory = directory !== undefined ? directory : this.structure;
-  //   if (directory === undefined) {
-  //     throw ErrorFactory.newInternalError('structure is undefined');
-  //   }
-
-  //   let name: string, child: VirtualFileSystemEntry;
-  //   path = nodePath.posix.normalize(path);
-  //   // In case of an absolute path, name should be the root including the path separator
-  //   name = nodePath.posix.isAbsolute(path) ? nodePath.posix.parse(path).root : path.split(nodePath.posix.sep)[0];
-  //   path = nodePath.posix.relative(name, path);
-  //   // In case of the Posix root, the child is the structure (Windows roots/drives are also handled as plain directories)
-  //   child = name === nodePath.posix.sep ? directory : directory.children[name];
-
-  //   if (child !== undefined) {
-  //     switch (child.type) {
-  //       case MetadataType.file:
-  //         break;
-  //       case MetadataType.dir:
-  //         if (path.length === 0) {
-  //           break;
-  //         }
-  //         path = this.followSymLinks(path, child);
-  //         break;
-  //     }
-  //   }
-  //   return nodePath.posix.join(name, path);
-  // }
-
   private findEntry(path: string): VirtualFileSystemEntry {
     if (this.structure === undefined) {
       throw ErrorFactory.newInternalError('structure is undefined');

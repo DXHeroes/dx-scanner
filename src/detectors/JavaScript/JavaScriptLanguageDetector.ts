@@ -5,6 +5,7 @@ import { IFileInspector } from '../../inspectors/IFileInspector';
 import { Types } from '../../types';
 import { fileNameRegExp, dirPath, fileExtensionRegExp, sharedSubpath } from '../utils';
 import { uniq } from 'lodash';
+import * as nodePath from "path"
 
 @injectable()
 export class JavaScriptLanguageDetector implements ILanguageDetector {
@@ -19,7 +20,7 @@ export class JavaScriptLanguageDetector implements ILanguageDetector {
     const hasTsFiles = (await this.fileInspector.scanFor(fileExtensionRegExp(['tsx', 'ts']), '/')).length > 0;
     if (packageFiles.length > 0) {
       for (const path of packageFiles.map((file) => dirPath(file))) {
-        result.push({ language: hasTsFiles ? ProgrammingLanguage.TypeScript : ProgrammingLanguage.JavaScript, path: path });
+        result.push({ language: hasTsFiles ? ProgrammingLanguage.TypeScript : ProgrammingLanguage.JavaScript, path });
       }
     } else {
       // @todo: Have separate typescript language detector
