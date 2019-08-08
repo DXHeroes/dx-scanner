@@ -1,6 +1,6 @@
 import { MetadataType } from './model';
 
-export type VirtualFileSystemEntry = VirtualFile | VirtualDirectory | VirtualSymbolicLink;
+export type VirtualFileSystemEntry = VirtualFile | VirtualDirectory;
 
 export interface VirtualFile {
   data: string;
@@ -10,9 +10,4 @@ export interface VirtualFile {
 export interface VirtualDirectory {
   children: { [key: string]: VirtualFileSystemEntry };
   type: MetadataType.dir;
-}
-
-export interface VirtualSymbolicLink {
-  target: string;
-  type: MetadataType.symlink;
 }

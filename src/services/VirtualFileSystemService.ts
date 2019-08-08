@@ -64,10 +64,6 @@ export class VirtualFileSystemService implements IProjectFilesBrowserService {
           }
           path = this.followSymLinks(path, child);
           break;
-        case MetadataType.symlink:
-          path = this.followSymLinks(nodePath.join(child.target, path), directory);
-          name = '';
-          break;
       }
     }
     return nodePath.join(name, path);
@@ -200,7 +196,7 @@ export class VirtualFileSystemService implements IProjectFilesBrowserService {
   }
 
   async deleteFile(path: string) {
-    if ((await this.isFile(path)) || (await this.isSymbolicLink(path))) {
+    if (await this.isFile(path)) {
       this.unsetEntry(path);
     } else {
       throw ErrorFactory.newInternalError('Is not a file');
@@ -221,14 +217,6 @@ export class VirtualFileSystemService implements IProjectFilesBrowserService {
       throw ErrorFactory.newInternalError('no such file or directory');
     }
     return entry.type === MetadataType.dir;
-  }
-
-  async isSymbolicLink(path: string) {
-    const entry = this.findEntryNoFollow(path);
-    if (entry === undefined) {
-      throw ErrorFactory.newInternalError('no such file or directory');
-    }
-    return entry.type === MetadataType.symlink;
   }
 
   async getMetadata(path: string): Promise<Metadata> {
@@ -259,13 +247,6 @@ export class VirtualFileSystemService implements IProjectFilesBrowserService {
         ...metadata,
         extension: undefined,
         type: MetadataType.dir,
-      };
-    }
-
-    if (await this.isSymbolicLink(path)) {
-      return {
-        ...metadata,
-        type: MetadataType.symlink,
       };
     }
 
