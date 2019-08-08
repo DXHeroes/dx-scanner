@@ -4,14 +4,14 @@ node_js:
   - '10'
 
 os:
-  - linux
-  - osx
   - windows
+  - linux
 
 cache:
   yarn: true
   directories:
     - lib
+    - coverage
     - node_modules
 
 script:
