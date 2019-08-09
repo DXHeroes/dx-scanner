@@ -3,7 +3,7 @@ import { injectable, inject } from 'inversify';
 import { LanguageAtPath, ProgrammingLanguage } from '../../model';
 import { IFileInspector } from '../../inspectors/IFileInspector';
 import { Types } from '../../types';
-import { fileNameRegExp, dirPath, fileExtensionRegExp, sharedSubpath } from '../utils';
+import { fileNameRegExp, fileExtensionRegExp, sharedSubpath } from '../utils';
 import { uniq } from 'lodash';
 import * as nodePath from "path"
 
@@ -19,7 +19,7 @@ export class JavaScriptLanguageDetector implements ILanguageDetector {
     const packageFiles = await this.fileInspector.scanFor(fileNameRegExp('package.json'), '/');
     const hasTsFiles = (await this.fileInspector.scanFor(fileExtensionRegExp(['tsx', 'ts']), '/')).length > 0;
     if (packageFiles.length > 0) {
-      for (const path of packageFiles.map((file) => dirPath(file))) {
+      for (const path of packageFiles.map((file) => nodePath.dirname(file.path))) {
         result.push({ language: hasTsFiles ? ProgrammingLanguage.TypeScript : ProgrammingLanguage.JavaScript, path });
       }
     } else {
@@ -31,7 +31,7 @@ export class JavaScriptLanguageDetector implements ILanguageDetector {
         return result;
       }
       // if (jsOrTsFiles.length === 0) return result;
-      const dirsWithProjects = uniq(jsOrTsFiles.map(dirPath));
+      const dirsWithProjects = uniq(jsOrTsFiles.map(f => nodePath.dirname(f.path)));
       // Get the shared subpath
       const commonPath = sharedSubpath(dirsWithProjects);
       result.push({ language: hasTsFiles ? ProgrammingLanguage.TypeScript : ProgrammingLanguage.JavaScript, path: commonPath });

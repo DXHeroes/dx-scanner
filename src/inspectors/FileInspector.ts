@@ -29,6 +29,8 @@ export class FileInspector implements IFileInspector {
   }
 
   readFile(path: string) {
+    console.log("this.basePath", this.basePath)
+    console.log("path", path)
     return this.projectFilesBrowser.readFile(this.normalizePath(path));
   }
 
