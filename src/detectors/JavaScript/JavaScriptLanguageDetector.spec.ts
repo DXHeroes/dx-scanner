@@ -20,7 +20,7 @@ describe('JavaScriptLanguageDetector', () => {
     virtualFileSystemService.clearFileSystem();
   });
 
-  it('detects javascript correctly via package.json', async () => {
+  it.only('detects javascript correctly via package.json', async () => {
     const structure: VirtualDirectory = {
       type: MetadataType.dir,
       children: {

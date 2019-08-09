@@ -23,6 +23,9 @@ export class VirtualFileSystemService implements IProjectFilesBrowserService {
   }
 
   private pathAsStructureArray(path: string): string[] {
+    // because of windows separator
+    path = path.replace("\\", "")
+
     path = nodePath.posix.resolve(path);
 
     let pathAsArray = [];
@@ -45,9 +48,9 @@ export class VirtualFileSystemService implements IProjectFilesBrowserService {
       throw ErrorFactory.newInternalError('structure is undefined');
     }
 
-    path = nodePath.posix.normalize('/' + path);
-
+    path = nodePath.posix.normalize(nodePath.posix.sep + path);
     const structurePath = this.pathAsStructureArray(path);
+
     if (structurePath.length === 0) {
       return this.structure;
     }
@@ -76,6 +79,9 @@ export class VirtualFileSystemService implements IProjectFilesBrowserService {
   }
 
   private findEntryNoFollow(path: string): VirtualFileSystemEntry | undefined {
+    path = path.replace("\\", "\/")
+    path = nodePath.posix.normalize(path)
+
     const parentEntry = this.findParentEntry(path);
     const name = nodePath.posix.basename(path);
     if (name === undefined) {
@@ -89,7 +95,12 @@ export class VirtualFileSystemService implements IProjectFilesBrowserService {
       throw ErrorFactory.newInternalError('structure is undefined');
     }
 
+    console.log("pathpath", path)
+
     const dirName = nodePath.posix.dirname(path);
+    console.log("dirName", dirName)
+
+
     if (dirName === path) {
       return this.structure;
     }

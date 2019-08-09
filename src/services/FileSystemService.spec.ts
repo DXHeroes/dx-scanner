@@ -35,7 +35,7 @@ describe('FileSystemService', () => {
       const mockFolderPath = path.resolve(__dirname, '__MOCKS__/mockFolder');
 
       const result = await fileSystemService.readDirectory(mockFolderPath);
-      expect(result).toEqual(['mockFile.ts', 'mockFileSL.ts', 'mockFileSLbroken.ln', 'mockFileToRewrite.ts', 'mockSubFolder']);
+      expect(result).toEqual(['mockFile.ts', 'mockFileSLbroken.ln', 'mockFileToRewrite.ts', 'mockSubFolder']);
     });
 
     it("throws an error if the target doesn't exist", async () => {
@@ -394,9 +394,8 @@ describe('FileSystemService', () => {
           files.push(meta.name);
         });
 
-        expect(files.length).toEqual(6);
+        expect(files.length).toEqual(5);
         expect(files).toContain('mockFile.ts');
-        expect(files).toContain('mockFileSL.ts');
         expect(files).toContain('mockFileToRewrite.ts');
         expect(files).toContain('mockSubFolder');
         expect(files).toContain('mockSubFolderFile.txt');

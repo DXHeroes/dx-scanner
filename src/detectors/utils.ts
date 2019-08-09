@@ -4,30 +4,9 @@ import { Metadata } from '../services/model';
 import { GitHubFile } from '../services/git/IGitHubService';
 import * as nodePath from "path"
 
-  // export const dirPath = (file: GitHubFile | Metadata): string => {
-  //   return nodePath.dirname(file.path)
-
-  //   const isRelative = !nodePath.isAbsolute(file.path)
-  //   console.log("isRelative", isRelative)
-  //   const prefix = isRelative ? '/' : './';
-  //   let path = !file.path.startsWith(prefix) ? `${prefix}${file.path}` : file.path;
-  //   if (file.path.startsWith(`./${file.name}`) || file.path.startsWith(`${file.name}`)) {
-  //     return './';
-  //   }
-  //   console.log("path2", path)
-
-  //   let dir = path.replace(`/${file.name}`, '');
-  //   if (dir === '') {
-  //     return prefix;
-  //   }
-  //   if (dir.endsWith('/')) {
-  //     return dir.substring(0, dir.length - 1);
-  //   }
-  //   console.log("dir", dir)
-  //   console.log("nodePath.dirname(file.path)", nodePath.dirname(file.path))
-
-  //   return dir;
-  // };
+export const dirPath = (file: GitHubFile | Metadata): string => {
+  return nodePath.dirname(file.path)
+};
 
 export const fileExtensionRegExp = (extensions: string[]): RegExp => {
   const regExpString = `.*\\.(${extensions.join('|').replace('.', '\\.')})$`;
