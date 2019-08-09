@@ -33,7 +33,9 @@ jobs:
       - bin/run https://github.com/DXHeroes/dx-scanner
     os: linux
   - os: osx
+    if: branch = master
   - os: windows
+    if: branch = master
   - stage: deploy
     if: tag IS present
     deploy:
