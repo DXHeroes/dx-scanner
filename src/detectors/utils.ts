@@ -21,8 +21,8 @@ export const fileNameRegExp = (name: string): RegExp => {
  * Get common prefix of all paths
  */
 export const sharedSubpath = (paths: string[]): string => {
-  const sep = '/';
-  paths = paths.concat().sort();
+  const sep = nodePath.sep;
+  paths = paths.concat().map(p => p.split(nodePath.posix.sep).join(sep)).sort();
 
   const firstPath = paths[0];
   const lastPath = paths[paths.length - 1];
@@ -38,7 +38,9 @@ export const sharedSubpath = (paths: string[]): string => {
   while (i < length && firstPathSplit[i] === lastPathSplit[i]) {
     i++;
   }
-  return `${isRelative ? `.${sep}` : sep}${firstPathSplit.slice(0, i).join(sep)}`;
+
+  const commonPath = `${isRelative ? `.${sep}` : sep}${firstPathSplit.slice(0, i).join(sep)}`;
+  return nodePath.normalize(commonPath)
 };
 
 export const indexBy = <T>(array: T[], keyFn: (item: T) => string): { [index: string]: T } => {

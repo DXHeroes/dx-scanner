@@ -2,6 +2,7 @@ import { sharedSubpath, dirPath, hasOneOfPackages } from './utils';
 import { MetadataType } from '../services/model';
 import { PackageManagement, PackageManagementFramework } from '../model';
 import * as nodePath from 'path';
+import normalize from 'normalize-path';
 
 describe('DetectorUtils', () => {
   describe('#dirPath', () => {
@@ -68,11 +69,11 @@ describe('DetectorUtils', () => {
     });
 
     it('works with relative paths', () => {
-      expect(sharedSubpath(['./foo', './foo', './foo/bar'])).toEqual('./foo');
+      expect(sharedSubpath(['./foo', './foo', './foo/bar'])).toEqual(nodePath.normalize('./foo'));
     });
 
     it('works with relative paths - implicit relative path', () => {
-      expect(sharedSubpath(['./foo', 'foo', './foo/bar'])).toEqual('./foo');
+      expect(sharedSubpath(['./foo', 'foo', './foo/bar'])).toEqual(nodePath.normalize('./foo'));
     });
 
     it('works with relative paths - mixed in absolute path', () => {
