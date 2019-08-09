@@ -18,7 +18,7 @@ describe('EditorConfigIsPresentPractice', () => {
 
   it('Returns practicing if there is a .editorconfig', async () => {
     containerCtx.virtualFileSystemService.setFileSystem({
-      '.editorconfig': '...',
+      '/.editorconfig': '...',
     });
 
     const evaluated = await practice.evaluate(containerCtx.practiceContext);
@@ -27,7 +27,7 @@ describe('EditorConfigIsPresentPractice', () => {
 
   it('Returns notPracticing if there is NO .editorconfig', async () => {
     containerCtx.virtualFileSystemService.setFileSystem({
-      'not.exists': '...',
+      '/not.exists': '...',
     });
 
     const evaluated = await practice.evaluate(containerCtx.practiceContext);

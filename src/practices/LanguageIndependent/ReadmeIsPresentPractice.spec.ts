@@ -18,7 +18,7 @@ describe('ReadmePracticeIsPresentPractice', () => {
 
   it('Returns practicing if there is a readme', async () => {
     containerCtx.virtualFileSystemService.setFileSystem({
-      'readme.anything': '...',
+      '/readme.anything': '...',
     });
 
     const evaluated = await practice.evaluate(containerCtx.practiceContext);
@@ -27,7 +27,7 @@ describe('ReadmePracticeIsPresentPractice', () => {
 
   it('Returns notPracticing if there is NO readme', async () => {
     containerCtx.virtualFileSystemService.setFileSystem({
-      'not.exists': '...',
+      '/not.exists': '...',
     });
 
     const evaluated = await practice.evaluate(containerCtx.practiceContext);

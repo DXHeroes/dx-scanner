@@ -18,7 +18,7 @@ describe('JsGitignoreIsPresentPractice', () => {
 
   it('Returns practicing if there is a .gitignore', async () => {
     containerCtx.virtualFileSystemService.setFileSystem({
-      '.gitignore': '...',
+      '/.gitignore': '...',
     });
 
     const evaluated = await practice.evaluate(containerCtx.practiceContext);
@@ -27,7 +27,7 @@ describe('JsGitignoreIsPresentPractice', () => {
 
   it('Returns notPracticing if there is NO .gitignore', async () => {
     containerCtx.virtualFileSystemService.setFileSystem({
-      'not.exists': '...',
+      '/not.exists': '...',
     });
 
     const evaluated = await practice.evaluate(containerCtx.practiceContext);

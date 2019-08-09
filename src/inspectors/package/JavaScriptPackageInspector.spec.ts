@@ -47,6 +47,10 @@ describe('JavaScriptPackageInspector', () => {
   });
 
   describe('functions', () => {
+    afterEach(async () => {
+      containerCtx.virtualFileSystemService.clearFileSystem();
+    });
+
     describe('#findPackage', () => {
       beforeEach(async () => {
         await inspector.init();
@@ -102,6 +106,7 @@ describe('JavaScriptPackageInspector', () => {
           '/invalid.package.json': '...',
         };
 
+        containerCtx.virtualFileSystemService.clearFileSystem();
         containerCtx.virtualFileSystemService.setFileSystem(structure);
 
         await inspector.init();

@@ -18,7 +18,7 @@ describe('LicenseIsPresentPractice', () => {
 
   it('Returns practicing if there is a license', async () => {
     containerCtx.virtualFileSystemService.setFileSystem({
-      'license.anything': '...',
+      '/license.anything': '...',
     });
 
     const evaluated = await practice.evaluate(containerCtx.practiceContext);
@@ -27,7 +27,7 @@ describe('LicenseIsPresentPractice', () => {
 
   it('Returns notPracticing if there is NO license', async () => {
     containerCtx.virtualFileSystemService.setFileSystem({
-      'not.exists': '...',
+      '/not.exists': '...',
     });
 
     const evaluated = await practice.evaluate(containerCtx.practiceContext);
