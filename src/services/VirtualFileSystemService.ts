@@ -1,218 +1,97 @@
 import { IProjectFilesBrowserService, Metadata, MetadataType } from './model';
-import { VirtualDirectory, VirtualFileSystemEntry } from './IVirtualFileSystemService';
-import * as _ from 'lodash';
+import { VirtualDirectory } from './IVirtualFileSystemService';
 import { injectable } from 'inversify';
 import { ErrorFactory } from '../lib/errors';
 import { Omit } from 'lodash';
 import * as nodePath from 'path';
+import { fs as vfs, vol } from 'memfs';
 
 @injectable()
 export class VirtualFileSystemService implements IProjectFilesBrowserService {
-  private structure: VirtualDirectory | undefined;
-
-  constructor() {
-    this.structure = undefined;
-  }
-
   setFileSystem(structure: VirtualDirectory) {
-    this.structure = structure;
+    vol.fromJSON(structure);
   }
 
   clearFileSystem() {
-    this.structure = undefined;
-  }
-
-  private pathAsStructureArray(path: string): string[] {
-    // because of windows separator
-    path = path.replace("\\", "")
-
-    path = nodePath.posix.resolve(path);
-
-    let pathAsArray = [];
-    const root = nodePath.posix.parse(path).root;
-
-    while (path !== root) {
-      pathAsArray.unshift('children', nodePath.posix.basename(path));
-      path = nodePath.posix.dirname(path);
-    }
-
-    // Append the non-Posix root
-    if (root !== nodePath.posix.sep) {
-      pathAsArray.unshift('children', root);
-    }
-    return pathAsArray;
-  }
-
-  private findEntry(path: string): VirtualFileSystemEntry {
-    if (this.structure === undefined) {
-      throw ErrorFactory.newInternalError('structure is undefined');
-    }
-
-    path = nodePath.posix.normalize(nodePath.posix.sep + path);
-    const structurePath = this.pathAsStructureArray(path);
-
-    if (structurePath.length === 0) {
-      return this.structure;
-    }
-    return _.get(this.structure, structurePath);
-  }
-
-  private setEntry(path: string, entry: VirtualFileSystemEntry) {
-    if (this.structure === undefined) {
-      throw ErrorFactory.newInternalError('structure is undefined');
-    }
-
-    path = nodePath.posix.resolve(path);
-    // Throws an error if the parent is not a directory
-    this.findParentEntry(path);
-
-    this.structure = _.set(this.structure, this.pathAsStructureArray(path), entry);
-  }
-
-  private unsetEntry(path: string) {
-    const parentEntry = this.findParentEntry(path);
-    const name = nodePath.posix.basename(path);
-    if (name === undefined) {
-      throw ErrorFactory.newInternalError('no such file or directory');
-    }
-    delete parentEntry.children[name];
-  }
-
-  private findEntryNoFollow(path: string): VirtualFileSystemEntry | undefined {
-    path = path.replace("\\", "\/")
-    path = nodePath.posix.normalize(path)
-
-    const parentEntry = this.findParentEntry(path);
-    const name = nodePath.posix.basename(path);
-    if (name === undefined) {
-      throw ErrorFactory.newInternalError('no such file or directory');
-    }
-    return parentEntry.children[name];
-  }
-
-  private findParentEntry(path: string): VirtualDirectory {
-    if (this.structure === undefined) {
-      throw ErrorFactory.newInternalError('structure is undefined');
-    }
-
-    console.log("pathpath", path)
-
-    const dirName = nodePath.posix.dirname(path);
-    console.log("dirName", dirName)
-
-
-    if (dirName === path) {
-      return this.structure;
-    }
-
-    const entry = this.findEntry(dirName);
-    if (entry === undefined || entry.type !== MetadataType.dir) {
-      throw ErrorFactory.newInternalError('is not a directory');
-    }
-    return entry;
+    vol.reset();
   }
 
   async exists(path: string) {
-    const entry = this.findEntry(path);
-    return entry !== undefined ? true : false;
+    try {
+      await vfs.promises.lstat(path);
+      return true;
+    } catch (error) {
+      return false;
+    }
   }
 
   async readDirectory(path: string) {
-    const entry = this.findEntry(path);
-    if (entry === undefined) {
-      throw ErrorFactory.newInternalError('No such file or directory');
-    }
-    if (entry.type !== MetadataType.dir) {
-      throw ErrorFactory.newInternalError('Is not a directory');
-    }
-
-    return _.keys(entry.children);
+    return <Promise<string[]>>vfs.promises.readdir(path);
   }
 
   async readFile(path: string) {
-    const entry = this.findEntry(path);
-    if (entry === undefined) {
-      throw ErrorFactory.newInternalError('No such file or directory');
-    }
-    if (entry.type !== MetadataType.file) {
-      throw ErrorFactory.newInternalError('Is not a file');
-    }
-
-    return entry.data;
+    return <Promise<string>>vfs.promises.readFile(path, 'utf-8');
   }
 
   async writeFile(path: string, content: string) {
-    let entry = this.findEntry(path);
-    if (entry !== undefined && entry.type !== MetadataType.file) {
-      throw ErrorFactory.newInternalError('is not a file');
-    }
-    this.setEntry(path, { type: MetadataType.file, data: content });
+    return vfs.promises.writeFile(path, content);
   }
 
   async createDirectory(path: string) {
-    if (this.findEntryNoFollow(path) !== undefined) {
-      throw ErrorFactory.newInternalError('Dir already exists');
+    if (!(await this.isDirectory(nodePath.dirname(path)))) {
+      throw ErrorFactory.newArgumentError('No such directory');
     }
-    this.setEntry(path, { type: MetadataType.dir, children: {} });
+
+    return vfs.promises.mkdir(path);
   }
 
   async deleteDirectory(path: string) {
-    if (await this.isDirectory(path)) {
-      this.unsetEntry(path);
-    } else {
-      throw ErrorFactory.newInternalError('Is not a directory');
+    const exists = await this.exists(path);
+    if (!exists || (exists && !(await this.isDirectory(path)))) {
+      throw ErrorFactory.newArgumentError('No such directory');
     }
+
+    return vfs.promises.rmdir(path);
   }
 
   async createFile(path: string, data: string) {
-    let originalData: string;
-    try {
-      originalData = await this.readFile(path);
-    } catch {
-      originalData = '';
+    if (!(await this.isDirectory(nodePath.dirname(path)))) {
+      throw ErrorFactory.newArgumentError('No such directory');
     }
 
-    await this.writeFile(path, originalData + data);
+    //append data to a file, creating the file if it does not yet exist
+    return vfs.promises.appendFile(path, data);
   }
 
   async deleteFile(path: string) {
-    if (await this.isFile(path)) {
-      this.unsetEntry(path);
-    } else {
-      throw ErrorFactory.newInternalError('Is not a file');
-    }
+    return vfs.promises.unlink(path);
   }
 
   async isFile(path: string) {
-    const entry = this.findEntryNoFollow(path);
-    if (entry === undefined) {
-      throw ErrorFactory.newInternalError('no such file or directory');
-    }
-    return entry.type === MetadataType.file;
+    const stats = await vfs.promises.lstat(path);
+    return stats.isFile();
   }
 
   async isDirectory(path: string) {
-    const entry = this.findEntryNoFollow(path);
-    if (entry === undefined) {
-      throw ErrorFactory.newInternalError('no such file or directory');
-    }
-    return entry.type === MetadataType.dir;
+    const stats = await vfs.promises.lstat(path);
+    return stats.isDirectory();
   }
 
   async getMetadata(path: string): Promise<Metadata> {
-    const name = nodePath.posix.basename(path);
-    const splitName = name.split('.');
+    if (!(await this.exists(path))) {
+      throw ErrorFactory.newInternalError(`File doesn't exist (${path})`);
+    }
 
-    // dotfiles doesn't have an extension
-    const extension: string | undefined = name.startsWith('.') ? undefined : `.${splitName[splitName.length - 1]}`;
+    const extension = nodePath.extname(path);
+    const stats = await vfs.promises.lstat(path);
 
     const metadata: Omit<Metadata, 'type'> = {
       path,
-      name,
-      baseName: name.replace(extension || '', ''),
-      extension,
+      name: nodePath.basename(path),
+      baseName: nodePath.basename(path, extension),
+      extension: extension === '' ? undefined : extension,
       //return size in bytes
-      size: 0,
+      size: <number>stats.size,
     };
 
     if (await this.isDirectory(path)) {
@@ -227,13 +106,13 @@ export class VirtualFileSystemService implements IProjectFilesBrowserService {
       ...metadata,
       type: MetadataType.file,
     };
-}
+  }
 
   async flatTraverse(path: string, fn: (meta: Metadata) => void | boolean) {
-    const dirContent = await this.readDirectory(path);
+    const dirContent = await vfs.promises.readdir(path);
     for (const cnt of dirContent) {
-      const cntPath = nodePath.posix.join(path, cnt);
-      const metadata = await this.getMetadata(cntPath);
+      const absolutePath = nodePath.resolve(path, <string>cnt);
+      const metadata = await this.getMetadata(absolutePath);
 
       const lambdaResult = fn(metadata);
       if (lambdaResult === false) return false;

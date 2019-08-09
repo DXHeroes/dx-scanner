@@ -16,7 +16,6 @@ import { IFileInspector } from './inspectors/IFileInspector';
 import { ProgrammingLanguage, ProjectComponentType, ProjectComponentPlatform, ProjectComponentFramework, ProjectComponent } from './model';
 import { JavaScriptPackageInspector } from './inspectors/package/JavaScriptPackageInspector';
 import { VirtualDirectory } from './services/IVirtualFileSystemService';
-import { MetadataType } from './services/model';
 import { packageJSONContents } from './detectors/__MOCKS__';
 import { IPracticeWithMetadata } from './practices/DxPracticeDecorator';
 import { ScannerUtils } from './scanner/ScannerUtils';
@@ -54,13 +53,7 @@ export const createTestContainer = (
 
   if (!structure) {
     structure = {
-      type: MetadataType.dir,
-      children: {
-        'package.json': {
-          type: MetadataType.file,
-          data: packageJSONContents,
-        },
-      },
+      '/package.json': packageJSONContents,
     };
   }
 

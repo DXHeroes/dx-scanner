@@ -1,4 +1,3 @@
-import { MetadataType } from '../../services/model';
 import { EditorConfigIsPresentPractice } from './EditorConfigIsPresentPractice';
 import { PracticeEvaluationResult } from '../../model';
 import { TestContainerContext, createTestContainer } from '../../inversify.config';
@@ -19,13 +18,7 @@ describe('EditorConfigIsPresentPractice', () => {
 
   it('Returns practicing if there is a .editorconfig', async () => {
     containerCtx.virtualFileSystemService.setFileSystem({
-      type: MetadataType.dir,
-      children: {
-        '.editorconfig': {
-          type: MetadataType.file,
-          data: '...',
-        },
-      },
+      '.editorconfig': '...',
     });
 
     const evaluated = await practice.evaluate(containerCtx.practiceContext);
@@ -34,13 +27,7 @@ describe('EditorConfigIsPresentPractice', () => {
 
   it('Returns notPracticing if there is NO .editorconfig', async () => {
     containerCtx.virtualFileSystemService.setFileSystem({
-      type: MetadataType.dir,
-      children: {
-        'not.exists': {
-          type: MetadataType.file,
-          data: '...',
-        },
-      },
+      'not.exists': '...',
     });
 
     const evaluated = await practice.evaluate(containerCtx.practiceContext);

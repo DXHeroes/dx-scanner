@@ -28,17 +28,17 @@ export class FileSystemService implements IProjectFilesBrowserService {
   }
 
   async createDirectory(path: string) {
-  if (!(await this.isDirectory(nodePath.dirname(path)))) {
-    throw ErrorFactory.newArgumentError("No such directory")
-  }
+    if (!(await this.isDirectory(nodePath.dirname(path)))) {
+      throw ErrorFactory.newArgumentError('No such directory');
+    }
 
     return fs.promises.mkdir(path);
   }
 
   async deleteDirectory(path: string) {
-    const exists = await this.exists(path)
+    const exists = await this.exists(path);
     if (!exists || (exists && !(await this.isDirectory(path)))) {
-      throw ErrorFactory.newArgumentError("No such directory")
+      throw ErrorFactory.newArgumentError('No such directory');
     }
 
     return fs.promises.rmdir(path);
@@ -46,9 +46,9 @@ export class FileSystemService implements IProjectFilesBrowserService {
 
   async createFile(path: string, data: string) {
     if (!(await this.isDirectory(nodePath.dirname(path)))) {
-      throw ErrorFactory.newArgumentError("No such directory")
+      throw ErrorFactory.newArgumentError('No such directory');
     }
-  
+
     //append data to a file, creating the file if it does not yet exist
     return fs.promises.appendFile(path, data);
   }

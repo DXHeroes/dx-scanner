@@ -3,7 +3,6 @@ import { FileInspector } from '../../inspectors/FileInspector';
 import { ProgrammingLanguage } from '../../model';
 import { VirtualFileSystemService } from '../../services/VirtualFileSystemService';
 import { VirtualDirectory } from '../../services/IVirtualFileSystemService';
-import { MetadataType } from '../../services/model';
 
 describe('JavaScriptLanguageDetector', () => {
   let detector: JavaScriptLanguageDetector;
@@ -20,15 +19,9 @@ describe('JavaScriptLanguageDetector', () => {
     virtualFileSystemService.clearFileSystem();
   });
 
-  it.only('detects javascript correctly via package.json', async () => {
+  it('detects javascript correctly via package.json', async () => {
     const structure: VirtualDirectory = {
-      type: MetadataType.dir,
-      children: {
-        'package.json': {
-          type: MetadataType.file,
-          data: '...',
-        },
-      },
+      '/package.json': '...',
     };
 
     virtualFileSystemService.setFileSystem(structure);
@@ -41,18 +34,7 @@ describe('JavaScriptLanguageDetector', () => {
 
   it("detects it's not a javascript", async () => {
     const structure: VirtualDirectory = {
-      type: MetadataType.dir,
-      children: {
-        src: {
-          type: MetadataType.dir,
-          children: {
-            'index.none': {
-              type: MetadataType.file,
-              data: '...',
-            },
-          },
-        },
-      },
+      '/src/index.none': '...',
     };
 
     virtualFileSystemService.setFileSystem(structure);
@@ -64,13 +46,7 @@ describe('JavaScriptLanguageDetector', () => {
 
   it('detects typescript correctly via ts file', async () => {
     const structure: VirtualDirectory = {
-      type: MetadataType.dir,
-      children: {
-        'index.ts': {
-          type: MetadataType.file,
-          data: '...',
-        },
-      },
+      '/index.ts': '...',
     };
 
     virtualFileSystemService.setFileSystem(structure);
@@ -83,13 +59,7 @@ describe('JavaScriptLanguageDetector', () => {
 
   it('detects javascript correctly via js file', async () => {
     const structure: VirtualDirectory = {
-      type: MetadataType.dir,
-      children: {
-        'index.js': {
-          type: MetadataType.file,
-          data: '...',
-        },
-      },
+      '/index.js': '...',
     };
 
     virtualFileSystemService.setFileSystem(structure);

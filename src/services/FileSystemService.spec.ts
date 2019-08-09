@@ -154,25 +154,19 @@ describe('FileSystemService', () => {
     it("throws an error if the parent directory doesn't exist", async () => {
       const mockFilePath = path.resolve(__dirname, '__MOCKS__/notExistingMockFolder/file.ts');
 
-      await expect(fileSystemService.createFile(mockFilePath, '...')).rejects.toThrow(
-        /ENOENT: no such file or directory/
-      );
+      await expect(fileSystemService.createFile(mockFilePath, '...')).rejects.toThrow(/ENOENT: no such file or directory/);
     });
 
     it('throws an error if the parent directory is not a directory', async () => {
       const mockFilePath = path.resolve(__dirname, '__MOCKS__/mockFolder/mockFile.ts/file.ts');
 
-      await expect(fileSystemService.createFile(mockFilePath, '...')).rejects.toThrow(
-        "No such directory"
-      );
+      await expect(fileSystemService.createFile(mockFilePath, '...')).rejects.toThrow('No such directory');
     });
 
     it("throws an error if the target isn't a file", async () => {
       const mockFilePath = path.resolve(__dirname, '__MOCKS__/mockFolder');
 
-      await expect(fileSystemService.createFile(mockFilePath, '...')).rejects.toThrow(
-        /EISDIR: illegal operation on a directory/,
-      );
+      await expect(fileSystemService.createFile(mockFilePath, '...')).rejects.toThrow(/EISDIR: illegal operation on a directory/);
     });
   });
 
@@ -210,27 +204,22 @@ describe('FileSystemService', () => {
         await fileSystemService.createDirectory(mockFolderToDelete);
 
         const existsDir = await fileSystemService.exists(mockFolderToDelete);
-        expect(existsDir).toEqual(true);  
+        expect(existsDir).toEqual(true);
       } finally {
         await fileSystemService.deleteDirectory(mockFolderToDelete);
       }
-
     });
 
     it("throws an error if the parent directory doesn't exist", async () => {
       const mockFilePath = path.resolve(__dirname, '__MOCKS__/notExistingMockFolder/file.ts');
 
-      await expect(fileSystemService.createDirectory(mockFilePath)).rejects.toThrow(
-        /ENOENT: no such file or directory/,
-      );
+      await expect(fileSystemService.createDirectory(mockFilePath)).rejects.toThrow(/ENOENT: no such file or directory/);
     });
 
     it('throws an error if the parent directory is not a directory', async () => {
       const mockFilePath = path.resolve(__dirname, '__MOCKS__/mockFolder/mockFile.ts/file.ts');
 
-      await expect(fileSystemService.createDirectory(mockFilePath)).rejects.toThrow(
-        "No such directory",
-      );
+      await expect(fileSystemService.createDirectory(mockFilePath)).rejects.toThrow('No such directory');
     });
 
     it('throws an error if the target is a directory', async () => {
@@ -261,18 +250,16 @@ describe('FileSystemService', () => {
   describe('#deleteDirectory', () => {
     it('exists() returns false after deleting', async () => {
       const mockFolderToDelete = path.resolve(__dirname, '__MOCKS__/deleteDirTest');
-      let existsDir: boolean
+      let existsDir: boolean;
 
       try {
         await fileSystemService.createDirectory(mockFolderToDelete);
-        
-         existsDir = await fileSystemService.exists(mockFolderToDelete);
+
+        existsDir = await fileSystemService.exists(mockFolderToDelete);
         expect(existsDir).toEqual(true);
-        } finally {
-          await fileSystemService.deleteDirectory(mockFolderToDelete);
-        }
-
-
+      } finally {
+        await fileSystemService.deleteDirectory(mockFolderToDelete);
+      }
 
       existsDir = await fileSystemService.exists(mockFolderToDelete);
       expect(existsDir).toEqual(false);
@@ -281,17 +268,13 @@ describe('FileSystemService', () => {
     it("throws an error if the target doesn't exist", async () => {
       const mockFolderPath = path.resolve(__dirname, '__MOCKS__/notExistingMockFolder');
 
-      await expect(fileSystemService.deleteDirectory(mockFolderPath)).rejects.toThrow(
-        "No such directory",
-      );
+      await expect(fileSystemService.deleteDirectory(mockFolderPath)).rejects.toThrow('No such directory');
     });
 
     it("throws an error if the target isn't a directory", async () => {
       const mockFilePath = path.resolve(__dirname, '__MOCKS__/mockFolder/mockFile.ts');
 
-      await expect(fileSystemService.deleteDirectory(mockFilePath)).rejects.toThrow(
-        "No such directory",
-      );
+      await expect(fileSystemService.deleteDirectory(mockFilePath)).rejects.toThrow('No such directory');
     });
 
     describe('#getMetadata', () => {
@@ -302,7 +285,7 @@ describe('FileSystemService', () => {
         expect(result.baseName).toEqual('mockFolder');
         expect(result.extension).toEqual(undefined);
         expect(result.name).toMatch('mockFolder');
-        expect(result.path).toMatch(path.resolve("src/services/__MOCKS__/mockFolder"));
+        expect(result.path).toMatch(path.resolve('src/services/__MOCKS__/mockFolder'));
         expect(typeof result.size).toBe('number');
         expect(result.type).toEqual('dir');
       });
@@ -314,7 +297,7 @@ describe('FileSystemService', () => {
         expect(result.baseName).toEqual('mockFile');
         expect(result.extension).toEqual('.ts');
         expect(result.name).toEqual('mockFile.ts');
-        expect(result.path).toMatch(path.resolve("src/services/__MOCKS__/mockFolder/mockFile.ts"));
+        expect(result.path).toMatch(path.resolve('src/services/__MOCKS__/mockFolder/mockFile.ts'));
         expect(typeof result.size).toBe('number');
         expect(result.type).toEqual('file');
       });
@@ -326,7 +309,7 @@ describe('FileSystemService', () => {
         expect(result.baseName).toEqual('.keep');
         expect(result.name).toEqual('.keep');
         expect(result.extension).toEqual(undefined);
-        expect(result.path).toMatch(path.resolve("src/services/__MOCKS__/.keep"));
+        expect(result.path).toMatch(path.resolve('src/services/__MOCKS__/.keep'));
         expect(typeof result.size).toBe('number');
         expect(result.type).toEqual('file');
       });
@@ -338,7 +321,7 @@ describe('FileSystemService', () => {
         expect(result.baseName).toEqual('mockFileSLbroken');
         expect(result.extension).toEqual('.ln');
         expect(result.name).toEqual('mockFileSLbroken.ln');
-        expect(result.path).toMatch(path.resolve("src/services/__MOCKS__/mockFolder/mockFileSLbroken.ln"));
+        expect(result.path).toMatch(path.resolve('src/services/__MOCKS__/mockFolder/mockFileSLbroken.ln'));
         expect(typeof result.size).toBe('number');
         expect(result.type).toEqual('file');
       });

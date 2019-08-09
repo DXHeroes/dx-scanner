@@ -7,7 +7,4 @@ export interface VirtualFile {
   type: MetadataType.file;
 }
 
-export interface VirtualDirectory {
-  children: { [key: string]: VirtualFileSystemEntry };
-  type: MetadataType.dir;
-}
+export type VirtualDirectory = Record<string, string | null>;

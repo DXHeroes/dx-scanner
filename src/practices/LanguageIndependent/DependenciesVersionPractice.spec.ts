@@ -1,4 +1,3 @@
-import { MetadataType } from '../../services/model';
 import { PracticeEvaluationResult } from '../../model';
 import { DependenciesVersionPractice } from './DependenciesVersionPractice';
 import { createTestContainer, TestContainerContext } from '../../inversify.config';
@@ -23,18 +22,12 @@ describe('DependenciesVersionPractice', () => {
 
   it('not practicing if newer package versions exists', async () => {
     const virtualDirectory: VirtualDirectory = {
-      type: MetadataType.dir,
-      children: {
-        'package.json': {
-          type: MetadataType.file,
-          data: JSON.stringify({
-            dependencies: {
-              'ts-node': '^1',
-              typescript: '^1',
-            },
-          }),
+      'package.json': JSON.stringify({
+        dependencies: {
+          'ts-node': '^1',
+          typescript: '^1',
         },
-      },
+      }),
     };
 
     /**
@@ -49,17 +42,11 @@ describe('DependenciesVersionPractice', () => {
 
   it('practicing if newest package version dependency', async () => {
     const virtualDirectory: VirtualDirectory = {
-      type: MetadataType.dir,
-      children: {
-        'package.json': {
-          type: MetadataType.file,
-          data: JSON.stringify({
-            dependencies: {
-              typescript: '^1000',
-            },
-          }),
+      'package.json': JSON.stringify({
+        dependencies: {
+          typescript: '^1000',
         },
-      },
+      }),
     };
 
     /**

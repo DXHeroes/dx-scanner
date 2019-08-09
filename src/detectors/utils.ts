@@ -2,10 +2,10 @@ import { PackageManagement } from '../model';
 import { intersection, keys } from 'lodash';
 import { Metadata } from '../services/model';
 import { GitHubFile } from '../services/git/IGitHubService';
-import * as nodePath from "path"
+import * as nodePath from 'path';
 
 export const dirPath = (file: GitHubFile | Metadata): string => {
-  return nodePath.dirname(file.path)
+  return nodePath.dirname(file.path);
 };
 
 export const fileExtensionRegExp = (extensions: string[]): RegExp => {

@@ -3,9 +3,7 @@ import { Metadata, MetadataType, ProjectFilesBrowserServices } from '../services
 import debug from 'debug';
 import { injectable, optional, inject } from 'inversify';
 import { Types } from '../types';
-import normalize from 'normalize-path';
-import { NodePath } from '@babel/core';
-import * as nodePath from "path"
+import * as nodePath from 'path';
 
 @injectable()
 export class FileInspector implements IFileInspector {
@@ -50,12 +48,12 @@ export class FileInspector implements IFileInspector {
 
   private normalizePath(path: string): string {
     if (!path) return path;
-    
+
     if (this.basePath && !path.startsWith(this.basePath)) {
       path = `${this.basePath}/${path}`;
     }
 
-    return nodePath.normalize(path)
+    return nodePath.normalize(path);
   }
 
   async scanFor(

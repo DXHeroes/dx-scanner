@@ -1,4 +1,3 @@
-import { MetadataType } from '../../services/model';
 import { JsPackageJsonConfigurationSetCorrectlyPractice } from './JsPackageJsonConfigurationSetCorrectlyPractice';
 import { PracticeEvaluationResult } from '../../model';
 import { TestContainerContext, createTestContainer } from '../../inversify.config';
@@ -24,16 +23,10 @@ describe('JsPackageJsonConfigurationSetCorrectlyPractice', () => {
 
   it('Returns notPracticing if tscripts build, start, test, lint are NOT used', async () => {
     containerCtx.virtualFileSystemService.setFileSystem({
-      type: MetadataType.dir,
-      children: {
-        'package.json': {
-          type: MetadataType.file,
-          data: `{ "scripts": {
+      'package.json': `{ "scripts": {
               "no": "script"
             }
         }`,
-        },
-      },
     });
 
     const evaluated = await practice.evaluate(containerCtx.practiceContext);
