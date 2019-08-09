@@ -1,7 +1,7 @@
 import { sharedSubpath, dirPath, hasOneOfPackages } from './utils';
 import { MetadataType } from '../services/model';
 import { PackageManagement, PackageManagementFramework } from '../model';
-import * as nodePath from "path";
+import * as nodePath from 'path';
 
 describe('DetectorUtils', () => {
   describe('#dirPath', () => {
@@ -58,6 +58,7 @@ describe('DetectorUtils', () => {
     it('returns shared path when root is the same', () => {
       expect(sharedSubpath(['/var', '/foo', '/foo/bar'])).toEqual(nodePath.normalize('/'));
     });
+
     it('returns shared path when dir is the same', () => {
       expect(sharedSubpath(['/foo', '/foo', '/foo/bar'])).toEqual(nodePath.normalize('/foo'));
     });
@@ -67,11 +68,11 @@ describe('DetectorUtils', () => {
     });
 
     it('works with relative paths', () => {
-      expect(sharedSubpath(['./foo', './foo', './foo/bar'])).toEqual(nodePath.normalize('./foo'));
+      expect(sharedSubpath(['./foo', './foo', './foo/bar'])).toEqual('./foo');
     });
 
     it('works with relative paths - implicit relative path', () => {
-      expect(sharedSubpath(['./foo', 'foo', './foo/bar'])).toEqual(nodePath.normalize('./foo'));
+      expect(sharedSubpath(['./foo', 'foo', './foo/bar'])).toEqual('./foo');
     });
 
     it('works with relative paths - mixed in absolute path', () => {

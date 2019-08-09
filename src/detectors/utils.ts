@@ -17,26 +17,28 @@ export const fileNameRegExp = (name: string): RegExp => {
   return new RegExp(`^${name.replace('.', '\\.')}$`, 'i');
 };
 
-export const sharedSubpath = (array: string[]): string => {
-  const A = array.concat().sort();
-  const a1 = A[0];
-  const a2 = A[A.length - 1];
-  let isRelative = false;
-  if (!a1.startsWith('/')) {
-    isRelative = true;
-  }
-  if (a2.startsWith('/') && isRelative) {
-    return '/';
-  }
-  const a1Splitted = a1.split('/').filter((p) => p !== '' && p !== '.');
-  const a2Splitted = a2.split('/').filter((p) => p !== '' && p !== '.');
-  const L = a1Splitted.length;
+/**
+ * Get common prefix of all paths
+ */
+export const sharedSubpath = (paths: string[]): string => {
+  const sep = '/';
+  paths = paths.concat().sort();
 
+  const firstPath = paths[0];
+  const lastPath = paths[paths.length - 1];
+  let isRelative = !nodePath.isAbsolute(firstPath);
+
+  if (lastPath.startsWith(sep) && isRelative) return sep;
+
+  const firstPathSplit = firstPath.split(sep).filter((p) => p !== '' && p !== '.');
+  const lastPathSplit = lastPath.split(sep).filter((p) => p !== '' && p !== '.');
+
+  const length = firstPathSplit.length;
   let i = 0;
-  while (i < L && a1Splitted[i] === a2Splitted[i]) {
+  while (i < length && firstPathSplit[i] === lastPathSplit[i]) {
     i++;
   }
-  return nodePath.normalize(`${isRelative ? './' : '/'}${a1Splitted.slice(0, i).join('/')}`);
+  return `${isRelative ? `.${sep}` : sep}${firstPathSplit.slice(0, i).join(sep)}`;
 };
 
 export const indexBy = <T>(array: T[], keyFn: (item: T) => string): { [index: string]: T } => {
