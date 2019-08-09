@@ -3,6 +3,7 @@ import { FileInspector } from '../../inspectors/FileInspector';
 import { ProgrammingLanguage } from '../../model';
 import { VirtualFileSystemService } from '../../services/VirtualFileSystemService';
 import { VirtualDirectory } from '../../services/IVirtualFileSystemService';
+import * as nodePath from "path"
 
 describe('JavaScriptLanguageDetector', () => {
   let detector: JavaScriptLanguageDetector;
@@ -29,7 +30,7 @@ describe('JavaScriptLanguageDetector', () => {
     const langAtPath = await detector.detectLanguage();
     expect(langAtPath.length).toEqual(1);
     expect(langAtPath[0].language).toEqual(ProgrammingLanguage.JavaScript);
-    expect(langAtPath[0].path).toEqual('/');
+    expect(langAtPath[0].path).toEqual(nodePath.normalize('/'));
   });
 
   it("detects it's not a javascript", async () => {
@@ -54,7 +55,7 @@ describe('JavaScriptLanguageDetector', () => {
     const langAtPath = await detector.detectLanguage();
     expect(langAtPath.length).toEqual(1);
     expect(langAtPath[0].language).toEqual(ProgrammingLanguage.TypeScript);
-    expect(langAtPath[0].path).toEqual('/');
+    expect(langAtPath[0].path).toEqual(nodePath.normalize('./'));
   });
 
   it('detects javascript correctly via js file', async () => {
@@ -67,6 +68,6 @@ describe('JavaScriptLanguageDetector', () => {
     const langAtPath = await detector.detectLanguage();
     expect(langAtPath.length).toEqual(1);
     expect(langAtPath[0].language).toEqual(ProgrammingLanguage.JavaScript);
-    expect(langAtPath[0].path).toEqual('/');
+    expect(langAtPath[0].path).toEqual(nodePath.normalize('./'));
   });
 });

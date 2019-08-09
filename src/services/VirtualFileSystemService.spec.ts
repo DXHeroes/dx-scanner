@@ -44,7 +44,10 @@ describe('VirtualFileSystemService', () => {
       const mockFolderPath = path.resolve('/mockFolder');
 
       const result = await virtualFileSystemService.readDirectory(mockFolderPath);
-      expect(result).toEqual(['mockFile.ts', 'mockFileSLbroken.ln', 'mockFileToRewrite.ts', 'mockSubFolder']);
+      expect(result).toContain('mockFile.ts');
+      expect(result).toContain('mockFileSLbroken.ln');
+      expect(result).toContain('mockFileToRewrite.ts');
+      expect(result).toContain('mockSubFolder');
     });
 
     it("throws an error if the target doesn't exist", async () => {
@@ -115,7 +118,7 @@ describe('VirtualFileSystemService', () => {
       const mockFilePath = path.resolve('/notExistingMockFolder/file.ts');
 
       await expect(virtualFileSystemService.writeFile(mockFilePath, '...')).rejects.toThrow(
-        "ENOENT: no such file or directory, open '" + mockFilePath + "'",
+       /ENOENT: no such file or directory/
       );
     });
 
@@ -123,7 +126,7 @@ describe('VirtualFileSystemService', () => {
       const mockFilePath = path.resolve('/mockFolder');
 
       await expect(virtualFileSystemService.writeFile(mockFilePath, '...')).rejects.toThrow(
-        "EISDIR: illegal operation on a directory, open '" + mockFilePath + "'",
+        /EISDIR: illegal operation on a directory/
       );
     });
   });
@@ -290,7 +293,7 @@ describe('VirtualFileSystemService', () => {
         expect(result.baseName).toEqual('mockFolder');
         expect(result.extension).toEqual(undefined);
         expect(result.name).toMatch('mockFolder');
-        expect(result.path).toMatch('/mockFolder');
+        expect(result.path).toMatch(path.resolve('/mockFolder'));
         expect(typeof result.size).toBe('number');
         expect(result.type).toEqual('dir');
       });
@@ -302,7 +305,7 @@ describe('VirtualFileSystemService', () => {
         expect(result.baseName).toEqual('mockFile');
         expect(result.extension).toEqual('.ts');
         expect(result.name).toEqual('mockFile.ts');
-        expect(result.path).toMatch('/mockFolder/mockFile.ts');
+        expect(result.path).toMatch(path.resolve('/mockFolder/mockFile.ts'));
         expect(typeof result.size).toBe('number');
         expect(result.type).toEqual('file');
       });
@@ -314,7 +317,7 @@ describe('VirtualFileSystemService', () => {
         expect(result.baseName).toEqual('.keep');
         expect(result.name).toEqual('.keep');
         expect(result.extension).toEqual(undefined);
-        expect(result.path).toMatch('/.keep');
+        expect(result.path).toMatch(path.resolve('/.keep'));
         expect(typeof result.size).toBe('number');
         expect(result.type).toEqual('file');
       });

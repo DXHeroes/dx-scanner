@@ -18,7 +18,7 @@ describe('CIUsedPractice', () => {
 
   it('Returns practicing if there is a .gitlab-ci.yml', async () => {
     containerCtx.virtualFileSystemService.setFileSystem({
-      '.gitlab-ci.yml': '...',
+      '/.gitlab-ci.yml': '...',
     });
 
     const evaluated = await practice.evaluate(containerCtx.practiceContext);

@@ -18,7 +18,7 @@ describe('LockfileIsPresentPractice', () => {
 
   it('Returns practicing if there is a package-lock.json', async () => {
     containerCtx.virtualFileSystemService.setFileSystem({
-      'package-lock.json': '...',
+      '/package-lock.json': '...',
     });
 
     const evaluated = await practice.evaluate(containerCtx.practiceContext);

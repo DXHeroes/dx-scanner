@@ -36,7 +36,7 @@ export const sharedSubpath = (array: string[]): string => {
   while (i < L && a1Splitted[i] === a2Splitted[i]) {
     i++;
   }
-  return `${isRelative ? './' : '/'}${a1Splitted.slice(0, i).join('/')}`;
+  return nodePath.normalize(`${isRelative ? './' : '/'}${a1Splitted.slice(0, i).join('/')}`);
 };
 
 export const indexBy = <T>(array: T[], keyFn: (item: T) => string): { [index: string]: T } => {

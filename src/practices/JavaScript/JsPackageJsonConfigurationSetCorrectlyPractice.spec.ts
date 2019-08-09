@@ -23,7 +23,7 @@ describe('JsPackageJsonConfigurationSetCorrectlyPractice', () => {
 
   it('Returns notPracticing if tscripts build, start, test, lint are NOT used', async () => {
     containerCtx.virtualFileSystemService.setFileSystem({
-      'package.json': `{ "scripts": {
+      '/package.json': `{ "scripts": {
               "no": "script"
             }
         }`,

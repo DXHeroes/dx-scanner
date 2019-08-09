@@ -49,7 +49,7 @@ describe('DetectorUtils', () => {
         size: 123,
         type: MetadataType.file,
       });
-      expect(dir).toEqual('./');
+      expect(dir).toEqual('.');
     });
   });
 
