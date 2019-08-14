@@ -41,17 +41,13 @@ describe('FileSystemService', () => {
     it("throws an error if the target doesn't exist", async () => {
       const mockFolderPath = path.resolve(__dirname, '__MOCKS__/notExistingMockFolder');
 
-      await expect(fileSystemService.readDirectory(mockFolderPath)).rejects.toThrow(
-        "ENOENT: no such file or directory, scandir '" + mockFolderPath + "'",
-      );
+      await expect(fileSystemService.readDirectory(mockFolderPath)).rejects.toThrow('ENOENT');
     });
 
     it('throws an error if the target is a file', async () => {
       const mockFilePath = path.resolve(__dirname, '__MOCKS__/mockFolder/mockFile.ts');
 
-      await expect(fileSystemService.readDirectory(mockFilePath)).rejects.toThrow(
-        "ENOTDIR: not a directory, scandir '" + mockFilePath + "'",
-      );
+      await expect(fileSystemService.readDirectory(mockFilePath)).rejects.toThrow('ENOTDIR');
     });
   });
 
@@ -66,15 +62,13 @@ describe('FileSystemService', () => {
     it("throws an error if the target doesn't exist", async () => {
       const mockFilePath = path.resolve(__dirname, '__MOCKS__/notExistingMockFolder');
 
-      await expect(fileSystemService.readFile(mockFilePath)).rejects.toThrow(
-        "ENOENT: no such file or directory, open '" + mockFilePath + "'",
-      );
+      await expect(fileSystemService.readFile(mockFilePath)).rejects.toThrow('ENOENT');
     });
 
     it("throws an error if the target isn't a file", async () => {
       const mockFolderPath = path.resolve(__dirname, '__MOCKS__/mockFolder');
 
-      await expect(fileSystemService.readFile(mockFolderPath)).rejects.toThrow(/EISDIR: illegal operation on a directory, /);
+      await expect(fileSystemService.readFile(mockFolderPath)).rejects.toThrow('EISDIR');
     });
   });
 
@@ -109,17 +103,19 @@ describe('FileSystemService', () => {
     it("throws an error if the parent directory doesn't exist", async () => {
       const mockFilePath = path.resolve(__dirname, '__MOCKS__/notExistingMockFolder/file.ts');
 
-      await expect(fileSystemService.writeFile(mockFilePath, '...')).rejects.toThrow(
-        "ENOENT: no such file or directory, open '" + mockFilePath + "'",
-      );
+      await expect(fileSystemService.writeFile(mockFilePath, '...')).rejects.toThrow('ENOENT');
+    });
+
+    it('throws an error if the parent directory is not a directory', async () => {
+      const mockFilePath = path.resolve(__dirname, '__MOCKS__/mockFolder/mockFile.ts/file.ts');
+
+      await expect(fileSystemService.writeFile(mockFilePath, '...')).rejects.toThrow('ENOTDIR');
     });
 
     it("throws an error if the target isn't a file", async () => {
       const mockFilePath = path.resolve(__dirname, '__MOCKS__/mockFolder');
 
-      await expect(fileSystemService.writeFile(mockFilePath, '...')).rejects.toThrow(
-        "EISDIR: illegal operation on a directory, open '" + mockFilePath + "'",
-      );
+      await expect(fileSystemService.writeFile(mockFilePath, '...')).rejects.toThrow('EISDIR');
     });
   });
 
@@ -154,19 +150,19 @@ describe('FileSystemService', () => {
     it("throws an error if the parent directory doesn't exist", async () => {
       const mockFilePath = path.resolve(__dirname, '__MOCKS__/notExistingMockFolder/file.ts');
 
-      await expect(fileSystemService.createFile(mockFilePath, '...')).rejects.toThrow(/ENOENT: no such file or directory/);
+      await expect(fileSystemService.createFile(mockFilePath, '...')).rejects.toThrow('ENOENT');
     });
 
     it('throws an error if the parent directory is not a directory', async () => {
       const mockFilePath = path.resolve(__dirname, '__MOCKS__/mockFolder/mockFile.ts/file.ts');
 
-      await expect(fileSystemService.createFile(mockFilePath, '...')).rejects.toThrow('No such directory');
+      await expect(fileSystemService.createFile(mockFilePath, '...')).rejects.toThrow('ENOTDIR');
     });
 
     it("throws an error if the target isn't a file", async () => {
       const mockFilePath = path.resolve(__dirname, '__MOCKS__/mockFolder');
 
-      await expect(fileSystemService.createFile(mockFilePath, '...')).rejects.toThrow(/EISDIR: illegal operation on a directory/);
+      await expect(fileSystemService.createFile(mockFilePath, '...')).rejects.toThrow('EISDIR');
     });
   });
 
@@ -184,9 +180,7 @@ describe('FileSystemService', () => {
     it("throws an error if the target doesn't exist", async () => {
       const mockFilePath = path.resolve(__dirname, '__MOCKS__/notExistingMockFolder');
 
-      await expect(fileSystemService.deleteFile(mockFilePath)).rejects.toThrow(
-        "ENOENT: no such file or directory, unlink '" + mockFilePath + "'",
-      );
+      await expect(fileSystemService.deleteFile(mockFilePath)).rejects.toThrow('ENOENT');
     });
 
     it("throws an error if the target isn't a file", async () => {
@@ -213,68 +207,55 @@ describe('FileSystemService', () => {
     it("throws an error if the parent directory doesn't exist", async () => {
       const mockFilePath = path.resolve(__dirname, '__MOCKS__/notExistingMockFolder/file.ts');
 
-      await expect(fileSystemService.createDirectory(mockFilePath)).rejects.toThrow(/ENOENT: no such file or directory/);
+      await expect(fileSystemService.createDirectory(mockFilePath)).rejects.toThrow('ENOENT');
     });
 
     it('throws an error if the parent directory is not a directory', async () => {
       const mockFilePath = path.resolve(__dirname, '__MOCKS__/mockFolder/mockFile.ts/file.ts');
 
-      await expect(fileSystemService.createDirectory(mockFilePath)).rejects.toThrow('No such directory');
+      await expect(fileSystemService.createDirectory(mockFilePath)).rejects.toThrow('ENOTDIR');
     });
 
     it('throws an error if the target is a directory', async () => {
       const mockFilePath = path.resolve(__dirname, '__MOCKS__/mockFolder');
 
-      await expect(fileSystemService.createDirectory(mockFilePath)).rejects.toThrow(
-        "EEXIST: file already exists, mkdir '" + mockFilePath + "'",
-      );
+      await expect(fileSystemService.createDirectory(mockFilePath)).rejects.toThrow('EEXIST');
     });
 
     it("throws an error if the target isn't a directory", async () => {
       const mockFilePath = path.resolve(__dirname, '__MOCKS__/mockFolder/mockFile.ts');
 
-      await expect(fileSystemService.createDirectory(mockFilePath)).rejects.toThrow(
-        "EEXIST: file already exists, mkdir '" + mockFilePath + "'",
-      );
+      await expect(fileSystemService.createDirectory(mockFilePath)).rejects.toThrow('EEXIST');
     });
 
     it('throws an error if the target is a broken symbolc link', async () => {
       const mockFilePath = path.resolve(__dirname, '__MOCKS__/mockFolder/mockFileSLbroken.ln');
 
-      await expect(fileSystemService.createDirectory(mockFilePath)).rejects.toThrow(
-        "EEXIST: file already exists, mkdir '" + mockFilePath + "'",
-      );
+      await expect(fileSystemService.createDirectory(mockFilePath)).rejects.toThrow('EEXIST');
     });
   });
 
   describe('#deleteDirectory', () => {
     it('exists() returns false after deleting', async () => {
       const mockFolderToDelete = path.resolve(__dirname, '__MOCKS__/deleteDirTest');
-      let existsDir: boolean;
 
-      try {
-        await fileSystemService.createDirectory(mockFolderToDelete);
+      await fileSystemService.createDirectory(mockFolderToDelete);
+      await fileSystemService.deleteDirectory(mockFolderToDelete);
 
-        existsDir = await fileSystemService.exists(mockFolderToDelete);
-        expect(existsDir).toEqual(true);
-      } finally {
-        await fileSystemService.deleteDirectory(mockFolderToDelete);
-      }
-
-      existsDir = await fileSystemService.exists(mockFolderToDelete);
+      const existsDir = await fileSystemService.exists(mockFolderToDelete);
       expect(existsDir).toEqual(false);
     });
 
     it("throws an error if the target doesn't exist", async () => {
       const mockFolderPath = path.resolve(__dirname, '__MOCKS__/notExistingMockFolder');
 
-      await expect(fileSystemService.deleteDirectory(mockFolderPath)).rejects.toThrow('No such directory');
+      await expect(fileSystemService.deleteDirectory(mockFolderPath)).rejects.toThrow('ENOENT');
     });
 
     it("throws an error if the target isn't a directory", async () => {
       const mockFilePath = path.resolve(__dirname, '__MOCKS__/mockFolder/mockFile.ts');
 
-      await expect(fileSystemService.deleteDirectory(mockFilePath)).rejects.toThrow('No such directory');
+      await expect(fileSystemService.deleteDirectory(mockFilePath)).rejects.toThrow('ENOTDIR');
     });
 
     describe('#getMetadata', () => {
@@ -285,7 +266,7 @@ describe('FileSystemService', () => {
         expect(result.baseName).toEqual('mockFolder');
         expect(result.extension).toEqual(undefined);
         expect(result.name).toMatch('mockFolder');
-        expect(result.path).toMatch(path.resolve('src/services/__MOCKS__/mockFolder'));
+        expect(result.path).toMatch(mockFolderPath);
         expect(typeof result.size).toBe('number');
         expect(result.type).toEqual('dir');
       });
@@ -297,7 +278,7 @@ describe('FileSystemService', () => {
         expect(result.baseName).toEqual('mockFile');
         expect(result.extension).toEqual('.ts');
         expect(result.name).toEqual('mockFile.ts');
-        expect(result.path).toMatch(path.resolve('src/services/__MOCKS__/mockFolder/mockFile.ts'));
+        expect(result.path).toMatch(mockFilePath);
         expect(typeof result.size).toBe('number');
         expect(result.type).toEqual('file');
       });
@@ -309,7 +290,7 @@ describe('FileSystemService', () => {
         expect(result.baseName).toEqual('.keep');
         expect(result.name).toEqual('.keep');
         expect(result.extension).toEqual(undefined);
-        expect(result.path).toMatch(path.resolve('src/services/__MOCKS__/.keep'));
+        expect(result.path).toMatch(mockFilePath);
         expect(typeof result.size).toBe('number');
         expect(result.type).toEqual('file');
       });
@@ -321,7 +302,7 @@ describe('FileSystemService', () => {
         expect(result.baseName).toEqual('mockFileSLbroken');
         expect(result.extension).toEqual('.ln');
         expect(result.name).toEqual('mockFileSLbroken.ln');
-        expect(result.path).toMatch(path.resolve('src/services/__MOCKS__/mockFolder/mockFileSLbroken.ln'));
+        expect(result.path).toMatch(mockFilePathSL);
         expect(typeof result.size).toBe('number');
         expect(result.type).toEqual('file');
       });
@@ -344,9 +325,7 @@ describe('FileSystemService', () => {
       it("should throw an error if the target doesn't exist", async () => {
         const mockFilePath = path.resolve(__dirname, '__MOCKS__/notExistingMockFolder');
 
-        await expect(fileSystemService.isFile(mockFilePath)).rejects.toThrow(
-          "ENOENT: no such file or directory, lstat '" + mockFilePath + "'",
-        );
+        await expect(fileSystemService.isFile(mockFilePath)).rejects.toThrow('ENOENT');
       });
     });
 
@@ -361,9 +340,7 @@ describe('FileSystemService', () => {
       it("should throw an error if the target doesn't exist", async () => {
         const mockFolderPath = path.resolve(__dirname, '__MOCKS__/notExistingMockFolder');
 
-        await expect(fileSystemService.isDirectory(mockFolderPath)).rejects.toThrow(
-          "ENOENT: no such file or directory, lstat '" + mockFolderPath + "'",
-        );
+        await expect(fileSystemService.isDirectory(mockFolderPath)).rejects.toThrow('ENOENT');
       });
     });
 
@@ -400,17 +377,13 @@ describe('FileSystemService', () => {
       it("throws an error if the root doesn't exist", async () => {
         const mockFolderPath = path.resolve(__dirname, '__MOCKS__/notExistingMockFolder');
 
-        await expect(fileSystemService.flatTraverse(mockFolderPath, () => true)).rejects.toThrow(
-          "ENOENT: no such file or directory, scandir '" + mockFolderPath + "'",
-        );
+        await expect(fileSystemService.flatTraverse(mockFolderPath, () => true)).rejects.toThrow('ENOENT');
       });
 
       it("throws an error if the root isn't a directory", async () => {
         const mockFolderPath = path.resolve(__dirname, '__MOCKS__/mockFolder/mockFile.ts');
 
-        await expect(fileSystemService.flatTraverse(mockFolderPath, () => true)).rejects.toThrow(
-          "ENOTDIR: not a directory, scandir '" + mockFolderPath + "'",
-        );
+        await expect(fileSystemService.flatTraverse(mockFolderPath, () => true)).rejects.toThrow('ENOTDIR');
       });
     });
   });

@@ -2,8 +2,8 @@ import { JavaScriptLanguageDetector } from './JavaScriptLanguageDetector';
 import { FileInspector } from '../../inspectors/FileInspector';
 import { ProgrammingLanguage } from '../../model';
 import { VirtualFileSystemService } from '../../services/VirtualFileSystemService';
-import { VirtualDirectory } from '../../services/IVirtualFileSystemService';
-import * as nodePath from "path"
+import * as nodePath from 'path';
+import { DirectoryJSON } from 'memfs/lib/volume';
 
 describe('JavaScriptLanguageDetector', () => {
   let detector: JavaScriptLanguageDetector;
@@ -21,7 +21,7 @@ describe('JavaScriptLanguageDetector', () => {
   });
 
   it('detects javascript correctly via package.json', async () => {
-    const structure: VirtualDirectory = {
+    const structure: DirectoryJSON = {
       '/package.json': '...',
     };
 
@@ -34,7 +34,7 @@ describe('JavaScriptLanguageDetector', () => {
   });
 
   it("detects it's not a javascript", async () => {
-    const structure: VirtualDirectory = {
+    const structure: DirectoryJSON = {
       '/src/index.none': '...',
     };
 
@@ -46,7 +46,7 @@ describe('JavaScriptLanguageDetector', () => {
   });
 
   it('detects typescript correctly via ts file', async () => {
-    const structure: VirtualDirectory = {
+    const structure: DirectoryJSON = {
       '/index.ts': '...',
     };
 
@@ -59,7 +59,7 @@ describe('JavaScriptLanguageDetector', () => {
   });
 
   it('detects javascript correctly via js file', async () => {
-    const structure: VirtualDirectory = {
+    const structure: DirectoryJSON = {
       '/index.js': '...',
     };
 

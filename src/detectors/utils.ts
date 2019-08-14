@@ -1,12 +1,6 @@
 import { PackageManagement } from '../model';
 import { intersection, keys } from 'lodash';
-import { Metadata } from '../services/model';
-import { GitHubFile } from '../services/git/IGitHubService';
 import * as nodePath from 'path';
-
-export const dirPath = (file: GitHubFile | Metadata): string => {
-  return nodePath.dirname(file.path);
-};
 
 export const fileExtensionRegExp = (extensions: string[]): RegExp => {
   const regExpString = `.*\\.(${extensions.join('|').replace('.', '\\.')})$`;
@@ -22,7 +16,10 @@ export const fileNameRegExp = (name: string): RegExp => {
  */
 export const sharedSubpath = (paths: string[]): string => {
   const sep = nodePath.sep;
-  paths = paths.concat().map(p => p.split(nodePath.posix.sep).join(sep)).sort();
+  paths = paths
+    .concat()
+    .map((p) => p.split(nodePath.posix.sep).join(sep))
+    .sort();
 
   const firstPath = paths[0];
   const lastPath = paths[paths.length - 1];
@@ -40,7 +37,7 @@ export const sharedSubpath = (paths: string[]): string => {
   }
 
   const commonPath = `${isRelative ? `.${sep}` : sep}${firstPathSplit.slice(0, i).join(sep)}`;
-  return nodePath.normalize(commonPath)
+  return nodePath.normalize(commonPath);
 };
 
 export const indexBy = <T>(array: T[], keyFn: (item: T) => string): { [index: string]: T } => {

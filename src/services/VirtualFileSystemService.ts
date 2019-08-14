@@ -1,14 +1,14 @@
 import { IProjectFilesBrowserService, Metadata, MetadataType } from './model';
-import { VirtualDirectory } from './IVirtualFileSystemService';
 import { injectable } from 'inversify';
-import { ErrorFactory } from '../lib/errors';
 import { Omit } from 'lodash';
 import * as nodePath from 'path';
 import { fs as vfs, vol } from 'memfs';
+import { DirectoryJSON } from 'memfs/lib/volume';
 
 @injectable()
 export class VirtualFileSystemService implements IProjectFilesBrowserService {
-  setFileSystem(structure: VirtualDirectory) {
+  setFileSystem(structure: DirectoryJSON) {
+    this.clearFileSystem();
     vol.fromJSON(structure);
   }
 
@@ -38,28 +38,14 @@ export class VirtualFileSystemService implements IProjectFilesBrowserService {
   }
 
   async createDirectory(path: string) {
-    if (!(await this.isDirectory(nodePath.dirname(path)))) {
-      throw ErrorFactory.newArgumentError('No such directory');
-    }
-
     return vfs.promises.mkdir(path);
   }
 
   async deleteDirectory(path: string) {
-    const exists = await this.exists(path);
-    if (!exists || (exists && !(await this.isDirectory(path)))) {
-      throw ErrorFactory.newArgumentError('No such directory');
-    }
-
     return vfs.promises.rmdir(path);
   }
 
   async createFile(path: string, data: string) {
-    if (!(await this.isDirectory(nodePath.dirname(path)))) {
-      throw ErrorFactory.newArgumentError('No such directory');
-    }
-
-    //append data to a file, creating the file if it does not yet exist
     return vfs.promises.appendFile(path, data);
   }
 
@@ -78,10 +64,6 @@ export class VirtualFileSystemService implements IProjectFilesBrowserService {
   }
 
   async getMetadata(path: string): Promise<Metadata> {
-    if (!(await this.exists(path))) {
-      throw ErrorFactory.newInternalError(`File doesn't exist (${path})`);
-    }
-
     const extension = nodePath.extname(path);
     const stats = await vfs.promises.lstat(path);
 

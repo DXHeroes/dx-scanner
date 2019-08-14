@@ -30,5 +30,4 @@ export interface Metadata {
 export enum MetadataType {
   file = 'file',
   dir = 'dir',
-  // symlink = 'symlink',
 }

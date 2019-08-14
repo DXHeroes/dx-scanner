@@ -3,13 +3,13 @@ import { VirtualFileSystemService } from './VirtualFileSystemService';
 import { createTestContainer } from '../inversify.config';
 
 describe('VirtualFileSystemService', () => {
-  let virtualFileSystemService: VirtualFileSystemService;
+  let service: VirtualFileSystemService;
 
   beforeAll(async () => {
     const container = createTestContainer({ uri: '.' });
-    virtualFileSystemService = container.virtualFileSystemService;
+    service = container.virtualFileSystemService;
 
-    virtualFileSystemService.setFileSystem({
+    service.setFileSystem({
       '/mockFolder/mockSubFolder/mockSubFolderFile.txt': '',
       '/mockFolder/mockFileSLbroken.ln': '',
       '/mockFolder/mockFileToRewrite.ts': '',
@@ -22,19 +22,19 @@ describe('VirtualFileSystemService', () => {
   describe('#exists', () => {
     it('returns true if the file exists', async () => {
       const mockFilePath = path.resolve('/mockFolder/mockFile.ts');
-      const result = await virtualFileSystemService.exists(mockFilePath);
+      const result = await service.exists(mockFilePath);
       expect(result).toEqual(true);
     });
 
     it('returns true if the directory exists', async () => {
       const mockFolderPath = path.resolve('/mockFolder');
-      const result = await virtualFileSystemService.exists(mockFolderPath);
+      const result = await service.exists(mockFolderPath);
       expect(result).toEqual(true);
     });
 
     it("returns false if the file doesn't exists", async () => {
       const mockFolderPath = path.resolve('/notExistingMockFolder');
-      const result = await virtualFileSystemService.exists(mockFolderPath);
+      const result = await service.exists(mockFolderPath);
       expect(result).toEqual(false);
     });
   });
@@ -43,7 +43,8 @@ describe('VirtualFileSystemService', () => {
     it('returns array of files after calling readDirectory()', async () => {
       const mockFolderPath = path.resolve('/mockFolder');
 
-      const result = await virtualFileSystemService.readDirectory(mockFolderPath);
+      const result = await service.readDirectory(mockFolderPath);
+      expect(result.length).toEqual(4);
       expect(result).toContain('mockFile.ts');
       expect(result).toContain('mockFileSLbroken.ln');
       expect(result).toContain('mockFileToRewrite.ts');
@@ -53,13 +54,13 @@ describe('VirtualFileSystemService', () => {
     it("throws an error if the target doesn't exist", async () => {
       const mockFolderPath = path.resolve('/notExistingMockFolder');
 
-      await expect(virtualFileSystemService.readDirectory(mockFolderPath)).rejects.toThrow(/ENOENT: no such file or directory/);
+      await expect(service.readDirectory(mockFolderPath)).rejects.toThrow(/ENOENT: no such file or directory/);
     });
 
     it('throws an error if the target is a file', async () => {
       const mockFilePath = path.resolve('/mockFolder/mockFile.ts');
 
-      await expect(virtualFileSystemService.readDirectory(mockFilePath)).rejects.toThrow(/ENOTDIR: not a directory/);
+      await expect(service.readDirectory(mockFilePath)).rejects.toThrow(/ENOTDIR: not a directory/);
     });
   });
 
@@ -67,22 +68,20 @@ describe('VirtualFileSystemService', () => {
     it('should return text (string) after calling readFile()', async () => {
       const mockFilePath = path.resolve('/mockFolder/mockFile.ts');
 
-      const result = await virtualFileSystemService.readFile(mockFilePath);
+      const result = await service.readFile(mockFilePath);
       expect(typeof result).toBe('string');
     });
 
     it("throws an error if the target doesn't exist", async () => {
       const mockFilePath = path.resolve('/notExistingMockFolder');
 
-      await expect(virtualFileSystemService.readFile(mockFilePath)).rejects.toThrow(
-        "ENOENT: no such file or directory, open '" + mockFilePath + "'",
-      );
+      await expect(service.readFile(mockFilePath)).rejects.toThrow("ENOENT: no such file or directory, open '" + mockFilePath + "'");
     });
 
     it("throws an error if the target isn't a file", async () => {
       const mockFolderPath = path.resolve('/mockFolder');
 
-      await expect(virtualFileSystemService.readFile(mockFolderPath)).rejects.toThrow(/EISDIR: illegal operation on a directory, /);
+      await expect(service.readFile(mockFolderPath)).rejects.toThrow(/EISDIR: illegal operation on a directory, /);
     });
   });
 
@@ -92,42 +91,38 @@ describe('VirtualFileSystemService', () => {
 
       const stringToWrite = "const toWrite = 'written';";
 
-      await virtualFileSystemService.writeFile(mockFilePath, stringToWrite);
+      await service.writeFile(mockFilePath, stringToWrite);
 
-      const finalContent = await virtualFileSystemService.readFile(mockFilePath);
+      const finalContent = await service.readFile(mockFilePath);
       expect(finalContent).toEqual(stringToWrite);
 
-      await virtualFileSystemService.deleteFile(mockFilePath);
+      await service.deleteFile(mockFilePath);
     });
 
     it('correctly rewrites a file', async () => {
       const mockFileToRewrite = path.resolve('/mockFolder/mockFileToRewrite.ts');
 
       const stringToWrite = "const toRewrite = 'rewritten';";
-      const previousContent = await virtualFileSystemService.readFile(mockFileToRewrite);
+      const previousContent = await service.readFile(mockFileToRewrite);
 
-      await virtualFileSystemService.writeFile(mockFileToRewrite, stringToWrite);
+      await service.writeFile(mockFileToRewrite, stringToWrite);
 
-      const finalContent = await virtualFileSystemService.readFile(mockFileToRewrite);
+      const finalContent = await service.readFile(mockFileToRewrite);
       expect(finalContent).toEqual(stringToWrite);
 
-      await virtualFileSystemService.writeFile(mockFileToRewrite, previousContent);
+      await service.writeFile(mockFileToRewrite, previousContent);
     });
 
     it("throws an error if the parent directory doesn't exist", async () => {
       const mockFilePath = path.resolve('/notExistingMockFolder/file.ts');
 
-      await expect(virtualFileSystemService.writeFile(mockFilePath, '...')).rejects.toThrow(
-       /ENOENT: no such file or directory/
-      );
+      await expect(service.writeFile(mockFilePath, '...')).rejects.toThrow(/ENOENT: no such file or directory/);
     });
 
     it("throws an error if the target isn't a file", async () => {
       const mockFilePath = path.resolve('/mockFolder');
 
-      await expect(virtualFileSystemService.writeFile(mockFilePath, '...')).rejects.toThrow(
-        /EISDIR: illegal operation on a directory/
-      );
+      await expect(service.writeFile(mockFilePath, '...')).rejects.toThrow(/EISDIR: illegal operation on a directory/);
     });
   });
 
@@ -137,44 +132,44 @@ describe('VirtualFileSystemService', () => {
 
       const stringToWrite = "const toWrite = 'written';";
 
-      await virtualFileSystemService.createFile(mockFilePath, stringToWrite);
+      await service.createFile(mockFilePath, stringToWrite);
 
-      const finalContent = await virtualFileSystemService.readFile(mockFilePath);
+      const finalContent = await service.readFile(mockFilePath);
       expect(finalContent).toEqual(stringToWrite);
 
-      await virtualFileSystemService.deleteFile(mockFilePath);
+      await service.deleteFile(mockFilePath);
     });
 
     it('appends data to a file if it exists already', async () => {
       const mockFile = path.resolve('/mockFolder/mockFile.ts');
 
       const stringToWrite = "const toAppend = 'appended';";
-      const previousContent = await virtualFileSystemService.readFile(mockFile);
+      const previousContent = await service.readFile(mockFile);
 
-      await virtualFileSystemService.createFile(mockFile, stringToWrite);
+      await service.createFile(mockFile, stringToWrite);
 
-      const finalContent = await virtualFileSystemService.readFile(mockFile);
+      const finalContent = await service.readFile(mockFile);
       expect(finalContent).toEqual(previousContent + stringToWrite);
 
-      await virtualFileSystemService.writeFile(mockFile, previousContent);
+      await service.writeFile(mockFile, previousContent);
     });
 
     it("throws an error if the parent directory doesn't exist", async () => {
       const mockFilePath = path.resolve('/notExistingMockFolder/file.ts');
 
-      await expect(virtualFileSystemService.createFile(mockFilePath, '...')).rejects.toThrow(/ENOENT: no such file or directory/);
+      await expect(service.createFile(mockFilePath, '...')).rejects.toThrow('ENOENT');
     });
 
-    it('throws an error if the parent directory is not a directory', async () => {
+    // temporarily skip until the bug is fixed: https://github.com/streamich/memfs/issues/414
+    it.skip('throws an error if the parent directory is not a directory', async () => {
       const mockFilePath = path.resolve('/mockFolder/mockFile.ts/file.ts');
-
-      await expect(virtualFileSystemService.createFile(mockFilePath, '...')).rejects.toThrow('No such directory');
+      await expect(service.createFile(mockFilePath, '...')).rejects.toThrow('ENOENT');
     });
 
     it("throws an error if the target isn't a file", async () => {
       const mockFilePath = path.resolve('/mockFolder');
 
-      await expect(virtualFileSystemService.createFile(mockFilePath, '...')).rejects.toThrow(/EISDIR: illegal operation on a directory/);
+      await expect(service.createFile(mockFilePath, '...')).rejects.toThrow('EISDIR');
     });
   });
 
@@ -182,25 +177,23 @@ describe('VirtualFileSystemService', () => {
     it('returns false after calling exists() when the file is deleted', async () => {
       const filePath = path.resolve('/testMockFile.ignore');
 
-      await virtualFileSystemService.createFile(filePath, '');
-      await virtualFileSystemService.deleteFile(filePath);
+      await service.createFile(filePath, '');
+      await service.deleteFile(filePath);
 
-      const existsFile = await virtualFileSystemService.exists(filePath);
+      const existsFile = await service.exists(filePath);
       expect(existsFile).toEqual(false);
     });
 
     it("throws an error if the target doesn't exist", async () => {
       const mockFilePath = path.resolve('/notExistingMockFolder');
 
-      await expect(virtualFileSystemService.deleteFile(mockFilePath)).rejects.toThrow(
-        "ENOENT: no such file or directory, unlink '" + mockFilePath + "'",
-      );
+      await expect(service.deleteFile(mockFilePath)).rejects.toThrow("ENOENT: no such file or directory, unlink '" + mockFilePath + "'");
     });
 
     it("throws an error if the target isn't a file", async () => {
       const mockFolderPath = path.resolve('/mockFolder');
 
-      await expect(virtualFileSystemService.deleteFile(mockFolderPath)).rejects.toThrow();
+      await expect(service.deleteFile(mockFolderPath)).rejects.toThrow();
     });
   });
 
@@ -209,167 +202,151 @@ describe('VirtualFileSystemService', () => {
       const mockFolderToDelete = path.resolve('/createDirTest');
 
       try {
-        await virtualFileSystemService.createDirectory(mockFolderToDelete);
+        await service.createDirectory(mockFolderToDelete);
 
-        const existsDir = await virtualFileSystemService.exists(mockFolderToDelete);
+        const existsDir = await service.exists(mockFolderToDelete);
         expect(existsDir).toEqual(true);
       } finally {
-        await virtualFileSystemService.deleteDirectory(mockFolderToDelete);
+        await service.deleteDirectory(mockFolderToDelete);
       }
     });
 
     it("throws an error if the parent directory doesn't exist", async () => {
       const mockFilePath = path.resolve('/notExistingMockFolder/file.ts');
 
-      await expect(virtualFileSystemService.createDirectory(mockFilePath)).rejects.toThrow(/ENOENT: no such file or directory/);
+      await expect(service.createDirectory(mockFilePath)).rejects.toThrow(/ENOENT: no such file or directory/);
     });
 
     it('throws an error if the parent directory is not a directory', async () => {
       const mockFilePath = path.resolve('/mockFolder/mockFile.ts/file.ts');
 
-      await expect(virtualFileSystemService.createDirectory(mockFilePath)).rejects.toThrow('No such directory');
+      await expect(service.createDirectory(mockFilePath)).rejects.toThrow('ENOTDIR');
     });
 
     it('throws an error if the target is a directory', async () => {
       const mockFilePath = path.resolve('/mockFolder');
 
-      await expect(virtualFileSystemService.createDirectory(mockFilePath)).rejects.toThrow(
-        "EEXIST: file already exists, mkdir '" + mockFilePath + "'",
-      );
+      await expect(service.createDirectory(mockFilePath)).rejects.toThrow("EEXIST: file already exists, mkdir '" + mockFilePath + "'");
     });
 
     it("throws an error if the target isn't a directory", async () => {
       const mockFilePath = path.resolve('/mockFolder/mockFile.ts');
 
-      await expect(virtualFileSystemService.createDirectory(mockFilePath)).rejects.toThrow(
-        "EEXIST: file already exists, mkdir '" + mockFilePath + "'",
-      );
+      await expect(service.createDirectory(mockFilePath)).rejects.toThrow("EEXIST: file already exists, mkdir '" + mockFilePath + "'");
     });
 
     it('throws an error if the target is a broken symbolc link', async () => {
       const mockFilePath = path.resolve('/mockFolder/mockFileSLbroken.ln');
 
-      await expect(virtualFileSystemService.createDirectory(mockFilePath)).rejects.toThrow(
-        "EEXIST: file already exists, mkdir '" + mockFilePath + "'",
-      );
+      await expect(service.createDirectory(mockFilePath)).rejects.toThrow("EEXIST: file already exists, mkdir '" + mockFilePath + "'");
     });
   });
 
   describe('#deleteDirectory', () => {
     it('exists() returns false after deleting', async () => {
       const mockFolderToDelete = path.resolve('/deleteDirTest');
-      let existsDir: boolean;
 
-      try {
-        await virtualFileSystemService.createDirectory(mockFolderToDelete);
+      await service.createDirectory(mockFolderToDelete);
+      await service.deleteDirectory(mockFolderToDelete);
 
-        existsDir = await virtualFileSystemService.exists(mockFolderToDelete);
-        expect(existsDir).toEqual(true);
-      } finally {
-        await virtualFileSystemService.deleteDirectory(mockFolderToDelete);
-      }
-
-      existsDir = await virtualFileSystemService.exists(mockFolderToDelete);
+      const existsDir = await service.exists(mockFolderToDelete);
       expect(existsDir).toEqual(false);
     });
 
     it("throws an error if the target doesn't exist", async () => {
       const mockFolderPath = path.resolve('/notExistingMockFolder');
 
-      await expect(virtualFileSystemService.deleteDirectory(mockFolderPath)).rejects.toThrow('No such directory');
+      await expect(service.deleteDirectory(mockFolderPath)).rejects.toThrow('ENOENT');
     });
 
     it("throws an error if the target isn't a directory", async () => {
       const mockFilePath = path.resolve('/mockFolder/mockFile.ts');
 
-      await expect(virtualFileSystemService.deleteDirectory(mockFilePath)).rejects.toThrow('No such directory');
+      await expect(service.deleteDirectory(mockFilePath)).rejects.toThrow('ENOTDIR');
     });
 
     describe('#getMetadata', () => {
       it('it returns metadata for Folder', async () => {
         const mockFolderPath = path.resolve('/mockFolder');
-        const result = await virtualFileSystemService.getMetadata(mockFolderPath);
+        const result = await service.getMetadata(mockFolderPath);
 
         expect(result.baseName).toEqual('mockFolder');
         expect(result.extension).toEqual(undefined);
         expect(result.name).toMatch('mockFolder');
-        expect(result.path).toMatch(path.resolve('/mockFolder'));
+        expect(result.path).toMatch(mockFolderPath);
         expect(typeof result.size).toBe('number');
         expect(result.type).toEqual('dir');
       });
 
       it('it returns metadata for File', async () => {
         const mockFilePath = path.resolve('/mockFolder/mockFile.ts');
-        const result = await virtualFileSystemService.getMetadata(mockFilePath);
+        const result = await service.getMetadata(mockFilePath);
 
         expect(result.baseName).toEqual('mockFile');
         expect(result.extension).toEqual('.ts');
         expect(result.name).toEqual('mockFile.ts');
-        expect(result.path).toMatch(path.resolve('/mockFolder/mockFile.ts'));
+        expect(result.path).toMatch(mockFilePath);
         expect(typeof result.size).toBe('number');
         expect(result.type).toEqual('file');
       });
 
       it('it returns metadata for dotfile', async () => {
         const mockFilePath = path.resolve('/.keep');
-        const result = await virtualFileSystemService.getMetadata(mockFilePath);
+        const result = await service.getMetadata(mockFilePath);
 
         expect(result.baseName).toEqual('.keep');
         expect(result.name).toEqual('.keep');
         expect(result.extension).toEqual(undefined);
-        expect(result.path).toMatch(path.resolve('/.keep'));
+        expect(result.path).toMatch(mockFilePath);
         expect(typeof result.size).toBe('number');
         expect(result.type).toEqual('file');
       });
 
       it('it returns metadata for broken Symlink but only as a File', async () => {
         const mockFilePathSL = path.resolve('/mockFolder/mockFileSLbroken.ln');
-        const result = await virtualFileSystemService.getMetadata(mockFilePathSL);
+        const result = await service.getMetadata(mockFilePathSL);
 
         expect(result.baseName).toEqual('mockFileSLbroken');
         expect(result.extension).toEqual('.ln');
         expect(result.name).toEqual('mockFileSLbroken.ln');
-        expect(result.path).toMatch(path.resolve('/mockFolder/mockFileSLbroken.ln'));
+        expect(result.path).toMatch(mockFilePathSL);
         expect(typeof result.size).toBe('number');
         expect(result.type).toEqual('file');
       });
 
       it("throws an error if the target doesn't exist", async () => {
         const mockFolderPath = path.resolve('/notExistingMockFolder');
-
-        await expect(virtualFileSystemService.getMetadata(mockFolderPath)).rejects.toThrow(`File doesn't exist (${mockFolderPath})`);
+        await expect(service.getMetadata(mockFolderPath)).rejects.toThrow('ENOENT');
       });
     });
 
     describe('#isFile', () => {
       it('should return file', async () => {
         const mockFilePath = path.resolve('/mockFolder/mockFile.ts');
-        const result = await virtualFileSystemService.getMetadata(mockFilePath);
+        const result = await service.isFile(mockFilePath);
 
-        expect(result.type).toEqual('file');
+        expect(result).toEqual(true);
       });
 
       it("should throw an error if the target doesn't exist", async () => {
         const mockFilePath = path.resolve('/notExistingMockFolder');
 
-        await expect(virtualFileSystemService.isFile(mockFilePath)).rejects.toThrow(
-          "ENOENT: no such file or directory, lstat '" + mockFilePath + "'",
-        );
+        await expect(service.isFile(mockFilePath)).rejects.toThrow('ENOENT');
       });
     });
 
     describe('#isDirectory', () => {
       it('should return directory', async () => {
         const mockFolderPath = path.resolve('/mockFolder');
-        const result = await virtualFileSystemService.getMetadata(mockFolderPath);
+        const result = await service.isDirectory(mockFolderPath);
 
-        expect(result.type).toEqual('dir');
+        expect(result).toEqual(true);
       });
 
       it("should throw an error if the target doesn't exist", async () => {
         const mockFolderPath = path.resolve('/notExistingMockFolder');
 
-        await expect(virtualFileSystemService.isDirectory(mockFolderPath)).rejects.toThrow(
+        await expect(service.isDirectory(mockFolderPath)).rejects.toThrow(
           "ENOENT: no such file or directory, lstat '" + mockFolderPath + "'",
         );
       });
@@ -381,7 +358,7 @@ describe('VirtualFileSystemService', () => {
 
         let files: string[] = [];
 
-        await virtualFileSystemService.flatTraverse(mockFolderPath, (meta) => {
+        await service.flatTraverse(mockFolderPath, (meta) => {
           files.push(meta.name);
         });
 
@@ -397,7 +374,7 @@ describe('VirtualFileSystemService', () => {
 
         let files: string[] = [];
 
-        await virtualFileSystemService.flatTraverse(mockFolderPath, (meta) => {
+        await service.flatTraverse(mockFolderPath, (meta) => {
           files.push(meta.name);
           return false;
         });
@@ -408,15 +385,13 @@ describe('VirtualFileSystemService', () => {
       it("throws an error if the root doesn't exist", async () => {
         const mockFolderPath = path.resolve('/notExistingMockFolder');
 
-        await expect(virtualFileSystemService.flatTraverse(mockFolderPath, () => true)).rejects.toThrow(
-          /ENOENT: no such file or directory/,
-        );
+        await expect(service.flatTraverse(mockFolderPath, () => true)).rejects.toThrow(/ENOENT: no such file or directory/);
       });
 
       it("throws an error if the root isn't a directory", async () => {
         const mockFolderPath = path.resolve('/mockFolder/mockFile.ts');
 
-        await expect(virtualFileSystemService.flatTraverse(mockFolderPath, () => true)).rejects.toThrow(/ENOTDIR: not a directory/);
+        await expect(service.flatTraverse(mockFolderPath, () => true)).rejects.toThrow(/ENOTDIR: not a directory/);
       });
     });
   });

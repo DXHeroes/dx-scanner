@@ -15,13 +15,13 @@ import { IPackageInspector } from './inspectors/IPackageInspector';
 import { IFileInspector } from './inspectors/IFileInspector';
 import { ProgrammingLanguage, ProjectComponentType, ProjectComponentPlatform, ProjectComponentFramework, ProjectComponent } from './model';
 import { JavaScriptPackageInspector } from './inspectors/package/JavaScriptPackageInspector';
-import { VirtualDirectory } from './services/IVirtualFileSystemService';
 import { packageJSONContents } from './detectors/__MOCKS__';
 import { IPracticeWithMetadata } from './practices/DxPracticeDecorator';
 import { ScannerUtils } from './scanner/ScannerUtils';
 import { FileInspector } from './inspectors/FileInspector';
 import { IssueTrackingInspector } from './inspectors/IssueTrackingInspector';
 import { CollaborationInspector } from './inspectors/CollaborationInspector';
+import { DirectoryJSON } from 'memfs/lib/volume';
 
 export const createRootContainer = (args: ArgumentsProvider): Container => {
   const container = new Container();
@@ -46,7 +46,7 @@ const bindScanningStrategyDetectors = (container: Container) => {
 
 export const createTestContainer = (
   args?: ArgumentsProvider,
-  structure?: VirtualDirectory,
+  structure?: DirectoryJSON,
   projectComponent?: ProjectComponent,
 ): TestContainerContext => {
   const container = createRootContainer(args ? args : { uri: './' });

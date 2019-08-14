@@ -13,10 +13,12 @@ import {
   UnitTestFramework,
 } from '../model';
 import { keys, uniq } from 'lodash';
-import { dirPath, fileExtensionRegExp, fileNameRegExp, hasOneOfPackages, indexBy, sharedSubpath } from './utils';
+import { fileExtensionRegExp, fileNameRegExp, hasOneOfPackages, indexBy, sharedSubpath } from './utils';
 import Debug from 'debug';
 import { GitHubFile } from '../services/git/IGitHubService';
 import { GitHubContentType } from '../services/git/IGitHubService';
+import * as nodePath from 'path';
+
 const debug = Debug('cli:detectors:javascript');
 
 export class JavascriptComponentDetector {
@@ -31,7 +33,7 @@ export class JavascriptComponentDetector {
     // First Scan for package files
     const packageFiles = await this.scanFor(fileNameRegExp('package.json'), '/');
     if (packageFiles.length > 0) {
-      for (const path of packageFiles.map(dirPath)) {
+      for (const path of packageFiles.map((f) => nodePath.dirname(f.path))) {
         const project = await this.determineProjectAtPath(path);
         result.push(project);
       }
@@ -39,7 +41,7 @@ export class JavascriptComponentDetector {
       // new RegExp(/.*\.(tsx|jsx|ts|js)$/, 'i')
       // We have to go deeper
       const jsOrTsFiles = await this.scanFor(fileExtensionRegExp(['tsx', 'jsx', 'js', 'ts']), '/');
-      const dirsWithProjects = uniq(jsOrTsFiles.map(dirPath));
+      const dirsWithProjects = uniq(jsOrTsFiles.map((f) => nodePath.dirname(f.path)));
       // Get the shared subpath
       const commonPath = sharedSubpath(dirsWithProjects);
       const project = await this.determineProjectAtPath(commonPath);

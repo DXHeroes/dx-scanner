@@ -1,8 +1,8 @@
 import { JavaScriptPackageInspector } from './JavaScriptPackageInspector';
 import { DependencyType } from '../IPackageInspector';
-import { VirtualDirectory } from '../../services/IVirtualFileSystemService';
 import { packageJSONContents } from '../../detectors/__MOCKS__';
 import { TestContainerContext, createTestContainer } from '../../inversify.config';
+import { DirectoryJSON } from 'memfs/lib/volume';
 
 describe('JavaScriptPackageInspector', () => {
   let inspector: JavaScriptPackageInspector;
@@ -47,10 +47,6 @@ describe('JavaScriptPackageInspector', () => {
   });
 
   describe('functions', () => {
-    afterEach(async () => {
-      containerCtx.virtualFileSystemService.clearFileSystem();
-    });
-
     describe('#findPackage', () => {
       beforeEach(async () => {
         await inspector.init();
@@ -102,11 +98,10 @@ describe('JavaScriptPackageInspector', () => {
       });
 
       it('returns false if package.json is invalid', async () => {
-        const structure: VirtualDirectory = {
+        const structure: DirectoryJSON = {
           '/invalid.package.json': '...',
         };
 
-        containerCtx.virtualFileSystemService.clearFileSystem();
         containerCtx.virtualFileSystemService.setFileSystem(structure);
 
         await inspector.init();
@@ -116,7 +111,7 @@ describe('JavaScriptPackageInspector', () => {
 
     describe('#hasLockFile', () => {
       it('return true if there is a lock file', async () => {
-        const structure: VirtualDirectory = {
+        const structure: DirectoryJSON = {
           'package.json': packageJSONContents,
           'yarn.lock': '...',
         };
