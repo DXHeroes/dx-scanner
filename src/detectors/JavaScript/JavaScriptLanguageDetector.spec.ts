@@ -1,16 +1,16 @@
 import { JavaScriptLanguageDetector } from './JavaScriptLanguageDetector';
 import { FileInspector } from '../../inspectors/FileInspector';
 import { ProgrammingLanguage } from '../../model';
-import { VirtualFileSystemService } from '../../services/VirtualFileSystemService';
+import { FileSystemService } from '../../services/FileSystemService';
 import * as nodePath from 'path';
 import { DirectoryJSON } from 'memfs/lib/volume';
 
 describe('JavaScriptLanguageDetector', () => {
   let detector: JavaScriptLanguageDetector;
-  let virtualFileSystemService: VirtualFileSystemService;
+  let virtualFileSystemService: FileSystemService;
 
   beforeEach(() => {
-    virtualFileSystemService = new VirtualFileSystemService();
+    virtualFileSystemService = new FileSystemService(true);
 
     const fileInspector = new FileInspector(virtualFileSystemService, '/');
     detector = new JavaScriptLanguageDetector(fileInspector);

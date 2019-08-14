@@ -2,7 +2,7 @@ import path from 'path';
 import { FileSystemService } from './FileSystemService';
 import { createTestContainer } from '../inversify.config';
 
-describe('FileSystemService', () => {
+describe('FileSystemService - REAL', () => {
   let fileSystemService: FileSystemService;
 
   beforeAll(async () => {
@@ -310,7 +310,7 @@ describe('FileSystemService', () => {
       it("throws an error if the target doesn't exist", async () => {
         const mockFolderPath = path.resolve(__dirname, '__MOCKS__/notExistingMockFolder');
 
-        await expect(fileSystemService.getMetadata(mockFolderPath)).rejects.toThrow(`File doesn't exist (${mockFolderPath})`);
+        await expect(fileSystemService.getMetadata(mockFolderPath)).rejects.toThrow('ENOENT');
       });
     });
 

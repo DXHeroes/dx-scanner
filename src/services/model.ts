@@ -1,7 +1,6 @@
 import { FileSystemService } from './FileSystemService';
-import { VirtualFileSystemService } from './VirtualFileSystemService';
 
-export type ProjectFilesBrowserServices = FileSystemService | VirtualFileSystemService;
+export type ProjectFilesBrowserServices = FileSystemService;
 
 export interface IProjectFilesBrowserService {
   exists(path: string): Promise<boolean>;

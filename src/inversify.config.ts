@@ -8,7 +8,6 @@ import { practices } from './practices';
 import { ScanningStrategyDetector } from './detectors/ScanningStrategyDetector';
 import { bindScanningContext } from './contexts/scanner/scannerContextBinding';
 import { FileSystemService } from './services/FileSystemService';
-import { VirtualFileSystemService } from './services/VirtualFileSystemService';
 import { GitHubService } from './services/git/GitHubService';
 import { PracticeContext } from './contexts/practice/PracticeContext';
 import { IPackageInspector } from './inspectors/IPackageInspector';
@@ -57,10 +56,10 @@ export const createTestContainer = (
     };
   }
 
-  const vfss = new VirtualFileSystemService();
+  const vfss = new FileSystemService(true);
   vfss.setFileSystem(structure);
 
-  // VirtualFileSystemService as default ProjectBrowser
+  // FileSystemService as default ProjectBrowser
   container.bind(Types.IProjectFilesBrowser).toConstantValue(vfss);
   container.bind(Types.IContentRepositoryBrowser).to(GitHubService);
   container.bind(Types.IFileInspector).to(FileInspector);
@@ -74,7 +73,7 @@ export const createTestContainer = (
   const fileInspector = container.get<IFileInspector>(Types.IFileInspector);
   const issueTrackingInspector = container.get<IssueTrackingInspector>(Types.IIssueTrackingInspector);
   const collaborationInspector = container.get<CollaborationInspector>(Types.ICollaborationInspector);
-  const virtualFileSystemService = container.get<VirtualFileSystemService>(Types.IProjectFilesBrowser);
+  const virtualFileSystemService = container.get<FileSystemService>(Types.IProjectFilesBrowser);
   const packageInspector = container.get<IPackageInspector>(Types.IPackageInspector);
 
   /**
@@ -119,7 +118,7 @@ export interface TestContainerContext {
    * Services
    */
   fileSystemService: FileSystemService;
-  virtualFileSystemService: VirtualFileSystemService;
+  virtualFileSystemService: FileSystemService;
 }
 
 export interface TestPracticeContext extends PracticeContext {

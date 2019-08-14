@@ -1,9 +1,9 @@
 import path from 'path';
-import { VirtualFileSystemService } from './VirtualFileSystemService';
+import { FileSystemService } from './FileSystemService';
 import { createTestContainer } from '../inversify.config';
 
-describe('VirtualFileSystemService', () => {
-  let service: VirtualFileSystemService;
+describe('FileSystemService - VIRTUAL', () => {
+  let service: FileSystemService;
 
   beforeAll(async () => {
     const container = createTestContainer({ uri: '.' });
@@ -42,7 +42,6 @@ describe('VirtualFileSystemService', () => {
   describe('#readDirectory', () => {
     it('returns array of files after calling readDirectory()', async () => {
       const mockFolderPath = path.resolve('/mockFolder');
-
       const result = await service.readDirectory(mockFolderPath);
       expect(result.length).toEqual(4);
       expect(result).toContain('mockFile.ts');

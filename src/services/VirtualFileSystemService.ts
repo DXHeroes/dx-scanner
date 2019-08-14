@@ -1,107 +1,116 @@
-import { IProjectFilesBrowserService, Metadata, MetadataType } from './model';
-import { injectable } from 'inversify';
-import { Omit } from 'lodash';
-import * as nodePath from 'path';
-import { fs as vfs, vol } from 'memfs';
-import { DirectoryJSON } from 'memfs/lib/volume';
+// // import { IProjectFilesBrowserService, Metadata, MetadataType } from './model';
+// import { injectable } from 'inversify';
+// // import { Omit } from 'lodash';
+// // import * as nodePath from 'path';
+// import { IFs, Volume, createFsFromVolume } from 'memfs';
+// import { DirectoryJSON, Volume as VSVolume } from 'memfs/lib/volume';
+// import { FileSystemService } from './FileSystemService';
 
-@injectable()
-export class VirtualFileSystemService implements IProjectFilesBrowserService {
-  setFileSystem(structure: DirectoryJSON) {
-    this.clearFileSystem();
-    vol.fromJSON(structure);
-  }
+// @injectable()
+// export class VirtualFileSystemService extends FileSystemService {
+//   // protected fileSystem: IFs;
+//   // protected virtualVolume: VSVolume;
 
-  clearFileSystem() {
-    vol.reset();
-  }
+//   constructor() {
+//     super(true);
+//     // this.virtualVolume = new VSVolume();
+//     // this.fileSystem = createFsFromVolume(this.virtualVolume);
+//   }
 
-  async exists(path: string) {
-    try {
-      await vfs.promises.lstat(path);
-      return true;
-    } catch (error) {
-      return false;
-    }
-  }
+//   // setFileSystem(structure: DirectoryJSON) {
+//   //   this.virtualVolume.fromJSON(structure);
+//   // }
 
-  async readDirectory(path: string) {
-    return <Promise<string[]>>vfs.promises.readdir(path);
-  }
+//   // clearFileSystem() {
+//   //   this.virtualVolume.reset();
+//   // }
 
-  async readFile(path: string) {
-    return <Promise<string>>vfs.promises.readFile(path, 'utf-8');
-  }
+// //   async exists(path: string) {
+// //     try {
+// //       await this.fileSystem.promises.lstat(path);
+// //       return true;
+// //     } catch (error) {
+// //       return false;
+// //     }
+// //   }
 
-  async writeFile(path: string, content: string) {
-    return vfs.promises.writeFile(path, content);
-  }
+// //   readDirectory(path: string) {
+// //     return <Promise<string[]>>this.fileSystem.promises.readdir(path);
+// //   }
 
-  async createDirectory(path: string) {
-    return vfs.promises.mkdir(path);
-  }
+// //   readFile(path: string) {
+// //     return <Promise<string>>this.fileSystem.promises.readFile(path, 'utf-8');
+// //   }
 
-  async deleteDirectory(path: string) {
-    return vfs.promises.rmdir(path);
-  }
+// //   writeFile(path: string, content: string) {
+// //     return this.fileSystem.promises.writeFile(path, content);
+// //   }
 
-  async createFile(path: string, data: string) {
-    return vfs.promises.appendFile(path, data);
-  }
+// //   createDirectory(path: string) {
+// //     return this.fileSystem.promises.mkdir(path);
+// //   }
 
-  async deleteFile(path: string) {
-    return vfs.promises.unlink(path);
-  }
+// //   deleteDirectory(path: string) {
+// //     return this.fileSystem.promises.rmdir(path);
+// //   }
 
-  async isFile(path: string) {
-    const stats = await vfs.promises.lstat(path);
-    return stats.isFile();
-  }
+// //   createFile(path: string, data: string) {
+// //     return this.fileSystem.promises.appendFile(path, data);
+// //   }
 
-  async isDirectory(path: string) {
-    const stats = await vfs.promises.lstat(path);
-    return stats.isDirectory();
-  }
+// //   deleteFile(path: string) {
+// //     return this.fileSystem.promises.unlink(path);
+// //   }
 
-  async getMetadata(path: string): Promise<Metadata> {
-    const extension = nodePath.extname(path);
-    const stats = await vfs.promises.lstat(path);
+// //   async isFile(path: string) {
+// //     const stats = await this.fileSystem.promises.lstat(path);
+// //     return stats.isFile();
+// //   }
 
-    const metadata: Omit<Metadata, 'type'> = {
-      path,
-      name: nodePath.basename(path),
-      baseName: nodePath.basename(path, extension),
-      extension: extension === '' ? undefined : extension,
-      //return size in bytes
-      size: <number>stats.size,
-    };
+// //   async isDirectory(path: string) {
+// //     const stats = await this.fileSystem.promises.lstat(path);
+// //     return stats.isDirectory();
+// //   }
 
-    if (await this.isDirectory(path)) {
-      return {
-        ...metadata,
-        extension: undefined,
-        type: MetadataType.dir,
-      };
-    }
+// //   async getMetadata(path: string): Promise<Metadata> {
+// //     const extension = nodePath.extname(path);
+// //     const stats = await this.fileSystem.promises.lstat(path);
 
-    return {
-      ...metadata,
-      type: MetadataType.file,
-    };
-  }
+// //     const metadata: Omit<Metadata, 'type'> = {
+// //       path,
+// //       name: nodePath.basename(path),
+// //       baseName: nodePath.basename(path, extension),
+// //       extension: extension === '' ? undefined : extension,
+// //       //return size in bytes
+// //       size: <number>stats.size,
+// //     };
 
-  async flatTraverse(path: string, fn: (meta: Metadata) => void | boolean) {
-    const dirContent = await vfs.promises.readdir(path);
-    for (const cnt of dirContent) {
-      const absolutePath = nodePath.resolve(path, <string>cnt);
-      const metadata = await this.getMetadata(absolutePath);
+// //     if (await this.isDirectory(path)) {
+// //       return {
+// //         ...metadata,
+// //         extension: undefined,
+// //         type: MetadataType.dir,
+// //       };
+// //     }
 
-      const lambdaResult = fn(metadata);
-      if (lambdaResult === false) return false;
+// //     return {
+// //       ...metadata,
+// //       type: MetadataType.file,
+// //     };
+// //   }
 
-      if (metadata.type === MetadataType.dir) {
-        await this.flatTraverse(metadata.path, fn);
-      }
-    }
-  }
-}
+// //   async flatTraverse(path: string, fn: (meta: Metadata) => void | boolean) {
+// //     const dirContent = await this.fileSystem.promises.readdir(path);
+// //     for (const cnt of dirContent) {
+// //       const absolutePath = nodePath.resolve(path, <string>cnt);
+// //       const metadata = await this.getMetadata(absolutePath);
+
+// //       const lambdaResult = fn(metadata);
+// //       if (lambdaResult === false) return false;
+
+// //       if (metadata.type === MetadataType.dir) {
+// //         await this.flatTraverse(metadata.path, fn);
+// //       }
+// //     }
+// //   }
+// }
