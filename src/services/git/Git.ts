@@ -63,7 +63,7 @@ export class Git {
       if (!f) {
         throw ErrorFactory.newInternalError(`Could not get content of ${path}`);
       }
-      return Buffer.from(f.data, 'base64').toString('utf-8');
+      return Buffer.from(f.content, 'base64').toString('utf-8');
     });
   }
 
