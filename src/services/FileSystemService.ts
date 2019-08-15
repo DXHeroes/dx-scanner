@@ -1,4 +1,4 @@
-import * as fs from 'fs';
+import fs from 'fs';
 import * as nodePath from 'path';
 import { injectable } from 'inversify';
 import { IProjectFilesBrowserService, Metadata, MetadataType } from './model';
