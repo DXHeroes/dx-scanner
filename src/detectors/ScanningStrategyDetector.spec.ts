@@ -5,7 +5,7 @@ import { createTestContainer } from '../inversify.config';
 jest.mock('simple-git/promise');
 
 describe('ScanningStrategyDetector', () => {
-  let mockedGit = <jest.Mock>git;
+  const mockedGit = <jest.Mock>git;
   let repo: { owner: string; name: string };
 
   describe('#detect', () => {

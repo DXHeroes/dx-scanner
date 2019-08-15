@@ -25,7 +25,7 @@ export class VirtualFileSystemService implements IProjectFilesBrowserService {
   private pathAsStructureArray(path: string): string[] {
     path = nodePath.resolve(path);
 
-    let pathAsArray = [];
+    const pathAsArray = [];
     const root = nodePath.parse(path).root;
 
     while (path !== root) {
@@ -46,13 +46,13 @@ export class VirtualFileSystemService implements IProjectFilesBrowserService {
       throw ErrorFactory.newInternalError('structure is undefined');
     }
 
-    let name: string, child: VirtualFileSystemEntry;
+    let name: string;
     path = nodePath.normalize(path);
     // In case of an absolute path, name should be the root including the path separator
     name = nodePath.isAbsolute(path) ? nodePath.parse(path).root : path.split(nodePath.sep)[0];
     path = nodePath.relative(name, path);
     // In case of the Posix root, the child is the structure (Windows roots/drives are also handled as plain directories)
-    child = name === nodePath.sep ? directory : directory.children[name];
+    const child: VirtualFileSystemEntry = name === nodePath.sep ? directory : directory.children[name];
 
     if (child !== undefined) {
       switch (child.type) {
@@ -166,7 +166,7 @@ export class VirtualFileSystemService implements IProjectFilesBrowserService {
   }
 
   async writeFile(path: string, content: string) {
-    let entry = this.findEntry(path);
+    const entry = this.findEntry(path);
     if (entry !== undefined && entry.type !== MetadataType.file) {
       throw ErrorFactory.newInternalError('is not a file');
     }

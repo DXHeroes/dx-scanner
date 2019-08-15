@@ -477,7 +477,7 @@ describe('FileSystemService', () => {
 
   describe('#flatTraverse', () => {
     it('returns keys of metadata of every result', async () => {
-      let files: string[] = [];
+      const files: string[] = [];
 
       await service.flatTraverse('/src', (meta) => {
         files.push(meta.name);
@@ -492,7 +492,7 @@ describe('FileSystemService', () => {
     });
 
     it('stops on false', async () => {
-      let files: string[] = [];
+      const files: string[] = [];
 
       await service.flatTraverse('/src', (meta) => {
         files.push(meta.name);
@@ -503,7 +503,7 @@ describe('FileSystemService', () => {
     });
 
     it('follows the root symbolic links', async () => {
-      let files: string[] = [];
+      const files: string[] = [];
 
       await service.flatTraverse('/srcSL', (meta) => {
         files.push(meta.name);

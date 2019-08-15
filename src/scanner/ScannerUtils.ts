@@ -20,7 +20,7 @@ export class ScannerUtils {
    * Topological sort of directed ascyclic graphs
    */
   static sortPractices(practices: IPracticeWithMetadata[]): IPracticeWithMetadata[] {
-    let graph: [string, (string | undefined)][] = [];
+    const graph: [string, (string | undefined)][] = [];
     let dependentPractices: string[] = [];
 
     const allPracticeConstructors = practices.map((p) => p.getMetadata().id);

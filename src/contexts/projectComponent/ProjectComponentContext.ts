@@ -24,7 +24,9 @@ export class ProjectComponentContext extends ContextBase {
     this.practiceContextFactory = practiceContextFactory;
   }
 
-  async init(): Promise<void> {}
+  async init(): Promise<void> {
+    throw new Error('Method not implemented.');
+  }
 
   getPracticeContext(): PracticeContext {
     return this.practiceContextFactory(this.projectComponent);

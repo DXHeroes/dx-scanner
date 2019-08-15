@@ -6,11 +6,11 @@ import { GitHubFile } from '../services/git/IGitHubService';
 export const dirPath = (file: GitHubFile | Metadata): string => {
   const isRelative = file.path.startsWith('/') ? true : false;
   const prefix = isRelative ? '/' : './';
-  let path = !file.path.startsWith(prefix) ? `${prefix}${file.path}` : file.path;
+  const path = !file.path.startsWith(prefix) ? `${prefix}${file.path}` : file.path;
   if (file.path.startsWith(`./${file.name}`) || file.path.startsWith(`${file.name}`)) {
     return './';
   }
-  let dir = path.replace(`/${file.name}`, '');
+  const dir = path.replace(`/${file.name}`, '');
   if (dir === '') {
     return prefix;
   }
