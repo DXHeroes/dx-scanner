@@ -23,7 +23,7 @@ export const sharedSubpath = (paths: string[]): string => {
 
   const firstPath = paths[0];
   const lastPath = paths[paths.length - 1];
-  let isRelative = !nodePath.isAbsolute(firstPath);
+  const isRelative = !nodePath.isAbsolute(firstPath);
 
   if (lastPath.startsWith(sep) && isRelative) return sep;
 

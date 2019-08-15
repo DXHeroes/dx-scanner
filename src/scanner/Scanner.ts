@@ -66,7 +66,8 @@ export class Scanner {
   }
 
   private async preprocessData(scanningStrategy: ScanningStrategy) {
-    let { serviceType, accessType, remoteUrl, localPath } = scanningStrategy;
+    const { serviceType, accessType, remoteUrl } = scanningStrategy;
+    let localPath = scanningStrategy.localPath;
 
     if (localPath === undefined && remoteUrl !== undefined) {
       switch (serviceType) {
