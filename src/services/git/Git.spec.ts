@@ -163,6 +163,15 @@ describe('Git', () => {
     });
   });
 
+  describe('#getContributorCount', () => {
+    it('returns the number of contributors', async () => {
+      gitHubNock.getContributors([{ id: 251370, login: 'Spaceghost' }, { id: 583231, login: 'octocat' }]);
+
+      const result = await git.getContributorCount();
+      expect(result).toEqual(2);
+    });
+  });
+
   describe('#getTextFileContent', () => {
     it('returns the content', async () => {
       gitHubNock.getFile('src/index.ts', '...');
