@@ -109,7 +109,7 @@ describe('FileSystemService - REAL', () => {
     it('throws an error if the parent directory is not a directory', async () => {
       const mockFilePath = path.resolve(__dirname, '__MOCKS__/mockFolder/mockFile.ts/file.ts');
 
-      await expect(fileSystemService.writeFile(mockFilePath, '...')).rejects.toThrow('ENOTDIR');
+      await expect(fileSystemService.writeFile(mockFilePath, '...')).rejects.toThrow(/ENOTDIR|ENOENT/);
     });
 
     it("throws an error if the target isn't a file", async () => {
@@ -156,7 +156,7 @@ describe('FileSystemService - REAL', () => {
     it('throws an error if the parent directory is not a directory', async () => {
       const mockFilePath = path.resolve(__dirname, '__MOCKS__/mockFolder/mockFile.ts/file.ts');
 
-      await expect(fileSystemService.createFile(mockFilePath, '...')).rejects.toThrow('ENOTDIR');
+      await expect(fileSystemService.createFile(mockFilePath, '...')).rejects.toThrow(/ENOTDIR|ENOENT/);
     });
 
     it("throws an error if the target isn't a file", async () => {
@@ -213,7 +213,7 @@ describe('FileSystemService - REAL', () => {
     it('throws an error if the parent directory is not a directory', async () => {
       const mockFilePath = path.resolve(__dirname, '__MOCKS__/mockFolder/mockFile.ts/file.ts');
 
-      await expect(fileSystemService.createDirectory(mockFilePath)).rejects.toThrow('ENOTDIR');
+      await expect(fileSystemService.createDirectory(mockFilePath)).rejects.toThrow(/ENOTDIR|ENOENT/);
     });
 
     it('throws an error if the target is a directory', async () => {
@@ -255,7 +255,7 @@ describe('FileSystemService - REAL', () => {
     it("throws an error if the target isn't a directory", async () => {
       const mockFilePath = path.resolve(__dirname, '__MOCKS__/mockFolder/mockFile.ts');
 
-      await expect(fileSystemService.deleteDirectory(mockFilePath)).rejects.toThrow('ENOTDIR');
+      await expect(fileSystemService.deleteDirectory(mockFilePath)).rejects.toThrow(/ENOTDIR|ENOENT/);
     });
 
     describe('#getMetadata', () => {

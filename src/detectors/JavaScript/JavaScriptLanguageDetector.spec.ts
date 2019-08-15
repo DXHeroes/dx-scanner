@@ -30,7 +30,7 @@ describe('JavaScriptLanguageDetector', () => {
     const langAtPath = await detector.detectLanguage();
     expect(langAtPath.length).toEqual(1);
     expect(langAtPath[0].language).toEqual(ProgrammingLanguage.JavaScript);
-    expect(langAtPath[0].path).toEqual(nodePath.normalize('/'));
+    expect(langAtPath[0].path).toEqual(nodePath.sep);
   });
 
   it("detects it's not a javascript", async () => {
@@ -55,7 +55,7 @@ describe('JavaScriptLanguageDetector', () => {
     const langAtPath = await detector.detectLanguage();
     expect(langAtPath.length).toEqual(1);
     expect(langAtPath[0].language).toEqual(ProgrammingLanguage.TypeScript);
-    expect(langAtPath[0].path).toEqual(nodePath.normalize('/'));
+    expect(langAtPath[0].path).toEqual(nodePath.sep);
   });
 
   it('detects javascript correctly via js file', async () => {
@@ -68,6 +68,6 @@ describe('JavaScriptLanguageDetector', () => {
     const langAtPath = await detector.detectLanguage();
     expect(langAtPath.length).toEqual(1);
     expect(langAtPath[0].language).toEqual(ProgrammingLanguage.JavaScript);
-    expect(langAtPath[0].path).toEqual(nodePath.normalize('/'));
+    expect(langAtPath[0].path).toEqual(nodePath.sep);
   });
 });
