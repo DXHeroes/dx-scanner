@@ -16,7 +16,7 @@ export class FileSystemService implements IProjectFilesBrowserService {
   protected fileSystem: IFs | (typeof fs);
   private virtualVolume: VSVolume | undefined;
 
-  constructor({ isVirtual = false }) {
+  constructor({ isVirtual = false } = {}) {
     if (!isVirtual) {
       this.fileSystem = fs;
       this.virtualVolume = undefined;

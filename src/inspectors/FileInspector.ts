@@ -12,9 +12,9 @@ export class FileInspector implements IFileInspector {
 
   constructor(
     @inject(Types.IProjectFilesBrowser) projectFilesBrowser: ProjectFilesBrowserServices,
-    @inject(Types.FileInspectorBasePath) @optional() basePath: string,
+    @inject(Types.FileInspectorBasePath) @optional() basePath: string | undefined,
   ) {
-    this.basePath = this.normalizePath(basePath);
+    this.basePath = basePath && this.normalizePath(basePath);
     this.projectFilesBrowser = projectFilesBrowser;
   }
 
@@ -47,8 +47,6 @@ export class FileInspector implements IFileInspector {
   }
 
   private normalizePath(path: string): string {
-    if (!path) return path;
-
     if (this.basePath && !path.startsWith(this.basePath)) {
       path = `${this.basePath}/${path}`;
     }
