@@ -56,7 +56,7 @@ export const createTestContainer = (
     };
   }
 
-  const vfss = new FileSystemService(true);
+  const vfss = new FileSystemService({ isVirtual: true });
   vfss.setFileSystem(structure);
 
   // FileSystemService as default ProjectBrowser
