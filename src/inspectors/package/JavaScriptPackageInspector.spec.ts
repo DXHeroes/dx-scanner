@@ -1,9 +1,8 @@
 import { JavaScriptPackageInspector } from './JavaScriptPackageInspector';
 import { DependencyType } from '../IPackageInspector';
-import { VirtualDirectory } from '../../services/IVirtualFileSystemService';
 import { packageJSONContents } from '../../detectors/__MOCKS__';
-import { MetadataType } from '../../services/model';
 import { TestContainerContext, createTestContainer } from '../../inversify.config';
+import { DirectoryJSON } from 'memfs/lib/volume';
 
 describe('JavaScriptPackageInspector', () => {
   let inspector: JavaScriptPackageInspector;
@@ -17,13 +16,7 @@ describe('JavaScriptPackageInspector', () => {
 
   beforeEach(async () => {
     containerCtx.virtualFileSystemService.setFileSystem({
-      type: MetadataType.dir,
-      children: {
-        'package.json': {
-          type: MetadataType.file,
-          data: packageJSONContents,
-        },
-      },
+      'package.json': packageJSONContents,
     });
   });
 
@@ -105,14 +98,8 @@ describe('JavaScriptPackageInspector', () => {
       });
 
       it('returns false if package.json is invalid', async () => {
-        const structure: VirtualDirectory = {
-          type: MetadataType.dir,
-          children: {
-            'invalid.package.json': {
-              type: MetadataType.file,
-              data: '...',
-            },
-          },
+        const structure: DirectoryJSON = {
+          '/invalid.package.json': '...',
         };
 
         containerCtx.virtualFileSystemService.setFileSystem(structure);
@@ -124,18 +111,9 @@ describe('JavaScriptPackageInspector', () => {
 
     describe('#hasLockFile', () => {
       it('return true if there is a lock file', async () => {
-        const structure: VirtualDirectory = {
-          type: MetadataType.dir,
-          children: {
-            'package.json': {
-              type: MetadataType.file,
-              data: packageJSONContents,
-            },
-            'yarn.lock': {
-              type: MetadataType.file,
-              data: '...',
-            },
-          },
+        const structure: DirectoryJSON = {
+          'package.json': packageJSONContents,
+          'yarn.lock': '...',
         };
 
         containerCtx.virtualFileSystemService.setFileSystem(structure);
