@@ -1,26 +1,46 @@
 language: node_js
 node_js:
-  - '10'
   - '12'
+  - '10'
+
+os:
+  - windows
+  - linux
 
 cache:
   yarn: true
   directories:
     - lib
+    - coverage
     - node_modules
+
+env:
+  - YARN_GPG=no # ref.: https://travis-ci.community/t/timeout-after-build-finished-and-succeeded/1336
 
 script:
   - yarn build
   - yarn test --coverage
-  - yarn lint
   - bin/run -v
-  - yarn codecov
 
 jobs:
   include:
+  - stage: code style
+    if: branch = master
+    scripts:
+      - yarn lint
+      - yarn codecov
+  - stage: runtime test
+    if: branch = master
+    scripts:
+      - bin/run -v
+      - bin/run https://github.com/DXHeroes/dx-scanner
+    os: linux
+  - os: osx
+    if: branch = master
+  - os: windows
+    if: branch = master
   - stage: deploy
     if: tag IS present
-    node_js: '12'
     deploy:
       provider: npm
       email: dev@dxheroes.io

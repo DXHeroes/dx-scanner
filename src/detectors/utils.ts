@@ -1,24 +1,6 @@
 import { PackageManagement } from '../model';
 import { intersection, keys } from 'lodash';
-import { Metadata } from '../services/model';
-import { GitHubFile } from '../services/git/IGitHubService';
-
-export const dirPath = (file: GitHubFile | Metadata): string => {
-  const isRelative = file.path.startsWith('/') ? true : false;
-  const prefix = isRelative ? '/' : './';
-  let path = !file.path.startsWith(prefix) ? `${prefix}${file.path}` : file.path;
-  if (file.path.startsWith(`./${file.name}`) || file.path.startsWith(`${file.name}`)) {
-    return './';
-  }
-  let dir = path.replace(`/${file.name}`, '');
-  if (dir === '') {
-    return prefix;
-  }
-  if (dir.endsWith('/')) {
-    return dir.substring(0, dir.length - 1);
-  }
-  return dir;
-};
+import * as nodePath from 'path';
 
 export const fileExtensionRegExp = (extensions: string[]): RegExp => {
   const regExpString = `.*\\.(${extensions.join('|').replace('.', '\\.')})$`;
@@ -29,26 +11,32 @@ export const fileNameRegExp = (name: string): RegExp => {
   return new RegExp(`^${name.replace('.', '\\.')}$`, 'i');
 };
 
-export const sharedSubpath = (array: string[]): string => {
-  const A = array.concat().sort();
-  const a1 = A[0];
-  const a2 = A[A.length - 1];
-  let isRelative = false;
-  if (!a1.startsWith('/')) {
-    isRelative = true;
-  }
-  if (a2.startsWith('/') && isRelative) {
-    return '/';
-  }
-  const a1Splitted = a1.split('/').filter((p) => p !== '' && p !== '.');
-  const a2Splitted = a2.split('/').filter((p) => p !== '' && p !== '.');
-  const L = a1Splitted.length;
+/**
+ * Get common prefix of all paths
+ */
+export const sharedSubpath = (paths: string[]): string => {
+  const sep = nodePath.sep;
+  paths = paths
+    .concat()
+    .map((p) => p.split(nodePath.posix.sep).join(sep))
+    .sort();
 
+  const firstPath = paths[0];
+  const lastPath = paths[paths.length - 1];
+  let isRelative = !nodePath.isAbsolute(firstPath);
+
+  if (lastPath.startsWith(sep) && isRelative) return sep;
+
+  const firstPathSplit = firstPath.split(sep).filter((p) => p !== '' && p !== '.');
+  const lastPathSplit = lastPath.split(sep).filter((p) => p !== '' && p !== '.');
+
+  const length = firstPathSplit.length;
   let i = 0;
-  while (i < L && a1Splitted[i] === a2Splitted[i]) {
+  while (i < length && firstPathSplit[i] === lastPathSplit[i]) {
     i++;
   }
-  return `${isRelative ? './' : '/'}${a1Splitted.slice(0, i).join('/')}`;
+
+  return `${isRelative ? `.${sep}` : sep}${firstPathSplit.slice(0, i).join(sep)}`;
 };
 
 export const indexBy = <T>(array: T[], keyFn: (item: T) => string): { [index: string]: T } => {
