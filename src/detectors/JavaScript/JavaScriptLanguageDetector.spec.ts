@@ -1,16 +1,16 @@
 import { JavaScriptLanguageDetector } from './JavaScriptLanguageDetector';
 import { FileInspector } from '../../inspectors/FileInspector';
 import { ProgrammingLanguage } from '../../model';
-import { VirtualFileSystemService } from '../../services/VirtualFileSystemService';
-import { VirtualDirectory } from '../../services/IVirtualFileSystemService';
-import { MetadataType } from '../../services/model';
+import { FileSystemService } from '../../services/FileSystemService';
+import * as nodePath from 'path';
+import { DirectoryJSON } from 'memfs/lib/volume';
 
 describe('JavaScriptLanguageDetector', () => {
   let detector: JavaScriptLanguageDetector;
-  let virtualFileSystemService: VirtualFileSystemService;
+  let virtualFileSystemService: FileSystemService;
 
   beforeEach(() => {
-    virtualFileSystemService = new VirtualFileSystemService();
+    virtualFileSystemService = new FileSystemService({ isVirtual: true });
 
     const fileInspector = new FileInspector(virtualFileSystemService, '/');
     detector = new JavaScriptLanguageDetector(fileInspector);
@@ -21,14 +21,8 @@ describe('JavaScriptLanguageDetector', () => {
   });
 
   it('detects javascript correctly via package.json', async () => {
-    const structure: VirtualDirectory = {
-      type: MetadataType.dir,
-      children: {
-        'package.json': {
-          type: MetadataType.file,
-          data: '...',
-        },
-      },
+    const structure: DirectoryJSON = {
+      '/package.json': '...',
     };
 
     virtualFileSystemService.setFileSystem(structure);
@@ -36,23 +30,12 @@ describe('JavaScriptLanguageDetector', () => {
     const langAtPath = await detector.detectLanguage();
     expect(langAtPath.length).toEqual(1);
     expect(langAtPath[0].language).toEqual(ProgrammingLanguage.JavaScript);
-    expect(langAtPath[0].path).toEqual('/');
+    expect(langAtPath[0].path).toEqual(nodePath.sep);
   });
 
   it("detects it's not a javascript", async () => {
-    const structure: VirtualDirectory = {
-      type: MetadataType.dir,
-      children: {
-        src: {
-          type: MetadataType.dir,
-          children: {
-            'index.none': {
-              type: MetadataType.file,
-              data: '...',
-            },
-          },
-        },
-      },
+    const structure: DirectoryJSON = {
+      '/src/index.none': '...',
     };
 
     virtualFileSystemService.setFileSystem(structure);
@@ -63,14 +46,8 @@ describe('JavaScriptLanguageDetector', () => {
   });
 
   it('detects typescript correctly via ts file', async () => {
-    const structure: VirtualDirectory = {
-      type: MetadataType.dir,
-      children: {
-        'index.ts': {
-          type: MetadataType.file,
-          data: '...',
-        },
-      },
+    const structure: DirectoryJSON = {
+      '/index.ts': '...',
     };
 
     virtualFileSystemService.setFileSystem(structure);
@@ -78,18 +55,12 @@ describe('JavaScriptLanguageDetector', () => {
     const langAtPath = await detector.detectLanguage();
     expect(langAtPath.length).toEqual(1);
     expect(langAtPath[0].language).toEqual(ProgrammingLanguage.TypeScript);
-    expect(langAtPath[0].path).toEqual('/');
+    expect(langAtPath[0].path).toEqual(nodePath.sep);
   });
 
   it('detects javascript correctly via js file', async () => {
-    const structure: VirtualDirectory = {
-      type: MetadataType.dir,
-      children: {
-        'index.js': {
-          type: MetadataType.file,
-          data: '...',
-        },
-      },
+    const structure: DirectoryJSON = {
+      '/index.js': '...',
     };
 
     virtualFileSystemService.setFileSystem(structure);
@@ -97,6 +68,6 @@ describe('JavaScriptLanguageDetector', () => {
     const langAtPath = await detector.detectLanguage();
     expect(langAtPath.length).toEqual(1);
     expect(langAtPath[0].language).toEqual(ProgrammingLanguage.JavaScript);
-    expect(langAtPath[0].path).toEqual('/');
+    expect(langAtPath[0].path).toEqual(nodePath.sep);
   });
 });

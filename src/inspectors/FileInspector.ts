@@ -3,7 +3,7 @@ import { Metadata, MetadataType, ProjectFilesBrowserServices } from '../services
 import debug from 'debug';
 import { injectable, optional, inject } from 'inversify';
 import { Types } from '../types';
-import normalize from 'normalize-path';
+import * as nodePath from 'path';
 
 @injectable()
 export class FileInspector implements IFileInspector {
@@ -12,9 +12,9 @@ export class FileInspector implements IFileInspector {
 
   constructor(
     @inject(Types.IProjectFilesBrowser) projectFilesBrowser: ProjectFilesBrowserServices,
-    @inject(Types.FileInspectorBasePath) @optional() basePath: string,
+    @inject(Types.FileInspectorBasePath) @optional() basePath: string | undefined,
   ) {
-    this.basePath = basePath;
+    this.basePath = basePath && this.normalizePath(basePath);
     this.projectFilesBrowser = projectFilesBrowser;
   }
 
@@ -38,10 +38,6 @@ export class FileInspector implements IFileInspector {
     return this.projectFilesBrowser.isDirectory(this.normalizePath(path));
   }
 
-  isSymbolicLink(path: string) {
-    return this.projectFilesBrowser.isSymbolicLink(this.normalizePath(path));
-  }
-
   getMetadata(path: string) {
     return this.projectFilesBrowser.getMetadata(this.normalizePath(path));
   }
@@ -54,7 +50,8 @@ export class FileInspector implements IFileInspector {
     if (this.basePath && !path.startsWith(this.basePath)) {
       path = `${this.basePath}/${path}`;
     }
-    return normalize(path);
+
+    return nodePath.normalize(path);
   }
 
   async scanFor(
