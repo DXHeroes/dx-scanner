@@ -5,7 +5,7 @@ import * as nodePath from 'path';
 describe('DetectorUtils', () => {
   describe('#sharedSubpath', () => {
     it('returns shared path when root is the same', () => {
-      expect(sharedSubpath(['/var', '/foo', '/foo/bar'])).toEqual(nodePath.normalize('/'));
+      expect(sharedSubpath(['/var', '/foo', '/foo/bar'])).toEqual(nodePath.sep);
     });
 
     it('returns shared path when dir is the same', () => {
@@ -13,7 +13,7 @@ describe('DetectorUtils', () => {
     });
 
     it('returns shared path when dir has same prefixes', () => {
-      expect(sharedSubpath(['/foo', '/foor', '/foo/bar'])).toEqual(nodePath.normalize('/'));
+      expect(sharedSubpath(['/foo', '/foor', '/foo/bar'])).toEqual(nodePath.sep);
     });
 
     it('works with relative paths', () => {
@@ -26,7 +26,7 @@ describe('DetectorUtils', () => {
 
     it('works with relative paths - mixed in absolute path', () => {
       // @todo improve sharedSubpath so it can resolve relative paths to absolute ones. Considered edge case for now.
-      expect(sharedSubpath(['./foo', '/foo', './foo/bar'])).toEqual(nodePath.normalize('/'));
+      expect(sharedSubpath(['./foo', '/foo', './foo/bar'])).toEqual(nodePath.sep);
     });
   });
 
