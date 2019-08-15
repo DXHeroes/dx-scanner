@@ -36,8 +36,8 @@ export class Git {
 
   async getFile(path: string) {
     const result = await this.getRepoContent(path);
-    if (result !== null && !isArray(result)) {
-      return result;
+    if (result !== null && !isArray(result.data)) {
+      return result.data;
     } else {
       throw ErrorFactory.newInternalError(`${path} is not a file`);
     }

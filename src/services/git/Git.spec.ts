@@ -132,4 +132,34 @@ describe('Git', () => {
       expect(result).toEqual(expected);
     });
   });
+
+  describe('#getFile', () => {
+    it('returns the file', async () => {
+      const expected = gitHubNock.getFile('src/index.ts');
+
+      const result = await git.getFile('src/index.ts');
+      expect(result).toEqual(expected);
+    });
+
+    it("throws an error if the target doesn't exist", async () => {
+      gitHubNock.getNonexistentContents('non/existing/file.ts');
+
+      await expect(git.getFile('non/existing/file.ts')).rejects.toThrow('non/existing/file.ts is not a file');
+    });
+
+    it("throws an error if the target isn't a file", async () => {
+      gitHubNock.getDirectory('src', ['index.ts'], []);
+
+      await expect(git.getFile('src')).rejects.toThrow('src is not a file');
+    });
+
+    it('caches the results', async () => {
+      // bacause of persist == false, the second call to git.getFile() would cause Nock to throw an error if the cache wasn't used
+      const expected = gitHubNock.getFile('src/index.ts', undefined, undefined, false);
+      await git.getFile('src/index.ts');
+
+      const result = await git.getFile('src/index.ts');
+      expect(result).toEqual(expected);
+    });
+  });
 });
