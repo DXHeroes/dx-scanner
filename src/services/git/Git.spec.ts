@@ -95,4 +95,41 @@ describe('Git', () => {
       expect(result).toBe(true);
     });
   });
+
+  describe('#listDirectory', () => {
+    it('returns array of files after calling readDirectory()', async () => {
+      const expected = gitHubNock.getDirectory('src', ['index.ts'], []);
+
+      const result = await git.listDirectory('src');
+      expect(result).toEqual(expected);
+    });
+
+    it("throws an error if the target doesn't exist", async () => {
+      gitHubNock.getNonexistentContents('non/existing/dir');
+
+      await expect(git.listDirectory('non/existing/dir')).rejects.toThrow('non/existing/dir is not a directory');
+    });
+
+    it('throws an error if the target is a file', async () => {
+      gitHubNock.getFile('src/index.ts');
+
+      await expect(git.listDirectory('src/index.ts')).rejects.toThrow('src/index.ts is not a directory');
+    });
+
+    it('throws an error if the target is a broken symbolic link', async () => {
+      gitHubNock.getSymlink('indexSLbroken.ts', 'non-existing-file.ts');
+      gitHubNock.getNonexistentContents('non-existing-file.ts');
+
+      await expect(git.listDirectory('indexSLbroken.ts')).rejects.toThrow('indexSLbroken.ts is not a directory');
+    });
+
+    it('caches the results', async () => {
+      // bacause of persist == false, the second call to git.listDirectory() would cause Nock to throw an error if the cache wasn't used
+      const expected = gitHubNock.getDirectory('src', ['index.ts'], [], false);
+      await git.listDirectory('src');
+
+      const result = await git.listDirectory('src');
+      expect(result).toEqual(expected);
+    });
+  });
 });
