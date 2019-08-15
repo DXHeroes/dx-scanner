@@ -37,7 +37,8 @@ export const sharedSubpath = (paths: string[]): string => {
   }
 
   const commonPath = `${isRelative ? `.${sep}` : sep}${firstPathSplit.slice(0, i).join(sep)}`;
-  return nodePath.normalize(commonPath);
+// return nodePath.normalize(commonPath);
+return commonPath
 };
 
 export const indexBy = <T>(array: T[], keyFn: (item: T) => string): { [index: string]: T } => {

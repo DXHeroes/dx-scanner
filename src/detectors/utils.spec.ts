@@ -17,11 +17,11 @@ describe('DetectorUtils', () => {
     });
 
     it('works with relative paths', () => {
-      expect(sharedSubpath(['./foo', './foo', './foo/bar'])).toEqual(nodePath.normalize('./foo'));
+      expect(sharedSubpath(['./foo', './foo', './foo/bar'])).toEqual(('.' + nodePath.sep + 'foo'));
     });
 
     it('works with relative paths - implicit relative path', () => {
-      expect(sharedSubpath(['./foo', 'foo', './foo/bar'])).toEqual(nodePath.normalize('./foo'));
+      expect(sharedSubpath(['./foo', 'foo', './foo/bar'])).toEqual(('.' + nodePath.sep + 'foo'));
     });
 
     it('works with relative paths - mixed in absolute path', () => {
