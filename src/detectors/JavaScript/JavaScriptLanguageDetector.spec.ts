@@ -10,7 +10,7 @@ describe('JavaScriptLanguageDetector', () => {
   let virtualFileSystemService: FileSystemService;
 
   beforeEach(() => {
-    virtualFileSystemService = new FileSystemService(true);
+    virtualFileSystemService = new FileSystemService({ isVirtual: true });
 
     const fileInspector = new FileInspector(virtualFileSystemService, '/');
     detector = new JavaScriptLanguageDetector(fileInspector);

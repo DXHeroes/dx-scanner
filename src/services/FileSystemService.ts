@@ -4,13 +4,19 @@ import { injectable } from 'inversify';
 import { IProjectFilesBrowserService, Metadata, MetadataType } from './model';
 import { IFs, createFsFromVolume } from 'memfs';
 import { Volume as VSVolume, DirectoryJSON } from 'memfs/lib/volume';
+import { ErrorFactory } from '../lib/errors';
 
+/**
+ * Service for file system browsing
+ *  - uses fs by default
+ *  - can work just in memory with memfs
+ */
 @injectable()
 export class FileSystemService implements IProjectFilesBrowserService {
   protected fileSystem: IFs | (typeof fs);
   private virtualVolume: VSVolume | undefined;
 
-  constructor(isVirtual: boolean = false) {
+  constructor({ isVirtual = false } = {}) {
     if (!isVirtual) {
       this.fileSystem = fs;
       this.virtualVolume = undefined;
@@ -21,12 +27,14 @@ export class FileSystemService implements IProjectFilesBrowserService {
   }
 
   setFileSystem(structure: DirectoryJSON) {
+    if (!this.virtualVolume) throw ErrorFactory.newInternalError('No virtual volume set');
     this.clearFileSystem();
-    this.virtualVolume!.fromJSON(structure);
+    this.virtualVolume.fromJSON(structure);
   }
 
   clearFileSystem() {
-    this.virtualVolume!.reset();
+    if (!this.virtualVolume) throw ErrorFactory.newInternalError('No virtual volume set');
+    this.virtualVolume.reset();
   }
 
   async exists(path: string) {
@@ -39,6 +47,8 @@ export class FileSystemService implements IProjectFilesBrowserService {
   }
 
   readDirectory(path: string) {
+    // <typeof fs> is small hack because TS thinks
+    //   that it's different interface by default
     return (<typeof fs>this.fileSystem).promises.readdir(path);
   }
 
@@ -104,6 +114,8 @@ export class FileSystemService implements IProjectFilesBrowserService {
   }
 
   async flatTraverse(path: string, fn: (meta: Metadata) => void | boolean) {
+    // <typeof fs> is small hack because TS thinks
+    //   that it's different interface by default
     const dirContent = await (<typeof fs>this.fileSystem).promises.readdir(path);
     for (const cnt of dirContent) {
       const absolutePath = nodePath.resolve(path, cnt);
