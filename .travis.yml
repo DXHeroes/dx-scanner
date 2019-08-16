@@ -32,17 +32,10 @@ jobs:
     scripts:
       - bin/run -v
       - bin/run https://github.com/DXHeroes/dx-scanner
-    os: linux
-  - scripts:
-      - yarn build
-      - yarn test
-      - bin/run -v
-      - bin/run https://github.com/DXHeroes/dx-scanner
     os: windows
-    if: branch = master
+  - os: linux
   - stage: release
     node_js: lts/*
-    if: tag IS present
     script: skip
     deploy:
       email: dev@dxheroes.io
