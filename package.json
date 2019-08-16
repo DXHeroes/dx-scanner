@@ -77,7 +77,7 @@
     "node": ">=10.15.3",
     "yarn": "^1.15.2"
   },
-  "main": "lib/index.ts",
+  "main": "lib/src/index.js",
   "bin": {
     "dxscanner": "./bin/run",
     "dx-scanner": "./bin/run",
