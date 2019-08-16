@@ -1,10 +1,8 @@
 language: node_js
 node_js:
   - '12'
-  - '10'
 
 os:
-  - windows
   - linux
 
 cache:
@@ -34,19 +32,13 @@ jobs:
     scripts:
       - bin/run -v
       - bin/run https://github.com/DXHeroes/dx-scanner
-    os: linux
-  - os: osx
-    if: branch = master
-  - os: windows
-    if: branch = master
-  - stage: deploy
-    if: tag IS present
+    os: windows
+  - os: linux
+  - stage: release
+    node_js: lts/*
+    script: skip
     deploy:
-      provider: npm
       email: dev@dxheroes.io
-      api_key:
-        secure: Go+gAeT7FHCuTPcYHqhg8xkmKeelCa4/J47BlJPIiPy+S3SB9FHKiQa/yFW1TRV4yj1eCm0zhk4c8LeqBSi/aG4e/BAVvyRvbZgC3320ytVbNwwNBsG/21a+FXPeXpJzOrZBFffNq3NzcGB7Fg1m2FuedHlltjz3QhQkQdD+PAyz0/hUbY/HYGE5knYitnP3qEsf5+nx0AhE0+dv6VU6Em7Ii0a/GMJ3ny2Em1+oLhew5gzi4Fz1W3gvwi2jccDx6LKEb6aUWxsjxMIdgnyJBiMkCQDMTxQcuZCnP2FRVInqE9QMJMgJP9nZqYNTC2VH/vqiNH5R67r14qr12QLyn4pQdOAdeh6An5AL5bJ6bwcqauxIUOqqOTS9rFVyop1WOm0Rv/HZc+PJmkPkD1D8Bw/rGqV6pjoomYKR8G2D3l3F6FGkAllgbGYW/3snqW2cfjj+L+2mdRKiC35e+LfT+WpGR9Tg8+wGxfRU/J4Kc/UNTnz1hbF0Mk77Bc67i8Ql4eMPGFe01PWTVc4B5GPBtIur0J+FK7cSloktHB5P+tJiMXc44OrSCxbXW7Z1y/pYS2SiZ6ZzL4Tb6u74M/o7j715DlL6GQ45wQkvWhxWOrVnLOdaJi50fUP6mV18ZYjr8eS6l9ut5zu99lUvgWr20eid5bTyUsP3wKCemKTpAnU=
-      on:
-        tags: true
-        repo: DXHeroes/dx-scanner
       skip_cleanup: true
+      script:
+        - npx semantic-release
