@@ -25,7 +25,7 @@ export class ProjectComponentContext extends ContextBase {
   }
 
   async init(): Promise<void> {
-    throw new Error('Method not implemented.');
+    //throw new Error('Method not implemented.');
   }
 
   getPracticeContext(): PracticeContext {
