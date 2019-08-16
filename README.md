@@ -32,27 +32,37 @@ C++ | 🚧
 
 - with NPM
   
-  ```npm install -g dxscanner``` 
+  ```npm install -g dx-scanner``` 
 - with Yarn 
   
-  ```yarn global add dxscanner```
+  ```yarn global add dx-scanner```
 
 ### Usage
 
 **Scan repository**
 ```
-dxscanner https://github.com/DXHeroes/dx-scanner
+dx-scanner https://github.com/DXHeroes/dx-scanner
 ```
 **Scan local path**
 ```
-dxscanner ~/my-project
+dx-scanner ~/my-project
 ```
 
 **All options**
 
 ```
-dxscanner [path]
+dx-scanner [path]
 ```
+
+**Aliases**
+```
+dx-scanner [path]
+
+dxscanner [path]
+
+dxs [path]
+```
+
 ## Contributing 👩‍💻 👨‍💻
 Feel free to contribute to the DX Scanner. If you want to contribute, please follow our [Contribution Guide](CONTRIBUTING.md).
 

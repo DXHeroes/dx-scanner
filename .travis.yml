@@ -38,6 +38,7 @@ jobs:
     node_js: lts/*
     script: skip
     deploy:
+      provider: script
       email: dev@dxheroes.io
       skip_cleanup: true
       script:
