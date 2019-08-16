@@ -1,3 +1,10 @@
+## [1.1.1](https://github.com/dxheroes/dx-scanner/compare/v1.1.0...v1.1.1) (2019-08-16)
+
+
+### Bug Fixes
+
+* **README:** fix command for installing ([#29](https://github.com/dxheroes/dx-scanner/issues/29)) ([81fff27](https://github.com/dxheroes/dx-scanner/commit/81fff27))
+
 # Changelog
 All notable changes to this project will be documented in this file.
 
