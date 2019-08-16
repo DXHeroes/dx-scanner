@@ -348,7 +348,7 @@ describe('FileSystemService - REAL', () => {
       it('returns keys of metadata of all results', async () => {
         const mockFolderPath = path.resolve(__dirname, '__MOCKS__/mockFolder');
 
-        let files: string[] = [];
+        const files: string[] = [];
 
         await fileSystemService.flatTraverse(mockFolderPath, (meta) => {
           files.push(meta.name);
@@ -364,7 +364,7 @@ describe('FileSystemService - REAL', () => {
       it('stops on false', async () => {
         const mockFolderPath = path.resolve(__dirname, '__MOCKS__/mockFolder');
 
-        let files: string[] = [];
+        const files: string[] = [];
 
         await fileSystemService.flatTraverse(mockFolderPath, (meta) => {
           files.push(meta.name);

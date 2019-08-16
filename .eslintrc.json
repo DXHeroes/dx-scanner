@@ -83,6 +83,7 @@
     "@typescript-eslint/no-floating-promises": [
       "error"
     ],
+    "@typescript-eslint/consistent-type-assertions": ["off"],
     "prettier/prettier": [
       "warn",
       {

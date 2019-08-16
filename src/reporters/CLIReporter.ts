@@ -87,7 +87,7 @@ export class CLIReporter implements IReporter {
     //     findingPath = `at: ${ownerAndRepo.owner}/${ownerAndRepo.repoName}`;
     // }
 
-    let practiceLineTexts = [reset(color(`- ${bold(pac.practice.name)} - ${italic(pac.practice.suggestion)}`))];
+    const practiceLineTexts = [reset(color(`- ${bold(pac.practice.name)} - ${italic(pac.practice.suggestion)}`))];
     if (pac.practice.url) {
       practiceLineTexts.push(color(italic(`${findingPath}(${pac.practice.url})`)));
     }

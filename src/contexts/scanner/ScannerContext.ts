@@ -18,7 +18,9 @@ export class ScannerContext extends ContextBase {
     this.languageContextFactory = languageContextFactory;
   }
 
-  async init(): Promise<void> {}
+  async init(): Promise<void> {
+    throw new Error('Method not implemented.');
+  }
 
   getLanguageContext(languageAtPath: LanguageAtPath) {
     return this.languageContextFactory(languageAtPath);

@@ -68,7 +68,7 @@ export class GitHubClient {
   ): Promise<Octokit.Response<{ id: number; login: string; url: string; followersUrl: string; contributions: number }[]>> {
     const pagination = options && options.pagination;
 
-    let listParams: Octokit.ReposListContributorsParams = {
+    const listParams: Octokit.ReposListContributorsParams = {
       owner,
       repo,
       ...pagination,
