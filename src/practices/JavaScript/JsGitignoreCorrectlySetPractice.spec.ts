@@ -1,4 +1,3 @@
-import { MetadataType } from '../../services/model';
 import { JsGitignoreCorrectlySetPractice } from './JsGitignoreCorrectlySetPractice';
 import { gitignoreContent } from '../../detectors/__MOCKS__/gitignoreContent.mock';
 import { PracticeEvaluationResult } from '../../model';
@@ -20,13 +19,7 @@ describe('JsGitignoreCorrectlySetPractice', () => {
 
   it('Returns practicing if the .gitignore is set correctly', async () => {
     containerCtx.virtualFileSystemService.setFileSystem({
-      type: MetadataType.dir,
-      children: {
-        '.gitignore': {
-          type: MetadataType.file,
-          data: gitignoreContent,
-        },
-      },
+      '.gitignore': gitignoreContent,
     });
 
     const evaluated = await practice.evaluate(containerCtx.practiceContext);
@@ -35,13 +28,7 @@ describe('JsGitignoreCorrectlySetPractice', () => {
 
   it('Returns notPracticing if there the .gitignore is NOT set correctly', async () => {
     containerCtx.virtualFileSystemService.setFileSystem({
-      type: MetadataType.dir,
-      children: {
-        '.gitignore': {
-          type: MetadataType.file,
-          data: '...',
-        },
-      },
+      '.gitignore': '...',
     });
 
     const evaluated = await practice.evaluate(containerCtx.practiceContext);
