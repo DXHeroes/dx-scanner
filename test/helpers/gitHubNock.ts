@@ -20,6 +20,14 @@ export class GitHubNock {
     return this.getContents(path, body);
   }
 
+  getDirectory(path: string, subfiles: string[], subdirs: string[]): (FileItem | DirectoryItem)[] {
+    const body = [
+      ...subfiles.map((name) => new FileItem(this.owner, this.repo, nodePath.posix.join(path, name))),
+      ...subdirs.map((name) => new DirectoryItem(this.owner, this.repo, nodePath.posix.join(path, name))),
+    ];
+    return this.getContents(path, body);
+  }
+
   private getContents<T>(path: string, contents: T): T {
     this.getRepo(`/contents/${path}`).reply(200, contents);
     return contents;
@@ -44,7 +52,14 @@ class RepoContent {
   type = '';
   _links: { self: string; git: string; html: string };
 
-  constructor(owner: string, repo: string, path: string, sha = '980a0d5f19a64b4b30a87d4206aade58726b60e3') {
+  constructor(
+    owner: string,
+    repo: string,
+    path: string,
+    gitType: string,
+    downloadable: boolean,
+    sha = '980a0d5f19a64b4b30a87d4206aade58726b60e3',
+  ) {
     const ref = 'master';
     const apiBase = `https://api.github.com/repos/${owner}/${repo}`;
     const htmlBase = `https://github.com/${owner}/${repo}`;
@@ -56,11 +71,11 @@ class RepoContent {
     this.size = 0;
     this.url = `${apiBase}/contents/${this.path}?ref=${ref}`;
     // eslint-disable-next-line @typescript-eslint/camelcase
-    this.html_url = `${htmlBase}/blob/${ref}/${this.path}`;
+    this.html_url = `${htmlBase}/${gitType}/${ref}/${this.path}`;
     // eslint-disable-next-line @typescript-eslint/camelcase
-    this.git_url = `${apiBase}/git/blobs/${this.sha}`;
+    this.git_url = `${apiBase}/git/${gitType}s/${this.sha}`;
     // eslint-disable-next-line @typescript-eslint/camelcase
-    this.download_url = `${downloadBase}/${ref}/${this.path}`;
+    this.download_url = downloadable ? `${downloadBase}/${ref}/${this.path}` : null;
     this._links = {
       self: this.url,
       git: this.git_url,
@@ -69,8 +84,15 @@ class RepoContent {
   }
 }
 
-export class File extends RepoContent {
+export class FileItem extends RepoContent {
   type = 'file';
+
+  constructor(owner: string, repo: string, path: string, sha = '980a0d5f19a64b4b30a87d4206aade58726b60e3') {
+    super(owner, repo, path, 'blob', true, sha);
+  }
+}
+
+export class File extends FileItem {
   content: string;
   encoding: string;
 
@@ -84,12 +106,20 @@ export class File extends RepoContent {
   }
 }
 
-export class Symlink extends RepoContent {
+export class Symlink extends FileItem {
   type = 'symlink';
   target: string;
 
   constructor(owner: string, repo: string, path: string, target: string, sha = '980a0d5f19a64b4b30a87d4206aade58726b60e3') {
     super(owner, repo, path, sha);
     this.target = target;
+  }
+}
+
+export class DirectoryItem extends RepoContent {
+  type = 'dir';
+
+  constructor(owner: string, repo: string, path: string, sha = '980a0d5f19a64b4b30a87d4206aade58726b60e3') {
+    super(owner, repo, path, 'tree', false, sha);
   }
 }
