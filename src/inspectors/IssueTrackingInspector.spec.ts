@@ -7,10 +7,10 @@ import { getIssueResponse } from '../services/git/__MOCKS__/gitHubClientMockFold
 import { getIssueServiceResponse } from '../services/git/__MOCKS__/gitHubServiceMockFolder/getIssueServiceResponse.mock';
 import nock from 'nock';
 import { TestContainerContext, createTestContainer } from '../inversify.config';
+import { GitHubNock } from '../../test/helpers/gitHubNock';
 
 describe('Issue Tracking Inspector', () => {
   let inspector: IssueTrackingInspector;
-  const gitHubNock = nock('https://api.github.com');
   let containerCtx: TestContainerContext;
 
   beforeAll(async () => {
@@ -18,20 +18,24 @@ describe('Issue Tracking Inspector', () => {
     inspector = <IssueTrackingInspector>containerCtx.practiceContext.issueTrackingInspector;
   });
 
+  beforeEach(() => {
+    nock.cleanAll();
+  });
+
   it('returns paginated issues', async () => {
-    gitHubNock.get('/repos/octocat/Hello-World/issues').reply(200, getIssuesResponse);
+    new GitHubNock('octocat', 'Hello-World').getRepo('/issues').reply(200, getIssuesResponse);
     const response = await inspector.getIssues('octocat', 'Hello-World');
     expect(response).toMatchObject(getIssuesServiceResponse);
   });
 
   it('returns paginated issue comments', async () => {
-    gitHubNock.get('/repos/octocat/Hello-World/issues/461030590/comments').reply(200, getIssueCommentsResponse);
+    new GitHubNock('octocat', 'Hello-World').getRepo('/issues/461030590/comments').reply(200, getIssueCommentsResponse);
     const response = await inspector.listIssueComments('octocat', 'Hello-World', 461030590);
     expect(response).toMatchObject(getIssueCommentsServiceResponse);
   });
 
   it('returns a single issue', async () => {
-    gitHubNock.get('/repos/octocat/Hello-World/issues/1').reply(200, getIssueResponse);
+    new GitHubNock('octocat', 'Hello-World').getRepo('/issues/1').reply(200, getIssueResponse);
     const response = await inspector.getIssue('octocat', 'Hello-World', 1);
     expect(response).toMatchObject(getIssueServiceResponse);
   });

@@ -2,11 +2,15 @@ import { ServiceType, AccessType } from './ScanningStrategyDetector';
 import git from 'simple-git/promise';
 import nock from 'nock';
 import { createTestContainer } from '../inversify.config';
+import { GitHubNock } from '../../test/helpers/gitHubNock';
 jest.mock('simple-git/promise');
 
 describe('ScanningStrategyDetector', () => {
   let mockedGit = <jest.Mock>git;
-  let repo: { owner: string; name: string };
+
+  beforeEach(() => {
+    nock.cleanAll();
+  });
 
   describe('#detect', () => {
     it('local path without remote', async () => {
@@ -29,11 +33,8 @@ describe('ScanningStrategyDetector', () => {
     });
 
     it('local path with remote public GitHub', async () => {
-      repo = { owner: 'DXHeroes', name: 'dx-scanner' };
       const repoPath = 'git@github.com:DXHeroes/dx-scanner.git';
-      nock('https://api.github.com')
-        .get(`/repos/${repo.owner}/${repo.name}`)
-        .reply(200);
+      new GitHubNock('DXHeroes', 'dx-scanner').getRepo('').reply(200);
 
       mockedGit.mockImplementation(() => {
         return {
@@ -54,11 +55,8 @@ describe('ScanningStrategyDetector', () => {
     });
 
     it('local path with remote private GitHub', async () => {
-      repo = { owner: 'DXHeroes', name: 'dx-scanner-private' };
       const repoPath = 'git@github.com:DXHeroes/dx-scanner-private.git';
-      nock('https://api.github.com')
-        .get(`/repos/${repo.owner}/${repo.name}`)
-        .reply(404);
+      new GitHubNock('DXHeroes', 'dx-scanner-private').getRepo('').reply(404);
 
       mockedGit.mockImplementation(() => {
         return {
@@ -79,11 +77,8 @@ describe('ScanningStrategyDetector', () => {
     });
 
     it('remote public GitHub', async () => {
-      repo = { owner: 'DXHeroes', name: 'dx-scanner' };
       const repoPath = 'https://github.com/DXHeroes/dx-scanner.git';
-      nock('https://api.github.com')
-        .get(`/repos/${repo.owner}/${repo.name}`)
-        .reply(200);
+      new GitHubNock('DXHeroes', 'dx-scanner').getRepo('').reply(200);
       const container = createTestContainer({ uri: repoPath });
 
       const result = await container.scanningStrategyDetector.detect();
@@ -97,11 +92,8 @@ describe('ScanningStrategyDetector', () => {
     });
 
     it('remote private GitHub', async () => {
-      repo = { owner: 'DXHeroes', name: 'dx-scanner-private' };
       const repoPath = 'https://github.com/DXHeroes/dx-scanner-private.git';
-      nock('https://api.github.com')
-        .get(`/repos/${repo.owner}/${repo.name}`)
-        .reply(404);
+      new GitHubNock('DXHeroes', 'dx-scanner-private').getRepo('').reply(404);
       const container = createTestContainer({ uri: repoPath });
 
       const result = await container.scanningStrategyDetector.detect();
@@ -115,11 +107,8 @@ describe('ScanningStrategyDetector', () => {
     });
 
     it('remote public GitHub without protocol in the URL', async () => {
-      repo = { owner: 'DXHeroes', name: 'dx-scanner' };
       const repoPath = 'github.com/DXHeroes/dx-scanner.git';
-      nock('https://api.github.com')
-        .get(`/repos/${repo.owner}/${repo.name}`)
-        .reply(200);
+      new GitHubNock('DXHeroes', 'dx-scanner').getRepo('').reply(200);
       const container = createTestContainer({ uri: repoPath });
 
       const result = await container.scanningStrategyDetector.detect();
