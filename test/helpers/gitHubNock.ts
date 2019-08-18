@@ -10,37 +10,39 @@ export class GitHubNock {
     this.repo = repo;
   }
 
-  getFile(path: string, content = 'Hello World!\n', sha = '980a0d5f19a64b4b30a87d4206aade58726b60e3'): File {
+  getFile(path: string, content = 'Hello World!\n', sha = '980a0d5f19a64b4b30a87d4206aade58726b60e3', persist = true): File {
     const body = new File(this.owner, this.repo, path, content, sha);
-    return this.getContents(path, body);
+    return this.getContents(path, body, persist);
   }
 
-  getSymlink(path: string, target: string, sha = '980a0d5f19a64b4b30a87d4206aade58726b60e3'): Symlink {
+  getSymlink(path: string, target: string, sha = '980a0d5f19a64b4b30a87d4206aade58726b60e3', persist = true): Symlink {
     const body = new Symlink(this.owner, this.repo, path, target, sha);
-    return this.getContents(path, body);
+    return this.getContents(path, body, persist);
   }
 
-  getDirectory(path: string, subfiles: string[], subdirs: string[]): (FileItem | DirectoryItem)[] {
+  getDirectory(path: string, subfiles: string[], subdirs: string[], persist = true): (FileItem | DirectoryItem)[] {
     const body = [
       ...subfiles.map((name) => new FileItem(this.owner, this.repo, nodePath.posix.join(path, name))),
       ...subdirs.map((name) => new DirectoryItem(this.owner, this.repo, nodePath.posix.join(path, name))),
     ];
-    return this.getContents(path, body);
+    return this.getContents(path, body, persist);
   }
 
-  getNonexistentContents(path: string): void {
-    this.getContents(path, undefined);
+  getNonexistentContents(path: string, persist = true): void {
+    this.getContents(path, undefined, persist);
   }
 
-  private getContents<T>(path: string, contents: T): T {
-    this.getRepo(`/contents/${path}`).reply(contents !== undefined ? 200 : 404, contents);
+  private getContents<T>(path: string, contents: T, persist = true): T {
+    this.getRepo(`/contents/${path}`, persist).reply(contents !== undefined ? 200 : 404, contents);
     return contents;
   }
 
-  getRepo(suffix: string): nock.Interceptor {
-    return nock('https://api.github.com')
-      .persist()
-      .get(`/repos/${this.owner}/${this.repo}${suffix}`);
+  getRepo(suffix: string, persist = true): nock.Interceptor {
+    const interceptor = nock('https://api.github.com');
+    if (persist) {
+      interceptor.persist();
+    }
+    return interceptor.get(`/repos/${this.owner}/${this.repo}${suffix}`);
   }
 }
 
