@@ -40,6 +40,12 @@ describe('FileSystemService', () => {
       const result = await fileSystemService.exists(mockFolderPath);
       expect(result).toEqual(false);
     });
+
+    it('follows symlinks', async () => {
+      const mockFilePath = path.resolve(__dirname, '__MOCKS__/mockFolderSL/mockFile.ts');
+      const result = await fileSystemService.exists(mockFilePath);
+      expect(result).toBe(true);
+    });
   });
 
   describe('#readDirectory', () => {

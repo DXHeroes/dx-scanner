@@ -6,6 +6,7 @@ import { injectable } from 'inversify';
 import { ICache } from '../../scanner/cache/ICache';
 import { ErrorFactory } from '../../lib/errors/ErrorFactory';
 import { GitHubPullRequestState, GitHubFile, GitHubDir } from '../../services/git/IGitHubService';
+import * as nodePath from 'path';
 
 @injectable()
 export class Git {
@@ -17,6 +18,11 @@ export class Git {
     this.repository = repository;
     this.gitHubClient = githubClient;
     this.cache = cache;
+  }
+
+  async exists(path: string): Promise<boolean> {
+    const result = await this.getRepoContent(await this.followSymLinks(path));
+    return result !== null;
   }
 
   async listDirectory(path: string): Promise<(GitHubFile | GitHubDir)[]> {
@@ -76,5 +82,34 @@ export class Git {
         return null;
       }
     });
+  }
+
+  private async followSymLinks(path: string, directory?: string): Promise<string> {
+    directory = directory !== undefined ? directory : '';
+
+    let name: string;
+    path = nodePath.posix.normalize(path);
+    // In case of an absolute path, name should be the root including the path separator
+    name = nodePath.posix.isAbsolute(path) ? nodePath.posix.parse(path).root : path.split(nodePath.posix.sep)[0];
+    path = nodePath.posix.relative(name, path);
+    const child = await this.getRepoContent(nodePath.posix.join(directory, name));
+
+    if (child !== null) {
+      if (isArray(child.data)) {
+        if (path.length !== 0) {
+          path = await this.followSymLinks(path, nodePath.posix.join(directory, name));
+        }
+      } else {
+        switch (child.data.type) {
+          case 'file':
+            break;
+          case 'symlink':
+            path = await this.followSymLinks(nodePath.posix.join(child.data.target, path), directory);
+            name = '';
+            break;
+        }
+      }
+    }
+    return nodePath.join(name, path);
   }
 }

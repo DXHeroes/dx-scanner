@@ -97,6 +97,11 @@ describe('FileSystemService', () => {
       const result = await service.exists('/non/existing/file.ts');
       expect(result).toBe(false);
     });
+
+    it('follows symlinks', async () => {
+      const result = await service.exists('srcSL/index.ts');
+      expect(result).toBe(true);
+    });
   });
 
   describe('#readDirectory', () => {
