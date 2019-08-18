@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/camelcase */
 import { GitHubService } from './GitHubService';
 import { GitHubClient } from './GitHubClient';
-import { getRepoContentResponse } from './__MOCKS__/gitHubClientMockFolder/getRepoContentResponse.mock';
 import { getPullsServiceResponse } from './__MOCKS__/gitHubServiceMockFolder/getPullsServiceResponse.mock';
 import { getPullsReviewsServiceResponse } from './__MOCKS__/gitHubServiceMockFolder/getPullsReviewsServiceResponse.mock';
 import { getCommitServiceResponse } from './__MOCKS__/gitHubServiceMockFolder/getCommitServiceResponse.mock';
@@ -70,7 +69,7 @@ describe('GitHub Service', () => {
   });
 
   it('returns repo content in own interface', async () => {
-    new GitHubNock('octocat', 'Hello-World').getRepo('/contents/README').reply(200, getRepoContentResponse);
+    new GitHubNock('octocat', 'Hello-World').getFile('README', 'Hello World!\n', '980a0d5f19a64b4b30a87d4206aade58726b60e3');
 
     const response = await service.getRepoContent('octocat', 'Hello-World', 'README');
     expect(response).toMatchObject(getRepoContentServiceResponse);

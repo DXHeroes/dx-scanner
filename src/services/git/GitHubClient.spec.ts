@@ -2,7 +2,7 @@
 import { GitHubClient } from './GitHubClient';
 import nock from 'nock';
 import { getPullsRequestsResponse } from './__MOCKS__/gitHubClientMockFolder/getPullsRequestsResponse.mock';
-import { getRepoContentResponse, getRepoContentAnonIncludedResponse } from './__MOCKS__/gitHubClientMockFolder/getRepoContentResponse.mock';
+import { getRepoContentAnonIncludedResponse } from './__MOCKS__/gitHubClientMockFolder/getRepoContentResponse.mock';
 import { getContributorsStatsResponse } from './__MOCKS__/gitHubClientMockFolder/getContributorsStatsResponse.mock';
 import { getPullRequestsReviewsResponse } from './__MOCKS__/gitHubClientMockFolder/getPullRequestsReviewsResponse.mock';
 import { getIssuesResponse } from './__MOCKS__/gitHubClientMockFolder/getIssuesResponse.mock';
@@ -23,10 +23,10 @@ describe('GitHubClient', () => {
   });
 
   it('gets repo content', async () => {
-    new GitHubNock('octocat', 'Hello-World').getRepo('/contents/README').reply(200, getRepoContentResponse);
+    const file = new GitHubNock('octocat', 'Hello-World').getFile('README');
     const response = await client.getRepoContent('octocat', 'Hello-World', 'README');
 
-    expect(response.data).toMatchObject(getRepoContentResponse);
+    expect(response.data).toMatchObject(file);
   });
 
   it('gets contributors stats', async () => {
