@@ -28,8 +28,12 @@ export class GitHubNock {
     return this.getContents(path, body);
   }
 
+  getNonexistentContents(path: string): void {
+    this.getContents(path, undefined);
+  }
+
   private getContents<T>(path: string, contents: T): T {
-    this.getRepo(`/contents/${path}`).reply(200, contents);
+    this.getRepo(`/contents/${path}`).reply(contents !== undefined ? 200 : 404, contents);
     return contents;
   }
 
