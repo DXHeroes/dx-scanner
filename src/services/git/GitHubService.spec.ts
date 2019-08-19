@@ -12,7 +12,6 @@ import { getPullsRequestsResponse } from './__MOCKS__/gitHubClientMockFolder/get
 import { getPullRequestsReviewsResponse } from './__MOCKS__/gitHubClientMockFolder/getPullRequestsReviewsResponse.mock';
 import { getCommitResponse } from './__MOCKS__/gitHubClientMockFolder/getCommitResponse.mock';
 import { getContributorsStatsResponse } from './__MOCKS__/gitHubClientMockFolder/getContributorsStatsResponse.mock';
-import { getContributorsResponse } from './__MOCKS__/gitHubClientMockFolder/getContributorsResponse.mock';
 import { getIssuesResponse } from './__MOCKS__/gitHubClientMockFolder/getIssuesResponse.mock';
 import { getIssueCommentsResponse } from './__MOCKS__/gitHubClientMockFolder/getIssueCommentsResponse.mock';
 import { getIssueCommentsServiceResponse } from './__MOCKS__/gitHubServiceMockFolder/getIssueCommentsServiceResponse.mock';
@@ -55,7 +54,7 @@ describe('GitHub Service', () => {
   });
 
   it('returns contributors in own interface', async () => {
-    new GitHubNock('octocat', 'Hello-World').getRepo('/contributors').reply(200, getContributorsResponse);
+    new GitHubNock('octocat', 'Hello-World').getContributors([{ id: 251370, login: 'Spaceghost' }, { id: 583231, login: 'octocat' }]);
 
     const response = await service.getContributors('octocat', 'Hello-World');
     expect(response).toMatchObject(getContributorsServiceResponse);

@@ -2,13 +2,11 @@
 import { GitHubClient } from './GitHubClient';
 import nock from 'nock';
 import { getPullsRequestsResponse } from './__MOCKS__/gitHubClientMockFolder/getPullsRequestsResponse.mock';
-import { getRepoContentAnonIncludedResponse } from './__MOCKS__/gitHubClientMockFolder/getRepoContentResponse.mock';
 import { getContributorsStatsResponse } from './__MOCKS__/gitHubClientMockFolder/getContributorsStatsResponse.mock';
 import { getPullRequestsReviewsResponse } from './__MOCKS__/gitHubClientMockFolder/getPullRequestsReviewsResponse.mock';
 import { getIssuesResponse } from './__MOCKS__/gitHubClientMockFolder/getIssuesResponse.mock';
 import { getPaginatedIssuesResponse } from './__MOCKS__/gitHubClientMockFolder/getPaginatedIssuesResponse.mock';
 import { getCommitResponse } from './__MOCKS__/gitHubClientMockFolder/getCommitResponse.mock';
-import { getContributorsResponse } from './__MOCKS__/gitHubClientMockFolder/getContributorsResponse.mock';
 import { getRepoCommitsResponse } from './__MOCKS__/gitHubClientMockFolder/getRepoCommitsResponse.mock';
 import { getPullsFilesResponse } from './__MOCKS__/gitHubClientMockFolder/getPullsFiles.mock';
 import { getPullCommitsResponse } from './__MOCKS__/gitHubClientMockFolder/getPullsCommitsResponse.mock';
@@ -37,20 +35,23 @@ describe('GitHubClient', () => {
   });
 
   it('gets contributors anonymous contributors included', async () => {
-    new GitHubNock('octocat', 'Hello-World')
-      .getRepo('/contributors')
-      .query({ anon: 'true' })
-      .reply(200, getRepoContentAnonIncludedResponse);
+    const contributors = new GitHubNock('octocat', 'Hello-World').getContributors(
+      [{ id: 251370, login: 'Spaceghost' }, { id: 583231, login: 'octocat' }],
+      true,
+    );
     const response = await client.getContributors('octocat', 'Hello-World', { filter: { anon: true } });
 
-    expect(response.data).toMatchObject(getRepoContentAnonIncludedResponse);
+    expect(response.data).toMatchObject(contributors);
   });
 
   it('gets contributors', async () => {
-    new GitHubNock('octocat', 'Hello-World').getRepo('/contributors').reply(200, getContributorsResponse);
+    const contributors = new GitHubNock('octocat', 'Hello-World').getContributors([
+      { id: 251370, login: 'Spaceghost' },
+      { id: 583231, login: 'octocat' },
+    ]);
     const response = await client.getContributors('octocat', 'Hello-World');
 
-    expect(response.data).toMatchObject(getContributorsResponse);
+    expect(response.data).toMatchObject(contributors);
   });
 
   it('gets pull requests', async () => {

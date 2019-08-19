@@ -32,6 +32,16 @@ export class GitHubNock {
     this.getContents(path, undefined, persist);
   }
 
+  getContributors(contributors: { id: number; login: string }[], anon?: boolean, persist = true): Contributor[] {
+    const body = contributors.map(({ id, login }) => new Contributor(id, login));
+    const interceptor = this.getRepo(`/contributors`, persist);
+    if (anon !== undefined) {
+      interceptor.query({ anon: anon.toString() });
+    }
+    interceptor.reply(200, body);
+    return body;
+  }
+
   private getContents<T>(path: string, contents: T, persist = true): T {
     this.getRepo(`/contents/${path}`, persist).reply(contents !== undefined ? 200 : 404, contents);
     return contents;
@@ -127,5 +137,55 @@ export class DirectoryItem extends RepoContent {
 
   constructor(owner: string, repo: string, path: string, sha = '980a0d5f19a64b4b30a87d4206aade58726b60e3') {
     super(owner, repo, path, 'tree', false, sha);
+  }
+}
+
+export class Contributor {
+  login: string;
+  id: number;
+  node_id = 'MDQ6VXNlcjE=';
+  avatar_url: string;
+  gravatar_id = '';
+  url: string;
+  html_url: string;
+  followers_url: string;
+  following_url: string;
+  gists_url: string;
+  starred_url: string;
+  subscriptions_url: string;
+  organizations_url: string;
+  repos_url: string;
+  events_url: string;
+  received_events_url: string;
+  type = 'User';
+  site_admin = false;
+  contributions = 1;
+
+  constructor(id: number, login: string) {
+    this.login = login;
+    this.id = id;
+    // eslint-disable-next-line @typescript-eslint/camelcase
+    this.avatar_url = `https://avatars3.githubusercontent.com/u/${this.id}`;
+    this.url = `https://api.github.com/users/${this.login}`;
+    // eslint-disable-next-line @typescript-eslint/camelcase
+    this.html_url = `https://github.com/${this.login}`;
+    // eslint-disable-next-line @typescript-eslint/camelcase
+    this.followers_url = `${this.url}/followers`;
+    // eslint-disable-next-line @typescript-eslint/camelcase
+    this.following_url = `${this.url}/following{/other_user}`;
+    // eslint-disable-next-line @typescript-eslint/camelcase
+    this.gists_url = `${this.url}/gists{/gist_id}`;
+    // eslint-disable-next-line @typescript-eslint/camelcase
+    this.starred_url = `${this.url}/starred{/owner}{/repo}`;
+    // eslint-disable-next-line @typescript-eslint/camelcase
+    this.subscriptions_url = `${this.url}/subscriptions`;
+    // eslint-disable-next-line @typescript-eslint/camelcase
+    this.organizations_url = `${this.url}/orgs`;
+    // eslint-disable-next-line @typescript-eslint/camelcase
+    this.repos_url = `${this.url}/repos`;
+    // eslint-disable-next-line @typescript-eslint/camelcase
+    this.events_url = `${this.url}/events{/privacy}`;
+    // eslint-disable-next-line @typescript-eslint/camelcase
+    this.received_events_url = `${this.url}/received_events`;
   }
 }
