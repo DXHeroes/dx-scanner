@@ -2,28 +2,26 @@ import nock from 'nock';
 import * as nodePath from 'path';
 
 export class GitHubNock {
-  owner: string;
-  repo: string;
+  repository: Repository;
 
-  constructor(owner: string, repo: string) {
-    this.owner = owner;
-    this.repo = repo;
+  constructor(ownerId: number, ownerLogin: string, repoId: number, repoName: string) {
+    this.repository = new Repository(repoId, repoName, new UserItem(ownerId, ownerLogin));
   }
 
   getFile(path: string, content = 'Hello World!\n', sha = '980a0d5f19a64b4b30a87d4206aade58726b60e3', persist = true): File {
-    const body = new File(this.owner, this.repo, path, content, sha);
+    const body = new File(this.repository, path, content, sha);
     return this.getContents(path, body, persist);
   }
 
   getSymlink(path: string, target: string, sha = '980a0d5f19a64b4b30a87d4206aade58726b60e3', persist = true): Symlink {
-    const body = new Symlink(this.owner, this.repo, path, target, sha);
+    const body = new Symlink(this.repository, path, target, sha);
     return this.getContents(path, body, persist);
   }
 
   getDirectory(path: string, subfiles: string[], subdirs: string[], persist = true): (FileItem | DirectoryItem)[] {
     const body = [
-      ...subfiles.map((name) => new FileItem(this.owner, this.repo, nodePath.posix.join(path, name))),
-      ...subdirs.map((name) => new DirectoryItem(this.owner, this.repo, nodePath.posix.join(path, name))),
+      ...subfiles.map((name) => new FileItem(this.repository, nodePath.posix.join(path, name))),
+      ...subdirs.map((name) => new DirectoryItem(this.repository, nodePath.posix.join(path, name))),
     ];
     return this.getContents(path, body, persist);
   }
@@ -33,26 +31,254 @@ export class GitHubNock {
   }
 
   getContributors(contributors: { id: number; login: string }[], anon?: boolean, persist = true): Contributor[] {
-    const body = contributors.map(({ id, login }) => new Contributor(id, login));
-    const interceptor = this.getRepo(`/contributors`, persist);
+    const url = this.repository.contributors_url;
+    const params: nock.POJO = {};
     if (anon !== undefined) {
-      interceptor.query({ anon: anon.toString() });
+      params.anon = anon.toString();
     }
-    interceptor.reply(200, body);
+    const code = 200;
+    const body = contributors.map(({ id, login }) => new Contributor(id, login));
+
+    GitHubNock.get(url, params, persist).reply(code, body);
     return body;
   }
 
   private getContents<T>(path: string, contents: T, persist = true): T {
-    this.getRepo(`/contents/${path}`, persist).reply(contents !== undefined ? 200 : 404, contents);
+    const url = this.repository.contents_url.replace('{+path}', path);
+    const params = {};
+    const code = contents !== undefined ? 200 : 404;
+
+    GitHubNock.get(url, params, persist).reply(code, contents);
     return contents;
   }
 
-  getRepo(suffix: string, persist = true): nock.Interceptor {
-    const interceptor = nock('https://api.github.com');
-    if (persist) {
-      interceptor.persist();
+  getCommits(persist = true): nock.Interceptor {
+    return GitHubNock.get(this.repository.commits_url.replace('{/sha}', ''), {}, persist);
+  }
+
+  getGitCommits(sha: string, persist = true): nock.Interceptor {
+    return GitHubNock.get(this.repository.git_commits_url.replace('{/sha}', `/${sha}`), {}, persist);
+  }
+
+  getIssues(number?: number, page?: number, perPage?: number, persist = true): nock.Interceptor {
+    const url = this.repository.issues_url.replace('{/number}', number !== undefined ? `/${number}` : '');
+    const params: nock.POJO = {};
+    if (page !== undefined) {
+      params.page = page;
     }
-    return interceptor.get(`/repos/${this.owner}/${this.repo}${suffix}`);
+    if (perPage !== undefined) {
+      // eslint-disable-next-line @typescript-eslint/camelcase
+      params.per_page = perPage;
+    }
+
+    return GitHubNock.get(url, params, persist);
+  }
+
+  getPulls(number?: number, state?: string, persist = true): nock.Interceptor {
+    const url = this.repository.pulls_url.replace('{/number}', number !== undefined ? `/${number}` : '');
+    const params: nock.POJO = {};
+    if (state !== undefined) {
+      params.state = state;
+    }
+
+    return GitHubNock.get(url, params, persist);
+  }
+
+  getRepo(suffix: string, persist = true): nock.Interceptor {
+    return GitHubNock.get(this.repository.url + suffix, {}, persist);
+  }
+
+  private static get(url: string, params: nock.POJO, persist = true): nock.Interceptor {
+    const urlObj = new URL(url);
+
+    const scope = nock(urlObj.origin);
+    if (persist) {
+      scope.persist();
+    }
+
+    const interceptor = scope.get(urlObj.pathname);
+    if (Object.keys(params)) {
+      interceptor.query(params);
+    }
+    return interceptor;
+  }
+}
+
+export class Repository {
+  id: number;
+  node_id = 'MDEwOlJlcG9zaXRvcnkxMjk2MjY5';
+  name: string;
+  full_name: string;
+  owner: UserItem;
+  private = false;
+  html_url: string;
+  description = '';
+  fork = false;
+  url: string;
+  archive_url: string;
+  assignees_url: string;
+  blobs_url: string;
+  branches_url: string;
+  collaborators_url: string;
+  comments_url: string;
+  commits_url: string;
+  compare_url: string;
+  contents_url: string;
+  contributors_url: string;
+  deployments_url: string;
+  downloads_url: string;
+  events_url: string;
+  forks_url: string;
+  git_commits_url: string;
+  git_refs_url: string;
+  git_tags_url: string;
+  git_url: string;
+  issue_comment_url: string;
+  issue_events_url: string;
+  issues_url: string;
+  keys_url: string;
+  labels_url: string;
+  languages_url: string;
+  merges_url: string;
+  milestones_url: string;
+  notifications_url: string;
+  pulls_url: string;
+  releases_url: string;
+  ssh_url: string;
+  stargazers_url: string;
+  statuses_url: string;
+  subscribers_url: string;
+  subscription_url: string;
+  tags_url: string;
+  teams_url: string;
+  trees_url: string;
+  clone_url: string;
+  mirror_url: string;
+  hooks_url: string;
+  svn_url: string;
+  homepage = 'https://example.com';
+  language = null;
+  forks_count = 0;
+  stargazers_count = 0;
+  watchers_count = 0;
+  size = 365;
+  default_branch = 'master';
+  open_issues_count = 0;
+  is_template = true;
+  topics = [];
+  has_issues = true;
+  has_projects = true;
+  has_wiki = true;
+  has_pages = false;
+  has_downloads = true;
+  archived = false;
+  disabled = false;
+  pushed_at = '2011-01-26T19:06:43Z';
+  created_at = '2011-01-26T19:01:12Z';
+  updated_at = '2011-01-26T19:14:43Z';
+  permissions = {
+    admin: true,
+    push: true,
+    pull: true,
+  };
+  allow_rebase_merge = true;
+  template_repository = null;
+  allow_squash_merge = true;
+  allow_merge_commit = true;
+  subscribers_count = 0;
+  network_count = 0;
+
+  constructor(id: number, name: string, owner: UserItem) {
+    this.id = id;
+    this.name = name;
+    this.owner = owner;
+    // eslint-disable-next-line @typescript-eslint/camelcase
+    this.full_name = `${this.owner.login}/${this.name}`;
+    // eslint-disable-next-line @typescript-eslint/camelcase
+    this.html_url = `${this.owner.html_url}/${this.name}`;
+    this.url = `https://api.github.com/repos/${this.full_name}`;
+    // eslint-disable-next-line @typescript-eslint/camelcase
+    this.archive_url = `${this.url}/{archive_format}{/ref}`;
+    // eslint-disable-next-line @typescript-eslint/camelcase
+    this.assignees_url = `${this.url}/assignees{/user}`;
+    // eslint-disable-next-line @typescript-eslint/camelcase
+    this.blobs_url = `${this.url}/git/blobs{/sha}`;
+    // eslint-disable-next-line @typescript-eslint/camelcase
+    this.branches_url = `${this.url}/branches{/branch}`;
+    // eslint-disable-next-line @typescript-eslint/camelcase
+    this.collaborators_url = `${this.url}/collaborators{/collaborator}`;
+    // eslint-disable-next-line @typescript-eslint/camelcase
+    this.comments_url = `${this.url}/comments{/number}`;
+    // eslint-disable-next-line @typescript-eslint/camelcase
+    this.commits_url = `${this.url}/commits{/sha}`;
+    // eslint-disable-next-line @typescript-eslint/camelcase
+    this.compare_url = `${this.url}/compare/{base}...{head}`;
+    // eslint-disable-next-line @typescript-eslint/camelcase
+    this.contents_url = `${this.url}/contents/{+path}`;
+    // eslint-disable-next-line @typescript-eslint/camelcase
+    this.contributors_url = `${this.url}/contributors`;
+    // eslint-disable-next-line @typescript-eslint/camelcase
+    this.deployments_url = `${this.url}/deployments`;
+    // eslint-disable-next-line @typescript-eslint/camelcase
+    this.downloads_url = `${this.url}/downloads`;
+    // eslint-disable-next-line @typescript-eslint/camelcase
+    this.events_url = `${this.url}/events`;
+    // eslint-disable-next-line @typescript-eslint/camelcase
+    this.forks_url = `${this.url}/forks`;
+    // eslint-disable-next-line @typescript-eslint/camelcase
+    this.git_commits_url = `${this.url}/git/commits{/sha}`;
+    // eslint-disable-next-line @typescript-eslint/camelcase
+    this.git_refs_url = `${this.url}/git/refs{/sha}`;
+    // eslint-disable-next-line @typescript-eslint/camelcase
+    this.git_tags_url = `${this.url}/git/tags{/sha}`;
+    // eslint-disable-next-line @typescript-eslint/camelcase
+    this.git_url = `git:github.com/${this.full_name}.git`;
+    // eslint-disable-next-line @typescript-eslint/camelcase
+    this.issue_comment_url = `${this.url}/issues/comments{/number}`;
+    // eslint-disable-next-line @typescript-eslint/camelcase
+    this.issue_events_url = `${this.url}/issues/events{/number}`;
+    // eslint-disable-next-line @typescript-eslint/camelcase
+    this.issues_url = `${this.url}/issues{/number}`;
+    // eslint-disable-next-line @typescript-eslint/camelcase
+    this.keys_url = `${this.url}/keys{/key_id}`;
+    // eslint-disable-next-line @typescript-eslint/camelcase
+    this.labels_url = `${this.url}/labels{/name}`;
+    // eslint-disable-next-line @typescript-eslint/camelcase
+    this.languages_url = `${this.url}/languages`;
+    // eslint-disable-next-line @typescript-eslint/camelcase
+    this.merges_url = `${this.url}/merges`;
+    // eslint-disable-next-line @typescript-eslint/camelcase
+    this.milestones_url = `${this.url}/milestones{/number}`;
+    // eslint-disable-next-line @typescript-eslint/camelcase
+    this.notifications_url = `${this.url}/notifications{?since,all,participating}`;
+    // eslint-disable-next-line @typescript-eslint/camelcase
+    this.pulls_url = `${this.url}/pulls{/number}`;
+    // eslint-disable-next-line @typescript-eslint/camelcase
+    this.releases_url = `${this.url}/releases{/id}`;
+    // eslint-disable-next-line @typescript-eslint/camelcase
+    this.ssh_url = `git@github.com:${this.full_name}.git`;
+    // eslint-disable-next-line @typescript-eslint/camelcase
+    this.stargazers_url = `${this.url}/stargazers`;
+    // eslint-disable-next-line @typescript-eslint/camelcase
+    this.statuses_url = `${this.url}/statuses/{sha}`;
+    // eslint-disable-next-line @typescript-eslint/camelcase
+    this.subscribers_url = `${this.url}/subscribers`;
+    // eslint-disable-next-line @typescript-eslint/camelcase
+    this.subscription_url = `${this.url}/subscription`;
+    // eslint-disable-next-line @typescript-eslint/camelcase
+    this.tags_url = `${this.url}/tags`;
+    // eslint-disable-next-line @typescript-eslint/camelcase
+    this.teams_url = `${this.url}/teams`;
+    // eslint-disable-next-line @typescript-eslint/camelcase
+    this.trees_url = `${this.url}/git/trees{/sha}`;
+    // eslint-disable-next-line @typescript-eslint/camelcase
+    this.clone_url = `https://github.com/${this.full_name}.git`;
+    // eslint-disable-next-line @typescript-eslint/camelcase
+    this.mirror_url = `git:git.example.com/${this.full_name}`;
+    // eslint-disable-next-line @typescript-eslint/camelcase
+    this.hooks_url = `${this.url}/hooks`;
+    // eslint-disable-next-line @typescript-eslint/camelcase
+    this.svn_url = `https://svn.github.com/${this.full_name}`;
   }
 }
 
@@ -69,29 +295,35 @@ class RepoContent {
   _links: { self: string; git: string; html: string };
 
   constructor(
-    owner: string,
-    repo: string,
+    repository: Repository,
     path: string,
     gitType: string,
     downloadable: boolean,
     sha = '980a0d5f19a64b4b30a87d4206aade58726b60e3',
   ) {
     const ref = 'master';
-    const apiBase = `https://api.github.com/repos/${owner}/${repo}`;
-    const htmlBase = `https://github.com/${owner}/${repo}`;
-    const downloadBase = `https://raw.githubusercontent.com/${owner}/${repo}`;
+    let gitPattern = '';
+    switch (gitType) {
+      case 'blob':
+        gitPattern = repository.blobs_url;
+        break;
+      case 'tree':
+        gitPattern = repository.trees_url;
+    }
 
     this.name = nodePath.posix.basename(path);
     this.path = path;
     this.sha = sha;
     this.size = 0;
-    this.url = `${apiBase}/contents/${this.path}?ref=${ref}`;
+    this.url = repository.contents_url.replace('{+path}', `${this.path}?ref=${ref}`);
     // eslint-disable-next-line @typescript-eslint/camelcase
-    this.html_url = `${htmlBase}/${gitType}/${ref}/${this.path}`;
+    this.html_url = `${repository.html_url}/${gitType}/${ref}/${this.path}`;
     // eslint-disable-next-line @typescript-eslint/camelcase
-    this.git_url = `${apiBase}/git/${gitType}s/${this.sha}`;
+    this.git_url = gitPattern.replace('{/sha}', `/${this.sha}`);
     // eslint-disable-next-line @typescript-eslint/camelcase
-    this.download_url = downloadable ? `${downloadBase}/${ref}/${this.path}` : null;
+    this.download_url = downloadable
+      ? `https://raw.githubusercontent.com/${repository.owner.login}/${repository.name}/${ref}/${this.path}`
+      : null;
     this._links = {
       self: this.url,
       git: this.git_url,
@@ -103,8 +335,8 @@ class RepoContent {
 export class FileItem extends RepoContent {
   type = 'file';
 
-  constructor(owner: string, repo: string, path: string, sha = '980a0d5f19a64b4b30a87d4206aade58726b60e3') {
-    super(owner, repo, path, 'blob', true, sha);
+  constructor(repository: Repository, path: string, sha = '980a0d5f19a64b4b30a87d4206aade58726b60e3') {
+    super(repository, path, 'blob', true, sha);
   }
 }
 
@@ -112,8 +344,8 @@ export class File extends FileItem {
   content: string;
   encoding: string;
 
-  constructor(owner: string, repo: string, path: string, content = 'Hello World!\n', sha = '980a0d5f19a64b4b30a87d4206aade58726b60e3') {
-    super(owner, repo, path, sha);
+  constructor(repository: Repository, path: string, content = 'Hello World!\n', sha = '980a0d5f19a64b4b30a87d4206aade58726b60e3') {
+    super(repository, path, sha);
 
     const contentBuffer = Buffer.from(content);
     this.size = contentBuffer.length;
@@ -126,8 +358,8 @@ export class Symlink extends FileItem {
   type = 'symlink';
   target: string;
 
-  constructor(owner: string, repo: string, path: string, target: string, sha = '980a0d5f19a64b4b30a87d4206aade58726b60e3') {
-    super(owner, repo, path, sha);
+  constructor(repository: Repository, path: string, target: string, sha = '980a0d5f19a64b4b30a87d4206aade58726b60e3') {
+    super(repository, path, sha);
     this.target = target;
   }
 }
@@ -135,8 +367,8 @@ export class Symlink extends FileItem {
 export class DirectoryItem extends RepoContent {
   type = 'dir';
 
-  constructor(owner: string, repo: string, path: string, sha = '980a0d5f19a64b4b30a87d4206aade58726b60e3') {
-    super(owner, repo, path, 'tree', false, sha);
+  constructor(repository: Repository, path: string, sha = '980a0d5f19a64b4b30a87d4206aade58726b60e3') {
+    super(repository, path, 'tree', false, sha);
   }
 }
 

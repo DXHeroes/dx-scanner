@@ -28,28 +28,28 @@ describe('Collaboration Inspector', () => {
   });
 
   it('returns paginated pull requests', async () => {
-    new GitHubNock('octocat', 'Hello-World').getRepo('/pulls').reply(200, getPullsRequestsResponse);
+    new GitHubNock(1, 'octocat', 1, 'Hello-World').getPulls().reply(200, getPullsRequestsResponse);
 
     const response = await inspector.getPullRequests('octocat', 'Hello-World');
     expect(response).toMatchObject(getPullsServiceResponse);
   });
 
   it('returns one pull request', async () => {
-    new GitHubNock('octocat', 'Hello-World').getRepo('/pulls/1').reply(200, getPullRequestResponse);
+    new GitHubNock(1, 'octocat', 1, 'Hello-World').getPulls(1).reply(200, getPullRequestResponse);
 
     const response = await inspector.getPullRequest('octocat', 'Hello-World', 1);
     expect(response).toMatchObject(getPullServiceResponse);
   });
 
   it('returns pull request files', async () => {
-    new GitHubNock('octocat', 'Hello-World').getRepo('/pulls/1/files').reply(200, getPullsFilesResponse);
+    new GitHubNock(1, 'octocat', 1, 'Hello-World').getRepo('/pulls/1/files').reply(200, getPullsFilesResponse);
 
     const response = await inspector.getPullRequestFiles('octocat', 'Hello-World', 1);
     expect(response).toMatchObject(getPullsFilesServiceResponse);
   });
 
   it('return pull request commits', async () => {
-    new GitHubNock('octocat', 'Hello-World').getRepo('/pulls/1/commits').reply(200, getPullCommitsResponse);
+    new GitHubNock(1, 'octocat', 1, 'Hello-World').getRepo('/pulls/1/commits').reply(200, getPullCommitsResponse);
 
     const response = await inspector.getPullCommits('octocat', 'Hello-World', 1);
     expect(response).toMatchObject(getPullCommitsServiceResponse);

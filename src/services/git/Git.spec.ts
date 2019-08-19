@@ -10,7 +10,7 @@ describe('Git', () => {
   beforeAll(() => {
     cache = new InMemoryCache();
     git = new Git({ url: 'https://github.com/DXHeroes/dx-scanner.git' }, new GitHubClient({ uri: '.' }), cache);
-    gitHubNock = new GitHubNock('DXHeroes', 'dx-scanner');
+    gitHubNock = new GitHubNock(1, 'DXHeroes', 1, 'dx-scanner');
   });
 
   beforeEach(() => {

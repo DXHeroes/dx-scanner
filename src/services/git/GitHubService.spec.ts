@@ -33,77 +33,77 @@ describe('GitHub Service', () => {
   });
 
   it('returns open pulls in own interface', async () => {
-    new GitHubNock('octocat', 'Hello-World').getRepo('/pulls').reply(200, getPullsRequestsResponse);
+    new GitHubNock(1, 'octocat', 1, 'Hello-World').getPulls().reply(200, getPullsRequestsResponse);
 
     const response = await service.getPullRequests('octocat', 'Hello-World');
     expect(response).toMatchObject(getPullsServiceResponse);
   });
 
   it('returns pull request reviews in own interface', async () => {
-    new GitHubNock('octocat', 'Hello-World').getRepo('/pulls/1/reviews').reply(200, getPullRequestsReviewsResponse);
+    new GitHubNock(1, 'octocat', 1, 'Hello-World').getRepo('/pulls/1/reviews').reply(200, getPullRequestsReviewsResponse);
 
     const response = await service.getPullRequestReviews('octocat', 'Hello-World', 1);
     expect(response).toMatchObject(getPullsReviewsServiceResponse);
   });
 
   it('returns commits in own interface', async () => {
-    new GitHubNock('octocat', 'Hello-World').getRepo('/git/commits/762941318ee16e59dabbacb1b4049eec22f0d303').reply(200, getCommitResponse);
+    new GitHubNock(1, 'octocat', 1, 'Hello-World').getGitCommits('762941318ee16e59dabbacb1b4049eec22f0d303').reply(200, getCommitResponse);
 
     const response = await service.getCommit('octocat', 'Hello-World', '762941318ee16e59dabbacb1b4049eec22f0d303');
     expect(response).toMatchObject(getCommitServiceResponse);
   });
 
   it('returns contributors in own interface', async () => {
-    new GitHubNock('octocat', 'Hello-World').getContributors([{ id: 251370, login: 'Spaceghost' }, { id: 583231, login: 'octocat' }]);
+    new GitHubNock(1, 'octocat', 1, 'Hello-World').getContributors([{ id: 251370, login: 'Spaceghost' }, { id: 583231, login: 'octocat' }]);
 
     const response = await service.getContributors('octocat', 'Hello-World');
     expect(response).toMatchObject(getContributorsServiceResponse);
   });
 
   it('returns contributor stats in own interface', async () => {
-    new GitHubNock('octocat', 'Hello-World').getRepo('/stats/contributors').reply(200, getContributorsStatsResponse);
+    new GitHubNock(1, 'octocat', 1, 'Hello-World').getRepo('/stats/contributors').reply(200, getContributorsStatsResponse);
 
     const response = await service.getContributorsStats('octocat', 'Hello-World');
     expect(response).toMatchObject(getContributorsStatsServiceResponse);
   });
 
   it('returns repo content in own interface', async () => {
-    new GitHubNock('octocat', 'Hello-World').getFile('README', 'Hello World!\n', '980a0d5f19a64b4b30a87d4206aade58726b60e3');
+    new GitHubNock(1, 'octocat', 1, 'Hello-World').getFile('README', 'Hello World!\n', '980a0d5f19a64b4b30a87d4206aade58726b60e3');
 
     const response = await service.getRepoContent('octocat', 'Hello-World', 'README');
     expect(response).toMatchObject(getRepoContentServiceResponse);
   });
 
   it('returns issues in own interface', async () => {
-    new GitHubNock('octocat', 'Hello-World').getRepo('/issues').reply(200, getIssuesResponse);
+    new GitHubNock(1, 'octocat', 1, 'Hello-World').getIssues().reply(200, getIssuesResponse);
 
     const response = await service.getIssues('octocat', 'Hello-World');
     expect(response).toMatchObject(getIssuesServiceResponse);
   });
 
   it('returns comments in own interface', async () => {
-    new GitHubNock('octocat', 'Hello-World').getRepo('/issues/1/comments').reply(200, getIssueCommentsResponse);
+    new GitHubNock(1, 'octocat', 1, 'Hello-World').getRepo('/issues/1/comments').reply(200, getIssueCommentsResponse);
 
     const response = await service.getIssueComments('octocat', 'Hello-World', 1);
     expect(response).toMatchObject(getIssueCommentsServiceResponse);
   });
 
   it('returns commits in own interfa', async () => {
-    new GitHubNock('octocat', 'Hello-World').getRepo('/issues/1/comments').reply(200, getIssueCommentsResponse);
+    new GitHubNock(1, 'octocat', 1, 'Hello-World').getRepo('/issues/1/comments').reply(200, getIssueCommentsResponse);
 
     const response = await service.getIssueComments('octocat', 'Hello-World', 1);
     expect(response).toMatchObject(getIssueCommentsServiceResponse);
   });
 
   it('returns pull files in own interface', async () => {
-    new GitHubNock('octocat', 'Hello-World').getRepo('/pulls/1/files').reply(200, getPullsFilesResponse);
+    new GitHubNock(1, 'octocat', 1, 'Hello-World').getRepo('/pulls/1/files').reply(200, getPullsFilesResponse);
 
     const response = await service.getPullRequestFiles('octocat', 'Hello-World', 1);
     expect(response).toMatchObject(getPullsFilesServiceResponse);
   });
 
   it('returns pull commits in own interface', async () => {
-    new GitHubNock('octocat', 'Hello-World').getRepo('/pulls/1/commits').reply(200, getPullCommitsResponse);
+    new GitHubNock(1, 'octocat', 1, 'Hello-World').getRepo('/pulls/1/commits').reply(200, getPullCommitsResponse);
 
     const response = await service.getPullCommits('octocat', 'Hello-World', 1);
     expect(response).toMatchObject(getPullCommitsServiceResponse);
