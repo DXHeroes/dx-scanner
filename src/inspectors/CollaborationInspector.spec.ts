@@ -2,7 +2,6 @@ import { CollaborationInspector } from './CollaborationInspector';
 import { GitHubService } from '../services/git/GitHubService';
 import { GitHubClient } from '../services/git/GitHubClient';
 import { getPullsServiceResponse } from '../services/git/__MOCKS__/gitHubServiceMockFolder/getPullsServiceResponse.mock';
-import { getPullsRequestsResponse } from '../services/git/__MOCKS__/gitHubClientMockFolder/getPullsRequestsResponse.mock';
 import { getPullServiceResponse } from '../services/git/__MOCKS__/gitHubServiceMockFolder/getPullServiceResponse.mock';
 import { getPullsFilesResponse } from '../services/git/__MOCKS__/gitHubClientMockFolder/getPullsFiles.mock';
 import { getPullsFilesServiceResponse } from '../services/git/__MOCKS__/gitHubServiceMockFolder/getPullFilesServiceResponse.mock';
@@ -28,14 +27,23 @@ describe('Collaboration Inspector', () => {
   });
 
   it('returns paginated pull requests', async () => {
-    new GitHubNock(1, 'octocat', 1, 'Hello-World').getPulls().reply(200, getPullsRequestsResponse);
+    new GitHubNock(1, 'octocat', 1, 'Hello-World').getPulls([
+      {
+        number: 1347,
+        state: 'open',
+        title: 'new-feature',
+        body: 'Please pull these awesome changes',
+        head: { ref: 'new-topic', repo: { id: 1296269, name: 'Hello-World', owner: { id: 1, login: 'octocat' } } },
+        base: { ref: 'master', repo: { id: 1296269, name: 'Hello-World', owner: { id: 1, login: 'octocat' } } },
+      },
+    ]);
 
     const response = await inspector.getPullRequests('octocat', 'Hello-World');
     expect(response).toMatchObject(getPullsServiceResponse);
   });
 
   it('returns one pull request', async () => {
-    new GitHubNock(1, 'octocat', 1, 'Hello-World').getPulls(1).reply(200, getPullRequestResponse);
+    new GitHubNock(1, 'octocat', 1, 'Hello-World').getPull(1).reply(200, getPullRequestResponse);
 
     const response = await inspector.getPullRequest('octocat', 'Hello-World', 1);
     expect(response).toMatchObject(getPullServiceResponse);

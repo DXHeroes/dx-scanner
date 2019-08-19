@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/camelcase */
 import { GitHubClient } from './GitHubClient';
 import nock from 'nock';
-import { getPullsRequestsResponse } from './__MOCKS__/gitHubClientMockFolder/getPullsRequestsResponse.mock';
 import { getContributorsStatsResponse } from './__MOCKS__/gitHubClientMockFolder/getContributorsStatsResponse.mock';
 import { getPullRequestsReviewsResponse } from './__MOCKS__/gitHubClientMockFolder/getPullRequestsReviewsResponse.mock';
 import { getIssuesResponse } from './__MOCKS__/gitHubClientMockFolder/getIssuesResponse.mock';
@@ -55,10 +54,22 @@ describe('GitHubClient', () => {
   });
 
   it('gets pull requests', async () => {
-    new GitHubNock(1, 'octocat', 1, 'Hello-World').getPulls(undefined, 'open').reply(200, getPullsRequestsResponse);
+    const pulls = new GitHubNock(1, 'octocat', 1, 'Hello-World').getPulls(
+      [
+        {
+          number: 1347,
+          state: 'open',
+          title: 'new-feature',
+          body: 'Please pull these awesome changes',
+          head: { ref: 'new-topic', repo: { id: 1296269, name: 'Hello-World', owner: { id: 1, login: 'octocat' } } },
+          base: { ref: 'master', repo: { id: 1296269, name: 'Hello-World', owner: { id: 1, login: 'octocat' } } },
+        },
+      ],
+      'open',
+    );
     const response = await client.getPullRequests('octocat', 'Hello-World');
 
-    expect(response.data).toMatchObject(getPullsRequestsResponse);
+    expect(response.data).toMatchObject(pulls);
   });
 
   it('get pull request reviews', async () => {

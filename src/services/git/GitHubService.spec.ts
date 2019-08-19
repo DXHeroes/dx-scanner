@@ -8,7 +8,6 @@ import { getContributorsServiceResponse } from './__MOCKS__/gitHubServiceMockFol
 import { getContributorsStatsServiceResponse } from './__MOCKS__/gitHubServiceMockFolder/getContributorsStatsServiceResponse.mock';
 import { getRepoContentServiceResponse } from './__MOCKS__/gitHubServiceMockFolder/getRepoContentServiceResponse.mock';
 import { getIssuesServiceResponse } from './__MOCKS__/gitHubServiceMockFolder/getIssuesServiceResponse.mock';
-import { getPullsRequestsResponse } from './__MOCKS__/gitHubClientMockFolder/getPullsRequestsResponse.mock';
 import { getPullRequestsReviewsResponse } from './__MOCKS__/gitHubClientMockFolder/getPullRequestsReviewsResponse.mock';
 import { getCommitResponse } from './__MOCKS__/gitHubClientMockFolder/getCommitResponse.mock';
 import { getContributorsStatsResponse } from './__MOCKS__/gitHubClientMockFolder/getContributorsStatsResponse.mock';
@@ -33,7 +32,16 @@ describe('GitHub Service', () => {
   });
 
   it('returns open pulls in own interface', async () => {
-    new GitHubNock(1, 'octocat', 1, 'Hello-World').getPulls().reply(200, getPullsRequestsResponse);
+    new GitHubNock(1, 'octocat', 1, 'Hello-World').getPulls([
+      {
+        number: 1347,
+        state: 'open',
+        title: 'new-feature',
+        body: 'Please pull these awesome changes',
+        head: { ref: 'new-topic', repo: { id: 1296269, name: 'Hello-World', owner: { id: 1, login: 'octocat' } } },
+        base: { ref: 'master', repo: { id: 1296269, name: 'Hello-World', owner: { id: 1, login: 'octocat' } } },
+      },
+    ]);
 
     const response = await service.getPullRequests('octocat', 'Hello-World');
     expect(response).toMatchObject(getPullsServiceResponse);

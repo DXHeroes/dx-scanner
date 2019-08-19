@@ -30,6 +30,35 @@ export class GitHubNock {
     this.getContents(path, undefined, persist);
   }
 
+  getPulls(
+    pulls: {
+      number: number;
+      state: string;
+      title: string;
+      body: string;
+      head: { ref: string; repo: { id: number; name: string; owner: { id: number; login: string } } };
+      base: { ref: string; repo: { id: number; name: string; owner: { id: number; login: string } } };
+    }[],
+    queryState?: string,
+    persist = true,
+  ): PullRequestItem[] {
+    const code = 200;
+    const responseBody = pulls.map(
+      ({ number, state, title, body, head, base }) =>
+        new PullRequestItem(
+          number,
+          state,
+          title,
+          body,
+          new BranchItem(head.ref, new Repository(head.repo.id, head.repo.name, new UserItem(head.repo.owner.id, head.repo.owner.login))),
+          new BranchItem(base.ref, new Repository(base.repo.id, base.repo.name, new UserItem(base.repo.owner.id, base.repo.owner.login))),
+        ),
+    );
+
+    this.getPullsInternal(undefined, queryState, persist).reply(code, responseBody);
+    return responseBody;
+  }
+
   getContributors(contributors: { id: number; login: string }[], anon?: boolean, persist = true): Contributor[] {
     const url = this.repository.contributors_url;
     const params: nock.POJO = {};
@@ -50,6 +79,17 @@ export class GitHubNock {
 
     GitHubNock.get(url, params, persist).reply(code, contents);
     return contents;
+  }
+
+  private getPullsInternal(number?: number, state?: string, persist = true): nock.Interceptor {
+    const url = this.repository.pulls_url.replace('{/number}', number !== undefined ? `/${number}` : '');
+    const params: nock.POJO = {};
+    if (state !== undefined) {
+      params.state = state;
+    }
+
+    const interceptor = GitHubNock.get(url, params, persist);
+    return interceptor;
   }
 
   getCommits(persist = true): nock.Interceptor {
@@ -74,14 +114,8 @@ export class GitHubNock {
     return GitHubNock.get(url, params, persist);
   }
 
-  getPulls(number?: number, state?: string, persist = true): nock.Interceptor {
-    const url = this.repository.pulls_url.replace('{/number}', number !== undefined ? `/${number}` : '');
-    const params: nock.POJO = {};
-    if (state !== undefined) {
-      params.state = state;
-    }
-
-    return GitHubNock.get(url, params, persist);
+  getPull(number: number, persist = true): nock.Interceptor {
+    return this.getPullsInternal(number, undefined, persist);
   }
 
   getRepo(suffix: string, persist = true): nock.Interceptor {
@@ -437,5 +471,91 @@ export class BranchItem {
     this.repo = repo;
     this.user = this.repo.owner;
     this.label = `${this.user.login}:${this.ref}`;
+  }
+}
+
+export class PullRequestItem {
+  url: string;
+  id = 1;
+  node_id = 'MDExOlB1bGxSZXF1ZXN0MQ==';
+  html_url: string;
+  diff_url: string;
+  patch_url: string;
+  issue_url: string;
+  commits_url: string;
+  review_comments_url: string;
+  review_comment_url: string;
+  comments_url: string;
+  statuses_url: string;
+  number: number;
+  state: string;
+  locked = false;
+  title: string;
+  user: UserItem;
+  body: string;
+  labels = [];
+  milestone = null;
+  created_at = '2011-01-26T19:01:12Z';
+  updated_at = '2011-01-26T19:01:12Z';
+  closed_at = '2011-01-26T19:01:12Z';
+  merged_at = '2011-01-26T19:01:12Z';
+  merge_commit_sha = 'e5bd3914e2e596debea16f433f57875b5b90bcd6';
+  assignee = null;
+  assignees = [];
+  requested_reviewers = [];
+  requested_teams = [];
+  head: BranchItem;
+  base: BranchItem;
+  _links: {
+    self: { href: string };
+    html: { href: string };
+    issue: { href: string };
+    comments: { href: string };
+    review_comments: { href: string };
+    review_comment: { href: string };
+    commits: { href: string };
+    statuses: { href: string };
+  };
+  author_association = 'OWNER';
+
+  constructor(number: number, state: string, title: string, body: string, head: BranchItem, base: BranchItem) {
+    this.number = number;
+    this.base = base;
+    this.head = head;
+    this.url = this.base.repo.pulls_url.replace('{/number}', `/${this.number}`);
+    // eslint-disable-next-line @typescript-eslint/camelcase
+    this.commits_url = `${this.url}/commits`;
+    // eslint-disable-next-line @typescript-eslint/camelcase
+    this.review_comments_url = `${this.url}/comments`;
+    // eslint-disable-next-line @typescript-eslint/camelcase
+    this.review_comment_url = `${this.base.repo.pulls_url.replace('{/number}', '')}/comments{/number}`;
+    // eslint-disable-next-line @typescript-eslint/camelcase
+    this.issue_url = this.base.repo.issues_url.replace('{/number}', `/${this.number}`);
+    // eslint-disable-next-line @typescript-eslint/camelcase
+    this.comments_url = `${this.issue_url}/comments`;
+    // eslint-disable-next-line @typescript-eslint/camelcase
+    this.html_url = `${this.base.repo.html_url}/pull/${this.number}`;
+    // eslint-disable-next-line @typescript-eslint/camelcase
+    this.diff_url = `${this.html_url}.diff`;
+    // eslint-disable-next-line @typescript-eslint/camelcase
+    this.patch_url = `${this.html_url}.patch`;
+    // eslint-disable-next-line @typescript-eslint/camelcase
+    this.statuses_url = this.head.repo.statuses_url.replace('{sha}', this.head.ref);
+    this.state = state;
+    this.title = title;
+    this.user = this.head.user;
+    this.body = body;
+    this._links = {
+      self: { href: this.url },
+      html: { href: this.html_url },
+      issue: { href: this.issue_url },
+      comments: { href: this.comments_url },
+      // eslint-disable-next-line @typescript-eslint/camelcase
+      review_comments: { href: this.review_comments_url },
+      // eslint-disable-next-line @typescript-eslint/camelcase
+      review_comment: { href: this.review_comment_url },
+      commits: { href: this.commits_url },
+      statuses: { href: this.statuses_url },
+    };
   }
 }
