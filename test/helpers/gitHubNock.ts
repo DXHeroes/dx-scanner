@@ -424,3 +424,18 @@ export class UserItem {
 export class Contributor extends UserItem {
   contributions = 1;
 }
+
+export class BranchItem {
+  label: string;
+  ref: string;
+  sha = '6dcb09b5b57875f334f61aebed695e2e4193db5e';
+  user: UserItem;
+  repo: Repository;
+
+  constructor(ref: string, repo: Repository) {
+    this.ref = ref;
+    this.repo = repo;
+    this.user = this.repo.owner;
+    this.label = `${this.user.login}:${this.ref}`;
+  }
+}

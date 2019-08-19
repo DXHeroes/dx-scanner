@@ -1,4 +1,4 @@
-import { UserItem, Repository } from '../../../../../test/helpers/gitHubNock';
+import { UserItem, Repository, BranchItem } from '../../../../../test/helpers/gitHubNock';
 
 /* eslint-disable @typescript-eslint/camelcase */
 export const getPullRequestResponse = {
@@ -31,20 +31,8 @@ export const getPullRequestResponse = {
   review_comment_url: 'https://api.github.com/repos/octocat/Hello-World/pulls/comments{/number}',
   comments_url: 'https://api.github.com/repos/octocat/Hello-World/issues/1/comments',
   statuses_url: 'https://api.github.com/repos/octocat/Hello-World/statuses/7044a8a032e85b6ab611033b2ac8af7ce85805b2',
-  head: {
-    label: 'unoju:patch-1',
-    ref: 'patch-1',
-    sha: '7044a8a032e85b6ab611033b2ac8af7ce85805b2',
-    user: new UserItem(777449, 'unoju'),
-    repo: new Repository(1724195, 'Hello-World', new UserItem(777449, 'unoju')),
-  },
-  base: {
-    label: 'octocat:master',
-    ref: 'master',
-    sha: '553c2077f0edc3d5dc5d17262f6aa498e69d6f8e',
-    user: new UserItem(583231, 'octocat'),
-    repo: new Repository(1296269, 'Hello-World', new UserItem(583231, 'octocat')),
-  },
+  head: new BranchItem('patch-1', new Repository(1724195, 'Hello-World', new UserItem(777449, 'unoju'))),
+  base: new BranchItem('master', new Repository(1296269, 'Hello-World', new UserItem(583231, 'octocat'))),
   _links: {
     self: {
       href: 'https://api.github.com/repos/octocat/Hello-World/pulls/1',

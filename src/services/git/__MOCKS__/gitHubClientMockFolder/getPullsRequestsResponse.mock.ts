@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/camelcase */
 import Octokit from '@octokit/rest';
-import { UserItem, Repository } from '../../../../../test/helpers/gitHubNock';
+import { UserItem, Repository, BranchItem } from '../../../../../test/helpers/gitHubNock';
 
 export const getPullsRequestsResponse: Octokit.ReposListPullRequestsAssociatedWithCommitResponse = [
   {
@@ -75,20 +75,8 @@ export const getPullsRequestsResponse: Octokit.ReposListPullRequestsAssociatedWi
         parent: null,
       },
     ],
-    head: {
-      label: 'octocat:new-topic',
-      ref: 'new-topic',
-      sha: '6dcb09b5b57875f334f61aebed695e2e4193db5e',
-      user: new UserItem(1, 'octocat'),
-      repo: new Repository(1296269, 'Hello-World', new UserItem(1, 'octocat')),
-    },
-    base: {
-      label: 'octocat:master',
-      ref: 'master',
-      sha: '6dcb09b5b57875f334f61aebed695e2e4193db5e',
-      user: new UserItem(1, 'octocat'),
-      repo: new Repository(1296269, 'Hello-World', new UserItem(1, 'octocat')),
-    },
+    head: new BranchItem('new-topic', new Repository(1296269, 'Hello-World', new UserItem(1, 'octocat'))),
+    base: new BranchItem('master', new Repository(1296269, 'Hello-World', new UserItem(1, 'octocat'))),
     _links: {
       self: {
         href: 'https://api.github.com/repos/octocat/Hello-World/pulls/1347',
