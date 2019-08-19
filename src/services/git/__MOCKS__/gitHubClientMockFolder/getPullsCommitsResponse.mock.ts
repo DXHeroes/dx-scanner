@@ -1,3 +1,5 @@
+import { UserItem } from '../../../../../test/helpers/gitHubNock';
+
 /* eslint-disable @typescript-eslint/camelcase */
 export const getPullCommitsResponse = [
   {
@@ -31,46 +33,8 @@ export const getPullCommitsResponse = [
     url: 'https://api.github.com/repos/octocat/Hello-World/commits/7044a8a032e85b6ab611033b2ac8af7ce85805b2',
     html_url: 'https://github.com/octocat/Hello-World/commit/7044a8a032e85b6ab611033b2ac8af7ce85805b2',
     comments_url: 'https://api.github.com/repos/octocat/Hello-World/commits/7044a8a032e85b6ab611033b2ac8af7ce85805b2/comments',
-    author: {
-      login: 'unoju',
-      id: 777449,
-      node_id: 'MDQ6VXNlcjc3NzQ0OQ==',
-      avatar_url: 'https://avatars2.githubusercontent.com/u/777449?v=4',
-      gravatar_id: '',
-      url: 'https://api.github.com/users/unoju',
-      html_url: 'https://github.com/unoju',
-      followers_url: 'https://api.github.com/users/unoju/followers',
-      following_url: 'https://api.github.com/users/unoju/following{/other_user}',
-      gists_url: 'https://api.github.com/users/unoju/gists{/gist_id}',
-      starred_url: 'https://api.github.com/users/unoju/starred{/owner}{/repo}',
-      subscriptions_url: 'https://api.github.com/users/unoju/subscriptions',
-      organizations_url: 'https://api.github.com/users/unoju/orgs',
-      repos_url: 'https://api.github.com/users/unoju/repos',
-      events_url: 'https://api.github.com/users/unoju/events{/privacy}',
-      received_events_url: 'https://api.github.com/users/unoju/received_events',
-      type: 'User',
-      site_admin: false,
-    },
-    committer: {
-      login: 'unoju',
-      id: 777449,
-      node_id: 'MDQ6VXNlcjc3NzQ0OQ==',
-      avatar_url: 'https://avatars2.githubusercontent.com/u/777449?v=4',
-      gravatar_id: '',
-      url: 'https://api.github.com/users/unoju',
-      html_url: 'https://github.com/unoju',
-      followers_url: 'https://api.github.com/users/unoju/followers',
-      following_url: 'https://api.github.com/users/unoju/following{/other_user}',
-      gists_url: 'https://api.github.com/users/unoju/gists{/gist_id}',
-      starred_url: 'https://api.github.com/users/unoju/starred{/owner}{/repo}',
-      subscriptions_url: 'https://api.github.com/users/unoju/subscriptions',
-      organizations_url: 'https://api.github.com/users/unoju/orgs',
-      repos_url: 'https://api.github.com/users/unoju/repos',
-      events_url: 'https://api.github.com/users/unoju/events{/privacy}',
-      received_events_url: 'https://api.github.com/users/unoju/received_events',
-      type: 'User',
-      site_admin: false,
-    },
+    author: new UserItem(777449, 'unoju'),
+    committer: new UserItem(777449, 'unoju'),
     parents: [
       {
         sha: '553c2077f0edc3d5dc5d17262f6aa498e69d6f8e',

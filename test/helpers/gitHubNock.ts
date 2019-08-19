@@ -140,7 +140,7 @@ export class DirectoryItem extends RepoContent {
   }
 }
 
-export class Contributor {
+export class UserItem {
   login: string;
   id: number;
   node_id = 'MDQ6VXNlcjE=';
@@ -159,7 +159,6 @@ export class Contributor {
   received_events_url: string;
   type = 'User';
   site_admin = false;
-  contributions = 1;
 
   constructor(id: number, login: string) {
     this.login = login;
@@ -188,4 +187,8 @@ export class Contributor {
     // eslint-disable-next-line @typescript-eslint/camelcase
     this.received_events_url = `${this.url}/received_events`;
   }
+}
+
+export class Contributor extends UserItem {
+  contributions = 1;
 }
