@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/explicit-member-accessibility */
 import { Repository } from '../../model';
 import { GitHubClient } from './GitHubClient';
 import { GitHubUrlParser } from './GitHubUrlParser';
@@ -20,7 +19,6 @@ export class Git {
     this.cache = cache;
   }
 
-  //should be explicit-member-accessibility disabled? There is just a warning
   async listDirectory(path: string): Promise<(GitHubFile | GitHubDir)[]> {
     return this.cache.getOrSet(this.contentCacheKey(path), async () => {
       const params = GitHubUrlParser.getOwnerAndRepoName(this.repository.url);
