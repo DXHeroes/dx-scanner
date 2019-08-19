@@ -141,7 +141,6 @@ export class Scanner {
     const practicesWithContext: PracticeWithContext[] = [];
     for (const componentWithCtx of componentsWithContext) {
       const componentContext = componentWithCtx.languageContext.getProjectComponentContext(componentWithCtx.component);
-      await componentContext.init();
       const practiceContext = componentContext.getPracticeContext();
 
       const applicablePractices = await filterAsync(this.practices, async (p) => {
