@@ -9,10 +9,9 @@ import ncu from 'npm-check-updates';
   id: 'LanguageIndependent.DependenciesVersion',
   name: 'Updated Dependencies',
   impact: PracticeImpact.high,
-  suggestion:
-    'Keep the dependencies updated to eliminate security concerns and compatibility issues. You can automatize it with e.g., GreenKeeper.',
+  suggestion: 'Keep the dependencies updated to eliminate security concerns and compatibility issues. Try to use Renovate Bot.',
   reportOnlyOnce: true,
-  url: 'https://greenkeeper.io/',
+  url: 'https://renovatebot.com/',
 })
 export class DependenciesVersionPractice implements IPractice {
   async isApplicable(ctx: PracticeContext): Promise<boolean> {
