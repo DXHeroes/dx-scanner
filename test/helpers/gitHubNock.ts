@@ -42,7 +42,6 @@ export class GitHubNock {
     queryState?: string,
     persist = true,
   ): PullRequestItem[] {
-    const code = 200;
     const responseBody = pulls.map(
       ({ number, state, title, body, head, base }) =>
         new PullRequestItem(
@@ -55,8 +54,28 @@ export class GitHubNock {
         ),
     );
 
-    this.getPullsInternal(undefined, queryState, persist).reply(code, responseBody);
-    return responseBody;
+    return this.getPullsInternal(undefined, queryState, responseBody, persist);
+  }
+
+  getPull(
+    number: number,
+    state: string,
+    title: string,
+    body: string,
+    head: { ref: string; repo: { id: number; name: string; owner: { id: number; login: string } } },
+    base: { ref: string; repo: { id: number; name: string; owner: { id: number; login: string } } },
+    persist = true,
+  ): PullRequest {
+    const responseBody = new PullRequest(
+      number,
+      state,
+      title,
+      body,
+      new BranchItem(head.ref, new Repository(head.repo.id, head.repo.name, new UserItem(head.repo.owner.id, head.repo.owner.login))),
+      new BranchItem(base.ref, new Repository(base.repo.id, base.repo.name, new UserItem(base.repo.owner.id, base.repo.owner.login))),
+    );
+
+    return this.getPullsInternal(number, undefined, responseBody, persist);
   }
 
   getContributors(contributors: { id: number; login: string }[], anon?: boolean, persist = true): Contributor[] {
@@ -81,15 +100,20 @@ export class GitHubNock {
     return contents;
   }
 
-  private getPullsInternal(number?: number, state?: string, persist = true): nock.Interceptor {
+  private getPullsInternal<T extends PullRequest | PullRequestItem[]>(
+    number: number | undefined,
+    state: string | undefined,
+    pulls: T,
+    persist = true,
+  ): T {
     const url = this.repository.pulls_url.replace('{/number}', number !== undefined ? `/${number}` : '');
     const params: nock.POJO = {};
     if (state !== undefined) {
       params.state = state;
     }
 
-    const interceptor = GitHubNock.get(url, params, persist);
-    return interceptor;
+    GitHubNock.get(url, params, persist).reply(200, pulls);
+    return pulls;
   }
 
   getCommits(persist = true): nock.Interceptor {
@@ -112,10 +136,6 @@ export class GitHubNock {
     }
 
     return GitHubNock.get(url, params, persist);
-  }
-
-  getPull(number: number, persist = true): nock.Interceptor {
-    return this.getPullsInternal(number, undefined, persist);
   }
 
   getRepo(suffix: string, persist = true): nock.Interceptor {
@@ -558,4 +578,19 @@ export class PullRequestItem {
       statuses: { href: this.statuses_url },
     };
   }
+}
+
+export class PullRequest extends PullRequestItem {
+  merged = false;
+  mergeable = true;
+  rebaseable = true;
+  mergeable_state = 'clean';
+  merged_by = null;
+  comments = 0;
+  review_comments = 0;
+  maintainer_can_modify = true;
+  commits = 1;
+  additions = 1;
+  deletions = 0;
+  changed_files = 1;
 }

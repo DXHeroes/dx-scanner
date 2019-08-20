@@ -7,7 +7,6 @@ import { getPullsFilesResponse } from '../services/git/__MOCKS__/gitHubClientMoc
 import { getPullsFilesServiceResponse } from '../services/git/__MOCKS__/gitHubServiceMockFolder/getPullFilesServiceResponse.mock';
 import { getPullCommitsResponse } from '../services/git/__MOCKS__/gitHubClientMockFolder/getPullsCommitsResponse.mock';
 import { getPullCommitsServiceResponse } from '../services/git/__MOCKS__/gitHubServiceMockFolder/getPullCommitsServiceResponse.mock';
-import { getPullRequestResponse } from '../services/git/__MOCKS__/gitHubServiceMockFolder/getPullRequestsResponse.mock';
 import nock from 'nock';
 import { TestContainerContext } from '../inversify.config';
 import { createTestContainer } from '../inversify.config';
@@ -43,7 +42,14 @@ describe('Collaboration Inspector', () => {
   });
 
   it('returns one pull request', async () => {
-    new GitHubNock(1, 'octocat', 1, 'Hello-World').getPull(1).reply(200, getPullRequestResponse);
+    new GitHubNock(1, 'octocat', 1, 'Hello-World').getPull(
+      1,
+      'closed',
+      'Edited README via GitHub',
+      '',
+      { ref: 'patch-1', repo: { id: 1724195, name: 'Hello-World', owner: { id: 777449, login: 'unoju' } } },
+      { ref: 'master', repo: { id: 1296269, name: 'Hello-World', owner: { id: 583231, login: 'octocat' } } },
+    );
 
     const response = await inspector.getPullRequest('octocat', 'Hello-World', 1);
     expect(response).toMatchObject(getPullServiceResponse);
