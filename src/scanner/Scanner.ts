@@ -66,7 +66,8 @@ export class Scanner {
   }
 
   private async preprocessData(scanningStrategy: ScanningStrategy) {
-    let { serviceType, accessType, remoteUrl, localPath } = scanningStrategy;
+    const { serviceType, accessType, remoteUrl } = scanningStrategy;
+    let localPath = scanningStrategy.localPath;
 
     if (localPath === undefined && remoteUrl !== undefined) {
       switch (serviceType) {
@@ -140,7 +141,6 @@ export class Scanner {
     const practicesWithContext: PracticeWithContext[] = [];
     for (const componentWithCtx of componentsWithContext) {
       const componentContext = componentWithCtx.languageContext.getProjectComponentContext(componentWithCtx.component);
-      await componentContext.init();
       const practiceContext = componentContext.getPracticeContext();
 
       const applicablePractices = await filterAsync(this.practices, async (p) => {

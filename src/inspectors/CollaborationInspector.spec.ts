@@ -1,6 +1,4 @@
 import { CollaborationInspector } from './CollaborationInspector';
-import { GitHubService } from '../services/git/GitHubService';
-import { GitHubClient } from '../services/git/GitHubClient';
 import { getPullsServiceResponse } from '../services/git/__MOCKS__/gitHubServiceMockFolder/getPullsServiceResponse.mock';
 import { getPullServiceResponse } from '../services/git/__MOCKS__/gitHubServiceMockFolder/getPullServiceResponse.mock';
 import { getPullsFilesResponse } from '../services/git/__MOCKS__/gitHubClientMockFolder/getPullsFiles.mock';

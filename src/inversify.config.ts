@@ -8,21 +8,19 @@ import { practices } from './practices';
 import { ScanningStrategyDetector } from './detectors/ScanningStrategyDetector';
 import { bindScanningContext } from './contexts/scanner/scannerContextBinding';
 import { FileSystemService } from './services/FileSystemService';
-import { VirtualFileSystemService } from './services/VirtualFileSystemService';
 import { GitHubService } from './services/git/GitHubService';
 import { PracticeContext } from './contexts/practice/PracticeContext';
 import { IPackageInspector } from './inspectors/IPackageInspector';
 import { IFileInspector } from './inspectors/IFileInspector';
 import { ProgrammingLanguage, ProjectComponentType, ProjectComponentPlatform, ProjectComponentFramework, ProjectComponent } from './model';
 import { JavaScriptPackageInspector } from './inspectors/package/JavaScriptPackageInspector';
-import { VirtualDirectory } from './services/IVirtualFileSystemService';
-import { MetadataType } from './services/model';
 import { packageJSONContents } from './detectors/__MOCKS__';
 import { IPracticeWithMetadata } from './practices/DxPracticeDecorator';
 import { ScannerUtils } from './scanner/ScannerUtils';
 import { FileInspector } from './inspectors/FileInspector';
 import { IssueTrackingInspector } from './inspectors/IssueTrackingInspector';
 import { CollaborationInspector } from './inspectors/CollaborationInspector';
+import { DirectoryJSON } from 'memfs/lib/volume';
 
 export const createRootContainer = (args: ArgumentsProvider): Container => {
   const container = new Container();
@@ -47,27 +45,21 @@ const bindScanningStrategyDetectors = (container: Container) => {
 
 export const createTestContainer = (
   args?: ArgumentsProvider,
-  structure?: VirtualDirectory,
+  structure?: DirectoryJSON,
   projectComponent?: ProjectComponent,
 ): TestContainerContext => {
   const container = createRootContainer(args ? args : { uri: './' });
 
   if (!structure) {
     structure = {
-      type: MetadataType.dir,
-      children: {
-        'package.json': {
-          type: MetadataType.file,
-          data: packageJSONContents,
-        },
-      },
+      '/package.json': packageJSONContents,
     };
   }
 
-  const vfss = new VirtualFileSystemService();
+  const vfss = new FileSystemService({ isVirtual: true });
   vfss.setFileSystem(structure);
 
-  // VirtualFileSystemService as default ProjectBrowser
+  // FileSystemService as default ProjectBrowser
   container.bind(Types.IProjectFilesBrowser).toConstantValue(vfss);
   container.bind(Types.IContentRepositoryBrowser).to(GitHubService);
   container.bind(Types.IFileInspector).to(FileInspector);
@@ -81,7 +73,7 @@ export const createTestContainer = (
   const fileInspector = container.get<IFileInspector>(Types.IFileInspector);
   const issueTrackingInspector = container.get<IssueTrackingInspector>(Types.IIssueTrackingInspector);
   const collaborationInspector = container.get<CollaborationInspector>(Types.ICollaborationInspector);
-  const virtualFileSystemService = container.get<VirtualFileSystemService>(Types.IProjectFilesBrowser);
+  const virtualFileSystemService = container.get<FileSystemService>(Types.IProjectFilesBrowser);
   const packageInspector = container.get<IPackageInspector>(Types.IPackageInspector);
 
   /**
@@ -126,7 +118,7 @@ export interface TestContainerContext {
    * Services
    */
   fileSystemService: FileSystemService;
-  virtualFileSystemService: VirtualFileSystemService;
+  virtualFileSystemService: FileSystemService;
 }
 
 export interface TestPracticeContext extends PracticeContext {

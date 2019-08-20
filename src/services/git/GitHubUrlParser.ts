@@ -1,19 +1,12 @@
-import { ErrorFactory } from '../../lib/errors/ErrorFactory';
-
-/* eslint-disable @typescript-eslint/explicit-member-accessibility */
+import gitUrlParse from 'git-url-parse';
 
 export class GitHubUrlParser {
-  public static getOwnerAndRepoName(url: string): { owner: string; repoName: string } {
-    url = url.replace('http://', '');
-    url = url.replace('https://', '');
-    const urlTokens = url.split('/');
-    if (urlTokens.length !== 3) {
-      throw ErrorFactory.newInternalError(`Malformed github url: ${url}`);
-    }
-    const repoName = urlTokens[2].endsWith('.git') ? urlTokens[2].replace('.git', '') : urlTokens[2];
+  static getOwnerAndRepoName(url: string): { owner: string; repoName: string } {
+    const parsedUrl = gitUrlParse(url);
+
     return {
-      owner: urlTokens[1],
-      repoName,
+      owner: parsedUrl.owner,
+      repoName: parsedUrl.name,
     };
   }
 }

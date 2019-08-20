@@ -1,4 +1,3 @@
-import { MetadataType } from '../../services/model';
 import { ReadmeIsPresentPractice } from './ReadmeIsPresentPractice';
 import { PracticeEvaluationResult } from '../../model';
 import { TestContainerContext, createTestContainer } from '../../inversify.config';
@@ -19,13 +18,7 @@ describe('ReadmePracticeIsPresentPractice', () => {
 
   it('Returns practicing if there is a readme', async () => {
     containerCtx.virtualFileSystemService.setFileSystem({
-      type: MetadataType.dir,
-      children: {
-        'readme.anything': {
-          type: MetadataType.file,
-          data: '...',
-        },
-      },
+      '/readme.anything': '...',
     });
 
     const evaluated = await practice.evaluate(containerCtx.practiceContext);
@@ -34,13 +27,7 @@ describe('ReadmePracticeIsPresentPractice', () => {
 
   it('Returns notPracticing if there is NO readme', async () => {
     containerCtx.virtualFileSystemService.setFileSystem({
-      type: MetadataType.dir,
-      children: {
-        'not.exists': {
-          type: MetadataType.file,
-          data: '...',
-        },
-      },
+      '/not.exists': '...',
     });
 
     const evaluated = await practice.evaluate(containerCtx.practiceContext);

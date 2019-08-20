@@ -1,4 +1,3 @@
-import { MetadataType } from '../../services/model';
 import { DockerizationUsedPractice } from './DockerizationUsedPractice';
 import { PracticeEvaluationResult } from '../../model';
 import { TestContainerContext, createTestContainer } from '../../inversify.config';
@@ -19,13 +18,7 @@ describe('DockerizationUsedPractice', () => {
 
   it('Returns practicing if the docker is used', async () => {
     containerCtx.virtualFileSystemService.setFileSystem({
-      type: MetadataType.dir,
-      children: {
-        Dockerfile: {
-          type: MetadataType.file,
-          data: '...',
-        },
-      },
+      Dockerfile: '...',
     });
 
     const evaluated = await practice.evaluate(containerCtx.practiceContext);
@@ -34,13 +27,7 @@ describe('DockerizationUsedPractice', () => {
 
   it('Returns notPracticing if the docker is NOT used', async () => {
     containerCtx.virtualFileSystemService.setFileSystem({
-      type: MetadataType.dir,
-      children: {
-        'not.exists': {
-          type: MetadataType.file,
-          data: '...',
-        },
-      },
+      'not.exists': '...',
     });
 
     const evaluated = await practice.evaluate(containerCtx.practiceContext);

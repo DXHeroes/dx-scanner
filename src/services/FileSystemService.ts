@@ -1,14 +1,45 @@
 import fs from 'fs';
 import * as nodePath from 'path';
-import { ErrorFactory } from '../lib/errors/ErrorFactory';
 import { injectable } from 'inversify';
 import { IProjectFilesBrowserService, Metadata, MetadataType } from './model';
+import { IFs, createFsFromVolume } from 'memfs';
+import { Volume as VSVolume, DirectoryJSON } from 'memfs/lib/volume';
+import { ErrorFactory } from '../lib/errors';
 
+/**
+ * Service for file system browsing
+ *  - uses fs by default
+ *  - can work just in memory with memfs
+ */
 @injectable()
 export class FileSystemService implements IProjectFilesBrowserService {
+  protected fileSystem: IFs | (typeof fs);
+  private virtualVolume: VSVolume | undefined;
+
+  constructor({ isVirtual = false } = {}) {
+    if (!isVirtual) {
+      this.fileSystem = fs;
+      this.virtualVolume = undefined;
+    } else {
+      this.virtualVolume = new VSVolume();
+      this.fileSystem = createFsFromVolume(this.virtualVolume);
+    }
+  }
+
+  setFileSystem(structure: DirectoryJSON) {
+    if (!this.virtualVolume) throw ErrorFactory.newInternalError('No virtual volume set');
+    this.clearFileSystem();
+    this.virtualVolume.fromJSON(structure);
+  }
+
+  clearFileSystem() {
+    if (!this.virtualVolume) throw ErrorFactory.newInternalError('No virtual volume set');
+    this.virtualVolume.reset();
+  }
+
   async exists(path: string) {
     try {
-      await fs.promises.lstat(path);
+      await this.fileSystem.promises.lstat(path);
       return true;
     } catch (error) {
       return false;
@@ -16,89 +47,76 @@ export class FileSystemService implements IProjectFilesBrowserService {
   }
 
   readDirectory(path: string) {
-    return fs.promises.readdir(path);
+    // <typeof fs> is small hack because TS thinks
+    //   that it's different interface by default
+    return (<typeof fs>this.fileSystem).promises.readdir(path);
   }
 
   readFile(path: string) {
-    return fs.promises.readFile(path, 'utf-8');
+    return <Promise<string>>this.fileSystem.promises.readFile(path, 'utf-8');
   }
 
   writeFile(path: string, content: string) {
-    return fs.promises.writeFile(path, content);
+    return this.fileSystem.promises.writeFile(path, content);
   }
 
   createDirectory(path: string) {
-    return fs.promises.mkdir(path);
+    return this.fileSystem.promises.mkdir(path);
   }
 
   deleteDirectory(path: string) {
-    return fs.promises.rmdir(path);
+    return this.fileSystem.promises.rmdir(path);
   }
 
   createFile(path: string, data: string) {
-    //append data to a file, creating the file if it does not yet exist
-    return fs.promises.appendFile(path, data);
+    return this.fileSystem.promises.appendFile(path, data);
   }
 
   deleteFile(path: string) {
-    return fs.promises.unlink(path);
+    return this.fileSystem.promises.unlink(path);
   }
 
   async isFile(path: string) {
-    const stats = await fs.promises.lstat(path);
+    const stats = await this.fileSystem.promises.lstat(path);
     return stats.isFile();
   }
 
   async isDirectory(path: string) {
-    const stats = await fs.promises.lstat(path);
+    const stats = await this.fileSystem.promises.lstat(path);
     return stats.isDirectory();
   }
 
-  async isSymbolicLink(path: string) {
-    const stats = await fs.promises.lstat(path);
-    return stats.isSymbolicLink();
-  }
-
   async getMetadata(path: string): Promise<Metadata> {
-    if (!(await this.exists(path))) {
-      throw ErrorFactory.newInternalError(`File doesn't exist (${path})`);
-    }
-
-    const extension = nodePath.posix.extname(path);
-    const stats = await fs.promises.lstat(path);
+    const extension = nodePath.extname(path);
+    const stats = await this.fileSystem.promises.lstat(path);
 
     const metadata: Omit<Metadata, 'type'> = {
       path,
-      name: nodePath.posix.basename(path),
-      baseName: nodePath.posix.basename(path, extension),
+      name: nodePath.basename(path),
+      baseName: nodePath.basename(path, extension),
       extension: extension === '' ? undefined : extension,
       //return size in bytes
-      size: stats.size,
+      size: <number>stats.size,
     };
 
-    if (await this.isFile(path)) {
-      return {
-        ...metadata,
-        type: MetadataType.file,
-      };
-    } else if (await this.isDirectory(path)) {
+    if (await this.isDirectory(path)) {
       return {
         ...metadata,
         extension: undefined,
         type: MetadataType.dir,
       };
-    } else if (await this.isSymbolicLink(path)) {
-      return {
-        ...metadata,
-        type: MetadataType.symlink,
-      };
     }
 
-    throw ErrorFactory.newInternalError("It's not file, dir nor symlink");
+    return {
+      ...metadata,
+      type: MetadataType.file,
+    };
   }
 
   async flatTraverse(path: string, fn: (meta: Metadata) => void | boolean) {
-    const dirContent = await fs.promises.readdir(path);
+    // <typeof fs> is small hack because TS thinks
+    //   that it's different interface by default
+    const dirContent = await (<typeof fs>this.fileSystem).promises.readdir(path);
     for (const cnt of dirContent) {
       const absolutePath = nodePath.resolve(path, cnt);
       const metadata = await this.getMetadata(absolutePath);

@@ -1,4 +1,3 @@
-import { MetadataType } from '../../services/model';
 import { JsPackageManagementUsedPractice } from './JsPackageManagementUsedPractice';
 import { PracticeEvaluationResult } from '../../model';
 import { TestContainerContext, createTestContainer } from '../../inversify.config';
@@ -24,13 +23,7 @@ describe('JsPackageManagementUsedPractice', () => {
 
   it('Returns notPracticing if there is NO package.json', async () => {
     containerCtx.virtualFileSystemService.setFileSystem({
-      type: MetadataType.dir,
-      children: {
-        'not.exists': {
-          type: MetadataType.file,
-          data: '...',
-        },
-      },
+      'not.exists': '...',
     });
 
     const evaluated = await practice.evaluate(containerCtx.practiceContext);

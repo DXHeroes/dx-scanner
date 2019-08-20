@@ -1,5 +1,4 @@
 import { LicenseIsPresentPractice } from './LicenseIsPresentPractice';
-import { MetadataType } from '../../services/model';
 import { PracticeEvaluationResult } from '../../model';
 import { TestContainerContext, createTestContainer } from '../../inversify.config';
 
@@ -19,13 +18,7 @@ describe('LicenseIsPresentPractice', () => {
 
   it('Returns practicing if there is a license', async () => {
     containerCtx.virtualFileSystemService.setFileSystem({
-      type: MetadataType.dir,
-      children: {
-        'license.anything': {
-          type: MetadataType.file,
-          data: '...',
-        },
-      },
+      '/license.anything': '...',
     });
 
     const evaluated = await practice.evaluate(containerCtx.practiceContext);
@@ -34,13 +27,7 @@ describe('LicenseIsPresentPractice', () => {
 
   it('Returns notPracticing if there is NO license', async () => {
     containerCtx.virtualFileSystemService.setFileSystem({
-      type: MetadataType.dir,
-      children: {
-        'not.exists': {
-          type: MetadataType.file,
-          data: '...',
-        },
-      },
+      '/not.exists': '...',
     });
 
     const evaluated = await practice.evaluate(containerCtx.practiceContext);

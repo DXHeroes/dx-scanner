@@ -6,7 +6,7 @@ import { GitHubNock } from '../../test/helpers/gitHubNock';
 jest.mock('simple-git/promise');
 
 describe('ScanningStrategyDetector', () => {
-  let mockedGit = <jest.Mock>git;
+  const mockedGit = <jest.Mock>git;
 
   beforeEach(() => {
     nock.cleanAll();

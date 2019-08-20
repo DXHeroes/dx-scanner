@@ -6,7 +6,7 @@ jest.mock('../../inspectors/package/JavaScriptPackageInspector');
 
 describe('JavaScriptComponentDetector', () => {
   let detector: JavaScriptComponentDetector;
-  let MockedJSPackageInspector = <jest.Mock<JavaScriptPackageInspector>>(<unknown>JavaScriptPackageInspector);
+  const MockedJSPackageInspector = <jest.Mock<JavaScriptPackageInspector>>(<unknown>JavaScriptPackageInspector);
   let mockJsPackageInspector: JavaScriptPackageInspector;
 
   beforeAll(async () => {
