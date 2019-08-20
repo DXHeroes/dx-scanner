@@ -117,6 +117,61 @@ describe('Git', () => {
     });
   });
 
+  describe('#getMetadata', () => {
+    it('it returns metadata for Folder', async () => {
+      gitHubNock.getDirectory('mockFolder', ['mockFile.ts'], []);
+
+      const result = await git.getMetadata('mockFolder');
+
+      expect(result.baseName).toEqual('mockFolder');
+      expect(result.extension).toEqual(undefined);
+      expect(result.name).toMatch('mockFolder');
+      expect(result.path).toMatch('mockFolder');
+      expect(typeof result.size).toBe('number');
+      expect(result.type).toEqual('dir');
+    });
+
+    it('it returns metadata for File', async () => {
+      gitHubNock.getFile('mockFile.ts');
+
+      const result = await git.getMetadata('mockFile.ts');
+
+      expect(result.baseName).toEqual('mockFile');
+      expect(result.extension).toEqual('.ts');
+      expect(result.name).toEqual('mockFile.ts');
+      expect(result.path).toMatch('mockFile.ts');
+      expect(typeof result.size).toBe('number');
+      expect(result.type).toEqual('file');
+    });
+
+    it('it returns metadata for dotfile', async () => {
+      gitHubNock.getFile('.keep');
+
+      const result = await git.getMetadata('.keep');
+
+      expect(result.baseName).toEqual('.keep');
+      expect(result.name).toEqual('.keep');
+      expect(result.extension).toEqual(undefined);
+      expect(result.path).toMatch('.keep');
+      expect(typeof result.size).toBe('number');
+      expect(result.type).toEqual('file');
+    });
+
+    it("throws an error if the target doesn't exist", async () => {
+      gitHubNock.getNonexistentContents('notExistingMockFolder');
+
+      await expect(git.getMetadata('notExistingMockFolder')).rejects.toThrow('Could not get content of notExistingMockFolder');
+    });
+
+    it('caches the results', async () => {
+      // bacause of persist == false, the second call to git.getMetadata() would cause Nock to throw an error if the cache wasn't used
+      gitHubNock.getDirectory('mockFolder', ['mockFile.ts'], [], false);
+      await git.getMetadata('mockFolder');
+
+      await git.getMetadata('mockFolder');
+    });
+  });
+
   describe('#getContributorCount', () => {
     it('returns the number of contributors', async () => {
       gitHubNock.getContributors([{ id: 251370, login: 'Spaceghost' }, { id: 583231, login: 'octocat' }]);

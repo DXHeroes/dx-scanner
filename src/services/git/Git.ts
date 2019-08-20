@@ -7,6 +7,7 @@ import { ICache } from '../../scanner/cache/ICache';
 import { ErrorFactory } from '../../lib/errors/ErrorFactory';
 import { GitHubPullRequestState, GitHubFile, GitHubDir } from '../../services/git/IGitHubService';
 import * as nodePath from 'path';
+import { Metadata, MetadataType } from '../model';
 
 @injectable()
 export class Git {
@@ -41,6 +42,39 @@ export class Git {
     } else {
       throw ErrorFactory.newInternalError(`${path} is not a file`);
     }
+  }
+
+  async getMetadata(path: string): Promise<Metadata> {
+    let extension: string | undefined = nodePath.posix.extname(path);
+    const result = await this.getRepoContent(await this.followSymLinks(path));
+
+    const name = nodePath.posix.basename(path);
+    const baseName = nodePath.posix.basename(path, extension);
+    extension = extension === '' ? undefined : extension;
+
+    if (result === null) {
+      throw ErrorFactory.newInternalError(`Could not get content of ${path}`);
+    }
+
+    if (isArray(result.data)) {
+      return {
+        path,
+        name,
+        baseName,
+        type: MetadataType.dir,
+        size: 0,
+        extension: undefined,
+      };
+    }
+
+    return {
+      path,
+      name,
+      baseName,
+      type: MetadataType.file,
+      size: result.data.size,
+      extension,
+    };
   }
 
   async getContributorCount(): Promise<number> {
