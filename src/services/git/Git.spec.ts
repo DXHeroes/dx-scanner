@@ -172,6 +172,35 @@ describe('Git', () => {
     });
   });
 
+  describe('#getPullRequestCount', () => {
+    it('returns the number of both open and closed pull requests', async () => {
+      gitHubNock.getPulls(
+        [
+          {
+            number: 1,
+            state: 'open',
+            title: '1',
+            body: '1',
+            head: { ref: 'head', repo: { id: 1, name: 'Hello-World', owner: { id: 1, login: 'octocat' } } },
+            base: { ref: 'base', repo: { id: 1, name: 'Hello-World', owner: { id: 1, login: 'octocat' } } },
+          },
+          {
+            number: 2,
+            state: 'closed',
+            title: '2',
+            body: '2',
+            head: { ref: 'head', repo: { id: 1, name: 'Hello-World', owner: { id: 1, login: 'octocat' } } },
+            base: { ref: 'base', repo: { id: 1, name: 'Hello-World', owner: { id: 1, login: 'octocat' } } },
+          },
+        ],
+        'all',
+      );
+
+      const result = await git.getPullRequestCount();
+      expect(result).toEqual(2);
+    });
+  });
+
   describe('#getTextFileContent', () => {
     it('returns the content', async () => {
       gitHubNock.getFile('src/index.ts', '...');
