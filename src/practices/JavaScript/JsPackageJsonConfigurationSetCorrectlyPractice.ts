@@ -11,6 +11,7 @@ import { PracticeContext } from '../../contexts/practice/PracticeContext';
     'Use right configuration to automate repetitive tasks. Use build to automate the build process, lint for linting your code, test for testing and start to run your project.',
   reportOnlyOnce: true,
   url: 'https://docs.npmjs.com/files/package.json',
+  dependsOn: { practicing: ['Javascript.PackageManagementUsed'] },
 })
 export class JsPackageJsonConfigurationSetCorrectlyPractice implements IPractice {
   async isApplicable(ctx: PracticeContext): Promise<boolean> {
