@@ -33,14 +33,7 @@ describe('Collaboration Inspector', () => {
   });
 
   it('returns one pull request', async () => {
-    new GitHubNock(1, 'octocat', 1, 'Hello-World').getPull(
-      1,
-      'closed',
-      'Edited README via GitHub',
-      '',
-      { ref: 'patch-1', repo: { id: 1724195, name: 'Hello-World', owner: { id: 777449, login: 'unoju' } } },
-      { ref: 'master', repo: { id: 1296269, name: 'Hello-World', owner: { id: 583231, login: 'octocat' } } },
-    );
+    new GitHubNock(583231, 'octocat', 1296269, 'Hello-World').getPull(1, 'closed', 'Edited README via GitHub', '', 'patch-1', 'master');
 
     const response = await inspector.getPullRequest('octocat', 'Hello-World', 1);
     expect(response).toMatchObject(getPullServiceResponse);
