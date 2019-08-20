@@ -86,36 +86,6 @@ describe('Git', () => {
     });
   });
 
-  describe('#getFile', () => {
-    it('returns the file', async () => {
-      const expected = gitHubNock.getFile('mockFolder/mockFile.ts');
-
-      const result = await git.getFile('mockFolder/mockFile.ts');
-      expect(result).toEqual(expected);
-    });
-
-    it("throws an error if the target doesn't exist", async () => {
-      gitHubNock.getNonexistentContents('notExistingMockFolder');
-
-      await expect(git.getFile('notExistingMockFolder')).rejects.toThrow('notExistingMockFolder is not a file');
-    });
-
-    it("throws an error if the target isn't a file", async () => {
-      gitHubNock.getDirectory('mockFolder', ['mockFile.ts'], []);
-
-      await expect(git.getFile('mockFolder')).rejects.toThrow('mockFolder is not a file');
-    });
-
-    it('caches the results', async () => {
-      // bacause of persist == false, the second call to git.getFile() would cause Nock to throw an error if the cache wasn't used
-      const expected = gitHubNock.getFile('mockFolder/mockFile.ts', undefined, undefined, false);
-      await git.getFile('mockFolder/mockFile.ts');
-
-      const result = await git.getFile('mockFolder/mockFile.ts');
-      expect(result).toEqual(expected);
-    });
-  });
-
   describe('#getMetadata', () => {
     it('it returns metadata for Folder', async () => {
       gitHubNock.getDirectory('mockFolder', ['mockFile.ts'], []);

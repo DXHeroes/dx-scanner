@@ -28,19 +28,10 @@ export class Git {
 
   async readDirectory(path: string): Promise<string[]> {
     const result = await this.getRepoContent(await this.followSymLinks(path));
-    if (result !== null && isArray(result.data)) {
-      return result.data.map((item: GitHubFile | GitHubDir) => item.name);
+    if (result !== null && isArray(result)) {
+      return result.map((item: GitHubFile | GitHubDir) => item.name);
     } else {
       throw ErrorFactory.newInternalError(`${path} is not a directory`);
-    }
-  }
-
-  async getFile(path: string) {
-    const result = await this.getRepoContent(path);
-    if (result !== null && !isArray(result.data)) {
-      return result.data;
-    } else {
-      throw ErrorFactory.newInternalError(`${path} is not a file`);
     }
   }
 
@@ -56,7 +47,7 @@ export class Git {
       throw ErrorFactory.newInternalError(`Could not get content of ${path}`);
     }
 
-    if (isArray(result.data)) {
+    if (isArray(result)) {
       return {
         path,
         name,
@@ -72,7 +63,7 @@ export class Git {
       name,
       baseName,
       type: MetadataType.file,
-      size: result.data.size,
+      size: result.size,
       extension,
     };
   }
@@ -92,13 +83,13 @@ export class Git {
     });
   }
 
-  getTextFileContent(path: string): Promise<string> {
-    return this.getFile(path).then((f) => {
-      if (!f) {
-        throw ErrorFactory.newInternalError(`Could not get content of ${path}`);
-      }
-      return Buffer.from(f.content, 'base64').toString('utf-8');
-    });
+  async getTextFileContent(path: string): Promise<string> {
+    const result = await this.getRepoContent(path);
+    if (result !== null && !isArray(result)) {
+      return Buffer.from(result.content, 'base64').toString('utf-8');
+    } else {
+      throw ErrorFactory.newInternalError(`${path} is not a file`);
+    }
   }
 
   private getRepoContent(path: string) {
@@ -107,7 +98,8 @@ export class Git {
 
     return this.cache.getOrSet(key, async () => {
       try {
-        return await this.gitHubClient.getRepoContent(params.owner, params.repoName, path);
+        const result = await this.gitHubClient.getRepoContent(params.owner, params.repoName, path);
+        return result.data;
       } catch (e) {
         if (e.name !== 'HttpError' || e.status !== 404) {
           throw e;
@@ -129,16 +121,16 @@ export class Git {
     const child = await this.getRepoContent(nodePath.posix.join(directory, name));
 
     if (child !== null) {
-      if (isArray(child.data)) {
+      if (isArray(child)) {
         if (path.length !== 0) {
           path = await this.followSymLinks(path, nodePath.posix.join(directory, name));
         }
       } else {
-        switch (child.data.type) {
+        switch (child.type) {
           case 'file':
             break;
           case 'symlink':
-            path = await this.followSymLinks(nodePath.posix.join(child.data.target, path), directory);
+            path = await this.followSymLinks(nodePath.posix.join(child.target, path), directory);
             name = '';
             break;
         }
