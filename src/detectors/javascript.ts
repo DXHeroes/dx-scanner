@@ -92,7 +92,7 @@ export class JavascriptComponentDetector {
   private async determinePackageManagement(path: string): Promise<PackageManagement | undefined> {
     try {
       let system: PackageManagementFramework = PackageManagementFramework.NPM;
-      const packageJsonContent = await this.git.getTextFileContent(path + '/package.json');
+      const packageJsonContent = await this.git.readFile(path + '/package.json');
       const hasYarnLockfile =
         (await this.scanFor(fileNameRegExp('yarn.lock'), path, {
           shallow: true,

@@ -35,6 +35,15 @@ export class Git {
     }
   }
 
+  async readFile(path: string): Promise<string> {
+    const result = await this.getRepoContent(await this.followSymLinks(path));
+    if (result !== null && !isArray(result)) {
+      return Buffer.from(result.content, result.encoding).toString('utf-8');
+    } else {
+      throw ErrorFactory.newInternalError(`${path} is not a file`);
+    }
+  }
+
   async getMetadata(path: string): Promise<Metadata> {
     let extension: string | undefined = nodePath.posix.extname(path);
     const result = await this.getRepoContent(await this.followSymLinks(path));
@@ -81,15 +90,6 @@ export class Git {
       }
       return r.data.length;
     });
-  }
-
-  async getTextFileContent(path: string): Promise<string> {
-    const result = await this.getRepoContent(path);
-    if (result !== null && !isArray(result)) {
-      return Buffer.from(result.content, 'base64').toString('utf-8');
-    } else {
-      throw ErrorFactory.newInternalError(`${path} is not a file`);
-    }
   }
 
   private getRepoContent(path: string) {
