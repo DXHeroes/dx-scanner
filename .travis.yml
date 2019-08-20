@@ -32,9 +32,13 @@ jobs:
     scripts:
       - bin/run -v
       - bin/run https://github.com/DXHeroes/dx-scanner
+      - bin/run https://github.com/moment/luxon
+      - bin/run https://github.com/intoli/remote-browser
+      - dxs 
     os: windows
   - os: linux
   - stage: release
+    if: os = linux
     node_js: lts/*
     script: skip
     deploy:
