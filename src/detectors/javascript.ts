@@ -15,9 +15,9 @@ import {
 import { keys, uniq } from 'lodash';
 import { fileExtensionRegExp, fileNameRegExp, hasOneOfPackages, indexBy, sharedSubpath } from './utils';
 import Debug from 'debug';
-import { GitHubFile } from '../services/git/IGitHubService';
-import { GitHubContentType } from '../services/git/IGitHubService';
 import * as nodePath from 'path';
+import { Metadata } from '../services/model';
+import { MetadataType } from '../services/model';
 
 const debug = Debug('cli:detectors:javascript');
 
@@ -136,10 +136,10 @@ export class JavascriptComponentDetector {
       ignoreSubPaths?: string[];
       shallow?: boolean;
     },
-  ): Promise<GitHubFile[]> {
+  ): Promise<Metadata[]> {
     options = options || {};
-    let result: GitHubFile[] = [];
-    const dirContents = await this.git.listDirectory(path);
+    let result: Metadata[] = [];
+    const dirContents = await this.git.readDirectory(path);
     debug(`Scanning for ${fileName.toString()} in ${path}`);
     if (options.ignoreSubPaths) {
       options.ignoreSubPaths.forEach((pathToIgnore) => {
@@ -150,12 +150,13 @@ export class JavascriptComponentDetector {
     }
     // debug(dirContents);
     for (const entry of dirContents) {
-      if (entry.type === GitHubContentType.file) {
-        if (entry.name.match(fileName)) {
-          result.push(entry);
+      const entryMetadata = await this.git.getMetadata(`${path}/${entry}`);
+      if (entryMetadata.type === MetadataType.file) {
+        if (entryMetadata.name.match(fileName)) {
+          result.push(entryMetadata);
         }
-      } else if (options.shallow === false && entry.type === GitHubContentType.dir) {
-        const subResult = await this.scanFor(fileName, entry.path);
+      } else if (options.shallow === false && entryMetadata.type === MetadataType.dir) {
+        const subResult = await this.scanFor(fileName, entryMetadata.path);
         result = [...result, ...subResult];
       }
     }

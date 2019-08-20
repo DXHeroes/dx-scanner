@@ -53,37 +53,36 @@ describe('Git', () => {
     });
   });
 
-  describe('#listDirectory', () => {
+  describe('#readDirectory', () => {
     it('returns array of files after calling listDirectory()', async () => {
-      const expected = gitHubNock.getDirectory(
-        'mockFolder',
-        ['mockFile.ts', 'mockFileSLbroken.ln', 'mockFileToRewrite.ts'],
-        ['mockSubFolder'],
-      );
+      gitHubNock.getDirectory('mockFolder', ['mockFile.ts', 'mockFileSLbroken.ln', 'mockFileToRewrite.ts'], ['mockSubFolder']);
 
-      const result = await git.listDirectory('mockFolder');
-      expect(result).toEqual(expected);
+      const result = await git.readDirectory('mockFolder');
+      expect(result.length).toEqual(4);
+      expect(result).toContain('mockFile.ts');
+      expect(result).toContain('mockFileSLbroken.ln');
+      expect(result).toContain('mockFileToRewrite.ts');
+      expect(result).toContain('mockSubFolder');
     });
 
     it("throws an error if the target doesn't exist", async () => {
       gitHubNock.getNonexistentContents('notExistingMockFolder');
 
-      await expect(git.listDirectory('notExistingMockFolder')).rejects.toThrow('notExistingMockFolder is not a directory');
+      await expect(git.readDirectory('notExistingMockFolder')).rejects.toThrow('notExistingMockFolder is not a directory');
     });
 
     it('throws an error if the target is a file', async () => {
-      gitHubNock.getFile('mockFolder/mockFile.ts');
+      gitHubNock.getFile('mockFile.ts');
 
-      await expect(git.listDirectory('mockFolder/mockFile.ts')).rejects.toThrow('mockFolder/mockFile.ts is not a directory');
+      await expect(git.readDirectory('mockFile.ts')).rejects.toThrow('mockFile.ts is not a directory');
     });
 
     it('caches the results', async () => {
-      // bacause of persist == false, the second call to git.listDirectory() would cause Nock to throw an error if the cache wasn't used
-      const expected = gitHubNock.getDirectory('mockFolder', ['mockFile.ts'], [], false);
-      await git.listDirectory('mockFolder');
+      // bacause of persist == false, the second call to git.readDirectory() would cause Nock to throw an error if the cache wasn't used
+      gitHubNock.getDirectory('mockFolder', ['mockFile.ts'], [], false);
+      await git.readDirectory('mockFolder');
 
-      const result = await git.listDirectory('mockFolder');
-      expect(result).toEqual(expected);
+      await git.readDirectory('mockFolder');
     });
   });
 

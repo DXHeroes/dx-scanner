@@ -26,10 +26,10 @@ export class Git {
     return result !== null;
   }
 
-  async listDirectory(path: string): Promise<(GitHubFile | GitHubDir)[]> {
-    const result = await this.getRepoContent(path);
+  async readDirectory(path: string): Promise<string[]> {
+    const result = await this.getRepoContent(await this.followSymLinks(path));
     if (result !== null && isArray(result.data)) {
-      return result.data;
+      return result.data.map((item: GitHubFile | GitHubDir) => item.name);
     } else {
       throw ErrorFactory.newInternalError(`${path} is not a directory`);
     }

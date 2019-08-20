@@ -17,7 +17,7 @@ export class RepositoryParser {
   async parse(repository: Repository): Promise<DeprecatedProjectComponent[]> {
     const git = this.gitFactory(repository);
     // todo - find out if we need this?
-    // const dir = await git.listDirectory('/');
+    // const dir = await git.readDirectory('/');
     const javascriptDetector = new JavascriptComponentDetector(git);
     const resultFromDetector = await javascriptDetector.detect();
     const gitInfoObtainer = new GitInfoObtainer(git);
