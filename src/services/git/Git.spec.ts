@@ -20,145 +20,99 @@ describe('Git', () => {
 
   describe('#exists', () => {
     it('returns true if the file exists', async () => {
-      gitHubNock.getDirectory('src', [], []);
+      gitHubNock.getFile('mockFile.ts');
 
-      const result = await git.exists('src');
-
-      expect(result).toBe(true);
-    });
-
-    it('returns true if the directory is a root directory', async () => {
-      gitHubNock.getDirectory('/', [], []);
-
-      const result = await git.exists('/');
+      const result = await git.exists('mockFile.ts');
 
       expect(result).toBe(true);
     });
 
-    it('returns true if the directory exists on absolute path', async () => {
-      gitHubNock.getDirectory('/', ['src'], []);
-      gitHubNock.getDirectory('/src', [], []);
+    it('returns true if the directory exists', async () => {
+      gitHubNock.getDirectory('mockFolder', [], []);
 
-      const result = await git.exists('/src');
-
-      expect(result).toBe(true);
-    });
-
-    it('returns true if the directory exists on relative path', async () => {
-      gitHubNock.getDirectory('src', [], []);
-
-      const result = await git.exists('src');
+      const result = await git.exists('mockFolder');
 
       expect(result).toBe(true);
-    });
-
-    it('returns true if the symbolic link exists', async () => {
-      gitHubNock.getFile('indexSL.ts');
-
-      const result = await git.exists('indexSL.ts');
-
-      expect(result).toBe(true);
-    });
-
-    it('returns false if the broken symbolic link exists', async () => {
-      gitHubNock.getSymlink('indexSLbroken.ts', 'non-existing-file.ts');
-      gitHubNock.getNonexistentContents('non-existing-file.ts');
-
-      const result = await git.exists('indexSLbroken.ts');
-
-      expect(result).toBe(false);
     });
 
     it("returns false if the file doesn't exists", async () => {
-      gitHubNock.getNonexistentContents('non-existing-file.ts');
+      gitHubNock.getNonexistentContents('notExistingMockFolder');
 
-      const result = await git.exists('non-existing-file.ts');
+      const result = await git.exists('notExistingMockFolder');
 
       expect(result).toBe(false);
-    });
-
-    it('follows symlinks', async () => {
-      gitHubNock.getSymlink('srcSL', 'src');
-      gitHubNock.getDirectory('src', [], ['index.ts']);
-      gitHubNock.getFile('src/index.ts');
-
-      const result = await git.exists('srcSL/index.ts');
-      expect(result).toBe(true);
     });
 
     it('caches the results', async () => {
       // bacause of persist == false, the second call to git.exists() would cause Nock to throw an error if the cache wasn't used
-      gitHubNock.getDirectory('src', [], [], false);
-      await git.exists('src');
+      gitHubNock.getDirectory('mockFolder', [], [], false);
+      await git.exists('mockFolder');
 
-      const result = await git.exists('src');
+      const result = await git.exists('mockFolder');
       expect(result).toBe(true);
     });
   });
 
   describe('#listDirectory', () => {
-    it('returns array of files after calling readDirectory()', async () => {
-      const expected = gitHubNock.getDirectory('src', ['index.ts'], []);
+    it('returns array of files after calling listDirectory()', async () => {
+      const expected = gitHubNock.getDirectory(
+        'mockFolder',
+        ['mockFile.ts', 'mockFileSLbroken.ln', 'mockFileToRewrite.ts'],
+        ['mockSubFolder'],
+      );
 
-      const result = await git.listDirectory('src');
+      const result = await git.listDirectory('mockFolder');
       expect(result).toEqual(expected);
     });
 
     it("throws an error if the target doesn't exist", async () => {
-      gitHubNock.getNonexistentContents('non/existing/dir');
+      gitHubNock.getNonexistentContents('notExistingMockFolder');
 
-      await expect(git.listDirectory('non/existing/dir')).rejects.toThrow('non/existing/dir is not a directory');
+      await expect(git.listDirectory('notExistingMockFolder')).rejects.toThrow('notExistingMockFolder is not a directory');
     });
 
     it('throws an error if the target is a file', async () => {
-      gitHubNock.getFile('src/index.ts');
+      gitHubNock.getFile('mockFolder/mockFile.ts');
 
-      await expect(git.listDirectory('src/index.ts')).rejects.toThrow('src/index.ts is not a directory');
-    });
-
-    it('throws an error if the target is a broken symbolic link', async () => {
-      gitHubNock.getSymlink('indexSLbroken.ts', 'non-existing-file.ts');
-      gitHubNock.getNonexistentContents('non-existing-file.ts');
-
-      await expect(git.listDirectory('indexSLbroken.ts')).rejects.toThrow('indexSLbroken.ts is not a directory');
+      await expect(git.listDirectory('mockFolder/mockFile.ts')).rejects.toThrow('mockFolder/mockFile.ts is not a directory');
     });
 
     it('caches the results', async () => {
       // bacause of persist == false, the second call to git.listDirectory() would cause Nock to throw an error if the cache wasn't used
-      const expected = gitHubNock.getDirectory('src', ['index.ts'], [], false);
-      await git.listDirectory('src');
+      const expected = gitHubNock.getDirectory('mockFolder', ['mockFile.ts'], [], false);
+      await git.listDirectory('mockFolder');
 
-      const result = await git.listDirectory('src');
+      const result = await git.listDirectory('mockFolder');
       expect(result).toEqual(expected);
     });
   });
 
   describe('#getFile', () => {
     it('returns the file', async () => {
-      const expected = gitHubNock.getFile('src/index.ts');
+      const expected = gitHubNock.getFile('mockFolder/mockFile.ts');
 
-      const result = await git.getFile('src/index.ts');
+      const result = await git.getFile('mockFolder/mockFile.ts');
       expect(result).toEqual(expected);
     });
 
     it("throws an error if the target doesn't exist", async () => {
-      gitHubNock.getNonexistentContents('non/existing/file.ts');
+      gitHubNock.getNonexistentContents('notExistingMockFolder');
 
-      await expect(git.getFile('non/existing/file.ts')).rejects.toThrow('non/existing/file.ts is not a file');
+      await expect(git.getFile('notExistingMockFolder')).rejects.toThrow('notExistingMockFolder is not a file');
     });
 
     it("throws an error if the target isn't a file", async () => {
-      gitHubNock.getDirectory('src', ['index.ts'], []);
+      gitHubNock.getDirectory('mockFolder', ['mockFile.ts'], []);
 
-      await expect(git.getFile('src')).rejects.toThrow('src is not a file');
+      await expect(git.getFile('mockFolder')).rejects.toThrow('mockFolder is not a file');
     });
 
     it('caches the results', async () => {
       // bacause of persist == false, the second call to git.getFile() would cause Nock to throw an error if the cache wasn't used
-      const expected = gitHubNock.getFile('src/index.ts', undefined, undefined, false);
-      await git.getFile('src/index.ts');
+      const expected = gitHubNock.getFile('mockFolder/mockFile.ts', undefined, undefined, false);
+      await git.getFile('mockFolder/mockFile.ts');
 
-      const result = await git.getFile('src/index.ts');
+      const result = await git.getFile('mockFolder/mockFile.ts');
       expect(result).toEqual(expected);
     });
   });
@@ -203,30 +157,30 @@ describe('Git', () => {
 
   describe('#getTextFileContent', () => {
     it('returns the content', async () => {
-      gitHubNock.getFile('src/index.ts', '...');
+      gitHubNock.getFile('mockFolder/mockFile.ts', '...');
 
-      const result = await git.getTextFileContent('src/index.ts');
+      const result = await git.getTextFileContent('mockFolder/mockFile.ts');
       expect(result).toEqual('...');
     });
 
     it("throws an error if the target doesn't exist", async () => {
-      gitHubNock.getNonexistentContents('non/existing/file.ts');
+      gitHubNock.getNonexistentContents('notExistingMockFolder');
 
-      await expect(git.getTextFileContent('non/existing/file.ts')).rejects.toThrow('non/existing/file.ts is not a file');
+      await expect(git.getTextFileContent('notExistingMockFolder')).rejects.toThrow('notExistingMockFolder is not a file');
     });
 
     it("throws an error if the target isn't a file", async () => {
-      gitHubNock.getDirectory('src', ['index.ts'], []);
+      gitHubNock.getDirectory('mockFolder', ['mockFile.ts'], []);
 
-      await expect(git.getTextFileContent('src')).rejects.toThrow('src is not a file');
+      await expect(git.getTextFileContent('mockFolder')).rejects.toThrow('mockFolder is not a file');
     });
 
     it('caches the results', async () => {
       // bacause of persist == false, the second call to git.getTextFileContent() would cause Nock to throw an error if the cache wasn't used
-      gitHubNock.getFile('src/index.ts', '...', undefined, false);
-      await git.getTextFileContent('src/index.ts');
+      gitHubNock.getFile('mockFolder/mockFile.ts', '...', undefined, false);
+      await git.getTextFileContent('mockFolder/mockFile.ts');
 
-      const result = await git.getTextFileContent('src/index.ts');
+      const result = await git.getTextFileContent('mockFolder/mockFile.ts');
       expect(result).toEqual('...');
     });
   });

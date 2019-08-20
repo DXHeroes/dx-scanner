@@ -13,11 +13,6 @@ export class GitHubNock {
     return this.getContents(path, body, persist);
   }
 
-  getSymlink(path: string, target: string, sha = '980a0d5f19a64b4b30a87d4206aade58726b60e3', persist = true): Symlink {
-    const body = new Symlink(this.repository, path, target, sha);
-    return this.getContents(path, body, persist);
-  }
-
   getDirectory(path: string, subfiles: string[], subdirs: string[], persist = true): (FileItem | DirectoryItem)[] {
     const body = [
       ...subfiles.map((name) => new FileItem(this.repository, nodePath.posix.join(path, name))),
@@ -405,16 +400,6 @@ export class File extends FileItem {
     this.size = contentBuffer.length;
     this.encoding = 'base64';
     this.content = contentBuffer.toString(this.encoding);
-  }
-}
-
-export class Symlink extends FileItem {
-  type = 'symlink';
-  target: string;
-
-  constructor(repository: Repository, path: string, target: string, sha = '980a0d5f19a64b4b30a87d4206aade58726b60e3') {
-    super(repository, path, sha);
-    this.target = target;
   }
 }
 
