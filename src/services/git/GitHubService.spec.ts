@@ -32,15 +32,8 @@ describe('GitHub Service', () => {
   });
 
   it('returns open pulls in own interface', async () => {
-    new GitHubNock(1, 'octocat', 1, 'Hello-World').getPulls([
-      {
-        number: 1347,
-        state: 'open',
-        title: 'new-feature',
-        body: 'Please pull these awesome changes',
-        head: { ref: 'new-topic', repo: { id: 1296269, name: 'Hello-World', owner: { id: 1, login: 'octocat' } } },
-        base: { ref: 'master', repo: { id: 1296269, name: 'Hello-World', owner: { id: 1, login: 'octocat' } } },
-      },
+    new GitHubNock(1, 'octocat', 1296269, 'Hello-World').getPulls([
+      { number: 1347, state: 'open', title: 'new-feature', body: 'Please pull these awesome changes', head: 'new-topic', base: 'master' },
     ]);
 
     const response = await service.getPullRequests('octocat', 'Hello-World');

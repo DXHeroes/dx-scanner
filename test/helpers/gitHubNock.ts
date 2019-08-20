@@ -26,27 +26,13 @@ export class GitHubNock {
   }
 
   getPulls(
-    pulls: {
-      number: number;
-      state: string;
-      title: string;
-      body: string;
-      head: { ref: string; repo: { id: number; name: string; owner: { id: number; login: string } } };
-      base: { ref: string; repo: { id: number; name: string; owner: { id: number; login: string } } };
-    }[],
+    pulls: { number: number; state: string; title: string; body: string; head: string; base: string }[],
     queryState?: string,
     persist = true,
   ): PullRequestItem[] {
     const responseBody = pulls.map(
       ({ number, state, title, body, head, base }) =>
-        new PullRequestItem(
-          number,
-          state,
-          title,
-          body,
-          new BranchItem(head.ref, new Repository(head.repo.id, head.repo.name, new UserItem(head.repo.owner.id, head.repo.owner.login))),
-          new BranchItem(base.ref, new Repository(base.repo.id, base.repo.name, new UserItem(base.repo.owner.id, base.repo.owner.login))),
-        ),
+        new PullRequestItem(number, state, title, body, new BranchItem(head, this.repository), new BranchItem(base, this.repository)),
     );
 
     return this.getPullsInternal(undefined, queryState, responseBody, persist);

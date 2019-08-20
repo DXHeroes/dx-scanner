@@ -55,16 +55,7 @@ describe('GitHubClient', () => {
 
   it('gets pull requests', async () => {
     const pulls = new GitHubNock(1, 'octocat', 1, 'Hello-World').getPulls(
-      [
-        {
-          number: 1347,
-          state: 'open',
-          title: 'new-feature',
-          body: 'Please pull these awesome changes',
-          head: { ref: 'new-topic', repo: { id: 1296269, name: 'Hello-World', owner: { id: 1, login: 'octocat' } } },
-          base: { ref: 'master', repo: { id: 1296269, name: 'Hello-World', owner: { id: 1, login: 'octocat' } } },
-        },
-      ],
+      [{ number: 1347, state: 'open', title: 'new-feature', body: 'Please pull these awesome changes', head: 'new-topic', base: 'master' }],
       'open',
     );
     const response = await client.getPullRequests('octocat', 'Hello-World');
