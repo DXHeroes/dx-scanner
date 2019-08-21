@@ -218,6 +218,65 @@ describe('Git', () => {
     });
   });
 
+  describe('#flatTraverse', () => {
+    it('returns keys of metadata of all results', async () => {
+      gitHubNock.getDirectory('mockFolder', ['mockFile.ts'], ['mockSubFolder']);
+      gitHubNock.getFile('mockFolder/mockFile.ts');
+      gitHubNock.getDirectory('mockFolder/mockSubFolder', ['mockSubFolderFile.txt'], []);
+      gitHubNock.getFile('mockFolder/mockSubFolder/mockSubFolderFile.txt');
+
+      const files: string[] = [];
+
+      await git.flatTraverse('mockFolder', (meta) => {
+        files.push(meta.name);
+      });
+
+      expect(files.length).toEqual(3);
+      expect(files).toContain('mockFile.ts');
+      expect(files).toContain('mockSubFolder');
+      expect(files).toContain('mockSubFolderFile.txt');
+    });
+
+    it('stops on false', async () => {
+      gitHubNock.getDirectory('mockFolder', ['mockFile.ts'], ['mockSubFolder']);
+      gitHubNock.getFile('mockFolder/mockFile.ts');
+      gitHubNock.getDirectory('mockFolder/mockSubFolder', ['mockSubFolderFile.txt'], []);
+      gitHubNock.getFile('mockFolder/mockSubFolder/mockSubFolderFile.txt');
+
+      const files: string[] = [];
+
+      await git.flatTraverse('mockFolder', (meta) => {
+        files.push(meta.name);
+        return false;
+      });
+
+      expect(files.length).toEqual(1);
+    });
+
+    it("throws an error if the root doesn't exist", async () => {
+      gitHubNock.getNonexistentContents('notExistingMockFolder');
+
+      await expect(git.flatTraverse('notExistingMockFolder', () => true)).rejects.toThrow('notExistingMockFolder is not a directory');
+    });
+
+    it("throws an error if the root isn't a directory", async () => {
+      gitHubNock.getFile('mockFile.ts');
+
+      await expect(git.flatTraverse('mockFile.ts', () => true)).rejects.toThrow('mockFile.ts is not a directory');
+    });
+
+    it('caches the results', async () => {
+      // bacause of persist == false, the second call to git.flatTraverse() would cause Nock to throw an error if the cache wasn't used
+      gitHubNock.getDirectory('mockFolder', ['mockFile.ts'], ['mockSubFolder'], false);
+      gitHubNock.getFile('mockFolder/mockFile.ts', undefined, undefined, false);
+      gitHubNock.getDirectory('mockFolder/mockSubFolder', ['mockSubFolderFile.txt'], [], false);
+      gitHubNock.getFile('mockFolder/mockSubFolder/mockSubFolderFile.txt', undefined, undefined, false);
+      await git.flatTraverse('mockFolder', () => true);
+
+      await git.flatTraverse('mockFolder', () => true);
+    });
+  });
+
   describe('#getContributorCount', () => {
     it('returns the number of contributors', async () => {
       gitHubNock.getContributors([{ id: 251370, login: 'Spaceghost' }, { id: 583231, login: 'octocat' }]);

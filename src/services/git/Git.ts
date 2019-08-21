@@ -93,6 +93,21 @@ export class Git {
     };
   }
 
+  async flatTraverse(path: string, fn: (meta: Metadata) => void | boolean): Promise<void | boolean> {
+    const dirContent = await this.readDirectory(path);
+    for (const cnt of dirContent) {
+      const absolutePath = nodePath.posix.join(path, cnt);
+      const metadata = await this.getMetadata(absolutePath);
+
+      const lambdaResult = fn(metadata);
+      if (lambdaResult === false) return false;
+
+      if (metadata.type === MetadataType.dir) {
+        await this.flatTraverse(metadata.path, fn);
+      }
+    }
+  }
+
   async getContributorCount(): Promise<number> {
     const params = GitHubUrlParser.getOwnerAndRepoName(this.repository.url);
     return this.gitHubClient.getContributors(params.owner, params.repoName).then((r) => r.data.length);
