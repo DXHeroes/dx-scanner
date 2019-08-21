@@ -10,6 +10,7 @@ import { PracticeContext } from '../../contexts/practice/PracticeContext';
   suggestion: 'Scripts in the .gitignore set as usual.',
   reportOnlyOnce: true,
   url: 'https://github.com/github/gitignore/blob/master/Node.gitignore',
+  dependsOn: { practicing: ['LanguageIndependent.GitignoreIsPresent'] },
 })
 export class JsGitignoreCorrectlySetPractice implements IPractice {
   async isApplicable(ctx: PracticeContext): Promise<boolean> {
