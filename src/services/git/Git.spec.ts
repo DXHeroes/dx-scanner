@@ -139,6 +139,30 @@ describe('Git', () => {
     });
   });
 
+  describe('#isDirectory', () => {
+    it('should return file', async () => {
+      gitHubNock.getDirectory('mockFolder', [], []);
+
+      const result = await git.isDirectory('mockFolder');
+
+      expect(result).toEqual(true);
+    });
+
+    it("should throw an error if the target doesn't exist", async () => {
+      gitHubNock.getNonexistentContents('notExistingMockFolder');
+
+      await expect(git.isDirectory('notExistingMockFolder')).rejects.toThrow('Could not get content of notExistingMockFolder');
+    });
+
+    it('caches the results', async () => {
+      // bacause of persist == false, the second call to git.isDirectory() would cause Nock to throw an error if the cache wasn't used
+      gitHubNock.getDirectory('mockFolder', [], [], false);
+      await git.isDirectory('mockFolder');
+
+      await git.isDirectory('mockFolder');
+    });
+  });
+
   describe('#getMetadata', () => {
     it('it returns metadata for Folder', async () => {
       gitHubNock.getDirectory('mockFolder', ['mockFile.ts'], []);

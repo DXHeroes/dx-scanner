@@ -52,6 +52,14 @@ export class Git {
     return !isArray(result);
   }
 
+  async isDirectory(path: string): Promise<boolean> {
+    const result = await this.getRepoContent(await this.followSymLinks(path));
+    if (result === null) {
+      throw ErrorFactory.newInternalError(`Could not get content of ${path}`);
+    }
+    return isArray(result);
+  }
+
   async getMetadata(path: string): Promise<Metadata> {
     let extension: string | undefined = nodePath.posix.extname(path);
     const result = await this.getRepoContent(await this.followSymLinks(path));
