@@ -7,10 +7,10 @@ import { ICache } from '../../scanner/cache/ICache';
 import { ErrorFactory } from '../../lib/errors/ErrorFactory';
 import { GitHubPullRequestState, GitHubFile, GitHubDir } from '../../services/git/IGitHubService';
 import * as nodePath from 'path';
-import { Metadata, MetadataType } from '../model';
+import { Metadata, MetadataType, IProjectFilesBrowserService } from '../model';
 
 @injectable()
-export class Git {
+export class Git implements IProjectFilesBrowserService {
   private repository: Repository;
   private gitHubClient: GitHubClient;
   private cache: ICache;
