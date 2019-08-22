@@ -22,10 +22,7 @@ export class GitHubClient {
     this.output = new ConsoleOutput();
 
     this.client = new Octokit({
-      auth: argumentsProvider.auth && {
-        clientId: argumentsProvider.auth.user,
-        clientSecret: argumentsProvider.auth.pass,
-      },
+      auth: argumentsProvider.auth,
     });
   }
 

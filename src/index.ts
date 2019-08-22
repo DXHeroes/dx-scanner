@@ -1,5 +1,5 @@
 import 'reflect-metadata';
-import { createRootContainer } from './inversify.config';
+import { createRootContainer, ArgumentsProvider } from './inversify.config';
 import { Scanner } from './scanner/Scanner';
 import { Command, flags } from '@oclif/command';
 import cli from 'cli-ux';
@@ -20,7 +20,8 @@ class DXScannerCommand extends Command {
   static args = [{ name: 'path' }];
 
   async run() {
-    const { args /* , flags */ } = this.parse(DXScannerCommand);
+    const { args, flags } = this.parse(DXScannerCommand);
+    const authorization = flags.authorization ? flags.authorization : undefined;
 
     // const name = flags.name || 'world';
     // this.log(`hello ${name} from ./src/index.ts`);
@@ -31,7 +32,12 @@ class DXScannerCommand extends Command {
     const scanPath = args.path || process.cwd();
     cli.action.start(`Scanning URI: ${scanPath}`);
 
-    const container = createRootContainer({ uri: scanPath });
+    const params: ArgumentsProvider = { uri: scanPath };
+    if (authorization) {
+      params['auth'] = authorization;
+    }
+
+    const container = createRootContainer(params);
     const scanner = container.get(Scanner);
 
     await scanner.scan();
