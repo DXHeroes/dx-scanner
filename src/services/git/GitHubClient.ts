@@ -211,8 +211,3 @@ export class GitHubClient {
     );
   };
 }
-
-export interface GitHubAuth {
-  username: string;
-  passwordOrToken: string;
-}
