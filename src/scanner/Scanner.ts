@@ -74,10 +74,6 @@ export class Scanner {
         case ServiceType.git:
         case ServiceType.github:
           const cloneUrl = new url.URL(remoteUrl);
-          // if (this.argumentsProvider.auth !== undefined) {
-          //   cloneUrl.password = this.argumentsProvider.auth.pass;
-          //   cloneUrl.username = this.argumentsProvider.auth.user;
-          // }
           localPath = fs.mkdtempSync(path.join(os.tmpdir(), 'dx-scanner'));
           await git()
             .silent(true)
