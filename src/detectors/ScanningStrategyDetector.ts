@@ -67,7 +67,7 @@ export class ScanningStrategyDetector implements IDetector<string, ScanningStrat
       return undefined;
     }
 
-    if (true || remoteService.serviceType === ServiceType.github) {
+    if (remoteService.serviceType === ServiceType.github) {
       const parsedUrl = gitUrlParse(remoteService.remoteUrl);
 
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
