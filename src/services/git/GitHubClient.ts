@@ -15,12 +15,9 @@ const debug = Debug('cli:services:git:github-client');
 @injectable()
 export class GitHubClient {
   private readonly client: Octokit;
-  private readonly output: IOutput;
   private callCount = 0;
 
   constructor(@inject(Types.ArgumentsProvider) argumentsProvider: ArgumentsProvider) {
-    this.output = new ConsoleOutput();
-
     this.client = new Octokit({
       auth: argumentsProvider.auth,
     });
