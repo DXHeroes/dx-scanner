@@ -192,9 +192,9 @@ export class GitHubClient {
       })
       .catch((error) => {
         if (error.response) {
-          this.output.error(`${error.response.status} => ${inspect(error.response.data)}`);
+          debug(`${error.response.status} => ${inspect(error.response.data)}`);
         } else {
-          this.output.error(error);
+          debug(inspect(error));
         }
         throw error;
       });
