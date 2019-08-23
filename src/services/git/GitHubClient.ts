@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/camelcase */
 import Octokit from '@octokit/rest';
-import { ConsoleOutput, IOutput } from '../../lib/output';
 import { inspect } from 'util';
 import { injectable, inject } from 'inversify';
 import { grey } from 'colors';
