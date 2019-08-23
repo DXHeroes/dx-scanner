@@ -132,8 +132,3 @@ export interface ArgumentsProvider {
   uri: string;
   auth?: string;
 }
-
-// interface Credentials {
-//   user: string;
-//   pass: string;
-// }
