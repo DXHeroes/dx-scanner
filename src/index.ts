@@ -21,7 +21,7 @@ class DXScannerCommand extends Command {
 
   async run() {
     const { args, flags } = this.parse(DXScannerCommand);
-    const authorization = flags.authorization ? flags.authorization : undefined;
+    let authorization = flags.authorization ? flags.authorization : undefined;
 
     // const name = flags.name || 'world';
     // this.log(`hello ${name} from ./src/index.ts`);
@@ -35,7 +35,16 @@ class DXScannerCommand extends Command {
     const container = createRootContainer({ uri: scanPath, auth: authorization });
     const scanner = container.get(Scanner);
 
-    await scanner.scan();
+    try {
+      await scanner.scan();
+    } catch (error) {
+      authorization = await cli.prompt('Insert your GitHub personal access token.\nhttps://github.com/settings/tokens\n');
+
+      const container = createRootContainer({ uri: scanPath, auth: authorization });
+      const scanner = container.get(Scanner);
+
+      await scanner.scan();
+    }
 
     cli.action.stop();
   }

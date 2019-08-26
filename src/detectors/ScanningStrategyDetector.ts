@@ -7,7 +7,6 @@ import { injectable, inject } from 'inversify';
 import { ErrorFactory } from '../lib/errors';
 import { Types } from '../types';
 import { ArgumentsProvider } from '../inversify.config';
-import cli from 'cli-ux';
 
 @injectable()
 export class ScanningStrategyDetector implements IDetector<string, ScanningStrategy> {
@@ -43,7 +42,7 @@ export class ScanningStrategyDetector implements IDetector<string, ScanningStrat
     }
 
     if (accessType === AccessType.private && this.argumentsProvider.auth === undefined) {
-      this.argumentsProvider.auth = await cli.prompt('Insert your GitHub personal access token.\nhttps://github.com/settings/tokens\n');
+      throw new Error('AT was not provided');
     }
 
     return {
