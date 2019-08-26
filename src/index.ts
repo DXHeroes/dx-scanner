@@ -32,12 +32,7 @@ class DXScannerCommand extends Command {
     const scanPath = args.path || process.cwd();
     cli.action.start(`Scanning URI: ${scanPath}`);
 
-    const params: ArgumentsProvider = { uri: scanPath };
-    if (authorization) {
-      params['auth'] = authorization;
-    }
-
-    const container = createRootContainer(params);
+    const container = createRootContainer({ uri: scanPath, auth: authorization });
     const scanner = container.get(Scanner);
 
     await scanner.scan();
