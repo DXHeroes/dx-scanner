@@ -2,6 +2,7 @@ import { ServiceType, AccessType } from './ScanningStrategyDetector';
 import git from 'simple-git/promise';
 import nock from 'nock';
 import { createTestContainer } from '../inversify.config';
+import { test as oclifTest } from '@oclif/test';
 jest.mock('simple-git/promise');
 
 describe('ScanningStrategyDetector', () => {
@@ -53,12 +54,22 @@ describe('ScanningStrategyDetector', () => {
       });
     });
 
-    it('local path with remote private GitHub', async () => {
+    it.only('local path with remote private GitHub', async () => {
       repo = { owner: 'DXHeroes', name: 'dx-scanner-private' };
       const repoPath = 'git@github.com:DXHeroes/dx-scanner-private.git';
-      nock('https://api.github.com')
-        .get(`/repos/${repo.owner}/${repo.name}`)
-        .reply(404);
+
+      // eslint-disable-next-line @typescript-eslint/no-require-imports
+      // const stdin = require('mock-stdin').stdin();
+      // stdin.send('bad access token');
+
+      // nock('https://api.github.com')
+      //   .get(`/repos/${repo.owner}/${repo.name}`)
+      //   .reply(404);
+
+      oclifTest
+        .nock('https://api.github.com', (api) => api.get('/repos/${repo.owner}/${repo.name}').reply(404))
+        .command('bad access token')
+        .stdin('bad access token');
 
       mockedGit.mockImplementation(() => {
         return {
