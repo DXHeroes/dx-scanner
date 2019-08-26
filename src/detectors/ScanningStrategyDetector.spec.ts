@@ -2,7 +2,6 @@ import { ServiceType, AccessType } from './ScanningStrategyDetector';
 import git from 'simple-git/promise';
 import nock from 'nock';
 import { createTestContainer } from '../inversify.config';
-import { test as oclifTest } from '@oclif/test';
 jest.mock('simple-git/promise');
 
 describe('ScanningStrategyDetector', () => {
@@ -54,22 +53,13 @@ describe('ScanningStrategyDetector', () => {
       });
     });
 
-    it.only('local path with remote private GitHub', async () => {
+    it('local path with remote private GitHub', async () => {
       repo = { owner: 'DXHeroes', name: 'dx-scanner-private' };
       const repoPath = 'git@github.com:DXHeroes/dx-scanner-private.git';
 
-      // eslint-disable-next-line @typescript-eslint/no-require-imports
-      // const stdin = require('mock-stdin').stdin();
-      // stdin.send('bad access token');
-
-      // nock('https://api.github.com')
-      //   .get(`/repos/${repo.owner}/${repo.name}`)
-      //   .reply(404);
-
-      oclifTest
-        .nock('https://api.github.com', (api) => api.get('/repos/${repo.owner}/${repo.name}').reply(404))
-        .command('bad access token')
-        .stdin('bad access token');
+      nock('https://api.github.com')
+        .get(`/repos/${repo.owner}/${repo.name}`)
+        .reply(404);
 
       mockedGit.mockImplementation(() => {
         return {
@@ -77,7 +67,8 @@ describe('ScanningStrategyDetector', () => {
           getRemotes: () => [{ name: 'origin', refs: { fetch: repoPath, push: repoPath } }],
         };
       });
-      const container = createTestContainer({ uri: '/local/path' });
+
+      const container = createTestContainer({ uri: '/local/path', auth: 'auth' });
 
       const result = await container.scanningStrategyDetector.detect();
 
@@ -113,7 +104,7 @@ describe('ScanningStrategyDetector', () => {
       nock('https://api.github.com')
         .get(`/repos/${repo.owner}/${repo.name}`)
         .reply(404);
-      const container = createTestContainer({ uri: repoPath });
+      const container = createTestContainer({ uri: repoPath, auth: 'bad AT' });
 
       const result = await container.scanningStrategyDetector.detect();
 

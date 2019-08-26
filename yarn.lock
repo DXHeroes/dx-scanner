@@ -453,13 +453,6 @@
   resolved "https://registry.yarnpkg.com/@oclif/screen/-/screen-1.0.4.tgz#b740f68609dfae8aa71c3a6cab15d816407ba493"
   integrity sha512-60CHpq+eqnTxLZQ4PGHYNwUX572hgpMHGPtTWMjdTMsAvlm69lZV/4ly6O3sAYkomo4NggGcomrDpBe34rxUqw==
 
-"@oclif/test@^1.2.5":
-  version "1.2.5"
-  resolved "https://registry.yarnpkg.com/@oclif/test/-/test-1.2.5.tgz#4d9723c38647a2a5930bf888f8c43790d74a18ca"
-  integrity sha512-8Y+Ix4A3Zhm87aL0ldVonDK7vFWyLfnFHzP3goYaLyIeh/60KL37lMxfmbp/kBN6/Y0Ru17iR1pdDi/hTDClLQ==
-  dependencies:
-    fancy-test "^1.4.3"
-
 "@octokit/endpoint@^5.1.0":
   version "5.2.0"
   resolved "https://registry.yarnpkg.com/@octokit/endpoint/-/endpoint-5.2.0.tgz#acd569cb7152549998454aa5658532eb24a0987e"
@@ -654,11 +647,6 @@
   dependencies:
     "@babel/types" "^7.3.0"
 
-"@types/chai@*":
-  version "4.2.0"
-  resolved "https://registry.yarnpkg.com/@types/chai/-/chai-4.2.0.tgz#2478260021408dec32c123a7cad3414beb811a07"
-  integrity sha512-zw8UvoBEImn392tLjxoavuonblX/4Yb9ha4KBU10FirCfwgzhKO0dvyJSF9ByxV1xK1r2AgnAi/tvQaLgxQqxA==
-
 "@types/debug@^4.1.5":
   version "4.1.5"
   resolved "https://registry.yarnpkg.com/@types/debug/-/debug-4.1.5.tgz#b14efa8852b7768d898906613c23f688713e02cd"
@@ -725,7 +713,7 @@
   resolved "https://registry.yarnpkg.com/@types/json-schema/-/json-schema-7.0.3.tgz#bdfd69d61e464dcc81b25159c270d75a73c1a636"
   integrity sha512-Il2DtDVRGDcqjDtE+rF8iqg1CArehSK84HZJCT7AMITlyXRBpuPhqGLDQMowraqqu1coEaimg4ZOqggt6L6L+A==
 
-"@types/lodash@*", "@types/lodash@^4.14.137":
+"@types/lodash@^4.14.137":
   version "4.14.137"
   resolved "https://registry.yarnpkg.com/@types/lodash/-/lodash-4.14.137.tgz#8a4804937dc6462274ffcc088df8f14fc1b368e2"
   integrity sha512-g4rNK5SRKloO+sUGbuO7aPtwbwzMgjK+bm9BBhLD7jGUiGR7zhwYEhSln/ihgYQBeIJ5j7xjyaYzrWTcu3UotQ==
@@ -735,12 +723,7 @@
   resolved "https://registry.yarnpkg.com/@types/minimatch/-/minimatch-3.0.3.tgz#3dca0e3f33b200fc7d1139c0cd96c1268cadfd9d"
   integrity sha512-tHq6qdbT9U1IRSGf14CL0pUlULksvY9OZ+5eEgl1N7t+OA3tGvNpxJCzuKQlsNgCVwbAs670L1vcVQi8j9HjnA==
 
-"@types/mocha@*":
-  version "5.2.7"
-  resolved "https://registry.yarnpkg.com/@types/mocha/-/mocha-5.2.7.tgz#315d570ccb56c53452ff8638738df60726d5b6ea"
-  integrity sha512-NYrtPht0wGzhwe9+/idPaBB+TqkY9AhTvOLMkThm0IoEfLaiVQZwBwyJ5puCkO3AUCWrmcoePjp2mbFocKy4SQ==
-
-"@types/nock@*", "@types/nock@^10.0.3":
+"@types/nock@^10.0.3":
   version "10.0.3"
   resolved "https://registry.yarnpkg.com/@types/nock/-/nock-10.0.3.tgz#dab1d18ffbccfbf2db811dab9584304eeb6e1c4c"
   integrity sha512-OthuN+2FuzfZO3yONJ/QVjKmLEuRagS9TV9lEId+WHL9KhftYG+/2z+pxlr0UgVVXSpVD8woie/3fzQn8ft/Ow==
@@ -779,11 +762,6 @@
   version "6.0.1"
   resolved "https://registry.yarnpkg.com/@types/semver/-/semver-6.0.1.tgz#a984b405c702fa5a7ec6abc56b37f2ba35ef5af6"
   integrity sha512-ffCdcrEE5h8DqVxinQjo+2d1q+FV5z7iNtPofw3JsrltSoSVlOGaW0rY8XxtO9XukdTn8TaCGWmk2VFGhI70mg==
-
-"@types/sinon@*":
-  version "7.0.13"
-  resolved "https://registry.yarnpkg.com/@types/sinon/-/sinon-7.0.13.tgz#ca039c23a9e27ebea53e0901ef928ea2a1a6d313"
-  integrity sha512-d7c/C/+H/knZ3L8/cxhicHUiTDxdgap0b/aNJfsmLwFu/iOP17mdgbQsbHA3SJmrzsjD0l3UEE5SN4xxuz5ung==
 
 "@types/stack-utils@^1.0.1":
   version "1.0.1"
@@ -2880,21 +2858,6 @@ extsprintf@^1.2.0:
   version "1.4.0"
   resolved "https://registry.yarnpkg.com/extsprintf/-/extsprintf-1.4.0.tgz#e2689f8f356fad62cca65a3a91c5df5f9551692f"
   integrity sha1-4mifjzVvrWLMplo6kcXfX5VRaS8=
-
-fancy-test@^1.4.3:
-  version "1.4.4"
-  resolved "https://registry.yarnpkg.com/fancy-test/-/fancy-test-1.4.4.tgz#979f2827fccafac0ef52b542ab9ba9e8bcf40e50"
-  integrity sha512-F2JYBLJTsfvqjziAl/niwxnWYJy+JCIyDMbbBJqT7XzF8JwEIOL3/TC99v3Ig5LFXkvuwKrKpetSymd6CjH8ew==
-  dependencies:
-    "@types/chai" "*"
-    "@types/lodash" "*"
-    "@types/mocha" "*"
-    "@types/nock" "*"
-    "@types/node" "*"
-    "@types/sinon" "*"
-    lodash "^4.17.13"
-    mock-stdin "^0.3.1"
-    stdout-stderr "^0.1.9"
 
 fast-deep-equal@^2.0.1:
   version "2.0.1"
@@ -5612,11 +5575,6 @@ mkdirp@0.x, mkdirp@^0.5.0, mkdirp@^0.5.1, mkdirp@~0.5.0, mkdirp@~0.5.1:
   dependencies:
     minimist "0.0.8"
 
-mock-stdin@^0.3.1:
-  version "0.3.1"
-  resolved "https://registry.yarnpkg.com/mock-stdin/-/mock-stdin-0.3.1.tgz#c657d9642d90786435c64ca5e99bbd4d09bd7dd3"
-  integrity sha1-xlfZZC2QeGQ1xkyl6Zu9TQm9fdM=
-
 modify-values@^1.0.0:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/modify-values/-/modify-values-1.0.1.tgz#b3939fa605546474e3e3e3c63d64bd43b4ee6022"
@@ -7881,14 +7839,6 @@ static-extend@^0.1.1:
   dependencies:
     define-property "^0.2.5"
     object-copy "^0.1.0"
-
-stdout-stderr@^0.1.9:
-  version "0.1.9"
-  resolved "https://registry.yarnpkg.com/stdout-stderr/-/stdout-stderr-0.1.9.tgz#9b48ee04eff955ee07776e27125d5524d9d02f57"
-  integrity sha1-m0juBO/5Ve4Hd24nEl1VJNnQL1c=
-  dependencies:
-    debug "^3.1.0"
-    strip-ansi "^4.0.0"
 
 stealthy-require@^1.1.1:
   version "1.1.1"
