@@ -3,13 +3,14 @@ import { GitHubClient } from './GitHubClient';
 import { InMemoryCache } from '../../scanner/cache/InMemoryCahce';
 import { GitHubNock } from '../../../test/helpers/gitHubNock';
 import nock from 'nock';
+import { GitHubService } from './GitHubService';
 
 describe('Git', () => {
   let cache: InMemoryCache, git: Git, gitHubNock: GitHubNock;
 
   beforeAll(() => {
     cache = new InMemoryCache();
-    git = new Git({ url: 'https://github.com/DXHeroes/dx-scanner.git' }, new GitHubClient({ uri: '.' }), cache);
+    git = new Git({ url: 'https://github.com/DXHeroes/dx-scanner.git' }, new GitHubService(new GitHubClient({ uri: '.' })), cache);
     gitHubNock = new GitHubNock(1, 'DXHeroes', 1, 'dx-scanner');
   });
 

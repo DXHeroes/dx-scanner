@@ -1,23 +1,25 @@
 import { Repository } from '../../model';
-import { GitHubClient } from './GitHubClient';
 import { GitHubUrlParser } from './GitHubUrlParser';
 import { isArray } from 'util';
-import { injectable } from 'inversify';
+import { inject, injectable } from 'inversify';
 import { ICache } from '../../scanner/cache/ICache';
 import { ErrorFactory } from '../../lib/errors/ErrorFactory';
-import { GitHubPullRequestState, GitHubFile, GitHubDir } from '../../services/git/IGitHubService';
+import { GitHubPullRequestState } from '../../services/git/IGitHubService';
 import * as nodePath from 'path';
 import { Metadata, MetadataType, IProjectFilesBrowserService } from '../model';
+import { Types } from '../../types';
+import { ProjectIssueBrowserService as ContentRepositoryBrowserService } from '../../model';
+import { Directory, File, Symlink } from './model';
 
 @injectable()
 export class Git implements IProjectFilesBrowserService {
   private repository: Repository;
-  private gitHubClient: GitHubClient;
+  private service: ContentRepositoryBrowserService;
   private cache: ICache;
 
-  constructor(repository: Repository, githubClient: GitHubClient, cache: ICache) {
+  constructor(repository: Repository, @inject(Types.IContentRepositoryBrowser) service: ContentRepositoryBrowserService, cache: ICache) {
     this.repository = repository;
-    this.gitHubClient = githubClient;
+    this.service = service;
     this.cache = cache;
   }
 
@@ -29,15 +31,16 @@ export class Git implements IProjectFilesBrowserService {
   async readDirectory(path: string): Promise<string[]> {
     const result = await this.getRepoContent(await this.followSymLinks(path));
     if (result !== null && isArray(result)) {
-      return result.map((item: GitHubFile | GitHubDir) => item.name);
+      return result.map((item) => item.name);
     } else {
       throw ErrorFactory.newInternalError(`${path} is not a directory`);
     }
   }
 
   async readFile(path: string): Promise<string> {
-    const result = await this.getRepoContent(await this.followSymLinks(path));
+    let result = await this.getRepoContent(await this.followSymLinks(path));
     if (result !== null && !isArray(result)) {
+      result = result as File;
       return Buffer.from(result.content, result.encoding).toString('utf-8');
     } else {
       throw ErrorFactory.newInternalError(`${path} is not a file`);
@@ -110,27 +113,26 @@ export class Git implements IProjectFilesBrowserService {
 
   async getContributorCount(): Promise<number> {
     const params = GitHubUrlParser.getOwnerAndRepoName(this.repository.url);
-    return this.gitHubClient.getContributors(params.owner, params.repoName).then((r) => r.data.length);
+    return this.service.getContributors(params.owner, params.repoName).then((r) => r.totalCount);
   }
 
   async getPullRequestCount(): Promise<number> {
     const params = GitHubUrlParser.getOwnerAndRepoName(this.repository.url);
-    return this.gitHubClient.getPullRequests(params.owner, params.repoName, GitHubPullRequestState.all).then((r) => {
+    return this.service.getPullRequests(params.owner, params.repoName, { filter: { state: GitHubPullRequestState.all } }).then((r) => {
       if (!r) {
         throw ErrorFactory.newInternalError('Could not get pull requests');
       }
-      return r.data.length;
+      return r.totalCount;
     });
   }
 
-  private getRepoContent(path: string) {
+  private getRepoContent(path: string): Promise<File | Symlink | Directory | null> {
     const params = GitHubUrlParser.getOwnerAndRepoName(this.repository.url);
     const key = `${params.owner}:${params.repoName}:content:${path}`;
 
     return this.cache.getOrSet(key, async () => {
       try {
-        const result = await this.gitHubClient.getRepoContent(params.owner, params.repoName, path);
-        return result.data;
+        return await this.service.getRepoContent(params.owner, params.repoName, path);
       } catch (e) {
         if (e.name !== 'HttpError' || e.status !== 404) {
           throw e;

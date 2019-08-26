@@ -30,38 +30,6 @@ export enum GitHubPullRequestState {
   all = 'all',
 }
 
-export interface GitHubDir {
-  type: GitHubContentType.dir;
-  size: 0;
-  name: string;
-  path: string;
-  sha: string;
-  url: string;
-  html_url: string;
-  download_url: null;
-}
-
-export enum GitHubContentType {
-  file = 'file',
-  dir = 'dir',
-}
-
-export interface GitHubFile {
-  type: GitHubContentType.file;
-  encoding: string;
-  size: number;
-  name: string;
-  path: string;
-  sha: string;
-  url: string;
-  html_url: string;
-  download_url: string;
-}
-
-export interface GitHubFileWithContent extends GitHubFile {
-  content: string;
-}
-
 export enum GitHubIssueState {
   open = 'open',
   closed = 'closed',
