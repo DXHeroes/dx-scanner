@@ -26,6 +26,7 @@ export class ScanningStrategyDetector implements IDetector<string, ScanningStrat
     const path = ScanningStrategyDetectorUtils.normalizePath(this.argumentsProvider.uri);
 
     const inputType = this.determineInputType(path);
+
     // try to determine remote origin if input is local file system
     if (inputType === ServiceType.local) {
       remoteService = await this.determineRemote(path);
@@ -39,10 +40,6 @@ export class ScanningStrategyDetector implements IDetector<string, ScanningStrat
       serviceType = inputType;
       remoteUrl = path;
       accessType = await this.determineRemoteAccessType({ remoteUrl: path, serviceType });
-    }
-
-    if (accessType === AccessType.private && this.argumentsProvider.auth === undefined) {
-      throw new Error('AT was not provided');
     }
 
     return {
@@ -78,10 +75,7 @@ export class ScanningStrategyDetector implements IDetector<string, ScanningStrat
       try {
         response = await this.gitHubClient.get(parsedUrl.owner, parsedUrl.name);
       } catch (error) {
-        if (error.status && error.status === 404) {
-          return AccessType.private;
-        }
-        throw error;
+        throw ErrorFactory.newInternalError('You passed bad credentials or non existing repo.');
       }
 
       if (response.status === 200) {

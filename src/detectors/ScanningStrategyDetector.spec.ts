@@ -68,16 +68,9 @@ describe('ScanningStrategyDetector', () => {
         };
       });
 
-      const container = createTestContainer({ uri: '/local/path', auth: 'auth' });
+      const container = createTestContainer({ uri: '/local/path', auth: 'bad AT' });
 
-      const result = await container.scanningStrategyDetector.detect();
-
-      expect(result).toEqual({
-        accessType: AccessType.private,
-        localPath: '/local/path',
-        remoteUrl: repoPath,
-        serviceType: ServiceType.github,
-      });
+      await expect(container.scanningStrategyDetector.detect()).rejects.toThrow('bad credentials');
     });
 
     it('remote public GitHub', async () => {
@@ -106,14 +99,7 @@ describe('ScanningStrategyDetector', () => {
         .reply(404);
       const container = createTestContainer({ uri: repoPath, auth: 'bad AT' });
 
-      const result = await container.scanningStrategyDetector.detect();
-
-      expect(result).toEqual({
-        accessType: AccessType.private,
-        localPath: undefined,
-        remoteUrl: repoPath,
-        serviceType: ServiceType.github,
-      });
+      await expect(container.scanningStrategyDetector.detect()).rejects.toThrow('bad credentials');
     });
 
     it('remote public GitHub without protocol in the URL', async () => {
