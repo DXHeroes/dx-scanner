@@ -1,5 +1,5 @@
 import 'reflect-metadata';
-import { createRootContainer, ArgumentsProvider } from './inversify.config';
+import { createRootContainer } from './inversify.config';
 import { Scanner } from './scanner/Scanner';
 import { Command, flags } from '@oclif/command';
 import cli from 'cli-ux';
