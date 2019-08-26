@@ -27,7 +27,6 @@ export class ScanningStrategyDetector implements IDetector<string, ScanningStrat
     const path = ScanningStrategyDetectorUtils.normalizePath(this.argumentsProvider.uri);
 
     const inputType = this.determineInputType(path);
-
     // try to determine remote origin if input is local file system
     if (inputType === ServiceType.local) {
       remoteService = await this.determineRemote(path);
@@ -43,7 +42,7 @@ export class ScanningStrategyDetector implements IDetector<string, ScanningStrat
       accessType = await this.determineRemoteAccessType({ remoteUrl: path, serviceType });
     }
 
-    if (accessType === AccessType.private) {
+    if (accessType === AccessType.private && this.argumentsProvider.auth === undefined) {
       this.argumentsProvider.auth = await cli.prompt('Insert your GitHub personal access token.\nhttps://github.com/settings/tokens\n');
     }
 
@@ -87,6 +86,9 @@ export class ScanningStrategyDetector implements IDetector<string, ScanningStrat
       }
 
       if (response.status === 200) {
+        if (response.data.private === true) {
+          return AccessType.private;
+        }
         return AccessType.public;
       }
     }
