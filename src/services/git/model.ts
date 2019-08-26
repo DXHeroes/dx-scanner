@@ -53,12 +53,12 @@ export interface Contributor {
   contributions: number | undefined;
 }
 
-interface RepoContent {
+export interface RepoContent {
   name: string;
   path: string;
   sha: string;
   size: number;
-  type: 'file' | 'symlink';
+  type: 'dir' | 'file' | 'symlink';
 }
 
 export interface File extends RepoContent {
@@ -71,6 +71,8 @@ export interface Symlink extends RepoContent {
   type: 'symlink';
   target: string;
 }
+
+export type Directory = Array<RepoContent>;
 
 export interface Issue {
   user: UserInfo;

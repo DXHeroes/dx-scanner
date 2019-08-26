@@ -1,6 +1,16 @@
-import { File } from '../../model';
+import { Directory, File } from '../../model';
 
-export const getRepoContentServiceResponse: File = {
+export const getRepoContentServiceResponseDir: Directory = [
+  {
+    name: 'mockFile.ts',
+    path: 'mockFolder/mockFile.ts',
+    size: 0,
+    sha: '980a0d5f19a64b4b30a87d4206aade58726b60e3',
+    type: 'file',
+  },
+];
+
+export const getRepoContentServiceResponseFile: File = {
   name: 'README',
   path: 'README',
   size: 13,

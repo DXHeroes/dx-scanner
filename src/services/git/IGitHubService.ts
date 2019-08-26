@@ -1,5 +1,5 @@
 import { ListGetterOptions } from '../../inspectors/common/ListGetterOptions';
-import { PullRequest, PullRequestReview, Commit, Contributor, ContributorStats, Issue, File, Symlink, PullFiles } from './model';
+import { PullRequest, PullRequestReview, Commit, Contributor, ContributorStats, Issue, Directory, File, Symlink, PullFiles } from './model';
 import { Paginated } from '../../inspectors/common/Paginated';
 
 export interface IGitHubService {
@@ -16,7 +16,7 @@ export interface IGitHubService {
   getContributorsStats(owner: string, repo: string): Promise<Paginated<ContributorStats>>;
   getIssues(owner: string, repo: string): Promise<Paginated<Issue>>;
   getIssue(owner: string, repo: string, issueNumber: number): Promise<Issue>;
-  getRepoContent(owner: string, repo: string, path: string): Promise<File | Symlink>;
+  getRepoContent(owner: string, repo: string, path: string): Promise<File | Symlink | Directory>;
 }
 
 export interface GitHubPagination {

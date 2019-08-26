@@ -6,6 +6,7 @@ import {
   PullRequestReview,
   Commit,
   ContributorStats,
+  Directory,
   File,
   Issue,
   PullFiles,
@@ -21,6 +22,7 @@ import {
   PullsListReviewsResponseItem,
   ReposGetContributorsStatsResponseItem,
 } from '@octokit/rest';
+import { isArray } from 'util';
 @injectable()
 export class GitHubService implements IGitHubService {
   private gitHubClient: GitHubClient;
@@ -180,18 +182,26 @@ export class GitHubService implements IGitHubService {
     return { items, ...pagination };
   }
 
-  async getRepoContent(owner: string, repo: string, path: string): Promise<File | Symlink> {
+  async getRepoContent(owner: string, repo: string, path: string): Promise<File | Symlink | Directory> {
     const response = await this.gitHubClient.getRepoContent(owner, repo, path);
-    return {
-      name: response.data.name,
-      path: response.data.path,
-      size: response.data.size,
-      sha: response.data.sha,
-      type: response.data.type,
-      content: response.data.content,
-      encoding: response.data.encoding,
-      target: response.data.target,
-    };
+    return isArray(response.data)
+      ? response.data.map((item) => ({
+          name: item.name,
+          path: item.path,
+          sha: item.sha,
+          size: item.size,
+          type: item.type,
+        }))
+      : {
+          name: response.data.name,
+          path: response.data.path,
+          size: response.data.size,
+          sha: response.data.sha,
+          type: response.data.type,
+          content: response.data.content,
+          encoding: response.data.encoding,
+          target: response.data.target,
+        };
   }
 
   async getIssues(owner: string, repo: string): Promise<Paginated<Issue>> {

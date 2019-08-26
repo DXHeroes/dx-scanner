@@ -6,7 +6,10 @@ import { getPullsReviewsServiceResponse } from './__MOCKS__/gitHubServiceMockFol
 import { getCommitServiceResponse } from './__MOCKS__/gitHubServiceMockFolder/getCommitServiceResponse.mock';
 import { getContributorsServiceResponse } from './__MOCKS__/gitHubServiceMockFolder/getContributorsServiceResponse.mock';
 import { getContributorsStatsServiceResponse } from './__MOCKS__/gitHubServiceMockFolder/getContributorsStatsServiceResponse.mock';
-import { getRepoContentServiceResponse } from './__MOCKS__/gitHubServiceMockFolder/getRepoContentServiceResponse.mock';
+import {
+  getRepoContentServiceResponseDir,
+  getRepoContentServiceResponseFile,
+} from './__MOCKS__/gitHubServiceMockFolder/getRepoContentServiceResponse.mock';
 import { getIssuesServiceResponse } from './__MOCKS__/gitHubServiceMockFolder/getIssuesServiceResponse.mock';
 import { getPullRequestsReviewsResponse } from './__MOCKS__/gitHubClientMockFolder/getPullRequestsReviewsResponse.mock';
 import { getCommitResponse } from './__MOCKS__/gitHubClientMockFolder/getCommitResponse.mock';
@@ -68,11 +71,20 @@ describe('GitHub Service', () => {
     expect(response).toMatchObject(getContributorsStatsServiceResponse);
   });
 
-  it('returns repo content in own interface', async () => {
-    new GitHubNock(1, 'octocat', 1, 'Hello-World').getFile('README', 'Hello World!\n', '980a0d5f19a64b4b30a87d4206aade58726b60e3');
+  describe('#getRepoContent', () => {
+    it('returns files in own interface', async () => {
+      new GitHubNock(1, 'octocat', 1, 'Hello-World').getFile('README', 'Hello World!\n', '980a0d5f19a64b4b30a87d4206aade58726b60e3');
 
-    const response = await service.getRepoContent('octocat', 'Hello-World', 'README');
-    expect(response).toMatchObject(getRepoContentServiceResponse);
+      const response = await service.getRepoContent('octocat', 'Hello-World', 'README');
+      expect(response).toMatchObject(getRepoContentServiceResponseFile);
+    });
+
+    it('returns directories in own interface', async () => {
+      new GitHubNock(1, 'octocat', 1, 'Hello-World').getDirectory('mockFolder', ['mockFile.ts'], []);
+
+      const response = await service.getRepoContent('octocat', 'Hello-World', 'mockFolder');
+      expect(response).toMatchObject(getRepoContentServiceResponseDir);
+    });
   });
 
   it('returns issues in own interface', async () => {
