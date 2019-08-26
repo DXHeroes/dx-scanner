@@ -28,6 +28,10 @@ export class GitHubService implements IGitHubService {
     this.gitHubClient = gitHubClient;
   }
 
+  getRepo(owner: string, repo: string) {
+    return this.gitHubClient.get(owner, repo);
+  }
+
   async getPullRequests(owner: string, repo: string): Promise<Paginated<PullRequest>> {
     const response: PullsListResponseItem[] = await this.gitHubClient.paginate('GET /repos/:owner/:repo/pulls', owner, repo);
 
