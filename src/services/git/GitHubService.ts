@@ -6,11 +6,12 @@ import {
   PullRequestReview,
   Commit,
   ContributorStats,
+  File,
   Issue,
-  RepoContent,
   PullFiles,
   PullCommits,
   IssueComment,
+  Symlink,
 } from './model';
 import { IGitHubService } from './IGitHubService';
 import { Paginated } from '../../inspectors/common/Paginated';
@@ -179,7 +180,7 @@ export class GitHubService implements IGitHubService {
     return { items, ...pagination };
   }
 
-  async getRepoContent(owner: string, repo: string, path: string): Promise<RepoContent> {
+  async getRepoContent(owner: string, repo: string, path: string): Promise<File | Symlink> {
     const response = await this.gitHubClient.getRepoContent(owner, repo, path);
     return {
       name: response.data.name,
@@ -189,6 +190,7 @@ export class GitHubService implements IGitHubService {
       type: response.data.type,
       content: response.data.content,
       encoding: response.data.encoding,
+      target: response.data.target,
     };
   }
 

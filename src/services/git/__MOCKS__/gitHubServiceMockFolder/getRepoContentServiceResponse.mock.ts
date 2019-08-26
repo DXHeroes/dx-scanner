@@ -1,6 +1,6 @@
-import { RepoContent } from '../../model';
+import { File } from '../../model';
 
-export const getRepoContentServiceResponse: RepoContent = {
+export const getRepoContentServiceResponse: File = {
   name: 'README',
   path: 'README',
   size: 13,

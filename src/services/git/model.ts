@@ -53,14 +53,23 @@ export interface Contributor {
   contributions: number | undefined;
 }
 
-export interface RepoContent {
+interface RepoContent {
   name: string;
   path: string;
   sha: string;
   size: number;
-  type: string;
+  type: 'file' | 'symlink';
+}
+
+export interface File extends RepoContent {
+  type: 'file';
   content: string;
-  encoding: string;
+  encoding: BufferEncoding;
+}
+
+export interface Symlink extends RepoContent {
+  type: 'symlink';
+  target: string;
 }
 
 export interface Issue {
