@@ -51,12 +51,9 @@ export class GitHubNock {
     return this.getPullsInternal(number, undefined, responseBody, persist);
   }
 
-  getContributors(contributors: { id: number; login: string }[], anon?: boolean, persist = true): Contributor[] {
+  getContributors(contributors: { id: number; login: string }[], persist = true): Contributor[] {
     const url = this.repository.contributors_url;
-    const params: nock.POJO = {};
-    if (anon !== undefined) {
-      params.anon = anon.toString();
-    }
+    const params = {};
     const code = 200;
     const body = contributors.map(({ id, login }) => new Contributor(id, login));
 
@@ -97,16 +94,9 @@ export class GitHubNock {
     return GitHubNock.get(this.repository.git_commits_url.replace('{/sha}', `/${sha}`), {}, persist);
   }
 
-  getIssues(number?: number, page?: number, perPage?: number, persist = true): nock.Interceptor {
+  getIssues(number?: number, persist = true): nock.Interceptor {
     const url = this.repository.issues_url.replace('{/number}', number !== undefined ? `/${number}` : '');
     const params: nock.POJO = {};
-    if (page !== undefined) {
-      params.page = page;
-    }
-    if (perPage !== undefined) {
-      // eslint-disable-next-line @typescript-eslint/camelcase
-      params.per_page = perPage;
-    }
 
     return GitHubNock.get(url, params, persist);
   }

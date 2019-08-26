@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/camelcase */
 import { GitHubService } from './GitHubService';
-import { GitHubClient } from './GitHubClient';
 import { getPullsServiceResponse } from './__MOCKS__/gitHubServiceMockFolder/getPullsServiceResponse.mock';
 import { getPullsReviewsServiceResponse } from './__MOCKS__/gitHubServiceMockFolder/getPullsReviewsServiceResponse.mock';
 import { getCommitServiceResponse } from './__MOCKS__/gitHubServiceMockFolder/getCommitServiceResponse.mock';
@@ -11,27 +10,26 @@ import {
   getRepoContentServiceResponseFile,
 } from './__MOCKS__/gitHubServiceMockFolder/getRepoContentServiceResponse.mock';
 import { getIssuesServiceResponse } from './__MOCKS__/gitHubServiceMockFolder/getIssuesServiceResponse.mock';
-import { getPullRequestsReviewsResponse } from './__MOCKS__/gitHubClientMockFolder/getPullRequestsReviewsResponse.mock';
-import { getCommitResponse } from './__MOCKS__/gitHubClientMockFolder/getCommitResponse.mock';
-import { getContributorsStatsResponse } from './__MOCKS__/gitHubClientMockFolder/getContributorsStatsResponse.mock';
-import { getIssuesResponse } from './__MOCKS__/gitHubClientMockFolder/getIssuesResponse.mock';
-import { getIssueCommentsResponse } from './__MOCKS__/gitHubClientMockFolder/getIssueCommentsResponse.mock';
+import { getPullRequestsReviewsResponse } from './__MOCKS__/gitHubServiceMockFolder/getPullRequestsReviewsResponse.mock';
+import { getCommitResponse } from './__MOCKS__/gitHubServiceMockFolder/getCommitResponse.mock';
+import { getContributorsStatsResponse } from './__MOCKS__/gitHubServiceMockFolder/getContributorsStatsResponse.mock';
+import { getIssuesResponse } from './__MOCKS__/gitHubServiceMockFolder/getIssuesResponse.mock';
+import { getIssueCommentsResponse } from './__MOCKS__/gitHubServiceMockFolder/getIssueCommentsResponse.mock';
 import { getIssueCommentsServiceResponse } from './__MOCKS__/gitHubServiceMockFolder/getIssueCommentsServiceResponse.mock';
 import nock from 'nock';
-import { getPullsFilesResponse } from './__MOCKS__/gitHubClientMockFolder/getPullsFiles.mock';
+import { getPullsFilesResponse } from './__MOCKS__/gitHubServiceMockFolder/getPullsFiles.mock';
 import { getPullsFilesServiceResponse } from './__MOCKS__/gitHubServiceMockFolder/getPullFilesServiceResponse.mock';
-import { getPullCommitsResponse } from './__MOCKS__/gitHubClientMockFolder/getPullsCommitsResponse.mock';
+import { getPullCommitsResponse } from './__MOCKS__/gitHubServiceMockFolder/getPullsCommitsResponse.mock';
 import { getPullCommitsServiceResponse } from './__MOCKS__/gitHubServiceMockFolder/getPullCommitsServiceResponse.mock';
 import { GitHubNock } from '../../../test/helpers/gitHubNock';
 import { GitHubPullRequestState } from './IGitHubService';
+import { getRepoCommitsResponse } from './__MOCKS__/gitHubServiceMockFolder/getRepoCommitsResponse.mock';
 
 describe('GitHub Service', () => {
   let service: GitHubService;
-  let client: GitHubClient;
 
   beforeEach(async () => {
-    client = new GitHubClient({ uri: '.' });
-    service = new GitHubService(client);
+    service = new GitHubService({ uri: '.' });
     nock.cleanAll();
   });
 
@@ -93,6 +91,13 @@ describe('GitHub Service', () => {
 
     const response = await service.getPullRequestReviews('octocat', 'Hello-World', 1);
     expect(response).toMatchObject(getPullsReviewsServiceResponse);
+  });
+
+  it('returns commits in own interface', async () => {
+    new GitHubNock(1, 'octocat', 1, 'Hello-World').getCommits().reply(200, getRepoCommitsResponse);
+    const response = await service.getRepoCommits('octocat', 'Hello-World');
+
+    expect(response.data).toMatchObject(getRepoCommitsResponse);
   });
 
   it('returns commits in own interface', async () => {

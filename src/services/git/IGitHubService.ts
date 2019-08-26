@@ -19,11 +19,6 @@ export interface IGitHubService {
   getRepoContent(owner: string, repo: string, path: string): Promise<File | Symlink | Directory>;
 }
 
-export interface GitHubPagination {
-  page?: number;
-  per_page?: number;
-}
-
 export enum GitHubPullRequestState {
   open = 'open',
   closed = 'closed',

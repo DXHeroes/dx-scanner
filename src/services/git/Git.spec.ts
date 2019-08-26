@@ -1,5 +1,4 @@
 import { Git } from './Git';
-import { GitHubClient } from './GitHubClient';
 import { InMemoryCache } from '../../scanner/cache/InMemoryCahce';
 import { GitHubNock } from '../../../test/helpers/gitHubNock';
 import nock from 'nock';
@@ -10,7 +9,7 @@ describe('Git', () => {
 
   beforeAll(() => {
     cache = new InMemoryCache();
-    git = new Git({ url: 'https://github.com/DXHeroes/dx-scanner.git' }, new GitHubService(new GitHubClient({ uri: '.' })), cache);
+    git = new Git({ url: 'https://github.com/DXHeroes/dx-scanner.git' }, new GitHubService({ uri: '.' }), cache);
     gitHubNock = new GitHubNock(1, 'DXHeroes', 1, 'dx-scanner');
   });
 

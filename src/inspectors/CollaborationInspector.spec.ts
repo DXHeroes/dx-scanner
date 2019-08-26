@@ -1,9 +1,9 @@
 import { CollaborationInspector } from './CollaborationInspector';
 import { getPullsServiceResponse } from '../services/git/__MOCKS__/gitHubServiceMockFolder/getPullsServiceResponse.mock';
 import { getPullServiceResponse } from '../services/git/__MOCKS__/gitHubServiceMockFolder/getPullServiceResponse.mock';
-import { getPullsFilesResponse } from '../services/git/__MOCKS__/gitHubClientMockFolder/getPullsFiles.mock';
+import { getPullsFilesResponse } from '../services/git/__MOCKS__/gitHubServiceMockFolder/getPullsFiles.mock';
 import { getPullsFilesServiceResponse } from '../services/git/__MOCKS__/gitHubServiceMockFolder/getPullFilesServiceResponse.mock';
-import { getPullCommitsResponse } from '../services/git/__MOCKS__/gitHubClientMockFolder/getPullsCommitsResponse.mock';
+import { getPullCommitsResponse } from '../services/git/__MOCKS__/gitHubServiceMockFolder/getPullsCommitsResponse.mock';
 import { getPullCommitsServiceResponse } from '../services/git/__MOCKS__/gitHubServiceMockFolder/getPullCommitsServiceResponse.mock';
 import nock from 'nock';
 import { TestContainerContext } from '../inversify.config';

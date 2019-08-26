@@ -1,9 +1,9 @@
 import { IssueTrackingInspector } from './IssueTrackingInspector';
-import { getIssuesResponse } from '../services/git/__MOCKS__/gitHubClientMockFolder/getIssuesResponse.mock';
+import { getIssuesResponse } from '../services/git/__MOCKS__/gitHubServiceMockFolder/getIssuesResponse.mock';
 import { getIssuesServiceResponse } from '../services/git/__MOCKS__/gitHubServiceMockFolder/getIssuesServiceResponse.mock';
 import { getIssueCommentsServiceResponse } from '../services/git/__MOCKS__/gitHubServiceMockFolder/getIssueCommentsServiceResponse.mock';
-import { getIssueCommentsResponse } from '../services/git/__MOCKS__/gitHubClientMockFolder/getIssueCommentsResponse.mock';
-import { getIssueResponse } from '../services/git/__MOCKS__/gitHubClientMockFolder/getIssueResponse.mock';
+import { getIssueCommentsResponse } from '../services/git/__MOCKS__/gitHubServiceMockFolder/getIssueCommentsResponse.mock';
+import { getIssueResponse } from '../services/git/__MOCKS__/gitHubServiceMockFolder/getIssueResponse.mock';
 import { getIssueServiceResponse } from '../services/git/__MOCKS__/gitHubServiceMockFolder/getIssueServiceResponse.mock';
 import nock from 'nock';
 import { TestContainerContext, createTestContainer } from '../inversify.config';
