@@ -31,16 +31,20 @@ import Debug from 'debug';
 import { delay } from '../../lib/delay';
 import { Types } from '../../types';
 import { ArgumentsProvider } from '../../inversify.config';
+import { ICache } from '../../scanner/cache/ICache';
+import { InMemoryCache } from '../../scanner/cache/InMemoryCahce';
 const debug = Debug('cli:services:git:github-service');
 
 @injectable()
 export class GitHubService implements IGitHubService {
   private readonly client: Octokit;
   private readonly output: IOutput;
+  private cache: ICache;
   private callCount = 0;
 
   constructor(@inject(Types.ArgumentsProvider) argumentsProvider: ArgumentsProvider) {
     this.output = new ConsoleOutput();
+    this.cache = new InMemoryCache();
 
     this.client = new Octokit({
       auth: argumentsProvider.auth && {
@@ -48,6 +52,10 @@ export class GitHubService implements IGitHubService {
         clientSecret: argumentsProvider.auth.pass,
       },
     });
+  }
+
+  purgeCache() {
+    this.cache.purge();
   }
 
   /**
@@ -266,26 +274,40 @@ export class GitHubService implements IGitHubService {
   /**
    * Gets the contents of a file or directory in a repository.
    */
-  async getRepoContent(owner: string, repo: string, path: string): Promise<File | Symlink | Directory> {
-    const response = await this.unwrap(this.client.repos.getContents({ owner, repo, path }));
-    return isArray(response.data)
-      ? response.data.map((item) => ({
-          name: item.name,
-          path: item.path,
-          sha: item.sha,
-          size: item.size,
-          type: item.type,
-        }))
-      : {
-          name: response.data.name,
-          path: response.data.path,
-          size: response.data.size,
-          sha: response.data.sha,
-          type: response.data.type,
-          content: response.data.content,
-          encoding: response.data.encoding,
-          target: response.data.target,
-        };
+  async getRepoContent(owner: string, repo: string, path: string): Promise<File | Symlink | Directory | null> {
+    const key = `${owner}:${repo}:content:${path}`;
+
+    return this.cache.getOrSet(key, async () => {
+      let response;
+      try {
+        response = await this.unwrap(this.client.repos.getContents({ owner, repo, path }));
+      } catch (e) {
+        if (e.name !== 'HttpError' || e.status !== 404) {
+          throw e;
+        }
+
+        return null;
+      }
+
+      return isArray(response.data)
+        ? response.data.map((item) => ({
+            name: item.name,
+            path: item.path,
+            sha: item.sha,
+            size: item.size,
+            type: item.type,
+          }))
+        : {
+            name: response.data.name,
+            path: response.data.path,
+            size: response.data.size,
+            sha: response.data.sha,
+            type: response.data.type,
+            content: response.data.content,
+            encoding: response.data.encoding,
+            target: response.data.target,
+          };
+    });
   }
 
   /**

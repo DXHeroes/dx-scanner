@@ -2,7 +2,6 @@ import { Repository } from '../../model';
 import { GitHubUrlParser } from './GitHubUrlParser';
 import { isArray } from 'util';
 import { inject, injectable } from 'inversify';
-import { ICache } from '../../scanner/cache/ICache';
 import { ErrorFactory } from '../../lib/errors/ErrorFactory';
 import { GitHubPullRequestState } from '../../services/git/IGitHubService';
 import * as nodePath from 'path';
@@ -15,12 +14,10 @@ import { Directory, File, Symlink } from './model';
 export class Git implements IProjectFilesBrowserService {
   private repository: Repository;
   private service: ContentRepositoryBrowserService;
-  private cache: ICache;
 
-  constructor(repository: Repository, @inject(Types.IContentRepositoryBrowser) service: ContentRepositoryBrowserService, cache: ICache) {
+  constructor(repository: Repository, @inject(Types.IContentRepositoryBrowser) service: ContentRepositoryBrowserService) {
     this.repository = repository;
     this.service = service;
-    this.cache = cache;
   }
 
   async exists(path: string): Promise<boolean> {
@@ -128,19 +125,7 @@ export class Git implements IProjectFilesBrowserService {
 
   private getRepoContent(path: string): Promise<File | Symlink | Directory | null> {
     const params = GitHubUrlParser.getOwnerAndRepoName(this.repository.url);
-    const key = `${params.owner}:${params.repoName}:content:${path}`;
-
-    return this.cache.getOrSet(key, async () => {
-      try {
-        return await this.service.getRepoContent(params.owner, params.repoName, path);
-      } catch (e) {
-        if (e.name !== 'HttpError' || e.status !== 404) {
-          throw e;
-        }
-
-        return null;
-      }
-    });
+    return this.service.getRepoContent(params.owner, params.repoName, path);
   }
 
   private async followSymLinks(path: string, directory?: string): Promise<string> {

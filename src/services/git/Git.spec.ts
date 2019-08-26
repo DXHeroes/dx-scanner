@@ -1,20 +1,19 @@
 import { Git } from './Git';
-import { InMemoryCache } from '../../scanner/cache/InMemoryCahce';
 import { GitHubNock } from '../../../test/helpers/gitHubNock';
 import nock from 'nock';
 import { GitHubService } from './GitHubService';
 
 describe('Git', () => {
-  let cache: InMemoryCache, git: Git, gitHubNock: GitHubNock;
+  let service: GitHubService, git: Git, gitHubNock: GitHubNock;
 
   beforeAll(() => {
-    cache = new InMemoryCache();
-    git = new Git({ url: 'https://github.com/DXHeroes/dx-scanner.git' }, new GitHubService({ uri: '.' }), cache);
+    service = new GitHubService({ uri: '.' });
+    git = new Git({ url: 'https://github.com/DXHeroes/dx-scanner.git' }, service);
     gitHubNock = new GitHubNock(1, 'DXHeroes', 1, 'dx-scanner');
   });
 
   beforeEach(() => {
-    cache.purge();
+    service.purgeCache();
     nock.cleanAll();
   });
 

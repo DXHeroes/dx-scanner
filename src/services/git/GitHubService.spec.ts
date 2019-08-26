@@ -24,6 +24,7 @@ import { getPullCommitsServiceResponse } from './__MOCKS__/gitHubServiceMockFold
 import { GitHubNock } from '../../../test/helpers/gitHubNock';
 import { GitHubPullRequestState } from './IGitHubService';
 import { getRepoCommitsResponse } from './__MOCKS__/gitHubServiceMockFolder/getRepoCommitsResponse.mock';
+import { File } from './model';
 
 describe('GitHub Service', () => {
   let service: GitHubService;
@@ -34,6 +35,17 @@ describe('GitHub Service', () => {
   });
 
   describe('#getPullRequests', () => {
+    it('purges the cache', async () => {
+      new GitHubNock(1, 'octocat', 1, 'Hello-World').getFile('README', 'before', undefined, false);
+      await service.getRepoContent('octocat', 'Hello-World', 'README');
+
+      service.purgeCache();
+
+      new GitHubNock(1, 'octocat', 1, 'Hello-World').getFile('README', 'after');
+      const response = await service.getRepoContent('octocat', 'Hello-World', 'README');
+      expect(((response as unknown) as File).content).toEqual('YWZ0ZXI=');
+    });
+
     it('returns pulls in own interface', async () => {
       new GitHubNock(1, 'octocat', 1296269, 'Hello-World').getPulls([
         { number: 1347, state: 'open', title: 'new-feature', body: 'Please pull these awesome changes', head: 'new-topic', base: 'master' },
@@ -134,6 +146,22 @@ describe('GitHub Service', () => {
 
       const response = await service.getRepoContent('octocat', 'Hello-World', 'mockFolder');
       expect(response).toMatchObject(getRepoContentServiceResponseDir);
+    });
+
+    it("returns null if the path doesn't exists", async () => {
+      new GitHubNock(1, 'octocat', 1, 'Hello-World').getNonexistentContents('notExistingMockFolder');
+
+      const result = await service.getRepoContent('octocat', 'Hello-World', 'notExistingMockFolder');
+
+      expect(result).toBe(null);
+    });
+
+    it('caches the results', async () => {
+      // bacause of persist == false, the second call to service.getRepoContent() would cause Nock to throw an error if the cache wasn't used
+      new GitHubNock(1, 'octocat', 1, 'Hello-World').getFile('README', undefined, undefined, false);
+      await service.getRepoContent('octocat', 'Hello-World', 'README');
+
+      await service.getRepoContent('octocat', 'Hello-World', 'README');
     });
   });
 
