@@ -23,6 +23,7 @@ import { getPullsFilesServiceResponse } from './__MOCKS__/gitHubServiceMockFolde
 import { getPullCommitsResponse } from './__MOCKS__/gitHubClientMockFolder/getPullsCommitsResponse.mock';
 import { getPullCommitsServiceResponse } from './__MOCKS__/gitHubServiceMockFolder/getPullCommitsServiceResponse.mock';
 import { GitHubNock } from '../../../test/helpers/gitHubNock';
+import { GitHubPullRequestState } from './IGitHubService';
 
 describe('GitHub Service', () => {
   let service: GitHubService;
@@ -34,13 +35,57 @@ describe('GitHub Service', () => {
     nock.cleanAll();
   });
 
-  it('returns open pulls in own interface', async () => {
-    new GitHubNock(1, 'octocat', 1296269, 'Hello-World').getPulls([
-      { number: 1347, state: 'open', title: 'new-feature', body: 'Please pull these awesome changes', head: 'new-topic', base: 'master' },
-    ]);
+  describe('#getPullRequests', () => {
+    it('returns pulls in own interface', async () => {
+      new GitHubNock(1, 'octocat', 1296269, 'Hello-World').getPulls([
+        { number: 1347, state: 'open', title: 'new-feature', body: 'Please pull these awesome changes', head: 'new-topic', base: 'master' },
+      ]);
 
-    const response = await service.getPullRequests('octocat', 'Hello-World');
-    expect(response).toMatchObject(getPullsServiceResponse);
+      const response = await service.getPullRequests('octocat', 'Hello-World');
+      expect(response).toMatchObject(getPullsServiceResponse);
+    });
+
+    it('returns open pulls by default', async () => {
+      new GitHubNock(1, 'octocat', 1296269, 'Hello-World').getPulls([
+        { number: 1347, state: 'open', title: 'new-feature', body: 'Please pull these awesome changes', head: 'new-topic', base: 'master' },
+      ]);
+
+      const response = await service.getPullRequests('octocat', 'Hello-World');
+      expect(response.items.map((item) => item.state)).toMatchObject(['open']);
+    });
+
+    it('returns open pulls', async () => {
+      new GitHubNock(1, 'octocat', 1296269, 'Hello-World').getPulls(
+        [{ number: 1347, state: 'open', title: 'new-feature', body: '', head: 'new-topic', base: 'master' }],
+        'open',
+      );
+
+      const response = await service.getPullRequests('octocat', 'Hello-World', { filter: { state: GitHubPullRequestState.open } });
+      expect(response.items.map((item) => item.state)).toMatchObject(['open']);
+    });
+
+    it('returns closed pulls', async () => {
+      new GitHubNock(1, 'octocat', 1296269, 'Hello-World').getPulls(
+        [{ number: 1347, state: 'closed', title: 'new-feature', body: '', head: 'new-topic', base: 'master' }],
+        'closed',
+      );
+
+      const response = await service.getPullRequests('octocat', 'Hello-World', { filter: { state: GitHubPullRequestState.closed } });
+      expect(response.items.map((item) => item.state)).toMatchObject(['closed']);
+    });
+
+    it('returns all pulls', async () => {
+      new GitHubNock(1, 'octocat', 1296269, 'Hello-World').getPulls(
+        [
+          { number: 1347, state: 'open', title: 'new-feature', body: '', head: 'new-topic', base: 'master' },
+          { number: 1348, state: 'closed', title: 'new-feature', body: '', head: 'new-topic', base: 'master' },
+        ],
+        'all',
+      );
+
+      const response = await service.getPullRequests('octocat', 'Hello-World', { filter: { state: GitHubPullRequestState.all } });
+      expect(response.items.map((item) => item.state)).toMatchObject(['open', 'closed']);
+    });
   });
 
   it('returns pull request reviews in own interface', async () => {

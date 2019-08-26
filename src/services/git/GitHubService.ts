@@ -14,7 +14,7 @@ import {
   IssueComment,
   Symlink,
 } from './model';
-import { IGitHubService } from './IGitHubService';
+import { IGitHubService, GitHubPullRequestState } from './IGitHubService';
 import { Paginated } from '../../inspectors/common/Paginated';
 import {
   IssuesListForRepoResponseItem,
@@ -23,6 +23,7 @@ import {
   ReposGetContributorsStatsResponseItem,
 } from '@octokit/rest';
 import { isArray } from 'util';
+import { ListGetterOptions } from '../../inspectors/common/ListGetterOptions';
 @injectable()
 export class GitHubService implements IGitHubService {
   private gitHubClient: GitHubClient;
@@ -35,8 +36,16 @@ export class GitHubService implements IGitHubService {
     return this.gitHubClient.get(owner, repo);
   }
 
-  async getPullRequests(owner: string, repo: string): Promise<Paginated<PullRequest>> {
-    const response: PullsListResponseItem[] = await this.gitHubClient.paginate('GET /repos/:owner/:repo/pulls', owner, repo);
+  async getPullRequests(
+    owner: string,
+    repo: string,
+    options?: ListGetterOptions<{ state?: GitHubPullRequestState }>,
+  ): Promise<Paginated<PullRequest>> {
+    let url = 'GET /repos/:owner/:repo/pulls';
+    if (options !== undefined && options.filter !== undefined && options.filter.state !== undefined) {
+      url = `${url}?state=${options.filter.state}`;
+    }
+    const response: PullsListResponseItem[] = await this.gitHubClient.paginate(url, owner, repo);
 
     const items = response.map((val) => ({
       user: {
