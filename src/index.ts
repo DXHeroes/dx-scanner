@@ -15,6 +15,7 @@ class DXScannerCommand extends Command {
     authorization: flags.string({ char: 'a', description: 'Credentials to the repository.' }),
     // flag with no value (-f, --force)
     force: flags.boolean({ char: 'f' }),
+    json: flags.boolean({ char: 'j', description: 'Output in JSON' }),
   };
 
   static args = [{ name: 'path' }];
