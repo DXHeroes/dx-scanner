@@ -10,7 +10,7 @@ export interface JSONReport {
   practice: PracticeInfo[];
 }
 
-interface PracticeInfo {
+export interface PracticeInfo {
   name: string;
   suggestion: string;
   impact: PracticeImpact;
