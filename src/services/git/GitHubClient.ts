@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/camelcase */
 import Octokit from '@octokit/rest';
-import { ConsoleOutput, IOutput } from '../../lib/output';
 import { inspect } from 'util';
 import { injectable, inject } from 'inversify';
 import { grey } from 'colors';
@@ -15,17 +14,11 @@ const debug = Debug('cli:services:git:github-client');
 @injectable()
 export class GitHubClient {
   private readonly client: Octokit;
-  private readonly output: IOutput;
   private callCount = 0;
 
   constructor(@inject(Types.ArgumentsProvider) argumentsProvider: ArgumentsProvider) {
-    this.output = new ConsoleOutput();
-
     this.client = new Octokit({
-      auth: argumentsProvider.auth && {
-        clientId: argumentsProvider.auth.user,
-        clientSecret: argumentsProvider.auth.pass,
-      },
+      auth: argumentsProvider.auth,
     });
   }
 
@@ -195,9 +188,9 @@ export class GitHubClient {
       })
       .catch((error) => {
         if (error.response) {
-          this.output.error(`${error.response.status} => ${inspect(error.response.data)}`);
+          debug(`${error.response.status} => ${inspect(error.response.data)}`);
         } else {
-          this.output.error(error);
+          debug(inspect(error));
         }
         throw error;
       });
@@ -213,9 +206,4 @@ export class GitHubClient {
       grey(`GitHub API Hit: ${this.callCount}. Remaining ${response.headers['x-ratelimit-remaining']} hits. (${response.headers.link})`),
     );
   };
-}
-
-export interface GitHubAuth {
-  username: string;
-  passwordOrToken: string;
 }

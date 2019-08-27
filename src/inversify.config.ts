@@ -130,10 +130,5 @@ export interface TestPracticeContext extends PracticeContext {
 
 export interface ArgumentsProvider {
   uri: string;
-  auth?: Credentials;
-}
-
-interface Credentials {
-  user: string;
-  pass: string;
+  auth?: string;
 }
