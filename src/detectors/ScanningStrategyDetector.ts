@@ -75,7 +75,10 @@ export class ScanningStrategyDetector implements IDetector<string, ScanningStrat
       try {
         response = await this.gitHubClient.get(parsedUrl.owner, parsedUrl.name);
       } catch (error) {
-        throw ErrorFactory.newArgumentError('You passed bad credentials or non existing repo.');
+        if (error.status === 401 || error.status === 404 || error.status === 403) {
+          throw ErrorFactory.newArgumentError('You passed bad credentials or non existing repo.');
+        }
+        throw error;
       }
 
       if (response.status === 200) {
