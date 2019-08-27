@@ -49,11 +49,7 @@ Inspectors indirectly works with Git code hosting providers APIs. They use commo
 There is a [File System Service](https://github.com/DXHeroes/dx-scanner/tree/master/src/services) working with files.
 
 #### Git
-Services convert API responses to the own interface, so Inspectors can use them. They indirectly use Octokit via Clients. Only the GitHub Service is implemented for now. If you need e.g. GitLab Service, you can contribute! First of all you will also need to implement GitLab Client. Then you can implement GitLab Service. Get inspired by [GitHub Service](https://github.com/DXHeroes/dx-scanner/blob/master/src/services/git/GitHubService.ts)
-
-### Clients
-Clients directly use Git code hosting providers APIs. They getting responses and check the rate limits.
-Only GitHub Client is implemented for now. If you need e.g. GitLab Client, you can contribute! Get inspired by [GitHub Client](https://github.com/DXHeroes/dx-scanner/tree/master/src/services/git).
+Services directly use Git code hosting providers APIs while checking the rate limits. They convert API responses to the own interface, so Inspectors can use them. Only the GitHub Service is implemented for now. If you need e.g. GitLab Service, you can contribute! Get inspired by [GitHub Service](https://github.com/DXHeroes/dx-scanner/blob/master/src/services/git/GitHubService.ts)
 
 ## Copyright and Licensing
 

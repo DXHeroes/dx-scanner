@@ -1,6 +1,5 @@
 import { Container } from 'inversify';
 import { Scanner } from './scanner/Scanner';
-import { GitHubClient } from './services/git/GitHubClient';
 import { Types } from './types';
 import { IReporter } from './reporters/IReporter';
 import { CLIReporter } from './reporters/CLIReporter';
@@ -29,7 +28,6 @@ export const createRootContainer = (args: ArgumentsProvider): Container => {
   container.bind<IReporter>(Types.IReporter).to(CLIReporter);
   container.bind(Types.ArgumentsProvider).toConstantValue(args);
   container.bind(Scanner).toSelf();
-  container.bind(GitHubClient).toSelf();
   container.bind(FileSystemService).toSelf();
   container.bind(GitHubService).toSelf();
   // register practices
@@ -68,7 +66,6 @@ export const createTestContainer = (
   container.bind(Types.IPackageInspector).to(JavaScriptPackageInspector);
 
   const scanningStrategyDetector = container.get<ScanningStrategyDetector>(ScanningStrategyDetector);
-  const gitHubClient = container.get<GitHubClient>(GitHubClient);
   const fileSystemService = container.get<FileSystemService>(FileSystemService);
   const fileInspector = container.get<IFileInspector>(Types.IFileInspector);
   const issueTrackingInspector = container.get<IssueTrackingInspector>(Types.IIssueTrackingInspector);
@@ -98,7 +95,6 @@ export const createTestContainer = (
     container,
     practiceContext,
     scanningStrategyDetector,
-    gitHubClient,
     fileSystemService,
     virtualFileSystemService,
   };
@@ -108,11 +104,6 @@ export interface TestContainerContext {
   container: Container;
   practiceContext: PracticeContext;
   scanningStrategyDetector: ScanningStrategyDetector;
-
-  /**
-   * Clients
-   */
-  gitHubClient: GitHubClient;
 
   /**
    * Services

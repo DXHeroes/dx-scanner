@@ -1,5 +1,5 @@
 import { injectable, inject } from 'inversify';
-import { ProjectIssueBrowserService as ContentRepositoryBrowserService } from './model';
+import { ProjectIssueBrowserService as ContentRepositoryBrowserService } from '../model';
 import { Types } from '../types';
 import { ICollaborationInspector } from './ICollaborationInspector';
 

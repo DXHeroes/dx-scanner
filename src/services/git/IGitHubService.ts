@@ -1,5 +1,5 @@
 import { ListGetterOptions } from '../../inspectors/common/ListGetterOptions';
-import { PullRequest, PullRequestReview, Commit, Contributor, ContributorStats, Issue, RepoContent, PullFiles } from './model';
+import { PullRequest, PullRequestReview, Commit, Contributor, ContributorStats, Issue, Directory, File, Symlink, PullFiles } from './model';
 import { Paginated } from '../../inspectors/common/Paginated';
 
 export interface IGitHubService {
@@ -16,50 +16,13 @@ export interface IGitHubService {
   getContributorsStats(owner: string, repo: string): Promise<Paginated<ContributorStats>>;
   getIssues(owner: string, repo: string): Promise<Paginated<Issue>>;
   getIssue(owner: string, repo: string, issueNumber: number): Promise<Issue>;
-  getRepoContent(owner: string, repo: string, path: string): Promise<RepoContent>;
-}
-
-export interface GitHubPagination {
-  page?: number;
-  per_page?: number;
+  getRepoContent(owner: string, repo: string, path: string): Promise<File | Symlink | Directory | null>;
 }
 
 export enum GitHubPullRequestState {
   open = 'open',
   closed = 'closed',
   all = 'all',
-}
-
-export interface GitHubDir {
-  type: GitHubContentType.dir;
-  size: 0;
-  name: string;
-  path: string;
-  sha: string;
-  url: string;
-  html_url: string;
-  download_url: null;
-}
-
-export enum GitHubContentType {
-  file = 'file',
-  dir = 'dir',
-}
-
-export interface GitHubFile {
-  type: GitHubContentType.file;
-  encoding: string;
-  size: number;
-  name: string;
-  path: string;
-  sha: string;
-  url: string;
-  html_url: string;
-  download_url: string;
-}
-
-export interface GitHubFileWithContent extends GitHubFile {
-  content: string;
 }
 
 export enum GitHubIssueState {

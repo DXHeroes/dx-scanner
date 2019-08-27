@@ -1,18 +1,19 @@
 import { injectable, inject } from 'inversify';
-import { GitHubClient } from './GitHubClient';
 import {
   PullRequest,
   Contributor,
   PullRequestReview,
   Commit,
   ContributorStats,
+  Directory,
+  File,
   Issue,
-  RepoContent,
   PullFiles,
   PullCommits,
   IssueComment,
+  Symlink,
 } from './model';
-import { IGitHubService } from './IGitHubService';
+import { IGitHubService, GitHubPullRequestState } from './IGitHubService';
 import { Paginated } from '../../inspectors/common/Paginated';
 import {
   IssuesListForRepoResponseItem,
@@ -20,16 +21,60 @@ import {
   PullsListReviewsResponseItem,
   ReposGetContributorsStatsResponseItem,
 } from '@octokit/rest';
+import { isArray } from 'util';
+import { ListGetterOptions } from '../../inspectors/common/ListGetterOptions';
+import Octokit from '@octokit/rest';
+import { grey } from 'colors';
+import { inspect } from 'util';
+import Debug from 'debug';
+import { delay } from '../../lib/delay';
+import { Types } from '../../types';
+import { ArgumentsProvider } from '../../inversify.config';
+import { ICache } from '../../scanner/cache/ICache';
+import { InMemoryCache } from '../../scanner/cache/InMemoryCahce';
+const debug = Debug('cli:services:git:github-service');
+
 @injectable()
 export class GitHubService implements IGitHubService {
-  private gitHubClient: GitHubClient;
+  private readonly client: Octokit;
+  private cache: ICache;
+  private callCount = 0;
 
-  constructor(@inject(GitHubClient) gitHubClient: GitHubClient) {
-    this.gitHubClient = gitHubClient;
+  constructor(@inject(Types.ArgumentsProvider) argumentsProvider: ArgumentsProvider) {
+    this.cache = new InMemoryCache();
+
+    this.client = new Octokit({
+      auth: argumentsProvider.auth,
+    });
   }
 
-  async getPullRequests(owner: string, repo: string): Promise<Paginated<PullRequest>> {
-    const response: PullsListResponseItem[] = await this.gitHubClient.paginate('GET /repos/:owner/:repo/pulls', owner, repo);
+  purgeCache() {
+    this.cache.purge();
+  }
+
+  /**
+   * The parent and source objects are present when the repository is a fork.
+   *
+   * 'parent' is the repository this repository was forked from.
+   * 'source' is the ultimate source for the network.
+   */
+  getRepo(owner: string, repo: string) {
+    return this.unwrap(this.client.repos.get({ owner, repo }));
+  }
+
+  /**
+   * Lists all pull requests in the repo.
+   */
+  async getPullRequests(
+    owner: string,
+    repo: string,
+    options?: ListGetterOptions<{ state?: GitHubPullRequestState }>,
+  ): Promise<Paginated<PullRequest>> {
+    let url = 'GET /repos/:owner/:repo/pulls';
+    if (options !== undefined && options.filter !== undefined && options.filter.state !== undefined) {
+      url = `${url}?state=${options.filter.state}`;
+    }
+    const response: PullsListResponseItem[] = await this.paginate(url, owner, repo);
 
     const items = response.map((val) => ({
       user: {
@@ -59,8 +104,12 @@ export class GitHubService implements IGitHubService {
     return { items, ...pagination };
   }
 
+  /**
+   * Get a single pull request.
+   */
   async getPullRequest(owner: string, repo: string, prNumber: number): Promise<PullRequest> {
-    const response = await this.gitHubClient.getPullRequest(owner, repo, prNumber);
+    // eslint-disable-next-line @typescript-eslint/camelcase
+    const response = await this.unwrap(this.client.pulls.get({ owner, repo, pull_number: prNumber }));
     return {
       user: {
         id: response.data.user.id,
@@ -86,8 +135,11 @@ export class GitHubService implements IGitHubService {
     };
   }
 
+  /**
+   * Lists all reviews on pull request in the repo.
+   */
   async getPullRequestReviews(owner: string, repo: string, prNumber: number): Promise<Paginated<PullRequestReview>> {
-    const response: PullsListReviewsResponseItem[] = await this.gitHubClient.paginate(
+    const response: PullsListReviewsResponseItem[] = await this.paginate(
       'GET /repos/:owner/:repo/pulls/:pull_number/reviews',
       owner,
       repo,
@@ -110,8 +162,22 @@ export class GitHubService implements IGitHubService {
     return { items, ...pagination };
   }
 
+  /**
+   * Lists commits in the repository.
+   *
+   * The response will include a verification object that describes the result of verifying the commit's signature.
+   * To see the included fields in the verification object see https://octokit.github.io/rest.js/#pagination.
+   */
+  async getRepoCommits(owner: string, repo: string) {
+    return this.unwrap(this.client.repos.listCommits({ owner, repo }));
+  }
+
+  /**
+   * Get the Commit of the given commit_sha in the repo.
+   */
   async getCommit(owner: string, repo: string, commitSha: string): Promise<Commit> {
-    const response = await this.gitHubClient.getCommit(owner, repo, commitSha);
+    // eslint-disable-next-line @typescript-eslint/camelcase
+    const response = await this.unwrap(this.client.git.getCommit({ owner, repo, commit_sha: commitSha }));
 
     return {
       sha: response.data.sha,
@@ -130,8 +196,11 @@ export class GitHubService implements IGitHubService {
     };
   }
 
+  /**
+   * Lists contributors to the specified repository and sorts them by the number of commits per contributor in descending order.
+   */
   async getContributors(owner: string, repo: string): Promise<Paginated<Contributor>> {
-    const response = await this.gitHubClient.paginate('GET /repos/:owner/:repo/contributors', owner, repo);
+    const response = await this.paginate('GET /repos/:owner/:repo/contributors', owner, repo);
     const items = response.map((val) => ({
       user: {
         id: val.id,
@@ -149,8 +218,29 @@ export class GitHubService implements IGitHubService {
     return { items, ...pagination };
   }
 
+  /**
+   * total - The Total number of commits authored by the contributor.
+   *  Weekly Hash (weeks array):
+   *
+   *    w - Start of the week, given as a Unix timestamp.
+   *    a - Number of additions
+   *    d - Number of deletions
+   *    c - Number of commits
+   */
   async getContributorsStats(owner: string, repo: string): Promise<Paginated<ContributorStats>> {
-    const response: ReposGetContributorsStatsResponseItem[] = await this.gitHubClient.paginate(
+    // Wait for GitHub stats to be recomputed
+    await this.unwrap(
+      this.client.repos.getContributorsStats({ owner, repo }).then((r) => {
+        if (r.status === 202) {
+          debug('Waiting for GitHub stats to be recomputed');
+          return delay(10_000).then(() => r);
+        } else {
+          return r;
+        }
+      }),
+    );
+
+    const response: ReposGetContributorsStatsResponseItem[] = await this.paginate(
       'GET /repos/:owner/:repo/stats/contributors',
       owner,
       repo,
@@ -175,21 +265,50 @@ export class GitHubService implements IGitHubService {
     return { items, ...pagination };
   }
 
-  async getRepoContent(owner: string, repo: string, path: string): Promise<RepoContent> {
-    const response = await this.gitHubClient.getRepoContent(owner, repo, path);
-    return {
-      name: response.data.name,
-      path: response.data.path,
-      size: response.data.size,
-      sha: response.data.sha,
-      type: response.data.type,
-      content: response.data.content,
-      encoding: response.data.encoding,
-    };
+  /**
+   * Gets the contents of a file or directory in a repository.
+   */
+  async getRepoContent(owner: string, repo: string, path: string): Promise<File | Symlink | Directory | null> {
+    const key = `${owner}:${repo}:content:${path}`;
+
+    return this.cache.getOrSet(key, async () => {
+      let response;
+      try {
+        response = await this.unwrap(this.client.repos.getContents({ owner, repo, path }));
+      } catch (e) {
+        if (e.name !== 'HttpError' || e.status !== 404) {
+          throw e;
+        }
+
+        return null;
+      }
+
+      return isArray(response.data)
+        ? response.data.map((item) => ({
+            name: item.name,
+            path: item.path,
+            sha: item.sha,
+            size: item.size,
+            type: item.type,
+          }))
+        : {
+            name: response.data.name,
+            path: response.data.path,
+            size: response.data.size,
+            sha: response.data.sha,
+            type: response.data.type,
+            content: response.data.content,
+            encoding: response.data.encoding,
+            target: response.data.target,
+          };
+    });
   }
 
+  /**
+   * List all issues in the repo.
+   */
   async getIssues(owner: string, repo: string): Promise<Paginated<Issue>> {
-    const response: IssuesListForRepoResponseItem[] = await this.gitHubClient.paginate('GET /repos/:owner/:repo/issues', owner, repo);
+    const response: IssuesListForRepoResponseItem[] = await this.paginate('GET /repos/:owner/:repo/issues', owner, repo);
 
     const items = response.map((val) => ({
       user: {
@@ -211,8 +330,12 @@ export class GitHubService implements IGitHubService {
     return { items, ...pagination };
   }
 
+  /**
+   * Get a single issue in the repo.
+   */
   async getIssue(owner: string, repo: string, issueNumber: number): Promise<Issue> {
-    const response = await this.gitHubClient.getIssue(owner, repo, issueNumber);
+    // eslint-disable-next-line @typescript-eslint/camelcase
+    const response = await this.unwrap(this.client.issues.get({ owner, repo, issue_number: issueNumber }));
 
     return {
       id: response.data.id,
@@ -227,13 +350,7 @@ export class GitHubService implements IGitHubService {
   }
 
   async getIssueComments(owner: string, repo: string, issueNumber: number): Promise<Paginated<IssueComment>> {
-    const response = await this.gitHubClient.paginate(
-      'GET /repos/:owner/:repo/issues/:issue_number/comments',
-      owner,
-      repo,
-      undefined,
-      issueNumber,
-    );
+    const response = await this.paginate('GET /repos/:owner/:repo/issues/:issue_number/comments', owner, repo, undefined, issueNumber);
 
     const items = response.map((val) => ({
       user: {
@@ -253,8 +370,11 @@ export class GitHubService implements IGitHubService {
     return { items, ...pagination };
   }
 
+  /**
+   * Lists all pull request files.
+   */
   async getPullRequestFiles(owner: string, repo: string, prNumber: number): Promise<Paginated<PullFiles>> {
-    const response = await this.gitHubClient.paginate('GET /repos/:owner/:repo/pulls/:pull_number/files', owner, repo, prNumber);
+    const response = await this.paginate('GET /repos/:owner/:repo/pulls/:pull_number/files', owner, repo, prNumber);
 
     const items = response.map((val) => ({
       sha: val.sha,
@@ -270,8 +390,11 @@ export class GitHubService implements IGitHubService {
     return { items, ...pagination };
   }
 
+  /**
+   * Lists commits on a pull request.
+   */
   async getPullCommits(owner: string, repo: string, prNumber: number): Promise<Paginated<PullCommits>> {
-    const response = await this.gitHubClient.paginate('GET /repos/:owner/:repo/pulls/:pull_number/commits', owner, repo, prNumber);
+    const response = await this.paginate('GET /repos/:owner/:repo/pulls/:pull_number/commits', owner, repo, prNumber);
 
     const items = response.map((val) => ({
       sha: val.sha,
@@ -295,6 +418,30 @@ export class GitHubService implements IGitHubService {
     return { items, ...pagination };
   }
 
+  /**
+   * Get all results across all pages.
+   */
+  private async paginate(uri: string, owner: string, repo: string, prNumber?: number, issueNumber?: number) {
+    const object = {
+      owner: owner,
+      repo: repo,
+    };
+    if (prNumber) {
+      // eslint-disable-next-line @typescript-eslint/camelcase
+      Object.assign(object, { pull_number: prNumber });
+    }
+    if (issueNumber) {
+      // eslint-disable-next-line @typescript-eslint/camelcase
+      Object.assign(object, { issue_number: issueNumber });
+    }
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    return this.client.paginate(uri, object, (response: Octokit.Response<any>) => {
+      this.debugGitHubResponse(response);
+      return response.data;
+    });
+  }
+
   getPagination(totalCount: number) {
     const hasNextPage = false;
     const hasPreviousPage = false;
@@ -303,4 +450,34 @@ export class GitHubService implements IGitHubService {
 
     return { totalCount, hasNextPage, hasPreviousPage, page, perPage };
   }
+
+  /**
+   * Debug GitHub request promise
+   */
+  private unwrap<T>(clientPromise: Promise<Octokit.Response<T>>): Promise<Octokit.Response<T>> {
+    return clientPromise
+      .then((response) => {
+        this.debugGitHubResponse(response);
+        return response;
+      })
+      .catch((error) => {
+        if (error.response) {
+          debug(`${error.response.status} => ${inspect(error.response.data)}`);
+        } else {
+          debug(inspect(error));
+        }
+        throw error;
+      });
+  }
+
+  /**
+   * Debug GitHub response
+   * - count API calls and inform about remaining rate limit
+   */
+  private debugGitHubResponse = <T>(response: Octokit.Response<T>) => {
+    this.callCount++;
+    debug(
+      grey(`GitHub API Hit: ${this.callCount}. Remaining ${response.headers['x-ratelimit-remaining']} hits. (${response.headers.link})`),
+    );
+  };
 }
