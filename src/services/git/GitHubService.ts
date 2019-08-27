@@ -24,7 +24,6 @@ import {
 import { isArray } from 'util';
 import { ListGetterOptions } from '../../inspectors/common/ListGetterOptions';
 import Octokit from '@octokit/rest';
-import { ConsoleOutput, IOutput } from '../../lib/output';
 import { grey } from 'colors';
 import { inspect } from 'util';
 import Debug from 'debug';
@@ -38,19 +37,14 @@ const debug = Debug('cli:services:git:github-service');
 @injectable()
 export class GitHubService implements IGitHubService {
   private readonly client: Octokit;
-  private readonly output: IOutput;
   private cache: ICache;
   private callCount = 0;
 
   constructor(@inject(Types.ArgumentsProvider) argumentsProvider: ArgumentsProvider) {
-    this.output = new ConsoleOutput();
     this.cache = new InMemoryCache();
 
     this.client = new Octokit({
-      auth: argumentsProvider.auth && {
-        clientId: argumentsProvider.auth.user,
-        clientSecret: argumentsProvider.auth.pass,
-      },
+      auth: argumentsProvider.auth,
     });
   }
 
@@ -468,9 +462,9 @@ export class GitHubService implements IGitHubService {
       })
       .catch((error) => {
         if (error.response) {
-          this.output.error(`${error.response.status} => ${inspect(error.response.data)}`);
+          debug(`${error.response.status} => ${inspect(error.response.data)}`);
         } else {
-          this.output.error(error);
+          debug(inspect(error));
         }
         throw error;
       });

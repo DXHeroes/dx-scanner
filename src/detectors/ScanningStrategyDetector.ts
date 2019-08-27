@@ -67,7 +67,7 @@ export class ScanningStrategyDetector implements IDetector<string, ScanningStrat
       return undefined;
     }
 
-    if (true || remoteService.serviceType === ServiceType.github) {
+    if (remoteService.serviceType === ServiceType.github) {
       const parsedUrl = gitUrlParse(remoteService.remoteUrl);
 
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -75,13 +75,16 @@ export class ScanningStrategyDetector implements IDetector<string, ScanningStrat
       try {
         response = await this.gitHubService.getRepo(parsedUrl.owner, parsedUrl.name);
       } catch (error) {
-        if (error.status && error.status === 404) {
-          return AccessType.private;
+        if (error.status === 401 || error.status === 404 || error.status === 403) {
+          throw ErrorFactory.newArgumentError('You passed bad credentials or non existing repo.');
         }
         throw error;
       }
 
       if (response.status === 200) {
+        if (response.data.private === true) {
+          return AccessType.private;
+        }
         return AccessType.public;
       }
     }
