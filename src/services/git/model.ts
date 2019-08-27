@@ -58,10 +58,21 @@ export interface RepoContent {
   path: string;
   sha: string;
   size: number;
-  type: string;
-  content: string;
-  encoding: string;
+  type: 'dir' | 'file' | 'symlink';
 }
+
+export interface File extends RepoContent {
+  type: 'file';
+  content: string;
+  encoding: BufferEncoding;
+}
+
+export interface Symlink extends RepoContent {
+  type: 'symlink';
+  target: string;
+}
+
+export type Directory = Array<RepoContent>;
 
 export interface Issue {
   user: UserInfo;

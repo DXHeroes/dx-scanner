@@ -4,7 +4,7 @@ import { IIssueTrackingInspector } from './IIssueTrackingInspector';
 import { Paginated } from './common/Paginated';
 import { Issue, IssueComment } from '../services/git/model';
 import { Types } from '../types';
-import { ProjectIssueBrowserService } from './model';
+import { ProjectIssueBrowserService } from '../model';
 
 @injectable()
 export class IssueTrackingInspector implements IIssueTrackingInspector {

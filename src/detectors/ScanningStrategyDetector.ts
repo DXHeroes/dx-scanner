@@ -2,19 +2,19 @@ import { IDetector } from './IDetector';
 import git from 'simple-git/promise';
 import { ScanningStrategyDetectorUtils } from './utils/ScanningStrategyDetectorUtils';
 import gitUrlParse from 'git-url-parse';
-import { GitHubClient } from '../services/git/GitHubClient';
 import { injectable, inject } from 'inversify';
 import { ErrorFactory } from '../lib/errors';
 import { Types } from '../types';
 import { ArgumentsProvider } from '../inversify.config';
+import { GitHubService } from '../services/git/GitHubService';
 
 @injectable()
 export class ScanningStrategyDetector implements IDetector<string, ScanningStrategy> {
-  private gitHubClient: GitHubClient;
+  private gitHubService: GitHubService;
   private readonly argumentsProvider: ArgumentsProvider;
 
-  constructor(@inject(GitHubClient) gitHubClient: GitHubClient, @inject(Types.ArgumentsProvider) argumentsProvider: ArgumentsProvider) {
-    this.gitHubClient = gitHubClient;
+  constructor(@inject(GitHubService) gitHubService: GitHubService, @inject(Types.ArgumentsProvider) argumentsProvider: ArgumentsProvider) {
+    this.gitHubService = gitHubService;
     this.argumentsProvider = argumentsProvider;
   }
 
@@ -73,7 +73,7 @@ export class ScanningStrategyDetector implements IDetector<string, ScanningStrat
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       let response: any;
       try {
-        response = await this.gitHubClient.get(parsedUrl.owner, parsedUrl.name);
+        response = await this.gitHubService.getRepo(parsedUrl.owner, parsedUrl.name);
       } catch (error) {
         if (error.status === 401 || error.status === 404 || error.status === 403) {
           throw ErrorFactory.newArgumentError('You passed bad credentials or non existing repo.');

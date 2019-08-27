@@ -1,3 +1,5 @@
+import { GitHubService } from './services/git/GitHubService';
+
 // New model starts here
 
 export interface LanguageAtPath {
@@ -201,3 +203,5 @@ export interface PracticeAndComponent {
   practice: PracticeMetadata;
   component: ProjectComponent;
 }
+
+export type ProjectIssueBrowserService = GitHubService;
