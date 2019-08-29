@@ -1,36 +1,35 @@
-import { PracticeAndComponent, PracticeImpact } from '../model';
-import { GitHubUrlParser } from '../services/git/GitHubUrlParser';
-import { IReporter, PracticeInfo } from './IReporter';
-import { injectable } from 'inversify';
-import { uniq, compact } from 'lodash';
+import { PracticeAndComponent } from '../model';
+import { IReporter, JSONReport } from './IReporter';
+import { injectable, inject } from 'inversify';
+import { Types } from '../types';
+import { ArgumentsProvider } from '../inversify.config';
+import _ from 'lodash';
 
 @injectable()
 export class JSONReporter implements IReporter {
-  report(practicesAndComponents: PracticeAndComponent[]): string {
-    const repoNames = uniq(
-      compact(
-        practicesAndComponents.map((pac): string | undefined => {
-          if (pac.component.repositoryPath) {
-            const git = GitHubUrlParser.getOwnerAndRepoName(pac.component.repositoryPath);
-            return `${git.owner}/${git.repoName}`;
-          }
+  private readonly argumentsProvider: ArgumentsProvider;
 
-          return pac.component.path;
-        }),
-      ),
-    );
+  constructor(@inject(Types.ArgumentsProvider) argumentsProvider: ArgumentsProvider) {
+    this.argumentsProvider = argumentsProvider;
+  }
 
-    let practices: PracticeInfo;
+  report(practicesAndComponents: PracticeAndComponent[]): JSONReport {
+    const report: JSONReport = {
+      uri: this.argumentsProvider.uri,
+      components: [],
+    };
 
     for (const pac of practicesAndComponents) {
-      practices = {
-        name: pac.practice.name,
-        suggestion: pac.practice.suggestion,
-        impact: pac.practice.impact,
-        url: pac.practice.url,
-      };
+      let component = _.find(report.components, { path: pac.component.path });
+      if (!component) {
+        const currentComponentReport = { ...pac.component, practices: [pac.practice] };
+        report.components.push(currentComponentReport);
+        component = currentComponentReport;
+        continue;
+      }
+      component.practices.push(pac.practice);
     }
 
-    return JSON.stringify(practices);
+    return report;
   }
 }
