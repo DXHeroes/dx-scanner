@@ -8,7 +8,7 @@ import {
 } from '../model';
 
 export interface IReporter {
-  report(practicesAndComponents: PracticeAndComponent[]): string | JSONReport;
+  report(practicesAndComponents: PracticeAndComponent[]): string | Promise<JSONReport>;
 }
 
 export type JSONReport = { uri: string; components: ComponentReport[] };
