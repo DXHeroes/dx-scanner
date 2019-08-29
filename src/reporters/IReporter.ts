@@ -1,24 +1,28 @@
-import { PracticeAndComponent, PracticeImpact, ProjectComponentPlatform, ProgrammingLanguage } from '../model';
-import { ServiceType } from '../detectors/ScanningStrategyDetector';
+import {
+  PracticeAndComponent,
+  PracticeImpact,
+  ProjectComponentPlatform,
+  ProgrammingLanguage,
+  ProjectComponent,
+  PracticeMetadata,
+} from '../model';
 
 export interface IReporter {
-  report(practicesAndComponents: PracticeAndComponent[]): string;
+  report(practicesAndComponents: PracticeAndComponent[]): string | JSONReport;
 }
 
-export type JSONReport = { components: ComponentReport[] };
+export type JSONReport = { uri: string; components: ComponentReport[] };
 
-export interface ComponentReport {
+export interface ComponentReport extends ProjectComponent {
   path: string;
-  platform: ProjectComponentPlatform;
-  serviceType: ServiceType;
-  uri: string;
   language: ProgrammingLanguage;
-  practices: PracticeInfo[];
+  platform: ProjectComponentPlatform;
+  practices: Omit<PracticeMetadata, 'dependsOn' | 'reportOnlyOnce'>[];
 }
 
 export interface PracticeInfo {
   name: string;
-  suggestion: string;
-  impact: PracticeImpact;
   url: string;
+  impact: PracticeImpact;
+  suggestion: string;
 }
