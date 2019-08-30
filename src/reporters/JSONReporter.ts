@@ -4,19 +4,13 @@ import { injectable, inject } from 'inversify';
 import { Types } from '../types';
 import { ArgumentsProvider } from '../inversify.config';
 import _ from 'lodash';
-import { FileSystemService } from '../services/FileSystemService';
 
 @injectable()
 export class JSONReporter implements IReporter {
   private readonly argumentsProvider: ArgumentsProvider;
-  private readonly fileSystemService: FileSystemService;
 
-  constructor(
-    @inject(Types.ArgumentsProvider) argumentsProvider: ArgumentsProvider,
-    @inject(FileSystemService) fileSystemService: FileSystemService,
-  ) {
+  constructor(@inject(Types.ArgumentsProvider) argumentsProvider: ArgumentsProvider) {
     this.argumentsProvider = argumentsProvider;
-    this.fileSystemService = fileSystemService;
   }
 
   async report(practicesAndComponents: PracticeAndComponent[]): Promise<JSONReport> {
@@ -35,12 +29,7 @@ export class JSONReporter implements IReporter {
       }
       component.practices.push(pac.practice);
     }
-    await this.reportInFile(report);
 
     return report;
-  }
-
-  async reportInFile(report: JSONReport) {
-    await this.fileSystemService.writeFile(`${process.cwd()}/dxScannerOutput.json`, JSON.stringify(report, null, 4));
   }
 }
