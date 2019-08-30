@@ -15,6 +15,7 @@ class DXScannerCommand extends Command {
     authorization: flags.string({ char: 'a', description: 'Credentials to the repository.' }),
     // flag with no value (-f, --force)
     force: flags.boolean({ char: 'f' }),
+    json: flags.boolean({ char: 'j', description: 'Output in JSON' }),
   };
 
   static args = [{ name: 'path' }];
@@ -22,6 +23,7 @@ class DXScannerCommand extends Command {
   async run() {
     const { args, flags } = this.parse(DXScannerCommand);
     let authorization = flags.authorization ? flags.authorization : undefined;
+    const json = flags.json ? flags.json : undefined;
 
     // const name = flags.name || 'world';
     // this.log(`hello ${name} from ./src/index.ts`);
@@ -32,7 +34,7 @@ class DXScannerCommand extends Command {
     const scanPath = args.path || process.cwd();
     cli.action.start(`Scanning URI: ${scanPath}`);
 
-    const container = createRootContainer({ uri: scanPath, auth: authorization });
+    const container = createRootContainer({ uri: scanPath, auth: authorization, json: json });
     const scanner = container.get(Scanner);
 
     try {

@@ -20,12 +20,13 @@ import { FileInspector } from './inspectors/FileInspector';
 import { IssueTrackingInspector } from './inspectors/IssueTrackingInspector';
 import { CollaborationInspector } from './inspectors/CollaborationInspector';
 import { DirectoryJSON } from 'memfs/lib/volume';
+import { JSONReporter } from './reporters/JSONReporter';
 
 export const createRootContainer = (args: ArgumentsProvider): Container => {
   const container = new Container();
   bindScanningStrategyDetectors(container);
   bindScanningContext(container);
-  container.bind<IReporter>(Types.IReporter).to(CLIReporter);
+  args.json ? container.bind<IReporter>(Types.IReporter).to(JSONReporter) : container.bind<IReporter>(Types.IReporter).to(CLIReporter);
   container.bind(Types.ArgumentsProvider).toConstantValue(args);
   container.bind(Scanner).toSelf();
   container.bind(FileSystemService).toSelf();
@@ -122,4 +123,5 @@ export interface TestPracticeContext extends PracticeContext {
 export interface ArgumentsProvider {
   uri: string;
   auth?: string;
+  json?: boolean;
 }
