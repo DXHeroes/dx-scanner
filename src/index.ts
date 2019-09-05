@@ -46,6 +46,7 @@ class DXScannerCommand extends Command {
 
         const container = createRootContainer({ uri: scanPath, auth: authorization });
         const scanner = container.get(Scanner);
+
         await scanner.scan();
       } else {
         throw error;

@@ -21,6 +21,7 @@ import { IssueTrackingInspector } from './inspectors/IssueTrackingInspector';
 import { CollaborationInspector } from './inspectors/CollaborationInspector';
 import { DirectoryJSON } from 'memfs/lib/volume';
 import { JSONReporter } from './reporters/JSONReporter';
+import { ConfigProvider } from './contexts/ConfigProvider';
 
 export const createRootContainer = (args: ArgumentsProvider): Container => {
   const container = new Container();
@@ -35,6 +36,7 @@ export const createRootContainer = (args: ArgumentsProvider): Container => {
   practices.forEach((practice) => {
     container.bind<IPracticeWithMetadata>(Types.Practice).toConstantValue(ScannerUtils.initPracticeWithMetadata(practice));
   });
+  container.bind(Types.ConfigProvider).to(ConfigProvider);
   return container;
 };
 

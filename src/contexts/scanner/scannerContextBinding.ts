@@ -8,6 +8,7 @@ import { FileInspector } from '../../inspectors/FileInspector';
 import { FileSystemService } from '../../services/FileSystemService';
 import { GitInspector } from '../../inspectors/GitInspector';
 import { GitHubService } from '../../services/git/GitHubService';
+import { ConfigProvider } from '../ConfigProvider';
 
 export const bindScanningContext = (container: Container) => {
   container.bind(Types.ScannerContextFactory).toFactory(
