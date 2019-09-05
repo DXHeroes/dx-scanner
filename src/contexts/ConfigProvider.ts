@@ -25,9 +25,9 @@ export class ConfigProvider {
     if (extension === 'json' || extension === '') {
       parsedContent = JSON.parse(content);
     }
-    // if (extension === 'yml') {
-    //   parsedFile = yaml.safeLoad(content);
-    // }
+    if (extension === 'yml') {
+      parsedContent = yaml.safeLoad(content);
+    }
 
     const practicesInConfig = [];
     for (const practice in parsedContent.practices) {
