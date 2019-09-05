@@ -3,6 +3,7 @@ import { createRootContainer } from './inversify.config';
 import { Scanner } from './scanner/Scanner';
 import { Command, flags } from '@oclif/command';
 import cli from 'cli-ux';
+import { ServiceError } from './lib/errors';
 
 class DXScannerCommand extends Command {
   static description = 'Scan your project for possible DX recommendations.';
@@ -40,12 +41,15 @@ class DXScannerCommand extends Command {
     try {
       await scanner.scan();
     } catch (error) {
-      authorization = await cli.prompt('Insert your GitHub personal access token.\nhttps://github.com/settings/tokens\n');
+      if (error instanceof ServiceError) {
+        authorization = await cli.prompt('Insert your GitHub personal access token.\nhttps://github.com/settings/tokens\n');
 
-      const container = createRootContainer({ uri: scanPath, auth: authorization });
-      const scanner = container.get(Scanner);
-
-      await scanner.scan();
+        const container = createRootContainer({ uri: scanPath, auth: authorization });
+        const scanner = container.get(Scanner);
+        await scanner.scan();
+      } else {
+        throw error;
+      }
     }
 
     cli.action.stop();
