@@ -25,6 +25,7 @@ import { ScannerUtils } from './ScannerUtils';
 import { ArgumentsProvider } from '../inversify.config';
 import { IPracticeWithMetadata } from '../practices/DxPracticeDecorator';
 import filterAsync from 'node-filter-async';
+import { ConfigProvider } from '../contexts/ConfigProvider';
 
 @injectable()
 export class Scanner {
@@ -34,6 +35,7 @@ export class Scanner {
   private readonly practices: IPracticeWithMetadata[];
   private readonly argumentsProvider: ArgumentsProvider;
   private readonly scanDebug: debug.Debugger;
+  private readonly configProvider: ConfigProvider;
 
   constructor(
     @inject(ScanningStrategyDetector) scanStrategyDetector: ScanningStrategyDetector,
@@ -42,6 +44,7 @@ export class Scanner {
     // inject all practices registered under Types.Practice in inversify config
     @multiInject(Types.Practice) practices: IPracticeWithMetadata[],
     @inject(Types.ArgumentsProvider) argumentsProvider: ArgumentsProvider,
+    @inject(Types.ConfigProvider) configProvider: ConfigProvider,
   ) {
     this.scanStrategyDetector = scanStrategyDetector;
     this.scannerContextFactory = scannerContextFactory;
@@ -49,6 +52,7 @@ export class Scanner {
     this.practices = practices;
     this.argumentsProvider = argumentsProvider;
     this.scanDebug = debug('scanner');
+    this.configProvider = configProvider;
   }
 
   async scan(): Promise<void> {
@@ -139,9 +143,23 @@ export class Scanner {
       const componentContext = componentWithCtx.languageContext.getProjectComponentContext(componentWithCtx.component);
       const practiceContext = componentContext.getPracticeContext();
 
-      const applicablePractices = await filterAsync(this.practices, async (p) => {
+      const offedPractices = await this.configProvider.isConfigApplicable(practiceContext);
+
+      let applicablePractices = await filterAsync(this.practices, async (p) => {
         return await p.isApplicable(practiceContext);
       });
+
+      let configApplicablePractices;
+      if (offedPractices) {
+        configApplicablePractices = await filterAsync(applicablePractices, async (p) => {
+          const metadata = p.getMetadata();
+          const name = metadata.id.split('.').pop();
+          return !offedPractices.includes(<string>name);
+        });
+      }
+      if (configApplicablePractices) {
+        applicablePractices = configApplicablePractices;
+      }
 
       const orderedApplicablePractices = ScannerUtils.sortPractices(applicablePractices);
       for (const practice of orderedApplicablePractices) {
