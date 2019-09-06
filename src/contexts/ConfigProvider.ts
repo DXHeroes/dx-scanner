@@ -16,6 +16,7 @@ export class ConfigProvider {
 
   async init() {
     const regexConfigFile = new RegExp('dxscannerrc.', 'i');
+
     const configFileMetadata = await this.fileInspector.scanFor(regexConfigFile, '/', { shallow: true });
 
     if (configFileMetadata.length === 0) {

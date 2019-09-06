@@ -81,6 +81,7 @@ export class Scanner {
         case ServiceType.github:
           const cloneUrl = new url.URL(remoteUrl);
           localPath = fs.mkdtempSync(path.join(os.tmpdir(), 'dx-scanner'));
+          // TODO: if the user didn't add API token to CLI, throw an error and don't care about the ConfigProvider. We'll use config provider just for other tokens, not for APIT token for clone.
           await git()
             .silent(true)
             .clone(cloneUrl.href, localPath);
@@ -142,10 +143,11 @@ export class Scanner {
   private async detectPractices(componentsWithContext: ProjectComponentAndLangContext[]): Promise<PracticeWithContext[]> {
     const practicesWithContext: PracticeWithContext[] = [];
     for (const componentWithCtx of componentsWithContext) {
-      const componentContext = componentWithCtx.languageContext.getProjectComponentContext(componentWithCtx.component);
+      const componentContext = componentWithCtx.languageContext.getProjectComponentContext(componentWithCtx.component); // TODO: there should be Config for given ProjectComponent
       const practiceContext = componentContext.getPracticeContext();
 
       const customApplicablePractices = this.practices.filter(
+        // TODO: add "off" to type
         (p) => this.configProvider.getOverridenPractice(p.getMetadata().id) !== 'off',
       );
 
@@ -183,7 +185,7 @@ export class Scanner {
             defaultImpact: p.practice.getMetadata().impact,
             impact: this.configProvider.getOverridenPractice(p.practice.getMetadata().id),
           },
-          component: p.componentContext.projectComponent,
+          component: p.componentContext.projectComponent, // TODO: there should be all necessary API tokens needed for reports (Slack API token etc.)
         };
       }),
     );

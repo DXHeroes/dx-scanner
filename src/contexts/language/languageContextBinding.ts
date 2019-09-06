@@ -26,8 +26,12 @@ const createLanguageContainer = (languageAtPath: LanguageAtPath, rootContainer: 
   bindComponentDetectors(container);
   bindProjectComponentContext(container);
   bindPackageInspectors(languageAtPath, container);
+
   container.bind(LanguageContext).toSelf();
-  container.bind(Types.ConfigProvider).to(ConfigProvider)
+  // TODO: bind BUT DO NOT INIT ConfigProvider on given lang path, just bind
+  // TODO: how is the PackageInspector hand overed to ProjectComponent? Do the same with ConfigProvider. I guess the child container can take whatever from the parent container.
+  // TODO: bind initiated config as constant value
+  container.bind(Types.ConfigProvider).to(ConfigProvider);
   return container;
 };
 
@@ -46,6 +50,8 @@ const bindPackageInspectors = (languageAtPath: LanguageAtPath, container: Contai
       .bind(Types.IPackageInspector)
       .to(JavaScriptPackageInspector)
       .inSingletonScope();
+
+    // TODO: bind this as InitiableInspector instead of using next line binding
     container.bind(JavaScriptPackageInspector).toDynamicValue((ctx) => {
       return ctx.container.get(Types.IPackageInspector);
     });
