@@ -146,6 +146,8 @@ export class Scanner {
       const componentContext = componentWithCtx.languageContext.getProjectComponentContext(componentWithCtx.component); // TODO: there should be Config for given ProjectComponent
       const practiceContext = componentContext.getPracticeContext();
 
+      await componentContext.initConfigProvider();
+
       const customApplicablePractices = this.practices.filter(
         // TODO: add "off" to type
         (p) => this.configProvider.getOverridenPractice(p.getMetadata().id) !== 'off',

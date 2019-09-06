@@ -20,6 +20,7 @@ export const bindProjectComponentContext = (container: Container) => {
 const createProjectComponentContainer = (projectComponent: ProjectComponent, rootContainer: Container): Container => {
   const container = rootContainer.createChild();
   container.bind(Types.ProjectComponent).toConstantValue(projectComponent);
+  container.bind(Types.ConfigProvider).to(ConfigProvider);
   container.bind(Types.PracticeContextFactory).toFactory(
     (ctx): PracticeContextFactory => {
       return (projectComponent: ProjectComponent): PracticeContext => {
@@ -43,6 +44,5 @@ const createProjectComponentContainer = (projectComponent: ProjectComponent, roo
   );
 
   container.bind(ProjectComponentContext).toSelf();
-  //container.bind(Types.ConfigProvider).to(ConfigProvider);
   return container;
 };

@@ -4,7 +4,6 @@ import { FileInspector } from '../../inspectors/FileInspector';
 import { JavaScriptPackageInspector } from '../../inspectors/package/JavaScriptPackageInspector';
 import { LanguageAtPath, ProgrammingLanguage } from '../../model';
 import { LanguageContextFactory, Types } from '../../types';
-import { ConfigProvider } from '../ConfigProvider';
 import { bindProjectComponentContext } from '../projectComponent/projectComponentContextBinding';
 import { LanguageContext } from './LanguageContext';
 
@@ -28,10 +27,6 @@ const createLanguageContainer = (languageAtPath: LanguageAtPath, rootContainer: 
   bindPackageInspectors(languageAtPath, container);
 
   container.bind(LanguageContext).toSelf();
-  // TODO: bind BUT DO NOT INIT ConfigProvider on given lang path, just bind
-  // TODO: how is the PackageInspector hand overed to ProjectComponent? Do the same with ConfigProvider. I guess the child container can take whatever from the parent container.
-  // TODO: bind initiated config as constant value
-  container.bind(Types.ConfigProvider).to(ConfigProvider);
   return container;
 };
 

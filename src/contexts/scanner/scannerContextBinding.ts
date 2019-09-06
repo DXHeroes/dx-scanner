@@ -8,7 +8,6 @@ import { GitHubService } from '../../services/git/GitHubService';
 import { ScannerContextFactory, Types } from '../../types';
 import { bindLanguageContext } from '../language/languageContextBinding';
 import { ScannerContext } from './ScannerContext';
-import { ConfigProvider } from '../ConfigProvider';
 
 export const bindScanningContext = (container: Container) => {
   container.bind(Types.ScannerContextFactory).toFactory(
@@ -28,7 +27,6 @@ const createScanningContainer = (scanningStrategy: ScanningStrategy, rootContain
   bindLanguageContext(container);
   bindFileAccess(scanningStrategy, container);
   container.bind(ScannerContext).toSelf();
-  //container.bind(Types.ConfigProvider).to(ConfigProvider);
   return container;
 };
 
