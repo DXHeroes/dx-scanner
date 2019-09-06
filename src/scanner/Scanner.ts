@@ -143,8 +143,6 @@ export class Scanner {
 
       await componentContext.configProvider.init();
 
-      // componentContext.configProvider.config
-
       const customApplicablePractices = this.practices.filter(
         // TODO: add "off" to type
         (p) => componentContext.configProvider.getOverridenPractice(p.getMetadata().id) !== 'off',

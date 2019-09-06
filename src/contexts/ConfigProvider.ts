@@ -1,8 +1,8 @@
 import { inject, injectable } from 'inversify';
 import yaml from 'js-yaml';
+import _ from 'lodash';
 import { IFileInspector } from '../inspectors/IFileInspector';
 import { Types } from '../types';
-import _ from 'lodash';
 
 @injectable()
 export class ConfigProvider {
@@ -27,10 +27,10 @@ export class ConfigProvider {
     let parsedContent;
     const content = await this.fileInspector.readFile(configFile.path);
 
-    if (configFile.extension === 'json' || configFile.extension === '') {
+    if (configFile.extension === '.json' || configFile.extension === '') {
       parsedContent = JSON.parse(content);
     }
-    if (configFile.extension === 'yml' || configFile.extension === 'yaml') {
+    if (configFile.extension === '.yml' || configFile.extension === '.yaml') {
       parsedContent = yaml.safeLoad(content);
     }
 
