@@ -1,4 +1,4 @@
-import { Color, blue, bold, green, grey, italic, red, reset, yellow } from 'colors';
+import { Color, blue, bold, green, grey, italic, red, reset, yellow, underline } from 'colors';
 import { PracticeAndComponent, PracticeImpact } from '../model';
 import { GitHubUrlParser } from '../services/git/GitHubUrlParser';
 import { IReporter } from './IReporter';
@@ -74,6 +74,9 @@ export class CLIReporter implements IReporter {
     }
     for (const pac of practicesAndComponents) {
       lines.push(this.linesForPractice(pac, color, practicesAndComponents.length > 1));
+      if (pac.practice.defaultImpact !== pac.practice.impact) {
+        lines.push(bold(this.changedImpact(pac, (color = grey))));
+      }
     }
     lines.push(bold(''));
     return lines.join('\n');
@@ -92,6 +95,19 @@ export class CLIReporter implements IReporter {
       practiceLineTexts.push(color(italic(`${findingPath}(${pac.practice.url})`)));
     }
 
+    return practiceLineTexts.join(' ');
+  }
+
+  private changedImpact(pac: PracticeAndComponent, color: Color) {
+    const practiceLineTexts = [
+      reset(
+        color(
+          `You changed impact of ${bold(pac.practice.name)} from ${underline(pac.practice.defaultImpact)} to ${underline(
+            pac.practice.impact,
+          )}`,
+        ),
+      ),
+    ];
     return practiceLineTexts.join(' ');
   }
 }

@@ -156,12 +156,6 @@ export class Scanner {
       for (const practice of orderedApplicablePractices) {
         const isFulfilled = ScannerUtils.isFulfilled(practice, practicesWithContext);
         if (!isFulfilled) continue;
-        //console.log(Object.assign(<Record<string, any>>practice.getMetadata(), { defaultImpact: practice.getMetadata().impact }));
-        console.log((practice.getMetadata().defaultImpact = practice.getMetadata().impact), 'saving');
-        console.log(practice.getMetadata().impact, 'imp');
-
-        console.log(practice.getMetadata().defaultImpact, 'defImp');
-        // console.log(practice.getMetadata());
         const evaluation = await practice.evaluate(practiceContext);
         practicesWithContext.push({
           practice,
@@ -173,7 +167,6 @@ export class Scanner {
     }
     this.scanDebug('Applicable practices:');
     this.scanDebug(practicesWithContext.map((p) => p.practice.getMetadata().name));
-    //console.log(practicesWithContext, 'prWithCon');
     return practicesWithContext;
   }
 
@@ -182,11 +175,13 @@ export class Scanner {
 
     const reportString = this.reporter.report(
       relevantPractices.map((p) => {
+        const impact = p.componentContext.configProvider.getOverridenPractice(p.practice.getMetadata().id);
+
         return {
           practice: {
             ...p.practice.getMetadata(),
             defaultImpact: p.practice.getMetadata().impact,
-            //impact: this.configProvider.getOverridenPractice(p.practice.getMetadata().id),
+            impact: impact ? impact : p.practice.getMetadata().impact,
           },
           component: p.componentContext.projectComponent, // TODO: there should be all necessary API tokens needed for reports (Slack API token etc.)
         };
