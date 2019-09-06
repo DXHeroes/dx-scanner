@@ -1,42 +1,42 @@
-import { injectable } from 'inversify';
-import { PracticeContext } from './practice/PracticeContext';
+import { inject, injectable } from 'inversify';
 import yaml from 'js-yaml';
+import { IFileInspector } from '../inspectors/IFileInspector';
+import { Types } from '../types';
+import _ from 'lodash';
 
 @injectable()
 export class ConfigProvider {
-  async isConfigApplicable(ctx: PracticeContext) {
-    if (ctx.fileInspector === undefined) {
-      return undefined;
-    }
+  private readonly fileInspector: IFileInspector;
+  config: any;
 
+  constructor(@inject(Types.IFileInspector) fileInspector: IFileInspector) {
+    this.fileInspector = fileInspector;
+    this.config = undefined;
+  }
+
+  async init() {
     const regexConfigFile = new RegExp('dxscannerrc.', 'i');
-    const configFileMetadata = await ctx.fileInspector.scanFor(regexConfigFile, '/', { shallow: true });
+    const configFileMetadata = await this.fileInspector.scanFor(regexConfigFile, '/', { shallow: true });
 
-    const configFile = configFileMetadata.find((path) => path.path[0]);
-
-    if (!configFile) {
+    if (configFileMetadata.length === 0) {
       return undefined;
     }
+    const configFile = configFileMetadata[0];
 
     let parsedContent;
-    const content = await ctx.fileInspector.readFile(configFile.path);
+    const content = await this.fileInspector.readFile(configFile.path);
 
-    const extension = configFile.path.split('.').pop();
-    if (extension === 'json' || extension === '') {
+    if (configFile.extension === 'json' || configFile.extension === '') {
       parsedContent = JSON.parse(content);
     }
-    if (extension === 'yml') {
+    if (configFile.extension === 'yml' || configFile.extension === 'yaml') {
       parsedContent = yaml.safeLoad(content);
     }
 
-    const practicesInConfig = [];
-    for (const practice in parsedContent.practices) {
-      const value = parsedContent.practices[practice];
-      if (value === 'off') {
-        practicesInConfig.push(practice);
-      }
-    }
+    this.config = parsedContent;
+  }
 
-    return practicesInConfig;
+  getOverridenPractice(practiceId: string) {
+    return _.get(this.config, ['practices', practiceId]);
   }
 }

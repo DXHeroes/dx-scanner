@@ -36,7 +36,7 @@ export const createRootContainer = (args: ArgumentsProvider): Container => {
   practices.forEach((practice) => {
     container.bind<IPracticeWithMetadata>(Types.Practice).toConstantValue(ScannerUtils.initPracticeWithMetadata(practice));
   });
-  container.bind(Types.ConfigProvider).to(ConfigProvider);
+  //container.bind(Types.ConfigProvider).to(ConfigProvider);
   return container;
 };
 

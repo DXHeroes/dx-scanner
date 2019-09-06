@@ -1,13 +1,13 @@
-import { Types, ScannerContextFactory } from '../../types';
-import { ScanningStrategy, ServiceType } from '../../detectors/ScanningStrategyDetector';
-import { ScannerContext } from './ScannerContext';
 import { Container } from 'inversify';
-import { bindLanguageContext } from '../language/languageContextBinding';
 import { JavaScriptLanguageDetector } from '../../detectors/JavaScript/JavaScriptLanguageDetector';
+import { ScanningStrategy, ServiceType } from '../../detectors/ScanningStrategyDetector';
 import { FileInspector } from '../../inspectors/FileInspector';
-import { FileSystemService } from '../../services/FileSystemService';
 import { GitInspector } from '../../inspectors/GitInspector';
+import { FileSystemService } from '../../services/FileSystemService';
 import { GitHubService } from '../../services/git/GitHubService';
+import { ScannerContextFactory, Types } from '../../types';
+import { bindLanguageContext } from '../language/languageContextBinding';
+import { ScannerContext } from './ScannerContext';
 import { ConfigProvider } from '../ConfigProvider';
 
 export const bindScanningContext = (container: Container) => {
@@ -28,6 +28,7 @@ const createScanningContainer = (scanningStrategy: ScanningStrategy, rootContain
   bindLanguageContext(container);
   bindFileAccess(scanningStrategy, container);
   container.bind(ScannerContext).toSelf();
+  //container.bind(Types.ConfigProvider).to(ConfigProvider);
   return container;
 };
 

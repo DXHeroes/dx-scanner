@@ -1,11 +1,12 @@
 import { Container, tagged } from 'inversify';
-import { LanguageContextFactory, Types } from '../../types';
-import { LanguageAtPath, ProgrammingLanguage } from '../../model';
-import { LanguageContext } from './LanguageContext';
-import { bindProjectComponentContext } from '../projectComponent/projectComponentContextBinding';
-import { JavaScriptPackageInspector } from '../../inspectors/package/JavaScriptPackageInspector';
-import { FileInspector } from '../../inspectors/FileInspector';
 import { JavaScriptComponentDetector } from '../../detectors/JavaScript/JavaScriptComponentDetector';
+import { FileInspector } from '../../inspectors/FileInspector';
+import { JavaScriptPackageInspector } from '../../inspectors/package/JavaScriptPackageInspector';
+import { LanguageAtPath, ProgrammingLanguage } from '../../model';
+import { LanguageContextFactory, Types } from '../../types';
+import { ConfigProvider } from '../ConfigProvider';
+import { bindProjectComponentContext } from '../projectComponent/projectComponentContextBinding';
+import { LanguageContext } from './LanguageContext';
 
 export const bindLanguageContext = (container: Container) => {
   container.bind(Types.LanguageContextFactory).toFactory(
@@ -26,6 +27,7 @@ const createLanguageContainer = (languageAtPath: LanguageAtPath, rootContainer: 
   bindProjectComponentContext(container);
   bindPackageInspectors(languageAtPath, container);
   container.bind(LanguageContext).toSelf();
+  container.bind(Types.ConfigProvider).to(ConfigProvider)
   return container;
 };
 

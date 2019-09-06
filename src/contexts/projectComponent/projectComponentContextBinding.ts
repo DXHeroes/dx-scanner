@@ -1,9 +1,10 @@
 import { Container } from 'inversify';
-import { Types, ProjectComponentContextFactory, PracticeContextFactory } from '../../types';
-import { ProjectComponentContext } from './ProjectComponentContext';
-import { ProjectComponent } from '../../model';
-import { PracticeContext } from '../practice/PracticeContext';
 import { IGitInspector } from '../../inspectors/IGitInspector';
+import { ProjectComponent } from '../../model';
+import { PracticeContextFactory, ProjectComponentContextFactory, Types } from '../../types';
+import { ConfigProvider } from '../ConfigProvider';
+import { PracticeContext } from '../practice/PracticeContext';
+import { ProjectComponentContext } from './ProjectComponentContext';
 
 export const bindProjectComponentContext = (container: Container) => {
   container.bind(Types.ProjectComponentContextFactory).toFactory(
@@ -39,5 +40,6 @@ const createProjectComponentContainer = (projectComponent: ProjectComponent, roo
     },
   );
   container.bind(ProjectComponentContext).toSelf();
+  //container.bind(Types.ConfigProvider).to(ConfigProvider);
   return container;
 };
