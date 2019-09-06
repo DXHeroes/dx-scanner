@@ -8,24 +8,16 @@ import { ConfigProvider } from '../ConfigProvider';
 export class ProjectComponentContext {
   readonly projectComponent: ProjectComponent;
   private readonly practiceContextFactory: PracticeContextFactory;
-  private readonly configProvider: ConfigProvider;
+  readonly configProvider: ConfigProvider;
 
   constructor(
+    @inject(Types.ConfigProvider) configProvider: ConfigProvider,
     @inject(Types.ProjectComponent) projectComponent: ProjectComponent,
     @inject(Types.PracticeContextFactory) practiceContextFactory: PracticeContextFactory,
-    @inject(Types.ConfigProvider) configProvider: ConfigProvider,
   ) {
     this.projectComponent = projectComponent;
     this.practiceContextFactory = practiceContextFactory;
     this.configProvider = configProvider;
-  }
-
-  initConfigProvider() {
-    return this.configProvider.init();
-  }
-
-  get config(): any {
-    return this.configProvider.config;
   }
 
   get path(): string {

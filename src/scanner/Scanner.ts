@@ -35,7 +35,6 @@ export class Scanner {
   private readonly practices: IPracticeWithMetadata[];
   private readonly argumentsProvider: ArgumentsProvider;
   private readonly scanDebug: debug.Debugger;
-  private readonly configProvider: ConfigProvider;
 
   constructor(
     @inject(ScanningStrategyDetector) scanStrategyDetector: ScanningStrategyDetector,
@@ -44,7 +43,6 @@ export class Scanner {
     // inject all practices registered under Types.Practice in inversify config
     @multiInject(Types.Practice) practices: IPracticeWithMetadata[],
     @inject(Types.ArgumentsProvider) argumentsProvider: ArgumentsProvider,
-    @inject(Types.ConfigProvider) configProvider: ConfigProvider,
   ) {
     this.scanStrategyDetector = scanStrategyDetector;
     this.scannerContextFactory = scannerContextFactory;
@@ -52,7 +50,6 @@ export class Scanner {
     this.practices = practices;
     this.argumentsProvider = argumentsProvider;
     this.scanDebug = debug('scanner');
-    this.configProvider = configProvider;
   }
 
   async scan(): Promise<void> {
@@ -64,10 +61,8 @@ export class Scanner {
     const languagesAtPaths = await this.detectLanguagesAtPaths(scannerContext);
     this.scanDebug(`LanguagesAtPaths:`, inspect(languagesAtPaths));
     const projectComponents = await this.detectProjectComponents(languagesAtPaths, scannerContext, scanStrategy);
-    await this.configProvider.init();
     this.scanDebug(`Components:`, inspect(projectComponents));
     const identifiedPractices = await this.detectPractices(projectComponents);
-    //const offedPractices = await this.configProvider.isConfigApplicable()
     await this.report(identifiedPractices);
   }
 
@@ -146,11 +141,13 @@ export class Scanner {
       const componentContext = componentWithCtx.languageContext.getProjectComponentContext(componentWithCtx.component); // TODO: there should be Config for given ProjectComponent
       const practiceContext = componentContext.getPracticeContext();
 
-      await componentContext.initConfigProvider();
+      await componentContext.configProvider.init();
+
+      // componentContext.configProvider.config
 
       const customApplicablePractices = this.practices.filter(
         // TODO: add "off" to type
-        (p) => this.configProvider.getOverridenPractice(p.getMetadata().id) !== 'off',
+        (p) => componentContext.configProvider.getOverridenPractice(p.getMetadata().id) !== 'off',
       );
 
       const applicablePractices = await filterAsync(customApplicablePractices, async (p) => {
@@ -185,7 +182,7 @@ export class Scanner {
           practice: {
             ...p.practice.getMetadata(),
             defaultImpact: p.practice.getMetadata().impact,
-            impact: this.configProvider.getOverridenPractice(p.practice.getMetadata().id),
+            // impact: this.configProvider.getOverridenPractice(p.practice.getMetadata().id),
           },
           component: p.componentContext.projectComponent, // TODO: there should be all necessary API tokens needed for reports (Slack API token etc.)
         };

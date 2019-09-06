@@ -21,6 +21,7 @@ export const bindLanguageContext = (container: Container) => {
 const createLanguageContainer = (languageAtPath: LanguageAtPath, rootContainer: Container): Container => {
   const container = rootContainer.createChild();
   container.bind(Types.LanguageAtPath).toConstantValue(languageAtPath);
+
   bindFileAccess(languageAtPath, container);
   bindComponentDetectors(container);
   bindProjectComponentContext(container);
