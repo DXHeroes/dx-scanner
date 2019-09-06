@@ -13,7 +13,7 @@ export class JSONReporter implements IReporter {
     this.argumentsProvider = argumentsProvider;
   }
 
-  async report(practicesAndComponents: PracticeAndComponent[]): Promise<JSONReport> {
+  report(practicesAndComponents: PracticeAndComponent[]): JSONReport {
     const report: JSONReport = {
       uri: this.argumentsProvider.uri,
       components: [],
