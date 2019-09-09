@@ -8,6 +8,7 @@ import {
   ProjectComponentFramework,
   ProjectComponentPlatform,
   ProjectComponentType,
+  PracticeImpact,
 } from '../model';
 import { ScannerContext } from '../contexts/scanner/ScannerContext';
 import { LanguageContext } from '../contexts/language/LanguageContext';
@@ -26,6 +27,8 @@ import { ArgumentsProvider } from '../inversify.config';
 import { IPracticeWithMetadata } from '../practices/DxPracticeDecorator';
 import filterAsync from 'node-filter-async';
 import { ConfigProvider } from '../contexts/ConfigProvider';
+import util from 'util';
+import { JSONReport } from '../reporters/IReporter';
 
 @injectable()
 export class Scanner {
@@ -76,7 +79,6 @@ export class Scanner {
         case ServiceType.github:
           const cloneUrl = new url.URL(remoteUrl);
           localPath = fs.mkdtempSync(path.join(os.tmpdir(), 'dx-scanner'));
-          // TODO: if the user didn't add API token to CLI, throw an error and don't care about the ConfigProvider. We'll use config provider just for other tokens, not for APIT token for clone.
           await git()
             .silent(true)
             .clone(cloneUrl.href, localPath);
@@ -138,14 +140,13 @@ export class Scanner {
   private async detectPractices(componentsWithContext: ProjectComponentAndLangContext[]): Promise<PracticeWithContext[]> {
     const practicesWithContext: PracticeWithContext[] = [];
     for (const componentWithCtx of componentsWithContext) {
-      const componentContext = componentWithCtx.languageContext.getProjectComponentContext(componentWithCtx.component); // TODO: there should be Config for given ProjectComponent
+      const componentContext = componentWithCtx.languageContext.getProjectComponentContext(componentWithCtx.component);
       const practiceContext = componentContext.getPracticeContext();
 
       await componentContext.configProvider.init();
 
       const customApplicablePractices = this.practices.filter(
-        // TODO: add "off" to type
-        (p) => componentContext.configProvider.getOverridenPractice(p.getMetadata().id) !== 'off',
+        (p) => componentContext.configProvider.getOverridenPractice(p.getMetadata().id) !== PracticeImpact.off,
       );
 
       const applicablePractices = await filterAsync(customApplicablePractices, async (p) => {
@@ -183,11 +184,15 @@ export class Scanner {
             defaultImpact: p.practice.getMetadata().impact,
             impact: impact ? impact : p.practice.getMetadata().impact,
           },
-          component: p.componentContext.projectComponent, // TODO: there should be all necessary API tokens needed for reports (Slack API token etc.)
+          component: p.componentContext.projectComponent,
         };
       }),
     );
-    console.log(reportString);
+    if (typeof reportString === 'string') {
+      console.log(reportString);
+    } else {
+      console.log(util.inspect(reportString, { showHidden: true, depth: null }));
+    }
   }
 }
 
