@@ -42,7 +42,6 @@ const bindFileAccess = (scanningStrategy: ScanningStrategy, container: Container
   if (scanningStrategy.serviceType === ServiceType.github) {
     container.bind(Types.IContentRepositoryBrowser).to(GitHubService);
   }
-  // TODO: bind services for GitHub strategy
   container
     .bind(Types.IFileInspector)
     .to(FileInspector)

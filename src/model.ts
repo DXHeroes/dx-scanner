@@ -105,6 +105,7 @@ export enum PracticeImpact {
   medium = 'medium',
   small = 'small',
   hint = 'hint',
+  off = 'off',
 }
 
 export enum PracticeEvaluationResult {
