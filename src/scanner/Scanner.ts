@@ -188,11 +188,9 @@ export class Scanner {
         };
       }),
     );
-    if (typeof reportString === 'string') {
-      console.log(reportString);
-    } else {
-      console.log(util.inspect(reportString, { showHidden: true, depth: null }));
-    }
+    typeof reportString === 'string'
+      ? console.log(reportString)
+      : console.log(util.inspect(reportString, { showHidden: false, depth: null }));
   }
 }
 
