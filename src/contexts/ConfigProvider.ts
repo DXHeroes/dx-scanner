@@ -3,9 +3,10 @@ import yaml from 'js-yaml';
 import _ from 'lodash';
 import { IFileInspector } from '../inspectors/IFileInspector';
 import { Types } from '../types';
+import { IConfigProvider } from './IConfigProvider';
 
 @injectable()
-export class ConfigProvider {
+export class ConfigProvider implements IConfigProvider {
   private readonly fileInspector: IFileInspector;
   config: any;
 
