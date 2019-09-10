@@ -63,6 +63,35 @@ dxscanner [path]
 dxs [path]
 ```
 
+## Configuration ⚙️
+Add ```dxscannerrc.*``` config file to change default configuration. It can be a ```.json```, ```.yml``` even dotfile!
+
+**Practices**  
+You can switch off practices you don't want to scan. Use the id of the practice.
+
+Possible impact:
+```
+high
+
+medium
+
+small
+
+hint
+
+off
+```
+
+Example :
+```
+{
+    "practices": {
+        "JavaScript.GitignoreCorrectlySet": "medium",
+        "JavaScript.LoggerUsed": "off"
+    }
+}
+```
+
 ## Contributing 👩‍💻 👨‍💻
 Feel free to contribute to the DX Scanner. If you want to contribute, please follow our [Contribution Guide](CONTRIBUTING.md).
 
