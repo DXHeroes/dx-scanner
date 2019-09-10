@@ -7,7 +7,7 @@ export interface IConfigProvider {
 
 export interface IConfig {
   practices?: {
-    [key in Practices]?: PracticeImpact;
+    [key in Practices]?: PracticeImpactType;
   };
   tokens?: {
     [key in Service]: string;
@@ -17,6 +17,8 @@ export interface IConfig {
 enum Service {
   Slack = 'Slack',
 }
+
+type PracticeImpactType = 'high' | 'medium' | 'small' | 'hint' | 'off';
 
 enum Practices {
   PullRequestPractice = 'PullRequestPractice',
