@@ -5,9 +5,9 @@ export interface IConfigProvider {
   getOverridenPractice(practiceId: string): PracticeImpact;
 }
 
-export interface IConfig {
+export interface Config {
   practices?: {
-    [key in Practices]?: PracticeImpactType;
+    [key in Practices]?: PracticeImpact;
   };
   tokens?: {
     [key in Service]: string;
@@ -17,8 +17,6 @@ export interface IConfig {
 enum Service {
   Slack = 'Slack',
 }
-
-type PracticeImpactType = 'high' | 'medium' | 'small' | 'hint' | 'off';
 
 enum Practices {
   'JavaScript.TypeScriptUsedPractice' = 'JavaScript.TypeScriptUsedPractice',

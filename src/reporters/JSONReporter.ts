@@ -13,7 +13,7 @@ export class JSONReporter implements IReporter {
     this.argumentsProvider = argumentsProvider;
   }
 
-  report(practicesAndComponents: PracticeAndComponent[]): JSONReport {
+  report(practicesAndComponents: PracticeAndComponent[], practicesOff: string[]): JSONReport {
     const report: JSONReport = {
       uri: this.argumentsProvider.uri,
       components: [],
@@ -28,7 +28,13 @@ export class JSONReporter implements IReporter {
         continue;
       }
       component.practices.push(pac.practice);
+      
+      if (practicesOff.length > 0) {
+        Object.assign(component, { practicesOff: practicesOff})
+      }
     }
+
+
 
     return report;
   }

@@ -1,34 +1,23 @@
-import { injectable, inject, multiInject } from 'inversify';
-import { ScanningStrategyDetector, ScanningStrategy, ServiceType } from '../detectors/ScanningStrategyDetector';
-import { Types, ScannerContextFactory } from '../types';
-import {
-  LanguageAtPath,
-  ProjectComponent,
-  PracticeEvaluationResult,
-  ProjectComponentFramework,
-  ProjectComponentPlatform,
-  ProjectComponentType,
-  PracticeImpact,
-} from '../model';
-import { ScannerContext } from '../contexts/scanner/ScannerContext';
+import debug from 'debug';
+import fs from 'fs';
+import { inject, injectable, multiInject } from 'inversify';
+import filterAsync from 'node-filter-async';
+import os from 'os';
+import path from 'path';
+import git from 'simple-git/promise';
+import url from 'url';
+import util, { inspect } from 'util';
 import { LanguageContext } from '../contexts/language/LanguageContext';
 import { PracticeContext } from '../contexts/practice/PracticeContext';
 import { ProjectComponentContext } from '../contexts/projectComponent/ProjectComponentContext';
-import { IReporter } from '../reporters/IReporter';
-import debug from 'debug';
-import fs from 'fs';
-import git from 'simple-git/promise';
-import os from 'os';
-import path from 'path';
-import url from 'url';
-import { inspect } from 'util';
-import { ScannerUtils } from './ScannerUtils';
+import { ScannerContext } from '../contexts/scanner/ScannerContext';
+import { ScanningStrategy, ScanningStrategyDetector, ServiceType } from '../detectors/ScanningStrategyDetector';
 import { ArgumentsProvider } from '../inversify.config';
+import { LanguageAtPath, PracticeEvaluationResult, PracticeImpact, ProjectComponent, ProjectComponentFramework, ProjectComponentPlatform, ProjectComponentType } from '../model';
 import { IPracticeWithMetadata } from '../practices/DxPracticeDecorator';
-import filterAsync from 'node-filter-async';
-import { ConfigProvider } from '../contexts/ConfigProvider';
-import util from 'util';
-import { JSONReport } from '../reporters/IReporter';
+import { IReporter } from '../reporters/IReporter';
+import { ScannerContextFactory, Types } from '../types';
+import { ScannerUtils } from './ScannerUtils';
 
 @injectable()
 export class Scanner {
@@ -66,7 +55,7 @@ export class Scanner {
     const projectComponents = await this.detectProjectComponents(languagesAtPaths, scannerContext, scanStrategy);
     this.scanDebug(`Components:`, inspect(projectComponents));
     const identifiedPractices = await this.detectPractices(projectComponents);
-    await this.report(identifiedPractices);
+    await this.report(identifiedPractices.practicesWithContext, identifiedPractices.practicesOff);
   }
 
   private async preprocessData(scanningStrategy: ScanningStrategy) {
@@ -137,24 +126,32 @@ export class Scanner {
     return components;
   }
 
-  private async detectPractices(componentsWithContext: ProjectComponentAndLangContext[]): Promise<PracticeWithContext[]> {
+  //: Promise<PracticeWithContext[]>
+  private async detectPractices(componentsWithContext: ProjectComponentAndLangContext[]) {
     const practicesWithContext: PracticeWithContext[] = [];
+    let practicesOffWithMetadata, practicesOff = [];
     for (const componentWithCtx of componentsWithContext) {
       const componentContext = componentWithCtx.languageContext.getProjectComponentContext(componentWithCtx.component);
       const practiceContext = componentContext.getPracticeContext();
 
       await componentContext.configProvider.init();
 
-      /* Filter out turned off practices */
-      const customApplicablePractices = this.practices.filter(
-        (p) => componentContext.configProvider.getOverridenPractice(p.getMetadata().id) !== PracticeImpact.off,
-      );
 
-      const applicablePractices = await filterAsync(customApplicablePractices, async (p) => {
+
+      const applicablePractices = await filterAsync(this.practices, async (p) => {
         return await p.isApplicable(practiceContext);
       });
 
-      const orderedApplicablePractices = ScannerUtils.sortPractices(applicablePractices);
+      /* Filter out turned off practices */
+      const customApplicablePractices = applicablePractices.filter(
+        (p) => componentContext.configProvider.getOverridenPractice(p.getMetadata().id) !== PracticeImpact.off,
+      );
+
+      practicesOffWithMetadata = applicablePractices.filter(
+        (p) => componentContext.configProvider.getOverridenPractice(p.getMetadata().id) === PracticeImpact.off,
+      );
+
+      const orderedApplicablePractices = ScannerUtils.sortPractices(customApplicablePractices);
       for (const practice of orderedApplicablePractices) {
         const isFulfilled = ScannerUtils.isFulfilled(practice, practicesWithContext);
         if (!isFulfilled) continue;
@@ -166,15 +163,19 @@ export class Scanner {
           evaluation,
         });
       }
+
+      for (const practice of practicesOffWithMetadata) {
+        practicesOff.push(practice.getMetadata().name);
+      }
     }
     this.scanDebug('Applicable practices:');
     this.scanDebug(practicesWithContext.map((p) => p.practice.getMetadata().name));
-    return practicesWithContext;
+    return { practicesWithContext: practicesWithContext, practicesOff: practicesOff }
   }
 
-  private async report(practicesWithContext: PracticeWithContext[]) {
+  private async report(practicesWithContext: PracticeWithContext[], practicesOff: string[]) {
     const relevantPractices = practicesWithContext.filter((p) => p.evaluation === PracticeEvaluationResult.notPracticing);
-
+    console.log(practicesOff, 'practicesOff')
     const reportString = this.reporter.report(
       relevantPractices.map((p) => {
         const impact = p.componentContext.configProvider.getOverridenPractice(p.practice.getMetadata().id);
@@ -182,12 +183,12 @@ export class Scanner {
         return {
           practice: {
             ...p.practice.getMetadata(),
-            defaultImpact: p.practice.getMetadata().impact,
             impact: impact ? impact : p.practice.getMetadata().impact,
           },
           component: p.componentContext.projectComponent,
         };
       }),
+      practicesOff
     );
     typeof reportString === 'string'
       ? console.log(reportString)

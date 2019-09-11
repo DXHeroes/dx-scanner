@@ -90,7 +90,7 @@ export interface DeprecatedProjectComponent {
 }
 
 export interface PracticeMetadata {
-  defaultImpact?: any;
+  defaultImpact?: PracticeImpact;
   id: string;
   name: string;
   suggestion: string;

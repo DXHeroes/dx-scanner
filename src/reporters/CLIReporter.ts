@@ -7,7 +7,7 @@ import { uniq, compact } from 'lodash';
 
 @injectable()
 export class CLIReporter implements IReporter {
-  report(practicesAndComponents: PracticeAndComponent[]): string {
+  report(practicesAndComponents: PracticeAndComponent[], practicesOff: string[]): string {
     const lines: string[] = [];
 
     const repoNames = uniq(
@@ -40,6 +40,17 @@ export class CLIReporter implements IReporter {
 
       const impactLine = this.emitImpactSegment(practicesAndComponents, impact);
       impactLine && lines.push(impactLine);
+    }
+
+    lines.push('----------------------------');
+    lines.push('');
+    practicesOff.length === 0 ? lines.push(bold(red('No practice was switched off.'))) : lines.push(bold(red('You switched off these practices:')));
+    for (const practice of practicesOff) {
+      lines.push(
+        red(
+          `- ${italic(practice)}`,
+        ),
+      );
     }
     lines.push('');
     lines.push('----------------------------');
@@ -102,7 +113,7 @@ export class CLIReporter implements IReporter {
     const practiceLineTexts = [
       reset(
         color(
-          `You changed impact of ${bold(pac.practice.name)} from ${underline(pac.practice.defaultImpact)} to ${underline(
+          `You changed impact of ${bold(pac.practice.name)} from ${underline(<string>pac.practice.defaultImpact)} to ${underline(
             pac.practice.impact,
           )}`,
         ),

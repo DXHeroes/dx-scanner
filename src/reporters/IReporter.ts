@@ -11,7 +11,7 @@ export interface IReporter {
   report(practicesAndComponents: PracticeAndComponent[], practicesOff?: string[]): string | JSONReport;
 }
 
-export type JSONReport = { uri: string; components: ComponentReport[] };
+export type JSONReport = { uri: string; components: ComponentReport[]; practicesOff?: string[] };
 
 export interface ComponentReport extends ProjectComponent {
   path: string;
