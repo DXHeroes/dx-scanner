@@ -67,7 +67,7 @@ dxs [path]
 Add ```dxscannerrc.*``` config file to change default configuration. It can be a ```.json```, ```.yml``` even dotfile!
 
 **Practices**  
-You can switch off practices you don't want to scan. Use the id of the practice.
+You can switch off practices you don't want to scan or change its impact. Use the id of the practice.
 
 Possible impact:
 ```
