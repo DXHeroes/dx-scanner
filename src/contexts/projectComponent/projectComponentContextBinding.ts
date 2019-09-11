@@ -26,7 +26,6 @@ const createProjectComponentContainer = (projectComponent: ProjectComponent, roo
       return (projectComponent: ProjectComponent): PracticeContext => {
         let gitInspector: IGitInspector | undefined;
 
-        // TODO: WTF this try/catch? pls refactor ideally without try/catch
         try {
           gitInspector = ctx.container.get(Types.IGitInspector);
         } catch {}
