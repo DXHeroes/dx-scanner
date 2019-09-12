@@ -44,7 +44,7 @@ class DXScannerCommand extends Command {
       if (error instanceof ServiceError) {
         authorization = await cli.prompt('Insert your GitHub personal access token.\nhttps://github.com/settings/tokens\n');
 
-        const container = createRootContainer({ uri: scanPath, auth: authorization });
+        const container = createRootContainer({ uri: scanPath, auth: authorization, json: json });
         const scanner = container.get(Scanner);
 
         await scanner.scan();
