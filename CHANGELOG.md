@@ -1,3 +1,10 @@
+## [1.4.1](https://github.com/dxheroes/dx-scanner/compare/v1.4.0...v1.4.1) (2019-09-12)
+
+
+### Bug Fixes
+
+* add new practicesWitchContext for every component in for loop. ([#46](https://github.com/dxheroes/dx-scanner/issues/46)) ([d5d50db](https://github.com/dxheroes/dx-scanner/commit/d5d50db))
+
 # [1.4.0](https://github.com/dxheroes/dx-scanner/compare/v1.3.0...v1.4.0) (2019-08-30)
 
 

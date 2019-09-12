@@ -137,6 +137,7 @@ export class Scanner {
     let filteredPractices;
 
     for (const componentWithCtx of componentsWithContext) {
+      const practicesWithContextFromComponent: PracticeWithContext[] = [];
       const componentContext = componentWithCtx.languageContext.getProjectComponentContext(componentWithCtx.component);
       const practiceContext = componentContext.getPracticeContext();
 
@@ -145,7 +146,8 @@ export class Scanner {
       const orderedApplicablePractices = ScannerUtils.sortPractices(filteredPractices.customApplicablePractices);
 
       for (const practice of orderedApplicablePractices) {
-        const isFulfilled = ScannerUtils.isFulfilled(practice, practicesWithContext);
+        const isFulfilled = ScannerUtils.isFulfilled(practice, practicesWithContextFromComponent);
+
         if (!isFulfilled) continue;
         const evaluation = await practice.evaluate(practiceContext);
         practicesWithContext.push({
