@@ -1,9 +1,12 @@
-import toposort from 'toposort';
 import _ from 'lodash';
-import { IPractice } from '../practices/IPractice';
-import { IPracticeWithMetadata } from '../practices/DxPracticeDecorator';
-import { PracticeWithContext } from './Scanner';
+import filterAsync from 'node-filter-async';
+import toposort from 'toposort';
+import { ProjectComponentContext } from '../contexts/projectComponent/ProjectComponentContext';
 import { ErrorFactory } from '../lib/errors';
+import { PracticeImpact } from '../model';
+import { IPracticeWithMetadata } from '../practices/DxPracticeDecorator';
+import { IPractice } from '../practices/IPractice';
+import { PracticeWithContext } from './Scanner';
 
 /**
  * Scanner helpers & utilities
@@ -73,5 +76,28 @@ export class ScannerUtils {
     }
 
     return true;
+  }
+
+  /**
+   * Filter out applicable practices and turned off practices.
+   */
+  static async filterPractices(componentContext: ProjectComponentContext, practices: IPracticeWithMetadata[]) {
+    const practiceContext = componentContext.getPracticeContext();
+
+    //need practiceContext.projectComponent
+    const applicablePractices = await filterAsync(practices, async (p) => {
+      return await p.isApplicable(practiceContext);
+    });
+
+    /* Filter out turned off practices */
+    const customApplicablePractices = applicablePractices.filter(
+      (p) => componentContext.configProvider.getOverridenPractice(p.getMetadata().id) !== PracticeImpact.off,
+    );
+
+    const practicesOff = applicablePractices.filter(
+      (p) => componentContext.configProvider.getOverridenPractice(p.getMetadata().id) === PracticeImpact.off,
+    );
+
+    return { customApplicablePractices, practicesOff };
   }
 }

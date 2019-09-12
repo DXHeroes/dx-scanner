@@ -90,6 +90,7 @@ export interface DeprecatedProjectComponent {
 }
 
 export interface PracticeMetadata {
+  defaultImpact?: PracticeImpact;
   id: string;
   name: string;
   suggestion: string;
@@ -104,6 +105,7 @@ export enum PracticeImpact {
   medium = 'medium',
   small = 'small',
   hint = 'hint',
+  off = 'off',
 }
 
 export enum PracticeEvaluationResult {

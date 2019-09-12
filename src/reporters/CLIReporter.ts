@@ -1,13 +1,14 @@
-import { Color, blue, bold, green, grey, italic, red, reset, yellow } from 'colors';
+import { Color, blue, bold, green, grey, italic, red, reset, yellow, underline } from 'colors';
 import { PracticeAndComponent, PracticeImpact } from '../model';
 import { GitHubUrlParser } from '../services/git/GitHubUrlParser';
 import { IReporter } from './IReporter';
 import { injectable } from 'inversify';
 import { uniq, compact } from 'lodash';
+import { IPracticeWithMetadata } from '../practices/DxPracticeDecorator';
 
 @injectable()
 export class CLIReporter implements IReporter {
-  report(practicesAndComponents: PracticeAndComponent[]): string {
+  report(practicesAndComponents: PracticeAndComponent[], practicesOff: IPracticeWithMetadata[]): string {
     const lines: string[] = [];
 
     const repoNames = uniq(
@@ -40,6 +41,15 @@ export class CLIReporter implements IReporter {
 
       const impactLine = this.emitImpactSegment(practicesAndComponents, impact);
       impactLine && lines.push(impactLine);
+    }
+
+    lines.push('----------------------------');
+    lines.push('');
+    practicesOff.length === 0
+      ? lines.push(bold(yellow('No practice was switched off.')))
+      : lines.push(bold(red('You switched off these practices:')));
+    for (const practice of practicesOff) {
+      lines.push(red(`- ${italic(practice.getMetadata().name)}`));
     }
     lines.push('');
     lines.push('----------------------------');
@@ -74,6 +84,9 @@ export class CLIReporter implements IReporter {
     }
     for (const pac of practicesAndComponents) {
       lines.push(this.linesForPractice(pac, color, practicesAndComponents.length > 1));
+      if (pac.practice.defaultImpact !== pac.practice.impact) {
+        lines.push(bold(this.changedImpact(pac, (color = grey))));
+      }
     }
     lines.push(bold(''));
     return lines.join('\n');
@@ -92,6 +105,19 @@ export class CLIReporter implements IReporter {
       practiceLineTexts.push(color(italic(`${findingPath}(${pac.practice.url})`)));
     }
 
+    return practiceLineTexts.join(' ');
+  }
+
+  private changedImpact(pac: PracticeAndComponent, color: Color) {
+    const practiceLineTexts = [
+      reset(
+        color(
+          `You changed impact of ${bold(pac.practice.name)} from ${underline(<string>pac.practice.defaultImpact)} to ${underline(
+            pac.practice.impact,
+          )}`,
+        ),
+      ),
+    ];
     return practiceLineTexts.join(' ');
   }
 }

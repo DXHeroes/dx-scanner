@@ -1,13 +1,13 @@
-import { Types, ScannerContextFactory } from '../../types';
-import { ScanningStrategy, ServiceType } from '../../detectors/ScanningStrategyDetector';
-import { ScannerContext } from './ScannerContext';
 import { Container } from 'inversify';
-import { bindLanguageContext } from '../language/languageContextBinding';
 import { JavaScriptLanguageDetector } from '../../detectors/JavaScript/JavaScriptLanguageDetector';
+import { ScanningStrategy, ServiceType } from '../../detectors/ScanningStrategyDetector';
 import { FileInspector } from '../../inspectors/FileInspector';
-import { FileSystemService } from '../../services/FileSystemService';
 import { GitInspector } from '../../inspectors/GitInspector';
+import { FileSystemService } from '../../services/FileSystemService';
 import { GitHubService } from '../../services/git/GitHubService';
+import { ScannerContextFactory, Types } from '../../types';
+import { bindLanguageContext } from '../language/languageContextBinding';
+import { ScannerContext } from './ScannerContext';
 
 export const bindScanningContext = (container: Container) => {
   container.bind(Types.ScannerContextFactory).toFactory(
@@ -42,7 +42,6 @@ const bindFileAccess = (scanningStrategy: ScanningStrategy, container: Container
   if (scanningStrategy.serviceType === ServiceType.github) {
     container.bind(Types.IContentRepositoryBrowser).to(GitHubService);
   }
-  // TODO: bind services for GitHub strategy
   container
     .bind(Types.IFileInspector)
     .to(FileInspector)

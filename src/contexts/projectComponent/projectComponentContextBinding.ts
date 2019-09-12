@@ -1,9 +1,10 @@
 import { Container } from 'inversify';
-import { Types, ProjectComponentContextFactory, PracticeContextFactory } from '../../types';
-import { ProjectComponentContext } from './ProjectComponentContext';
-import { ProjectComponent } from '../../model';
-import { PracticeContext } from '../practice/PracticeContext';
 import { IGitInspector } from '../../inspectors/IGitInspector';
+import { ProjectComponent } from '../../model';
+import { PracticeContextFactory, ProjectComponentContextFactory, Types } from '../../types';
+import { ConfigProvider } from '../ConfigProvider';
+import { PracticeContext } from '../practice/PracticeContext';
+import { ProjectComponentContext } from './ProjectComponentContext';
 
 export const bindProjectComponentContext = (container: Container) => {
   container.bind(Types.ProjectComponentContextFactory).toFactory(
@@ -18,11 +19,13 @@ export const bindProjectComponentContext = (container: Container) => {
 
 const createProjectComponentContainer = (projectComponent: ProjectComponent, rootContainer: Container): Container => {
   const container = rootContainer.createChild();
+  container.bind(Types.ConfigProvider).to(ConfigProvider);
   container.bind(Types.ProjectComponent).toConstantValue(projectComponent);
   container.bind(Types.PracticeContextFactory).toFactory(
     (ctx): PracticeContextFactory => {
       return (projectComponent: ProjectComponent): PracticeContext => {
         let gitInspector: IGitInspector | undefined;
+
         try {
           gitInspector = ctx.container.get(Types.IGitInspector);
         } catch {}
@@ -38,6 +41,7 @@ const createProjectComponentContainer = (projectComponent: ProjectComponent, roo
       };
     },
   );
+
   container.bind(ProjectComponentContext).toSelf();
   return container;
 };
