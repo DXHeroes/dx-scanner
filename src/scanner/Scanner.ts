@@ -140,6 +140,7 @@ export class Scanner {
       const componentContext = componentWithCtx.languageContext.getProjectComponentContext(componentWithCtx.component);
       const practiceContext = componentContext.getPracticeContext();
 
+      await componentContext.configProvider.init();
       filteredPractices = await ScannerUtils.filterPractices(componentContext, this.practices);
       const orderedApplicablePractices = ScannerUtils.sortPractices(filteredPractices.customApplicablePractices);
 
@@ -159,10 +160,10 @@ export class Scanner {
     this.scanDebug('Applicable practices:');
     this.scanDebug(practicesWithContext.map((p) => p.practice.getMetadata().name));
 
-    return { practicesWithContext: practicesWithContext, practicesOff: filteredPractices && filteredPractices.practicesOff };
+    return { practicesWithContext: practicesWithContext, practicesOff: filteredPractices ? filteredPractices.practicesOff : [] };
   }
 
-  private async report(practicesWithContext: PracticeWithContext[], practicesOff?: string[]) {
+  private async report(practicesWithContext: PracticeWithContext[], practicesOff: IPracticeWithMetadata[]) {
     const relevantPractices = practicesWithContext.filter((p) => p.evaluation === PracticeEvaluationResult.notPracticing);
 
     const reportString = this.reporter.report(
@@ -199,5 +200,5 @@ export interface PracticeWithContext {
 
 interface PracticeWithContextAndOff {
   practicesWithContext: PracticeWithContext[];
-  practicesOff: string[] | undefined;
+  practicesOff: IPracticeWithMetadata[];
 }

@@ -4,10 +4,11 @@ import { GitHubUrlParser } from '../services/git/GitHubUrlParser';
 import { IReporter } from './IReporter';
 import { injectable } from 'inversify';
 import { uniq, compact } from 'lodash';
+import { IPracticeWithMetadata } from '../practices/DxPracticeDecorator';
 
 @injectable()
 export class CLIReporter implements IReporter {
-  report(practicesAndComponents: PracticeAndComponent[], practicesOff: string[]): string {
+  report(practicesAndComponents: PracticeAndComponent[], practicesOff: IPracticeWithMetadata[]): string {
     const lines: string[] = [];
 
     const repoNames = uniq(
@@ -48,7 +49,7 @@ export class CLIReporter implements IReporter {
       ? lines.push(bold(red('No practice was switched off.')))
       : lines.push(bold(red('You switched off these practices:')));
     for (const practice of practicesOff) {
-      lines.push(red(`- ${italic(practice)}`));
+      lines.push(red(`- ${italic(practice.getMetadata().name)}`));
     }
     lines.push('');
     lines.push('----------------------------');

@@ -82,9 +82,9 @@ export class ScannerUtils {
    * Filter out applicable practices and turned off practices.
    */
   static async filterPractices(componentContext: ProjectComponentContext, practices: IPracticeWithMetadata[]) {
-    await componentContext.configProvider.init();
     const practiceContext = componentContext.getPracticeContext();
 
+    //need practiceContext.projectComponent
     const applicablePractices = await filterAsync(practices, async (p) => {
       return await p.isApplicable(practiceContext);
     });
@@ -94,14 +94,9 @@ export class ScannerUtils {
       (p) => componentContext.configProvider.getOverridenPractice(p.getMetadata().id) !== PracticeImpact.off,
     );
 
-    const practicesOffWithMetadata = applicablePractices.filter(
+    const practicesOff = applicablePractices.filter(
       (p) => componentContext.configProvider.getOverridenPractice(p.getMetadata().id) === PracticeImpact.off,
     );
-
-    const practicesOff = [];
-    for (const practice of practicesOffWithMetadata) {
-      practicesOff.push(practice.getMetadata().name);
-    }
 
     return { customApplicablePractices, practicesOff };
   }

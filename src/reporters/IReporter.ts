@@ -6,9 +6,10 @@ import {
   ProjectComponent,
   PracticeMetadata,
 } from '../model';
+import { IPracticeWithMetadata } from '../practices/DxPracticeDecorator';
 
 export interface IReporter {
-  report(practicesAndComponents: PracticeAndComponent[], practicesOff?: string[]): string | JSONReport;
+  report(practicesAndComponents: PracticeAndComponent[], practicesOff: IPracticeWithMetadata[]): string | JSONReport;
 }
 
 export type JSONReport = { uri: string; components: ComponentReport[]; practicesOff?: string[] };

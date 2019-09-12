@@ -4,9 +4,37 @@ import { DeprecatedTSLintPractice } from '../practices/JavaScript/DeprecatedTSLi
 import { ESLintUsedPractice } from '../practices/JavaScript/ESLintUsedPractice';
 import { TypeScriptUsedPractice } from '../practices/JavaScript/TypeScriptUsedPractice';
 import { FirstTestPractice, SecondTestPractice, InvalidTestPractice } from './__MOCKS__';
-import { PracticeEvaluationResult } from '../model';
+import {
+  PracticeEvaluationResult,
+  PracticeImpact,
+  ProgrammingLanguage,
+  ProjectComponentFramework,
+  ProjectComponentPlatform,
+  ProjectComponentType,
+} from '../model';
+import { ConfigProvider } from '../contexts/ConfigProvider';
+import { TestContainerContext, createTestContainer } from '../inversify.config';
+import { JsGitignoreCorrectlySetPractice } from '../practices/JavaScript/JsGitignoreCorrectlySetPractice';
+import { ScannerContextFactory, Types } from '../types';
+import { ServiceType } from '../detectors/ScanningStrategyDetector';
+import _ from 'lodash';
+import { PracticeContext } from '../contexts/practice/PracticeContext';
 
 describe('ScannerUtils', () => {
+  let configProvider: ConfigProvider;
+  let containerCtx: TestContainerContext;
+  let ctx: TestContainerContext;
+
+  beforeAll(() => {
+    containerCtx = createTestContainer();
+    containerCtx.container.bind('ConfigProvider').to(ConfigProvider);
+    configProvider = containerCtx.container.get('ConfigProvider');
+  });
+
+  beforeEach(() => {
+    ctx = createTestContainer({ uri: '.' });
+  });
+
   describe('#sortPractices', () => {
     it('sorts practices correctly ', async () => {
       const practices = [DeprecatedTSLintPractice, ESLintUsedPractice, TypeScriptUsedPractice].map(ScannerUtils.initPracticeWithMetadata);
@@ -58,6 +86,46 @@ describe('ScannerUtils', () => {
       const result = ScannerUtils.isFulfilled(practice, [evaluatedPractice]);
 
       expect(result).toEqual(false);
+    });
+
+    it('return filtered out practices', async () => {
+      // const languageAtPathMock = { language: ProgrammingLanguage.JavaScript, path: './var/foo' };
+
+      const config = {
+        practices: {
+          'JavaScript.GitignoreCorrectlySet': PracticeImpact.off,
+        },
+      };
+
+      const componentMock = {
+        framework: ProjectComponentFramework.UNKNOWN,
+        language: ProgrammingLanguage.JavaScript,
+        path: './var/foo',
+        platform: ProjectComponentPlatform.BackEnd,
+        type: ProjectComponentType.Application,
+      };
+
+      const componentContext = {
+        configProvider: {
+          getOverridenPractice(practiceId: string) {
+            console.log(practiceId);
+            return _.get(config, ['practices', practiceId]);
+          },
+        },
+
+        getPracticeContext(): PracticeContext {
+          return {
+            projectComponent: componentMock,
+          } as any;
+        },
+      };
+
+      const practices = [DeprecatedTSLintPractice, ESLintUsedPractice, TypeScriptUsedPractice, JsGitignoreCorrectlySetPractice].map(
+        ScannerUtils.initPracticeWithMetadata,
+      );
+
+      const filteredPractices = await ScannerUtils.filterPractices(componentContext as any, practices);
+      //expect(filteredPractices.practicesOff).toEqual()
     });
   });
 });

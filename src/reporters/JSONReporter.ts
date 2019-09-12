@@ -4,6 +4,7 @@ import { injectable, inject } from 'inversify';
 import { Types } from '../types';
 import { ArgumentsProvider } from '../inversify.config';
 import _ from 'lodash';
+import { IPracticeWithMetadata } from '../practices/DxPracticeDecorator';
 
 @injectable()
 export class JSONReporter implements IReporter {
@@ -13,7 +14,7 @@ export class JSONReporter implements IReporter {
     this.argumentsProvider = argumentsProvider;
   }
 
-  report(practicesAndComponents: PracticeAndComponent[], practicesOff: string[]): JSONReport {
+  report(practicesAndComponents: PracticeAndComponent[], practicesOff: IPracticeWithMetadata[]): JSONReport {
     const report: JSONReport = {
       uri: this.argumentsProvider.uri,
       components: [],
