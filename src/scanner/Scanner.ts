@@ -148,7 +148,7 @@ export class Scanner {
 
       const orderedApplicablePractices = ScannerUtils.sortPractices(applicablePractices);
       for (const practice of orderedApplicablePractices) {
-        const isFulfilled = ScannerUtils.isFulfilled(practice, practicesWithContextFroComponent);
+        const isFulfilled = ScannerUtils.isFulfilled(practice, practicesWithContextFromComponent);
 
         if (!isFulfilled) continue;
 
