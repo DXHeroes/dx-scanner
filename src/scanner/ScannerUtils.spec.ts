@@ -88,9 +88,7 @@ describe('ScannerUtils', () => {
       expect(result).toEqual(false);
     });
 
-    it('return filtered out practices', async () => {
-      // const languageAtPathMock = { language: ProgrammingLanguage.JavaScript, path: './var/foo' };
-
+    it('filterPractices() returns filtered out practices and practices off', async () => {
       const config = {
         practices: {
           'JavaScript.GitignoreCorrectlySet': PracticeImpact.off,
@@ -108,7 +106,6 @@ describe('ScannerUtils', () => {
       const componentContext = {
         configProvider: {
           getOverridenPractice(practiceId: string) {
-            console.log(practiceId);
             return _.get(config, ['practices', practiceId]);
           },
         },
@@ -125,7 +122,9 @@ describe('ScannerUtils', () => {
       );
 
       const filteredPractices = await ScannerUtils.filterPractices(componentContext as any, practices);
-      //expect(filteredPractices.practicesOff).toEqual()
+
+      expect(filteredPractices.practicesOff.length).toBeGreaterThanOrEqual(1);
+      expect(filteredPractices.customApplicablePractices.length).toBeGreaterThanOrEqual(2);
     });
   });
 });
