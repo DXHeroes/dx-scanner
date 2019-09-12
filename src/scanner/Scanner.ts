@@ -138,7 +138,7 @@ export class Scanner {
     const practicesWithContext: PracticeWithContext[] = [];
 
     for (const componentWithCtx of componentsWithContext) {
-      const practicesWithContextFroComponent: PracticeWithContext[] = [];
+      const practicesWithContextFromComponent: PracticeWithContext[] = [];
       const componentContext = componentWithCtx.languageContext.getProjectComponentContext(componentWithCtx.component);
       const practiceContext = componentContext.getPracticeContext();
 
