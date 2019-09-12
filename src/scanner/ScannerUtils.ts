@@ -1,14 +1,12 @@
-import toposort from 'toposort';
 import _ from 'lodash';
-import { IPractice } from '../practices/IPractice';
-import { IPracticeWithMetadata } from '../practices/DxPracticeDecorator';
-import { PracticeWithContext } from './Scanner';
-import { ErrorFactory } from '../lib/errors';
-import { multiInject } from 'inversify';
-import { Types } from '../types';
-import { ProjectComponentContext } from '../contexts/projectComponent/ProjectComponentContext';
 import filterAsync from 'node-filter-async';
+import toposort from 'toposort';
+import { ProjectComponentContext } from '../contexts/projectComponent/ProjectComponentContext';
+import { ErrorFactory } from '../lib/errors';
 import { PracticeImpact } from '../model';
+import { IPracticeWithMetadata } from '../practices/DxPracticeDecorator';
+import { IPractice } from '../practices/IPractice';
+import { PracticeWithContext } from './Scanner';
 
 /**
  * Scanner helpers & utilities
@@ -17,7 +15,7 @@ export class ScannerUtils {
   /**
    * Creates the practice with metadata
    */
-  static initPracticeWithMetadata(practice: { new(): IPractice }): IPracticeWithMetadata {
+  static initPracticeWithMetadata(practice: { new (): IPractice }): IPracticeWithMetadata {
     return <IPracticeWithMetadata>(<unknown>new practice());
   }
 
@@ -80,6 +78,9 @@ export class ScannerUtils {
     return true;
   }
 
+  /**
+   * Filter out applicable practices and turned off practices.
+   */
   static async filterPractices(componentContext: ProjectComponentContext, practices: IPracticeWithMetadata[]) {
     await componentContext.configProvider.init();
     const practiceContext = componentContext.getPracticeContext();
@@ -97,7 +98,11 @@ export class ScannerUtils {
       (p) => componentContext.configProvider.getOverridenPractice(p.getMetadata().id) === PracticeImpact.off,
     );
 
-    return { customApplicablePractices, practicesOffWithMetadata }
-  }
+    const practicesOff = [];
+    for (const practice of practicesOffWithMetadata) {
+      practicesOff.push(practice.getMetadata().name);
+    }
 
+    return { customApplicablePractices, practicesOff };
+  }
 }

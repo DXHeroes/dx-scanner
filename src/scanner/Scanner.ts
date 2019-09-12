@@ -1,7 +1,6 @@
 import debug from 'debug';
 import fs from 'fs';
 import { inject, injectable, multiInject } from 'inversify';
-import filterAsync from 'node-filter-async';
 import os from 'os';
 import path from 'path';
 import git from 'simple-git/promise';
@@ -13,7 +12,14 @@ import { ProjectComponentContext } from '../contexts/projectComponent/ProjectCom
 import { ScannerContext } from '../contexts/scanner/ScannerContext';
 import { ScanningStrategy, ScanningStrategyDetector, ServiceType } from '../detectors/ScanningStrategyDetector';
 import { ArgumentsProvider } from '../inversify.config';
-import { LanguageAtPath, PracticeEvaluationResult, PracticeImpact, ProjectComponent, ProjectComponentFramework, ProjectComponentPlatform, ProjectComponentType } from '../model';
+import {
+  LanguageAtPath,
+  PracticeEvaluationResult,
+  ProjectComponent,
+  ProjectComponentFramework,
+  ProjectComponentPlatform,
+  ProjectComponentType,
+} from '../model';
 import { IPracticeWithMetadata } from '../practices/DxPracticeDecorator';
 import { IReporter } from '../reporters/IReporter';
 import { ScannerContextFactory, Types } from '../types';
@@ -128,15 +134,15 @@ export class Scanner {
 
   private async detectPractices(componentsWithContext: ProjectComponentAndLangContext[]): Promise<PracticeWithContextAndOff> {
     const practicesWithContext: PracticeWithContext[] = [];
-    let practicesOff = [];
+    let filteredPractices;
 
     for (const componentWithCtx of componentsWithContext) {
       const componentContext = componentWithCtx.languageContext.getProjectComponentContext(componentWithCtx.component);
       const practiceContext = componentContext.getPracticeContext();
 
-      const filteredPractices = await ScannerUtils.filterPractices(componentContext, this.practices);
+      filteredPractices = await ScannerUtils.filterPractices(componentContext, this.practices);
       const orderedApplicablePractices = ScannerUtils.sortPractices(filteredPractices.customApplicablePractices);
-      
+
       for (const practice of orderedApplicablePractices) {
         const isFulfilled = ScannerUtils.isFulfilled(practice, practicesWithContext);
         if (!isFulfilled) continue;
@@ -148,17 +154,15 @@ export class Scanner {
           evaluation,
         });
       }
-
-      for (const practice of filteredPractices.practicesOffWithMetadata) {
-        practicesOff.push(practice.getMetadata().name);
-      }
     }
+
     this.scanDebug('Applicable practices:');
     this.scanDebug(practicesWithContext.map((p) => p.practice.getMetadata().name));
-    return { practicesWithContext: practicesWithContext, practicesOff: practicesOff }
+
+    return { practicesWithContext: practicesWithContext, practicesOff: filteredPractices && filteredPractices.practicesOff };
   }
 
-  private async report(practicesWithContext: PracticeWithContext[], practicesOff: string[]) {
+  private async report(practicesWithContext: PracticeWithContext[], practicesOff?: string[]) {
     const relevantPractices = practicesWithContext.filter((p) => p.evaluation === PracticeEvaluationResult.notPracticing);
 
     const reportString = this.reporter.report(
@@ -173,7 +177,7 @@ export class Scanner {
           component: p.componentContext.projectComponent,
         };
       }),
-      practicesOff
+      practicesOff,
     );
     typeof reportString === 'string'
       ? console.log(reportString)
@@ -193,7 +197,7 @@ export interface PracticeWithContext {
   evaluation: PracticeEvaluationResult;
 }
 
-export interface PracticeWithContextAndOff {
-  practicesWithContext: PracticeWithContext[],
-  practicesOff: string[]
+interface PracticeWithContextAndOff {
+  practicesWithContext: PracticeWithContext[];
+  practicesOff: string[] | undefined;
 }

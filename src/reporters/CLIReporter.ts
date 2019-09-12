@@ -44,13 +44,11 @@ export class CLIReporter implements IReporter {
 
     lines.push('----------------------------');
     lines.push('');
-    practicesOff.length === 0 ? lines.push(bold(red('No practice was switched off.'))) : lines.push(bold(red('You switched off these practices:')));
+    practicesOff.length === 0
+      ? lines.push(bold(red('No practice was switched off.')))
+      : lines.push(bold(red('You switched off these practices:')));
     for (const practice of practicesOff) {
-      lines.push(
-        red(
-          `- ${italic(practice)}`,
-        ),
-      );
+      lines.push(red(`- ${italic(practice)}`));
     }
     lines.push('');
     lines.push('----------------------------');

@@ -28,13 +28,11 @@ export class JSONReporter implements IReporter {
         continue;
       }
       component.practices.push(pac.practice);
-      
+
       if (practicesOff.length > 0) {
-        Object.assign(component, { practicesOff: practicesOff})
+        Object.assign(component, { practicesOff: practicesOff });
       }
     }
-
-
 
     return report;
   }
