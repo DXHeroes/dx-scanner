@@ -25,6 +25,7 @@ import { ScannerUtils } from './ScannerUtils';
 import { ArgumentsProvider } from '../inversify.config';
 import { IPracticeWithMetadata } from '../practices/DxPracticeDecorator';
 import filterAsync from 'node-filter-async';
+import util from 'util';
 
 @injectable()
 export class Scanner {
@@ -135,7 +136,9 @@ export class Scanner {
 
   private async detectPractices(componentsWithContext: ProjectComponentAndLangContext[]): Promise<PracticeWithContext[]> {
     const practicesWithContext: PracticeWithContext[] = [];
+
     for (const componentWithCtx of componentsWithContext) {
+      const practicesWithContextFromComponent: PracticeWithContext[] = [];
       const componentContext = componentWithCtx.languageContext.getProjectComponentContext(componentWithCtx.component);
       const practiceContext = componentContext.getPracticeContext();
 
@@ -145,7 +148,8 @@ export class Scanner {
 
       const orderedApplicablePractices = ScannerUtils.sortPractices(applicablePractices);
       for (const practice of orderedApplicablePractices) {
-        const isFulfilled = ScannerUtils.isFulfilled(practice, practicesWithContext);
+        const isFulfilled = ScannerUtils.isFulfilled(practice, practicesWithContextFromComponent);
+
         if (!isFulfilled) continue;
 
         const evaluation = await practice.evaluate(practiceContext);
