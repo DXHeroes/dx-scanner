@@ -1,9 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { ScannerUtils } from './ScannerUtils';
-import { DeprecatedTSLintPractice } from '../practices/JavaScript/DeprecatedTSLintPractice';
-import { ESLintUsedPractice } from '../practices/JavaScript/ESLintUsedPractice';
-import { TypeScriptUsedPractice } from '../practices/JavaScript/TypeScriptUsedPractice';
-import { FirstTestPractice, SecondTestPractice, InvalidTestPractice } from './__MOCKS__';
+import _ from 'lodash';
+import { PracticeContext } from '../contexts/practice/PracticeContext';
 import {
   PracticeEvaluationResult,
   PracticeImpact,
@@ -12,29 +9,14 @@ import {
   ProjectComponentPlatform,
   ProjectComponentType,
 } from '../model';
-import { ConfigProvider } from '../contexts/ConfigProvider';
-import { TestContainerContext, createTestContainer } from '../inversify.config';
+import { DeprecatedTSLintPractice } from '../practices/JavaScript/DeprecatedTSLintPractice';
+import { ESLintUsedPractice } from '../practices/JavaScript/ESLintUsedPractice';
 import { JsGitignoreCorrectlySetPractice } from '../practices/JavaScript/JsGitignoreCorrectlySetPractice';
-import { ScannerContextFactory, Types } from '../types';
-import { ServiceType } from '../detectors/ScanningStrategyDetector';
-import _ from 'lodash';
-import { PracticeContext } from '../contexts/practice/PracticeContext';
+import { TypeScriptUsedPractice } from '../practices/JavaScript/TypeScriptUsedPractice';
+import { ScannerUtils } from './ScannerUtils';
+import { FirstTestPractice, InvalidTestPractice, SecondTestPractice } from './__MOCKS__';
 
 describe('ScannerUtils', () => {
-  let configProvider: ConfigProvider;
-  let containerCtx: TestContainerContext;
-  let ctx: TestContainerContext;
-
-  beforeAll(() => {
-    containerCtx = createTestContainer();
-    containerCtx.container.bind('ConfigProvider').to(ConfigProvider);
-    configProvider = containerCtx.container.get('ConfigProvider');
-  });
-
-  beforeEach(() => {
-    ctx = createTestContainer({ uri: '.' });
-  });
-
   describe('#sortPractices', () => {
     it('sorts practices correctly ', async () => {
       const practices = [DeprecatedTSLintPractice, ESLintUsedPractice, TypeScriptUsedPractice].map(ScannerUtils.initPracticeWithMetadata);
