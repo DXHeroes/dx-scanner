@@ -4,6 +4,11 @@ import { IPractice } from '../practices/IPractice';
 import { IPracticeWithMetadata } from '../practices/DxPracticeDecorator';
 import { PracticeWithContext } from './Scanner';
 import { ErrorFactory } from '../lib/errors';
+import { multiInject } from 'inversify';
+import { Types } from '../types';
+import { ProjectComponentContext } from '../contexts/projectComponent/ProjectComponentContext';
+import filterAsync from 'node-filter-async';
+import { PracticeImpact } from '../model';
 
 /**
  * Scanner helpers & utilities
@@ -12,7 +17,7 @@ export class ScannerUtils {
   /**
    * Creates the practice with metadata
    */
-  static initPracticeWithMetadata(practice: { new (): IPractice }): IPracticeWithMetadata {
+  static initPracticeWithMetadata(practice: { new(): IPractice }): IPracticeWithMetadata {
     return <IPracticeWithMetadata>(<unknown>new practice());
   }
 
@@ -74,4 +79,25 @@ export class ScannerUtils {
 
     return true;
   }
+
+  static async filterPractices(componentContext: ProjectComponentContext, practices: IPracticeWithMetadata[]) {
+    await componentContext.configProvider.init();
+    const practiceContext = componentContext.getPracticeContext();
+
+    const applicablePractices = await filterAsync(practices, async (p) => {
+      return await p.isApplicable(practiceContext);
+    });
+
+    /* Filter out turned off practices */
+    const customApplicablePractices = applicablePractices.filter(
+      (p) => componentContext.configProvider.getOverridenPractice(p.getMetadata().id) !== PracticeImpact.off,
+    );
+
+    const practicesOffWithMetadata = applicablePractices.filter(
+      (p) => componentContext.configProvider.getOverridenPractice(p.getMetadata().id) === PracticeImpact.off,
+    );
+
+    return { customApplicablePractices, practicesOffWithMetadata }
+  }
+
 }

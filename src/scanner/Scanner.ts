@@ -126,32 +126,17 @@ export class Scanner {
     return components;
   }
 
-  //: Promise<PracticeWithContext[]>
-  private async detectPractices(componentsWithContext: ProjectComponentAndLangContext[]) {
+  private async detectPractices(componentsWithContext: ProjectComponentAndLangContext[]): Promise<PracticeWithContextAndOff> {
     const practicesWithContext: PracticeWithContext[] = [];
-    let practicesOffWithMetadata, practicesOff = [];
+    let practicesOff = [];
+
     for (const componentWithCtx of componentsWithContext) {
       const componentContext = componentWithCtx.languageContext.getProjectComponentContext(componentWithCtx.component);
       const practiceContext = componentContext.getPracticeContext();
 
-      await componentContext.configProvider.init();
-
-
-
-      const applicablePractices = await filterAsync(this.practices, async (p) => {
-        return await p.isApplicable(practiceContext);
-      });
-
-      /* Filter out turned off practices */
-      const customApplicablePractices = applicablePractices.filter(
-        (p) => componentContext.configProvider.getOverridenPractice(p.getMetadata().id) !== PracticeImpact.off,
-      );
-
-      practicesOffWithMetadata = applicablePractices.filter(
-        (p) => componentContext.configProvider.getOverridenPractice(p.getMetadata().id) === PracticeImpact.off,
-      );
-
-      const orderedApplicablePractices = ScannerUtils.sortPractices(customApplicablePractices);
+      const filteredPractices = await ScannerUtils.filterPractices(componentContext, this.practices);
+      const orderedApplicablePractices = ScannerUtils.sortPractices(filteredPractices.customApplicablePractices);
+      
       for (const practice of orderedApplicablePractices) {
         const isFulfilled = ScannerUtils.isFulfilled(practice, practicesWithContext);
         if (!isFulfilled) continue;
@@ -164,7 +149,7 @@ export class Scanner {
         });
       }
 
-      for (const practice of practicesOffWithMetadata) {
+      for (const practice of filteredPractices.practicesOffWithMetadata) {
         practicesOff.push(practice.getMetadata().name);
       }
     }
@@ -175,7 +160,7 @@ export class Scanner {
 
   private async report(practicesWithContext: PracticeWithContext[], practicesOff: string[]) {
     const relevantPractices = practicesWithContext.filter((p) => p.evaluation === PracticeEvaluationResult.notPracticing);
-    console.log(practicesOff, 'practicesOff')
+
     const reportString = this.reporter.report(
       relevantPractices.map((p) => {
         const impact = p.componentContext.configProvider.getOverridenPractice(p.practice.getMetadata().id);
@@ -206,4 +191,9 @@ export interface PracticeWithContext {
   practiceContext: PracticeContext;
   practice: IPracticeWithMetadata;
   evaluation: PracticeEvaluationResult;
+}
+
+export interface PracticeWithContextAndOff {
+  practicesWithContext: PracticeWithContext[],
+  practicesOff: string[]
 }
