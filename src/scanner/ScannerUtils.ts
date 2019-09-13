@@ -7,10 +7,12 @@ import { PracticeImpact } from '../model';
 import { IPracticeWithMetadata } from '../practices/DxPracticeDecorator';
 import { IPractice } from '../practices/IPractice';
 import { PracticeWithContext } from './Scanner';
+import { measurable } from '../lib/measurable';
 
 /**
  * Scanner helpers & utilities
  */
+// @measurable()
 export class ScannerUtils {
   /**
    * Creates the practice with metadata

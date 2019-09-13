@@ -1,22 +1,26 @@
 import fs from 'fs';
 import * as nodePath from 'path';
-import { injectable } from 'inversify';
 import { IProjectFilesBrowserService, Metadata, MetadataType } from './model';
 import { IFs, createFsFromVolume } from 'memfs';
 import { Volume as VSVolume, DirectoryJSON } from 'memfs/lib/volume';
 import { ErrorFactory } from '../lib/errors';
+import { ServiceBase } from './ServiceBase';
+import { injectable } from 'inversify';
+import { measurable } from '../lib/measurable';
 
 /**
  * Service for file system browsing
  *  - uses fs by default
  *  - can work just in memory with memfs
  */
+// @measurable()
 @injectable()
-export class FileSystemService implements IProjectFilesBrowserService {
+export class FileSystemService extends ServiceBase implements IProjectFilesBrowserService {
   protected fileSystem: IFs | (typeof fs);
   private virtualVolume: VSVolume | undefined;
 
   constructor({ isVirtual = false } = {}) {
+    super();
     if (!isVirtual) {
       this.fileSystem = fs;
       this.virtualVolume = undefined;

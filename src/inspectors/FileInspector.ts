@@ -4,7 +4,9 @@ import debug from 'debug';
 import { injectable, optional, inject } from 'inversify';
 import { Types } from '../types';
 import * as nodePath from 'path';
+import { measurable } from '../lib/measurable';
 
+@measurable()
 @injectable()
 export class FileInspector implements IFileInspector {
   readonly basePath: string | undefined;

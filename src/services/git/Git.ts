@@ -1,7 +1,7 @@
 import { Repository } from '../../model';
 import { GitHubUrlParser } from './GitHubUrlParser';
 import { isArray } from 'util';
-import { inject, injectable } from 'inversify';
+import { inject } from 'inversify';
 import { ErrorFactory } from '../../lib/errors/ErrorFactory';
 import { GitHubPullRequestState } from '../../services/git/IGitHubService';
 import * as nodePath from 'path';
@@ -9,13 +9,14 @@ import { Metadata, MetadataType, IProjectFilesBrowserService } from '../model';
 import { Types } from '../../types';
 import { ProjectIssueBrowserService as ContentRepositoryBrowserService } from '../../model';
 import { Directory, File, Symlink } from './model';
+import { ServiceBase } from '../ServiceBase';
 
-@injectable()
-export class Git implements IProjectFilesBrowserService {
+export class Git extends ServiceBase implements IProjectFilesBrowserService {
   private repository: Repository;
   private service: ContentRepositoryBrowserService;
 
   constructor(repository: Repository, @inject(Types.IContentRepositoryBrowser) service: ContentRepositoryBrowserService) {
+    super();
     this.repository = repository;
     this.service = service;
   }

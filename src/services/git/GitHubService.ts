@@ -1,4 +1,4 @@
-import { injectable, inject } from 'inversify';
+import { inject, injectable } from 'inversify';
 import {
   PullRequest,
   Contributor,
@@ -32,15 +32,19 @@ import { Types } from '../../types';
 import { ArgumentsProvider } from '../../inversify.config';
 import { ICache } from '../../scanner/cache/ICache';
 import { InMemoryCache } from '../../scanner/cache/InMemoryCahce';
+import { ServiceBase } from '../ServiceBase';
+import { measurable } from '../../lib/measurable';
 const debug = Debug('cli:services:git:github-service');
 
+// @measurable()
 @injectable()
-export class GitHubService implements IGitHubService {
+export class GitHubService extends ServiceBase implements IGitHubService {
   private readonly client: Octokit;
   private cache: ICache;
   private callCount = 0;
 
   constructor(@inject(Types.ArgumentsProvider) argumentsProvider: ArgumentsProvider) {
+    super();
     this.cache = new InMemoryCache();
 
     this.client = new Octokit({

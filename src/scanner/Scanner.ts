@@ -1,6 +1,6 @@
 import debug from 'debug';
 import fs from 'fs';
-import { inject, injectable, multiInject } from 'inversify';
+import { inject, injectable, multiInject, decorate } from 'inversify';
 import os from 'os';
 import path from 'path';
 import git from 'simple-git/promise';
@@ -24,7 +24,9 @@ import { IPracticeWithMetadata } from '../practices/DxPracticeDecorator';
 import { IReporter } from '../reporters/IReporter';
 import { ScannerContextFactory, Types } from '../types';
 import { ScannerUtils } from './ScannerUtils';
+import { measurable } from '../lib/measurable';
 
+// @measurable()
 @injectable()
 export class Scanner {
   private readonly scanStrategyDetector: ScanningStrategyDetector;

@@ -7,7 +7,9 @@ import { ErrorFactory } from '../lib/errors';
 import { Types } from '../types';
 import { ArgumentsProvider } from '../inversify.config';
 import { GitHubService } from '../services/git/GitHubService';
+import { measurable } from '../lib/measurable';
 
+@measurable()
 @injectable()
 export class ScanningStrategyDetector implements IDetector<string, ScanningStrategy> {
   private gitHubService: GitHubService;

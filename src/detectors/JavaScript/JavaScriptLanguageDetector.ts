@@ -6,7 +6,9 @@ import { Types } from '../../types';
 import { fileNameRegExp, fileExtensionRegExp, sharedSubpath } from '../utils';
 import { uniq } from 'lodash';
 import * as nodePath from 'path';
+import { measurable } from '../../lib/measurable';
 
+@measurable()
 @injectable()
 export class JavaScriptLanguageDetector implements ILanguageDetector {
   private fileInspector: IFileInspector;

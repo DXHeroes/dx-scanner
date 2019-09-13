@@ -1,11 +1,12 @@
 import { PackageInspectorBase } from './PackageInspectorBase';
-import { injectable, inject } from 'inversify';
+import { inject } from 'inversify';
 import { Types } from '../../types';
 import { keys } from 'lodash';
 import { DependencyType } from '../IPackageInspector';
 import { IFileInspector } from '../IFileInspector';
+import { measurable } from '../../lib/measurable';
 
-@injectable()
+@measurable()
 export class JavaScriptPackageInspector extends PackageInspectorBase {
   private fileInspector: IFileInspector;
   private packageJson!: PackageJSON;

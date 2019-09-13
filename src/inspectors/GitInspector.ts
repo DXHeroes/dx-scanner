@@ -6,11 +6,13 @@ import { isEqual, uniqWith } from 'lodash';
 import { injectable, inject } from 'inversify';
 import { Types } from '../types';
 import { paginate, Paginated } from './common/Paginated';
+import { measurable } from '../lib/measurable';
 
+@measurable()
+@injectable()
 /**
  * A Git repository inspector.
  */
-@injectable()
 export class GitInspector implements IGitInspector {
   /**
    * The repository to be inspected.

@@ -10,7 +10,8 @@
   "scripts": {
     "build": "rimraf lib && tsc -b",
     "build:watch": "yarn build -w",
-    "lint": "eslint 'src/**/*.ts'",
+    "debug:flamegraph": "yarn build && node --prof lib/src/index.debug.js && node --prof-process --preprocess -j isolate*.log | flamebearer",
+    "lint": "eslint '[src|typings]/**/*.ts'",
     "lint:fix": "yarn lint --fix",
     "prepack": "yarn build",
     "start": "./bin/run",
@@ -67,6 +68,7 @@
     "eslint": "^6.2.1",
     "eslint-config-prettier": "^6.1.0",
     "eslint-plugin-prettier": "^3.1.0",
+    "flamebearer": "^1.1.3",
     "jest": "^24.9.0",
     "nock": "^10.0.6",
     "prettier": "^1.18.2",

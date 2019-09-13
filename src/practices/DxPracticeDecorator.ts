@@ -4,6 +4,7 @@
 import { PracticeMetadata } from '../model';
 import { injectable } from 'inversify';
 import { IPractice } from './IPractice';
+import { measurable } from '../lib/measurable';
 
 function DxPracticeWrapperDecorator(practiceMetadata: PracticeMetadata) {
   return function classDecorator<T extends new (...args: any[]) => {}>(constructor: T) {
@@ -17,7 +18,7 @@ function DxPracticeWrapperDecorator(practiceMetadata: PracticeMetadata) {
 
 export function DxPractice(metadata: PracticeMetadata) {
   return (target: any) => {
-    return DxPracticeWrapperDecorator(metadata)(injectable()(target));
+    return DxPracticeWrapperDecorator(metadata)(injectable()(measurable()(target)));
   };
 }
 

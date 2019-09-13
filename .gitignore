@@ -1,5 +1,7 @@
 *-debug.log
 *-error.log
+*-v8.log
+flamegraph.html
 *.ignore
 /.nyc_output
 /build

@@ -5,8 +5,10 @@ import { Types } from '../types';
 import { ArgumentsProvider } from '../inversify.config';
 import _ from 'lodash';
 import { IPracticeWithMetadata } from '../practices/DxPracticeDecorator';
+import { measurable } from '../lib/measurable';
 
 @injectable()
+@measurable()
 export class JSONReporter implements IReporter {
   private readonly argumentsProvider: ArgumentsProvider;
 

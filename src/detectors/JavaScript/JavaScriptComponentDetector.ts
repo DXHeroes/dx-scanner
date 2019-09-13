@@ -3,6 +3,9 @@ import { IProjectComponentDetector } from '../IProjectComponentDetector';
 import { ProjectComponent, LanguageAtPath, ProjectComponentFramework, ProjectComponentPlatform, ProjectComponentType } from '../../model';
 import { Types } from '../../types';
 import { IPackageInspector } from '../../inspectors/IPackageInspector';
+import { measurable } from '../../lib/measurable';
+
+@measurable()
 @injectable()
 export class JavaScriptComponentDetector implements IProjectComponentDetector {
   private packageInspector: IPackageInspector;

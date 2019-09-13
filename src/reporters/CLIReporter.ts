@@ -1,11 +1,13 @@
 import { Color, blue, bold, green, grey, italic, red, reset, yellow, underline } from 'colors';
 import { PracticeAndComponent, PracticeImpact } from '../model';
 import { GitHubUrlParser } from '../services/git/GitHubUrlParser';
-import { IReporter } from './IReporter';
 import { injectable } from 'inversify';
 import { uniq, compact } from 'lodash';
 import { IPracticeWithMetadata } from '../practices/DxPracticeDecorator';
+import { measurable } from '../lib/measurable';
+import { IReporter } from './IReporter';
 
+@measurable()
 @injectable()
 export class CLIReporter implements IReporter {
   report(practicesAndComponents: PracticeAndComponent[], practicesOff: IPracticeWithMetadata[]): string {
