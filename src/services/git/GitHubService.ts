@@ -31,12 +31,12 @@ import { delay } from '../../lib/delay';
 import { Types } from '../../types';
 import { ArgumentsProvider } from '../../inversify.config';
 import { ICache } from '../../scanner/cache/ICache';
-import { InMemoryCache } from '../../scanner/cache/InMemoryCahce';
+import { InMemoryCache } from '../../scanner/cache/InMemoryCache';
 import { ServiceBase } from '../ServiceBase';
 import { measurable } from '../../lib/measurable';
 const debug = Debug('cli:services:git:github-service');
 
-// @measurable()
+@measurable()
 @injectable()
 export class GitHubService extends ServiceBase implements IGitHubService {
   private readonly client: Octokit;

@@ -26,6 +26,7 @@ export class InMemoryCache implements ICache {
   }
 
   async getOrSet<T>(key: string, setter: () => Promise<T>): Promise<T> {
+    debug('cache')(`key ${key} here i am`);
     const previous = this.get(key);
     if (previous !== undefined) {
       debug('cache')(`key ${key} already cached`);

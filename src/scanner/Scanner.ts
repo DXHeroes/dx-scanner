@@ -33,7 +33,6 @@ export class Scanner {
   private readonly scannerContextFactory: ScannerContextFactory;
   private readonly reporter: IReporter;
   private readonly practices: IPracticeWithMetadata[];
-  private readonly argumentsProvider: ArgumentsProvider;
   private readonly scanDebug: debug.Debugger;
 
   constructor(
@@ -42,13 +41,11 @@ export class Scanner {
     @inject(Types.IReporter) reporter: IReporter,
     // inject all practices registered under Types.Practice in inversify config
     @multiInject(Types.Practice) practices: IPracticeWithMetadata[],
-    @inject(Types.ArgumentsProvider) argumentsProvider: ArgumentsProvider,
   ) {
     this.scanStrategyDetector = scanStrategyDetector;
     this.scannerContextFactory = scannerContextFactory;
     this.reporter = reporter;
     this.practices = practices;
-    this.argumentsProvider = argumentsProvider;
     this.scanDebug = debug('scanner');
   }
 

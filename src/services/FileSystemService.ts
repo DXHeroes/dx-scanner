@@ -7,7 +7,8 @@ import { ErrorFactory } from '../lib/errors';
 import { ServiceBase } from './ServiceBase';
 import { injectable } from 'inversify';
 import { measurable } from '../lib/measurable';
-import { cacheableMethod } from '../lib/cacheableMethod';
+import { ICache } from '../scanner/cache/ICache';
+import { InMemoryCache } from '../scanner/cache/InMemoryCache';
 
 /**
  * Service for file system browsing
@@ -42,7 +43,6 @@ export class FileSystemService extends ServiceBase implements IProjectFilesBrows
     this.virtualVolume.reset();
   }
 
-  @cacheableMethod
   async exists(path: string) {
     try {
       await this.fileSystem.promises.lstat(path);

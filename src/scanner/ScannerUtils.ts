@@ -8,7 +8,6 @@ import { IPracticeWithMetadata } from '../practices/DxPracticeDecorator';
 import { IPractice } from '../practices/IPractice';
 import { PracticeWithContext } from './Scanner';
 import { measurable } from '../lib/measurable';
-import { cacheableMethod } from '../lib/cacheableMethod';
 
 /**
  * Scanner helpers & utilities
