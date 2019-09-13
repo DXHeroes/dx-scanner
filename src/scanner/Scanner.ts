@@ -26,7 +26,7 @@ import { ScannerContextFactory, Types } from '../types';
 import { ScannerUtils } from './ScannerUtils';
 import { measurable } from '../lib/measurable';
 
-// @measurable()
+@measurable()
 @injectable()
 export class Scanner {
   private readonly scanStrategyDetector: ScanningStrategyDetector;

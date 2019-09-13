@@ -7,13 +7,14 @@ import { ErrorFactory } from '../lib/errors';
 import { ServiceBase } from './ServiceBase';
 import { injectable } from 'inversify';
 import { measurable } from '../lib/measurable';
+import { cacheableMethod } from '../lib/cacheableMethod';
 
 /**
  * Service for file system browsing
  *  - uses fs by default
  *  - can work just in memory with memfs
  */
-// @measurable()
+@measurable()
 @injectable()
 export class FileSystemService extends ServiceBase implements IProjectFilesBrowserService {
   protected fileSystem: IFs | (typeof fs);
@@ -41,6 +42,7 @@ export class FileSystemService extends ServiceBase implements IProjectFilesBrows
     this.virtualVolume.reset();
   }
 
+  @cacheableMethod
   async exists(path: string) {
     try {
       await this.fileSystem.promises.lstat(path);

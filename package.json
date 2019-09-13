@@ -11,6 +11,7 @@
     "build": "rimraf lib && tsc -b",
     "build:watch": "yarn build -w",
     "debug:flamegraph": "yarn build && node --prof lib/src/index.debug.js && node --prof-process --preprocess -j isolate*.log | flamebearer",
+    "debug:timers": "yarn build && cross-env DEBUG_FD=3 DEBUG=timers* node lib/src/index.debug.js 3> debug_out.txt",
     "lint": "eslint '[src|typings]/**/*.ts'",
     "lint:fix": "yarn lint --fix",
     "prepack": "yarn build",
