@@ -30,32 +30,24 @@ export class JavaScriptComponentDetector implements IProjectComponentDetector {
 
     const frontendPackages = ['webpack', 'jquery', 'gulp', 'grunt', 'browserify', 'babel'];
 
+    let frontendOrBackend;
     if (this.packageInspector.hasOneOfPackages(backendPackages)) {
-      return [
-        {
-          framework: ProjectComponentFramework.UNKNOWN,
-          language: langAtPath.language,
-          path: langAtPath.path,
-          platform: ProjectComponentPlatform.BackEnd,
-          repositoryPath: undefined,
-          type: ProjectComponentType.Application,
-        },
-      ];
+      frontendOrBackend = ProjectComponentPlatform.FrontEnd;
     }
 
     if (this.packageInspector.hasOneOfPackages(frontendPackages)) {
-      return [
-        {
-          framework: ProjectComponentFramework.UNKNOWN,
-          language: langAtPath.language,
-          path: langAtPath.path,
-          platform: ProjectComponentPlatform.FrontEnd,
-          repositoryPath: undefined,
-          type: ProjectComponentType.Application,
-        },
-      ];
+      frontendOrBackend = ProjectComponentPlatform.BackEnd;
     }
 
-    return [];
+    return [
+      {
+        framework: ProjectComponentFramework.UNKNOWN,
+        language: langAtPath.language,
+        path: langAtPath.path,
+        platform: frontendOrBackend ? frontendOrBackend : ProjectComponentPlatform.UNKNOWN,
+        repositoryPath: undefined,
+        type: ProjectComponentType.Application,
+      },
+    ];
   }
 }

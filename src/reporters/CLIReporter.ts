@@ -48,6 +48,7 @@ export class CLIReporter implements IReporter {
     practicesOff.length === 0
       ? lines.push(bold(yellow('No practice was switched off.')))
       : lines.push(bold(red('You switched off these practices:')));
+    console.log(practicesOff);
     for (const practice of practicesOff) {
       lines.push(red(`- ${italic(practice.getMetadata().name)}`));
     }
