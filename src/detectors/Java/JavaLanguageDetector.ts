@@ -2,9 +2,11 @@ import { ILanguageDetector } from '../ILanguageDetector';
 import { injectable, inject } from 'inversify';
 import { IFileInspector } from '../../inspectors/IFileInspector';
 import { Types } from '../../types';
-import { LanguageAtPath } from '../../model';
-import { fileNameRegExp } from '../utils';
+import { LanguageAtPath, ProgrammingLanguage } from '../../model';
+import { fileNameRegExp, fileExtensionRegExp, sharedSubpath } from '../utils';
 import { Metadata } from '../../services/model';
+import * as nodePath from 'path';
+import { uniq } from 'lodash';
 
 @injectable()
 export class JavaLanguageDetector implements ILanguageDetector {
@@ -19,6 +21,20 @@ export class JavaLanguageDetector implements ILanguageDetector {
     const isMaven: boolean = packageFiles.length > 0 ? true : false;
     if (!isMaven) {
       packageFiles = await this.fileInspector.scanFor(fileNameRegExp('build.gradle'), '/');
+    }
+    if (packageFiles.length > 0) {
+      for (const path of packageFiles.map((file) => nodePath.dirname(file.path))) {
+        result.push({ language: ProgrammingLanguage.Java, path });
+      }
+    } else {
+      // Support for KOTLIN or Groovy? => fileExtensionRegExp(['java', 'kt', 'groovy']
+      const javaFiles = await this.fileInspector.scanFor(fileExtensionRegExp(['java']), '/');
+      if (javaFiles.length === 0) {
+        return result;
+      }
+      const dirsWithProjects = uniq(javaFiles.map((f) => nodePath.dirname(f.path)));
+      const commonPath = sharedSubpath(dirsWithProjects);
+      result.push({ language: ProgrammingLanguage.Java, path: commonPath });
     }
     return result;
   }
