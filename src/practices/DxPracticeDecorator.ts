@@ -9,7 +9,7 @@ function DxPracticeWrapperDecorator(practiceMetadata: PracticeMetadata) {
   return function classDecorator<T extends new (...args: any[]) => {}>(constructor: T) {
     return class extends constructor {
       getMetadata = () => {
-        return { ...practiceMetadata, matcher: this };
+        return { ...practiceMetadata, defaultImpact: practiceMetadata.impact, matcher: this };
       };
     };
   };
