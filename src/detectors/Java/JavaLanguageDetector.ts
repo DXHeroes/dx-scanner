@@ -27,8 +27,7 @@ export class JavaLanguageDetector implements ILanguageDetector {
         result.push({ language: ProgrammingLanguage.Java, path });
       }
     } else {
-      // Support for KOTLIN or Groovy? => fileExtensionRegExp(['java', 'kt', 'groovy']
-      const javaFiles = await this.fileInspector.scanFor(fileExtensionRegExp(['java']), '/');
+      const javaFiles: Metadata[] = await this.fileInspector.scanFor(fileExtensionRegExp(['java']), '/');
       if (javaFiles.length === 0) {
         return result;
       }
