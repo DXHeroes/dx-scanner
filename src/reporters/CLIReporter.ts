@@ -1,16 +1,24 @@
-import { Color, blue, bold, green, grey, italic, red, reset, yellow, underline } from 'colors';
-import { PracticeAndComponent, PracticeImpact } from '../model';
-import { GitHubUrlParser } from '../services/git/GitHubUrlParser';
-import { IReporter } from './IReporter';
-import { injectable } from 'inversify';
-import { uniq, compact } from 'lodash';
+import { blue, bold, Color, green, grey, italic, red, reset, underline, yellow } from 'colors';
+import { inject, injectable } from 'inversify';
+import { PracticeAndComponent, PracticeImpact, PracticeMetadata } from '../model';
 import { IPracticeWithMetadata } from '../practices/DxPracticeDecorator';
+import { GitHubUrlParser } from '../services/git/GitHubUrlParser';
+import { Types } from '../types';
+import { ComponentReport, IReporter } from './IReporter';
+import { JSONReporter } from './JSONReporter';
 
 @injectable()
 export class CLIReporter implements IReporter {
+  private readonly JSONReporter: JSONReporter;
+
+  constructor(@inject(Types.JSONReporter) JSONReporter: JSONReporter) {
+    this.JSONReporter = JSONReporter;
+  }
+
   report(practicesAndComponents: PracticeAndComponent[], practicesOff: IPracticeWithMetadata[]): string {
     const lines: string[] = [];
-    let repoName;
+
+    const report = this.JSONReporter.report(practicesAndComponents, practicesOff);
 
     lines.push(bold(blue('----------------------------')));
     lines.push(bold(blue('|                          |')));
@@ -18,29 +26,38 @@ export class CLIReporter implements IReporter {
     lines.push(bold(blue('|                          |')));
     lines.push(bold(blue('----------------------------')));
 
-    for (const pac of practicesAndComponents) {
-      if (pac.component.repositoryPath) {
-        const git = GitHubUrlParser.getOwnerAndRepoName(pac.component.repositoryPath);
+    let repoName;
+    for (const component of report.components) {
+      lines.push('\n----------------------------\n');
+      lines.push(bold(blue('Developer Experience Report for:')));
+
+      if (component.repositoryPath) {
+        const git = GitHubUrlParser.getOwnerAndRepoName(component.repositoryPath);
         repoName = `${git.owner}/${git.repoName}`;
       } else {
-        repoName = pac.component.path;
+        repoName = component.path;
       }
+      lines.push(repoName);
       lines.push('\n----------------------------');
+
       for (const key in PracticeImpact) {
         const impact = <PracticeImpact>PracticeImpact[key];
 
-        const impactLine = this.emitImpactSegment(pac, impact);
+        const impactLine = this.emitImpactSegment(component, impact);
         impactLine && lines.push(impactLine);
       }
     }
+
     lines.push('----------------------------');
     lines.push('');
+
     practicesOff.length === 0
       ? lines.push(bold(yellow('No practice was switched off.')))
       : lines.push(bold(red('You switched off these practices:')));
     for (const practice of practicesOff) {
       lines.push(red(`- ${italic(practice.getMetadata().name)}`));
     }
+
     lines.push('');
     lines.push('----------------------------');
     lines.push('');
@@ -49,128 +66,19 @@ export class CLIReporter implements IReporter {
     lines.push(italic(blue('- https://dxheroes.io')));
     lines.push(reset(' '));
     return lines.join('\n');
-
-    //   const repoNames = uniq(
-    //     compact(
-    //       practicesAndComponents.map((pac): string | undefined => {
-    //         if (pac.component.repositoryPath) {
-    //           const git = GitHubUrlParser.getOwnerAndRepoName(pac.component.repositoryPath);
-    //           return `${git.owner}/${git.repoName}`;
-    //         }
-
-    //         return pac.component.path;
-    //       }),
-    //     ),
-    //   );
-
-    //   lines.push(bold(blue('----------------------------')));
-    //   lines.push(bold(blue('|                          |')));
-    //   lines.push(bold(blue('|     DX Scanner Result    |')));
-    //   lines.push(bold(blue('|                          |')));
-    //   lines.push(bold(blue('----------------------------')));
-
-    //   lines.push(bold(blue('Developer Experience Report for:')));
-    //   repoNames.forEach((repoName) => {
-    //     lines.push(repoName);
-    //   });
-
-    //   lines.push('\n----------------------------');
-    //   for (const key in PracticeImpact) {
-    //     const impact = <PracticeImpact>PracticeImpact[key];
-
-    //     const impactLine = this.emitImpactSegment(practicesAndComponents, impact);
-    //     impactLine && lines.push(impactLine);
-    //   }
-
-    //   lines.push('----------------------------');
-    //   lines.push('');
-    //   practicesOff.length === 0
-    //     ? lines.push(bold(yellow('No practice was switched off.')))
-    //     : lines.push(bold(red('You switched off these practices:')));
-    //   for (const practice of practicesOff) {
-    //     lines.push(red(`- ${italic(practice.getMetadata().name)}`));
-    //   }
-    //   lines.push('');
-    //   lines.push('----------------------------');
-    //   lines.push('');
-    //   lines.push(italic(blue('Implementation is not adoption.')));
-    //   lines.push(italic(blue('We can help you with both. :-)')));
-    //   lines.push(italic(blue('- https://dxheroes.io')));
-    //   lines.push(reset(' '));
-    //   return lines.join('\n');
-    // }
-
-    // private emitImpactSegment(practicesAndComponents: PracticeAndComponent[], impact: PracticeImpact): string | undefined {
-    //   const lines: string[] = [];
-    //   practicesAndComponents = practicesAndComponents.filter((pac) => pac.practice.impact === impact);
-    //   if (practicesAndComponents.length === 0) {
-    //     return undefined;
-    //   }
-    //   lines.push(reset(''));
-    //   let color = blue;
-    //   if (impact === PracticeImpact.high) {
-    //     color = red;
-    //     lines.push(bold(color('Improvements with highest impact:\n')));
-    //   } else if (impact === PracticeImpact.medium) {
-    //     color = yellow;
-    //     lines.push(bold(color('Improvements with medium impact:\n')));
-    //   } else if (impact === PracticeImpact.small) {
-    //     color = green;
-    //     lines.push(bold(color('Improvements with minor impact:\n')));
-    //   } else {
-    //     color = grey;
-    //     lines.push(bold(color('Also consider:')));
-    //   }
-    //   for (const pac of practicesAndComponents) {
-    //     lines.push(this.linesForPractice(pac, color, practicesAndComponents.length > 1));
-    //     if (pac.practice.defaultImpact !== pac.practice.impact) {
-    //       lines.push(bold(this.changedImpact(pac, (color = grey))));
-    //     }
-    //   }
-    //   lines.push(bold(''));
-    //   return lines.join('\n');
-    // }
-
-    // // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    // private linesForPractice(pac: PracticeAndComponent, color: Color, _includeFindingPath: boolean): string {
-    //   const findingPath = '';
-    //   // if (includeFindingPath) {
-    //   //     const ownerAndRepo = GitHubUrlParser.getOwnerAndRepoName(pac.component.githubUrl!);
-    //   //     findingPath = `at: ${ownerAndRepo.owner}/${ownerAndRepo.repoName}`;
-    //   // }
-
-    //   const practiceLineTexts = [reset(color(`- ${bold(pac.practice.name)} - ${italic(pac.practice.suggestion)}`))];
-    //   if (pac.practice.url) {
-    //     practiceLineTexts.push(color(italic(`${findingPath}(${pac.practice.url})`)));
-    //   }
-
-    //   return practiceLineTexts.join(' ');
-    // }
   }
 
-  private linesForPractice(pac: PracticeAndComponent, color: Color): string {
-    const findingPath = '';
-    // if (includeFindingPath) {
-    //     const ownerAndRepo = GitHubUrlParser.getOwnerAndRepoName(pac.component.githubUrl!);
-    //     findingPath = `at: ${ownerAndRepo.owner}/${ownerAndRepo.repoName}`;
-    // }
+  private emitImpactSegment(component: ComponentReport, impact: PracticeImpact): string | undefined {
+    const lines: string[] = [];
 
-    const practiceLineTexts = [reset(color(`- ${bold(pac.practice.name)} - ${italic(pac.practice.suggestion)}`))];
-    if (pac.practice.url) {
-      practiceLineTexts.push(color(italic(`${findingPath}(${pac.practice.url})`)));
+    const practices = component.practices.filter((practice) => practice.impact === impact);
+    if (practices.length === 0) {
+      return undefined;
     }
 
-    return practiceLineTexts.join(' ');
-  }
-
-  private emitImpactSegment(practicesAndComponent: PracticeAndComponent, impact: PracticeImpact): string | undefined {
-    const lines: string[] = [];
-    //practicesAndComponent = practicesAndComponent.filter((pac) => pac.practice.impact === impact);
-    // if (practicesAndComponents.length === 0) {
-    //   return undefined;
-    // }
     lines.push(reset(''));
     let color = blue;
+
     if (impact === PracticeImpact.high) {
       color = red;
       lines.push(bold(color('Improvements with highest impact:\n')));
@@ -184,28 +92,35 @@ export class CLIReporter implements IReporter {
       color = grey;
       lines.push(bold(color('Also consider:')));
     }
-    lines.push(this.linesForPractice(practicesAndComponent, color));
-    if (practicesAndComponent.practice.defaultImpact !== practicesAndComponent.practice.impact) {
-      lines.push(bold(this.changedImpact(practicesAndComponent, (color = grey))));
+
+    for (const practice of practices) {
+      lines.push(this.linesForPractice(practice, color));
+
+      if (practice.defaultImpact !== practice.impact) {
+        lines.push(bold(this.changedImpact(practice, (color = grey))));
+      }
     }
 
-    // for (const pac of practicesAndComponents) {
-    //   lines.push(this.linesForPractice(pac, color, practicesAndComponents.length > 1));
-    //   if (pac.practice.defaultImpact !== pac.practice.impact) {
-    //     lines.push(bold(this.changedImpact(pac, (color = grey))));
-    //   }
-    // }
     lines.push(bold(''));
     return lines.join('\n');
   }
 
-  private changedImpact(pac: PracticeAndComponent, color: Color) {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  private linesForPractice(practice: PracticeMetadata, color: Color): string {
+    const findingPath = '';
+    const practiceLineTexts = [reset(color(`- ${bold(practice.name)} - ${italic(practice.suggestion)}`))];
+    if (practice.url) {
+      practiceLineTexts.push(color(italic(`${findingPath}(${practice.url})`)));
+    }
+
+    return practiceLineTexts.join(' ');
+  }
+
+  private changedImpact(practice: PracticeMetadata, color: Color) {
     const practiceLineTexts = [
       reset(
         color(
-          `You changed impact of ${bold(pac.practice.name)} from ${underline(<string>pac.practice.defaultImpact)} to ${underline(
-            pac.practice.impact,
-          )}`,
+          `You changed impact of ${bold(practice.name)} from ${underline(<string>practice.defaultImpact)} to ${underline(practice.impact)}`,
         ),
       ),
     ];

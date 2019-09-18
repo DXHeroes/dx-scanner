@@ -101,7 +101,6 @@ export class Scanner {
       for (const componentDetector of detectors) {
         const componentsWithContext = (await componentDetector.detectComponent(langAtPath)).map((c) => {
           if (strategy.remoteUrl) {
-            console.log(strategy.localPath, 'local');
             c.repositoryPath = strategy.remoteUrl;
           }
           return {
