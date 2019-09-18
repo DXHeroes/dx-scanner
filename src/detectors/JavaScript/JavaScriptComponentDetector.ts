@@ -32,11 +32,11 @@ export class JavaScriptComponentDetector implements IProjectComponentDetector {
 
     let frontendOrBackend;
     if (this.packageInspector.hasOneOfPackages(backendPackages)) {
-      frontendOrBackend = ProjectComponentPlatform.FrontEnd;
+      frontendOrBackend = ProjectComponentPlatform.BackEnd;
     }
 
     if (this.packageInspector.hasOneOfPackages(frontendPackages)) {
-      frontendOrBackend = ProjectComponentPlatform.BackEnd;
+      frontendOrBackend = ProjectComponentPlatform.FrontEnd;
     }
 
     return [
