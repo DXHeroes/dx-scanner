@@ -6,6 +6,8 @@ import { bindProjectComponentContext } from '../projectComponent/projectComponen
 import { JavaScriptPackageInspector } from '../../inspectors/package/JavaScriptPackageInspector';
 import { FileInspector } from '../../inspectors/FileInspector';
 import { JavaScriptComponentDetector } from '../../detectors/JavaScript/JavaScriptComponentDetector';
+import { JavaPackageInspector } from '../../inspectors/package/JavaPackageInspector';
+import { JavaComponentDetector } from '../../detectors/Java/JavaComponentDetector';
 
 export const bindLanguageContext = (container: Container) => {
   container.bind(Types.LanguageContextFactory).toFactory(
@@ -50,6 +52,17 @@ const bindPackageInspectors = (languageAtPath: LanguageAtPath, container: Contai
     container.bind(Types.InitiableInspector).toDynamicValue((ctx) => {
       return ctx.container.get(Types.IPackageInspector);
     });
+  } else if (languageAtPath.language === ProgrammingLanguage.Java) {
+    container
+      .bind(Types.IPackageInspector)
+      .to(JavaPackageInspector)
+      .inSingletonScope();
+    container.bind(JavaPackageInspector).toDynamicValue((ctx) => {
+      return ctx.container.get(Types.IPackageInspector);
+    });
+    container.bind(Types.InitiableInspector).toDynamicValue((ctx) => {
+      return ctx.container.get(Types.IPackageInspector);
+    });
   }
 };
 
@@ -62,6 +75,10 @@ const bindComponentDetectors = (container: Container) => {
     .bind(Types.IProjectComponentDetector)
     .to(JavaScriptComponentDetector)
     .whenTargetTagged(DETECT_LANGUAGE_TAG, ProgrammingLanguage.TypeScript);
+  container
+    .bind(Types.IProjectComponentDetector)
+    .to(JavaComponentDetector)
+    .whenTargetTagged(DETECT_LANGUAGE_TAG, ProgrammingLanguage.Java);
 
   container.bind(Types.ProjectComponentDetectorFactory).toFactory((ctx) => {
     return getProjectComponentDetectorFactory(ctx.container as Container);
