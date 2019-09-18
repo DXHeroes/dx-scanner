@@ -31,7 +31,7 @@ export class CLIReporter implements IReporter {
       lines.push('\n----------------------------\n');
       lines.push(bold(blue('Developer Experience Report for:')));
 
-      if (component.repositoryPath) {
+      if (component.repositoryPath && !component.path) {
         const git = GitHubUrlParser.getOwnerAndRepoName(component.repositoryPath);
         repoName = `${git.owner}/${git.repoName}`;
       } else {
