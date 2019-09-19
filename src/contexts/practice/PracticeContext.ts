@@ -4,6 +4,7 @@ import { IIssueTrackingInspector } from '../../inspectors/IIssueTrackingInspecto
 import { ProjectComponent } from '../../model';
 import { IFileInspector } from '../../inspectors/IFileInspector';
 import { ICollaborationInspector } from '../../inspectors/ICollaborationInspector';
+import { EslintConfig } from '../IConfigProvider';
 
 export interface PracticeContext {
   projectComponent: ProjectComponent;
@@ -12,5 +13,5 @@ export interface PracticeContext {
   issueTrackingInspector: IIssueTrackingInspector | undefined;
   collaborationInspector: ICollaborationInspector | undefined;
   fileInspector: IFileInspector | undefined;
-  config?: any; //Config
+  config?: EslintConfig;
 }

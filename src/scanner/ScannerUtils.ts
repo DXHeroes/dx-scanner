@@ -60,7 +60,6 @@ export class ScannerUtils {
    */
   static isFulfilled(practice: IPracticeWithMetadata, evaluatedPractices: PracticeWithContext[]): boolean {
     const practiceMetadata = practice.getMetadata();
-    // console.log(practiceMetadata.name, 'name');
     if (!practiceMetadata.dependsOn) return true;
 
     for (const evaluation of _.keys(practiceMetadata.dependsOn)) {

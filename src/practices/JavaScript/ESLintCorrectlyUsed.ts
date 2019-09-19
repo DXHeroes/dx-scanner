@@ -1,11 +1,8 @@
-import eslint, { CLIEngine } from 'eslint';
+import { CLIEngine } from 'eslint';
 import { PracticeContext } from '../../contexts/practice/PracticeContext';
 import { PracticeEvaluationResult, PracticeImpact, ProgrammingLanguage } from '../../model';
 import { DxPractice } from '../DxPracticeDecorator';
 import { IPractice } from '../IPractice';
-import { ConfigProvider } from '../../contexts/ConfigProvider';
-import { inject } from 'inversify';
-import { Types } from '../../types';
 import _ from 'lodash';
 
 @DxPractice({
@@ -25,8 +22,6 @@ export class ESLintCorrectlyUsedPractice implements IPractice {
   }
 
   async evaluate(ctx: PracticeContext): Promise<PracticeEvaluationResult> {
-    const CLIEngine = eslint.CLIEngine;
-
     let options: CLIEngine.Options = {
       fix: false, // Use auto-fixer
       useEslintrc: false, // Set to false so the project doesn't take the eslint config from home folder
@@ -55,13 +50,12 @@ export class ESLintCorrectlyUsedPractice implements IPractice {
     }
 
     const eslintIgnore = ctx.config && ctx.config.eslintIgnore;
-    // console.log(eslintConfig, 'config');
-    // console.log(options, 'options');
     if (eslintIgnore !== undefined) {
       options = { ...options, ignorePattern: eslintIgnore };
     } else {
       options = { ...options, ignorePattern: ['lib', 'dist', 'build'] };
     }
+
     if (ctx.projectComponent.language === ProgrammingLanguage.TypeScript) {
       // Object.assign(options, { extensions: ['.ts'] });
       options = { ...options, extensions: ['.ts'] };
