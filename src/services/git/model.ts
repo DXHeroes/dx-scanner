@@ -1,3 +1,7 @@
+export enum GitService {
+  github = 'github.com',
+}
+
 export interface UserInfo {
   login: string;
   id: number;
