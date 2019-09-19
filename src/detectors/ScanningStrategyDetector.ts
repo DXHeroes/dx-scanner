@@ -59,6 +59,10 @@ export class ScanningStrategyDetector implements IDetector<string, ScanningStrat
       return ServiceType.local;
     }
 
+    if (ScanningStrategyDetectorUtils.isBitbucketPath(path)) {
+      return ServiceType.bitbucket;
+    }
+
     throw ErrorFactory.newInternalError('Unable to detect scanning strategy');
   };
 
@@ -87,6 +91,11 @@ export class ScanningStrategyDetector implements IDetector<string, ScanningStrat
         }
         return AccessType.public;
       }
+    }
+
+    //TODO
+    if (remoteService.serviceType === ServiceType.bitbucket) {
+      'Not implemented yet';
     }
 
     return undefined;
@@ -132,6 +141,7 @@ export interface ScanningStrategy {
 
 export enum ServiceType {
   github = 'github',
+  bitbucket = 'bitbucket',
   git = 'git',
   local = 'local',
 }
