@@ -30,7 +30,8 @@ export abstract class PackageInspectorBase implements IPackageInspector, IInitia
       return false;
     }
     for (const pkg of this.packages) {
-      if (pkg.name.toLowerCase() === name.toLowerCase()) {
+      const nameRegExp = new RegExp(name);
+      if (nameRegExp.test(pkg.name.toLowerCase())) {
         return true;
       }
     }
