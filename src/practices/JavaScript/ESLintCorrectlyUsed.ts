@@ -3,9 +3,6 @@ import { PracticeContext } from '../../contexts/practice/PracticeContext';
 import { PracticeEvaluationResult, PracticeImpact, ProgrammingLanguage } from '../../model';
 import { DxPractice } from '../DxPracticeDecorator';
 import { IPractice } from '../IPractice';
-import { ConfigProvider } from '../../contexts/ConfigProvider';
-import { inject } from 'inversify';
-import { Types } from '../../types';
 
 @DxPractice({
   id: 'JavaScript.ESLintCorrectlyUsedPractice',
@@ -45,11 +42,10 @@ export class ESLintCorrectlyUsedPractice implements IPractice {
     }
 
     const eslintIgnore = ctx.config && ctx.config.eslintIgnore;
-    console.log(eslintConfig, 'config');
-    console.log(eslintIgnore, 'ignore');
     if (eslintIgnore !== undefined) {
       Object.assign(options, { ignorePattern: eslintIgnore });
     }
+
     if (ctx.projectComponent.language === ProgrammingLanguage.TypeScript) {
       Object.assign(options, { extensions: ['.ts'] });
     }
