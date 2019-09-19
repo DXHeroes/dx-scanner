@@ -10,8 +10,14 @@ export interface Config {
     [key in Practices]?: PracticeImpact;
   };
   tokens?: {
-    [key in Service]: string;
+    [key in Service]: string | EslintConfig;
   };
+}
+
+export interface EslintConfig {
+  eslintIgnore?: string[];
+  useEslintrc?: boolean;
+  impact?: string;
 }
 
 enum Service {
