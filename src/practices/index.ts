@@ -27,6 +27,7 @@ export const practices = [
   TypeScriptUsedPractice,
   PrettierUsedPractice,
   ESLintUsedPractice,
+  ESLintCorrectlyUsedPractice,
   LockfileIsPresentPractice,
   UnitTestPractice,
   JsFrontendTestingFrameworkUsedPractice,
@@ -44,5 +45,4 @@ export const practices = [
   DependenciesVersionPractice,
   JsGitignoreIsPresentPractice,
   JsGitignoreCorrectlySetPractice,
-  ESLintCorrectlyUsedPractice,
 ];

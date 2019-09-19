@@ -6,6 +6,7 @@ import { IPractice } from '../IPractice';
 import { ConfigProvider } from '../../contexts/ConfigProvider';
 import { inject } from 'inversify';
 import { Types } from '../../types';
+import _ from 'lodash';
 
 @DxPractice({
   id: 'JavaScript.ESLintCorrectlyUsedPractice',
@@ -26,41 +27,54 @@ export class ESLintCorrectlyUsedPractice implements IPractice {
   async evaluate(ctx: PracticeContext): Promise<PracticeEvaluationResult> {
     const CLIEngine = eslint.CLIEngine;
 
-    const options: CLIEngine.Options = {
-      //Set to false so the project doesn't take the eslint config from home folder
-      useEslintrc: false,
+    let options: CLIEngine.Options = {
+      fix: false, // Use auto-fixer
+      useEslintrc: false, // Set to false so the project doesn't take the eslint config from home folder
       rules: {
         semi: 2,
       },
     };
 
     let eslintConfig;
-    //Get the eslint config for component
+    // Get the eslint config for component
+    // FIXME: this is not correct behaviour - if there is no fileInspector, it should be unknown practicing
     if (ctx.fileInspector !== undefined) {
-      const eslintConfigNameRegex = new RegExp('.eslintrc');
-      eslintConfig = await ctx.fileInspector.scanFor(eslintConfigNameRegex, ctx.projectComponent.path, { shallow: true });
+      eslintConfig = await ctx.fileInspector.scanFor(/\.eslintrc/, ctx.projectComponent.path, { shallow: true });
     }
     if (eslintConfig) {
-      Object.assign(options, { configFile: eslintConfig[0].path });
+      // options = { ...options, configFile: eslintConfig[0].path };
+      // eslint-disable-next-line @typescript-eslint/no-var-requires, @typescript-eslint/no-require-imports
+      const baseConfig = require(eslintConfig[0].path);
+      const plugins = _.clone(baseConfig.plugins);
+      const extensions = _.clone(baseConfig.extends);
+      // baseConfig.delete("plugins")
+      _.unset(baseConfig, 'plugins');
+      _.unset(baseConfig, 'extends');
+      options = { ...options, baseConfig, plugins, extensions };
+      // console.log(require(eslintConfig[0].path))
     }
 
     const eslintIgnore = ctx.config && ctx.config.eslintIgnore;
-    console.log(eslintConfig, 'config');
-    console.log(eslintIgnore, 'ignore');
+    // console.log(eslintConfig, 'config');
+    // console.log(options, 'options');
     if (eslintIgnore !== undefined) {
-      Object.assign(options, { ignorePattern: eslintIgnore });
+      options = { ...options, ignorePattern: eslintIgnore };
+    } else {
+      options = { ...options, ignorePattern: ['lib', 'dist', 'build'] };
     }
     if (ctx.projectComponent.language === ProgrammingLanguage.TypeScript) {
-      Object.assign(options, { extensions: ['.ts'] });
+      // Object.assign(options, { extensions: ['.ts'] });
+      options = { ...options, extensions: ['.ts'] };
     }
     if (ctx.projectComponent.language === ProgrammingLanguage.JavaScript) {
-      Object.assign(options, { extensions: ['.js'] });
+      options = { ...options, extensions: ['.js'] };
     }
 
     const cli = new CLIEngine(options);
 
     const report = cli.executeOnFiles([ctx.projectComponent.path]);
 
+    // console.log('report :', JSON.stringify(report.results.filter((r) => r.errorCount > 0)));
     if (report['errorCount'] === 0) {
       return PracticeEvaluationResult.practicing;
     }
