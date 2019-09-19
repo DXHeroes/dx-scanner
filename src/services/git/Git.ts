@@ -1,5 +1,4 @@
 import { Repository } from '../../model';
-import { GitHubUrlParser } from './GitHubUrlParser';
 import { isArray } from 'util';
 import { inject, injectable } from 'inversify';
 import { ErrorFactory } from '../../lib/errors/ErrorFactory';
@@ -9,6 +8,7 @@ import { Metadata, MetadataType, IProjectFilesBrowserService } from '../model';
 import { Types } from '../../types';
 import { ProjectIssueBrowserService as ContentRepositoryBrowserService } from '../../model';
 import { Directory, File, Symlink } from './model';
+import { GitServiceUtils } from './GitServiceUtils';
 
 @injectable()
 export class Git implements IProjectFilesBrowserService {
@@ -109,12 +109,12 @@ export class Git implements IProjectFilesBrowserService {
   }
 
   async getContributorCount(): Promise<number> {
-    const params = GitHubUrlParser.getOwnerAndRepoName(this.repository.url);
+    const params = GitServiceUtils.getOwnerAndRepoName(this.repository.url);
     return this.service.getContributors(params.owner, params.repoName).then((r) => r.totalCount);
   }
 
   async getPullRequestCount(): Promise<number> {
-    const params = GitHubUrlParser.getOwnerAndRepoName(this.repository.url);
+    const params = GitServiceUtils.getOwnerAndRepoName(this.repository.url);
     return this.service.getPullRequests(params.owner, params.repoName, { filter: { state: GitHubPullRequestState.all } }).then((r) => {
       if (!r) {
         throw ErrorFactory.newInternalError('Could not get pull requests');
@@ -124,7 +124,7 @@ export class Git implements IProjectFilesBrowserService {
   }
 
   private getRepoContent(path: string): Promise<File | Symlink | Directory | null> {
-    const params = GitHubUrlParser.getOwnerAndRepoName(this.repository.url);
+    const params = GitServiceUtils.getOwnerAndRepoName(this.repository.url);
     return this.service.getRepoContent(params.owner, params.repoName, path);
   }
 

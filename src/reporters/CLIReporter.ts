@@ -2,10 +2,11 @@ import { blue, bold, Color, green, grey, italic, red, reset, underline, yellow }
 import { inject, injectable } from 'inversify';
 import { PracticeAndComponent, PracticeImpact, PracticeMetadata } from '../model';
 import { IPracticeWithMetadata } from '../practices/DxPracticeDecorator';
-import { GitHubUrlParser } from '../services/git/GitHubUrlParser';
 import { Types } from '../types';
 import { ComponentReport, IReporter } from './IReporter';
 import { JSONReporter } from './JSONReporter';
+import { sharedSubpath } from '../detectors/utils';
+import { GitServiceUtils } from '../services/git/GitServiceUtils';
 
 @injectable()
 export class CLIReporter implements IReporter {
@@ -27,13 +28,14 @@ export class CLIReporter implements IReporter {
     lines.push(bold(blue('----------------------------')));
 
     let repoName;
+    const componentsSharedSubpath = sharedSubpath(report.components.map((c) => c.path));
+
     for (const component of report.components) {
       lines.push('\n----------------------------\n');
       lines.push(bold(blue('Developer Experience Report for:')));
 
-      if (component.repositoryPath && !component.path) {
-        const git = GitHubUrlParser.getOwnerAndRepoName(component.repositoryPath);
-        repoName = `${git.owner}/${git.repoName}`;
+      if (component.repositoryPath) {
+        repoName = GitServiceUtils.getUrlToRepo(component.repositoryPath, component.path.replace(componentsSharedSubpath, ''));
       } else {
         repoName = component.path;
       }
@@ -52,7 +54,7 @@ export class CLIReporter implements IReporter {
     lines.push('');
 
     practicesOff.length === 0
-      ? lines.push(bold(yellow('No practice was switched off.')))
+      ? lines.push(bold(yellow('No practices were switched off.')))
       : lines.push(bold(red('You switched off these practices:')));
     for (const practice of practicesOff) {
       lines.push(red(`- ${italic(practice.getMetadata().name)}`));
