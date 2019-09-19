@@ -146,16 +146,22 @@ export class Scanner {
       const orderedApplicablePractices = ScannerUtils.sortPractices(filteredPractices.customApplicablePractices);
 
       for (const practice of orderedApplicablePractices) {
+        const practiceConfig = componentContext.configProvider.getOverridenPractice(practice.getMetadata().id);
+
         const isFulfilled = ScannerUtils.isFulfilled(practice, practicesWithContextFromComponent);
 
         if (!isFulfilled) continue;
-        const evaluation = await practice.evaluate(practiceContext);
-        practicesWithContext.push({
+        const evaluation = await practice.evaluate({ ...practiceContext, config: practiceConfig });
+
+        const practiceWithContext = {
           practice,
           componentContext,
           practiceContext,
           evaluation,
-        });
+        };
+
+        practicesWithContext.push(practiceWithContext);
+        practicesWithContextFromComponent.push(practiceWithContext);
       }
     }
 

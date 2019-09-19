@@ -87,8 +87,8 @@ export class CLIReporter implements IReporter {
       if (pac.practice.defaultImpact !== pac.practice.impact) {
         lines.push(bold(this.changedImpact(pac, (color = grey))));
       }
+      lines.push(bold(''));
     }
-    lines.push(bold(''));
     return lines.join('\n');
   }
 

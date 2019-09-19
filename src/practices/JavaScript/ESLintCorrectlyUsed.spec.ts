@@ -1,8 +1,6 @@
-import { ESLintUsedPractice } from './ESLintUsedPractice';
-import { ProgrammingLanguage } from '../../model';
-import { PracticeEvaluationResult } from '../../model';
-import { TestContainerContext, createTestContainer } from '../../inversify.config';
 import { IPackageInspector } from '../../inspectors/IPackageInspector';
+import { createTestContainer, TestContainerContext } from '../../inversify.config';
+import { PracticeEvaluationResult, ProgrammingLanguage } from '../../model';
 import { ESLintCorrectlyUsedPractice } from './ESLintCorrectlyUsed';
 
 describe('ESLintCorrectlyUsedPractice', () => {
@@ -23,6 +21,6 @@ describe('ESLintCorrectlyUsedPractice', () => {
     containerCtx.practiceContext.projectComponent.language = ProgrammingLanguage.TypeScript;
 
     const result = await practice.evaluate(containerCtx.practiceContext);
-    //expect(result).toEqual(PracticeEvaluationResult.notPracticing);
+    expect(result).toEqual(PracticeEvaluationResult.notPracticing);
   });
 });

@@ -12,4 +12,5 @@ export interface PracticeContext {
   issueTrackingInspector: IIssueTrackingInspector | undefined;
   collaborationInspector: ICollaborationInspector | undefined;
   fileInspector: IFileInspector | undefined;
+  config?: any; //Config
 }
