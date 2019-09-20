@@ -45,7 +45,7 @@ export class ESLintCorrectlyUsedPractice implements IPractice {
       // baseConfig.delete("plugins")
       _.unset(baseConfig, 'plugins');
       _.unset(baseConfig, 'extends');
-      options = { ...options, baseConfig, plugins, extensions };
+      options = { ...options, baseConfig, plugins /* extensions */ };
       // console.log(require(eslintConfig[0].path))
     }
 
