@@ -25,13 +25,17 @@ export class JsPackageJsonConfigurationSetCorrectlyPractice implements IPractice
       return PracticeEvaluationResult.unknown;
     }
 
-    let content = await ctx.fileInspector.readFile('/package.json');
+    const content = await ctx.fileInspector.readFile('/package.json');
     let parsedPackageJson;
 
     if (content) {
-      content = content.trim();
-      content = JSON.stringify(content);
-      parsedPackageJson = JSON.parse(content);
+      try {
+        parsedPackageJson = JSON.parse(content);
+      } catch (error) {
+        if (error instanceof SyntaxError) {
+          return PracticeEvaluationResult.unknown;
+        }
+      }
     }
 
     if (parsedPackageJson.scripts) {
