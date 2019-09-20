@@ -35,7 +35,7 @@ export class ESLintCorrectlyUsedPractice implements IPractice {
     };
 
     // Get the eslint config for component
-    const eslintConfig = await ctx.fileInspector.scanFor(/\.eslintrc/, ctx.projectComponent.path, { shallow: true });
+    const eslintConfig = await ctx.fileInspector.scanFor(/\.eslintrc/, '/', { shallow: true });
 
     if (eslintConfig.length > 0) {
       // eslint-disable-next-line @typescript-eslint/no-var-requires, @typescript-eslint/no-require-imports
