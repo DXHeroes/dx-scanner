@@ -47,7 +47,7 @@ export class ESLintCorrectlyUsedPractice implements IPractice {
     }
 
     const eslintIgnore = ctx.config && ctx.config.eslintIgnore;
-    if (eslintIgnore !== undefined) {
+    if (eslintIgnore && eslintIgnore.length > 0) {
       options = { ...options, ignorePattern: eslintIgnore };
     } else {
       options = { ...options, ignorePattern: ['lib', 'dist', 'build'] };
