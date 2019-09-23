@@ -22,7 +22,7 @@ export class IssueTrackingInspector implements IIssueTrackingInspector {
     return this.service.getIssue(owner, repo, issueNumber);
   }
 
-  async listIssueComments(owner: string, repo: string, id: number): Promise<Paginated<IssueComment>> {
-    return this.service.getIssueComments(owner, repo, id);
+  async listIssueComments(owner: string, repo: string, issueNumber: number): Promise<Paginated<IssueComment>> {
+    return this.service.getIssueComments(owner, repo, issueNumber);
   }
 }
