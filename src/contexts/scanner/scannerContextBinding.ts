@@ -8,6 +8,7 @@ import { GitHubService } from '../../services/git/GitHubService';
 import { ScannerContextFactory, Types } from '../../types';
 import { bindLanguageContext } from '../language/languageContextBinding';
 import { ScannerContext } from './ScannerContext';
+import { BitbucketService } from '../../services/bitbucket/BitbucketService';
 
 export const bindScanningContext = (container: Container) => {
   container.bind(Types.ScannerContextFactory).toFactory(
@@ -41,6 +42,9 @@ const bindFileAccess = (scanningStrategy: ScanningStrategy, container: Container
   }
   if (scanningStrategy.serviceType === ServiceType.github) {
     container.bind(Types.IContentRepositoryBrowser).to(GitHubService);
+  }
+  if (scanningStrategy.serviceType === ServiceType.bitbucket) {
+    container.bind(Types.IContentRepositoryBrowser).to(BitbucketService);
   }
   container
     .bind(Types.IFileInspector)

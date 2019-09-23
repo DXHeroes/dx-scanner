@@ -7,14 +7,23 @@ import { ErrorFactory } from '../lib/errors';
 import { Types } from '../types';
 import { ArgumentsProvider } from '../inversify.config';
 import { GitHubService } from '../services/git/GitHubService';
+import { BitbucketService } from '../services/bitbucket/BitbucketService';
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const parseBitbucketUrl = require('parse-bitbucket-url');
 
 @injectable()
 export class ScanningStrategyDetector implements IDetector<string, ScanningStrategy> {
   private gitHubService: GitHubService;
+  private bitbucketService: BitbucketService;
   private readonly argumentsProvider: ArgumentsProvider;
 
-  constructor(@inject(GitHubService) gitHubService: GitHubService, @inject(Types.ArgumentsProvider) argumentsProvider: ArgumentsProvider) {
+  constructor(
+    @inject(GitHubService) gitHubService: GitHubService,
+    @inject(BitbucketService) bitbucketService: BitbucketService,
+    @inject(Types.ArgumentsProvider) argumentsProvider: ArgumentsProvider,
+  ) {
     this.gitHubService = gitHubService;
+    this.bitbucketService = bitbucketService;
     this.argumentsProvider = argumentsProvider;
   }
 
@@ -95,7 +104,24 @@ export class ScanningStrategyDetector implements IDetector<string, ScanningStrat
 
     //TODO
     if (remoteService.serviceType === ServiceType.bitbucket) {
-      'Not implemented yet';
+      const parsedUrl = parseBitbucketUrl(remoteService.remoteUrl);
+
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      let response: any;
+      try {
+        response = await this.bitbucketService.getRepo(parsedUrl.owner, parsedUrl.name);
+      } catch (error) {
+        if (error.status === 401 || error.status === 404 || error.status === 403) {
+          throw ErrorFactory.newArgumentError('You passed bad credentials or non existing repo.');
+        }
+      }
+      console.log(response.status, 'respo');
+      // if (response.status === 200) {
+      //   if (response.data.private === true) {
+      //     return AccessType.private;
+      //   }
+      //   return AccessType.public;
+      // }
     }
 
     return undefined;

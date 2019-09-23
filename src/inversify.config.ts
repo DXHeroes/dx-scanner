@@ -21,6 +21,7 @@ import { ScannerUtils } from './scanner/ScannerUtils';
 import { FileSystemService } from './services/FileSystemService';
 import { GitHubService } from './services/git/GitHubService';
 import { Types } from './types';
+import { BitbucketService } from './services/bitbucket/BitbucketService';
 
 export const createRootContainer = (args: ArgumentsProvider): Container => {
   const container = new Container();
@@ -31,6 +32,7 @@ export const createRootContainer = (args: ArgumentsProvider): Container => {
   container.bind(Scanner).toSelf();
   container.bind(FileSystemService).toSelf();
   container.bind(GitHubService).toSelf();
+  container.bind(BitbucketService).toSelf();
   // register practices
   practices.forEach((practice) => {
     container.bind<IPracticeWithMetadata>(Types.Practice).toConstantValue(ScannerUtils.initPracticeWithMetadata(practice));
