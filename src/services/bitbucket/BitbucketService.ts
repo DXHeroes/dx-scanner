@@ -66,6 +66,14 @@ export class BitbucketService {
     this.cache.purge();
   }
 
+  getRepo(owner: string, repo: string) {
+    const params: Bitbucket.Params.RepositoriesGet = {
+      repo_slug: repo,
+      username: owner,
+    };
+    return this.unwrap(this.client.repositories.get(params));
+  }
+
   async getPullRequests(owner: string, repo: string) {
     const paramas: Bitbucket.Params.PullrequestsList = {
       repo_slug: repo,
@@ -128,4 +136,29 @@ export class BitbucketService {
     const response = this.client.issue_tracker.listComments(params);
     return response;
   }
+  //: Promise<Octokit.Response<T>>
+  //:Promise<Octokit.Response<T>>
+  private unwrap<T>(clientPromise: Promise<Bitbucket.Response<Bitbucket.Schema.Repository>>) {
+    return clientPromise
+      .then((response) => {
+        this.debugBitbucketResponse(response);
+        return response;
+      })
+      .catch((error: { response: { status: any; data: any } }) => {
+        if (error.response) {
+          debug(`${error.response.status} => ${inspect(error.response.data)}`);
+        } else {
+          debug(inspect(error));
+        }
+        throw error;
+      });
+  }
+
+  //: Octokit.Response<T>
+  private debugBitbucketResponse = <T>(response: any) => {
+    this.callCount++;
+    debug(
+      grey(`Bitbucket API Hit: ${this.callCount}. Remaining ${response.headers['x-ratelimit-remaining']} hits. (${response.headers.link})`),
+    );
+  };
 }
