@@ -117,6 +117,10 @@ export class GitHubNock {
     if (Object.keys(params)) {
       interceptor.query(params);
     }
+    // nock('http://example.com')
+    //   .get('/')
+    //   .query('/')
+    //   .reply(500, 'hello world');
     return interceptor;
   }
 }
