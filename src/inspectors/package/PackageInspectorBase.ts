@@ -25,14 +25,19 @@ export abstract class PackageInspectorBase implements IPackageInspector, IInitia
     throw new Error('Method not implemented.');
   }
 
-  hasPackage(name: string, options?: PackageOptions | undefined): boolean {
+  hasPackage(name: string | RegExp, options?: PackageOptions | undefined): boolean {
     if (!this.packages) {
       return false;
     }
     for (const pkg of this.packages) {
-      const nameRegExp = new RegExp(name);
-      if (nameRegExp.test(pkg.name.toLowerCase())) {
-        return true;
+      if (typeof name === 'string') {
+        if (pkg.name.toLowerCase() === name.toLowerCase()) {
+          return true;
+        }
+      } else {
+        if (name.test(pkg.name.toLowerCase())) {
+          return true;
+        }
       }
     }
     return false;
