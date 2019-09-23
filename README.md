@@ -1,7 +1,6 @@
 [![Version](https://img.shields.io/npm/v/dx-scanner.svg)](https://npmjs.org/package/dx-scanner)
 [![Travis (.org)](https://img.shields.io/travis/DXHeroes/dx-scanner)](https://travis-ci.org/DXHeroes/dx-scanner)
 ![Codecov](https://img.shields.io/codecov/c/github/DXHeroes/dx-scanner)
-![Libraries.io dependency status for GitHub repo](https://img.shields.io/librariesio/github/DXHeroes/dx-scanner)
 ![last commit](https://img.shields.io/github/last-commit/DXHeroes/dx-scanner)
 ![GitHub commit activity](https://img.shields.io/github/commit-activity/w/DXHeroes/dx-scanner)
 [![Downloads/week](https://img.shields.io/npm/dw/dx-scanner.svg)](https://npmjs.org/package/dx-scanner)
