@@ -20,7 +20,8 @@ export class ESLintUsedPractice implements IPractice {
 
   async evaluate(ctx: PracticeContext): Promise<PracticeEvaluationResult> {
     if (ctx.packageInspector) {
-      if (ctx.packageInspector.hasPackage('eslint')) {
+      const eslintRegex = new RegExp('eslint');
+      if (ctx.packageInspector.hasPackage(eslintRegex)) {
         return PracticeEvaluationResult.practicing;
       } else {
         return PracticeEvaluationResult.notPracticing;

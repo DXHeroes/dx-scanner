@@ -3,7 +3,7 @@ export interface IPackageInspector {
   init(): Promise<void>;
   hasPackageManagement(): boolean;
   findPackages(searchTerm: string | RegExp): Package[];
-  hasPackage(name: string, options?: PackageOptions): boolean;
+  hasPackage(name: string | RegExp, options?: PackageOptions): boolean;
   findPackage(name: string, options?: PackageOptions): Package | undefined;
   hasOneOfPackages(packages: string[]): boolean;
   hasLockfile(): boolean | undefined;

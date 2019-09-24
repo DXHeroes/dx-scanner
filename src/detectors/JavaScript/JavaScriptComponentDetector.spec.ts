@@ -41,7 +41,7 @@ describe('JavaScriptComponentDetector', () => {
       mockJsPackageInspector.packages = [mockPackage('webpack')];
 
       mockJsPackageInspector.hasOneOfPackages = (packages: string[]) => {
-        const files = packages.filter((file) => file === 'express');
+        const files = packages.filter((file) => file === 'webpack');
         if (files.length > 0) {
           return true;
         }
@@ -64,6 +64,6 @@ describe('JavaScriptComponentDetector', () => {
     detector = new JavaScriptComponentDetector(mockJsPackageInspector);
 
     const components = await detector.detectComponent({ language: ProgrammingLanguage.JavaScript, path: './src' });
-    expect(components.length).toEqual(0);
+    expect(components[0].platform).toEqual(ProjectComponentPlatform.UNKNOWN);
   });
 });
