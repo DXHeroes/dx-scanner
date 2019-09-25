@@ -17,6 +17,7 @@ DX Scanner is an open source library that allows you to “measure” Developer 
 
 ![DX Scanner Demo](./demo.svg)
 
+
 ## What language is supported?
 
 Language | Supported
