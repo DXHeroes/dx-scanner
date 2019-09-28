@@ -4,6 +4,7 @@ import { inject } from 'inversify';
 import { Types } from '../../types';
 import { DependencyType } from '../IPackageInspector';
 import * as xml2js from 'xml2js';
+import * as g2js from 'gradle-to-js';
 
 export class JavaPackageInspector extends PackageInspectorBase {
   private fileInspector: IFileInspector;
@@ -19,23 +20,36 @@ export class JavaPackageInspector extends PackageInspectorBase {
       this.debug('JavaPackageInspector init started');
       this.packages = [];
       const parsedDependencies: ParsedDependency[] = [];
-      const mavenFileString = await this.fileInspector.readFile('pom.xml');
-      if (!mavenFileString) {
-        const gradleFileString = await this.fileInspector.readFile('build.gradle');
-      }
-      xml2js.parseString(mavenFileString, (err, result: PomXML) => {
-        const xmlDependencies = result.project.dependencies.values();
-        for (const xmlDependency of xmlDependencies) {
-          const dependencyAttributes = xmlDependency.dependency.values();
-          for (const attribute of dependencyAttributes) {
-            parsedDependencies.push({ packageName: attribute.artifactId[0], version: attribute.version[0] });
+      const isMaven: boolean = await this.fileInspector.exists('pom.xml');
+      if (isMaven) {
+        const mavenFileString = await this.fileInspector.readFile('pom.xml');
+        xml2js.parseString(mavenFileString, (err, result: PomXML) => {
+          if (err) {
+            throw err;
           }
+          const xmlDependencies = result.project.dependencies.values();
+          for (const xmlDependency of xmlDependencies) {
+            const dependencyAttributes = xmlDependency.dependency.values();
+            for (const attribute of dependencyAttributes) {
+              parsedDependencies.push({ packageName: String(attribute.artifactId.pop()), version: String(attribute.version.pop()) });
+            }
+          }
+          this.addPackages(parsedDependencies, DependencyType.Runtime);
+        });
+      } else {
+        const isGradle: boolean = await this.fileInspector.exists('build.gradle');
+        if (!isGradle) {
+          throw new Error('Unsupported Java project architecture');
         }
-        this.addPackages(parsedDependencies, DependencyType.Runtime);
-        this.debug('JSPackageInspector init ended');
-      });
+        const gradleFileString = await this.fileInspector.readFile('build.gradle');
+        g2js.parseText(gradleFileString).then((result: any) => {
+          console.log(result);
+        });
+      }
+      this.debug('JSPackageInspector init ended');
     } catch (e) {
       this.packages = undefined;
+      console.log(e);
       this.debug(e);
     }
   }
