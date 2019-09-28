@@ -43,7 +43,7 @@ export class JavaPackageInspector extends PackageInspectorBase {
         }
         const gradleFileString = await this.fileInspector.readFile('build.gradle');
         g2js.parseText(gradleFileString).then((result: any) => {
-          console.log(result);
+          //console.log(result);
         });
       }
       this.debug('JSPackageInspector init ended');
@@ -110,6 +110,23 @@ export interface PomXML {
     ];
     build: {};
   };
+}
+
+export interface BuildGradle {
+  plugins: [];
+  group: string;
+  version: string;
+  sourceCompatibility: string;
+  repositories: [];
+  dependencies: [
+    {
+      group: string;
+      name: string;
+      version: string;
+      type: string;
+      excludes: [];
+    },
+  ];
 }
 
 export interface ParsedDependency {
