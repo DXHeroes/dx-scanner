@@ -1,26 +1,42 @@
-import { IPackageInspector } from '../../inspectors/IPackageInspector';
+import { CLIEngine } from 'eslint';
 import { createTestContainer, TestContainerContext } from '../../inversify.config';
-import { PracticeEvaluationResult, ProgrammingLanguage } from '../../model';
+import { PracticeEvaluationResult } from '../../model';
 import { ESLintCorrectlyUsedPractice } from './ESLintCorrectlyUsed';
+jest.mock('eslint');
 
 describe('ESLintCorrectlyUsedPractice', () => {
   let practice: ESLintCorrectlyUsedPractice;
   let containerCtx: TestContainerContext;
-  let packageInspector: IPackageInspector;
+
+  const mockedEslint = <jest.Mock>(<unknown>CLIEngine);
 
   beforeAll(() => {
     containerCtx = createTestContainer();
     containerCtx.container.bind('ESLintCorrectlyUsedPractice').to(ESLintCorrectlyUsedPractice);
     practice = containerCtx.container.get('ESLintCorrectlyUsedPractice');
-    packageInspector = <IPackageInspector>containerCtx.practiceContext.packageInspector;
   });
 
-  it('Did not detect ESLint', async () => {
-    packageInspector.hasPackage = () => false;
-
-    containerCtx.practiceContext.projectComponent.language = ProgrammingLanguage.TypeScript;
-
+  it('Returns practicing, if errorCount === 0', async () => {
+    const report = { errorCount: 0 };
+    mockedEslint.mockImplementation(() => {
+      return {
+        executeOnFiles: () => report,
+      };
+    });
     const result = await practice.evaluate(containerCtx.practiceContext);
+
+    expect(result).toEqual(PracticeEvaluationResult.practicing);
+  });
+
+  it('Returns not practicing, if errorCount !== 0', async () => {
+    const report = { errorCount: 1 };
+    mockedEslint.mockImplementation(() => {
+      return {
+        executeOnFiles: () => report,
+      };
+    });
+    const result = await practice.evaluate(containerCtx.practiceContext);
+
     expect(result).toEqual(PracticeEvaluationResult.notPracticing);
   });
 });
