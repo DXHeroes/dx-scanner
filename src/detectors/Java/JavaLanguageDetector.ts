@@ -21,7 +21,6 @@ export class JavaLanguageDetector implements ILanguageDetector {
     const isMaven: boolean = packageFiles.length > 0 ? true : false;
     if (!isMaven) {
       packageFiles = await this.fileInspector.scanFor(fileNameRegExp('build.gradle'), '/');
-      console.log(packageFiles);
     }
     if (packageFiles.length > 0) {
       for (const path of packageFiles.map((file) => nodePath.dirname(file.path))) {

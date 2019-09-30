@@ -31,10 +31,14 @@ export class JavaPackageInspector extends PackageInspectorBase {
           for (const xmlDependency of xmlDependencies) {
             const dependencyAttributes = xmlDependency.dependency.values();
             for (const attribute of dependencyAttributes) {
+              // should an error be thrown here or should a version be set to an empty string '' instead?
+              if (!attribute.version.pop()) {
+                throw new Error(`Dependency version of ${attribute.artifactId.pop()} is not available`);
+              }
               parsedDependencies.push({ packageName: String(attribute.artifactId.pop()), version: String(attribute.version.pop()) });
             }
+            this.addPackages(parsedDependencies, DependencyType.Runtime);
           }
-          this.addPackages(parsedDependencies, DependencyType.Runtime);
         });
       } else {
         const isGradle: boolean = await this.fileInspector.exists('build.gradle');
@@ -42,14 +46,17 @@ export class JavaPackageInspector extends PackageInspectorBase {
           throw new Error('Unsupported Java project architecture');
         }
         const gradleFileString = await this.fileInspector.readFile('build.gradle');
-        g2js.parseText(gradleFileString).then((result: any) => {
-          //console.log(result);
+        g2js.parseText(gradleFileString).then((result: BuildGradle) => {
+          for (const dependency of result.dependencies) {
+            parsedDependencies.push({ packageName: dependency.name, version: dependency.version });
+            console.log(`name: ${dependency.name}, version: ${dependency.version}`);
+          }
+          this.addPackages(parsedDependencies, DependencyType.Runtime);
         });
       }
       this.debug('JSPackageInspector init ended');
     } catch (e) {
       this.packages = undefined;
-      console.log(e);
       this.debug(e);
     }
   }
