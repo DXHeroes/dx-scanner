@@ -77,7 +77,7 @@ export class GitHubNock {
     persist = true,
   ): T {
     const url = this.repository.pulls_url.replace('{/number}', number !== undefined ? `/${number}` : '');
-    const params: nock.POJO = {};
+    const params: nock.DataMatcherMap = {};
     if (state !== undefined) {
       params.state = state;
     }
@@ -96,7 +96,7 @@ export class GitHubNock {
 
   getIssues(number?: number, persist = true): nock.Interceptor {
     const url = this.repository.issues_url.replace('{/number}', number !== undefined ? `/${number}` : '');
-    const params: nock.POJO = {};
+    const params: nock.DataMatcherMap = {};
 
     return GitHubNock.get(url, params, persist);
   }
@@ -105,7 +105,7 @@ export class GitHubNock {
     return GitHubNock.get(this.repository.url + suffix, {}, persist);
   }
 
-  private static get(url: string, params: nock.POJO, persist = true): nock.Interceptor {
+  private static get(url: string, params: nock.DataMatcherMap, persist = true): nock.Interceptor {
     const urlObj = new URL(url);
 
     const scope = nock(urlObj.origin);

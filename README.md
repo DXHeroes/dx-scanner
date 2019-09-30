@@ -1,7 +1,6 @@
 [![Version](https://img.shields.io/npm/v/dx-scanner.svg)](https://npmjs.org/package/dx-scanner)
 [![Travis (.org)](https://img.shields.io/travis/DXHeroes/dx-scanner)](https://travis-ci.org/DXHeroes/dx-scanner)
 ![Codecov](https://img.shields.io/codecov/c/github/DXHeroes/dx-scanner)
-![Libraries.io dependency status for GitHub repo](https://img.shields.io/librariesio/github/DXHeroes/dx-scanner)
 ![last commit](https://img.shields.io/github/last-commit/DXHeroes/dx-scanner)
 ![GitHub commit activity](https://img.shields.io/github/commit-activity/w/DXHeroes/dx-scanner)
 [![Downloads/week](https://img.shields.io/npm/dw/dx-scanner.svg)](https://npmjs.org/package/dx-scanner)
@@ -14,9 +13,10 @@
 
 # DX Scanner
 
-DX Scanner is an open-source library that allows you to “measure” Developer Experience directly based on your source code and recommend practices to adopt that will help you to improve your product development.
+DX Scanner is an open source library that allows you to “measure” Developer Experience directly based on your source code. DX Scanner recommends practices that can help you with improving your product development.
 
-### Which languages are supported?
+## What language is supported?
+
 Language | Supported
 ------------ | -------------
 JavaScript/TypeScript | ✅
@@ -63,8 +63,37 @@ dxscanner [path]
 dxs [path]
 ```
 
+## Configuration ⚙️
+Add ```dxscannerrc.*``` config file to change default configuration. It can be a ```.json```, ```.yml```, and even a dotfile!
+
+**Practices**  
+You can switch off practices you do not want to scan or change its impact. Use the id of the practice.
+
+Possible impact:
+```
+high
+
+medium
+
+small
+
+hint
+
+off
+```
+
+Example :
+```
+{
+    "practices": {
+        "JavaScript.GitignoreCorrectlySet": "medium",
+        "JavaScript.LoggerUsed": "off"
+    }
+}
+```
+
 ## Contributing 👩‍💻 👨‍💻
-Feel free to contribute to the DX Scanner. If you want to contribute, please follow our [Contribution Guide](CONTRIBUTING.md).
+Feel free to contribute to our DX Scanner. Please follow the [Contribution Guide](CONTRIBUTING.md).
 
 ## License 📝
 
@@ -72,7 +101,7 @@ The DX Scanner open source project is licensed under the [Attribution-NonCommerc
 
 ## Contributors ✨
 
-Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/docs/en/emoji-key)):
+Many thanks to these wonderful people ([emoji key](https://allcontributors.org/docs/en/emoji-key)):
 
 <!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
 <!-- prettier-ignore-start -->
@@ -91,4 +120,4 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
 <!-- prettier-ignore-end -->
 <!-- ALL-CONTRIBUTORS-LIST:END -->
 
-This project follows the [all-contributors](https://github.com/all-contributors/all-contributors) specification. Contributions of any kind welcome!
+This project follows the [all-contributors](https://github.com/all-contributors/all-contributors) specification. Any kind of contributions are welcome!

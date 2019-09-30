@@ -1,13 +1,16 @@
 import { Container, tagged } from 'inversify';
-import { LanguageContextFactory, Types } from '../../types';
+import { JavaScriptComponentDetector } from '../../detectors/JavaScript/JavaScriptComponentDetector';
+import { FileInspector } from '../../inspectors/FileInspector';
+import { JavaScriptPackageInspector } from '../../inspectors/package/JavaScriptPackageInspector';
 import { LanguageAtPath, ProgrammingLanguage } from '../../model';
-import { LanguageContext } from './LanguageContext';
+import { LanguageContextFactory, Types } from '../../types';
 import { bindProjectComponentContext } from '../projectComponent/projectComponentContextBinding';
 import { JavaScriptPackageInspector } from '../../inspectors/package/JavaScriptPackageInspector';
 import { FileInspector } from '../../inspectors/FileInspector';
 import { JavaScriptComponentDetector } from '../../detectors/JavaScript/JavaScriptComponentDetector';
 import { JavaPackageInspector } from '../../inspectors/package/JavaPackageInspector';
 import { JavaComponentDetector } from '../../detectors/Java/JavaComponentDetector';
+import { LanguageContext } from './LanguageContext';
 
 export const bindLanguageContext = (container: Container) => {
   container.bind(Types.LanguageContextFactory).toFactory(
@@ -23,10 +26,12 @@ export const bindLanguageContext = (container: Container) => {
 const createLanguageContainer = (languageAtPath: LanguageAtPath, rootContainer: Container): Container => {
   const container = rootContainer.createChild();
   container.bind(Types.LanguageAtPath).toConstantValue(languageAtPath);
+
   bindFileAccess(languageAtPath, container);
   bindComponentDetectors(container);
   bindProjectComponentContext(container);
   bindPackageInspectors(languageAtPath, container);
+
   container.bind(LanguageContext).toSelf();
   return container;
 };
@@ -46,6 +51,8 @@ const bindPackageInspectors = (languageAtPath: LanguageAtPath, container: Contai
       .bind(Types.IPackageInspector)
       .to(JavaScriptPackageInspector)
       .inSingletonScope();
+
+    // TODO: bind this as InitiableInspector instead of using next line binding
     container.bind(JavaScriptPackageInspector).toDynamicValue((ctx) => {
       return ctx.container.get(Types.IPackageInspector);
     });

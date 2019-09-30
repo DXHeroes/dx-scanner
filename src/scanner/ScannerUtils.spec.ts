@@ -1,10 +1,20 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { ScannerUtils } from './ScannerUtils';
+import _ from 'lodash';
+import { PracticeContext } from '../contexts/practice/PracticeContext';
+import {
+  PracticeEvaluationResult,
+  PracticeImpact,
+  ProgrammingLanguage,
+  ProjectComponentFramework,
+  ProjectComponentPlatform,
+  ProjectComponentType,
+} from '../model';
 import { DeprecatedTSLintPractice } from '../practices/JavaScript/DeprecatedTSLintPractice';
 import { ESLintUsedPractice } from '../practices/JavaScript/ESLintUsedPractice';
+import { JsGitignoreCorrectlySetPractice } from '../practices/JavaScript/JsGitignoreCorrectlySetPractice';
 import { TypeScriptUsedPractice } from '../practices/JavaScript/TypeScriptUsedPractice';
-import { FirstTestPractice, SecondTestPractice, InvalidTestPractice } from './__MOCKS__';
-import { PracticeEvaluationResult } from '../model';
+import { ScannerUtils } from './ScannerUtils';
+import { FirstTestPractice, InvalidTestPractice, SecondTestPractice } from './__MOCKS__';
 
 describe('ScannerUtils', () => {
   describe('#sortPractices', () => {
@@ -58,6 +68,45 @@ describe('ScannerUtils', () => {
       const result = ScannerUtils.isFulfilled(practice, [evaluatedPractice]);
 
       expect(result).toEqual(false);
+    });
+
+    it('filterPractices() returns filtered out practices and practices off', async () => {
+      const config = {
+        practices: {
+          'JavaScript.GitignoreCorrectlySet': PracticeImpact.off,
+        },
+      };
+
+      const componentMock = {
+        framework: ProjectComponentFramework.UNKNOWN,
+        language: ProgrammingLanguage.JavaScript,
+        path: './var/foo',
+        platform: ProjectComponentPlatform.BackEnd,
+        type: ProjectComponentType.Application,
+      };
+
+      const componentContext = {
+        configProvider: {
+          getOverridenPractice(practiceId: string) {
+            return _.get(config, ['practices', practiceId]);
+          },
+        },
+
+        getPracticeContext(): PracticeContext {
+          return {
+            projectComponent: componentMock,
+          } as any;
+        },
+      };
+
+      const practices = [DeprecatedTSLintPractice, ESLintUsedPractice, TypeScriptUsedPractice, JsGitignoreCorrectlySetPractice].map(
+        ScannerUtils.initPracticeWithMetadata,
+      );
+
+      const filteredPractices = await ScannerUtils.filterPractices(componentContext as any, practices);
+
+      expect(filteredPractices.practicesOff.length).toBeGreaterThanOrEqual(1);
+      expect(filteredPractices.customApplicablePractices.length).toBeGreaterThanOrEqual(2);
     });
   });
 });

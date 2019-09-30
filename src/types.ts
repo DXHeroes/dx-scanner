@@ -43,6 +43,8 @@ export const Types = {
   ArgumentsProvider: Symbol('ArgumentsProvider'),
   Practice: Symbol('Practice'),
   IReporter: Symbol('IReporter'),
+  ConfigProvider: Symbol('ConfigProvider'),
+  JSONReporter: Symbol('JSONReporter'),
 };
 
 export type GitFactory = (repository: Repository) => Git;

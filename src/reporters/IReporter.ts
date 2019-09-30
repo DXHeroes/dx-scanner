@@ -6,12 +6,13 @@ import {
   ProjectComponent,
   PracticeMetadata,
 } from '../model';
+import { IPracticeWithMetadata } from '../practices/DxPracticeDecorator';
 
 export interface IReporter {
-  report(practicesAndComponents: PracticeAndComponent[]): string | Promise<JSONReport>;
+  report(practicesAndComponents: PracticeAndComponent[], practicesOff: IPracticeWithMetadata[]): string | JSONReport;
 }
 
-export type JSONReport = { uri: string; components: ComponentReport[] };
+export type JSONReport = { uri: string; components: ComponentReport[]; practicesOff?: string[] };
 
 export interface ComponentReport extends ProjectComponent {
   path: string;

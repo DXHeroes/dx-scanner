@@ -1,55 +1,66 @@
 # Contributing to DX Scanner
 
-It seems you want to participate on DX Scanner - that's great! We welcome contributions to our [open source project on GitHub](http://github.com/DXHeroes/dx-scanner).
+It seems like you want to participate on our DX Scanner - that's great! We welcome contributions to our [open source project on GitHub](http://github.com/DXHeroes/dx-scanner).
 
 ## Introduction
-We're glad you're interested in DX Scanner in the way of contributing. We value the pro-community developers as you are.
+
+We are glad that you are interested in DX Scanner in the way of contributing. We value the pro-community developers as you are.
 
 ## Help the community
-1) Repport an Error or Bug 🐛
+
+1) Report an Error or a Bug 🐛
 2) Request a Feature 🆕
-3) Contribute Code 👨‍💻👩‍💻
-4) Contribute Documentation 📝
+3) Contribute to the Code 👨‍💻👩‍💻
+4) Contribute to the Documentation 📝
 5) Provide Support on Issues ℹ️
 
-## Need a help?
+## Need help?
 
-If you have any question about this project, how to use it, or just need clarification about anything open an Issue at https://github.com/DXHeroes/dx-scanner/issues .
+If you have any question about this project (for example, how to use it) or if you just need some clarification about anything, please open an Issue at [Issues](https://github.com/DXHeroes/dx-scanner/issues).
 
 ## Contributing
 
-1. **Fork & Clone** the repository
-2. **Setup** the DX Scanner
-    - Install Yarn with `npm i -g yarn` if not yet installed
-    - Install packages with `yarn install`
-    - Run with `yarn start`
-    - Build with `yarn build`
-    - Run tests with `yarn test`
-    - Lint code with `yarn lint` or `yarn lint:fix` with autofixer
-3.  **Commit** changes to your own branch
-4.  **Push** your work back up to your fork
-5.  Submit a **Pull Request** so that we can review your changes
+Follow these steps:
 
-NOTE: Be sure to merge the latest from "upstream" before making a pull request.
+1. **Fork & Clone** the repository  
+2. **Setup** the DX Scanner  
+   - Install Yarn with `npm i -g yarn` if not yet installed  
+   - Install packages with `yarn install`  
+   - Run with `yarn start`  
+   - Build with `yarn build`  
+   - Run tests with `yarn test`  
+   - Lint code with `yarn lint` or `yarn lint:fix` with autofixer  
+3. **Commit** changes to your own branch  
+4. **Push** your work back up to your fork  
+5. Submit a **Pull Request** so that we can review your changes
+
+**NOTE: Be sure to merge the latest from "upstream" before making a pull request.**
 
 ## Contribute Code
+
 ### Practices
-Practices check your repository for using tooling, which improves product development.
+
+Check your repository for using the correct tooling which improves product development.
 
 #### JavaScript/TypeScript
-We have more than 10 JS/TS practices for now! If you want to add more, you're more than welcome. Check [JavaScript Practices](https://github.com/DXHeroes/dx-scanner/tree/master/src/practices/JavaScript) to see, what's the pattern of implementation of your own practice.
+
+We have more than 10 JS/TS practices for now! If you want to add more, you are more than welcome. Check [JavaScript Practices](https://github.com/DXHeroes/dx-scanner/tree/master/src/practices/JavaScript) to see what is the pattern of implementation of your own practice.
 
 #### Other Languages
-Other languages are not supported yet. If you want to contribute, check [Practices](https://github.com/DXHeroes/dx-scanner/tree/master/src/practices). Get inspired by [Javascript Practices](https://github.com/DXHeroes/dx-scanner/tree/master/src/practices/JavaScript) implementation.
+
+Other languages are not supported yet. If you want to contribute, see [Practices](https://github.com/DXHeroes/dx-scanner/tree/master/src/practices). Get inspired by [Javascript Practices](https://github.com/DXHeroes/dx-scanner/tree/master/src/practices/JavaScript) implementation.
 
 ### Inspectors
-Inspectors indirectly works with Git code hosting providers APIs. They use common interfaces provided by services so you don't have to which API to use.
+
+Inspectors indirectly work with Git code hosting providers APIs. They use common interfaces provided by services so you do not have to know which API to use.
 
 ### Services
+
 There is a [File System Service](https://github.com/DXHeroes/dx-scanner/tree/master/src/services) working with files.
 
 #### Git
-Services directly use Git code hosting providers APIs while checking the rate limits. They convert API responses to the own interface, so Inspectors can use them. Only the GitHub Service is implemented for now. If you need e.g. GitLab Service, you can contribute! Get inspired by [GitHub Service](https://github.com/DXHeroes/dx-scanner/blob/master/src/services/git/GitHubService.ts)
+
+Services directly use Git code hosting providers APIs while checking the rate limits. They convert API responses to their own interface so Inspectors can use them. Only the GitHub Service is implemented so far. If you need for example, GitLab Service, you can contribute! Get inspired by [GitHub Service](https://github.com/DXHeroes/dx-scanner/blob/master/src/services/git/GitHubService.ts)
 
 ## Copyright and Licensing
 
