@@ -35,6 +35,7 @@ export class JsPackageJsonConfigurationSetCorrectlyPractice implements IPractice
         if (error instanceof SyntaxError) {
           return PracticeEvaluationResult.unknown;
         }
+        throw error;
       }
     }
 
