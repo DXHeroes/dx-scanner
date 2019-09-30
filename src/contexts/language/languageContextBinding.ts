@@ -5,9 +5,6 @@ import { JavaScriptPackageInspector } from '../../inspectors/package/JavaScriptP
 import { LanguageAtPath, ProgrammingLanguage } from '../../model';
 import { LanguageContextFactory, Types } from '../../types';
 import { bindProjectComponentContext } from '../projectComponent/projectComponentContextBinding';
-import { JavaScriptPackageInspector } from '../../inspectors/package/JavaScriptPackageInspector';
-import { FileInspector } from '../../inspectors/FileInspector';
-import { JavaScriptComponentDetector } from '../../detectors/JavaScript/JavaScriptComponentDetector';
 import { JavaPackageInspector } from '../../inspectors/package/JavaPackageInspector';
 import { JavaComponentDetector } from '../../detectors/Java/JavaComponentDetector';
 import { LanguageContext } from './LanguageContext';

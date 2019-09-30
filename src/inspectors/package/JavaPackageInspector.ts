@@ -49,7 +49,6 @@ export class JavaPackageInspector extends PackageInspectorBase {
         g2js.parseText(gradleFileString).then((result: BuildGradle) => {
           for (const dependency of result.dependencies) {
             parsedDependencies.push({ packageName: dependency.name, version: dependency.version });
-            console.log(`name: ${dependency.name}, version: ${dependency.version}`);
           }
           this.addPackages(parsedDependencies, DependencyType.Runtime);
         });
