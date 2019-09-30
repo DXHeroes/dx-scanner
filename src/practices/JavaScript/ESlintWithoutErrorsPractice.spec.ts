@@ -1,19 +1,19 @@
 import { CLIEngine } from 'eslint';
 import { createTestContainer, TestContainerContext } from '../../inversify.config';
 import { PracticeEvaluationResult } from '../../model';
-import { ESLintCorrectlyUsedPractice } from './ESLintCorrectlyUsed';
+import { ESLintWithoutErrorsPractice } from './ESLintWithoutErrorsPractice';
 jest.mock('eslint');
 
-describe('ESLintCorrectlyUsedPractice', () => {
-  let practice: ESLintCorrectlyUsedPractice;
+describe('ESLintWithoutErrorsPractice', () => {
+  let practice: ESLintWithoutErrorsPractice;
   let containerCtx: TestContainerContext;
 
   const mockedEslint = <jest.Mock>(<unknown>CLIEngine);
 
   beforeAll(() => {
     containerCtx = createTestContainer();
-    containerCtx.container.bind('ESLintCorrectlyUsedPractice').to(ESLintCorrectlyUsedPractice);
-    practice = containerCtx.container.get('ESLintCorrectlyUsedPractice');
+    containerCtx.container.bind('ESLintWithoutErrorsPractice').to(ESLintWithoutErrorsPractice);
+    practice = containerCtx.container.get('ESLintWithoutErrorsPractice');
   });
 
   it('Returns practicing, if errorCount === 0', async () => {

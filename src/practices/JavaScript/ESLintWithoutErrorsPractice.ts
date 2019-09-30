@@ -14,7 +14,7 @@ import _ from 'lodash';
   url: 'https://eslint.org/',
   dependsOn: { practicing: ['JavaScript.ESLintUsed'] },
 })
-export class ESLintCorrectlyUsedPractice implements IPractice {
+export class ESLintWithoutErrorsPractice implements IPractice {
   async isApplicable(ctx: PracticeContext): Promise<boolean> {
     return (
       ctx.projectComponent.language === ProgrammingLanguage.JavaScript || ctx.projectComponent.language === ProgrammingLanguage.TypeScript
