@@ -17,6 +17,7 @@ class DXScannerCommand extends Command {
     // flag with no value (-f, --force)
     force: flags.boolean({ char: 'f' }),
     json: flags.boolean({ char: 'j', description: 'Output in JSON' }),
+    init: flags.boolean({ char: 'i', description: 'Install DX Scanner in your folder' }),
   };
 
   static args = [{ name: 'path' }];
