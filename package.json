@@ -17,7 +17,8 @@
     "test": "jest",
     "test:watch": "jest --watch",
     "validate": "yarn install && yarn build && yarn lint && yarn test",
-    "semantic-release": "semantic-release"
+    "semantic-release": "semantic-release",
+    "postinstall": "dx-scanner --init"
   },
   "publishConfig": {
     "access": "public"
