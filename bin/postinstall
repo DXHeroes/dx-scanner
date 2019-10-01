@@ -5,9 +5,7 @@ const { spawnSync } = require('child_process')
 const fs = require('fs')
 const packageName = fs.readFileSync(0, 'utf-8')
 
-// We need to run a different command when working on dx-scanner
-if (packageName == "dx-scanner") {
-	spawnSync('bin/run', ['--init'])
-} else {
+// We cannot run it when working on dx-scanner.
+if (packageName !== "dx-scanner") {
 	spawnSync('dx-scanner', ['--init'])
 }
