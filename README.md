@@ -20,11 +20,12 @@ DX Scanner is an open source library that allows you to “measure” Developer 
 Language | Supported
 ------------ | -------------
 JavaScript/TypeScript | ✅
-Ruby | 🚧
-C# | 🚧
-Java | 🚧
+Java | 🏁
 Python | 🚧
+PHP | 🚧
 C++ | 🚧
+C# | 🚧
+Ruby | 🚧
 
 ## Getting Started 🏁
 
