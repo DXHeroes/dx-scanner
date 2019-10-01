@@ -69,16 +69,25 @@ export class Scanner {
     let localPath = scanningStrategy.localPath;
 
     if (localPath === undefined && remoteUrl !== undefined) {
-      switch (serviceType) {
-        case ServiceType.git:
-        case ServiceType.github:
-          const cloneUrl = new url.URL(remoteUrl);
-          localPath = fs.mkdtempSync(path.join(os.tmpdir(), 'dx-scanner'));
-          await git()
-            .silent(true)
-            .clone(cloneUrl.href, localPath);
-          break;
+      if (serviceType !== ServiceType.local) {
+        const cloneUrl = new url.URL(remoteUrl);
+        localPath = fs.mkdtempSync(path.join(os.tmpdir(), 'dx-scanner'));
+        await git()
+          .silent(true)
+          .clone(cloneUrl.href, localPath);
       }
+
+      // switch (serviceType) {
+      //   case ServiceType.git:
+      //   case ServiceType.github:
+      //     const cloneGHUrl = new url.URL(remoteUrl);
+      //     localPath = fs.mkdtempSync(path.join(os.tmpdir(), 'dx-scanner'));
+      //     await git()
+      //       .silent(true)
+      //       .clone(cloneGHUrl.href, localPath);
+      //     break;
+      //   case ServiceType.bitbucket:
+      // }
     }
 
     return { serviceType, accessType, remoteUrl, localPath };
