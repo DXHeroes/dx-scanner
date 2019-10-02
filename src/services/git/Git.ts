@@ -154,6 +154,6 @@ export class Git implements IProjectFilesBrowserService {
         }
       }
     }
-    return nodePath.join(name, path);
+    return nodePath.posix.join(name, path);
   }
 }
