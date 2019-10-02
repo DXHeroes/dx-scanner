@@ -4,6 +4,7 @@ import { Scanner } from './scanner/Scanner';
 import { Command, flags } from '@oclif/command';
 import cli from 'cli-ux';
 import { ServiceError } from './lib/errors';
+import updateNotifier from 'update-notifier';
 
 class DXScannerCommand extends Command {
   static description = 'Scan your project for possible DX recommendations.';
@@ -26,6 +27,8 @@ class DXScannerCommand extends Command {
     const { args, flags } = this.parse(DXScannerCommand);
     let authorization = flags.authorization ? flags.authorization : undefined;
     const json = flags.json ? flags.json : undefined;
+
+    const notifier = updateNotifier({ pkg: this.config.pjson });
 
     // const name = flags.name || 'world';
     // this.log(`hello ${name} from ./src/index.ts`);
@@ -53,8 +56,8 @@ class DXScannerCommand extends Command {
         throw error;
       }
     }
-
     cli.action.stop();
+    notifier.notify({ isGlobal: true });
   }
 }
 
