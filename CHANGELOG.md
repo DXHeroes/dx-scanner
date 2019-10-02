@@ -1,3 +1,10 @@
+## [1.4.2](https://github.com/dxheroes/dx-scanner/compare/v1.4.1...v1.4.2) (2019-10-02)
+
+
+### Bug Fixes
+
+* **GitService:** change join for resolve ([#74](https://github.com/dxheroes/dx-scanner/issues/74)) ([e5e4827](https://github.com/dxheroes/dx-scanner/commit/e5e4827))
+
 ## [1.4.1](https://github.com/dxheroes/dx-scanner/compare/v1.4.0...v1.4.1) (2019-09-12)
 
 
