@@ -1,3 +1,10 @@
+# [1.5.0](https://github.com/dxheroes/dx-scanner/compare/v1.4.2...v1.5.0) (2019-10-02)
+
+
+### Features
+
+* **cli:** add postinstall message with hint to create .dxscannerrc config file ([b652ee2](https://github.com/dxheroes/dx-scanner/commit/b652ee2))
+
 ## [1.4.2](https://github.com/dxheroes/dx-scanner/compare/v1.4.1...v1.4.2) (2019-10-02)
 
 
