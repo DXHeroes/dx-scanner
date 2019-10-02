@@ -1,11 +1,12 @@
+/* eslint-disable @typescript-eslint/camelcase */
 import nock from 'nock';
 import * as nodePath from 'path';
 
 export class BitbucketNock {
   repository: Repository;
 
-  constructor(ownerId: number, ownerLogin: string, repoId: number, repoName: string) {
-    this.repository = new Repository(repoId, repoName, new UserItem(ownerId, ownerLogin));
+  constructor(/*ownerId: number,*/ ownerLogin: string, /*repoId: number,*/ repoName: string) {
+    this.repository = new Repository(/*repoId,*/ repoName, new UserItem(/*ownerId,*/ ownerLogin));
   }
 
   //   getFile(path: string, content = 'Hello World!\n', sha = '980a0d5f19a64b4b30a87d4206aade58726b60e3', persist = true): File {
@@ -77,7 +78,7 @@ export class BitbucketNock {
     persist = true,
   ): T {
     const url = this.repository.pulls_url.replace('{/number}', number !== undefined ? `/${number}` : '');
-    const params: nock.POJO = {};
+    const params: nock.DataMatcherMap = {};
     if (state !== undefined) {
       params.state = state;
     }
@@ -105,7 +106,7 @@ export class BitbucketNock {
   //     return BitbucketNock.get(this.repository.url + suffix, {}, persist);
   //   }
 
-  private static get(url: string, params: nock.POJO, persist = true): nock.Interceptor {
+  private static get(url: string, params: nock.DataMatcherMap, persist = true): nock.Interceptor {
     const urlObj = new URL(url);
 
     const scope = nock(urlObj.origin);
@@ -122,7 +123,7 @@ export class BitbucketNock {
 }
 
 export class Repository {
-  id: number;
+  //id: number;
   node_id = 'MDEwOlJlcG9zaXRvcnkxMjk2MjY5';
   name: string;
   full_name: string;
@@ -205,8 +206,8 @@ export class Repository {
   subscribers_count = 0;
   network_count = 0;
 
-  constructor(id: number, name: string, owner: UserItem) {
-    this.id = id;
+  constructor(/*id: number,*/ name: string, owner: UserItem) {
+    //this.id = id;
     this.name = name;
     this.owner = owner;
     // eslint-disable-next-line @typescript-eslint/camelcase
@@ -381,9 +382,9 @@ export class DirectoryItem extends RepoContent {
 
 export class UserItem {
   login: string;
-  id: number;
+  //id: number;
   node_id = 'MDQ6VXNlcjE=';
-  avatar_url: string;
+  //avatar_url: string;
   gravatar_id = '';
   url: string;
   html_url: string;
@@ -399,11 +400,11 @@ export class UserItem {
   type = 'User';
   site_admin = false;
 
-  constructor(id: number, login: string) {
+  constructor(/*id: number,*/ login: string) {
     this.login = login;
-    this.id = id;
+    //this.id = id;
     // eslint-disable-next-line @typescript-eslint/camelcase
-    this.avatar_url = `https://avatars3.githubusercontent.com/u/${this.id}`;
+    //this.avatar_url = `https://avatars3.githubusercontent.com/u/${this.id}`;
     this.url = `https://api.github.com/users/${this.login}`;
     // eslint-disable-next-line @typescript-eslint/camelcase
     this.html_url = `https://github.com/${this.login}`;
@@ -547,3 +548,160 @@ export class PullRequest extends PullRequestItem {
   deletions = 0;
   changed_files = 1;
 }
+
+// export const reply = {
+//   pagelen: 10,
+//   size: 18,
+//   values: [
+//     {
+//       description:
+//         "Encountered lots of problems in an old C extension I was trying to get working with PyPy, to do with missing things inside datetime.h \\(and cpyext\\_datetime.h\\).\r\n\r\nIdea is to bring everything a bit closer to: [https://github.com/python/cpython/blob/master/Include/datetime.h](https://github.com/python/cpython/blob/master/Include/datetime.h)\r\n\r\nIncluded in this is 'long hashcode' in:  \r\n\tPyDateTime\\_Delta  \r\n\tPyDateTime\\_Time  \r\n\tPyDateTime\\_DateTime  \r\n\tPyDateTime\\_Date\r\n\r\nAlso added 'unsigned char fold' \\(\\+ new constructors that let this be used\\) to:  \r\n\tPyDateTime\\_Time  \r\n\tPyDateTime\\_DateTime\r\n\r\nAnd: 'unsigned char data\\[...\\]' to:  \r\n\tPyDateTime\\_Time  \r\n\tPyDateTime\\_Date  \r\n\tPyDateTime\\_DateTime\r\n\r\nFinally, added the objects:  \r\n\t\\_PyDateTime\\_BaseTime  \r\n\t\\_PyDateTime\\_BaseDateTime\r\n\r\nAlso brought across DATETIME\\_API\\_MAGIC which is a part of CPython and I found I had a reliance on \\(therefore others might have the same thing\\)",
+//       links: {
+//         decline: {
+//           href: 'https://api.bitbucket.org/2.0/repositories/pypy/pypy/pullrequests/622/decline',
+//         },
+//         diffstat: {
+//           href:
+//             'https://api.bitbucket.org/2.0/repositories/pypy/pypy/diffstat/ashwinahuja/pypy:f79995148331%0D5fa60afb5e51?from_pullrequest_id=622',
+//         },
+//         commits: {
+//           href: 'https://api.bitbucket.org/2.0/repositories/pypy/pypy/pullrequests/622/commits',
+//         },
+//         self: {
+//           href: 'https://api.bitbucket.org/2.0/repositories/pypy/pypy/pullrequests/622',
+//         },
+//         comments: {
+//           href: 'https://api.bitbucket.org/2.0/repositories/pypy/pypy/pullrequests/622/comments',
+//         },
+//         merge: {
+//           href: 'https://api.bitbucket.org/2.0/repositories/pypy/pypy/pullrequests/622/merge',
+//         },
+//         html: {
+//           href: 'https://bitbucket.org/pypy/pypy/pull-requests/622',
+//         },
+//         activity: {
+//           href: 'https://api.bitbucket.org/2.0/repositories/pypy/pypy/pullrequests/622/activity',
+//         },
+//         diff: {
+//           href:
+//             'https://api.bitbucket.org/2.0/repositories/pypy/pypy/diff/ashwinahuja/pypy:f79995148331%0D5fa60afb5e51?from_pullrequest_id=622',
+//         },
+//         approve: {
+//           href: 'https://api.bitbucket.org/2.0/repositories/pypy/pypy/pullrequests/622/approve',
+//         },
+//         statuses: {
+//           href: 'https://api.bitbucket.org/2.0/repositories/pypy/pypy/pullrequests/622/statuses',
+//         },
+//       },
+//       title: 'Make more compatible with old C extensions using the PyDateTime_... objects',
+//       close_source_branch: false,
+//       type: 'pullrequest',
+//       id: 622,
+//       destination: {
+//         commit: {
+//           hash: '5fa60afb5e51',
+//           type: 'commit',
+//           links: {
+//             self: {
+//               href: 'https://api.bitbucket.org/2.0/repositories/pypy/pypy/commit/5fa60afb5e51',
+//             },
+//             html: {
+//               href: 'https://bitbucket.org/pypy/pypy/commits/5fa60afb5e51',
+//             },
+//           },
+//         },
+//         repository: {
+//           links: {
+//             self: {
+//               href: 'https://api.bitbucket.org/2.0/repositories/pypy/pypy',
+//             },
+//             html: {
+//               href: 'https://bitbucket.org/pypy/pypy',
+//             },
+//             avatar: {
+//               href: 'https://bytebucket.org/ravatar/%7B54220cd1-b139-4188-9455-1e13e663f1ac%7D?ts=105930',
+//             },
+//           },
+//           type: 'repository',
+//           name: 'pypy',
+//           full_name: 'pypy/pypy',
+//           uuid: '{54220cd1-b139-4188-9455-1e13e663f1ac}',
+//         },
+//         branch: {
+//           name: 'default',
+//         },
+//       },
+//       created_on: '2018-09-13T16:43:59.014478+00:00',
+//       summary: {
+//         raw:
+//           "Encountered lots of problems in an old C extension I was trying to get working with PyPy, to do with missing things inside datetime.h \\(and cpyext\\_datetime.h\\).\r\n\r\nIdea is to bring everything a bit closer to: [https://github.com/python/cpython/blob/master/Include/datetime.h](https://github.com/python/cpython/blob/master/Include/datetime.h)\r\n\r\nIncluded in this is 'long hashcode' in:  \r\n\tPyDateTime\\_Delta  \r\n\tPyDateTime\\_Time  \r\n\tPyDateTime\\_DateTime  \r\n\tPyDateTime\\_Date\r\n\r\nAlso added 'unsigned char fold' \\(\\+ new constructors that let this be used\\) to:  \r\n\tPyDateTime\\_Time  \r\n\tPyDateTime\\_DateTime\r\n\r\nAnd: 'unsigned char data\\[...\\]' to:  \r\n\tPyDateTime\\_Time  \r\n\tPyDateTime\\_Date  \r\n\tPyDateTime\\_DateTime\r\n\r\nFinally, added the objects:  \r\n\t\\_PyDateTime\\_BaseTime  \r\n\t\\_PyDateTime\\_BaseDateTime\r\n\r\nAlso brought across DATETIME\\_API\\_MAGIC which is a part of CPython and I found I had a reliance on \\(therefore others might have the same thing\\)",
+//         markup: 'markdown',
+//         html:
+//           '<p>Encountered lots of problems in an old C extension I was trying to get working with PyPy, to do with missing things inside datetime.h (and cpyext_datetime.h).</p>\n<p>Idea is to bring everything a bit closer to: <a data-is-external-link="true" href="https://github.com/python/cpython/blob/master/Include/datetime.h" rel="nofollow">https://github.com/python/cpython/blob/master/Include/datetime.h</a></p>\n<p>Included in this is \'long hashcode\' in:<br />\n    PyDateTime_Delta<br />\n    PyDateTime_Time<br />\n    PyDateTime_DateTime<br />\n    PyDateTime_Date</p>\n<p>Also added \'unsigned char fold\' (+ new constructors that let this be used) to:<br />\n    PyDateTime_Time<br />\n    PyDateTime_DateTime</p>\n<p>And: \'unsigned char data[...]\' to:<br />\n    PyDateTime_Time<br />\n    PyDateTime_Date<br />\n    PyDateTime_DateTime</p>\n<p>Finally, added the objects:<br />\n    _PyDateTime_BaseTime<br />\n    _PyDateTime_BaseDateTime</p>\n<p>Also brought across DATETIME_API_MAGIC which is a part of CPython and I found I had a reliance on (therefore others might have the same thing)</p>',
+//         type: 'rendered',
+//       },
+//       source: {
+//         commit: {
+//           hash: 'f79995148331',
+//           type: 'commit',
+//           links: {
+//             self: {
+//               href: 'https://api.bitbucket.org/2.0/repositories/ashwinahuja/pypy/commit/f79995148331',
+//             },
+//             html: {
+//               href: 'https://bitbucket.org/ashwinahuja/pypy/commits/f79995148331',
+//             },
+//           },
+//         },
+//         repository: {
+//           links: {
+//             self: {
+//               href: 'https://api.bitbucket.org/2.0/repositories/ashwinahuja/pypy',
+//             },
+//             html: {
+//               href: 'https://bitbucket.org/ashwinahuja/pypy',
+//             },
+//             avatar: {
+//               href: 'https://bytebucket.org/ravatar/%7Bed2b5d25-be07-4808-b0dd-c5d4633e4a57%7D?ts=python',
+//             },
+//           },
+//           type: 'repository',
+//           name: 'pypy',
+//           full_name: 'ashwinahuja/pypy',
+//           uuid: '{ed2b5d25-be07-4808-b0dd-c5d4633e4a57}',
+//         },
+//         branch: {
+//           name: 'default',
+//         },
+//       },
+//       comment_count: 3,
+//       state: 'OPEN',
+//       task_count: 0,
+//       reason: '',
+//       updated_on: '2019-09-22T07:28:06.932156+00:00',
+//       author: {
+//         display_name: 'Ashwin Ahuja',
+//         uuid: '{f1f005b4-8963-4824-a447-3cdaebfd80a0}',
+//         links: {
+//           self: {
+//             href: 'https://api.bitbucket.org/2.0/users/%7Bf1f005b4-8963-4824-a447-3cdaebfd80a0%7D',
+//           },
+//           html: {
+//             href: 'https://bitbucket.org/%7Bf1f005b4-8963-4824-a447-3cdaebfd80a0%7D/',
+//           },
+//           avatar: {
+//             href:
+//               'https://secure.gravatar.com/avatar/b2161a145da2091ef7d2d874f2a25c37?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FAA-2.png',
+//           },
+//         },
+//         nickname: 'ashwinahuja',
+//         type: 'user',
+//         account_id: '557058:30c16884-172c-4aed-8bcd-52d8b81dd0af',
+//       },
+//       merge_commit: null,
+//       closed_by: null,
+//     },
+//   ],
+// };
+
+export const reply = { data: { pagelen: 10, size: 0, values: [] } };

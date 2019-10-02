@@ -87,6 +87,12 @@ export class Scanner {
       //       .clone(cloneGHUrl.href, localPath);
       //     break;
       //   case ServiceType.bitbucket:
+      //     const cloneUrl = new url.URL(remoteUrl);
+      //     localPath = fs.mkdtempSync(path.join(os.tmpdir(), 'dx-scanner'));
+      //     await git()
+      //       .silent(true)
+      //       .clone(cloneUrl.href, localPath);
+      //     break;
       // }
     }
 

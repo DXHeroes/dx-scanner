@@ -3,22 +3,22 @@ export enum GitService {
 }
 
 export interface UserInfo {
-  login: string;
-  id: number;
-  url: string;
+  login: string | undefined;
+  id: number | undefined;
+  url: string | undefined;
 }
 
 export interface PullRequest {
-  user: UserInfo;
-  id: number;
-  url: string;
-  body: string;
-  createdAt: string;
+  user: UserInfo | undefined;
+  id: number | undefined;
+  url: string | undefined;
+  body: string | undefined;
+  createdAt: string | undefined;
   updatedAt: string | undefined | null;
   closedAt: string | undefined | null;
   mergedAt: string | undefined | null;
-  state: string;
-  base: { repo: Repo };
+  state: string | undefined;
+  base?: { repo: Repo };
 }
 
 export interface PullRequestReview {

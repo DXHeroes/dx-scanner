@@ -1,41 +1,22 @@
 /* eslint-disable @typescript-eslint/camelcase */
-import { injectable, inject } from 'inversify';
-// import {
-//   PullRequest,
-//   Contributor,
-//   PullRequestReview,
-//   Commit,
-//   ContributorStats,
-//   Directory,
-//   File,
-//   Issue,
-//   PullFiles,
-//   PullCommits,
-//   IssueComment,
-//   Symlink,
-// } from './model';
-import { Paginated } from '../../inspectors/common/Paginated';
-import {
-  IssuesListForRepoResponseItem,
-  PullsListResponseItem,
-  PullsListReviewsResponseItem,
-  ReposGetContributorsStatsResponseItem,
-} from '@octokit/rest';
-import { isArray } from 'util';
-import { ListGetterOptions } from '../../inspectors/common/ListGetterOptions';
-import Octokit from '@octokit/rest';
+import Bitbucket from 'bitbucket';
 import { grey } from 'colors';
-import { inspect } from 'util';
 import Debug from 'debug';
-import { delay } from '../../lib/delay';
-import { Types } from '../../types';
+import { inject, injectable } from 'inversify';
+import { inspect } from 'util';
 import { ArgumentsProvider } from '../../inversify.config';
 import { ICache } from '../../scanner/cache/ICache';
 import { InMemoryCache } from '../../scanner/cache/InMemoryCahce';
-import Bitbucket from 'bitbucket';
+import { Types } from '../../types';
+import { IGitHubService, GitHubPullRequestState } from '../git/IGitHubService';
+import { ListGetterOptions } from '../../inspectors/common/ListGetterOptions';
+import { PullsListResponseItem } from '@octokit/rest';
+import { Paginated } from '../../inspectors/common/Paginated';
+import { PullRequest } from '../git/model';
 const debug = Debug('cli:services:git:github-service');
 
 // implements IBitbucketService
+//implements IGitHubService
 @injectable()
 export class BitbucketService {
   private readonly client: Bitbucket;
@@ -74,13 +55,58 @@ export class BitbucketService {
     return this.unwrap(this.client.repositories.get(params));
   }
 
-  async getPullRequests(owner: string, repo: string) {
+  async getPullRequests(owner: string, repo: string): Promise<Paginated<PullRequest>> {
     const paramas: Bitbucket.Params.PullrequestsList = {
       repo_slug: repo,
       username: owner,
     };
     const response = await this.client.pullrequests.list(paramas);
-    return response;
+    if (response.data.values !== undefined) {
+      const values: PullsListResponseItem[] = response.data && <PullsListResponseItem[]>(<unknown>response.data.values);
+    }
+
+    console.log(response, 'response 61');
+    const values =
+      response.data.values &&
+      response.data.values.map((val) => ({
+        user: {
+          id: val.author && val.author.uuid, //
+          login: val.author && val.author.nickname, //
+          url: val.author && val.author.links && val.author.links.html && val.author.links.html.href, //
+        },
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        url: val.destination!.repository!.links!.html!.href, //
+        body: val.description, //
+        createdAt: val.created_on, //
+        updatedAt: val.updated_on, //
+        closedAt: val.closed_by, //
+        mergedAt: val.merge_commit, //
+        state: <string>val.state, //
+        id: val.id, //
+        // base: {
+        //   repo: {
+        //     url: val.base.repo.url,
+        //     name: val.base.repo.name,
+        //     id: val.base.repo.id,
+        //     owner: val.base.repo.owner,
+        //   },
+        // },
+      }));
+
+    const pagination = {
+      hasNextPage: response.data.next ? true : false,
+      hasPreviousPage: response.data.previous ? true : false,
+      page: response.data.page,
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      perPage: response.data.values!.length,
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      totalCount: response.data.values!.length,
+    };
+    const items = values ? values : [];
+
+    // const pagination = this.getPagination(response.length);
+
+    return { items, pagination };
   }
 
   async getPullRequest(owner: string, repo: string, prNumber: number) {
@@ -161,4 +187,13 @@ export class BitbucketService {
       grey(`Bitbucket API Hit: ${this.callCount}. Remaining ${response.headers['x-ratelimit-remaining']} hits. (${response.headers.link})`),
     );
   };
+
+  // getPagination(totalCount: number) {
+  //   const hasNextPage = false;
+  //   const hasPreviousPage = false;
+  //   const page = 1;
+  //   const perPage = totalCount;
+
+  //   return { totalCount, hasNextPage, hasPreviousPage, page, perPage };
+  // }
 }

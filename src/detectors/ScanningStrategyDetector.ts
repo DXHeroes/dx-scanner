@@ -115,7 +115,6 @@ export class ScanningStrategyDetector implements IDetector<string, ScanningStrat
           throw ErrorFactory.newArgumentError('You passed bad credentials or non existing repo.');
         }
       }
-      console.log(response.status, 'respo');
       // if (response.status === 200) {
       //   if (response.data.private === true) {
       //     return AccessType.private;
