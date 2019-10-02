@@ -4,7 +4,6 @@ import { Scanner } from './scanner/Scanner';
 import { Command, flags } from '@oclif/command';
 import cli from 'cli-ux';
 import { ServiceError } from './lib/errors';
-import pkg from 'pjson';
 import updateNotifier from 'update-notifier';
 
 class DXScannerCommand extends Command {
@@ -29,7 +28,7 @@ class DXScannerCommand extends Command {
     let authorization = flags.authorization ? flags.authorization : undefined;
     const json = flags.json ? flags.json : undefined;
 
-    const notifier = updateNotifier({ pkg });
+    const notifier = updateNotifier({ pkg: this.config.pjson });
 
     // const name = flags.name || 'world';
     // this.log(`hello ${name} from ./src/index.ts`);
