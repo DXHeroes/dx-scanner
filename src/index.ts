@@ -57,7 +57,7 @@ class DXScannerCommand extends Command {
       }
     }
     cli.action.stop();
-    notifier.notify();
+    notifier.notify({ isGlobal: true });
   }
 }
 
