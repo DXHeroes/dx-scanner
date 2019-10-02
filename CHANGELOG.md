@@ -1,3 +1,10 @@
+# [1.6.0](https://github.com/dxheroes/dx-scanner/compare/v1.5.0...v1.6.0) (2019-10-02)
+
+
+### Features
+
+* **cli:** add update-notifier ([6733185](https://github.com/dxheroes/dx-scanner/commit/6733185)), closes [#70](https://github.com/dxheroes/dx-scanner/issues/70)
+
 # [1.5.0](https://github.com/dxheroes/dx-scanner/compare/v1.4.2...v1.5.0) (2019-10-02)
 
 
