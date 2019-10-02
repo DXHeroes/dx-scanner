@@ -1,11 +1,9 @@
 #!/usr/bin/env node
 /* eslint-disable @typescript-eslint/no-var-requires, @typescript-eslint/no-require-imports */
 
-const { spawnSync } = require('child_process')
-const fs = require('fs')
 const packageName = process.env.NAME
 
 // We cannot run it when working on dx-scanner.
 if (packageName !== "dx-scanner") {
-	spawnSync('dx-scanner', ['--init'])
+  console.log(`You can create .dxscannerrc in your repository to customize configuration.`);
 }
