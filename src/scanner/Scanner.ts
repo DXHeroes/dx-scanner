@@ -178,12 +178,7 @@ export class Scanner {
     const reportString = this.reporter.report(
       relevantPractices.map((p) => {
         const config = p.componentContext.configProvider.getOverridenPractice(p.practice.getMetadata().id);
-
-        if (typeof config === 'string') {
-          impact = config;
-        } else if (config && 'impact' in config) {
-          impact = config.impact;
-        }
+        impact = config.impact;
 
         return {
           practice: {
