@@ -2,15 +2,15 @@ import { PracticeImpact } from '../model';
 
 export interface IConfigProvider {
   init(): Promise<void>;
-  getOverridenPractice(practiceId: string): PracticeImpact;
+  getOverridenPractice(practiceId: string): PracticeImpact | EslintConfig;
 }
 
 export interface Config {
   practices?: {
-    [key in Practices]?: PracticeImpact;
+    [key in Practices]?: PracticeImpact | EslintConfig;
   };
   tokens?: {
-    [key in Service]: string | EslintConfig;
+    [key in Service]: string;
   };
 }
 

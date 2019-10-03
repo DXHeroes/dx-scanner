@@ -174,11 +174,11 @@ export class Scanner {
   private async report(practicesWithContext: PracticeWithContext[], practicesOff: IPracticeWithMetadata[]) {
     const relevantPractices = practicesWithContext.filter((p) => p.evaluation === PracticeEvaluationResult.notPracticing);
 
+    let impact: any;
     const reportString = this.reporter.report(
       relevantPractices.map((p) => {
         const config = p.componentContext.configProvider.getOverridenPractice(p.practice.getMetadata().id);
 
-        let impact;
         if (typeof config === 'string') {
           impact = config;
         } else if (config && 'impact' in config) {

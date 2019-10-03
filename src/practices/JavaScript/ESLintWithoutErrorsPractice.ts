@@ -46,7 +46,10 @@ export class ESLintWithoutErrorsPractice implements IPractice {
       options = { ...options, baseConfig, plugins };
     }
 
-    const eslintIgnore = ctx.config && ctx.config.eslintIgnore;
+    let eslintIgnore;
+    if (typeof ctx.config !== 'string') {
+      eslintIgnore = ctx.config && ctx.config.eslintIgnore;
+    }
     if (eslintIgnore && eslintIgnore.length > 0) {
       options = { ...options, ignorePattern: eslintIgnore };
     } else {

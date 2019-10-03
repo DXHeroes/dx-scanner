@@ -3,7 +3,8 @@ import yaml from 'js-yaml';
 import _ from 'lodash';
 import { IFileInspector } from '../inspectors/IFileInspector';
 import { Types } from '../types';
-import { IConfigProvider, Config } from './IConfigProvider';
+import { IConfigProvider, Config, EslintConfig } from './IConfigProvider';
+import { PracticeImpact } from '../model';
 
 @injectable()
 export class ConfigProvider implements IConfigProvider {
@@ -38,7 +39,11 @@ export class ConfigProvider implements IConfigProvider {
     this.config = parsedContent;
   }
 
-  getOverridenPractice(practiceId: string) {
-    return _.get(this.config, ['practices', practiceId]);
+  getOverridenPractice(practiceId: string): PracticeImpact | EslintConfig {
+    const practiceConfig = _.get(this.config, ['practices', practiceId]);
+    if (typeof practiceConfig !== 'string' && practiceConfig !== undefined) {
+      return practiceConfig.impact;
+    }
+    return practiceConfig;
   }
 }
