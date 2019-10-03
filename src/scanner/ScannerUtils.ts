@@ -90,11 +90,11 @@ export class ScannerUtils {
 
     /* Filter out turned off practices */
     const customApplicablePractices = applicablePractices.filter(
-      (p) => componentContext.configProvider.getOverridenPractice(p.getMetadata().id) !== PracticeImpact.off,
+      (p) => componentContext.configProvider.getOverriddenPractice(p.getMetadata().id) !== PracticeImpact.off,
     );
 
     const practicesOff = applicablePractices.filter(
-      (p) => componentContext.configProvider.getOverridenPractice(p.getMetadata().id) === PracticeImpact.off,
+      (p) => componentContext.configProvider.getOverriddenPractice(p.getMetadata().id) === PracticeImpact.off,
     );
 
     return { customApplicablePractices, practicesOff };

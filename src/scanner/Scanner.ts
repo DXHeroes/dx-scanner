@@ -146,7 +146,7 @@ export class Scanner {
       const orderedApplicablePractices = ScannerUtils.sortPractices(filteredPractices.customApplicablePractices);
 
       for (const practice of orderedApplicablePractices) {
-        const practiceConfig = componentContext.configProvider.getOverridenPractice(practice.getMetadata().id);
+        const practiceConfig = componentContext.configProvider.getOverriddenPractice(practice.getMetadata().id);
 
         const isFulfilled = ScannerUtils.isFulfilled(practice, practicesWithContextFromComponent);
 
@@ -177,7 +177,7 @@ export class Scanner {
     let impact: any;
     const reportString = this.reporter.report(
       relevantPractices.map((p) => {
-        const config = p.componentContext.configProvider.getOverridenPractice(p.practice.getMetadata().id);
+        const config = p.componentContext.configProvider.getOverriddenPractice(p.practice.getMetadata().id);
         impact = config.impact;
 
         return {
