@@ -101,6 +101,7 @@ export class CLIReporter implements IReporter {
       if (practice.defaultImpact !== practice.impact) {
         lines.push(bold(this.changedImpact(practice, (color = grey))));
       }
+      lines.push(bold(''));
     }
 
     lines.push(bold(''));
