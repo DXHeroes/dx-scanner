@@ -68,7 +68,7 @@ export class BitbucketService {
     console.log(response, 'response 61');
     const values =
       response.data.values &&
-      response.data.values.map((val) => ({
+      response.data.values.map((val: any) => ({
         user: {
           id: val.author && val.author.uuid, //
           login: val.author && val.author.nickname, //
@@ -106,7 +106,7 @@ export class BitbucketService {
 
     // const pagination = this.getPagination(response.length);
 
-    return { items, pagination };
+    return { items, ...pagination };
   }
 
   async getPullRequest(owner: string, repo: string, prNumber: number) {
