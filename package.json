@@ -1,7 +1,7 @@
 {
   "name": "dx-scanner",
   "description": "Scan your project for possible DX recommendations.",
-  "version": "1.5.0",
+  "version": "1.6.0",
   "author": "DX Heroes LTD <info@dxheroes.io> (https://dxheroes.io)",
   "homepage": "https://github.com/dxheroes/dx-scanner",
   "repository": "ssh://git@github.com/dxheroes/dx-scanner.git",
@@ -51,7 +51,8 @@
     "toposort": "^2.0.2",
     "ts-node": "^8",
     "tslib": "^1",
-    "typescript": "^3.5"
+    "typescript": "^3.5",
+    "update-notifier": "^3.0.1"
   },
   "devDependencies": {
     "@semantic-release/changelog": "^3.0.4",
@@ -67,6 +68,7 @@
     "@types/toposort": "^2.0.3",
     "@typescript-eslint/eslint-plugin": "^2.2.0",
     "@typescript-eslint/parser": "^2.2.0",
+    "@types/update-notifier": "^2.5.0",
     "codecov": "^3.5.0",
     "eslint-config-prettier": "^6.3.0",
     "eslint-plugin-prettier": "^3.1.0",
