@@ -87,7 +87,7 @@ describe('ScannerUtils', () => {
 
       const componentContext = {
         configProvider: {
-          getOverridenPractice(practiceId: string) {
+          getOverriddenPractice(practiceId: string) {
             return _.get(config, ['practices', practiceId]);
           },
         },
