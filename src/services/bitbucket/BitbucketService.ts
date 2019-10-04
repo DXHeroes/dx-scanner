@@ -70,32 +70,32 @@ export class BitbucketService {
       response.data.values &&
       response.data.values.map((val: any) => ({
         user: {
-          id: val.author && val.author.uuid, //
-          login: val.author && val.author.nickname, //
-          url: val.author && val.author.links && val.author.links.html && val.author.links.html.href, //
+          id: val.author && val.author.uuid,
+          login: val.author && val.author.nickname,
+          url: val.author && val.author.links && val.author.links.html && val.author.links.html.href,
         },
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        url: val.destination!.repository!.links!.html!.href, //
-        body: val.description, //
-        createdAt: val.created_on, //
-        updatedAt: val.updated_on, //
-        closedAt: val.closed_by, //
-        mergedAt: val.merge_commit, //
-        state: <string>val.state, //
-        id: val.id, //
-        // base: {
-        //   repo: {
-        //     url: val.base.repo.url,
-        //     name: val.base.repo.name,
-        //     id: val.base.repo.id,
-        //     owner: val.base.repo.owner,
-        //   },
-        // },
+        url: val.links!.html!.href!.html,
+        body: val.description,
+        createdAt: val.created_on,
+        updatedAt: val.updated_on,
+        closedAt: val.closed_by,
+        mergedAt: val.merge_commit,
+        state: <string>val.state,
+        id: val.id,
+        base: {
+          repo: {
+            url: val.destination.repository.links.html.href,
+            name: val.destination.repository.name,
+            id: val.destination.repository.uuid,
+            owner: val.destination.repository.fullname.shift('/').pop(),
+          },
+        },
       }));
 
     const pagination = {
-      hasNextPage: response.data.next ? true : false,
-      hasPreviousPage: response.data.previous ? true : false,
+      hasNextPage: !!response.data.next,
+      hasPreviousPage: !!response.data.previous,
       page: response.data.page,
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       perPage: response.data.values!.length,
