@@ -56,6 +56,7 @@ export enum ProgrammingLanguage {
   Clojure = 'Clojure',
   Haskell = 'Haskell',
   Elixir = 'Elixir',
+  Python = 'Python',
   UNKNOWN = 'UNKNOWN',
 }
 
