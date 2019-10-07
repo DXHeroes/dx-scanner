@@ -12,7 +12,7 @@ import { IGitHubService, GitHubPullRequestState } from '../git/IGitHubService';
 import { ListGetterOptions } from '../../inspectors/common/ListGetterOptions';
 import { PullsListResponseItem } from '@octokit/rest';
 import { Paginated } from '../../inspectors/common/Paginated';
-import { PullRequest } from '../git/model';
+import { PullRequest, Issue } from '../git/model';
 const debug = Debug('cli:services:git:github-service');
 
 // implements IBitbucketService
@@ -61,11 +61,7 @@ export class BitbucketService {
       username: owner,
     };
     const response = await this.client.pullrequests.list(paramas);
-    if (response.data.values !== undefined) {
-      const values: PullsListResponseItem[] = response.data && <PullsListResponseItem[]>(<unknown>response.data.values);
-    }
 
-    console.log(response, 'response 61');
     const values =
       response.data.values &&
       response.data.values.map((val: any) => ({
@@ -92,19 +88,9 @@ export class BitbucketService {
           },
         },
       }));
+    const pagination = this.getPagination(response.data);
 
-    const pagination = {
-      hasNextPage: !!response.data.next,
-      hasPreviousPage: !!response.data.previous,
-      page: response.data.page,
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      perPage: response.data.values!.length,
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      totalCount: response.data.values!.length,
-    };
     const items = values ? values : [];
-
-    // const pagination = this.getPagination(response.length);
 
     return { items, ...pagination };
   }
@@ -117,10 +103,52 @@ export class BitbucketService {
     };
 
     const response = await this.client.pullrequests.get(params);
-    return response;
+    response.data;
+
+    return {
+      user: {
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        id: response.data.author!.uuid,
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        login: response.data.author!.nickname,
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        url: response.data.author!.website,
+      },
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      url: response.data.links!.html!.href,
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      body: response.data.summary!.raw,
+      createdAt: <string>response.data.created_on,
+      updatedAt: <string>response.data.updated_on,
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      closedAt: <string>response.data.closed_by!.created_on,
+      mergedAt: <string>response.data.merge_commit,
+      state: response.data.state,
+      id: response.data.id,
+      base: {
+        repo: {
+          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+          url: response.data.destination!.repository!.links!.html!.href,
+          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+          name: response.data.destination!.repository!.name,
+          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+          id: response.data.destination!.repository!.uuid,
+          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+          owner: {
+            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+            login: response.data.destination!.repository!.owner!.nickname,
+            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+            id: response.data.destination!.repository!.owner!.uuid,
+            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+            url: response.data.destination!.repository!.owner!.links!.html!.href,
+          },
+        },
+      },
+    };
   }
 
-  async getPullRequestFiles(owner: string, repo: string, prNumber: number) {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  async getPullRequestFiles(owner: string, repo: string, prNumber: number): Promise<any> {
     throw new Error('Method not implemented.');
   }
 
@@ -131,7 +159,27 @@ export class BitbucketService {
       username: owner,
     };
     const response = await this.client.pullrequests.listCommits(params);
-    return response;
+
+    const items = response.data.values.map((val: any) => ({
+      sha: val.sha,
+      commit: {
+        url: val.commit.url,
+        message: val.commit.message,
+        author: {
+          name: val.commit.author.name,
+          email: val.commit.author.email,
+          date: val.commit.author.date,
+        },
+        tree: {
+          sha: val.commit.tree.sha,
+          url: val.commit.tree.url,
+        },
+        verified: val.commit.verification.verified,
+      },
+    }));
+    const pagination = this.getPagination(response.data);
+
+    return { items, ...pagination };
   }
 
   async getIssues(owner: string, repo: string) {
@@ -139,8 +187,31 @@ export class BitbucketService {
       repo_slug: repo,
       username: owner,
     };
-    const response = this.client.issue_tracker.list(params);
-    return response;
+    const response = await this.client.issue_tracker.list(params);
+
+    const values =
+      response.data.values &&
+      response.data.values.map((val: any) => ({
+        user: {
+          id: val.reporter.uuid,
+          login: val.reporter.nickname,
+          url: val.reporter.links.html.href,
+        },
+        url: val.repository.links.html.href,
+        body: val.content.raw,
+        createdAt: val.created_on,
+        updatedAt: val.updated_on,
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        closedAt: <string>val.closed_by!.created_on,
+        state: val.state,
+        id: val.repository.uuid,
+        // pullRequestUrl: val.pull_request && val.pull_request.url,
+      }));
+    const pagination = this.getPagination(response.data);
+
+    const items = values ? values : [];
+
+    return { items, ...pagination };
   }
 
   async getIssue(owner: string, repo: string, issueNumber: number) {
@@ -149,8 +220,30 @@ export class BitbucketService {
       repo_slug: repo,
       username: owner,
     };
-    const response = this.client.issue_tracker.get(params);
-    return response;
+    const response = await this.client.issue_tracker.get(params);
+
+    return {
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      id: response.data.repository!.uuid,
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      user: {
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        login: response.data.reporter!.nickname,
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        id: response.data.data.reporter!.uuid,
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        url: response.data.reporter!.href,
+      },
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      url: response.data.links!.html!.href,
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      body: response.data.content!.raw,
+      createdAt: <string>response.data.created_on,
+      updatedAt: <string>response.data.updated_on,
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      closedAt: <string>response.data.closed_by!.created_on,
+      state: <string>response.data.state,
+    };
   }
 
   async getIssueComments(owner: string, repo: string, issueNumber: number) {
@@ -159,11 +252,31 @@ export class BitbucketService {
       repo_slug: repo,
       username: owner,
     };
-    const response = this.client.issue_tracker.listComments(params);
-    return response;
+    const response = await this.client.issue_tracker.listComments(params);
+
+    const items =
+      response.data.values &&
+      response.data.values.map((val) => ({
+        user: {
+          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+          id: val.user!.uuid,
+          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+          login: val.user!.nickname,
+          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+          url: val.user!.links!.html!.href,
+        },
+        url: val.url,
+        body: val.body,
+        createdAt: val.created_at,
+        updatedAt: val.updated_at,
+        authorAssociation: val.author_association,
+        id: val.id,
+      }));
+    const pagination = this.getPagination(response.data);
+
+    return { items, ...pagination };
   }
   //: Promise<Octokit.Response<T>>
-  //:Promise<Octokit.Response<T>>
   private unwrap<T>(clientPromise: Promise<Bitbucket.Response<Bitbucket.Schema.Repository>>) {
     return clientPromise
       .then((response) => {
@@ -188,12 +301,15 @@ export class BitbucketService {
     );
   };
 
-  // getPagination(totalCount: number) {
-  //   const hasNextPage = false;
-  //   const hasPreviousPage = false;
-  //   const page = 1;
-  //   const perPage = totalCount;
+  getPagination(data: any) {
+    const hasNextPage = !!data.next;
+    const hasPreviousPage = !!data.previous;
+    const page = data.page;
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    const perPage = data.values!.length;
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    const totalCount = data.values!.length;
 
-  //   return { totalCount, hasNextPage, hasPreviousPage, page, perPage };
-  // }
+    return { totalCount, hasNextPage, hasPreviousPage, page, perPage };
+  }
 }

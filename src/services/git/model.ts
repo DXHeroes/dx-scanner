@@ -4,7 +4,7 @@ export enum GitService {
 
 export interface UserInfo {
   login: string | undefined;
-  id: number | undefined;
+  id: number | string | undefined;
   url: string | undefined;
 }
 
@@ -79,10 +79,10 @@ export interface Symlink extends RepoContent {
 export type Directory = Array<RepoContent>;
 
 export interface Issue {
-  user: UserInfo;
-  id: number;
-  url: string;
-  body: string;
+  user: UserInfo | undefined;
+  id: number | string | undefined;
+  url: string | undefined;
+  body: string | undefined;
   createdAt: string;
   updatedAt: string | undefined;
   closedAt: string | null;
@@ -126,8 +126,8 @@ interface Tree {
 }
 
 interface Repo {
-  url: string;
-  id: number;
-  name: string;
+  url: string | undefined;
+  id: number | string | undefined;
+  name: string | undefined;
   owner: UserInfo;
 }
