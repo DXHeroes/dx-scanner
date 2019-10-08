@@ -161,16 +161,22 @@ export class Scanner {
       const orderedApplicablePractices = ScannerUtils.sortPractices(filteredPractices.customApplicablePractices);
 
       for (const practice of orderedApplicablePractices) {
+        const practiceConfig = componentContext.configProvider.getOverriddenPractice(practice.getMetadata().id);
+
         const isFulfilled = ScannerUtils.isFulfilled(practice, practicesWithContextFromComponent);
 
         if (!isFulfilled) continue;
-        const evaluation = await practice.evaluate(practiceContext);
-        practicesWithContext.push({
+        const evaluation = await practice.evaluate({ ...practiceContext, config: practiceConfig });
+
+        const practiceWithContext = {
           practice,
           componentContext,
           practiceContext,
           evaluation,
-        });
+        };
+
+        practicesWithContext.push(practiceWithContext);
+        practicesWithContextFromComponent.push(practiceWithContext);
       }
     }
 
@@ -183,9 +189,11 @@ export class Scanner {
   private async report(practicesWithContext: PracticeWithContext[], practicesOff: IPracticeWithMetadata[]) {
     const relevantPractices = practicesWithContext.filter((p) => p.evaluation === PracticeEvaluationResult.notPracticing);
 
+    let impact: any;
     const reportString = this.reporter.report(
       relevantPractices.map((p) => {
-        const impact = p.componentContext.configProvider.getOverridenPractice(p.practice.getMetadata().id);
+        const config = p.componentContext.configProvider.getOverriddenPractice(p.practice.getMetadata().id);
+        impact = config.impact;
 
         return {
           practice: {

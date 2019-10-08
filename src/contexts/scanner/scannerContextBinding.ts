@@ -1,5 +1,6 @@
 import { Container } from 'inversify';
 import { JavaScriptLanguageDetector } from '../../detectors/JavaScript/JavaScriptLanguageDetector';
+import { PythonLanguageDetector } from '../../detectors/Python/PythonLanguageDetector';
 import { ScanningStrategy, ServiceType } from '../../detectors/ScanningStrategyDetector';
 import { FileInspector } from '../../inspectors/FileInspector';
 import { GitInspector } from '../../inspectors/GitInspector';
@@ -54,4 +55,5 @@ const bindFileAccess = (scanningStrategy: ScanningStrategy, container: Container
 
 const bindLanguageDetectors = (container: Container) => {
   container.bind(Types.ILanguageDetector).to(JavaScriptLanguageDetector);
+  container.bind(Types.ILanguageDetector).to(PythonLanguageDetector);
 };
