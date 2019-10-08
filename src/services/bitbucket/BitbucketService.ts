@@ -84,7 +84,7 @@ export class BitbucketService {
             url: val.destination.repository.links.html.href,
             name: val.destination.repository.name,
             id: val.destination.repository.uuid,
-            owner: val.destination.repository.fullname.shift('/').pop(),
+            owner: val.destination.repository.fullname.split('/').shift(),
           },
         },
       }));
@@ -136,11 +136,11 @@ export class BitbucketService {
           // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
           owner: {
             // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-            login: response.data.destination!.repository!.owner!.nickname,
+            login: response.data.author!.nickname,
             // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-            id: response.data.destination!.repository!.owner!.uuid,
+            id: response.data.author!.uuid,
             // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-            url: response.data.destination!.repository!.owner!.links!.html!.href,
+            url: response.data.author!.links!.html!.href,
           },
         },
       },
@@ -163,18 +163,18 @@ export class BitbucketService {
     const items = response.data.values.map((val: any) => ({
       sha: val.sha,
       commit: {
-        url: val.commit.url,
-        message: val.commit.message,
+        url: val.links.html.href,
+        message: val.message,
         author: {
-          name: val.commit.author.name,
-          email: val.commit.author.email,
-          date: val.commit.author.date,
+          name: val.author.raw,
+          email: undefined,
+          date: val.date,
         },
         tree: {
-          sha: val.commit.tree.sha,
-          url: val.commit.tree.url,
+          sha: val.hash,
+          url: val.links.html.href,
         },
-        verified: val.commit.verification.verified,
+        verified: undefined,
       },
     }));
     const pagination = this.getPagination(response.data);
@@ -202,7 +202,7 @@ export class BitbucketService {
         createdAt: val.created_on,
         updatedAt: val.updated_on,
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        closedAt: <string>val.closed_by!.created_on,
+        closedAt: undefined,
         state: val.state,
         id: val.repository.uuid,
         // pullRequestUrl: val.pull_request && val.pull_request.url,
@@ -230,7 +230,7 @@ export class BitbucketService {
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         login: response.data.reporter!.nickname,
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        id: response.data.data.reporter!.uuid,
+        id: response.data.reporter!.uuid,
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         url: response.data.reporter!.href,
       },
@@ -241,7 +241,7 @@ export class BitbucketService {
       createdAt: <string>response.data.created_on,
       updatedAt: <string>response.data.updated_on,
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      closedAt: <string>response.data.closed_by!.created_on,
+      closedAt: undefined,
       state: <string>response.data.state,
     };
   }
@@ -265,10 +265,10 @@ export class BitbucketService {
           // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
           url: val.user!.links!.html!.href,
         },
-        url: val.url,
-        body: val.body,
-        createdAt: val.created_at,
-        updatedAt: val.updated_at,
+        url: val.links!.html!.href,
+        body: val.content!.raw,
+        createdAt: val.created_on,
+        updatedAt: val.updated_on,
         authorAssociation: val.author_association,
         id: val.id,
       }));
