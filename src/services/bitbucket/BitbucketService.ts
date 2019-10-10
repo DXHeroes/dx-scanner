@@ -13,6 +13,7 @@ import { ListGetterOptions } from '../../inspectors/common/ListGetterOptions';
 import { PullsListResponseItem } from '@octokit/rest';
 import { Paginated } from '../../inspectors/common/Paginated';
 import { PullRequest, Issue } from '../git/model';
+import GitUrlParse from 'git-url-parse';
 const debug = Debug('cli:services:git:github-service');
 
 // implements IBitbucketService
@@ -32,8 +33,7 @@ export class BitbucketService {
 
     this.client = new Bitbucket(clientOptions);
 
-    const uri = argumentsProvider.uri.split('/');
-    const username = uri[uri.length - 2];
+    const username = GitUrlParse(argumentsProvider.uri).owner;
 
     let auth: Bitbucket.Auth;
     if (argumentsProvider.auth) {
