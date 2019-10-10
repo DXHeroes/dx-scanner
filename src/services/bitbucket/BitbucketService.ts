@@ -26,19 +26,18 @@ export class BitbucketService {
   constructor(@inject(Types.ArgumentsProvider) argumentsProvider: ArgumentsProvider) {
     this.cache = new InMemoryCache();
 
-    // const clientOptions = {
-    //   baseUrl: 'https://api.bitbucket.org/2.0',
-    //   headers: {},
-    //   options: {
-    //     timeout: 10,
-    //   },
-    // };
+    const clientOptions: Bitbucket.Options = {
+      hideNotice: true,
+    };
 
-    this.client = new Bitbucket();
+    this.client = new Bitbucket(clientOptions);
+
+    const uri = argumentsProvider.uri.split('/');
+    const username = uri[uri.length - 2];
 
     let auth: Bitbucket.Auth;
     if (argumentsProvider.auth) {
-      auth = { type: 'token', token: argumentsProvider.auth };
+      auth = { type: 'apppassword', username: username, password: argumentsProvider.auth };
       this.client.authenticate(auth);
     }
   }
