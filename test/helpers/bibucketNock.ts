@@ -1,243 +1,243 @@
-// import nock from 'nock';
-// import * as nodePath from 'path';
+import nock from 'nock';
+import * as nodePath from 'path';
 
-// export class BitbucketNock {
-//   repository: Repository;
+export class BitbucketNock {
+  repository: Repository;
 
-//   constructor(ownerId: number, ownerLogin: string, repoId: number, repoName: string) {
-//     this.repository = new Repository(repoId, repoName, new UserItem(ownerId, ownerLogin));
-//   }
+  constructor(ownerLogin: string, repoName: string) {
+    this.repository = new Repository(repoName, new UserItem(ownerLogin));
+  }
 
-//   getPulls(pulls: { number: number; state: string }[]): PullRequestItem[] {
-//     const responseBody = pulls.map(({ number, state }) => new PullRequestItem(number, state));
+  getPullRequests(pulls: { number: number; state: string }[]): PullRequestItem[] {
+    const responseBody = pulls.map(({ number, state }) => new PullRequestItem(number, state));
 
-//     return this.getPullsInternal(undefined, queryState, responseBody, persist);
-//   }
-// }
+    return this.getPullsInternal(undefined, queryState, responseBody, persist);
+  }
+}
 
-// export class UserItem {
-//   login: string;
-//   id: number;
-//   //node_id = 'MDQ6VXNlcjE=';
-//   url: string;
-//   html_url: string;
-//   // followers_url: string;
-//   // following_url: string;
-//   // gists_url: string;
-//   // starred_url: string;
-//   // subscriptions_url: string;
-//   // organizations_url: string;
-//   // repos_url: string;
-//   // events_url: string;
-//   // received_events_url: string;
-//   type = 'User';
-//   site_admin = false;
+export class UserItem {
+  login: string;
+  id: number;
+  //node_id = 'MDQ6VXNlcjE=';
+  url: string;
+  html_url: string;
+  // followers_url: string;
+  // following_url: string;
+  // gists_url: string;
+  // starred_url: string;
+  // subscriptions_url: string;
+  // organizations_url: string;
+  // repos_url: string;
+  // events_url: string;
+  // received_events_url: string;
+  type = 'User';
+  site_admin = false;
 
-//   constructor(id: number, login: string) {
-//     this.login = login;
-//     this.id = id;
-//     // eslint-disable-next-line @typescript-eslint/camelcase
-//     this.url = `https://api.bitbucket.org/2.0/repositories/${this.login}`;
-//     // eslint-disable-next-line @typescript-eslint/camelcase
-//     this.html_url = `https://bitbucket.org/${this.login}`;
-//     // // eslint-disable-next-line @typescript-eslint/camelcase
-//     // this.followers_url = `${this.url}/followers`;
-//     // // eslint-disable-next-line @typescript-eslint/camelcase
-//     // this.following_url = `${this.url}/following{/other_user}`;
-//     // // eslint-disable-next-line @typescript-eslint/camelcase
-//     // this.gists_url = `${this.url}/gists{/gist_id}`;
-//     // // eslint-disable-next-line @typescript-eslint/camelcase
-//     // this.starred_url = `${this.url}/starred{/owner}{/repo}`;
-//     // // eslint-disable-next-line @typescript-eslint/camelcase
-//     // this.subscriptions_url = `${this.url}/subscriptions`;
-//     // // eslint-disable-next-line @typescript-eslint/camelcase
-//     // this.organizations_url = `${this.url}/orgs`;
-//     // // eslint-disable-next-line @typescript-eslint/camelcase
-//     // this.repos_url = `${this.url}/repos`;
-//     // // eslint-disable-next-line @typescript-eslint/camelcase
-//     // this.events_url = `${this.url}/events{/privacy}`;
-//     // // eslint-disable-next-line @typescript-eslint/camelcase
-//     // this.received_events_url = `${this.url}/received_events`;
-//   }
-// }
+  constructor(login: string) {
+    this.login = login;
+    // this.id = id;
+    // eslint-disable-next-line @typescript-eslint/camelcase
+    this.url = `https://api.bitbucket.org/2.0/repositories/${this.login}`;
+    // eslint-disable-next-line @typescript-eslint/camelcase
+    this.html_url = `https://bitbucket.org/${this.login}`;
+    // // eslint-disable-next-line @typescript-eslint/camelcase
+    // this.followers_url = `${this.url}/followers`;
+    // // eslint-disable-next-line @typescript-eslint/camelcase
+    // this.following_url = `${this.url}/following{/other_user}`;
+    // // eslint-disable-next-line @typescript-eslint/camelcase
+    // this.gists_url = `${this.url}/gists{/gist_id}`;
+    // // eslint-disable-next-line @typescript-eslint/camelcase
+    // this.starred_url = `${this.url}/starred{/owner}{/repo}`;
+    // // eslint-disable-next-line @typescript-eslint/camelcase
+    // this.subscriptions_url = `${this.url}/subscriptions`;
+    // // eslint-disable-next-line @typescript-eslint/camelcase
+    // this.organizations_url = `${this.url}/orgs`;
+    // // eslint-disable-next-line @typescript-eslint/camelcase
+    // this.repos_url = `${this.url}/repos`;
+    // // eslint-disable-next-line @typescript-eslint/camelcase
+    // this.events_url = `${this.url}/events{/privacy}`;
+    // // eslint-disable-next-line @typescript-eslint/camelcase
+    // this.received_events_url = `${this.url}/received_events`;
+  }
+}
 
-// export class Repository {
-//   id: number;
-//   //node_id = 'MDEwOlJlcG9zaXRvcnkxMjk2MjY5';
-//   name: string;
-//   full_name: string;
-//   owner: UserItem;
-//   private = false;
-//   html_url: string;
-//   description = '';
-//   fork = false;
-//   url: string;
-//   archive_url: string;
-//   assignees_url: string;
-//   blobs_url: string;
-//   branches_url: string;
-//   collaborators_url: string;
-//   comments_url: string;
-//   commits_url: string;
-//   compare_url: string;
-//   contents_url: string;
-//   contributors_url: string;
-//   deployments_url: string;
-//   downloads_url: string;
-//   events_url: string;
-//   forks_url: string;
-//   git_commits_url: string;
-//   git_refs_url: string;
-//   git_tags_url: string;
-//   git_url: string;
-//   issue_comment_url: string;
-//   issue_events_url: string;
-//   issues_url: string;
-//   keys_url: string;
-//   labels_url: string;
-//   languages_url: string;
-//   merges_url: string;
-//   milestones_url: string;
-//   notifications_url: string;
-//   pulls_url: string;
-//   releases_url: string;
-//   ssh_url: string;
-//   stargazers_url: string;
-//   statuses_url: string;
-//   subscribers_url: string;
-//   subscription_url: string;
-//   tags_url: string;
-//   teams_url: string;
-//   trees_url: string;
-//   clone_url: string;
-//   mirror_url: string;
-//   hooks_url: string;
-//   svn_url: string;
-//   homepage = 'https://example.com';
-//   language = null;
-//   forks_count = 0;
-//   stargazers_count = 0;
-//   watchers_count = 0;
-//   size = 365;
-//   default_branch = 'master';
-//   open_issues_count = 0;
-//   is_template = true;
-//   topics = [];
-//   has_issues = true;
-//   has_projects = true;
-//   has_wiki = true;
-//   has_pages = false;
-//   has_downloads = true;
-//   archived = false;
-//   disabled = false;
-//   pushed_at = '2011-01-26T19:06:43Z';
-//   created_at = '2011-01-26T19:01:12Z';
-//   updated_at = '2011-01-26T19:14:43Z';
-//   permissions = {
-//     admin: true,
-//     push: true,
-//     pull: true,
-//   };
-//   allow_rebase_merge = true;
-//   template_repository = null;
-//   allow_squash_merge = true;
-//   allow_merge_commit = true;
-//   subscribers_count = 0;
-//   network_count = 0;
+export class Repository {
+  id: number;
+  //node_id = 'MDEwOlJlcG9zaXRvcnkxMjk2MjY5';
+  name: string;
+  full_name: string;
+  owner: UserItem;
+  private = false;
+  html_url: string;
+  description = '';
+  fork = false;
+  url: string;
+  archive_url: string;
+  assignees_url: string;
+  blobs_url: string;
+  branches_url: string;
+  collaborators_url: string;
+  comments_url: string;
+  commits_url: string;
+  compare_url: string;
+  contents_url: string;
+  contributors_url: string;
+  deployments_url: string;
+  downloads_url: string;
+  events_url: string;
+  forks_url: string;
+  git_commits_url: string;
+  git_refs_url: string;
+  git_tags_url: string;
+  git_url: string;
+  issue_comment_url: string;
+  issue_events_url: string;
+  issues_url: string;
+  keys_url: string;
+  labels_url: string;
+  languages_url: string;
+  merges_url: string;
+  milestones_url: string;
+  notifications_url: string;
+  pulls_url: string;
+  releases_url: string;
+  ssh_url: string;
+  stargazers_url: string;
+  statuses_url: string;
+  subscribers_url: string;
+  subscription_url: string;
+  tags_url: string;
+  teams_url: string;
+  trees_url: string;
+  clone_url: string;
+  mirror_url: string;
+  hooks_url: string;
+  svn_url: string;
+  homepage = 'https://example.com';
+  language = null;
+  forks_count = 0;
+  stargazers_count = 0;
+  watchers_count = 0;
+  size = 365;
+  default_branch = 'master';
+  open_issues_count = 0;
+  is_template = true;
+  topics = [];
+  has_issues = true;
+  has_projects = true;
+  has_wiki = true;
+  has_pages = false;
+  has_downloads = true;
+  archived = false;
+  disabled = false;
+  pushed_at = '2011-01-26T19:06:43Z';
+  created_at = '2011-01-26T19:01:12Z';
+  updated_at = '2011-01-26T19:14:43Z';
+  permissions = {
+    admin: true,
+    push: true,
+    pull: true,
+  };
+  allow_rebase_merge = true;
+  template_repository = null;
+  allow_squash_merge = true;
+  allow_merge_commit = true;
+  subscribers_count = 0;
+  network_count = 0;
 
-//   constructor(id: number, name: string, owner: UserItem) {
-//     this.id = id;
-//     this.name = name;
-//     this.owner = owner;
-//     // eslint-disable-next-line @typescript-eslint/camelcase
-//     this.full_name = `${this.owner.login}/${this.name}`;
-//     // eslint-disable-next-line @typescript-eslint/camelcase
-//     this.html_url = `${this.owner.html_url}/${this.name}`;
-//     this.url = `https://api.github.com/repos/${this.full_name}`;
-//     // eslint-disable-next-line @typescript-eslint/camelcase
-//     this.archive_url = `${this.url}/{archive_format}{/ref}`;
-//     // eslint-disable-next-line @typescript-eslint/camelcase
-//     this.assignees_url = `${this.url}/assignees{/user}`;
-//     // eslint-disable-next-line @typescript-eslint/camelcase
-//     this.blobs_url = `${this.url}/git/blobs{/sha}`;
-//     // eslint-disable-next-line @typescript-eslint/camelcase
-//     this.branches_url = `${this.url}/branches{/branch}`;
-//     // eslint-disable-next-line @typescript-eslint/camelcase
-//     this.collaborators_url = `${this.url}/collaborators{/collaborator}`;
-//     // eslint-disable-next-line @typescript-eslint/camelcase
-//     this.comments_url = `${this.url}/comments{/number}`;
-//     // eslint-disable-next-line @typescript-eslint/camelcase
-//     this.commits_url = `${this.url}/commits{/sha}`;
-//     // eslint-disable-next-line @typescript-eslint/camelcase
-//     this.compare_url = `${this.url}/compare/{base}...{head}`;
-//     // eslint-disable-next-line @typescript-eslint/camelcase
-//     this.contents_url = `${this.url}/contents/{+path}`;
-//     // eslint-disable-next-line @typescript-eslint/camelcase
-//     this.contributors_url = `${this.url}/contributors`;
-//     // eslint-disable-next-line @typescript-eslint/camelcase
-//     this.deployments_url = `${this.url}/deployments`;
-//     // eslint-disable-next-line @typescript-eslint/camelcase
-//     this.downloads_url = `${this.url}/downloads`;
-//     // eslint-disable-next-line @typescript-eslint/camelcase
-//     this.events_url = `${this.url}/events`;
-//     // eslint-disable-next-line @typescript-eslint/camelcase
-//     this.forks_url = `${this.url}/forks`;
-//     // eslint-disable-next-line @typescript-eslint/camelcase
-//     this.git_commits_url = `${this.url}/git/commits{/sha}`;
-//     // eslint-disable-next-line @typescript-eslint/camelcase
-//     this.git_refs_url = `${this.url}/git/refs{/sha}`;
-//     // eslint-disable-next-line @typescript-eslint/camelcase
-//     this.git_tags_url = `${this.url}/git/tags{/sha}`;
-//     // eslint-disable-next-line @typescript-eslint/camelcase
-//     this.git_url = `git:github.com/${this.full_name}.git`;
-//     // eslint-disable-next-line @typescript-eslint/camelcase
-//     this.issue_comment_url = `${this.url}/issues/comments{/number}`;
-//     // eslint-disable-next-line @typescript-eslint/camelcase
-//     this.issue_events_url = `${this.url}/issues/events{/number}`;
-//     // eslint-disable-next-line @typescript-eslint/camelcase
-//     this.issues_url = `${this.url}/issues{/number}`;
-//     // eslint-disable-next-line @typescript-eslint/camelcase
-//     this.keys_url = `${this.url}/keys{/key_id}`;
-//     // eslint-disable-next-line @typescript-eslint/camelcase
-//     this.labels_url = `${this.url}/labels{/name}`;
-//     // eslint-disable-next-line @typescript-eslint/camelcase
-//     this.languages_url = `${this.url}/languages`;
-//     // eslint-disable-next-line @typescript-eslint/camelcase
-//     this.merges_url = `${this.url}/merges`;
-//     // eslint-disable-next-line @typescript-eslint/camelcase
-//     this.milestones_url = `${this.url}/milestones{/number}`;
-//     // eslint-disable-next-line @typescript-eslint/camelcase
-//     this.notifications_url = `${this.url}/notifications{?since,all,participating}`;
-//     // eslint-disable-next-line @typescript-eslint/camelcase
-//     this.pulls_url = `${this.url}/pulls{/number}`;
-//     // eslint-disable-next-line @typescript-eslint/camelcase
-//     this.releases_url = `${this.url}/releases{/id}`;
-//     // eslint-disable-next-line @typescript-eslint/camelcase
-//     this.ssh_url = `git@github.com:${this.full_name}.git`;
-//     // eslint-disable-next-line @typescript-eslint/camelcase
-//     this.stargazers_url = `${this.url}/stargazers`;
-//     // eslint-disable-next-line @typescript-eslint/camelcase
-//     this.statuses_url = `${this.url}/statuses/{sha}`;
-//     // eslint-disable-next-line @typescript-eslint/camelcase
-//     this.subscribers_url = `${this.url}/subscribers`;
-//     // eslint-disable-next-line @typescript-eslint/camelcase
-//     this.subscription_url = `${this.url}/subscription`;
-//     // eslint-disable-next-line @typescript-eslint/camelcase
-//     this.tags_url = `${this.url}/tags`;
-//     // eslint-disable-next-line @typescript-eslint/camelcase
-//     this.teams_url = `${this.url}/teams`;
-//     // eslint-disable-next-line @typescript-eslint/camelcase
-//     this.trees_url = `${this.url}/git/trees{/sha}`;
-//     // eslint-disable-next-line @typescript-eslint/camelcase
-//     this.clone_url = `https://github.com/${this.full_name}.git`;
-//     // eslint-disable-next-line @typescript-eslint/camelcase
-//     this.mirror_url = `git:git.example.com/${this.full_name}`;
-//     // eslint-disable-next-line @typescript-eslint/camelcase
-//     this.hooks_url = `${this.url}/hooks`;
-//     // eslint-disable-next-line @typescript-eslint/camelcase
-//     this.svn_url = `https://svn.github.com/${this.full_name}`;
-//   }
-// }
+  constructor(name: string, owner: UserItem) {
+    // this.id = id;
+    this.name = name;
+    this.owner = owner;
+    // eslint-disable-next-line @typescript-eslint/camelcase
+    this.full_name = `${this.owner.login}/${this.name}`;
+    // eslint-disable-next-line @typescript-eslint/camelcase
+    this.html_url = `${this.owner.html_url}/${this.name}`;
+    this.url = `https://api.github.com/repos/${this.full_name}`;
+    // eslint-disable-next-line @typescript-eslint/camelcase
+    this.archive_url = `${this.url}/{archive_format}{/ref}`;
+    // eslint-disable-next-line @typescript-eslint/camelcase
+    this.assignees_url = `${this.url}/assignees{/user}`;
+    // eslint-disable-next-line @typescript-eslint/camelcase
+    this.blobs_url = `${this.url}/git/blobs{/sha}`;
+    // eslint-disable-next-line @typescript-eslint/camelcase
+    this.branches_url = `${this.url}/branches{/branch}`;
+    // eslint-disable-next-line @typescript-eslint/camelcase
+    this.collaborators_url = `${this.url}/collaborators{/collaborator}`;
+    // eslint-disable-next-line @typescript-eslint/camelcase
+    this.comments_url = `${this.url}/comments{/number}`;
+    // eslint-disable-next-line @typescript-eslint/camelcase
+    this.commits_url = `${this.url}/commits{/sha}`;
+    // eslint-disable-next-line @typescript-eslint/camelcase
+    this.compare_url = `${this.url}/compare/{base}...{head}`;
+    // eslint-disable-next-line @typescript-eslint/camelcase
+    this.contents_url = `${this.url}/contents/{+path}`;
+    // eslint-disable-next-line @typescript-eslint/camelcase
+    this.contributors_url = `${this.url}/contributors`;
+    // eslint-disable-next-line @typescript-eslint/camelcase
+    this.deployments_url = `${this.url}/deployments`;
+    // eslint-disable-next-line @typescript-eslint/camelcase
+    this.downloads_url = `${this.url}/downloads`;
+    // eslint-disable-next-line @typescript-eslint/camelcase
+    this.events_url = `${this.url}/events`;
+    // eslint-disable-next-line @typescript-eslint/camelcase
+    this.forks_url = `${this.url}/forks`;
+    // eslint-disable-next-line @typescript-eslint/camelcase
+    this.git_commits_url = `${this.url}/git/commits{/sha}`;
+    // eslint-disable-next-line @typescript-eslint/camelcase
+    this.git_refs_url = `${this.url}/git/refs{/sha}`;
+    // eslint-disable-next-line @typescript-eslint/camelcase
+    this.git_tags_url = `${this.url}/git/tags{/sha}`;
+    // eslint-disable-next-line @typescript-eslint/camelcase
+    this.git_url = `git:github.com/${this.full_name}.git`;
+    // eslint-disable-next-line @typescript-eslint/camelcase
+    this.issue_comment_url = `${this.url}/issues/comments{/number}`;
+    // eslint-disable-next-line @typescript-eslint/camelcase
+    this.issue_events_url = `${this.url}/issues/events{/number}`;
+    // eslint-disable-next-line @typescript-eslint/camelcase
+    this.issues_url = `${this.url}/issues{/number}`;
+    // eslint-disable-next-line @typescript-eslint/camelcase
+    this.keys_url = `${this.url}/keys{/key_id}`;
+    // eslint-disable-next-line @typescript-eslint/camelcase
+    this.labels_url = `${this.url}/labels{/name}`;
+    // eslint-disable-next-line @typescript-eslint/camelcase
+    this.languages_url = `${this.url}/languages`;
+    // eslint-disable-next-line @typescript-eslint/camelcase
+    this.merges_url = `${this.url}/merges`;
+    // eslint-disable-next-line @typescript-eslint/camelcase
+    this.milestones_url = `${this.url}/milestones{/number}`;
+    // eslint-disable-next-line @typescript-eslint/camelcase
+    this.notifications_url = `${this.url}/notifications{?since,all,participating}`;
+    // eslint-disable-next-line @typescript-eslint/camelcase
+    this.pulls_url = `${this.url}/pulls{/number}`;
+    // eslint-disable-next-line @typescript-eslint/camelcase
+    this.releases_url = `${this.url}/releases{/id}`;
+    // eslint-disable-next-line @typescript-eslint/camelcase
+    this.ssh_url = `git@github.com:${this.full_name}.git`;
+    // eslint-disable-next-line @typescript-eslint/camelcase
+    this.stargazers_url = `${this.url}/stargazers`;
+    // eslint-disable-next-line @typescript-eslint/camelcase
+    this.statuses_url = `${this.url}/statuses/{sha}`;
+    // eslint-disable-next-line @typescript-eslint/camelcase
+    this.subscribers_url = `${this.url}/subscribers`;
+    // eslint-disable-next-line @typescript-eslint/camelcase
+    this.subscription_url = `${this.url}/subscription`;
+    // eslint-disable-next-line @typescript-eslint/camelcase
+    this.tags_url = `${this.url}/tags`;
+    // eslint-disable-next-line @typescript-eslint/camelcase
+    this.teams_url = `${this.url}/teams`;
+    // eslint-disable-next-line @typescript-eslint/camelcase
+    this.trees_url = `${this.url}/git/trees{/sha}`;
+    // eslint-disable-next-line @typescript-eslint/camelcase
+    this.clone_url = `https://github.com/${this.full_name}.git`;
+    // eslint-disable-next-line @typescript-eslint/camelcase
+    this.mirror_url = `git:git.example.com/${this.full_name}`;
+    // eslint-disable-next-line @typescript-eslint/camelcase
+    this.hooks_url = `${this.url}/hooks`;
+    // eslint-disable-next-line @typescript-eslint/camelcase
+    this.svn_url = `https://svn.github.com/${this.full_name}`;
+  }
+}
 
 export const getPullRequestsResponse = { items: [], totalCount: 0, hasNextPage: false, hasPreviousPage: false, page: 1, perPage: 0 };
 
