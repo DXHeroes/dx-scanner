@@ -14,7 +14,7 @@
             dominant-baseline: text-before-edge;
             white-space: pre;
         }
-    
+
             :root {
                 --animation-duration: 17782ms;
             }
@@ -105,18 +105,18 @@
             .color0 {fill: #272822}
             .color1 {fill: #f92672}
             .color2 {fill: #a6e22e}
-            .color3 {fill: #f4bf75}
-            .color4 {fill: #66d9ef}
+            .color3 {fill: #f7f254}
+            .color4 {fill: #4c87ed}
             .color5 {fill: #ae81ff}
             .color6 {fill: #a1efe4}
             .color7 {fill: #f8f8f2}
             .color8 {fill: #75715e}
-            .color9 {fill: #fd971f}
-            .color10 {fill: #383830}
-            .color11 {fill: #49483e}
-            .color12 {fill: #a59f85}
-            .color13 {fill: #f5f4f1}
-            .color14 {fill: #cc6633}
+            .color9 {fill: #f92672}
+            .color10 {fill: #a6e22e}
+            .color11 {fill: #f7f254}
+            .color12 {fill: #4c87ed}
+            .color13 {fill: #ae81ff}
+            .color14 {fill: #a1efe4}
             .color15 {fill: #f9f8f5}
         </style>
     </defs>
