@@ -31,7 +31,7 @@ export class CLIReporter implements IReporter {
     const componentsSharedSubpath = sharedSubpath(report.components.map((c) => c.path));
 
     for (const component of report.components) {
-      lines.push('\n----------------------------\n');
+      lines.push('');
       lines.push(bold(blue('Developer Experience Report for:')));
 
       if (component.repositoryPath) {
@@ -40,7 +40,7 @@ export class CLIReporter implements IReporter {
         repoName = component.path;
       }
       lines.push(repoName);
-      lines.push('\n----------------------------');
+      lines.push('----------------------------');
 
       for (const key in PracticeImpact) {
         const impact = <PracticeImpact>PracticeImpact[key];
@@ -50,9 +50,6 @@ export class CLIReporter implements IReporter {
       }
     }
 
-    lines.push('----------------------------');
-    lines.push('');
-
     practicesOff.length === 0
       ? lines.push(bold(yellow('No practices were switched off.')))
       : lines.push(bold(red('You switched off these practices:')));
@@ -60,7 +57,6 @@ export class CLIReporter implements IReporter {
       lines.push(red(`- ${italic(practice.getMetadata().name)}`));
     }
 
-    lines.push('');
     lines.push('----------------------------');
     lines.push('');
     lines.push(italic(blue('Implementation is not adoption.')));
@@ -101,7 +97,6 @@ export class CLIReporter implements IReporter {
       if (practice.defaultImpact !== practice.impact) {
         lines.push(bold(this.changedImpact(practice, (color = grey))));
       }
-      lines.push(bold(''));
     }
 
     lines.push(bold(''));
