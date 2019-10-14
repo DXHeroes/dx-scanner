@@ -1,13 +1,13 @@
-import { IDetector } from './IDetector';
-import git from 'simple-git/promise';
-import { ScanningStrategyDetectorUtils } from './utils/ScanningStrategyDetectorUtils';
 import gitUrlParse from 'git-url-parse';
-import { injectable, inject } from 'inversify';
-import { ErrorFactory } from '../lib/errors';
-import { Types } from '../types';
+import { inject, injectable } from 'inversify';
+import git from 'simple-git/promise';
 import { ArgumentsProvider } from '../inversify.config';
-import { GitHubService } from '../services/git/GitHubService';
+import { ErrorFactory } from '../lib/errors';
 import { BitbucketService } from '../services/bitbucket/BitbucketService';
+import { GitHubService } from '../services/git/GitHubService';
+import { Types } from '../types';
+import { IDetector } from './IDetector';
+import { ScanningStrategyDetectorUtils } from './utils/ScanningStrategyDetectorUtils';
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const parseBitbucketUrl = require('parse-bitbucket-url');
 
@@ -111,7 +111,7 @@ export class ScanningStrategyDetector implements IDetector<string, ScanningStrat
       try {
         response = await this.bitbucketService.getRepo(parsedUrl.owner, parsedUrl.name);
       } catch (error) {
-        if (error.status === 401 || error.status === 404 || error.status === 403) {
+        if (error.code === 401 || error.code === 404 || error.code === 403) {
           throw ErrorFactory.newArgumentError('You passed bad credentials or non existing repo.');
         }
         throw error;
