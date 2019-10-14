@@ -1,3 +1,48 @@
+## [1.6.1](https://github.com/dxheroes/dx-scanner/compare/v1.6.0...v1.6.1) (2019-10-03)
+
+
+### Bug Fixes
+
+* add tests for EslintCorrectlyUsedPractice ([187f697](https://github.com/dxheroes/dx-scanner/commit/187f697))
+* Allow user to add impact in object in dx config file ([22e1577](https://github.com/dxheroes/dx-scanner/commit/22e1577))
+* allow user to customize configuration of DX scanner so it could be string or object ([a58f571](https://github.com/dxheroes/dx-scanner/commit/a58f571))
+* Catch the error and if it's SyntaxError return PracticeEvaluationResult.unknown ([be7d1b9](https://github.com/dxheroes/dx-scanner/commit/be7d1b9))
+* compare RegExp name with the package.name ([3e4a3f4](https://github.com/dxheroes/dx-scanner/commit/3e4a3f4))
+* eslint practice ([6acf75f](https://github.com/dxheroes/dx-scanner/commit/6acf75f))
+* Fix the condition for eslintIgnore ([54ca010](https://github.com/dxheroes/dx-scanner/commit/54ca010))
+* Interface of Config; add  interface for EslintConfig and use it in PracticeContext ([70f4c9c](https://github.com/dxheroes/dx-scanner/commit/70f4c9c))
+* Path for scanFor() ([c29708a](https://github.com/dxheroes/dx-scanner/commit/c29708a))
+* Remove console.logs, ([08a78cf](https://github.com/dxheroes/dx-scanner/commit/08a78cf))
+* Remove unnecessary logs. ([85baa4e](https://github.com/dxheroes/dx-scanner/commit/85baa4e))
+* remove unnecessary type definition ([3e6fd36](https://github.com/dxheroes/dx-scanner/commit/3e6fd36))
+* rename EslintConfig to PracticeConfig; return always PracticeConfig in getOverridenPractice() ([81e00cd](https://github.com/dxheroes/dx-scanner/commit/81e00cd))
+* rename practice ([05c09f7](https://github.com/dxheroes/dx-scanner/commit/05c09f7))
+* run on eslint/espree repo ([faa838e](https://github.com/dxheroes/dx-scanner/commit/faa838e))
+* throw error if it's not a SyntaxError ([3644149](https://github.com/dxheroes/dx-scanner/commit/3644149))
+* typo ([2dcb4c4](https://github.com/dxheroes/dx-scanner/commit/2dcb4c4))
+* typo ([898dcc6](https://github.com/dxheroes/dx-scanner/commit/898dcc6))
+
+# [1.6.0](https://github.com/dxheroes/dx-scanner/compare/v1.5.0...v1.6.0) (2019-10-02)
+
+
+### Features
+
+* **cli:** add update-notifier ([6733185](https://github.com/dxheroes/dx-scanner/commit/6733185)), closes [#70](https://github.com/dxheroes/dx-scanner/issues/70)
+
+# [1.5.0](https://github.com/dxheroes/dx-scanner/compare/v1.4.2...v1.5.0) (2019-10-02)
+
+
+### Features
+
+* **cli:** add postinstall message with hint to create .dxscannerrc config file ([b652ee2](https://github.com/dxheroes/dx-scanner/commit/b652ee2))
+
+## [1.4.2](https://github.com/dxheroes/dx-scanner/compare/v1.4.1...v1.4.2) (2019-10-02)
+
+
+### Bug Fixes
+
+* **GitService:** change join for resolve ([#74](https://github.com/dxheroes/dx-scanner/issues/74)) ([e5e4827](https://github.com/dxheroes/dx-scanner/commit/e5e4827))
+
 ## [1.4.1](https://github.com/dxheroes/dx-scanner/compare/v1.4.0...v1.4.1) (2019-09-12)
 
 

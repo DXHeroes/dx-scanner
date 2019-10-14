@@ -27,6 +27,7 @@ export const createRootContainer = (args: ArgumentsProvider): Container => {
   bindScanningStrategyDetectors(container);
   bindScanningContext(container);
   args.json ? container.bind<IReporter>(Types.IReporter).to(JSONReporter) : container.bind<IReporter>(Types.IReporter).to(CLIReporter);
+  container.bind(Types.JSONReporter).to(JSONReporter);
   container.bind(Types.ArgumentsProvider).toConstantValue(args);
   container.bind(Scanner).toSelf();
   container.bind(FileSystemService).toSelf();

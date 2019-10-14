@@ -29,7 +29,14 @@ export class JsPackageJsonConfigurationSetCorrectlyPractice implements IPractice
     let parsedPackageJson;
 
     if (content) {
-      parsedPackageJson = JSON.parse(content);
+      try {
+        parsedPackageJson = JSON.parse(content);
+      } catch (error) {
+        if (error instanceof SyntaxError) {
+          return PracticeEvaluationResult.unknown;
+        }
+        throw error;
+      }
     }
 
     if (parsedPackageJson.scripts) {

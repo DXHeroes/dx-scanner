@@ -1,0 +1,9 @@
+#!/usr/bin/env node
+/* eslint-disable @typescript-eslint/no-var-requires, @typescript-eslint/no-require-imports */
+
+const packageName = process.env.NAME
+
+// We cannot run it when working on dx-scanner.
+if (packageName !== "dx-scanner") {
+  console.log(`You can create .dxscannerrc in your repository to customize configuration.`);
+}

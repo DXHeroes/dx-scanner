@@ -19,6 +19,7 @@ import { EditorConfigIsPresentPractice } from './LanguageIndependent/EditorConfi
 import { JsGitignoreIsPresentPractice } from './JavaScript/JsGitignoreIsPresentPractice';
 import { JsGitignoreCorrectlySetPractice } from './JavaScript/JsGitignoreCorrectlySetPractice';
 import { DependenciesVersionPractice } from './LanguageIndependent/DependenciesVersionPractice';
+import { ESLintWithoutErrorsPractice } from './JavaScript/ESLintWithoutErrorsPractice';
 
 // register practices here
 export const practices = [
@@ -26,6 +27,7 @@ export const practices = [
   TypeScriptUsedPractice,
   PrettierUsedPractice,
   ESLintUsedPractice,
+  ESLintWithoutErrorsPractice,
   LockfileIsPresentPractice,
   UnitTestPractice,
   JsFrontendTestingFrameworkUsedPractice,

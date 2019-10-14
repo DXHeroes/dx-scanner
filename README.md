@@ -13,7 +13,7 @@
 
 # DX Scanner
 
-DX Scanner is an open source library that allows you to “measure” Developer Experience directly based on your source code. DX Scanner recommends practices that can help you with improving your product development.
+DX Scanner is an open source CLI tool that allows you to “measure” Developer Experience directly based on your source code. DX Scanner recommends practices that can help you with improving your product development.
 
 ![DX Scanner Demo](./demo.svg)
 
@@ -23,11 +23,12 @@ DX Scanner is an open source library that allows you to “measure” Developer 
 Language | Supported
 ------------ | -------------
 JavaScript/TypeScript | ✅
-Ruby | 🚧
-C# | 🚧
-Java | 🚧
+Java | 🏁
 Python | 🚧
+PHP | 🚧
 C++ | 🚧
+C# | 🚧
+Ruby | 🚧
 
 ## Getting Started 🏁
 
