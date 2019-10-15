@@ -9,7 +9,7 @@ import { PracticeContext } from '../../contexts/practice/PracticeContext';
   impact: PracticeImpact.high,
   suggestion: 'Add Readme to tell other people why your project is useful, what they can do with your project, and how they can use it.',
   reportOnlyOnce: true,
-  url: 'https://readme.io/',
+  url: 'https://dxkb.io/p/readme',
 })
 export class ReadmeIsPresentPractice implements IPractice {
   async isApplicable(): Promise<boolean> {
