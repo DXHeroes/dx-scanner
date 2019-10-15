@@ -1,4 +1,4 @@
-#!/usr/bin/env node --no-warnings
+#!/usr/bin/env node
 /* eslint-disable @typescript-eslint/no-var-requires, @typescript-eslint/no-require-imports */
 
 const fs = require('fs');
