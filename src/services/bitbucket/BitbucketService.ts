@@ -83,7 +83,7 @@ export class BitbucketService {
             url: val.destination.repository.links.html.href,
             name: val.destination.repository.name,
             id: val.destination.repository.uuid,
-            owner: val.destination.repository.fullname.split('/').shift(),
+            owner: val.destination.repository.full_name.split('/').shift(),
           },
         },
       }));
@@ -305,9 +305,9 @@ export class BitbucketService {
     const hasPreviousPage = !!data.previous;
     const page = data.page;
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    const perPage = data.values!.length;
+    const perPage = data.values && data.values.length;
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    const totalCount = data.values!.length;
+    const totalCount = data.values && data.values.length;
 
     return { totalCount, hasNextPage, hasPreviousPage, page, perPage };
   }
