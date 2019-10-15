@@ -10,7 +10,7 @@ import { PracticeContext } from '../../contexts/practice/PracticeContext';
   suggestion:
     'Continuous Integration (CI) is a practice of daily integrating code changes. Use CI to reduce the integration risk, improve code quality and more.',
   reportOnlyOnce: true,
-  url: 'https://developerexperience.io/practices/continuous-integration',
+  url: 'https://dxkb.io/p/continuous-integration',
 })
 export class CIUsedPractice implements IPractice {
   async isApplicable(): Promise<boolean> {

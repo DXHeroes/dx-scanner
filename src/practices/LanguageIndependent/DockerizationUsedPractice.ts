@@ -9,7 +9,7 @@ import { PracticeContext } from '../../contexts/practice/PracticeContext';
   impact: PracticeImpact.small,
   suggestion: 'Use docker to create, deploy, and run applications easier by using containers.',
   reportOnlyOnce: true,
-  url: 'https://docs.docker.com/get-started/',
+  url: 'https://dxkb.io/p/dockerizing',
 })
 export class DockerizationUsedPractice implements IPractice {
   async isApplicable(): Promise<boolean> {
