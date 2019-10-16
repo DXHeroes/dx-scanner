@@ -1,62 +1,53 @@
 /* eslint-disable @typescript-eslint/camelcase */
 import nock from 'nock';
-import * as nodePath from 'path';
 
 export class BitbucketNock {
-  getPullRequests(pulls: { user: string; repoName: string }) {
-    const response = new PullRequests().pullrequests;
+  user: string;
+  repoName: string;
 
-    const url = `https://api.bitbucket.org/2.0/repositories/${pulls.user}/${pulls.repoName}/pullrequests`;
-    const params = {};
-    const persist = true;
-
-    return BitbucketNock.get(url, params, persist).reply(200, response);
+  constructor(user: string, repoName: string) {
+    (this.user = user), (this.repoName = repoName);
   }
 
-  getPullRequest(pull: { user: string; repoName: string; pullRequestId: number }) {
-    const response = new PullRequest().pullRequest;
+  getApiResponse(resource: string, id?: number, value?: string) {
+    let url = `https://api.bitbucket.org/2.0/repositories/${this.user}/${this.repoName}/${resource}`;
+    let response;
 
-    const url = `https://api.bitbucket.org/2.0/repositories/${pull.user}/${pull.repoName}/pullrequests/${pull.pullRequestId}`;
-    const params = {};
-    const persist = true;
+    if (value !== undefined) {
+      switch (value) {
+        case 'comments':
+          url = url.concat(`/${id}/${value}`);
+          response = new IssueComments().issueComments;
+          break;
+        case 'commits':
+          url = url.concat(`/${id}/${value}`);
+          response = new Commits().commits;
+          break;
+      }
+    } else {
+      switch (resource) {
+        case 'pullrequests':
+          if (id !== undefined) {
+            url = url.concat(`/${id}`);
+            response = new PullRequest().pullRequest;
+          } else {
+            response = new PullRequests().pullrequests;
+          }
+          break;
+        case 'issues':
+          if (id !== undefined) {
+            url = url.concat(`/${id}`);
+            response = new Issue().issue;
+          } else {
+            response = new Issues().issues;
+          }
+          break;
 
-    return BitbucketNock.get(url, params, persist).reply(200, response);
-  }
+        default:
+          throw Error('You passed wrong value or id');
+      }
+    }
 
-  getPullCommits(pull: { user: string; repoName: string; pullRequestId: number }) {
-    const response = new Commits().commits;
-
-    const url = `https://api.bitbucket.org/2.0/repositories/${pull.user}/${pull.repoName}/pullrequests/${pull.pullRequestId}/commits`;
-    const params = {};
-    const persist = true;
-
-    return BitbucketNock.get(url, params, persist).reply(200, response);
-  }
-
-  getIssues(issues: { user: string; repoName: string }) {
-    const response = new Issues().issues;
-
-    const url = `https://api.bitbucket.org/2.0/repositories/${issues.user}/${issues.repoName}/issues`;
-    const params = {};
-    const persist = true;
-
-    return BitbucketNock.get(url, params, persist).reply(200, response);
-  }
-
-  getIssue(issue: { user: string; repoName: string; issueId: number }) {
-    const response = new Issue().issue;
-
-    const url = `https://api.bitbucket.org/2.0/repositories/${issue.user}/${issue.repoName}/issues/${issue.issueId}`;
-    const params = {};
-    const persist = true;
-
-    return BitbucketNock.get(url, params, persist).reply(200, response);
-  }
-
-  getIssueComments(issue: { user: string; repoName: string; issueId: number }) {
-    const response = new IssueComments().issueComments;
-
-    const url = `https://api.bitbucket.org/2.0/repositories/${issue.user}/${issue.repoName}/issues/${issue.issueId}/comments`;
     const params = {};
     const persist = true;
 
