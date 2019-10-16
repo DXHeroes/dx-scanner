@@ -47,55 +47,63 @@ describe('Bitbucket Service', () => {
     nock.cleanAll();
   });
 
-  describe('#getPullRequests', () => {
-    it('returns pull requests in own interface', async () => {
-      const bitbucketNock = new BitbucketNock();
-      const pulls = {
-        user: 'pypy',
-        repoName: 'pypy',
-      };
-      bitbucketNock.getPullRequests(pulls);
+  //describe('#getPullRequests', () => {
+  it('returns pull requests in own interface', async () => {
+    const bitbucketNock = new BitbucketNock();
+    const pulls = {
+      user: 'pypy',
+      repoName: 'pypy',
+    };
+    bitbucketNock.getPullRequests(pulls);
 
-      const response = await service.getPullRequests('pypy', 'pypy');
-      expect(response).toMatchObject(getPullRequestsResponse);
-    });
-
-    it('returns pull request in own interface', async () => {
-      const bitbucketNock = new BitbucketNock();
-      const pulls = {
-        user: 'pypy',
-        repoName: 'pypy',
-        pullRequestId: 1,
-      };
-      bitbucketNock.getPullRequest(pulls);
-
-      const response = await service.getPullRequest('pypy', 'pypy', 1);
-      expect(response).toMatchObject(getPullRequestResponse);
-    });
-
-    it.only('returns pullrequest commits in own interface', async () => {
-      const response = await service.getPullCommits('pypy', 'pypy', 622);
-      expect(response).toMatchObject(getPullCommits);
-    });
-
-    it('returns issues in own interface', async () => {
-      const response = await service.getIssues('pypy', 'pypy');
-      expect(response).toMatchObject(getIssuesResponse);
-    });
-
-    it('returns issue in own interface', async () => {
-      const response = await service.getIssue('pypy', 'pypy', 3086);
-      expect(response).toMatchObject(getIssueResponse);
-    });
-
-    it('returns issue comments in own interface', async () => {
-      const response = await service.getIssueComments('pypy', 'pypy', 3086);
-      if (response.items !== undefined) {
-        for (const item of response.items) {
-          //console.log(item.body);
-        }
-      }
-      //expect(response).toMatchObject(getIssueCommentsResponse);
-    });
+    const response = await service.getPullRequests('pypy', 'pypy');
+    expect(response).toMatchObject(getPullRequestsResponse);
   });
+
+  it('returns pull request in own interface', async () => {
+    const bitbucketNock = new BitbucketNock();
+    const pull = {
+      user: 'pypy',
+      repoName: 'pypy',
+      pullRequestId: 1,
+    };
+    bitbucketNock.getPullRequest(pull);
+
+    const response = await service.getPullRequest('pypy', 'pypy', 1);
+    expect(response).toMatchObject(getPullRequestResponse);
+  });
+
+  it('returns pullrequest commits in own interface', async () => {
+    const bitbucketNock = new BitbucketNock();
+    const pull = {
+      user: 'pypy',
+      repoName: 'pypy',
+      pullRequestId: 622,
+    };
+    bitbucketNock.getPullCommits(pull);
+
+    const response = await service.getPullCommits('pypy', 'pypy', 622);
+    expect(response).toMatchObject(getPullCommits);
+  });
+
+  it.only('returns issues in own interface', async () => {
+    const response = await service.getIssues('pypy', 'pypy');
+    expect(response).toMatchObject(getIssuesResponse);
+  });
+
+  it('returns issue in own interface', async () => {
+    const response = await service.getIssue('pypy', 'pypy', 3086);
+    expect(response).toMatchObject(getIssueResponse);
+  });
+
+  it('returns issue comments in own interface', async () => {
+    const response = await service.getIssueComments('pypy', 'pypy', 3086);
+    if (response.items !== undefined) {
+      for (const item of response.items) {
+        //console.log(item.body);
+      }
+    }
+    //expect(response).toMatchObject(getIssueCommentsResponse);
+  });
+  //});
 });

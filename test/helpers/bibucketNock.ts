@@ -3,38 +3,30 @@ import nock from 'nock';
 import * as nodePath from 'path';
 
 export class BitbucketNock {
-  // repository: Repository;
-
-  // constructor(ownerLogin: string, repoName: string) {
-  //   this.repository = new Repository(repoName, new UserItem(ownerLogin));
-  // }
-
-  // getPullRequests(pulls: { number: number; state: string }[]): PullRequestItem[] {
-  //   const responseBody = pulls.map(({ number, state }) => new PullRequestItem(number, state));
-
-  //   return this.getPullsInternal(undefined, queryState, responseBody, persist);
-  // }
-
   getPullRequests(pulls: { user: string; repoName: string }) {
-    // const response = pulls.map(
-    //   ({ user, repoName /*pullRequestId*/ }) => new PullRequest(new User(user), new Base(repoName, new Owner(user))),
-    // );
-
     const response = new PullRequests().pullrequests;
 
     const url = `https://api.bitbucket.org/2.0/repositories/${pulls.user}/${pulls.repoName}/pullrequests`;
     const params = {};
     const persist = true;
 
-    // const scope = nock('https://api.bitbucket.org/2.0').get(`/repositories/${pulls.user}/${pulls.repoName}/pullrequests`);
-    // return scope;
-    //console.log(response)
     return BitbucketNock.get(url, params, persist).reply(200, response);
   }
 
   getPullRequest(pull: { user: string; repoName: string; pullRequestId: number }) {
     const response = new PullRequest().pullRequest;
+
     const url = `https://api.bitbucket.org/2.0/repositories/${pull.user}/${pull.repoName}/pullrequests/${pull.pullRequestId}`;
+    const params = {};
+    const persist = true;
+
+    return BitbucketNock.get(url, params, persist).reply(200, response);
+  }
+
+  getPullCommits(pull: { user: string; repoName: string; pullRequestId: number }) {
+    const response = new Commits().commits;
+
+    const url = `https://api.bitbucket.org/2.0/repositories/${pull.user}/${pull.repoName}/pullrequests/${pull.pullRequestId}/commits`;
     const params = {};
     const persist = true;
 
@@ -68,162 +60,6 @@ export class PullRequests {
       size: 20,
       values: [new PullRequest().pullRequest],
     };
-    //     this.pullrequests = {
-    //       pagelen: 10,
-    //       size: 20,
-    //       values: [
-    //         {
-    //           description:
-    //             "Cfr. [https://www.python.org/dev/peps/pep-0553/](https://www.python.org/dev/peps/pep-0553/) and [https://github.com/python/cpython/pull/3355/](https://github.com/python/cpython/pull/3355/)\r\n\r\n‌\r\n\r\nReplaced the proposed \\([https://www.python.org/dev/peps/pep-0553/#implementation](https://www.python.org/dev/peps/pep-0553/#implementation)\\)\r\n\r\n```python\r\ndef breakpoint(*args, **kws):\r\n    import sys\r\n    missing = object()\r\n    hook = getattr(sys, 'breakpointhook', missing)\r\n    if hook is missing:\r\n        raise RuntimeError('lost sys.breakpointhook')\r\n    return hook(*args, **kws)\r\n```\r\n\r\nby simpler\r\n\r\n```python\r\nimport sys\r\n\r\ndef breakpoint(*args, **kwargs):\r\n    if not hasattr(sys, 'breakpointhook'):\r\n        raise RuntimeError('lost sys.breakpointhook')\r\n    return sys.breakpointhook(*args, **kwargs)\r\n```\r\n\r\n‌\r\n\r\nTests are still missing, as they are not immediately straightforward to implement.",
-    //           links: {
-    //             decline: {
-    //               href: 'https://api.bitbucket.org/2.0/repositories/pypy/pypy/pullrequests/671/decline',
-    //             },
-    //             diffstat: {
-    //               href:
-    //                 'https://api.bitbucket.org/2.0/repositories/pypy/pypy/diffstat/Yannick_Jadoul/pypy:075c2edf30ee%0Ddff15039dbab?from_pullrequest_id=671',
-    //             },
-    //             commits: {
-    //               href: 'https://api.bitbucket.org/2.0/repositories/pypy/pypy/pullrequests/671/commits',
-    //             },
-    //             self: {
-    //               href: 'https://api.bitbucket.org/2.0/repositories/pypy/pypy/pullrequests/671',
-    //             },
-    //             comments: {
-    //               href: 'https://api.bitbucket.org/2.0/repositories/pypy/pypy/pullrequests/671/comments',
-    //             },
-    //             merge: {
-    //               href: 'https://api.bitbucket.org/2.0/repositories/pypy/pypy/pullrequests/671/merge',
-    //             },
-    //             html: {
-    //               href: 'https://bitbucket.org/pypy/pypy/pull-requests/671',
-    //             },
-    //             activity: {
-    //               href: 'https://api.bitbucket.org/2.0/repositories/pypy/pypy/pullrequests/671/activity',
-    //             },
-    //             diff: {
-    //               href:
-    //                 'https://api.bitbucket.org/2.0/repositories/pypy/pypy/diff/Yannick_Jadoul/pypy:075c2edf30ee%0Ddff15039dbab?from_pullrequest_id=671',
-    //             },
-    //             approve: {
-    //               href: 'https://api.bitbucket.org/2.0/repositories/pypy/pypy/pullrequests/671/approve',
-    //             },
-    //             statuses: {
-    //               href: 'https://api.bitbucket.org/2.0/repositories/pypy/pypy/pullrequests/671/statuses',
-    //             },
-    //           },
-    //           title: '[WIP] PEP 533 implementation',
-    //           close_source_branch: false,
-    //           type: 'pullrequest',
-    //           id: 671,
-    //           destination: {
-    //             commit: {
-    //               hash: 'dff15039dbab',
-    //               type: 'commit',
-    //               links: {
-    //                 self: {
-    //                   href: 'https://api.bitbucket.org/2.0/repositories/pypy/pypy/commit/dff15039dbab',
-    //                 },
-    //                 html: {
-    //                   href: 'https://bitbucket.org/pypy/pypy/commits/dff15039dbab',
-    //                 },
-    //               },
-    //             },
-    //             repository: {
-    //               links: {
-    //                 self: {
-    //                   href: 'https://api.bitbucket.org/2.0/repositories/pypy/pypy',
-    //                 },
-    //                 html: {
-    //                   href: 'https://bitbucket.org/pypy/pypy',
-    //                 },
-    //                 avatar: {
-    //                   href: 'https://bytebucket.org/ravatar/%7B54220cd1-b139-4188-9455-1e13e663f1ac%7D?ts=105930',
-    //                 },
-    //               },
-    //               type: 'repository',
-    //               name: 'pypy',
-    //               full_name: 'pypy/pypy',
-    //               uuid: '{54220cd1-b139-4188-9455-1e13e663f1ac}',
-    //             },
-    //             branch: {
-    //               name: 'py3.7',
-    //             },
-    //           },
-    //           created_on: '2019-10-12T21:52:03.150669+00:00',
-    //           summary: {
-    //             raw:
-    //               "Cfr. [https://www.python.org/dev/peps/pep-0553/](https://www.python.org/dev/peps/pep-0553/) and [https://github.com/python/cpython/pull/3355/](https://github.com/python/cpython/pull/3355/)\r\n\r\n‌\r\n\r\nReplaced the proposed \\([https://www.python.org/dev/peps/pep-0553/#implementation](https://www.python.org/dev/peps/pep-0553/#implementation)\\)\r\n\r\n```python\r\ndef breakpoint(*args, **kws):\r\n    import sys\r\n    missing = object()\r\n    hook = getattr(sys, 'breakpointhook', missing)\r\n    if hook is missing:\r\n        raise RuntimeError('lost sys.breakpointhook')\r\n    return hook(*args, **kws)\r\n```\r\n\r\nby simpler\r\n\r\n```python\r\nimport sys\r\n\r\ndef breakpoint(*args, **kwargs):\r\n    if not hasattr(sys, 'breakpointhook'):\r\n        raise RuntimeError('lost sys.breakpointhook')\r\n    return sys.breakpointhook(*args, **kwargs)\r\n```\r\n\r\n‌\r\n\r\nTests are still missing, as they are not immediately straightforward to implement.",
-    //             markup: 'markdown',
-    //             html:
-    //               '<p>Cfr. <a data-is-external-link="true" href="https://www.python.org/dev/peps/pep-0553/" rel="nofollow">https://www.python.org/dev/peps/pep-0553/</a> and <a data-is-external-link="true" href="https://github.com/python/cpython/pull/3355/" rel="nofollow">https://github.com/python/cpython/pull/3355/</a></p>\n<p>‌</p>\n<p>Replaced the proposed (<a data-is-external-link="true" href="https://www.python.org/dev/peps/pep-0553/#implementation" rel="nofollow">https://www.python.org/dev/peps/pep-0553/#implementation</a>)</p>\n<div class="codehilite language-python"><pre><span></span><span class="k">def</span> <span class="nf">breakpoint</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kws</span><span class="p">):</span>\n    <span class="kn">import</span> <span class="nn">sys</span>\n    <span class="n">missing</span> <span class="o">=</span> <span class="nb">object</span><span class="p">()</span>\n    <span class="n">hook</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">sys</span><span class="p">,</span> <span class="s1">&#39;breakpointhook&#39;</span><span class="p">,</span> <span class="n">missing</span><span class="p">)</span>\n    <span class="k">if</span> <span class="n">hook</span> <span class="ow">is</span> <span class="n">missing</span><span class="p">:</span>\n        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s1">&#39;lost sys.breakpointhook&#39;</span><span class="p">)</span>\n    <span class="k">return</span> <span class="n">hook</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kws</span><span class="p">)</span>\n</pre></div>\n\n\n<p>by simpler</p>\n<div class="codehilite language-python"><pre><span></span><span class="kn">import</span> <span class="nn">sys</span>\n\n<span class="k">def</span> <span class="nf">breakpoint</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>\n    <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">sys</span><span class="p">,</span> <span class="s1">&#39;breakpointhook&#39;</span><span class="p">):</span>\n        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s1">&#39;lost sys.breakpointhook&#39;</span><span class="p">)</span>\n    <span class="k">return</span> <span class="n">sys</span><span class="o">.</span><span class="n">breakpointhook</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>\n</pre></div>\n\n\n<p>‌</p>\n<p>Tests are still missing, as they are not immediately straightforward to implement.</p>',
-    //             type: 'rendered',
-    //           },
-    //           source: {
-    //             commit: {
-    //               hash: '075c2edf30ee',
-    //               type: 'commit',
-    //               links: {
-    //                 self: {
-    //                   href: 'https://api.bitbucket.org/2.0/repositories/Yannick_Jadoul/pypy/commit/075c2edf30ee',
-    //                 },
-    //                 html: {
-    //                   href: 'https://bitbucket.org/Yannick_Jadoul/pypy/commits/075c2edf30ee',
-    //                 },
-    //               },
-    //             },
-    //             repository: {
-    //               links: {
-    //                 self: {
-    //                   href: 'https://api.bitbucket.org/2.0/repositories/Yannick_Jadoul/pypy',
-    //                 },
-    //                 html: {
-    //                   href: 'https://bitbucket.org/Yannick_Jadoul/pypy',
-    //                 },
-    //                 avatar: {
-    //                   href: 'https://bytebucket.org/ravatar/%7Be21192c5-da8c-4db6-9c21-9e167283a334%7D?ts=python',
-    //                 },
-    //               },
-    //               type: 'repository',
-    //               name: 'pypy',
-    //               full_name: 'Yannick_Jadoul/pypy',
-    //               uuid: '{e21192c5-da8c-4db6-9c21-9e167283a334}',
-    //             },
-    //             branch: {
-    //               name: 'py3.7-pep553',
-    //             },
-    //           },
-    //           comment_count: 4,
-    //           state: 'OPEN',
-    //           task_count: 0,
-    //           reason: '',
-    //           updated_on: '2019-10-14T22:26:27.626102+00:00',
-    //           author: {
-    //             display_name: 'Yannick Jadoul',
-    //             uuid: '{afdb1c84-0f8a-4104-85d2-f3012a479592}',
-    //             links: {
-    //               self: {
-    //                 href: 'https://api.bitbucket.org/2.0/users/%7Bafdb1c84-0f8a-4104-85d2-f3012a479592%7D',
-    //               },
-    //               html: {
-    //                 href: 'https://bitbucket.org/%7Bafdb1c84-0f8a-4104-85d2-f3012a479592%7D/',
-    //               },
-    //               avatar: {
-    //                 href:
-    //                   'https://secure.gravatar.com/avatar/e9ff28aedb0ee947074084d31a9da1b9?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FYJ-1.png',
-    //               },
-    //             },
-    //             nickname: 'Yannick_Jadoul',
-    //             type: 'user',
-    //             account_id: '557058:089ffcae-fe92-4101-aef5-f2b969471546',
-    //           },
-    //           merge_commit: null,
-    //           closed_by: null,
-    //         },
-    //       ],
-    //       page: 1,
-    //       next: 'https://api.bitbucket.org/2.0/repositories/pypy/pypy/pullrequests?page=2',
-    //     };
   }
 }
 
@@ -231,35 +67,11 @@ export class PullRequest {
   pullRequest: Bitbucket.Schema.Pullrequest & Bitbucket.Schema.Object;
   constructor() {
     this.pullRequest = {
-      //   rendered: {
-      //     reason: {
-      //       raw: 'already merged',
-      //       markup: 'markdown',
-      //       html: '<p>already merged</p>',
-      //       type: 'rendered',
-      //     },
-      //     description: {
-      //       raw: 'Added a floor() ufunc to micronumpy',
-      //       markup: 'markdown',
-      //       html: '<p>Added a floor() ufunc to micronumpy</p>',
-      //       type: 'rendered',
-      //     },
-      //     title: {
-      //       raw: 'floor ufunc for micronumpy',
-      //       markup: 'markdown',
-      //       html: '<p>floor ufunc for micronumpy</p>',
-      //       type: 'rendered',
-      //     },
-      //   },
-      //type: 'pullrequest',
       description: 'Added a floor() ufunc to micronumpy',
       links: {
         decline: {
           href: 'https://api.bitbucket.org/2.0/repositories/pypy/pypy/pullrequests/1/decline',
         },
-        // diffstat: {
-        //   href: 'https://api.bitbucket.org/2.0/repositories/pypy/pypy/diffstat/None?from_pullrequest_id=1',
-        // },
         commits: {
           href: 'https://api.bitbucket.org/2.0/repositories/pypy/pypy/pullrequests/1/commits',
         },
@@ -284,9 +96,6 @@ export class PullRequest {
         approve: {
           href: 'https://api.bitbucket.org/2.0/repositories/pypy/pypy/pullrequests/1/approve',
         },
-        // statuses: {
-        //   href: 'https://api.bitbucket.org/2.0/repositories/pypy/pypy/pullrequests/1/statuses',
-        // },
       },
       title: 'floor ufunc for micronumpy',
       close_source_branch: false,
@@ -324,15 +133,6 @@ export class PullRequest {
       source: {
         commit: {
           hash: '0f45e3d5961f',
-          //type: 'commit',
-          //   links: {
-          //     self: {
-          //       href: 'https://api.bitbucket.org/2.0/repositories/landtuna/pypy/commit/0f45e3d5961f',
-          //     },
-          //     html: {
-          //       href: 'https://bitbucket.org/landtuna/pypy/commits/0f45e3d5961f',
-          //     },
-          //   },
         },
         repository: {
           links: {
@@ -404,272 +204,160 @@ export class PullRequest {
       next: 'https://api.bitbucket.org/2.0/repositories/pypy/pypy/pullrequests?page=2',
     };
   }
-
-  //   user: User;
-  //   url = 'string';
-  //   body = 'string';
-  //   createdAt = '2011-06-22T19:44:39.555192+00:00';
-  //   updatedAt = '2011-06-22T19:44:39.555192+00:00';
-  //   mergedAt? = 'any';
-  //   state = 'string';
-  //   id = 123;
-  //   base: Base;
 }
 
-// export class UserItem {
-//   login: string;
-//   id: number;
-//   //node_id = 'MDQ6VXNlcjE=';
-//   url: string;
-//   html_url: string;
-//   // followers_url: string;
-//   // following_url: string;
-//   // gists_url: string;
-//   // starred_url: string;
-//   // subscriptions_url: string;
-//   // organizations_url: string;
-//   // repos_url: string;
-//   // events_url: string;
-//   // received_events_url: string;
-//   type = 'User';
-//   site_admin = false;
-
-//   constructor(login: string) {
-//     this.login = login;
-//     // this.id = id;
-//     // eslint-disable-next-line @typescript-eslint/camelcase
-//     this.url = `https://api.bitbucket.org/2.0/repositories/${this.login}`;
-//     // eslint-disable-next-line @typescript-eslint/camelcase
-//     this.html_url = `https://bitbucket.org/${this.login}`;
-//     // // eslint-disable-next-line @typescript-eslint/camelcase
-//     // this.followers_url = `${this.url}/followers`;
-//     // // eslint-disable-next-line @typescript-eslint/camelcase
-//     // this.following_url = `${this.url}/following{/other_user}`;
-//     // // eslint-disable-next-line @typescript-eslint/camelcase
-//     // this.gists_url = `${this.url}/gists{/gist_id}`;
-//     // // eslint-disable-next-line @typescript-eslint/camelcase
-//     // this.starred_url = `${this.url}/starred{/owner}{/repo}`;
-//     // // eslint-disable-next-line @typescript-eslint/camelcase
-//     // this.subscriptions_url = `${this.url}/subscriptions`;
-//     // // eslint-disable-next-line @typescript-eslint/camelcase
-//     // this.organizations_url = `${this.url}/orgs`;
-//     // // eslint-disable-next-line @typescript-eslint/camelcase
-//     // this.repos_url = `${this.url}/repos`;
-//     // // eslint-disable-next-line @typescript-eslint/camelcase
-//     // this.events_url = `${this.url}/events{/privacy}`;
-//     // // eslint-disable-next-line @typescript-eslint/camelcase
-//     // this.received_events_url = `${this.url}/received_events`;
-//   }
-// }
-
-// export class Repository {
-//   id: number;
-//   //node_id = 'MDEwOlJlcG9zaXRvcnkxMjk2MjY5';
-//   name: string;
-//   full_name: string;
-//   owner: UserItem;
-//   private = false;
-//   html_url: string;
-//   description = '';
-//   fork = false;
-//   url: string;
-//   archive_url: string;
-//   assignees_url: string;
-//   blobs_url: string;
-//   branches_url: string;
-//   collaborators_url: string;
-//   comments_url: string;
-//   commits_url: string;
-//   compare_url: string;
-//   contents_url: string;
-//   contributors_url: string;
-//   deployments_url: string;
-//   downloads_url: string;
-//   events_url: string;
-//   forks_url: string;
-//   git_commits_url: string;
-//   git_refs_url: string;
-//   git_tags_url: string;
-//   git_url: string;
-//   issue_comment_url: string;
-//   issue_events_url: string;
-//   issues_url: string;
-//   keys_url: string;
-//   labels_url: string;
-//   languages_url: string;
-//   merges_url: string;
-//   milestones_url: string;
-//   notifications_url: string;
-//   pulls_url: string;
-//   releases_url: string;
-//   ssh_url: string;
-//   stargazers_url: string;
-//   statuses_url: string;
-//   subscribers_url: string;
-//   subscription_url: string;
-//   tags_url: string;
-//   teams_url: string;
-//   trees_url: string;
-//   clone_url: string;
-//   mirror_url: string;
-//   hooks_url: string;
-//   svn_url: string;
-//   homepage = 'https://example.com';
-//   language = null;
-//   forks_count = 0;
-//   stargazers_count = 0;
-//   watchers_count = 0;
-//   size = 365;
-//   default_branch = 'master';
-//   open_issues_count = 0;
-//   is_template = true;
-//   topics = [];
-//   has_issues = true;
-//   has_projects = true;
-//   has_wiki = true;
-//   has_pages = false;
-//   has_downloads = true;
-//   archived = false;
-//   disabled = false;
-//   pushed_at = '2011-01-26T19:06:43Z';
-//   created_at = '2011-01-26T19:01:12Z';
-//   updated_at = '2011-01-26T19:14:43Z';
-//   permissions = {
-//     admin: true,
-//     push: true,
-//     pull: true,
-//   };
-//   allow_rebase_merge = true;
-//   template_repository = null;
-//   allow_squash_merge = true;
-//   allow_merge_commit = true;
-//   subscribers_count = 0;
-//   network_count = 0;
-
-//   constructor(name: string, owner: UserItem) {
-//     // this.id = id;
-//     this.name = name;
-//     this.owner = owner;
-//     // eslint-disable-next-line @typescript-eslint/camelcase
-//     this.full_name = `${this.owner.login}/${this.name}`;
-//     // eslint-disable-next-line @typescript-eslint/camelcase
-//     this.html_url = `${this.owner.html_url}/${this.name}`;
-//     this.url = `https://api.github.com/repos/${this.full_name}`;
-//     // eslint-disable-next-line @typescript-eslint/camelcase
-//     this.archive_url = `${this.url}/{archive_format}{/ref}`;
-//     // eslint-disable-next-line @typescript-eslint/camelcase
-//     this.assignees_url = `${this.url}/assignees{/user}`;
-//     // eslint-disable-next-line @typescript-eslint/camelcase
-//     this.blobs_url = `${this.url}/git/blobs{/sha}`;
-//     // eslint-disable-next-line @typescript-eslint/camelcase
-//     this.branches_url = `${this.url}/branches{/branch}`;
-//     // eslint-disable-next-line @typescript-eslint/camelcase
-//     this.collaborators_url = `${this.url}/collaborators{/collaborator}`;
-//     // eslint-disable-next-line @typescript-eslint/camelcase
-//     this.comments_url = `${this.url}/comments{/number}`;
-//     // eslint-disable-next-line @typescript-eslint/camelcase
-//     this.commits_url = `${this.url}/commits{/sha}`;
-//     // eslint-disable-next-line @typescript-eslint/camelcase
-//     this.compare_url = `${this.url}/compare/{base}...{head}`;
-//     // eslint-disable-next-line @typescript-eslint/camelcase
-//     this.contents_url = `${this.url}/contents/{+path}`;
-//     // eslint-disable-next-line @typescript-eslint/camelcase
-//     this.contributors_url = `${this.url}/contributors`;
-//     // eslint-disable-next-line @typescript-eslint/camelcase
-//     this.deployments_url = `${this.url}/deployments`;
-//     // eslint-disable-next-line @typescript-eslint/camelcase
-//     this.downloads_url = `${this.url}/downloads`;
-//     // eslint-disable-next-line @typescript-eslint/camelcase
-//     this.events_url = `${this.url}/events`;
-//     // eslint-disable-next-line @typescript-eslint/camelcase
-//     this.forks_url = `${this.url}/forks`;
-//     // eslint-disable-next-line @typescript-eslint/camelcase
-//     this.git_commits_url = `${this.url}/git/commits{/sha}`;
-//     // eslint-disable-next-line @typescript-eslint/camelcase
-//     this.git_refs_url = `${this.url}/git/refs{/sha}`;
-//     // eslint-disable-next-line @typescript-eslint/camelcase
-//     this.git_tags_url = `${this.url}/git/tags{/sha}`;
-//     // eslint-disable-next-line @typescript-eslint/camelcase
-//     this.git_url = `git:github.com/${this.full_name}.git`;
-//     // eslint-disable-next-line @typescript-eslint/camelcase
-//     this.issue_comment_url = `${this.url}/issues/comments{/number}`;
-//     // eslint-disable-next-line @typescript-eslint/camelcase
-//     this.issue_events_url = `${this.url}/issues/events{/number}`;
-//     // eslint-disable-next-line @typescript-eslint/camelcase
-//     this.issues_url = `${this.url}/issues{/number}`;
-//     // eslint-disable-next-line @typescript-eslint/camelcase
-//     this.keys_url = `${this.url}/keys{/key_id}`;
-//     // eslint-disable-next-line @typescript-eslint/camelcase
-//     this.labels_url = `${this.url}/labels{/name}`;
-//     // eslint-disable-next-line @typescript-eslint/camelcase
-//     this.languages_url = `${this.url}/languages`;
-//     // eslint-disable-next-line @typescript-eslint/camelcase
-//     this.merges_url = `${this.url}/merges`;
-//     // eslint-disable-next-line @typescript-eslint/camelcase
-//     this.milestones_url = `${this.url}/milestones{/number}`;
-//     // eslint-disable-next-line @typescript-eslint/camelcase
-//     this.notifications_url = `${this.url}/notifications{?since,all,participating}`;
-//     // eslint-disable-next-line @typescript-eslint/camelcase
-//     this.pulls_url = `${this.url}/pulls{/number}`;
-//     // eslint-disable-next-line @typescript-eslint/camelcase
-//     this.releases_url = `${this.url}/releases{/id}`;
-//     // eslint-disable-next-line @typescript-eslint/camelcase
-//     this.ssh_url = `git@github.com:${this.full_name}.git`;
-//     // eslint-disable-next-line @typescript-eslint/camelcase
-//     this.stargazers_url = `${this.url}/stargazers`;
-//     // eslint-disable-next-line @typescript-eslint/camelcase
-//     this.statuses_url = `${this.url}/statuses/{sha}`;
-//     // eslint-disable-next-line @typescript-eslint/camelcase
-//     this.subscribers_url = `${this.url}/subscribers`;
-//     // eslint-disable-next-line @typescript-eslint/camelcase
-//     this.subscription_url = `${this.url}/subscription`;
-//     // eslint-disable-next-line @typescript-eslint/camelcase
-//     this.tags_url = `${this.url}/tags`;
-//     // eslint-disable-next-line @typescript-eslint/camelcase
-//     this.teams_url = `${this.url}/teams`;
-//     // eslint-disable-next-line @typescript-eslint/camelcase
-//     this.trees_url = `${this.url}/git/trees{/sha}`;
-//     // eslint-disable-next-line @typescript-eslint/camelcase
-//     this.clone_url = `https://github.com/${this.full_name}.git`;
-//     // eslint-disable-next-line @typescript-eslint/camelcase
-//     this.mirror_url = `git:git.example.com/${this.full_name}`;
-//     // eslint-disable-next-line @typescript-eslint/camelcase
-//     this.hooks_url = `${this.url}/hooks`;
-//     // eslint-disable-next-line @typescript-eslint/camelcase
-//     this.svn_url = `https://svn.github.com/${this.full_name}`;
-//   }
-// }
-
-// export const getPullRequestsResponse = {
-//   pagelen: 10,
-//   size: 20,
-//   values: [
-//     {
-//       description: 'Added a floor() ufunc to micronumpy',
-//       links: [Object],
-//       title: 'floor ufunc for micronumpy',
-//       close_source_branch: false,
-//       reviewers: [],
-//       id: 1,
-//       destination: [Object],
-//       created_on: '2011-06-22T19:44:39.555192+00:00',
-//       summary: [Object],
-//       source: [Object],
-//       comment_count: 0,
-//       state: 'DECLINED',
-//       task_count: 0,
-//       participants: [],
-//       reason: 'already merged',
-//       updated_on: '2011-06-23T13:52:30.230741+00:00',
-//       author: [Object],
-//       merge_commit: undefined,
-//       closed_by: [Object],
-//       type: 'rendered',
-//       page: 1,
-//       next: 'https://api.bitbucket.org/2.0/repositories/pypy/pypy/pullrequests?page=2',
-//     },
-//   ],
-// };
+export class Commits {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  commits: any;
+  constructor() {
+    this.commits = {
+      pagelen: 10,
+      values: [
+        {
+          hash: 'f799951483319e5397d41019de50f8e07b01b04f',
+          repository: {
+            links: {
+              self: {
+                href: 'https://api.bitbucket.org/2.0/repositories/ashwinahuja/pypy',
+              },
+              html: {
+                href: 'https://bitbucket.org/ashwinahuja/pypy',
+              },
+              avatar: {
+                href: 'https://bytebucket.org/ravatar/%7Bed2b5d25-be07-4808-b0dd-c5d4633e4a57%7D?ts=python',
+              },
+            },
+            type: 'repository',
+            name: 'pypy',
+            full_name: 'ashwinahuja/pypy',
+            uuid: '{ed2b5d25-be07-4808-b0dd-c5d4633e4a57}',
+          },
+          links: {
+            self: {
+              href: 'https://api.bitbucket.org/2.0/repositories/ashwinahuja/pypy/commit/f799951483319e5397d41019de50f8e07b01b04f',
+            },
+            comments: {
+              href: 'https://api.bitbucket.org/2.0/repositories/ashwinahuja/pypy/commit/f799951483319e5397d41019de50f8e07b01b04f/comments',
+            },
+            patch: {
+              href: 'https://api.bitbucket.org/2.0/repositories/ashwinahuja/pypy/patch/f799951483319e5397d41019de50f8e07b01b04f',
+            },
+            html: {
+              href: 'https://bitbucket.org/ashwinahuja/pypy/commits/f799951483319e5397d41019de50f8e07b01b04f',
+            },
+            diff: {
+              href: 'https://api.bitbucket.org/2.0/repositories/ashwinahuja/pypy/diff/f799951483319e5397d41019de50f8e07b01b04f',
+            },
+            approve: {
+              href: 'https://api.bitbucket.org/2.0/repositories/ashwinahuja/pypy/commit/f799951483319e5397d41019de50f8e07b01b04f/approve',
+            },
+            statuses: {
+              href: 'https://api.bitbucket.org/2.0/repositories/ashwinahuja/pypy/commit/f799951483319e5397d41019de50f8e07b01b04f/statuses',
+            },
+          },
+          author: {
+            raw: 'ashwinahuja',
+            type: 'author',
+          },
+          summary: {
+            raw: 'Remove the duplicated (unnecessary items)',
+            markup: 'markdown',
+            html: '<p>Remove the duplicated (unnecessary items)</p>',
+            type: 'rendered',
+          },
+          parents: [
+            {
+              hash: '0e3d572c47c60df4760e541da6a05e5e305d6175',
+              type: 'commit',
+              links: {
+                self: {
+                  href: 'https://api.bitbucket.org/2.0/repositories/ashwinahuja/pypy/commit/0e3d572c47c60df4760e541da6a05e5e305d6175',
+                },
+                html: {
+                  href: 'https://bitbucket.org/ashwinahuja/pypy/commits/0e3d572c47c60df4760e541da6a05e5e305d6175',
+                },
+              },
+            },
+          ],
+          date: '2018-09-13T16:19:32+00:00',
+          message: 'Remove the duplicated (unnecessary items)',
+          type: 'commit',
+        },
+        {
+          hash: '0e3d572c47c60df4760e541da6a05e5e305d6175',
+          repository: {
+            links: {
+              self: {
+                href: 'https://api.bitbucket.org/2.0/repositories/ashwinahuja/pypy',
+              },
+              html: {
+                href: 'https://bitbucket.org/ashwinahuja/pypy',
+              },
+              avatar: {
+                href: 'https://bytebucket.org/ravatar/%7Bed2b5d25-be07-4808-b0dd-c5d4633e4a57%7D?ts=python',
+              },
+            },
+            type: 'repository',
+            name: 'pypy',
+            full_name: 'ashwinahuja/pypy',
+            uuid: '{ed2b5d25-be07-4808-b0dd-c5d4633e4a57}',
+          },
+          links: {
+            self: {
+              href: 'https://api.bitbucket.org/2.0/repositories/ashwinahuja/pypy/commit/0e3d572c47c60df4760e541da6a05e5e305d6175',
+            },
+            comments: {
+              href: 'https://api.bitbucket.org/2.0/repositories/ashwinahuja/pypy/commit/0e3d572c47c60df4760e541da6a05e5e305d6175/comments',
+            },
+            patch: {
+              href: 'https://api.bitbucket.org/2.0/repositories/ashwinahuja/pypy/patch/0e3d572c47c60df4760e541da6a05e5e305d6175',
+            },
+            html: {
+              href: 'https://bitbucket.org/ashwinahuja/pypy/commits/0e3d572c47c60df4760e541da6a05e5e305d6175',
+            },
+            diff: {
+              href: 'https://api.bitbucket.org/2.0/repositories/ashwinahuja/pypy/diff/0e3d572c47c60df4760e541da6a05e5e305d6175',
+            },
+            approve: {
+              href: 'https://api.bitbucket.org/2.0/repositories/ashwinahuja/pypy/commit/0e3d572c47c60df4760e541da6a05e5e305d6175/approve',
+            },
+            statuses: {
+              href: 'https://api.bitbucket.org/2.0/repositories/ashwinahuja/pypy/commit/0e3d572c47c60df4760e541da6a05e5e305d6175/statuses',
+            },
+          },
+          author: {
+            raw: 'ashwinahuja',
+            type: 'author',
+          },
+          summary: {
+            raw: 'Making datetime objects more compatible with old C extensions written for CPython',
+            markup: 'markdown',
+            html: '<p>Making datetime objects more compatible with old C extensions written for CPython</p>',
+            type: 'rendered',
+          },
+          parents: [
+            {
+              hash: '4cbeaa8bf545332c36ae277019772aa432693e4c',
+              type: 'commit',
+              links: {
+                self: {
+                  href: 'https://api.bitbucket.org/2.0/repositories/ashwinahuja/pypy/commit/4cbeaa8bf545332c36ae277019772aa432693e4c',
+                },
+                html: {
+                  href: 'https://bitbucket.org/ashwinahuja/pypy/commits/4cbeaa8bf545332c36ae277019772aa432693e4c',
+                },
+              },
+            },
+          ],
+          date: '2018-09-13T16:14:59+00:00',
+          message: 'Making datetime objects more compatible with old C extensions written for CPython',
+          type: 'commit',
+        },
+      ],
+      page: 1,
+    };
+  }
+}
 
 export const getPullRequestsResponse = {
   items: [
