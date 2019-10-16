@@ -25,6 +25,8 @@ import {
   /*BitbucketNock,*/ getPullRequestsResponse,
   getIssueResponse,
   getIssueCommentsResponse,
+  BitbucketNock,
+  pypyResponse,
 } from '../../../test/helpers/bibucketNock';
 import { BitbucketService } from './BitbucketService';
 
@@ -47,29 +49,31 @@ describe('Bitbucket Service', () => {
 
   describe('#getPullRequests', () => {
     it('returns pull requests in own interface', async () => {
-      // new BitbucketNock(1, 'atlassian', 1, 'bitbucketjs').getPulls([
-      //   {
-      //     number: 1347,
-      //     state: 'undefined',
-      //   },
-      // ]);
+      const bitbucketNock = new BitbucketNock();
+      const pulls = {
+        user: 'pypy',
+        repoName: 'pypy',
+      };
+      bitbucketNock.getPullRequests(pulls);
 
-      const response = await service.getPullRequests('atlassian', 'bitbucketjs');
+      const response = await service.getPullRequests('pypy', 'pypy');
       expect(response).toMatchObject(getPullRequestsResponse);
-
-      // const bitbucketNock = nock('https://api.bitbucket.org/2.0');
-      // bitbucketNock.get('/repositories/atlassian/bitbucketjs/pullrequests').reply(200, reply);
-      // const response = await service.getPullRequests('atlassian', 'bitbucketjs');
-      // console.log(response);
-      // expect(reply).toEqual(response);
     });
 
     it('returns pull request in own interface', async () => {
+      const bitbucketNock = new BitbucketNock();
+      const pulls = {
+        user: 'pypy',
+        repoName: 'pypy',
+        pullRequestId: 1,
+      };
+      bitbucketNock.getPullRequest(pulls);
+
       const response = await service.getPullRequest('pypy', 'pypy', 1);
       expect(response).toMatchObject(getPullRequestResponse);
     });
 
-    it('returns pullrequest commits in own interface', async () => {
+    it.only('returns pullrequest commits in own interface', async () => {
       const response = await service.getPullCommits('pypy', 'pypy', 622);
       expect(response).toMatchObject(getPullCommits);
     });
@@ -88,7 +92,7 @@ describe('Bitbucket Service', () => {
       const response = await service.getIssueComments('pypy', 'pypy', 3086);
       if (response.items !== undefined) {
         for (const item of response.items) {
-          console.log(item.body);
+          //console.log(item.body);
         }
       }
       //expect(response).toMatchObject(getIssueCommentsResponse);
