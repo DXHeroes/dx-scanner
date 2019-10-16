@@ -61,6 +61,7 @@ export class BitbucketService {
     };
     const response = await this.client.pullrequests.list(paramas);
 
+<<<<<<< HEAD
     const values = response.data.values.map((val) => ({
       user: {
         id: val.author && val.author.uuid,
@@ -81,6 +82,32 @@ export class BitbucketService {
           name: val.destination.repository.name,
           id: val.destination.repository.uuid,
           owner: val.destination.repository.full_name.split('/').shift(),
+=======
+    const values =
+      response.data.values &&
+      response.data.values.map((val: any) => ({
+        user: {
+          id: val.author && val.author.uuid,
+          login: val.author && val.author.nickname,
+          url: val.author && val.author.links && val.author.links.html && val.author.links.html.href,
+        },
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        url: val.links!.html!.href!.html,
+        body: val.description,
+        createdAt: val.created_on,
+        updatedAt: val.updated_on,
+        closedAt: undefined,
+        mergedAt: val.merge_commit,
+        state: <string>val.state,
+        id: val.id,
+        base: {
+          repo: {
+            url: val.destination.repository.links.html.href,
+            name: val.destination.repository.name,
+            id: val.destination.repository.uuid,
+            owner: val.destination.repository.full_name.split('/').shift(),
+          },
+>>>>>>> origin/feature/bitbucket-integration
         },
       },
     }));
@@ -223,6 +250,7 @@ export class BitbucketService {
     };
     const response: Bitbucket.Schema.IssueComment[] = await this.client.issue_tracker.listComments(params);
 
+<<<<<<< HEAD
     const items = response.data.values.map((val) => ({
       user: {
         id: val.user!.uuid,
@@ -236,6 +264,28 @@ export class BitbucketService {
       authorAssociation: val.author_association,
       id: val.id,
     }));
+=======
+    const items =
+      response.data.values &&
+      response.data.values.map((val) => ({
+        user: {
+          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+          id: val.user!.uuid,
+          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+          login: val.user!.nickname,
+          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+          url: val.user!.links!.html!.href,
+        },
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        url: val.links!.html!.href,
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        body: val.content!.raw,
+        createdAt: val.created_on,
+        updatedAt: val.updated_on,
+        authorAssociation: val.author_association,
+        id: val.id,
+      }));
+>>>>>>> origin/feature/bitbucket-integration
     const pagination = this.getPagination(response.data);
 
     return { items, ...pagination };
