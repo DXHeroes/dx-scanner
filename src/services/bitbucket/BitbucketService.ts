@@ -74,7 +74,7 @@ export class BitbucketService {
         body: val.description,
         createdAt: val.created_on,
         updatedAt: val.updated_on,
-        closedAt: val.closed_by,
+        closedAt: undefined,
         mergedAt: val.merge_commit,
         state: <string>val.state,
         id: val.id,
