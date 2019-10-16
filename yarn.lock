@@ -6513,11 +6513,6 @@ parent-module@^1.0.0:
   dependencies:
     callsites "^3.0.0"
 
-parse-bitbucket-url@^0.3.0:
-  version "0.3.0"
-  resolved "https://registry.yarnpkg.com/parse-bitbucket-url/-/parse-bitbucket-url-0.3.0.tgz#facec3beebfcec42265565e49081a10759bbba17"
-  integrity sha1-+s7Dvuv87EImVWXkkIGhB1m7uhc=
-
 parse-github-url@^1.0.1:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/parse-github-url/-/parse-github-url-1.0.2.tgz#242d3b65cbcdda14bb50439e3242acf6971db395"

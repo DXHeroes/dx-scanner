@@ -8,8 +8,7 @@ import { GitHubService } from '../services/git/GitHubService';
 import { Types } from '../types';
 import { IDetector } from './IDetector';
 import { ScanningStrategyDetectorUtils } from './utils/ScanningStrategyDetectorUtils';
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const parseBitbucketUrl = require('parse-bitbucket-url');
+import { GitServiceUtils } from '../services/git/GitServiceUtils';
 
 @injectable()
 export class ScanningStrategyDetector implements IDetector<string, ScanningStrategy> {
@@ -102,26 +101,17 @@ export class ScanningStrategyDetector implements IDetector<string, ScanningStrat
       }
     }
 
-    //TODO
     if (remoteService.serviceType === ServiceType.bitbucket) {
-      const parsedUrl = parseBitbucketUrl(remoteService.remoteUrl);
+      const parsedUrl = GitServiceUtils.getOwnerAndRepoName(remoteService.remoteUrl);
 
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      let response: any;
       try {
-        response = await this.bitbucketService.getRepo(parsedUrl.owner, parsedUrl.name);
+        await this.bitbucketService.getRepo(parsedUrl.owner, parsedUrl.repoName);
       } catch (error) {
         if (error.code === 401 || error.code === 404 || error.code === 403) {
           throw ErrorFactory.newArgumentError('You passed bad credentials or non existing repo.');
         }
         throw error;
       }
-      // if (response.status === 200) {
-      //   if (response.data.private === true) {
-      //     return AccessType.private;
-      //   }
-      //   return AccessType.public;
-      // }
     }
 
     return undefined;
