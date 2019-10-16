@@ -26,7 +26,6 @@ import {
   getIssueResponse,
   getIssueCommentsResponse,
   BitbucketNock,
-  pypyResponse,
 } from '../../../test/helpers/bibucketNock';
 import { BitbucketService } from './BitbucketService';
 
@@ -86,24 +85,42 @@ describe('Bitbucket Service', () => {
     expect(response).toMatchObject(getPullCommits);
   });
 
-  it.only('returns issues in own interface', async () => {
+  it('returns issues in own interface', async () => {
+    const bitbucketNock = new BitbucketNock();
+    const pull = {
+      user: 'pypy',
+      repoName: 'pypy',
+    };
+    bitbucketNock.getIssues(pull);
+
     const response = await service.getIssues('pypy', 'pypy');
     expect(response).toMatchObject(getIssuesResponse);
   });
 
   it('returns issue in own interface', async () => {
+    const bitbucketNock = new BitbucketNock();
+    const issue = {
+      user: 'pypy',
+      repoName: 'pypy',
+      issueId: 3086,
+    };
+    bitbucketNock.getIssue(issue);
+
     const response = await service.getIssue('pypy', 'pypy', 3086);
     expect(response).toMatchObject(getIssueResponse);
   });
 
   it('returns issue comments in own interface', async () => {
+    const bitbucketNock = new BitbucketNock();
+    const issue = {
+      user: 'pypy',
+      repoName: 'pypy',
+      issueId: 3086,
+    };
+    bitbucketNock.getIssueComments(issue);
+
     const response = await service.getIssueComments('pypy', 'pypy', 3086);
-    if (response.items !== undefined) {
-      for (const item of response.items) {
-        //console.log(item.body);
-      }
-    }
-    //expect(response).toMatchObject(getIssueCommentsResponse);
+    expect(response).toMatchObject(getIssueCommentsResponse);
   });
   //});
 });

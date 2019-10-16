@@ -264,7 +264,9 @@ export class BitbucketService {
           // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
           url: val.user!.links!.html!.href,
         },
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         url: val.links!.html!.href,
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         body: val.content!.raw,
         createdAt: val.created_on,
         updatedAt: val.updated_on,
