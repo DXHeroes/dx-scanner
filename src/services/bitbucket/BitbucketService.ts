@@ -146,9 +146,16 @@ export class BitbucketService {
       repo_slug: repo,
       username: owner,
     };
-    const response = await this.client.pullrequests.listCommits(params);
+    const response = <DeepRequired<Bitbucket.Response<{
+      next: string;
+      page: number;
+      pagelen: number;
+      previous: string;
+      size: number;
+      values: Bitbucket.Schema.Commit[];
+    }>>>await this.client.pullrequests.listCommits(params);
 
-    const items = response.data.values.map((val: any) => ({
+    const items = response.data.values.map((val) => ({
       sha: val.sha,
       commit: {
         url: val.links.html.href,
@@ -248,7 +255,7 @@ export class BitbucketService {
     return { items, ...pagination };
   }
 
-  private unwrap<T>(clientPromise: Promise<any>) {
+  private unwrap<T>(clientPromise: Promise<Bitbucket.Response<T>>) {
     return clientPromise
       .then((response) => {
         this.debugBitbucketResponse(response);
@@ -271,7 +278,7 @@ export class BitbucketService {
     );
   };
 
-  getPagination(data: any) {
+  getPagination<T>(data: { next: string, previous: string, page: number, values: T[]}) {
     const hasNextPage = !!data.next;
     const hasPreviousPage = !!data.previous;
     const page = data.page;
