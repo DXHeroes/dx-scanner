@@ -84,7 +84,9 @@ export class BitbucketService implements ICVSService {
       body: val.description,
       createdAt: val.created_on,
       updatedAt: val.updated_on,
+      //TODO
       closedAt: null,
+      //TODO
       mergedAt: null,
       state: val.state,
       id: val.id,
@@ -130,6 +132,7 @@ export class BitbucketService implements ICVSService {
       createdAt: response.data.created_on,
       updatedAt: response.data.updated_on,
       closedAt: response.data.closed_by.created_on,
+      //TODO
       mergedAt: null,
       state: response.data.state,
       id: response.data.id,
@@ -175,6 +178,7 @@ export class BitbucketService implements ICVSService {
           sha: val.hash,
           url: val.links.html.href,
         },
+        //TODO
         verified: false,
       },
     }));
@@ -200,6 +204,7 @@ export class BitbucketService implements ICVSService {
       body: val.content.raw,
       createdAt: val.created_on,
       updatedAt: val.updated_on,
+      //TODO
       closedAt: null,
       state: val.state,
       id: val.repository.uuid,
@@ -228,6 +233,7 @@ export class BitbucketService implements ICVSService {
       body: response.data.content.raw,
       createdAt: response.data.created_on,
       updatedAt: response.data.updated_on,
+      //TODO
       closedAt: null,
       state: response.data.state,
     };
