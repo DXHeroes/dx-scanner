@@ -13,7 +13,7 @@ import {
   IssueComment,
   Symlink,
 } from './model';
-import { IGitHubService, GitHubPullRequestState } from './IGitHubService';
+import { ICVSService, GitHubPullRequestState } from './ICVSService';
 import { Paginated } from '../../inspectors/common/Paginated';
 import {
   IssuesListForRepoResponseItem,
@@ -35,7 +35,7 @@ import { InMemoryCache } from '../../scanner/cache/InMemoryCahce';
 const debug = Debug('cli:services:git:github-service');
 
 @injectable()
-export class GitHubService implements IGitHubService {
+export class GitHubService implements ICVSService {
   private readonly client: Octokit;
   private cache: ICache;
   private callCount = 0;

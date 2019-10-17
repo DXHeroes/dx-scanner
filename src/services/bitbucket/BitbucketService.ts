@@ -11,13 +11,25 @@ import { DeepRequired } from '../../lib/deepRequired';
 import { ICache } from '../../scanner/cache/ICache';
 import { InMemoryCache } from '../../scanner/cache/InMemoryCahce';
 import { Types } from '../../types';
-import { Issue, IssueComment, PullCommits, PullRequest } from '../git/model';
+import {
+  Issue,
+  IssueComment,
+  PullCommits,
+  PullRequest,
+  PullFiles,
+  PullRequestReview,
+  Commit,
+  Contributor,
+  ContributorStats,
+  Symlink,
+  Directory,
+  File,
+} from '../git/model';
+import { ICVSService } from '../git/ICVSService';
 const debug = Debug('cli:services:git:github-service');
 
-// implements IBitbucketService
-//implements IGitHubService
 @injectable()
-export class BitbucketService {
+export class BitbucketService implements ICVSService {
   private readonly client: Bitbucket;
   private cache: ICache;
   private callCount = 0;
@@ -136,8 +148,8 @@ export class BitbucketService {
     };
   }
 
-  async getPullRequestFiles(owner: string, repo: string, prNumber: number): Promise<void> {
-    throw new Error('Method not implemented.');
+  async getPullRequestFiles(owner: string, repo: string, prNumber: number): Promise<Paginated<PullFiles>> {
+    throw new Error('Method not implemented yet.');
   }
 
   async getPullCommits(owner: string, repo: string, prNumber: number): Promise<Paginated<PullCommits>> {
@@ -253,6 +265,30 @@ export class BitbucketService {
     const pagination = this.getPagination(response.data);
 
     return { items, ...pagination };
+  }
+
+  async getPullRequestReviews(owner: string, repo: string, prNumber: number): Promise<Paginated<PullRequestReview>> {
+    throw new Error('Method not implemented yet.');
+  }
+
+  async getRepoCommits(owner: string, repo: string) {
+    throw new Error('Method not implemented yet.');
+  }
+
+  async getCommit(owner: string, repo: string, commitSha: string): Promise<Commit> {
+    throw new Error('Method not implemented yet.');
+  }
+
+  async getContributors(owner: string, repo: string): Promise<Paginated<Contributor>> {
+    throw new Error('Method not implemented yet.');
+  }
+
+  async getContributorsStats(owner: string, repo: string): Promise<Paginated<ContributorStats>> {
+    throw new Error('Method not implemented yet.');
+  }
+
+  async getRepoContent(owner: string, repo: string, path: string): Promise<File | Symlink | Directory | null> {
+    throw new Error('Method not implemented yet.');
   }
 
   private unwrap<T>(clientPromise: Promise<Bitbucket.Response<T>>) {

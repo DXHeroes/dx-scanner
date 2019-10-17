@@ -22,7 +22,7 @@ import { getPullsFilesServiceResponse } from './__MOCKS__/gitHubServiceMockFolde
 import { getPullCommitsResponse } from './__MOCKS__/gitHubServiceMockFolder/getPullsCommitsResponse.mock';
 import { getPullCommitsServiceResponse } from './__MOCKS__/gitHubServiceMockFolder/getPullCommitsServiceResponse.mock';
 import { GitHubNock } from '../../../test/helpers/gitHubNock';
-import { GitHubPullRequestState } from './IGitHubService';
+import { GitHubPullRequestState } from './ICVSService';
 import { getRepoCommitsResponse } from './__MOCKS__/gitHubServiceMockFolder/getRepoCommitsResponse.mock';
 import { File } from './model';
 
