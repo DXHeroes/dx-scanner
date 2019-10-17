@@ -14,6 +14,7 @@ import { PullsListResponseItem } from '@octokit/rest';
 import { Paginated } from '../../inspectors/common/Paginated';
 import { PullRequest, Issue } from '../git/model';
 import GitUrlParse from 'git-url-parse';
+import { DeepRequired, BitbucketPaginatedPullRequestResponse } from './IBitbucketClient';
 const debug = Debug('cli:services:git:github-service');
 
 // implements IBitbucketService
@@ -51,6 +52,7 @@ export class BitbucketService {
       repo_slug: repo,
       username: owner,
     };
+
     return this.unwrap(this.client.repositories.get(params));
   }
 
@@ -59,17 +61,22 @@ export class BitbucketService {
       repo_slug: repo,
       username: owner,
     };
-    const response = await this.client.pullrequests.list(paramas);
+
+    // TODO: two possible ways:
+    // const response = <DeepRequired<Bitbucket.Response<Bitbucket.Schema.PaginatedPullrequests>>>await this.client.pullrequests.list(paramas);
+    const response = <BitbucketPaginatedPullRequestResponse>await this.client.pullrequests.list(paramas);
     const url = 'www.bitbucket.org';
+
+    const values = response.data.values.map((val) => ({
     let data = <Required<Bitbucket.Schema.PaginatedPullrequests>>response.data
 
     const items = data.values.map((val) => ({
       user: {
-        id: <string>val.author!.uuid,
-        login: <string>val.author!.nickname,
-        url:  <string>val.author!.links!.html!.href,
+        id: <string>val.author.uuid,
+        login: <string>val.author.nickname,
+        url:  <string>val.author.links.html.href,
       },
-      url: <string>val.links!.html!.href,
+      url: <string>val.links.html.href,
       body: <string>val.description,
       createdAt: <string>val.created_on,
       updatedAt: <string>val.updated_on,
@@ -79,14 +86,10 @@ export class BitbucketService {
       id: <number>val.id,
       base: {
         repo: {
-          url: <string>val.destination!.repository!.links!.html!.href,
-          name: <string>val.destination!.repository!.name,
-          id: <string>val.destination!.repository!.uuid,
-          owner: {
-            login: <string>val.destination!.repository!.full_name!.split('/').shift(),
-            id: (<string><unknown>this.client.users.get({ username: <string>val.destination!.repository!.full_name!.split('/').shift() })),
-            url: url.concat(`/${val.destination!.repository!.full_name!.split('/').shift()}`)
-          }     
+          url: val.destination.repository.links.html.href,
+          name: val.destination.repository.name,
+          id: val.destination.repository.uuid,
+          owner: val.destination.repository.full_name.split('/').shift(),
         },
       },
     }));
@@ -228,7 +231,8 @@ export class BitbucketService {
     };
     const response: Bitbucket.Response<Bitbucket.Schema.PaginatedIssueComments> = await this.client.issue_tracker.listComments(params);
 
-    let data = <Required<Bitbucket.Schema.PaginatedIssueComments>>response.data
+    const items = response.data.values.map((val) => ({
+    //let data = <Required<Bitbucket.Schema.PaginatedIssueComments>>response.data
 
     const items = data.values.map((val) => ({
       user: {
