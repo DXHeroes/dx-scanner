@@ -1,3 +1,10 @@
+# [1.7.0](https://github.com/dxheroes/dx-scanner/compare/v1.6.1...v1.7.0) (2019-10-17)
+
+
+### Features
+
+* add golang language detector ([b063c3d](https://github.com/dxheroes/dx-scanner/commit/b063c3d)), closes [#82](https://github.com/dxheroes/dx-scanner/issues/82)
+
 ## [1.6.1](https://github.com/dxheroes/dx-scanner/compare/v1.6.0...v1.6.1) (2019-10-03)
 
 
