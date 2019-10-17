@@ -5,6 +5,7 @@ import { IProjectFilesBrowserService, Metadata, MetadataType } from './model';
 import { IFs, createFsFromVolume } from 'memfs';
 import { Volume as VSVolume, DirectoryJSON } from 'memfs/lib/volume';
 import { ErrorFactory } from '../lib/errors';
+import { ICache } from '../scanner/cache/ICache';
 
 /**
  * Service for file system browsing
