@@ -2,21 +2,16 @@
 import Bitbucket from 'bitbucket';
 import { grey } from 'colors';
 import Debug from 'debug';
+import GitUrlParse from 'git-url-parse';
 import { inject, injectable } from 'inversify';
 import { inspect } from 'util';
+import { Paginated } from '../../inspectors/common/Paginated';
 import { ArgumentsProvider } from '../../inversify.config';
+import { DeepRequired } from '../../lib/deepRequired';
 import { ICache } from '../../scanner/cache/ICache';
 import { InMemoryCache } from '../../scanner/cache/InMemoryCahce';
 import { Types } from '../../types';
-import { IGitHubService, GitHubPullRequestState } from '../git/IGitHubService';
-import { ListGetterOptions } from '../../inspectors/common/ListGetterOptions';
-import { PullsListResponseItem } from '@octokit/rest';
-import { Paginated } from '../../inspectors/common/Paginated';
-import { PullRequest, Issue, PullCommits, IssueComment } from '../git/model';
-import GitUrlParse from 'git-url-parse';
-import { BitbucketPaginatedPullRequestResponse } from './IBitbucketClient';
-import { DeepRequired } from '../../lib/deepRequired';
-import { Commits } from '../../../test/helpers/bibucketNock';
+import { Issue, IssueComment, PullCommits, PullRequest } from '../git/model';
 const debug = Debug('cli:services:git:github-service');
 
 // implements IBitbucketService
