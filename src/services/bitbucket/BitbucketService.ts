@@ -12,10 +12,11 @@ import { IGitHubService, GitHubPullRequestState } from '../git/IGitHubService';
 import { ListGetterOptions } from '../../inspectors/common/ListGetterOptions';
 import { PullsListResponseItem } from '@octokit/rest';
 import { Paginated } from '../../inspectors/common/Paginated';
-import { PullRequest, Issue } from '../git/model';
+import { PullRequest, Issue, PullCommits, IssueComment } from '../git/model';
 import GitUrlParse from 'git-url-parse';
 import { BitbucketPaginatedPullRequestResponse } from './IBitbucketClient';
 import { DeepRequired } from '../../lib/deepRequired';
+import { Commits } from '../../../test/helpers/bibucketNock';
 const debug = Debug('cli:services:git:github-service');
 
 // implements IBitbucketService
@@ -65,8 +66,6 @@ export class BitbucketService {
 
     const response = <DeepRequired<Bitbucket.Response<Bitbucket.Schema.PaginatedPullrequests>>>await this.client.pullrequests.list(paramas);
     const url = 'www.bitbucket.org';
-    // const test = await this.client.users.get({ username: 'ashwinahuja' });
-    // console.log(test.data.nickname, 'test');
 
     const values = response.data.values.map(async (val) => ({
       user: {
@@ -89,14 +88,13 @@ export class BitbucketService {
           id: val.destination.repository.uuid,
           owner: {
             login: <string>val.destination.repository.full_name.split('/').shift(),
-            id: <string>(<unknown>await this.client.users.get({ username: `${val.destination.repository.full_name.split('/').shift()}` })),
+            id: <string>(await this.client.users.get({ username: `${val.destination.repository.full_name.split('/').shift()}` })).data.uuid,
             url: url.concat(`/${val.destination.repository.full_name.split('/').shift()}`),
           },
         },
       },
     }));
 
-    //`${val.destination.repository.full_name.split('/').shift()}`
     const pagination = this.getPagination(response.data);
 
     const items = await Promise.all(values);
@@ -104,7 +102,7 @@ export class BitbucketService {
     return { items, ...pagination };
   }
 
-  async getPullRequest(owner: string, repo: string, prNumber: number) {
+  async getPullRequest(owner: string, repo: string, prNumber: number): Promise<PullRequest> {
     const params = {
       pull_request_id: prNumber,
       repo_slug: repo,
@@ -125,7 +123,7 @@ export class BitbucketService {
       createdAt: response.data.created_on,
       updatedAt: response.data.updated_on,
       closedAt: response.data.closed_by.created_on,
-      mergedAt: response.data.merge_commit,
+      mergedAt: null,
       state: response.data.state,
       id: response.data.id,
       base: {
@@ -147,7 +145,7 @@ export class BitbucketService {
     throw new Error('Method not implemented.');
   }
 
-  async getPullCommits(owner: string, repo: string, prNumber: number) {
+  async getPullCommits(owner: string, repo: string, prNumber: number): Promise<Paginated<PullCommits>> {
     const params: Bitbucket.Params.PullrequestsListCommits = {
       pull_request_id: prNumber.toString(),
       repo_slug: repo,
@@ -177,59 +175,57 @@ export class BitbucketService {
     return { items, ...pagination };
   }
 
-  async getIssues(owner: string, repo: string) {
+  async getIssues(owner: string, repo: string): Promise<Paginated<Issue>> {
     const params: Bitbucket.Params.IssueTrackerList = {
       repo_slug: repo,
       username: owner,
     };
-    const response: Bitbucket.Response<Bitbucket.Schema.PaginatedIssues> = await this.client.issue_tracker.list(params);
+    const response = <DeepRequired<Bitbucket.Response<Bitbucket.Schema.PaginatedIssues>>>await this.client.issue_tracker.list(params);
 
-    const values = response.data.values!.map((val) => ({
+    const items = response.data.values.map((val) => ({
       user: {
-        id: val.reporter!.uuid,
-        login: val.reporter!.nickname,
-        url: val.reporter!.links!.html!.href,
+        id: val.reporter.uuid,
+        login: val.reporter.nickname,
+        url: val.reporter.links.html.href,
       },
-      url: val.repository!.links!.html!.href,
-      body: val.content!.raw,
+      url: val.repository.links.html.href,
+      body: val.content.raw,
       createdAt: val.created_on,
       updatedAt: val.updated_on,
-      closedAt: undefined,
+      closedAt: null,
       state: val.state,
-      id: val.repository!.uuid,
+      id: val.repository.uuid,
     }));
     const pagination = this.getPagination(response.data);
-
-    const items = values ? values : [];
 
     return { items, ...pagination };
   }
 
-  async getIssue(owner: string, repo: string, issueNumber: number) {
+  async getIssue(owner: string, repo: string, issueNumber: number): Promise<Issue> {
     const params: Bitbucket.Params.IssueTrackerGet = {
       issue_id: issueNumber.toString(),
       repo_slug: repo,
       username: owner,
     };
-    const response = await this.client.issue_tracker.get(params);
+    const response = <DeepRequired<Bitbucket.Response<Bitbucket.Schema.Issue>>>await this.client.issue_tracker.get(params);
 
     return {
-      id: response.data.repository!.uuid,
+      id: response.data.repository.uuid,
       user: {
-        login: response.data.reporter!.nickname,
-        id: response.data.reporter!.uuid,
-        url: response.data.reporter!.href,
+        login: response.data.reporter.nickname,
+        id: response.data.reporter.uuid,
+        url: response.data.reporter.href,
       },
-      url: response.data.links!.html!.href,
-      body: response.data.content!.raw,
-      createdAt: <string>response.data.created_on,
-      updatedAt: <string>response.data.updated_on,
-      closedAt: undefined,
-      state: <string>response.data.state,
+      url: response.data.links.html.href,
+      body: response.data.content.raw,
+      createdAt: response.data.created_on,
+      updatedAt: response.data.updated_on,
+      closedAt: null,
+      state: response.data.state,
     };
   }
 
-  async getIssueComments(owner: string, repo: string, issueNumber: number) {
+  async getIssueComments(owner: string, repo: string, issueNumber: number): Promise<Paginated<IssueComment>> {
     const params: Bitbucket.Params.IssueTrackerListComments = {
       issue_id: issueNumber.toString(),
       repo_slug: repo,
