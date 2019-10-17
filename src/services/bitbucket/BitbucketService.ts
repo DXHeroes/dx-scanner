@@ -60,60 +60,39 @@ export class BitbucketService {
       username: owner,
     };
     const response = await this.client.pullrequests.list(paramas);
+    const url = 'www.bitbucket.org';
+    let data = <Required<Bitbucket.Schema.PaginatedPullrequests>>response.data
 
-<<<<<<< HEAD
-    const values = response.data.values.map((val) => ({
+    const items = data.values.map((val) => ({
       user: {
-        id: val.author && val.author.uuid,
-        login: val.author && val.author.nickname,
-        url: val.author && val.author.links && val.author.links.html && val.author.links.html.href,
+        id: <string>val.author!.uuid,
+        login: <string>val.author!.nickname,
+        url:  <string>val.author!.links!.html!.href,
       },
-      url: val.links!.html!.href!.html,
-      body: val.description,
-      createdAt: val.created_on,
-      updatedAt: val.updated_on,
-      closedAt: val.closed_by,
-      mergedAt: val.merge_commit,
+      url: <string>val.links!.html!.href,
+      body: <string>val.description,
+      createdAt: <string>val.created_on,
+      updatedAt: <string>val.updated_on,
+      closedAt: null,
+      mergedAt: null,
       state: <string>val.state,
-      id: val.id,
+      id: <number>val.id,
       base: {
         repo: {
-          url: val.destination.repository.links.html.href,
-          name: val.destination.repository.name,
-          id: val.destination.repository.uuid,
-          owner: val.destination.repository.full_name.split('/').shift(),
-=======
-    const values =
-      response.data.values &&
-      response.data.values.map((val: any) => ({
-        user: {
-          id: val.author && val.author.uuid,
-          login: val.author && val.author.nickname,
-          url: val.author && val.author.links && val.author.links.html && val.author.links.html.href,
-        },
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        url: val.links!.html!.href!.html,
-        body: val.description,
-        createdAt: val.created_on,
-        updatedAt: val.updated_on,
-        closedAt: undefined,
-        mergedAt: val.merge_commit,
-        state: <string>val.state,
-        id: val.id,
-        base: {
-          repo: {
-            url: val.destination.repository.links.html.href,
-            name: val.destination.repository.name,
-            id: val.destination.repository.uuid,
-            owner: val.destination.repository.full_name.split('/').shift(),
-          },
->>>>>>> origin/feature/bitbucket-integration
+          url: <string>val.destination!.repository!.links!.html!.href,
+          name: <string>val.destination!.repository!.name,
+          id: <string>val.destination!.repository!.uuid,
+          owner: {
+            login: <string>val.destination!.repository!.full_name!.split('/').shift(),
+            id: (<string><unknown>this.client.users.get({ username: <string>val.destination!.repository!.full_name!.split('/').shift() })),
+            url: url.concat(`/${val.destination!.repository!.full_name!.split('/').shift()}`)
+          }     
         },
       },
     }));
     const pagination = this.getPagination(response.data);
 
-    return { values, ...pagination };
+    return { items, ...pagination };
   }
 
   async getPullRequest(owner: string, repo: string, prNumber: number) {
@@ -167,7 +146,7 @@ export class BitbucketService {
     };
     const response = await this.client.pullrequests.listCommits(params);
 
-    const items = response.data.values.map((val) => ({
+    const items = response.data.values.map((val: any) => ({
       sha: val.sha,
       commit: {
         url: val.links.html.href,
@@ -196,20 +175,19 @@ export class BitbucketService {
     };
     const response: Bitbucket.Response<Bitbucket.Schema.PaginatedIssues> = await this.client.issue_tracker.list(params);
 
-    const values = response.data.values.map((val) => ({
+    const values = response.data.values!.map((val) => ({
       user: {
-        id: val.reporter.uuid,
-        login: val.reporter.nickname,
-        url: val.reporter.links.html.href,
+        id: val.reporter!.uuid,
+        login: val.reporter!.nickname,
+        url: val.reporter!.links!.html!.href,
       },
-      url: val.repository.links.html.href,
-      body: val.content.raw,
+      url: val.repository!.links!.html!.href,
+      body: val.content!.raw,
       createdAt: val.created_on,
       updatedAt: val.updated_on,
       closedAt: undefined,
       state: val.state,
-      id: val.repository.uuid,
-      // pullRequestUrl: val.pull_request && val.pull_request.url,
+      id: val.repository!.uuid,
     }));
     const pagination = this.getPagination(response.data);
 
@@ -248,10 +226,11 @@ export class BitbucketService {
       repo_slug: repo,
       username: owner,
     };
-    const response: Bitbucket.Schema.IssueComment[] = await this.client.issue_tracker.listComments(params);
+    const response: Bitbucket.Response<Bitbucket.Schema.PaginatedIssueComments> = await this.client.issue_tracker.listComments(params);
 
-<<<<<<< HEAD
-    const items = response.data.values.map((val) => ({
+    let data = <Required<Bitbucket.Schema.PaginatedIssueComments>>response.data
+
+    const items = data.values.map((val) => ({
       user: {
         id: val.user!.uuid,
         login: val.user!.nickname,
@@ -264,28 +243,6 @@ export class BitbucketService {
       authorAssociation: val.author_association,
       id: val.id,
     }));
-=======
-    const items =
-      response.data.values &&
-      response.data.values.map((val) => ({
-        user: {
-          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-          id: val.user!.uuid,
-          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-          login: val.user!.nickname,
-          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-          url: val.user!.links!.html!.href,
-        },
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        url: val.links!.html!.href,
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        body: val.content!.raw,
-        createdAt: val.created_on,
-        updatedAt: val.updated_on,
-        authorAssociation: val.author_association,
-        id: val.id,
-      }));
->>>>>>> origin/feature/bitbucket-integration
     const pagination = this.getPagination(response.data);
 
     return { items, ...pagination };
