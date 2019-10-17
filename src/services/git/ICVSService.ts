@@ -2,7 +2,7 @@ import { ListGetterOptions } from '../../inspectors/common/ListGetterOptions';
 import { PullRequest, PullRequestReview, Commit, Contributor, ContributorStats, Issue, Directory, File, Symlink, PullFiles } from './model';
 import { Paginated } from '../../inspectors/common/Paginated';
 
-export interface IGitHubService {
+export interface ICVSService {
   getPullRequests(
     owner: string,
     repo: string,

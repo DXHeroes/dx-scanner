@@ -2,7 +2,7 @@ import { Repository } from '../../model';
 import { isArray } from 'util';
 import { inject, injectable } from 'inversify';
 import { ErrorFactory } from '../../lib/errors/ErrorFactory';
-import { GitHubPullRequestState } from '../../services/git/IGitHubService';
+import { GitHubPullRequestState } from './ICVSService';
 import * as nodePath from 'path';
 import { Metadata, MetadataType, IProjectFilesBrowserService } from '../model';
 import { Types } from '../../types';
