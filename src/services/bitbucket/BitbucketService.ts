@@ -14,7 +14,8 @@ import { PullsListResponseItem } from '@octokit/rest';
 import { Paginated } from '../../inspectors/common/Paginated';
 import { PullRequest, Issue } from '../git/model';
 import GitUrlParse from 'git-url-parse';
-import { DeepRequired, BitbucketPaginatedPullRequestResponse } from './IBitbucketClient';
+import { BitbucketPaginatedPullRequestResponse } from './IBitbucketClient';
+import { DeepRequired } from '../../lib/deepRequired';
 const debug = Debug('cli:services:git:github-service');
 
 // implements IBitbucketService
@@ -62,38 +63,43 @@ export class BitbucketService {
       username: owner,
     };
 
-    // TODO: two possible ways:
-    // const response = <DeepRequired<Bitbucket.Response<Bitbucket.Schema.PaginatedPullrequests>>>await this.client.pullrequests.list(paramas);
-    const response = <BitbucketPaginatedPullRequestResponse>await this.client.pullrequests.list(paramas);
+    const response = <DeepRequired<Bitbucket.Response<Bitbucket.Schema.PaginatedPullrequests>>>await this.client.pullrequests.list(paramas);
     const url = 'www.bitbucket.org';
+    // const test = await this.client.users.get({ username: 'ashwinahuja' });
+    // console.log(test.data.nickname, 'test');
 
-    const values = response.data.values.map((val) => ({
-    let data = <Required<Bitbucket.Schema.PaginatedPullrequests>>response.data
-
-    const items = data.values.map((val) => ({
+    const values = response.data.values.map(async (val) => ({
       user: {
-        id: <string>val.author.uuid,
-        login: <string>val.author.nickname,
-        url:  <string>val.author.links.html.href,
+        id: val.author.uuid,
+        login: val.author.nickname,
+        url: val.author.links.html.href,
       },
-      url: <string>val.links.html.href,
-      body: <string>val.description,
-      createdAt: <string>val.created_on,
-      updatedAt: <string>val.updated_on,
+      url: val.links.html.href,
+      body: val.description,
+      createdAt: val.created_on,
+      updatedAt: val.updated_on,
       closedAt: null,
       mergedAt: null,
-      state: <string>val.state,
-      id: <number>val.id,
+      state: val.state,
+      id: val.id,
       base: {
         repo: {
           url: val.destination.repository.links.html.href,
           name: val.destination.repository.name,
           id: val.destination.repository.uuid,
-          owner: val.destination.repository.full_name.split('/').shift(),
+          owner: {
+            login: <string>val.destination.repository.full_name.split('/').shift(),
+            id: <string>(<unknown>await this.client.users.get({ username: `${val.destination.repository.full_name.split('/').shift()}` })),
+            url: url.concat(`/${val.destination.repository.full_name.split('/').shift()}`),
+          },
         },
       },
     }));
+
+    //`${val.destination.repository.full_name.split('/').shift()}`
     const pagination = this.getPagination(response.data);
+
+    const items = await Promise.all(values);
 
     return { items, ...pagination };
   }
@@ -105,32 +111,32 @@ export class BitbucketService {
       username: owner,
     };
 
-    const response = await this.client.pullrequests.get(params);
+    const response = <DeepRequired<Bitbucket.Response<Bitbucket.Schema.Pullrequest>>>await this.client.pullrequests.get(params);
     response.data;
 
     return {
       user: {
-        id: response.data.author!.uuid,
-        login: response.data.author!.nickname,
-        url: response.data.author!.website,
+        id: response.data.author.uuid,
+        login: response.data.author.nickname,
+        url: response.data.author.website,
       },
-      url: response.data.links!.html!.href,
-      body: response.data.summary!.raw,
-      createdAt: <string>response.data.created_on,
-      updatedAt: <string>response.data.updated_on,
-      closedAt: <string>response.data.closed_by!.created_on,
-      mergedAt: <string>response.data.merge_commit,
+      url: response.data.links.html.href,
+      body: response.data.summary.raw,
+      createdAt: response.data.created_on,
+      updatedAt: response.data.updated_on,
+      closedAt: response.data.closed_by.created_on,
+      mergedAt: response.data.merge_commit,
       state: response.data.state,
       id: response.data.id,
       base: {
         repo: {
-          url: response.data.destination!.repository!.links!.html!.href,
-          name: response.data.destination!.repository!.name,
-          id: response.data.destination!.repository!.uuid,
+          url: response.data.destination.repository.links.html.href,
+          name: response.data.destination.repository.name,
+          id: response.data.destination.repository.uuid,
           owner: {
-            login: response.data.author!.nickname,
-            id: response.data.author!.uuid,
-            url: response.data.author!.links!.html!.href,
+            login: response.data.author.nickname,
+            id: response.data.author.uuid,
+            url: response.data.author.links.html.href,
           },
         },
       },
@@ -229,19 +235,18 @@ export class BitbucketService {
       repo_slug: repo,
       username: owner,
     };
-    const response: Bitbucket.Response<Bitbucket.Schema.PaginatedIssueComments> = await this.client.issue_tracker.listComments(params);
+    const response = <DeepRequired<Bitbucket.Response<Bitbucket.Schema.PaginatedIssueComments>>>(
+      await this.client.issue_tracker.listComments(params)
+    );
 
     const items = response.data.values.map((val) => ({
-    //let data = <Required<Bitbucket.Schema.PaginatedIssueComments>>response.data
-
-    const items = data.values.map((val) => ({
       user: {
-        id: val.user!.uuid,
-        login: val.user!.nickname,
-        url: val.user!.links!.html!.href,
+        id: val.user.uuid,
+        login: val.user.nickname,
+        url: val.user.links.html.href,
       },
-      url: val.links!.html!.href,
-      body: val.content!.raw,
+      url: val.links.html.href,
+      body: val.content.raw,
       createdAt: val.created_on,
       updatedAt: val.updated_on,
       authorAssociation: val.author_association,

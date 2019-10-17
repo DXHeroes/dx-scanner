@@ -20,7 +20,11 @@ describe('Bitbucket Service', () => {
     bitbucketNock = new BitbucketNock('pypy', 'pypy');
   });
 
-  it('returns pull requests in own interface', async () => {
+  it.only('returns pull requests in own interface', async () => {
+    nock('https://api.bitbucket.org/2.0')
+      .get('/users/pypy')
+      .times(2)
+      .reply(200);
     bitbucketNock.getApiResponse('pullrequests');
 
     const response = await service.getPullRequests('pypy', 'pypy');
