@@ -158,14 +158,8 @@ export class BitbucketService implements ICVSService {
       repo_slug: repo,
       username: owner,
     };
-    const response = <DeepRequired<Bitbucket.Response<{
-      next: string;
-      page: number;
-      pagelen: number;
-      previous: string;
-      size: number;
-      values: Bitbucket.Schema.Commit[];
-    }>>>await this.client.pullrequests.listCommits(params);
+
+    const response = <DeepRequired<Bitbucket.Response<BitbucketCommit>>>await this.client.pullrequests.listCommits(params);
 
     const items = response.data.values.map((val) => ({
       sha: val.sha,
@@ -174,14 +168,14 @@ export class BitbucketService implements ICVSService {
         message: val.message,
         author: {
           name: val.author.raw,
-          email: undefined,
+          email: 'undefined',
           date: val.date,
         },
         tree: {
           sha: val.hash,
           url: val.links.html.href,
         },
-        verified: undefined,
+        verified: false,
       },
     }));
     const pagination = this.getPagination(response.data);
@@ -314,7 +308,7 @@ export class BitbucketService implements ICVSService {
     );
   };
 
-  getPagination<T>(data: { next: string, previous: string, page: number, values: T[]}) {
+  getPagination<T>(data: { next: string; previous: string; page: number; values: T[] }) {
     const hasNextPage = !!data.next;
     const hasPreviousPage = !!data.previous;
     const page = data.page;
@@ -323,4 +317,13 @@ export class BitbucketService implements ICVSService {
 
     return { totalCount, hasNextPage, hasPreviousPage, page, perPage };
   }
+}
+
+interface BitbucketCommit {
+  next: string;
+  page: number;
+  pagelen: number;
+  previous: string;
+  size: number;
+  values: Bitbucket.Schema.Commit[];
 }
