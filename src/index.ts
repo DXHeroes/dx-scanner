@@ -36,6 +36,8 @@ class DXScannerCommand extends Command {
     //   this.log(`you input --force and --file: ${args.file}`);
     // }
 
+    const hrstart = process.hrtime();
+
     const scanPath = args.path || process.cwd();
     cli.action.start(`Scanning URI: ${scanPath}`);
 
@@ -58,6 +60,10 @@ class DXScannerCommand extends Command {
     }
     cli.action.stop();
     notifier.notify({ isGlobal: true });
+
+    const hrend = process.hrtime(hrstart);
+
+    console.info('Scan duration %ds.', hrend[0]);
   }
 }
 
