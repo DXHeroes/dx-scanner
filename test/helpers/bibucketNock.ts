@@ -11,7 +11,7 @@ export class BitbucketNock {
     this.url = 'https://api.bitbucket.org/2.0';
   }
 
-  getApiResponse(resource: string, id?: number, value?: string) {
+  getApiResponse(resource: string, id?: number, value?: string): nock.Scope {
     let url = `${this.url}/repositories/${this.user}/${this.repoName}/${resource}`;
     let response;
 

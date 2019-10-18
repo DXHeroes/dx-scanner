@@ -12,7 +12,7 @@ import { BitbucketService } from './BitbucketService';
 
 describe('Bitbucket Service', () => {
   let service: BitbucketService;
-  let bitbucketNock: any;
+  let bitbucketNock: BitbucketNock;
 
   beforeEach(async () => {
     service = new BitbucketService({ uri: '.' });
