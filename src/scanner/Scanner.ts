@@ -19,11 +19,14 @@ import {
   ProjectComponentFramework,
   ProjectComponentPlatform,
   ProjectComponentType,
+  PracticeMetadata,
+  PracticeImpact,
 } from '../model';
 import { IPracticeWithMetadata } from '../practices/DxPracticeDecorator';
 import { IReporter } from '../reporters/IReporter';
 import { ScannerContextFactory, Types } from '../types';
 import { ScannerUtils } from './ScannerUtils';
+import _ from 'lodash';
 
 @injectable()
 export class Scanner {
@@ -60,8 +63,8 @@ export class Scanner {
     this.scanDebug(`LanguagesAtPaths:`, inspect(languagesAtPaths));
     const projectComponents = await this.detectProjectComponents(languagesAtPaths, scannerContext, scanStrategy);
     this.scanDebug(`Components:`, inspect(projectComponents));
-    const identifiedPractices = await this.detectPractices(projectComponents);
-    await this.report(identifiedPractices.practicesWithContext, identifiedPractices.practicesOff);
+    const componentsWithPractices = await this.detectPractices(projectComponents);
+    await this.report(componentsWithPractices);
   }
 
   private async preprocessData(scanningStrategy: ScanningStrategy) {
@@ -127,67 +130,91 @@ export class Scanner {
     return components;
   }
 
-  private async detectPractices(componentsWithContext: ProjectComponentAndLangContext[]): Promise<PracticeWithContextAndOff> {
-    const practicesWithContext: PracticeWithContext[] = [];
-    let filteredPractices;
-
-    for (const componentWithCtx of componentsWithContext) {
-      const practicesWithContextFromComponent: PracticeWithContext[] = [];
-      const componentContext = componentWithCtx.languageContext.getProjectComponentContext(componentWithCtx.component);
-      const practiceContext = componentContext.getPracticeContext();
-
-      await componentContext.configProvider.init();
-      filteredPractices = await ScannerUtils.filterPractices(componentContext, this.practices);
-      const orderedApplicablePractices = ScannerUtils.sortPractices(filteredPractices.customApplicablePractices);
-
-      for (const practice of orderedApplicablePractices) {
-        const practiceConfig = componentContext.configProvider.getOverriddenPractice(practice.getMetadata().id);
-
-        const isFulfilled = ScannerUtils.isFulfilled(practice, practicesWithContextFromComponent);
-
-        if (!isFulfilled) continue;
-        const evaluation = await practice.evaluate({ ...practiceContext, config: practiceConfig });
-
-        const practiceWithContext = {
-          practice,
-          componentContext,
-          practiceContext,
-          evaluation,
-        };
-
-        practicesWithContext.push(practiceWithContext);
-        practicesWithContextFromComponent.push(practiceWithContext);
-      }
-    }
+  private async detectPractices(componentsWithContext: ProjectComponentAndLangContext[]): Promise<PracticeWithContext[]> {
+    const practicesWithComponentContext = await Promise.all(componentsWithContext.map((cwctx) => this.detectPracticesForComponent(cwctx)));
+    const practicesWithContext = _.flatten(practicesWithComponentContext);
 
     this.scanDebug('Applicable practices:');
     this.scanDebug(practicesWithContext.map((p) => p.practice.getMetadata().name));
 
-    return { practicesWithContext: practicesWithContext, practicesOff: filteredPractices ? filteredPractices.practicesOff : [] };
+    return practicesWithContext;
   }
 
-  private async report(practicesWithContext: PracticeWithContext[], practicesOff: IPracticeWithMetadata[]) {
-    const relevantPractices = practicesWithContext.filter((p) => p.evaluation === PracticeEvaluationResult.notPracticing);
+  // private async report(componentsWithPractices: ComponentWithPractices[]) {
+  private async report(practicesWithContext: PracticeWithContext[]): Promise<void> {
+    // const relevantPractices = practicesWithContext.filter((p) => p.evaluation === PracticeEvaluationResult.notPracticing);
+    const relevantPractices = practicesWithContext;
 
-    let impact: any;
     const reportString = this.reporter.report(
       relevantPractices.map((p) => {
         const config = p.componentContext.configProvider.getOverriddenPractice(p.practice.getMetadata().id);
-        impact = config.impact;
+        const overridenImpact = config.impact;
 
         return {
-          practice: {
-            ...p.practice.getMetadata(),
-            impact: impact ? impact : p.practice.getMetadata().impact,
-          },
           component: p.componentContext.projectComponent,
+          practice: p.practice.getMetadata(),
+          evaluation: p.evaluation,
+          impact: <PracticeImpact>(overridenImpact ? overridenImpact : p.practice.getMetadata().impact),
+          isOn: p.isOn,
         };
       }),
-      practicesOff,
     );
+
     typeof reportString === 'string'
       ? console.log(reportString)
       : console.log(util.inspect(reportString, { showHidden: false, depth: null }));
+  }
+
+  private async detectPracticesForComponent(componentWithCtx: ProjectComponentAndLangContext): Promise<PracticeWithContext[]> {
+    // return new Promise((res, rej) => {
+    const practicesWithContext: PracticeWithContext[] = [];
+
+    const componentContext = componentWithCtx.languageContext.getProjectComponentContext(componentWithCtx.component);
+    const practiceContext = componentContext.getPracticeContext();
+
+    await componentContext.configProvider.init();
+    const filteredPractices = await ScannerUtils.filterPractices(componentContext, this.practices);
+
+    const orderedApplicablePractices = ScannerUtils.sortPractices(filteredPractices.customApplicablePractices);
+
+    /**
+     * Evaluate practices in correct order
+     */
+    for (const practice of orderedApplicablePractices) {
+      const practiceConfig = componentContext.configProvider.getOverriddenPractice(practice.getMetadata().id);
+
+      const isFulfilled = ScannerUtils.isFulfilled(practice, practicesWithContext);
+
+      if (!isFulfilled) continue;
+      const evaluation = await practice.evaluate({ ...practiceContext, config: practiceConfig });
+
+      const practiceWithContext = {
+        practice,
+        componentContext,
+        practiceContext,
+        evaluation,
+        isOn: true,
+      };
+
+      practicesWithContext.push(practiceWithContext);
+    }
+
+    /**
+     * Add turned off practices to result
+     */
+    for (const practiceOff of filteredPractices.practicesOff) {
+      const practiceWithContext = {
+        practice: practiceOff,
+        componentContext,
+        practiceContext,
+        evaluation: PracticeEvaluationResult.unknown,
+        isOn: false,
+      };
+
+      practicesWithContext.push(practiceWithContext);
+    }
+
+    return practicesWithContext;
   }
 }
 
@@ -201,9 +228,5 @@ export interface PracticeWithContext {
   practiceContext: PracticeContext;
   practice: IPracticeWithMetadata;
   evaluation: PracticeEvaluationResult;
-}
-
-interface PracticeWithContextAndOff {
-  practicesWithContext: PracticeWithContext[];
-  practicesOff: IPracticeWithMetadata[];
+  isOn: boolean;
 }
