@@ -18,7 +18,7 @@ export interface PullRequest {
   closedAt: string | null;
   mergedAt: string | null;
   state: string;
-  base?: { repo: Repo };
+  base: { repo: Repo };
 }
 
 export interface PullRequestReview {
