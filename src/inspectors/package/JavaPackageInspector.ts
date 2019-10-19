@@ -32,8 +32,9 @@ export class JavaPackageInspector extends PackageInspectorBase {
             const dependencyAttributes = xmlDependency.dependency.values();
             for (const attribute of dependencyAttributes) {
               // should an error be thrown here or should a version be set to an empty string '' instead?
-              if (!attribute.version.pop()) {
-                throw new Error(`Dependency version of ${attribute.artifactId.pop()} is not available`);
+              if (!attribute.version) {
+                // throw new Error(`Dependency version of ${attribute.artifactId.pop()} is not available`);
+                attribute.version = [''];
               }
               parsedDependencies.push({ packageName: String(attribute.artifactId.pop()), version: String(attribute.version.pop()) });
             }
@@ -46,14 +47,17 @@ export class JavaPackageInspector extends PackageInspectorBase {
           throw new Error('Unsupported Java project architecture');
         }
         const gradleFileString = await this.fileInspector.readFile('build.gradle');
-        g2js.parseText(gradleFileString).then((result: BuildGradle) => {
+        await g2js.parseText(gradleFileString).then((result: BuildGradle) => {
           for (const dependency of result.dependencies) {
+            if (dependency.name.startsWith("'")) {
+              dependency.name = dependency.name.slice(1, -1);
+            }
             parsedDependencies.push({ packageName: dependency.name, version: dependency.version });
           }
           this.addPackages(parsedDependencies, DependencyType.Runtime);
         });
       }
-      this.debug('JSPackageInspector init ended');
+      this.debug('JavaPackageInspector init ended');
     } catch (e) {
       this.packages = undefined;
       this.debug(e);
@@ -107,14 +111,27 @@ export interface PomXML {
           {
             groupId: [string];
             artifactId: [string];
-            version: [string];
+            version?: [string] | [''];
             scope?: [string];
             exclusions?: [string];
           },
         ];
       },
     ];
-    build: {};
+    build: [
+      {
+        plugins: [
+          {
+            plugin: [
+              {
+                groupId: [string];
+                artifactId: [string];
+              },
+            ];
+          },
+        ];
+      },
+    ];
   };
 }
 

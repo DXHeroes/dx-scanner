@@ -18,7 +18,7 @@ export class JavaLanguageDetector implements ILanguageDetector {
   async detectLanguage(): Promise<LanguageAtPath[]> {
     const result: LanguageAtPath[] = [];
     let packageFiles: Metadata[] = await this.fileInspector.scanFor(fileNameRegExp('pom.xml'), '/');
-    const isMaven: boolean = packageFiles.length > 0 ? true : false;
+    const isMaven: boolean = packageFiles.length > 0;
     if (!isMaven) {
       packageFiles = await this.fileInspector.scanFor(fileNameRegExp('build.gradle'), '/');
     }
