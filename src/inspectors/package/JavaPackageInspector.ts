@@ -8,7 +8,6 @@ import * as g2js from 'gradle-to-js';
 
 export class JavaPackageInspector extends PackageInspectorBase {
   private fileInspector: IFileInspector;
-  private hasLockfileFile!: boolean;
 
   constructor(@inject(Types.IFileInspector) fileInspector: IFileInspector) {
     super();
@@ -31,9 +30,7 @@ export class JavaPackageInspector extends PackageInspectorBase {
           for (const xmlDependency of xmlDependencies) {
             const dependencyAttributes = xmlDependency.dependency.values();
             for (const attribute of dependencyAttributes) {
-              // should an error be thrown here or should a version be set to an empty string '' instead?
               if (!attribute.version) {
-                // throw new Error(`Dependency version of ${attribute.artifactId.pop()} is not available`);
                 attribute.version = [''];
               }
               parsedDependencies.push({ packageName: String(attribute.artifactId.pop()), version: String(attribute.version.pop()) });
@@ -49,7 +46,7 @@ export class JavaPackageInspector extends PackageInspectorBase {
         const gradleFileString = await this.fileInspector.readFile('build.gradle');
         await g2js.parseText(gradleFileString).then((result: BuildGradle) => {
           for (const dependency of result.dependencies) {
-            if (dependency.name.startsWith("'")) {
+            if (dependency.name.startsWith("'") && dependency.name.endsWith("'")) {
               dependency.name = dependency.name.slice(1, -1);
             }
             parsedDependencies.push({ packageName: dependency.name, version: dependency.version });
@@ -90,7 +87,6 @@ export class JavaPackageInspector extends PackageInspectorBase {
 }
 
 export interface PomXML {
-  // @todo: cut down this interface to simplify it
   project: {
     $: {
       xmlns: string;
