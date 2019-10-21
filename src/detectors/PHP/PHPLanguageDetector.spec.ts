@@ -32,6 +32,19 @@ describe('PHPLanguageDetector', () => {
     expect(langAtPath).toEqual([]);
   });
 
+  it('detects php correctly via composer file', async () => {
+    const structure: DirectoryJSON = {
+      '/composer.phar': '...',
+    };
+
+    virtualFileSystemService.setFileSystem(structure);
+
+    const langAtPath = await detector.detectLanguage();
+    expect(langAtPath.length).toEqual(1);
+    expect(langAtPath[0].language).toEqual(ProgrammingLanguage.PHP);
+    expect(langAtPath[0].path).toEqual(nodePath.sep);
+  });
+
   it('detects php correctly via php file', async () => {
     const structure: DirectoryJSON = {
       '/index.php': '...',
