@@ -130,7 +130,7 @@ export class GitHubService implements ICVSService {
           name: response.data.base.repo.name,
           id: response.data.base.repo.id,
           owner: {
-            url: response.data.base.repo.url,
+            url: response.data.base.repo.owner.url,
             id: response.data.base.repo.owner.id.toString(),
             login: response.data.base.repo.owner.login,
           },
