@@ -1,4 +1,7 @@
-export const getIssuesResponse = {
+import { Issue } from '../../model';
+import { Paginated } from '../../../../inspectors/common/Paginated';
+
+export const getIssuesResponse: Paginated<Issue> = {
   items: [
     {
       user: {

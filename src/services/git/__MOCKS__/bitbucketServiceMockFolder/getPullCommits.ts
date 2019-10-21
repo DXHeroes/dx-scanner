@@ -1,7 +1,10 @@
-export const getPullCommits = {
+import { PullCommits } from '../../model';
+import { Paginated } from '../../../../inspectors/common/Paginated';
+
+export const getPullCommits: Paginated<PullCommits> = {
   items: [
     {
-      sha: undefined,
+      sha: 'f799951483319e5397d41019de50f8e07b01b04f',
       commit: {
         url: 'https://bitbucket.org/ashwinahuja/pypy/commits/f799951483319e5397d41019de50f8e07b01b04f',
         message: 'Remove the duplicated (unnecessary items)',
@@ -14,7 +17,7 @@ export const getPullCommits = {
       },
     },
     {
-      sha: undefined,
+      sha: '0e3d572c47c60df4760e541da6a05e5e305d6175',
       commit: {
         url: 'https://bitbucket.org/ashwinahuja/pypy/commits/0e3d572c47c60df4760e541da6a05e5e305d6175',
         message: 'Making datetime objects more compatible with old C extensions written for CPython',

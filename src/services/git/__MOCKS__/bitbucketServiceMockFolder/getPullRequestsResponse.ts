@@ -1,4 +1,7 @@
-export const getPullRequestsResponse = {
+import { Paginated } from '../../../../inspectors/common/Paginated';
+import { PullRequest } from '../../model';
+
+export const getPullRequestsResponse: Paginated<PullRequest> = {
   items: [
     {
       user: {
@@ -19,7 +22,7 @@ export const getPullRequestsResponse = {
           url: 'https://bitbucket.org/pypy/pypy',
           name: 'pypy',
           id: '{54220cd1-b139-4188-9455-1e13e663f1ac}',
-          owner: { id: undefined, login: 'pypy', url: 'www.bitbucket.org/pypy' },
+          owner: { id: 'undefined', login: 'pypy', url: 'www.bitbucket.org/pypy' },
         },
       },
     },

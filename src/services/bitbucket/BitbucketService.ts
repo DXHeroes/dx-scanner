@@ -97,7 +97,9 @@ export class BitbucketService implements ICVSService {
           id: val.destination.repository.uuid,
           owner: {
             login: <string>val.destination.repository.full_name.split('/').shift(),
-            id: <string>(await this.client.users.get({ username: `${val.destination.repository.full_name.split('/').shift()}` })).data.uuid,
+            id: <string>(await this.client.users.get({ username: `${val.destination.repository.full_name.split('/').shift()}` })).data.uuid
+              ? <string>(await this.client.users.get({ username: `${val.destination.repository.full_name.split('/').shift()}` })).data.uuid
+              : 'undefined',
             url: url.concat(`/${val.destination.repository.full_name.split('/').shift()}`),
           },
         },
@@ -125,13 +127,14 @@ export class BitbucketService implements ICVSService {
       user: {
         id: response.data.author.uuid,
         login: response.data.author.nickname,
-        url: response.data.author.website,
+        url: response.data.author.links.html.href,
       },
       url: response.data.links.html.href,
       body: response.data.summary.raw,
       createdAt: response.data.created_on,
       updatedAt: response.data.updated_on,
-      closedAt: response.data.closed_by.created_on,
+      //TODO
+      closedAt: 'undefined',
       //TODO
       mergedAt: null,
       state: response.data.state,
@@ -165,7 +168,7 @@ export class BitbucketService implements ICVSService {
     const response = <DeepRequired<Bitbucket.Response<BitbucketCommit>>>await this.client.pullrequests.listCommits(params);
 
     const items = response.data.values.map((val) => ({
-      sha: val.sha,
+      sha: val.hash,
       commit: {
         url: val.links.html.href,
         message: val.message,
@@ -227,7 +230,7 @@ export class BitbucketService implements ICVSService {
       user: {
         login: response.data.reporter.nickname,
         id: response.data.reporter.uuid,
-        url: response.data.reporter.href,
+        url: response.data.reporter.links.html.href,
       },
       url: response.data.links.html.href,
       body: response.data.content.raw,
@@ -256,10 +259,10 @@ export class BitbucketService implements ICVSService {
         url: val.user.links.html.href,
       },
       url: val.links.html.href,
-      body: val.content.raw,
+      body: val.content.raw ? val.content.raw : 'undefined',
       createdAt: val.created_on,
-      updatedAt: val.updated_on,
-      authorAssociation: val.author_association,
+      updatedAt: val.updated_on ? val.updated_on : 'undefined',
+      authorAssociation: val.author_association ? val.author_association : 'undefined',
       id: val.id,
     }));
     const pagination = this.getPagination(response.data);
