@@ -7,7 +7,7 @@ import {
   getIssueResponse,
   getIssueCommentsResponse,
   BitbucketNock,
-} from '../../../test/helpers/bibucketNock';
+} from '../../../test/helpers/bitbucketNock';
 import { BitbucketService } from './BitbucketService';
 
 describe('Bitbucket Service', () => {
