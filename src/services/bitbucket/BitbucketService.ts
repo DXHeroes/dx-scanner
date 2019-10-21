@@ -71,7 +71,7 @@ export class BitbucketService implements ICVSService {
       username: owner,
     };
 
-    const response = <DeepRequired<Bitbucket.Response<Bitbucket.Schema.PaginatedPullrequests>>>await this.client.pullrequests.list(paramas);
+    const response = <DeepRequired<Bitbucket.Response<Bitbucket.Schema.PaginatedPullrequests>>>await this.client.pullrequests.list(params);
     const url = 'www.bitbucket.org';
 
     const values = response.data.values.map(async (val) => ({
