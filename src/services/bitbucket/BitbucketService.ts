@@ -66,7 +66,7 @@ export class BitbucketService implements ICVSService {
   }
 
   async getPullRequests(owner: string, repo: string): Promise<Paginated<PullRequest>> {
-    const paramas: Bitbucket.Params.PullrequestsList = {
+    const params: Bitbucket.Params.PullrequestsList = {
       repo_slug: repo,
       username: owner,
     };
