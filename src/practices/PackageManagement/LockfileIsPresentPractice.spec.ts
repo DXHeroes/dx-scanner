@@ -14,6 +14,7 @@ describe('LockfileIsPresentPractice', () => {
 
   afterEach(async () => {
     containerCtx.virtualFileSystemService.clearFileSystem();
+    containerCtx.practiceContext.fileInspector!.purgeCache();
   });
 
   it('Returns practicing if there is a package-lock.json', async () => {

@@ -14,6 +14,7 @@ describe('DockerizationUsedPractice', () => {
 
   afterEach(async () => {
     containerCtx.virtualFileSystemService.clearFileSystem();
+    containerCtx.practiceContext.fileInspector!.purgeCache();
   });
 
   it('Returns practicing if the docker is used', async () => {

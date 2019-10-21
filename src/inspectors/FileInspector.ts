@@ -19,6 +19,7 @@ export class FileInspector implements IFileInspector {
   ) {
     this.basePath = basePath && this.normalizePath(basePath);
     this.projectFilesBrowser = projectFilesBrowser;
+
     this.cache = new InMemoryCache();
   }
 
