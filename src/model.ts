@@ -53,6 +53,7 @@ export enum ProgrammingLanguage {
   JavaScript = 'JavaScript',
   TypeScript = 'TypeScript',
   Go = 'Go',
+  PHP = 'PHP',
   Clojure = 'Clojure',
   Haskell = 'Haskell',
   Elixir = 'Elixir',
