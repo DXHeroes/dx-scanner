@@ -94,7 +94,7 @@ export class GitHubService implements ICVSService {
         repo: {
           url: val.base.repo.url,
           name: val.base.repo.name,
-          id: val.base.repo.id,
+          id: val.base.repo.id.toString(),
           owner: { url: val.base.repo.owner.url, id: val.base.repo.owner.id.toString(), login: val.base.repo.owner.login },
         },
       },
@@ -128,7 +128,7 @@ export class GitHubService implements ICVSService {
         repo: {
           url: response.data.base.repo.url,
           name: response.data.base.repo.name,
-          id: response.data.base.repo.id,
+          id: response.data.base.repo.id.toString(),
           owner: {
             url: response.data.base.repo.owner.url,
             id: response.data.base.repo.owner.id.toString(),

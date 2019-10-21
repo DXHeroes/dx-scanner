@@ -8,7 +8,7 @@ export const getPullsServiceResponse: Paginated<PullRequest> = {
     {
       base: {
         repo: {
-          id: 1296269,
+          id: '1296269',
           name: 'Hello-World',
           owner: {
             id: '1',

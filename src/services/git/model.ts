@@ -127,7 +127,7 @@ interface Tree {
 
 interface Repo {
   url: string;
-  id: number | string;
+  id: string;
   name: string;
   owner: UserInfo;
 }

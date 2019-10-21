@@ -3,7 +3,7 @@ import { PullRequest } from '../../model';
 export const getPullServiceResponse: PullRequest = {
   base: {
     repo: {
-      id: 1296269,
+      id: '1296269',
       name: 'Hello-World',
       owner: {
         id: '583231',
