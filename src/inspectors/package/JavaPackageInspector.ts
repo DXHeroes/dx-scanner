@@ -30,12 +30,8 @@ export class JavaPackageInspector extends PackageInspectorBase {
           for (const xmlDependency of xmlDependencies) {
             const dependencyAttributes = xmlDependency.dependency.values();
             for (const attribute of dependencyAttributes) {
-              if (!attribute.version) {
-                attribute.version = [''];
-              }
               parsedDependencies.push({ packageName: String(attribute.artifactId.pop()), version: String(attribute.version.pop()) });
             }
-            this.addPackages(parsedDependencies, DependencyType.Runtime);
           }
         });
       } else {
@@ -51,9 +47,9 @@ export class JavaPackageInspector extends PackageInspectorBase {
             }
             parsedDependencies.push({ packageName: dependency.name, version: dependency.version });
           }
-          this.addPackages(parsedDependencies, DependencyType.Runtime);
         });
       }
+      this.addPackages(parsedDependencies, DependencyType.Runtime);
       this.debug('JavaPackageInspector init ended');
     } catch (e) {
       this.packages = undefined;
@@ -107,7 +103,7 @@ export interface PomXML {
           {
             groupId: [string];
             artifactId: [string];
-            version?: [string] | [''];
+            version: [string];
             scope?: [string];
             exclusions?: [string];
           },
