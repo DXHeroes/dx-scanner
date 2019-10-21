@@ -78,7 +78,7 @@ export class GitHubService implements ICVSService {
 
     const items = response.map((val) => ({
       user: {
-        id: val.user.id,
+        id: val.user.id.toString(),
         login: val.user.login,
         url: val.user.url,
       },
@@ -95,7 +95,7 @@ export class GitHubService implements ICVSService {
           url: val.base.repo.url,
           name: val.base.repo.name,
           id: val.base.repo.id,
-          owner: val.base.repo.owner,
+          owner: { url: val.base.repo.url, id: val.base.repo.owner.id.toString(), login: val.base.repo.owner.login },
         },
       },
     }));
@@ -112,7 +112,7 @@ export class GitHubService implements ICVSService {
     const response = await this.unwrap(this.client.pulls.get({ owner, repo, pull_number: prNumber }));
     return {
       user: {
-        id: response.data.user.id,
+        id: response.data.user.id.toString(),
         login: response.data.user.login,
         url: response.data.user.url,
       },
@@ -129,7 +129,11 @@ export class GitHubService implements ICVSService {
           url: response.data.base.repo.url,
           name: response.data.base.repo.name,
           id: response.data.base.repo.id,
-          owner: response.data.base.repo.owner,
+          owner: {
+            url: response.data.base.repo.url,
+            id: response.data.base.repo.owner.id.toString(),
+            login: response.data.base.repo.owner.login,
+          },
         },
       },
     };
@@ -148,7 +152,7 @@ export class GitHubService implements ICVSService {
 
     const items = response.map((val) => ({
       user: {
-        id: val.user.id,
+        id: val.user.id.toString(),
         login: val.user.login,
         url: val.user.url,
       },
@@ -248,7 +252,7 @@ export class GitHubService implements ICVSService {
 
     const items = response.map((val) => ({
       author: {
-        id: val.author.id,
+        id: val.author.id.toString(),
         login: val.author.login,
         url: val.author.url,
       },
@@ -312,7 +316,7 @@ export class GitHubService implements ICVSService {
 
     const items = response.map((val) => ({
       user: {
-        id: val.user.id,
+        id: val.user.id.toString(),
         login: val.user.login,
         url: val.user.url,
       },
@@ -339,7 +343,11 @@ export class GitHubService implements ICVSService {
 
     return {
       id: response.data.id,
-      user: response.data.user,
+      user: {
+        login: response.data.user.login,
+        id: response.data.user.id.toString(),
+        url: response.data.user.url,
+      },
       url: response.data.url,
       body: response.data.body,
       createdAt: response.data.created_at,

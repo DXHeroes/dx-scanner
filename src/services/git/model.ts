@@ -4,7 +4,7 @@ export enum GitService {
 
 export interface UserInfo {
   login: string;
-  id: number | string;
+  id: string;
   url: string;
 }
 
