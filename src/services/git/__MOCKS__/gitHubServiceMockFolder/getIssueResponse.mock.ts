@@ -12,7 +12,7 @@ export const getIssueResponse = {
   node_id: 'MDExOlB1bGxSZXF1ZXN0MTQwOTAw',
   number: 1,
   title: 'Edited README via GitHub',
-  user: new UserItem(777449, 'unoju'),
+  user: new UserItem('777449', 'unoju'),
   labels: [],
   state: 'closed',
   locked: false,
@@ -31,5 +31,5 @@ export const getIssueResponse = {
     patch_url: 'https://github.com/octocat/Hello-World/pull/1.patch',
   },
   body: '',
-  closed_by: new UserItem(583231, 'octocat'),
+  closed_by: new UserItem('583231', 'octocat'),
 };

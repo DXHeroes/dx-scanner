@@ -2,13 +2,13 @@ import { Repository } from '../../model';
 import { isArray } from 'util';
 import { inject, injectable } from 'inversify';
 import { ErrorFactory } from '../../lib/errors/ErrorFactory';
-import { GitHubPullRequestState } from '../../services/git/IGitHubService';
 import * as nodePath from 'path';
 import { Metadata, MetadataType, IProjectFilesBrowserService } from '../model';
 import { Types } from '../../types';
 import { ProjectIssueBrowserService as ContentRepositoryBrowserService } from '../../model';
 import { Directory, File, Symlink } from './model';
 import { GitServiceUtils } from './GitServiceUtils';
+import { GitHubPullRequestState } from './IGitHubService';
 
 @injectable()
 export class Git implements IProjectFilesBrowserService {

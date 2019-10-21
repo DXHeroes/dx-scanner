@@ -13,7 +13,7 @@ import {
   IssueComment,
   Symlink,
 } from './model';
-import { IGitHubService, GitHubPullRequestState } from './IGitHubService';
+import { ICVSService } from './ICVSService';
 import { Paginated } from '../../inspectors/common/Paginated';
 import {
   IssuesListForRepoResponseItem,
@@ -32,10 +32,11 @@ import { Types } from '../../types';
 import { ArgumentsProvider } from '../../inversify.config';
 import { ICache } from '../../scanner/cache/ICache';
 import { InMemoryCache } from '../../scanner/cache/InMemoryCahce';
+import { GitHubPullRequestState } from './IGitHubService';
 const debug = Debug('cli:services:git:github-service');
 
 @injectable()
-export class GitHubService implements IGitHubService {
+export class GitHubService implements ICVSService {
   private readonly client: Octokit;
   private cache: ICache;
   private callCount = 0;
@@ -78,7 +79,7 @@ export class GitHubService implements IGitHubService {
 
     const items = response.map((val) => ({
       user: {
-        id: val.user.id,
+        id: val.user.id.toString(),
         login: val.user.login,
         url: val.user.url,
       },
@@ -94,8 +95,8 @@ export class GitHubService implements IGitHubService {
         repo: {
           url: val.base.repo.url,
           name: val.base.repo.name,
-          id: val.base.repo.id,
-          owner: val.base.repo.owner,
+          id: val.base.repo.id.toString(),
+          owner: { url: val.base.repo.owner.url, id: val.base.repo.owner.id.toString(), login: val.base.repo.owner.login },
         },
       },
     }));
@@ -112,7 +113,7 @@ export class GitHubService implements IGitHubService {
     const response = await this.unwrap(this.client.pulls.get({ owner, repo, pull_number: prNumber }));
     return {
       user: {
-        id: response.data.user.id,
+        id: response.data.user.id.toString(),
         login: response.data.user.login,
         url: response.data.user.url,
       },
@@ -128,8 +129,12 @@ export class GitHubService implements IGitHubService {
         repo: {
           url: response.data.base.repo.url,
           name: response.data.base.repo.name,
-          id: response.data.base.repo.id,
-          owner: response.data.base.repo.owner,
+          id: response.data.base.repo.id.toString(),
+          owner: {
+            url: response.data.base.repo.owner.url,
+            id: response.data.base.repo.owner.id.toString(),
+            login: response.data.base.repo.owner.login,
+          },
         },
       },
     };
@@ -148,7 +153,7 @@ export class GitHubService implements IGitHubService {
 
     const items = response.map((val) => ({
       user: {
-        id: val.user.id,
+        id: val.user.id.toString(),
         login: val.user.login,
         url: val.user.url,
       },
@@ -248,7 +253,7 @@ export class GitHubService implements IGitHubService {
 
     const items = response.map((val) => ({
       author: {
-        id: val.author.id,
+        id: val.author.id.toString(),
         login: val.author.login,
         url: val.author.url,
       },
@@ -312,7 +317,7 @@ export class GitHubService implements IGitHubService {
 
     const items = response.map((val) => ({
       user: {
-        id: val.user.id,
+        id: val.user.id.toString(),
         login: val.user.login,
         url: val.user.url,
       },
@@ -322,7 +327,7 @@ export class GitHubService implements IGitHubService {
       updatedAt: val.updated_at,
       closedAt: val.closed_at,
       state: val.state,
-      id: val.id,
+      id: val.id.toString(),
       pullRequestUrl: val.pull_request && val.pull_request.url,
     }));
     const pagination = this.getPagination(response.length);
@@ -338,8 +343,12 @@ export class GitHubService implements IGitHubService {
     const response = await this.unwrap(this.client.issues.get({ owner, repo, issue_number: issueNumber }));
 
     return {
-      id: response.data.id,
-      user: response.data.user,
+      id: response.data.id.toString(),
+      user: {
+        login: response.data.user.login,
+        id: response.data.user.id.toString(),
+        url: response.data.user.url,
+      },
       url: response.data.url,
       body: response.data.body,
       createdAt: response.data.created_at,
@@ -354,7 +363,7 @@ export class GitHubService implements IGitHubService {
 
     const items = response.map((val) => ({
       user: {
-        id: val.user.id,
+        id: val.user.id.toString(),
         login: val.user.login,
         url: val.user.url,
       },

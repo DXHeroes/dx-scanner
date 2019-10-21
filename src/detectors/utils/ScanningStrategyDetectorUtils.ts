@@ -7,8 +7,12 @@ export class ScanningStrategyDetectorUtils {
     return this.testPath(path, /github\.com/);
   }
 
+  static isBitbucketPath(path: string): boolean {
+    return this.testPath(path, /bitbucket\.org/);
+  }
+
   static isRemoteServicePath(path: string): boolean {
-    return this.isGitHubPath(path); // || ...
+    return this.isGitHubPath(path) || this.isBitbucketPath(path); // || ...
   }
 
   static testPath(path: string, regex: RegExp): boolean {

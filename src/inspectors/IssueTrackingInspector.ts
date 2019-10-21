@@ -18,11 +18,11 @@ export class IssueTrackingInspector implements IIssueTrackingInspector {
     return this.service.getIssues(owner, repo);
   }
 
-  async getIssue(owner: string, repo: string, issueNumber: number): Promise<Issue> {
-    return this.service.getIssue(owner, repo, issueNumber);
+  async getIssue(owner: string, repo: string, issueId: number): Promise<Issue> {
+    return this.service.getIssue(owner, repo, issueId);
   }
 
-  async listIssueComments(owner: string, repo: string, id: number): Promise<Paginated<IssueComment>> {
-    return this.service.getIssueComments(owner, repo, id);
+  async listIssueComments(owner: string, repo: string, issueId: number): Promise<Paginated<IssueComment>> {
+    return this.service.getIssueComments(owner, repo, issueId);
   }
 }
