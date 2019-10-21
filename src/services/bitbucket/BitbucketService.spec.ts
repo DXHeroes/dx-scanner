@@ -1,14 +1,12 @@
 import nock from 'nock';
-import {
-  getIssuesResponse,
-  getPullCommits,
-  getPullRequestResponse,
-  getPullRequestsResponse,
-  getIssueResponse,
-  getIssueCommentsResponse,
-  BitbucketNock,
-} from '../../../test/helpers/bitbucketNock';
+import { BitbucketNock } from '../../../test/helpers/bitbucketNock';
 import { BitbucketService } from './BitbucketService';
+import { getPullRequestsResponse } from '../git/__MOCKS__/bitbucketServiceMockFolder/getPullRequestsResponse';
+import { getPullRequestResponse } from '../git/__MOCKS__/bitbucketServiceMockFolder/getPullRequestResponse';
+import { getPullCommits } from '../git/__MOCKS__/bitbucketServiceMockFolder/getPullCommits';
+import { getIssuesResponse } from '../git/__MOCKS__/bitbucketServiceMockFolder/getIssuesResponse';
+import { getIssueResponse } from '../git/__MOCKS__/bitbucketServiceMockFolder/getIssueResponse';
+import { getIssueCommentsResponse } from '../git/__MOCKS__/bitbucketServiceMockFolder/getIssueCommentsResponse';
 
 describe('Bitbucket Service', () => {
   let service: BitbucketService;
