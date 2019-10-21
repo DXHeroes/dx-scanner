@@ -26,7 +26,7 @@ import {
   File,
 } from '../git/model';
 import { ICVSService } from '../git/ICVSService';
-const debug = Debug('cli:services:git:github-service');
+const debug = Debug('cli:services:git:bitbucket-service');
 
 @injectable()
 export class BitbucketService implements ICVSService {
@@ -66,12 +66,12 @@ export class BitbucketService implements ICVSService {
   }
 
   async getPullRequests(owner: string, repo: string): Promise<Paginated<PullRequest>> {
-    const paramas: Bitbucket.Params.PullrequestsList = {
+    const params: Bitbucket.Params.PullrequestsList = {
       repo_slug: repo,
       username: owner,
     };
 
-    const response = <DeepRequired<Bitbucket.Response<Bitbucket.Schema.PaginatedPullrequests>>>await this.client.pullrequests.list(paramas);
+    const response = <DeepRequired<Bitbucket.Response<Bitbucket.Schema.PaginatedPullrequests>>>await this.client.pullrequests.list(params);
     const url = 'www.bitbucket.org';
 
     const values = response.data.values.map(async (val) => ({
