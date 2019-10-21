@@ -8,12 +8,12 @@ export const getContributorsServiceResponse: Paginated<Contributor> = {
     {
       contributions: 1,
       followersUrl: undefined,
-      user: { id: 251370, login: 'Spaceghost', url: 'https://api.github.com/users/Spaceghost' },
+      user: { id: '251370', login: 'Spaceghost', url: 'https://api.github.com/users/Spaceghost' },
     },
     {
       contributions: 1,
       followersUrl: undefined,
-      user: { id: 583231, login: 'octocat', url: 'https://api.github.com/users/octocat' },
+      user: { id: '583231', login: 'octocat', url: 'https://api.github.com/users/octocat' },
     },
   ],
   page: 1,

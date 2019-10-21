@@ -6,7 +6,7 @@ export const getIssueServiceResponse: Issue = {
   id: 872858,
   user: {
     login: 'unoju',
-    id: 777449,
+    id: '777449',
     url: 'https://api.github.com/users/unoju',
   },
   state: 'closed',

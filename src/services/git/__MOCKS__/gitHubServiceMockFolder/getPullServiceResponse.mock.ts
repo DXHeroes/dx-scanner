@@ -6,7 +6,7 @@ export const getPullServiceResponse: PullRequest = {
       id: 1296269,
       name: 'Hello-World',
       owner: {
-        id: 583231,
+        id: '583231',
         login: 'octocat',
         url: 'https://api.github.com/users/octocat',
       },
@@ -21,5 +21,5 @@ export const getPullServiceResponse: PullRequest = {
   state: 'closed',
   updatedAt: '2011-01-26T19:01:12Z',
   url: 'https://api.github.com/repos/octocat/Hello-World/pulls/1',
-  user: { id: 583231, login: 'octocat', url: 'https://api.github.com/users/octocat' },
+  user: { id: '583231', login: 'octocat', url: 'https://api.github.com/users/octocat' },
 };
