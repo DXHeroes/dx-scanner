@@ -22,7 +22,7 @@ import { getPullsFilesServiceResponse } from './__MOCKS__/gitHubServiceMockFolde
 import { getPullCommitsResponse } from './__MOCKS__/gitHubServiceMockFolder/getPullsCommitsResponse.mock';
 import { getPullCommitsServiceResponse } from './__MOCKS__/gitHubServiceMockFolder/getPullCommitsServiceResponse.mock';
 import { GitHubNock } from '../../../test/helpers/gitHubNock';
-import { GitHubPullRequestState } from './ICVSService';
+import { CVSPullRequestState } from './ICVSService';
 import { getRepoCommitsResponse } from './__MOCKS__/gitHubServiceMockFolder/getRepoCommitsResponse.mock';
 import { File } from './model';
 
@@ -70,7 +70,7 @@ describe('GitHub Service', () => {
         'open',
       );
 
-      const response = await service.getPullRequests('octocat', 'Hello-World', { filter: { state: GitHubPullRequestState.open } });
+      const response = await service.getPullRequests('octocat', 'Hello-World', { filter: { state: CVSPullRequestState.open } });
       expect(response.items.map((item) => item.state)).toMatchObject(['open']);
     });
 
@@ -80,7 +80,7 @@ describe('GitHub Service', () => {
         'closed',
       );
 
-      const response = await service.getPullRequests('octocat', 'Hello-World', { filter: { state: GitHubPullRequestState.closed } });
+      const response = await service.getPullRequests('octocat', 'Hello-World', { filter: { state: CVSPullRequestState.closed } });
       expect(response.items.map((item) => item.state)).toMatchObject(['closed']);
     });
 
@@ -93,7 +93,7 @@ describe('GitHub Service', () => {
         'all',
       );
 
-      const response = await service.getPullRequests('octocat', 'Hello-World', { filter: { state: GitHubPullRequestState.all } });
+      const response = await service.getPullRequests('octocat', 'Hello-World', { filter: { state: CVSPullRequestState.all } });
       expect(response.items.map((item) => item.state)).toMatchObject(['open', 'closed']);
     });
   });

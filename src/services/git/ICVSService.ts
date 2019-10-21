@@ -6,7 +6,7 @@ export interface ICVSService {
   getPullRequests(
     owner: string,
     repo: string,
-    options?: ListGetterOptions<{ state?: GitHubPullRequestState }>,
+    options?: ListGetterOptions<{ state?: CVSPullRequestState }>,
   ): Promise<Paginated<PullRequest>>;
   getPullRequestReviews(owner: string, repo: string, prNumber: number): Promise<Paginated<PullRequestReview>>;
   getPullRequestFiles(owner: string, repo: string, prNumber: number): Promise<Paginated<PullFiles>>;
@@ -19,13 +19,13 @@ export interface ICVSService {
   getRepoContent(owner: string, repo: string, path: string): Promise<File | Symlink | Directory | null>;
 }
 
-export enum GitHubPullRequestState {
+export enum CVSPullRequestState {
   open = 'open',
   closed = 'closed',
   all = 'all',
 }
 
-export enum GitHubIssueState {
+export enum CVSIssueState {
   open = 'open',
   closed = 'closed',
   all = 'all',

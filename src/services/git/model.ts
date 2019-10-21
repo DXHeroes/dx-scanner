@@ -80,7 +80,7 @@ export type Directory = Array<RepoContent>;
 
 export interface Issue {
   user: UserInfo;
-  id: number | string;
+  id: string;
   url: string;
   body: string;
   createdAt: string;

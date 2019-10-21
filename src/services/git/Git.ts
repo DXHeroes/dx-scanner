@@ -2,7 +2,7 @@ import { Repository } from '../../model';
 import { isArray } from 'util';
 import { inject, injectable } from 'inversify';
 import { ErrorFactory } from '../../lib/errors/ErrorFactory';
-import { GitHubPullRequestState } from './ICVSService';
+import { CVSPullRequestState } from './ICVSService';
 import * as nodePath from 'path';
 import { Metadata, MetadataType, IProjectFilesBrowserService } from '../model';
 import { Types } from '../../types';
@@ -115,7 +115,7 @@ export class Git implements IProjectFilesBrowserService {
 
   async getPullRequestCount(): Promise<number> {
     const params = GitServiceUtils.getOwnerAndRepoName(this.repository.url);
-    return this.service.getPullRequests(params.owner, params.repoName, { filter: { state: GitHubPullRequestState.all } }).then((r) => {
+    return this.service.getPullRequests(params.owner, params.repoName, { filter: { state: CVSPullRequestState.all } }).then((r) => {
       if (!r) {
         throw ErrorFactory.newInternalError('Could not get pull requests');
       }

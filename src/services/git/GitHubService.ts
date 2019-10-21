@@ -13,7 +13,7 @@ import {
   IssueComment,
   Symlink,
 } from './model';
-import { ICVSService, GitHubPullRequestState } from './ICVSService';
+import { ICVSService, CVSPullRequestState } from './ICVSService';
 import { Paginated } from '../../inspectors/common/Paginated';
 import {
   IssuesListForRepoResponseItem,
@@ -68,7 +68,7 @@ export class GitHubService implements ICVSService {
   async getPullRequests(
     owner: string,
     repo: string,
-    options?: ListGetterOptions<{ state?: GitHubPullRequestState }>,
+    options?: ListGetterOptions<{ state?: CVSPullRequestState }>,
   ): Promise<Paginated<PullRequest>> {
     let url = 'GET /repos/:owner/:repo/pulls';
     if (options !== undefined && options.filter !== undefined && options.filter.state !== undefined) {
@@ -326,7 +326,7 @@ export class GitHubService implements ICVSService {
       updatedAt: val.updated_at,
       closedAt: val.closed_at,
       state: val.state,
-      id: val.id,
+      id: val.id.toString(),
       pullRequestUrl: val.pull_request && val.pull_request.url,
     }));
     const pagination = this.getPagination(response.length);
@@ -342,7 +342,7 @@ export class GitHubService implements ICVSService {
     const response = await this.unwrap(this.client.issues.get({ owner, repo, issue_number: issueNumber }));
 
     return {
-      id: response.data.id,
+      id: response.data.id.toString(),
       user: {
         login: response.data.user.login,
         id: response.data.user.id.toString(),
