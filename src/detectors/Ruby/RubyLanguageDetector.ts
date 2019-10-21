@@ -16,7 +16,7 @@ export class RubyLanguageDetector implements ILanguageDetector {
 
   async detectLanguage(): Promise<LanguageAtPath[]> {
     const result: LanguageAtPath[] = [];
-    const packageFiles = await this.fileInspector.scanFor(fileExtensionRegExp(['gemspec']), '/');
+    const packageFiles = await this.fileInspector.scanFor(fileNameRegExp('Gemfile'), '/');
 
     if(packageFiles.length > 0) {
       for (const path of packageFiles.map((file) => nodePath.dirname(file.path))) {

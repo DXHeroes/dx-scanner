@@ -20,9 +20,9 @@ describe('RubyLanguageDetector', () => {
     virtualFileSystemService.clearFileSystem();
   });
 
-  it('detects ruby correctly via gemspec file', async () => {
+  it('detects ruby correctly via Gemfile', async () => {
     const structure: DirectoryJSON = {
-      '/scan.gemspec': '...',
+      '/Gemfile': '...',
     };
 
     virtualFileSystemService.setFileSystem(structure);
