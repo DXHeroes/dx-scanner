@@ -26,7 +26,7 @@ import {
   File,
 } from '../git/model';
 import { ICVSService } from '../git/ICVSService';
-const debug = Debug('cli:services:git:github-service');
+const debug = Debug('cli:services:git:bitbucket-service');
 
 @injectable()
 export class BitbucketService implements ICVSService {
