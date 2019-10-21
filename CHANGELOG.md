@@ -1,3 +1,45 @@
+# [1.10.0](https://github.com/dxheroes/dx-scanner/compare/v1.9.0...v1.10.0) (2019-10-21)
+
+
+### Bug Fixes
+
+* add file GitHubService ([1f196a2](https://github.com/dxheroes/dx-scanner/commit/1f196a2))
+* add interface and fix it ([19d29d6](https://github.com/dxheroes/dx-scanner/commit/19d29d6))
+* add relevant type of bitbucketNock and return type ([d9dc3b3](https://github.com/dxheroes/dx-scanner/commit/d9dc3b3))
+* add return type to mock responses ([005b592](https://github.com/dxheroes/dx-scanner/commit/005b592))
+* allow only type string of userId. Fix returning UserInfo. ([d949be9](https://github.com/dxheroes/dx-scanner/commit/d949be9))
+* auth with apppassword ([1e3c80c](https://github.com/dxheroes/dx-scanner/commit/1e3c80c))
+* Bitbucket doesn't return time of closing, so the value will be undefined ([dc339b0](https://github.com/dxheroes/dx-scanner/commit/dc339b0))
+* change error.status to error.code ([ec2b094](https://github.com/dxheroes/dx-scanner/commit/ec2b094))
+* clone repo if it's not local ([ec3ae32](https://github.com/dxheroes/dx-scanner/commit/ec3ae32))
+* Facelift of the tests ([c888dd0](https://github.com/dxheroes/dx-scanner/commit/c888dd0))
+* fullname; counting totalCount if there is no item ([ef938b0](https://github.com/dxheroes/dx-scanner/commit/ef938b0))
+* make base required ([c35f271](https://github.com/dxheroes/dx-scanner/commit/c35f271))
+* Name of issueNumber ([542e28b](https://github.com/dxheroes/dx-scanner/commit/542e28b))
+* name of PullRequestState and IssueState, which is used just by GitHub for now ([468c037](https://github.com/dxheroes/dx-scanner/commit/468c037))
+* Not passing build https://travis-ci.org/DXHeroes/dx-scanner/jobs/600727699 ([81fc734](https://github.com/dxheroes/dx-scanner/commit/81fc734))
+* remove unused imports ([68276a8](https://github.com/dxheroes/dx-scanner/commit/68276a8))
+* rename IGitHubService to ICSVService, ([aa77885](https://github.com/dxheroes/dx-scanner/commit/aa77885))
+* return id as a string ([2abf5f8](https://github.com/dxheroes/dx-scanner/commit/2abf5f8))
+* return issue is as a string, ([3b84e02](https://github.com/dxheroes/dx-scanner/commit/3b84e02))
+* return responses in own interfaces ([10e1ab6](https://github.com/dxheroes/dx-scanner/commit/10e1ab6))
+* returning interfaces ([4ba6887](https://github.com/dxheroes/dx-scanner/commit/4ba6887))
+* returning object ([bf255d3](https://github.com/dxheroes/dx-scanner/commit/bf255d3))
+* Show the right message to the user accordingt to used CVS. ([188eef6](https://github.com/dxheroes/dx-scanner/commit/188eef6))
+* Split mock response into files ([13d79f0](https://github.com/dxheroes/dx-scanner/commit/13d79f0))
+* testing path of bitbucket ([0fcf989](https://github.com/dxheroes/dx-scanner/commit/0fcf989))
+* tests ([c229212](https://github.com/dxheroes/dx-scanner/commit/c229212))
+* tests for BitbucketService ([f7537bf](https://github.com/dxheroes/dx-scanner/commit/f7537bf))
+* typo in name of file ([5150580](https://github.com/dxheroes/dx-scanner/commit/5150580))
+* use git-url-parser package to get username ([6f4c8f0](https://github.com/dxheroes/dx-scanner/commit/6f4c8f0))
+* user url ([444cdbf](https://github.com/dxheroes/dx-scanner/commit/444cdbf))
+
+
+### Features
+
+* add isBitbucketPath() to check if the path is from Bitbucket. ([a958164](https://github.com/dxheroes/dx-scanner/commit/a958164))
+* bind BitbucketService ([c511023](https://github.com/dxheroes/dx-scanner/commit/c511023))
+
 # [1.9.0](https://github.com/dxheroes/dx-scanner/compare/v1.8.0...v1.9.0) (2019-10-21)
 
 
