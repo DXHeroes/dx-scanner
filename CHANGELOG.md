@@ -1,3 +1,12 @@
+# [1.8.0](https://github.com/dxheroes/dx-scanner/compare/v1.7.0...v1.8.0) (2019-10-21)
+
+
+### Features
+
+* add composer file to the detector ([5ad4c7d](https://github.com/dxheroes/dx-scanner/commit/5ad4c7d))
+* add cpp language detector ([871c47d](https://github.com/dxheroes/dx-scanner/commit/871c47d))
+* add php language detector ([54e0ac6](https://github.com/dxheroes/dx-scanner/commit/54e0ac6))
+
 # [1.7.0](https://github.com/dxheroes/dx-scanner/compare/v1.6.1...v1.7.0) (2019-10-17)
 
 
