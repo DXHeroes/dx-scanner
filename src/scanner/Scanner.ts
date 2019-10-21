@@ -140,9 +140,7 @@ export class Scanner {
     return practicesWithContext;
   }
 
-  // private async report(componentsWithPractices: ComponentWithPractices[]) {
   private async report(practicesWithContext: PracticeWithContext[]): Promise<void> {
-    // const relevantPractices = practicesWithContext.filter((p) => p.evaluation === PracticeEvaluationResult.notPracticing);
     const relevantPractices = practicesWithContext;
 
     const reportString = this.reporter.report(
@@ -166,7 +164,6 @@ export class Scanner {
   }
 
   private async detectPracticesForComponent(componentWithCtx: ProjectComponentAndLangContext): Promise<PracticeWithContext[]> {
-    // return new Promise((res, rej) => {
     const practicesWithContext: PracticeWithContext[] = [];
 
     const componentContext = componentWithCtx.languageContext.getProjectComponentContext(componentWithCtx.component);
