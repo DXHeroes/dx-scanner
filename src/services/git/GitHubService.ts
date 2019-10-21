@@ -13,7 +13,7 @@ import {
   IssueComment,
   Symlink,
 } from './model';
-import { ICVSService, CVSPullRequestState } from './ICVSService';
+import { ICVSService } from './ICVSService';
 import { Paginated } from '../../inspectors/common/Paginated';
 import {
   IssuesListForRepoResponseItem,
@@ -32,6 +32,7 @@ import { Types } from '../../types';
 import { ArgumentsProvider } from '../../inversify.config';
 import { ICache } from '../../scanner/cache/ICache';
 import { InMemoryCache } from '../../scanner/cache/InMemoryCahce';
+import { GitHubPullRequestState } from './IGitHubService';
 const debug = Debug('cli:services:git:github-service');
 
 @injectable()
@@ -68,7 +69,7 @@ export class GitHubService implements ICVSService {
   async getPullRequests(
     owner: string,
     repo: string,
-    options?: ListGetterOptions<{ state?: CVSPullRequestState }>,
+    options?: ListGetterOptions<{ state?: GitHubPullRequestState }>,
   ): Promise<Paginated<PullRequest>> {
     let url = 'GET /repos/:owner/:repo/pulls';
     if (options !== undefined && options.filter !== undefined && options.filter.state !== undefined) {
