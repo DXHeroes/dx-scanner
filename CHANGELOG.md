@@ -1,3 +1,15 @@
+# [1.9.0](https://github.com/dxheroes/dx-scanner/compare/v1.8.0...v1.9.0) (2019-10-21)
+
+
+### Bug Fixes
+
+* ruby language detector Gemfile ([672680e](https://github.com/dxheroes/dx-scanner/commit/672680e))
+
+
+### Features
+
+* add ruby language detector ([59a430f](https://github.com/dxheroes/dx-scanner/commit/59a430f))
+
 # [1.8.0](https://github.com/dxheroes/dx-scanner/compare/v1.7.0...v1.8.0) (2019-10-21)
 
 
