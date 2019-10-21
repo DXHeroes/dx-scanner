@@ -5,6 +5,8 @@ import { Command, flags } from '@oclif/command';
 import cli from 'cli-ux';
 import { ServiceError } from './lib/errors';
 import updateNotifier from 'update-notifier';
+import { ScanningStrategyDetectorUtils } from './detectors/utils/ScanningStrategyDetectorUtils';
+// import { ScanningStrategyDetectorUtils } from './utils/ScanningStrategyDetectorUtils';
 
 class DXScannerCommand extends Command {
   static description = 'Scan your project for possible DX recommendations.';
@@ -46,7 +48,11 @@ class DXScannerCommand extends Command {
       await scanner.scan();
     } catch (error) {
       if (error instanceof ServiceError) {
-        authorization = await cli.prompt('Insert your GitHub personal access token.\nhttps://github.com/settings/tokens\n');
+        ScanningStrategyDetectorUtils.isGitHubPath(scanPath)
+          ? (authorization = await cli.prompt('Insert your GitHub personal access token.\nhttps://github.com/settings/tokens\n'))
+          : (authorization = await cli.prompt(
+              'Insert your Bitbucket app password.\nhttps://confluence.atlassian.com/bitbucket/app-passwords-828781300.html\n',
+            ));
 
         const container = createRootContainer({ uri: scanPath, auth: authorization, json: json });
         const scanner = container.get(Scanner);
