@@ -146,7 +146,14 @@ export class Scanner {
         const isFulfilled = ScannerUtils.isFulfilled(practice, practicesWithContextFromComponent);
 
         if (!isFulfilled) continue;
-        const evaluation = await practice.evaluate({ ...practiceContext, config: practiceConfig });
+
+        let evaluation;
+        try {
+          evaluation = await practice.evaluate({ ...practiceContext, config: practiceConfig });
+        } catch (error) {
+          evaluation = PracticeEvaluationResult.unknown;
+          debug(`The ${practice.getMetadata().name} practice failed with this error:\n${error}`);
+        }
 
         const practiceWithContext = {
           practice,

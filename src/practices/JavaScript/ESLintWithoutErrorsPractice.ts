@@ -4,6 +4,12 @@ import { PracticeEvaluationResult, PracticeImpact, ProgrammingLanguage } from '.
 import { DxPractice } from '../DxPracticeDecorator';
 import { IPractice } from '../IPractice';
 import _ from 'lodash';
+import yaml from 'js-yaml';
+import { IFileInspector } from '../../inspectors/IFileInspector';
+import { inject } from 'inversify';
+import { Types } from '../../types';
+import { fs } from 'memfs';
+import debug from 'debug';
 
 @DxPractice({
   id: 'JavaScript.ESLintCorrectlyUsedPractice',
@@ -15,6 +21,11 @@ import _ from 'lodash';
   dependsOn: { practicing: ['JavaScript.ESLintUsed'] },
 })
 export class ESLintWithoutErrorsPractice implements IPractice {
+  // private readonly fileInspector: IFileInspector;
+
+  // constructor(@inject(Types.IFileInspector) fileInspector: IFileInspector) {
+  //   this.fileInspector = fileInspector;
+  // }
   async isApplicable(ctx: PracticeContext): Promise<boolean> {
     return (
       ctx.projectComponent.language === ProgrammingLanguage.JavaScript || ctx.projectComponent.language === ProgrammingLanguage.TypeScript
@@ -38,12 +49,22 @@ export class ESLintWithoutErrorsPractice implements IPractice {
     const eslintConfig = await ctx.fileInspector.scanFor(/\.eslintrc/, '/', { shallow: true });
 
     if (eslintConfig.length > 0) {
-      // eslint-disable-next-line @typescript-eslint/no-var-requires, @typescript-eslint/no-require-imports
-      const baseConfig = require(eslintConfig[0].path);
-      const plugins = _.clone(baseConfig.plugins);
-      _.unset(baseConfig, 'plugins');
-      _.unset(baseConfig, 'extends');
-      options = { ...options, baseConfig, plugins };
+      let baseConfig, content;
+
+      try {
+        // eslint-disable-next-line @typescript-eslint/no-require-imports
+        baseConfig = require(eslintConfig[0].path);
+
+        const plugins = _.clone(baseConfig.plugins);
+        _.unset(baseConfig, 'plugins');
+        _.unset(baseConfig, 'extends');
+        options = { ...options, baseConfig, plugins };
+      } catch (error) {
+        debug(`Loading .eslintrc file failed with this error:\n${error}`);
+
+        content = await ctx.fileInspector.readFile(eslintConfig[0].path);
+        baseConfig = yaml.safeLoad(content);
+      }
     }
 
     let eslintIgnore;
