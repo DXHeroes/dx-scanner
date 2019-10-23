@@ -5,7 +5,7 @@ import { injectable, optional, inject } from 'inversify';
 import { Types } from '../types';
 import * as nodePath from 'path';
 import { ICache } from '../scanner/cache/ICache';
-import { InMemoryCache } from '../scanner/cache/InMemoryCahce';
+import { InMemoryCache } from '../scanner/cache/InMemoryCache';
 
 @injectable()
 export class FileInspector implements IFileInspector {
