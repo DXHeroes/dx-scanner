@@ -19,7 +19,6 @@ import {
   ProjectComponentFramework,
   ProjectComponentPlatform,
   ProjectComponentType,
-  PracticeMetadata,
   PracticeImpact,
 } from '../model';
 import { IPracticeWithMetadata } from '../practices/DxPracticeDecorator';

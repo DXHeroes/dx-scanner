@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/camelcase */
+/* eslint-disable @typescript-eslint/no-unused-vars, @typescript-eslint/camelcase */
 import Bitbucket from 'bitbucket';
 import { grey } from 'colors';
 import Debug from 'debug';
