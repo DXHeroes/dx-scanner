@@ -1,10 +1,8 @@
-import { PracticeAndComponent } from '../model';
-import { IReporter, JSONReport } from './IReporter';
+import { IReporter, JSONReport, PracticeWithContextForReporter } from './IReporter';
 import { injectable, inject } from 'inversify';
 import { Types } from '../types';
 import { ArgumentsProvider } from '../inversify.config';
 import _ from 'lodash';
-import { IPracticeWithMetadata } from '../practices/DxPracticeDecorator';
 
 @injectable()
 export class JSONReporter implements IReporter {
@@ -14,7 +12,7 @@ export class JSONReporter implements IReporter {
     this.argumentsProvider = argumentsProvider;
   }
 
-  report(practicesAndComponents: PracticeAndComponent[], practicesOff: IPracticeWithMetadata[]): JSONReport {
+  report(practicesAndComponents: PracticeWithContextForReporter[]): JSONReport {
     const report: JSONReport = {
       uri: this.argumentsProvider.uri,
       components: [],
@@ -23,16 +21,15 @@ export class JSONReporter implements IReporter {
     for (const pac of practicesAndComponents) {
       let component = _.find(report.components, { path: pac.component.path });
       if (!component) {
-        const currentComponentReport = { ...pac.component, practices: [pac.practice] };
+        const currentComponentReport = {
+          ...pac.component,
+          practices: [pac.practice],
+        };
         report.components.push(currentComponentReport);
         component = currentComponentReport;
         continue;
       }
       component.practices.push(pac.practice);
-
-      if (practicesOff.length > 0) {
-        Object.assign(component, { practicesOff: practicesOff });
-      }
     }
 
     return report;

@@ -49,6 +49,7 @@ describe('ScannerUtils', () => {
         practiceContext: jest.fn() as any,
         practice: ScannerUtils.initPracticeWithMetadata(ESLintUsedPractice),
         evaluation: PracticeEvaluationResult.practicing,
+        isOn: jest.fn() as any,
       };
 
       const practice = ScannerUtils.initPracticeWithMetadata(DeprecatedTSLintPractice);
@@ -63,6 +64,7 @@ describe('ScannerUtils', () => {
         practiceContext: jest.fn() as any,
         practice: ScannerUtils.initPracticeWithMetadata(ESLintUsedPractice),
         evaluation: PracticeEvaluationResult.notPracticing,
+        isOn: jest.fn() as any,
       };
       const practice = ScannerUtils.initPracticeWithMetadata(DeprecatedTSLintPractice);
       const result = ScannerUtils.isFulfilled(practice, [evaluatedPractice]);

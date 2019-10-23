@@ -203,9 +203,4 @@ export enum GitFLow {
   Git = 'Git',
 }
 
-export interface PracticeAndComponent {
-  practice: PracticeMetadata;
-  component: ProjectComponent;
-}
-
 export type ProjectIssueBrowserService = GitHubService;

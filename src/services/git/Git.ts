@@ -38,6 +38,7 @@ export class Git implements IProjectFilesBrowserService {
     let result = await this.getRepoContent(await this.followSymLinks(path));
     if (result !== null && !isArray(result)) {
       result = result as File;
+      if (!result.content) return '';
       return Buffer.from(result.content, result.encoding).toString('utf-8');
     } else {
       throw ErrorFactory.newInternalError(`${path} is not a file`);

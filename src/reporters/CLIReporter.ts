@@ -1,12 +1,12 @@
 import { blue, bold, Color, green, grey, italic, red, reset, underline, yellow } from 'colors';
 import { inject, injectable } from 'inversify';
-import { PracticeAndComponent, PracticeImpact, PracticeMetadata } from '../model';
-import { IPracticeWithMetadata } from '../practices/DxPracticeDecorator';
+import { PracticeImpact, PracticeMetadata, PracticeEvaluationResult } from '../model';
 import { Types } from '../types';
-import { ComponentReport, IReporter } from './IReporter';
+import { IReporter, PracticeWithContextForReporter } from './IReporter';
 import { JSONReporter } from './JSONReporter';
 import { sharedSubpath } from '../detectors/utils';
 import { GitServiceUtils } from '../services/git/GitServiceUtils';
+import { ReporterUtils } from './ReporterUtils';
 
 @injectable()
 export class CLIReporter implements IReporter {
@@ -16,10 +16,10 @@ export class CLIReporter implements IReporter {
     this.JSONReporter = JSONReporter;
   }
 
-  report(practicesAndComponents: PracticeAndComponent[], practicesOff: IPracticeWithMetadata[]): string {
+  report(practicesAndComponents: PracticeWithContextForReporter[]): string {
     const lines: string[] = [];
 
-    const report = this.JSONReporter.report(practicesAndComponents, practicesOff);
+    const componentsWithPractices = ReporterUtils.getComponentsWithPractices(practicesAndComponents);
 
     lines.push(bold(blue('----------------------------')));
     lines.push(bold(blue('|                          |')));
@@ -28,33 +28,37 @@ export class CLIReporter implements IReporter {
     lines.push(bold(blue('----------------------------')));
 
     let repoName;
-    const componentsSharedSubpath = sharedSubpath(report.components.map((c) => c.path));
+    const componentsSharedSubpath = sharedSubpath(componentsWithPractices.map((c) => c.component.path));
 
-    for (const component of report.components) {
+    for (const cwp of componentsWithPractices) {
       lines.push('');
       lines.push(bold(blue('Developer Experience Report for:')));
 
-      if (component.repositoryPath) {
-        repoName = GitServiceUtils.getUrlToRepo(component.repositoryPath, component.path.replace(componentsSharedSubpath, ''));
+      if (cwp.component.repositoryPath) {
+        repoName = GitServiceUtils.getUrlToRepo(cwp.component.repositoryPath, cwp.component.path.replace(componentsSharedSubpath, ''));
       } else {
-        repoName = component.path;
+        repoName = cwp.component.path;
       }
       lines.push(repoName);
       lines.push('----------------------------');
 
       for (const key in PracticeImpact) {
-        const impact = <PracticeImpact>PracticeImpact[key];
+        const impact = PracticeImpact[key as keyof typeof PracticeImpact];
 
-        const impactLine = this.emitImpactSegment(component, impact);
+        const impactLine = this.emitImpactSegment(cwp.practicesAndComponents, impact);
         impactLine && lines.push(impactLine);
       }
-    }
 
-    practicesOff.length === 0
-      ? lines.push(bold(yellow('No practices were switched off.')))
-      : lines.push(bold(red('You switched off these practices:')));
-    for (const practice of practicesOff) {
-      lines.push(red(`- ${italic(practice.getMetadata().name)}`));
+      lines.push('----------------------------');
+      lines.push('');
+
+      const practicesAndComponentsOff = practicesAndComponents.filter((p) => p.isOn === false);
+      practicesAndComponentsOff.length === 0
+        ? lines.push(bold(yellow('No practices were switched off.')))
+        : lines.push(bold(red('You switched off these practices:')));
+      for (const p of practicesAndComponentsOff) {
+        lines.push(red(`- ${italic(p.practice.name)}`));
+      }
     }
 
     lines.push('----------------------------');
@@ -66,10 +70,12 @@ export class CLIReporter implements IReporter {
     return lines.join('\n');
   }
 
-  private emitImpactSegment(component: ComponentReport, impact: PracticeImpact): string | undefined {
+  private emitImpactSegment(practicesAndComponents: PracticeWithContextForReporter[], impact: PracticeImpact): string | undefined {
     const lines: string[] = [];
 
-    const practices = component.practices.filter((practice) => practice.impact === impact);
+    const practices = practicesAndComponents.filter(
+      (p) => p.impact === impact && p.isOn === true && p.evaluation === PracticeEvaluationResult.notPracticing,
+    );
     if (practices.length === 0) {
       return undefined;
     }
@@ -91,11 +97,11 @@ export class CLIReporter implements IReporter {
       lines.push(bold(color('Also consider:')));
     }
 
-    for (const practice of practices) {
-      lines.push(this.linesForPractice(practice, color));
+    for (const practiceWithContext of practices) {
+      lines.push(this.linesForPractice(practiceWithContext.practice, color));
 
-      if (practice.defaultImpact !== practice.impact) {
-        lines.push(bold(this.changedImpact(practice, (color = grey))));
+      if (practiceWithContext.practice.defaultImpact !== practiceWithContext.impact) {
+        lines.push(bold(this.changedImpact(practiceWithContext.practice, (color = grey))));
       }
     }
 

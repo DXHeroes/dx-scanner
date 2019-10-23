@@ -4,7 +4,6 @@ import _ from 'lodash';
 import { IFileInspector } from '../inspectors/IFileInspector';
 import { Types } from '../types';
 import { IConfigProvider, Config, PracticeConfig } from './IConfigProvider';
-import { PracticeImpact } from '../model';
 
 @injectable()
 export class ConfigProvider implements IConfigProvider {

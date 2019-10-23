@@ -3,7 +3,7 @@ import { Issue } from '../../model';
 /* eslint-disable @typescript-eslint/camelcase */
 export const getIssueServiceResponse: Issue = {
   url: 'https://api.github.com/repos/octocat/Hello-World/issues/1',
-  id: "872858",
+  id: '872858',
   user: {
     login: 'unoju',
     id: '777449',

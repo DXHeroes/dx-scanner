@@ -17,4 +17,5 @@ export interface IFileInspector {
       shallow?: boolean;
     },
   ): Promise<Metadata[]>;
+  purgeCache(): void;
 }

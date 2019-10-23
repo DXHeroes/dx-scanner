@@ -18,7 +18,7 @@ export class RubyLanguageDetector implements ILanguageDetector {
     const result: LanguageAtPath[] = [];
     const packageFiles = await this.fileInspector.scanFor(fileNameRegExp('Gemfile'), '/');
 
-    if(packageFiles.length > 0) {
+    if (packageFiles.length > 0) {
       for (const path of packageFiles.map((file) => nodePath.dirname(file.path))) {
         result.push({ language: ProgrammingLanguage.Ruby, path });
       }
