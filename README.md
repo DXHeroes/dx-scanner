@@ -6,7 +6,7 @@
 [![Downloads/week](https://img.shields.io/npm/dw/dx-scanner.svg)](https://npmjs.org/package/dx-scanner)
 ![GitHub contributors](https://img.shields.io/github/contributors/DXHeroes/dx-scanner)
 [![All Contributors](https://img.shields.io/badge/all_contributors-5-orange.svg)](#contributors-)
-[![License: CC BY-NC-SA 4.0](https://img.shields.io/badge/License-CC%20BY--NC--SA%204.0-lightgrey.svg)](https://creativecommons.org/licenses/by-nc-sa/4.0/) 
+[![NPM](https://img.shields.io/npm/l/dx-scanner)](LICENSE)
 [![oclif](https://img.shields.io/badge/cli-oclif-brightgreen.svg)](https://oclif.io)
 ![TypeScript](https://img.shields.io/badge/%3C%2F%3E-Typescript-blue)
 [![Twitter Follow](https://img.shields.io/twitter/follow/DX_Heroes?style=social)](https://twitter.com/DX_Heroes)
@@ -101,7 +101,7 @@ Feel free to contribute to our DX Scanner. Please follow the [Contribution Guide
 
 ## License 📝
 
-The DX Scanner open source project is licensed under the [Attribution-NonCommercial-ShareAlike 4.0 International License](https://creativecommons.org/licenses/by-nc-sa/4.0/).
+The DX Scanner open source project is licensed under the [MIT](LICENSE).
 
 ## Contributors ✨
 
