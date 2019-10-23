@@ -1,22 +1,4 @@
-import {
-  blue,
-  bold,
-  Color,
-  green,
-  grey,
-  italic,
-  red,
-  reset,
-  underline,
-  yellow,
-  magenta,
-  black,
-  bgWhite,
-  cyan,
-  white,
-  gray,
-  dim,
-} from 'colors';
+import { blue, bold, Color, green, grey, italic, red, reset, underline, yellow, cyan } from 'colors';
 import { inject, injectable } from 'inversify';
 import { PracticeImpact, PracticeMetadata, PracticeEvaluationResult } from '../model';
 import { Types } from '../types';

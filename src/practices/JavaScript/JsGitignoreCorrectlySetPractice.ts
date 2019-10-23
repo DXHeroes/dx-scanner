@@ -47,7 +47,6 @@ export class JsGitignoreCorrectlySetPractice implements IPractice {
     const errorLogRegex = parsedGitignore.find((value: string) => /\.log/.test(value));
     const debugRegex = parsedGitignore.find((value: string) => /debug/.test(value));
 
-
     if (
       (buildRegex || libRegex || distRegex) &&
       (packageJsonRegex || yarnLockRegex) &&
