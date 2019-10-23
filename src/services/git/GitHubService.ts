@@ -12,6 +12,7 @@ import {
   PullCommits,
   IssueComment,
   Symlink,
+  RepoContentType,
 } from './model';
 import { ICVSService } from './ICVSService';
 import { Paginated } from '../../inspectors/common/Paginated';
@@ -33,6 +34,7 @@ import { ArgumentsProvider } from '../../inversify.config';
 import { ICache } from '../../scanner/cache/ICache';
 import { InMemoryCache } from '../../scanner/cache/InMemoryCahce';
 import { GitHubPullRequestState } from './IGitHubService';
+import { ErrorFactory } from '../../lib/errors';
 const debug = Debug('cli:services:git:github-service');
 
 @injectable()
@@ -288,24 +290,36 @@ export class GitHubService implements ICVSService {
         return null;
       }
 
-      return isArray(response.data)
-        ? response.data.map((item) => ({
-            name: item.name,
-            path: item.path,
-            sha: item.sha,
-            size: item.size,
-            type: item.type,
-          }))
-        : {
-            name: response.data.name,
-            path: response.data.path,
-            size: response.data.size,
-            sha: response.data.sha,
-            type: response.data.type,
-            content: response.data.content,
-            encoding: response.data.encoding,
-            target: response.data.target,
-          };
+      if (isArray(response.data)) {
+        return response.data.map((item) => ({
+          name: item.name,
+          path: item.path,
+          sha: item.sha,
+          size: item.size,
+          type: <RepoContentType>item.type,
+        }));
+      } else if (response.data.type === RepoContentType.file) {
+        return {
+          name: response.data.name,
+          path: response.data.path,
+          size: response.data.size,
+          sha: response.data.sha,
+          type: response.data.type,
+          content: response.data.content,
+          encoding: <BufferEncoding>response.data.encoding,
+        };
+      } else if (response.data.type === RepoContentType.symlink) {
+        return {
+          name: response.data.name,
+          path: response.data.path,
+          size: response.data.size,
+          sha: response.data.sha,
+          type: response.data.type,
+          target: `${response.data.target}`,
+        };
+      } else {
+        throw ErrorFactory.newInternalError('Unexpected response');
+      }
     });
   }
 

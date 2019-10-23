@@ -43,7 +43,7 @@ export class CLIReporter implements IReporter {
       lines.push('----------------------------');
 
       for (const key in PracticeImpact) {
-        const impact = <PracticeImpact>PracticeImpact[key];
+        const impact = PracticeImpact[key as keyof typeof PracticeImpact];
 
         const impactLine = this.emitImpactSegment(cwp.practicesAndComponents, impact);
         impactLine && lines.push(impactLine);
