@@ -2,11 +2,10 @@ import { blue, bold, Color, green, grey, italic, red, reset, underline, yellow }
 import { inject, injectable } from 'inversify';
 import { PracticeImpact, PracticeMetadata, PracticeEvaluationResult } from '../model';
 import { Types } from '../types';
-import { ComponentReport, IReporter, PracticeWithContextForReporter } from './IReporter';
+import { IReporter, PracticeWithContextForReporter } from './IReporter';
 import { JSONReporter } from './JSONReporter';
 import { sharedSubpath } from '../detectors/utils';
 import { GitServiceUtils } from '../services/git/GitServiceUtils';
-import { PracticeWithContext } from '../scanner/Scanner';
 import { ReporterUtils } from './ReporterUtils';
 
 @injectable()

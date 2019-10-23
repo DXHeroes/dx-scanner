@@ -18,7 +18,7 @@ export class GolangLanguageDetector implements ILanguageDetector {
     const result: LanguageAtPath[] = [];
     const packageFiles = await this.fileInspector.scanFor(fileNameRegExp('Gopkg.toml'), '/');
 
-    if(packageFiles.length > 0) {
+    if (packageFiles.length > 0) {
       for (const path of packageFiles.map((file) => nodePath.dirname(file.path))) {
         result.push({ language: ProgrammingLanguage.Go, path });
       }

@@ -6,7 +6,6 @@ import {
   PracticeMetadata,
   PracticeEvaluationResult,
 } from '../model';
-import { PracticeWithContext } from '../scanner/Scanner';
 
 export interface IReporter {
   report(practicesAndComponents: PracticeWithContextForReporter[]): string | JSONReport;
