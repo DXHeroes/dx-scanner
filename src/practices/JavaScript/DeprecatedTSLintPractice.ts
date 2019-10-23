@@ -25,6 +25,6 @@ export class DeprecatedTSLintPractice implements IPractice {
       }
     }
 
-    return PracticeEvaluationResult.unknown;
+    return PracticeEvaluationResult.practicing;
   }
 }

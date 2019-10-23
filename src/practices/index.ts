@@ -1,9 +1,7 @@
-import { PullRequestPractice } from './Collaboration/PullRequestPractice';
 import { TypeScriptUsedPractice } from './JavaScript/TypeScriptUsedPractice';
 import { PrettierUsedPractice } from './JavaScript/PrettierUsedPractice';
 import { ESLintUsedPractice } from './JavaScript/ESLintUsedPractice';
 import { LockfileIsPresentPractice } from './PackageManagement/LockfileIsPresentPractice';
-import { UnitTestPractice } from './Testing/UnitTestPractice';
 import { JsFrontendTestingFrameworkUsedPractice } from './JavaScript/JsFrontendTestingFrameworkUsedPractice';
 import { JsLoggerUsedPractice } from './JavaScript/JsLoggerUsedPractice';
 import { LicenseIsPresentPractice } from './LanguageIndependent/LicenseIsPresentPractice';
@@ -23,13 +21,11 @@ import { ESLintWithoutErrorsPractice } from './JavaScript/ESLintWithoutErrorsPra
 
 // register practices here
 export const practices = [
-  PullRequestPractice,
   TypeScriptUsedPractice,
   PrettierUsedPractice,
   ESLintUsedPractice,
   ESLintWithoutErrorsPractice,
   LockfileIsPresentPractice,
-  UnitTestPractice,
   JsFrontendTestingFrameworkUsedPractice,
   JsBackendTestingFrameworkUsedPractice,
   JsLoggerUsedPractice,

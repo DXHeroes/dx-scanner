@@ -1,4 +1,22 @@
-import { blue, bold, Color, green, grey, italic, red, reset, underline, yellow } from 'colors';
+import {
+  blue,
+  bold,
+  Color,
+  green,
+  grey,
+  italic,
+  red,
+  reset,
+  underline,
+  yellow,
+  magenta,
+  black,
+  bgWhite,
+  cyan,
+  white,
+  gray,
+  dim,
+} from 'colors';
 import { inject, injectable } from 'inversify';
 import { PracticeImpact, PracticeMetadata, PracticeEvaluationResult } from '../model';
 import { Types } from '../types';
@@ -20,6 +38,7 @@ export class CLIReporter implements IReporter {
     const lines: string[] = [];
 
     const componentsWithPractices = ReporterUtils.getComponentsWithPractices(practicesAndComponents);
+    const dxScore = ReporterUtils.computeDXScore(practicesAndComponents);
 
     lines.push(bold(blue('----------------------------')));
     lines.push(bold(blue('|                          |')));
@@ -31,16 +50,16 @@ export class CLIReporter implements IReporter {
     const componentsSharedSubpath = sharedSubpath(componentsWithPractices.map((c) => c.component.path));
 
     for (const cwp of componentsWithPractices) {
-      lines.push('');
-      lines.push(bold(blue('Developer Experience Report for:')));
-
       if (cwp.component.repositoryPath) {
         repoName = GitServiceUtils.getUrlToRepo(cwp.component.repositoryPath, cwp.component.path.replace(componentsSharedSubpath, ''));
       } else {
         repoName = cwp.component.path;
       }
-      lines.push(repoName);
-      lines.push('----------------------------');
+
+      lines.push('');
+      lines.push(bold(blue(`Developer Experience Report for ${italic(repoName)}`)));
+      lines.push(cyan(bold(`DX Score: ${dxScore.components.find((c) => c.path === cwp.component.path)!.value}`)));
+      lines.push('');
 
       for (const key in PracticeImpact) {
         const impact = PracticeImpact[key as keyof typeof PracticeImpact];
@@ -49,19 +68,34 @@ export class CLIReporter implements IReporter {
         impactLine && lines.push(impactLine);
       }
 
-      lines.push('----------------------------');
-      lines.push('');
+      const practicesAndComponentsUnknown = practicesAndComponents.filter(
+        (p) => p.isOn && p.evaluation === PracticeEvaluationResult.unknown,
+      );
+      if (practicesAndComponentsUnknown.length > 0) {
+        lines.push(bold(red('Evaluation of these practices failed:')));
+        lines.push('');
 
-      const practicesAndComponentsOff = practicesAndComponents.filter((p) => p.isOn === false);
-      practicesAndComponentsOff.length === 0
-        ? lines.push(bold(yellow('No practices were switched off.')))
-        : lines.push(bold(red('You switched off these practices:')));
-      for (const p of practicesAndComponentsOff) {
-        lines.push(red(`- ${italic(p.practice.name)}`));
+        for (const p of practicesAndComponentsUnknown) {
+          lines.push(red(`- ${bold(p.practice.name)}`));
+        }
+        lines.push('');
+      }
+
+      const practicesAndComponentsOff = practicesAndComponents.filter((p) => !p.isOn);
+      if (practicesAndComponentsOff.length > 0) {
+        lines.push(bold(red('You have turned off these practices:')));
+        lines.push('');
+
+        for (const p of practicesAndComponentsOff) {
+          lines.push(red(`- ${italic(p.practice.name)}`));
+        }
+        lines.push('');
       }
     }
 
     lines.push('----------------------------');
+    lines.push('');
+    lines.push(bold(cyan(`Your overall score is ${dxScore.value}.`)));
     lines.push('');
     lines.push(italic(blue('Implementation is not adoption.')));
     lines.push(italic(blue('We can help you with both. :-)')));
@@ -76,9 +110,8 @@ export class CLIReporter implements IReporter {
     const practices = practicesAndComponents.filter(
       (p) => p.impact === impact && p.isOn === true && p.evaluation === PracticeEvaluationResult.notPracticing,
     );
-    if (practices.length === 0) {
-      return undefined;
-    }
+
+    if (practices.length === 0) return undefined;
 
     lines.push(reset(''));
     let color = blue;
@@ -92,6 +125,9 @@ export class CLIReporter implements IReporter {
     } else if (impact === PracticeImpact.small) {
       color = green;
       lines.push(bold(color('Improvements with minor impact:\n')));
+    } else if (impact === PracticeImpact.off) {
+      color = grey;
+      lines.push(bold(color('These practices are off:\n')));
     } else {
       color = grey;
       lines.push(bold(color('Also consider:')));
@@ -100,7 +136,7 @@ export class CLIReporter implements IReporter {
     for (const practiceWithContext of practices) {
       lines.push(this.linesForPractice(practiceWithContext.practice, color));
 
-      if (practiceWithContext.practice.defaultImpact !== practiceWithContext.impact) {
+      if (practiceWithContext.practice.defaultImpact !== practiceWithContext.practice.impact) {
         lines.push(bold(this.changedImpact(practiceWithContext.practice, (color = grey))));
       }
     }
@@ -109,7 +145,6 @@ export class CLIReporter implements IReporter {
     return lines.join('\n');
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   private linesForPractice(practice: PracticeMetadata, color: Color): string {
     const findingPath = '';
     const practiceLineTexts = [reset(color(`- ${bold(practice.name)} - ${italic(practice.suggestion)}`))];
