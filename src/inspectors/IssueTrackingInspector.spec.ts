@@ -23,19 +23,19 @@ describe('Issue Tracking Inspector', () => {
   });
 
   it('returns paginated issues', async () => {
-    new GitHubNock(1, 'octocat', 1, 'Hello-World').getIssues().reply(200, getIssuesResponse);
+    new GitHubNock("1", 'octocat', 1, 'Hello-World').getIssues().reply(200, getIssuesResponse);
     const response = await inspector.getIssues('octocat', 'Hello-World');
     expect(response).toMatchObject(getIssuesServiceResponse);
   });
 
   it('returns paginated issue comments', async () => {
-    new GitHubNock(1, 'octocat', 1, 'Hello-World').getRepo('/issues/461030590/comments').reply(200, getIssueCommentsResponse);
+    new GitHubNock("1", 'octocat', 1, 'Hello-World').getRepo('/issues/461030590/comments').reply(200, getIssueCommentsResponse);
     const response = await inspector.listIssueComments('octocat', 'Hello-World', 461030590);
     expect(response).toMatchObject(getIssueCommentsServiceResponse);
   });
 
   it('returns a single issue', async () => {
-    new GitHubNock(1, 'octocat', 1, 'Hello-World').getIssues(1).reply(200, getIssueResponse);
+    new GitHubNock("1", 'octocat', 1, 'Hello-World').getIssues(1).reply(200, getIssueResponse);
     const response = await inspector.getIssue('octocat', 'Hello-World', 1);
     expect(response).toMatchObject(getIssueServiceResponse);
   });

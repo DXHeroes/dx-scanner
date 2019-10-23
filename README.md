@@ -15,6 +15,9 @@
 
 DX Scanner is an open source CLI tool that allows you to “measure” Developer Experience directly based on your source code. DX Scanner recommends practices that can help you with improving your product development.
 
+![DX Scanner Demo](./demo.svg)
+
+
 ## What language is supported?
 
 Language | Supported

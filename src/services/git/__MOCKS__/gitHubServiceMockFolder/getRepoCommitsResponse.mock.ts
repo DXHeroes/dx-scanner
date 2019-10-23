@@ -33,8 +33,8 @@ export const getRepoCommitsResponse = [
     url: 'https://api.github.com/repos/octocat/Hello-World/commits/7fd1a60b01f91b314f59955a4e4d4e80d8edf11d',
     html_url: 'https://github.com/octocat/Hello-World/commit/7fd1a60b01f91b314f59955a4e4d4e80d8edf11d',
     comments_url: 'https://api.github.com/repos/octocat/Hello-World/commits/7fd1a60b01f91b314f59955a4e4d4e80d8edf11d/comments',
-    author: new UserItem(583231, 'octocat'),
-    committer: new UserItem(583231, 'octocat'),
+    author: new UserItem("583231", 'octocat'),
+    committer: new UserItem("583231", 'octocat'),
     parents: [
       {
         sha: '553c2077f0edc3d5dc5d17262f6aa498e69d6f8e',
@@ -79,8 +79,8 @@ export const getRepoCommitsResponse = [
     url: 'https://api.github.com/repos/octocat/Hello-World/commits/762941318ee16e59dabbacb1b4049eec22f0d303',
     html_url: 'https://github.com/octocat/Hello-World/commit/762941318ee16e59dabbacb1b4049eec22f0d303',
     comments_url: 'https://api.github.com/repos/octocat/Hello-World/commits/762941318ee16e59dabbacb1b4049eec22f0d303/comments',
-    author: new UserItem(251370, 'Spaceghost'),
-    committer: new UserItem(251370, 'Spaceghost'),
+    author: new UserItem("251370", 'Spaceghost'),
+    committer: new UserItem("251370", 'Spaceghost'),
     parents: [
       {
         sha: '553c2077f0edc3d5dc5d17262f6aa498e69d6f8e',

@@ -4,7 +4,7 @@ export enum GitService {
 
 export interface UserInfo {
   login: string;
-  id: number | string;
+  id: string;
   url: string;
 }
 
@@ -18,7 +18,7 @@ export interface PullRequest {
   closedAt: string | null;
   mergedAt: string | null;
   state: string;
-  base?: { repo: Repo };
+  base: { repo: Repo };
 }
 
 export interface PullRequestReview {
@@ -80,7 +80,7 @@ export type Directory = Array<RepoContent>;
 
 export interface Issue {
   user: UserInfo;
-  id: number | string;
+  id: string;
   url: string;
   body: string;
   createdAt: string;
@@ -127,7 +127,7 @@ interface Tree {
 
 interface Repo {
   url: string;
-  id: number | string;
+  id: string;
   name: string;
   owner: UserInfo;
 }
