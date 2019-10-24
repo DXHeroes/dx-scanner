@@ -1,3 +1,29 @@
+# [1.13.0](https://github.com/dxheroes/dx-scanner/compare/v1.12.0...v1.13.0) (2019-10-24)
+
+
+### Bug Fixes
+
+* **CIUsedPractice:** detect Appveyor CI ([68456fa](https://github.com/dxheroes/dx-scanner/commit/68456fa))
+* **CLI:** remove experimental warnings with Unix compatibility ([545a528](https://github.com/dxheroes/dx-scanner/commit/545a528))
+* **CLIReport:** off and failed practices read from component instead of all ([b705f9e](https://github.com/dxheroes/dx-scanner/commit/b705f9e))
+
+
+### Features
+
+* **CLI:** remove experimental warnings ([b173afe](https://github.com/dxheroes/dx-scanner/commit/b173afe))
+
+# [1.12.0](https://github.com/dxheroes/dx-scanner/compare/v1.11.0...v1.12.0) (2019-10-24)
+
+
+### Bug Fixes
+
+* **dockerization:** correctly detect library component instead of application ([b7aab05](https://github.com/dxheroes/dx-scanner/commit/b7aab05))
+
+
+### Features
+
+* **reports:** add DX Score ([20434da](https://github.com/dxheroes/dx-scanner/commit/20434da))
+
 # [1.11.0](https://github.com/dxheroes/dx-scanner/compare/v1.10.0...v1.11.0) (2019-10-23)
 
 

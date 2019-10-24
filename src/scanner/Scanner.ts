@@ -66,6 +66,9 @@ export class Scanner {
     await this.report(componentsWithPractices);
   }
 
+  /**
+   * Clone a repository if the input is remote repository
+   */
   private async preprocessData(scanningStrategy: ScanningStrategy) {
     const { serviceType, accessType, remoteUrl } = scanningStrategy;
     let localPath = scanningStrategy.localPath;
@@ -81,6 +84,9 @@ export class Scanner {
     return { serviceType, accessType, remoteUrl, localPath };
   }
 
+  /**
+   * Detect all languages
+   */
   private async detectLanguagesAtPaths(context: ScannerContext) {
     let languagesAtPaths: LanguageAtPath[] = [];
     for (const languageDetector of context.languageDetectors) {
@@ -89,6 +95,9 @@ export class Scanner {
     return languagesAtPaths;
   }
 
+  /**
+   * Detect project components (backend, frontend, libraries, etc.)
+   */
   private async detectProjectComponents(languagesAtPaths: LanguageAtPath[], context: ScannerContext, strategy: ScanningStrategy) {
     let components: ProjectComponentAndLangContext[] = [];
     for (const langAtPath of languagesAtPaths) {
@@ -129,6 +138,9 @@ export class Scanner {
     return components;
   }
 
+  /**
+   * Detect applicable practices for each component
+   */
   private async detectPractices(componentsWithContext: ProjectComponentAndLangContext[]): Promise<PracticeWithContext[]> {
     const practicesWithComponentContext = await Promise.all(componentsWithContext.map((cwctx) => this.detectPracticesForComponent(cwctx)));
     const practicesWithContext = _.flatten(practicesWithComponentContext);
@@ -139,6 +151,9 @@ export class Scanner {
     return practicesWithContext;
   }
 
+  /**
+   * Report result with specific reporter
+   */
   private async report(practicesWithContext: PracticeWithContext[]): Promise<void> {
     const relevantPractices = practicesWithContext;
 
@@ -162,6 +177,9 @@ export class Scanner {
       : console.log(util.inspect(reportString, { showHidden: false, depth: null }));
   }
 
+  /**
+   * Detect and evaluate applicable practices for a given component
+   */
   private async detectPracticesForComponent(componentWithCtx: ProjectComponentAndLangContext): Promise<PracticeWithContext[]> {
     const practicesWithContext: PracticeWithContext[] = [];
 
@@ -169,8 +187,8 @@ export class Scanner {
     const practiceContext = componentContext.getPracticeContext();
 
     await componentContext.configProvider.init();
-    const filteredPractices = await ScannerUtils.filterPractices(componentContext, this.practices);
 
+    const filteredPractices = await ScannerUtils.filterPractices(componentContext, this.practices);
     const orderedApplicablePractices = ScannerUtils.sortPractices(filteredPractices.customApplicablePractices);
 
     /**
@@ -178,7 +196,6 @@ export class Scanner {
      */
     for (const practice of orderedApplicablePractices) {
       const practiceConfig = componentContext.configProvider.getOverriddenPractice(practice.getMetadata().id);
-
       const isFulfilled = ScannerUtils.isFulfilled(practice, practicesWithContext);
 
       if (!isFulfilled) continue;
@@ -204,9 +221,9 @@ export class Scanner {
     /**
      * Add turned off practices to result
      */
-    for (const practiceOff of filteredPractices.practicesOff) {
+    for (const practice of filteredPractices.practicesOff) {
       const practiceWithContext = {
-        practice: practiceOff,
+        practice,
         componentContext,
         practiceContext,
         evaluation: PracticeEvaluationResult.unknown,

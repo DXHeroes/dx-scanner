@@ -33,16 +33,19 @@ export class JsGitignoreCorrectlySetPractice implements IPractice {
     const content = await ctx.fileInspector.readFile('.gitignore');
     const parsedGitignore = parseGitignore(content);
 
+    // folders with compiled code
     const buildRegex = parsedGitignore.find((value: string) => /build/.test(value));
-    const debugRegex = parsedGitignore.find((value: string) => /debug/.test(value));
     const libRegex = parsedGitignore.find((value: string) => /lib/.test(value));
     const distRegex = parsedGitignore.find((value: string) => /dist/.test(value));
-    const errorLogRegex = parsedGitignore.find((value: string) => /\.log/.test(value));
-    const nodeModulesRegex = parsedGitignore.find((value: string) => /node_modules/.test(value));
+    // lockfiles
     const packageJsonRegex = parsedGitignore.find((value: string) => /package-lock\.json/.test(value));
     const yarnLockRegex = parsedGitignore.find((value: string) => /yarn\.lock/.test(value));
+    // node_modules
+    const nodeModulesRegex = parsedGitignore.find((value: string) => /node_modules/.test(value));
+    // misc
     const coverageRegex = parsedGitignore.find((value: string) => /coverage/.test(value));
-    const dsStoreRegex = parsedGitignore.find((value: string) => /\.DS_Store/.test(value));
+    const errorLogRegex = parsedGitignore.find((value: string) => /\.log/.test(value));
+    const debugRegex = parsedGitignore.find((value: string) => /debug/.test(value));
 
     if (
       (buildRegex || libRegex || distRegex) &&
@@ -50,8 +53,7 @@ export class JsGitignoreCorrectlySetPractice implements IPractice {
       nodeModulesRegex &&
       debugRegex &&
       errorLogRegex &&
-      coverageRegex &&
-      dsStoreRegex
+      coverageRegex
     ) {
       return PracticeEvaluationResult.practicing;
     }
