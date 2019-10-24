@@ -59,11 +59,17 @@ export class Scanner {
     this.scanDebug(`Scan strategy (after preprocessing): ${inspect(scanStrategy)}`);
     const scannerContext = this.scannerContextFactory(scanStrategy);
     const languagesAtPaths = await this.detectLanguagesAtPaths(scannerContext);
-    this.scanDebug(`LanguagesAtPaths:`, inspect(languagesAtPaths));
+    this.scanDebug(`LanguagesAtPaths (${languagesAtPaths.length}):`, inspect(languagesAtPaths));
     const projectComponents = await this.detectProjectComponents(languagesAtPaths, scannerContext, scanStrategy);
-    this.scanDebug(`Components:`, inspect(projectComponents));
+    this.scanDebug(`Components (${projectComponents.length}):`, inspect(projectComponents));
     const componentsWithPractices = await this.detectPractices(projectComponents);
+    this.scanDebug(`Practices (${componentsWithPractices.length}):`, inspect(componentsWithPractices));
     await this.report(componentsWithPractices);
+    this.scanDebug(
+      `Overall scan stats. LanguagesAtPaths: ${inspect(languagesAtPaths.length)} Components: ${inspect(
+        projectComponents.length,
+      )} Practices: ${inspect(componentsWithPractices.length)}`,
+    );
   }
 
   /**
