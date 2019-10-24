@@ -1,14 +1,4 @@
-import {
-  PracticeEvaluationResult,
-  PracticeImpact,
-  ProjectComponentFramework,
-  ProgrammingLanguage,
-  ProjectComponentType,
-  ProjectComponentPlatform,
-} from '../model';
-import { Container } from 'inversify';
-import { Types } from '../types';
-import { PracticeWithContextForReporter } from './IReporter';
+import { PracticeEvaluationResult, PracticeImpact } from '../model';
 import { ReporterUtils } from './ReporterUtils';
 import { practiceWithContextFactory } from '../../test/factories/PracticeWithContextFactory';
 

@@ -16,6 +16,7 @@
     "start": "./bin/run",
     "test": "jest",
     "test:watch": "jest --watch",
+    "test:codecov:upload": "codecov -f \"coverage/coverage-final.json\"",
     "validate": "yarn install && yarn build && yarn lint && yarn test",
     "semantic-release": "semantic-release",
     "postinstall": "cross-env NAME=$npm_package_name bin/postinstall"
