@@ -75,13 +75,8 @@ export class ESLintWithoutErrorsPractice implements IPractice {
       options = { ...options, extensions: ['.js'] };
     }
 
-    let cli, report;
-    try {
-      cli = new CLIEngine(options);
-      report = cli.executeOnFiles([ctx.projectComponent.path]);
-    } catch (error) {
-      return PracticeEvaluationResult.unknown;
-    }
+    const cli = new CLIEngine(options);
+    const report = cli.executeOnFiles([ctx.projectComponent.path]);
 
     if (report['errorCount'] === 0) {
       return PracticeEvaluationResult.practicing;
