@@ -26,6 +26,15 @@ describe('CIUsedPractice', () => {
     expect(evaluated).toEqual(PracticeEvaluationResult.practicing);
   });
 
+  it('Returns practicing if there is a appveyor.yml for a Appveyor CI', async () => {
+    containerCtx.virtualFileSystemService.setFileSystem({
+      '/appveyor.yml': '...',
+    });
+
+    const evaluated = await practice.evaluate(containerCtx.practiceContext);
+    expect(evaluated).toEqual(PracticeEvaluationResult.practicing);
+  });
+
   it('Returns notPracticing if there is NO .gitlab-ci.yml', async () => {
     containerCtx.virtualFileSystemService.setFileSystem({
       'not.exists': '...',
