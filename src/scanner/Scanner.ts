@@ -66,9 +66,9 @@ export class Scanner {
     this.scanDebug(`Practices (${componentsWithPractices.length}):`, inspect(componentsWithPractices));
     await this.report(componentsWithPractices);
     this.scanDebug(
-      `Overall scan stats. LanguagesAtPaths: ${inspect(languagesAtPaths.length)} Components: ${inspect(
+      `Overall scan stats. LanguagesAtPaths: ${inspect(languagesAtPaths.length)}; Components: ${inspect(
         projectComponents.length,
-      )} Practices: ${inspect(componentsWithPractices.length)}`,
+      )}; Practices: ${inspect(componentsWithPractices.length)}.`,
     );
   }
 
