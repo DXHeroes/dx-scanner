@@ -24,7 +24,7 @@ script:
   - yarn build
   - yarn test --coverage
   - bin/run -v
-  - bash <(curl -s https://codecov.io/bash) -f coverage/coverage-final.json
+  - yarn test:codecov:upload
 
 jobs:
   include:
