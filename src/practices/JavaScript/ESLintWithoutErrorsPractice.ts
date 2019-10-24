@@ -1,15 +1,11 @@
+import debug from 'debug';
 import { CLIEngine } from 'eslint';
+import yaml from 'js-yaml';
+import _ from 'lodash';
 import { PracticeContext } from '../../contexts/practice/PracticeContext';
 import { PracticeEvaluationResult, PracticeImpact, ProgrammingLanguage } from '../../model';
 import { DxPractice } from '../DxPracticeDecorator';
 import { IPractice } from '../IPractice';
-import _ from 'lodash';
-import yaml from 'js-yaml';
-import { IFileInspector } from '../../inspectors/IFileInspector';
-import { inject } from 'inversify';
-import { Types } from '../../types';
-import { fs } from 'memfs';
-import debug from 'debug';
 
 @DxPractice({
   id: 'JavaScript.ESLintCorrectlyUsedPractice',
@@ -21,11 +17,6 @@ import debug from 'debug';
   dependsOn: { practicing: ['JavaScript.ESLintUsed'] },
 })
 export class ESLintWithoutErrorsPractice implements IPractice {
-  // private readonly fileInspector: IFileInspector;
-
-  // constructor(@inject(Types.IFileInspector) fileInspector: IFileInspector) {
-  //   this.fileInspector = fileInspector;
-  // }
   async isApplicable(ctx: PracticeContext): Promise<boolean> {
     return (
       ctx.projectComponent.language === ProgrammingLanguage.JavaScript || ctx.projectComponent.language === ProgrammingLanguage.TypeScript
@@ -38,14 +29,14 @@ export class ESLintWithoutErrorsPractice implements IPractice {
     }
 
     let options: CLIEngine.Options = {
-      fix: false, // Use auto-fixer
-      useEslintrc: false, // Set to false so the project doesn't take the eslint config from home folder
+      fix: false, // Use auto-fixer.
+      useEslintrc: false, // Set to false so the project doesn't take the eslint config from home folder.
       rules: {
         semi: 2,
       },
     };
 
-    // Get the eslint config for component
+    // Get the eslint config for component.
     const eslintConfig = await ctx.fileInspector.scanFor(/\.eslintrc/, '/', { shallow: true });
 
     if (eslintConfig.length > 0) {
