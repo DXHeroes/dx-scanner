@@ -15,6 +15,9 @@ describe('JavaScriptPackageInspector', () => {
   });
 
   beforeEach(async () => {
+    containerCtx.container.rebind('JavaScriptPackageInspector').to(JavaScriptPackageInspector);
+    inspector = containerCtx.container.get('JavaScriptPackageInspector');
+
     containerCtx.virtualFileSystemService.setFileSystem({
       'package.json': packageJSONContents,
     });
@@ -119,12 +122,12 @@ describe('JavaScriptPackageInspector', () => {
         containerCtx.virtualFileSystemService.setFileSystem(structure);
 
         await inspector.init();
-        expect(inspector.hasLockfile()).toBe(true);
+        expect(inspector.hasLockfile()).toEqual(true);
       });
 
       it('return false if there is no lock file', async () => {
         await inspector.init();
-        expect(inspector.hasLockfile()).toBe(false);
+        expect(inspector.hasLockfile()).toEqual(false);
       });
     });
   });

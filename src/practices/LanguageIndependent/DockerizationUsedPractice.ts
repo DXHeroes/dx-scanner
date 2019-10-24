@@ -1,5 +1,5 @@
 import { IPractice } from '../IPractice';
-import { PracticeEvaluationResult, PracticeImpact } from '../../model';
+import { PracticeEvaluationResult, PracticeImpact, ProjectComponentType } from '../../model';
 import { DxPractice } from '../DxPracticeDecorator';
 import { PracticeContext } from '../../contexts/practice/PracticeContext';
 
@@ -12,8 +12,8 @@ import { PracticeContext } from '../../contexts/practice/PracticeContext';
   url: 'https://dxkb.io/p/dockerizing',
 })
 export class DockerizationUsedPractice implements IPractice {
-  async isApplicable(): Promise<boolean> {
-    return true;
+  async isApplicable(ctx: PracticeContext): Promise<boolean> {
+    return ctx.projectComponent.type !== ProjectComponentType.Library;
   }
 
   async evaluate(ctx: PracticeContext): Promise<PracticeEvaluationResult> {

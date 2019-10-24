@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/camelcase */
+/* eslint-disable @typescript-eslint/no-unused-vars, @typescript-eslint/camelcase */
 import Bitbucket from 'bitbucket';
 import { grey } from 'colors';
 import Debug from 'debug';
@@ -9,7 +9,7 @@ import { Paginated } from '../../inspectors/common/Paginated';
 import { ArgumentsProvider } from '../../inversify.config';
 import { DeepRequired } from '../../lib/deepRequired';
 import { ICache } from '../../scanner/cache/ICache';
-import { InMemoryCache } from '../../scanner/cache/InMemoryCahce';
+import { InMemoryCache } from '../../scanner/cache/InMemoryCache';
 import { Types } from '../../types';
 import {
   Issue,

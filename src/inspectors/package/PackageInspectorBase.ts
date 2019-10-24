@@ -21,10 +21,12 @@ export abstract class PackageInspectorBase implements IPackageInspector, IInitia
     return isArray(this.packages);
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   findPackages(searchTerm: string | RegExp): Package[] {
     throw new Error('Method not implemented.');
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   hasPackage(name: string | RegExp, options?: PackageOptions | undefined): boolean {
     if (!this.packages) {
       return false;

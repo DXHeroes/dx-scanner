@@ -46,7 +46,7 @@ export class JavaScriptComponentDetector implements IProjectComponentDetector {
         path: langAtPath.path,
         platform: frontendOrBackend ? frontendOrBackend : ProjectComponentPlatform.UNKNOWN,
         repositoryPath: undefined,
-        type: ProjectComponentType.Application,
+        type: frontendOrBackend ? ProjectComponentType.Application : ProjectComponentType.Library,
       },
     ];
   }
