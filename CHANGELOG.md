@@ -1,3 +1,15 @@
+# [1.12.0](https://github.com/dxheroes/dx-scanner/compare/v1.11.0...v1.12.0) (2019-10-24)
+
+
+### Bug Fixes
+
+* **dockerization:** correctly detect library component instead of application ([b7aab05](https://github.com/dxheroes/dx-scanner/commit/b7aab05))
+
+
+### Features
+
+* **reports:** add DX Score ([20434da](https://github.com/dxheroes/dx-scanner/commit/20434da))
+
 # [1.11.0](https://github.com/dxheroes/dx-scanner/compare/v1.10.0...v1.11.0) (2019-10-23)
 
 
