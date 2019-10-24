@@ -23,8 +23,10 @@ export class DeprecatedTSLintPractice implements IPractice {
       if (ctx.packageInspector.hasPackage('tslint')) {
         return PracticeEvaluationResult.notPracticing;
       }
+
+      return PracticeEvaluationResult.practicing;
     }
 
-    return PracticeEvaluationResult.practicing;
+    return PracticeEvaluationResult.unknown;
   }
 }

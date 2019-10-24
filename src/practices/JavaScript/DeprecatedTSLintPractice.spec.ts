@@ -31,6 +31,6 @@ describe('DeprecatedTSLintPractice', () => {
 
   it('Did not detect TSLint and did not recognize packageInspector', async () => {
     const result = await practice.evaluate({ ...containerCtx.practiceContext, packageInspector: undefined });
-    expect(result).toEqual(PracticeEvaluationResult.practicing);
+    expect(result).toEqual(PracticeEvaluationResult.unknown);
   });
 });
