@@ -1,3 +1,30 @@
+# [1.12.0](https://github.com/dxheroes/dx-scanner/compare/v1.11.0...v1.12.0) (2019-10-24)
+
+
+### Bug Fixes
+
+* **dockerization:** correctly detect library component instead of application ([b7aab05](https://github.com/dxheroes/dx-scanner/commit/b7aab05))
+
+
+### Features
+
+* **reports:** add DX Score ([20434da](https://github.com/dxheroes/dx-scanner/commit/20434da))
+
+# [1.11.0](https://github.com/dxheroes/dx-scanner/compare/v1.10.0...v1.11.0) (2019-10-23)
+
+
+### Bug Fixes
+
+* upgraded TS interfaces according to TS 3.6 update ([a5934a7](https://github.com/dxheroes/dx-scanner/commit/a5934a7))
+* **cache:** purge cache after each test suite ([557207a](https://github.com/dxheroes/dx-scanner/commit/557207a))
+* **practices:** detect library correctly ([7f896ca](https://github.com/dxheroes/dx-scanner/commit/7f896ca))
+
+
+### Features
+
+* **CLI:** add scan duration time ([8c92bc1](https://github.com/dxheroes/dx-scanner/commit/8c92bc1))
+* **FileInspector:** add cache to all methods ([0f137a3](https://github.com/dxheroes/dx-scanner/commit/0f137a3))
+
 # [1.10.0](https://github.com/dxheroes/dx-scanner/compare/v1.9.0...v1.10.0) (2019-10-21)
 
 

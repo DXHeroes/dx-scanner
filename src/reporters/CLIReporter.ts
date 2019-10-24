@@ -1,21 +1,13 @@
 import { blue, bold, Color, green, grey, italic, red, reset, underline, yellow, cyan } from 'colors';
-import { inject, injectable } from 'inversify';
+import { injectable } from 'inversify';
 import { PracticeImpact, PracticeMetadata, PracticeEvaluationResult } from '../model';
-import { Types } from '../types';
 import { IReporter, PracticeWithContextForReporter } from './IReporter';
-import { JSONReporter } from './JSONReporter';
 import { sharedSubpath } from '../detectors/utils';
 import { GitServiceUtils } from '../services/git/GitServiceUtils';
 import { ReporterUtils } from './ReporterUtils';
 
 @injectable()
 export class CLIReporter implements IReporter {
-  private readonly JSONReporter: JSONReporter;
-
-  constructor(@inject(Types.JSONReporter) JSONReporter: JSONReporter) {
-    this.JSONReporter = JSONReporter;
-  }
-
   report(practicesAndComponents: PracticeWithContextForReporter[]): string {
     const lines: string[] = [];
 
