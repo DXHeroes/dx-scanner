@@ -94,7 +94,7 @@ export class ReporterUtils {
     valueString.push(`${score.points.percentage}%`);
     valueString.push(' | ');
     valueString.push(`${practicingCount}/${practicingCount + notPracticingCount}`);
-    if (offCount > 0) valueString.push(`(${offCount} skipped)`);
+    if (offCount > 0) valueString.push(` (${offCount} skipped)`);
 
     score.value = valueString.join('');
 
