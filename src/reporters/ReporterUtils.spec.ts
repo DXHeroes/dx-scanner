@@ -21,6 +21,8 @@ describe('ReporterUtils', () => {
       impact: PracticeImpact.high,
       url: "."
     },
+
+    //yes
     impact: PracticeImpact.high,
     evaluation: PracticeEvaluationResult.practicing,
     isOn: true
