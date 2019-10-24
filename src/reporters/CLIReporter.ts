@@ -18,7 +18,6 @@ export class CLIReporter implements IReporter {
     lines.push(bold(blue('|                          |')));
     lines.push(bold(blue('|     DX Scanner Result    |')));
     lines.push(bold(blue('|                          |')));
-    lines.push(bold(blue('----------------------------')));
 
     let repoName;
     const componentsSharedSubpath = sharedSubpath(componentsWithPractices.map((c) => c.component.path));
@@ -30,6 +29,7 @@ export class CLIReporter implements IReporter {
         repoName = cwp.component.path;
       }
 
+      lines.push(bold(blue('----------------------------')));
       lines.push('');
       lines.push(bold(blue(`Developer Experience Report for ${italic(repoName)}`)));
       lines.push(cyan(bold(`DX Score: ${dxScore.components.find((c) => c.path === cwp.component.path)!.value}`)));
@@ -42,7 +42,7 @@ export class CLIReporter implements IReporter {
         impactLine && lines.push(impactLine);
       }
 
-      const practicesAndComponentsUnknown = practicesAndComponents.filter(
+      const practicesAndComponentsUnknown = cwp.practicesAndComponents.filter(
         (p) => p.isOn && p.evaluation === PracticeEvaluationResult.unknown,
       );
       if (practicesAndComponentsUnknown.length > 0) {
@@ -55,7 +55,7 @@ export class CLIReporter implements IReporter {
         lines.push('');
       }
 
-      const practicesAndComponentsOff = practicesAndComponents.filter((p) => !p.isOn);
+      const practicesAndComponentsOff = cwp.practicesAndComponents.filter((p) => !p.isOn);
       if (practicesAndComponentsOff.length > 0) {
         lines.push(bold(red('You have turned off these practices:')));
         lines.push('');
@@ -87,7 +87,6 @@ export class CLIReporter implements IReporter {
 
     if (practices.length === 0) return undefined;
 
-    lines.push(reset(''));
     let color = blue;
 
     if (impact === PracticeImpact.high) {
