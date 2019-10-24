@@ -22,7 +22,7 @@ export class CIUsedPractice implements IPractice {
       return PracticeEvaluationResult.unknown;
     }
 
-    const regexCI = new RegExp(/\.gitlab-ci\.yml|\.travis\.yml|\.jenkins\.yml|\.circle-ci\/config\.yml/, 'i');
+    const regexCI = new RegExp(/\.gitlab-ci\.yml|\.travis\.yml|\.jenkins\.yml|\.circle-ci\/config\.yml|appveyor\.yml/, 'i');
 
     const files = await ctx.fileInspector.scanFor(regexCI, '/', { shallow: true });
 

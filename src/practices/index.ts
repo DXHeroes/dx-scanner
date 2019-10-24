@@ -16,7 +16,7 @@ import { DockerizationUsedPractice } from './LanguageIndependent/DockerizationUs
 import { EditorConfigIsPresentPractice } from './LanguageIndependent/EditorConfigIsPresentPractice';
 import { JsGitignoreIsPresentPractice } from './JavaScript/JsGitignoreIsPresentPractice';
 import { JsGitignoreCorrectlySetPractice } from './JavaScript/JsGitignoreCorrectlySetPractice';
-import { DependenciesVersionPractice } from './LanguageIndependent/DependenciesVersionPractice';
+import { DependenciesVersionPractice } from './JavaScript/DependenciesVersionPractice';
 import { ESLintWithoutErrorsPractice } from './JavaScript/ESLintWithoutErrorsPractice';
 
 // register practices here
