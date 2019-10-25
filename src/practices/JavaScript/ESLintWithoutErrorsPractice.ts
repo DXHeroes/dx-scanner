@@ -1,13 +1,15 @@
+import debug from 'debug';
 import { CLIEngine } from 'eslint';
+import yaml from 'js-yaml';
+import _ from 'lodash';
 import { PracticeContext } from '../../contexts/practice/PracticeContext';
 import { PracticeEvaluationResult, PracticeImpact, ProgrammingLanguage } from '../../model';
 import { DxPractice } from '../DxPracticeDecorator';
 import { IPractice } from '../IPractice';
-import _ from 'lodash';
 
 @DxPractice({
-  id: 'JavaScript.ESLintCorrectlyUsedPractice',
-  name: 'Using ESLint Correctly',
+  id: 'JavaScript.ESLintWithoutErrorsPractice',
+  name: 'ESLint Without Errors',
   impact: PracticeImpact.medium,
   suggestion: 'Use the ESLint correctly. You have some errors.',
   reportOnlyOnce: true,
@@ -27,23 +29,34 @@ export class ESLintWithoutErrorsPractice implements IPractice {
     }
 
     let options: CLIEngine.Options = {
-      fix: false, // Use auto-fixer
-      useEslintrc: false, // Set to false so the project doesn't take the eslint config from home folder
+      fix: false, // Use auto-fixer.
+      useEslintrc: false, // Set to false so the project doesn't take the eslint config from home folder.
       rules: {
         semi: 2,
       },
     };
 
-    // Get the eslint config for component
+    // Get the eslint config for component.
     const eslintConfig = await ctx.fileInspector.scanFor(/\.eslintrc/, '/', { shallow: true });
 
     if (eslintConfig.length > 0) {
-      // eslint-disable-next-line @typescript-eslint/no-var-requires, @typescript-eslint/no-require-imports
-      const baseConfig = require(eslintConfig[0].path);
-      const plugins = _.clone(baseConfig.plugins);
-      _.unset(baseConfig, 'plugins');
-      _.unset(baseConfig, 'extends');
-      options = { ...options, baseConfig, plugins };
+      let baseConfig, content;
+
+      try {
+        // eslint-disable-next-line @typescript-eslint/no-require-imports
+        baseConfig = require(eslintConfig[0].path);
+
+        const plugins = _.clone(baseConfig.plugins);
+        _.unset(baseConfig, 'plugins');
+        _.unset(baseConfig, 'extends');
+        options = { ...options, baseConfig, plugins };
+      } catch (error) {
+        const eSLintWithoutErrorsPracticeDebug = debug('ESLintWithoutErrorsPractice');
+        eSLintWithoutErrorsPracticeDebug(`Loading .eslintrc file failed with this error: ${error}`);
+
+        content = await ctx.fileInspector.readFile(eslintConfig[0].path);
+        baseConfig = yaml.safeLoad(content);
+      }
     }
 
     let eslintIgnore;
@@ -63,13 +76,8 @@ export class ESLintWithoutErrorsPractice implements IPractice {
       options = { ...options, extensions: ['.js'] };
     }
 
-    let cli, report;
-    try {
-      cli = new CLIEngine(options);
-      report = cli.executeOnFiles([ctx.projectComponent.path]);
-    } catch (error) {
-      return PracticeEvaluationResult.unknown;
-    }
+    const cli = new CLIEngine(options);
+    const report = cli.executeOnFiles([ctx.projectComponent.path]);
 
     if (report['errorCount'] === 0) {
       return PracticeEvaluationResult.practicing;

@@ -4,6 +4,7 @@ import _ from 'lodash';
 import { IFileInspector } from '../inspectors/IFileInspector';
 import { Types } from '../types';
 import { IConfigProvider, Config, PracticeConfig } from './IConfigProvider';
+import { PracticeImpact } from '../model';
 
 @injectable()
 export class ConfigProvider implements IConfigProvider {
@@ -41,13 +42,11 @@ export class ConfigProvider implements IConfigProvider {
   getOverriddenPractice(practiceId: string): PracticeConfig {
     const practiceConfig = _.get(this.config, ['practices', practiceId]);
     if (typeof practiceConfig !== 'string' && practiceConfig !== undefined) {
-      return practiceConfig.impact;
+      return { impact: <PracticeImpact>practiceConfig.impact };
     }
 
-    const impactInConfig = {
-      impact: practiceConfig,
+    return {
+      impact: <PracticeImpact>practiceConfig,
     };
-
-    return impactInConfig;
   }
 }
