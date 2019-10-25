@@ -41,13 +41,11 @@ export class ConfigProvider implements IConfigProvider {
   getOverriddenPractice(practiceId: string): PracticeConfig {
     const practiceConfig = _.get(this.config, ['practices', practiceId]);
     if (typeof practiceConfig !== 'string' && practiceConfig !== undefined) {
-      return practiceConfig.impact;
+      return { impact: practiceConfig.impact };
     }
 
-    const impactInConfig = {
+    return {
       impact: practiceConfig,
     };
-
-    return impactInConfig;
   }
 }
