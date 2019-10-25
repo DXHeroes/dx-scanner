@@ -1,3 +1,15 @@
+## [1.13.1](https://github.com/dxheroes/dx-scanner/compare/v1.13.0...v1.13.1) (2019-10-25)
+
+
+### Bug Fixes
+
+* Add PracticeImpact types ([28ac483](https://github.com/dxheroes/dx-scanner/commit/28ac483))
+* Loading yaml .eslintrc file ([938e178](https://github.com/dxheroes/dx-scanner/commit/938e178))
+* name and id of practice ([fcfa1c7](https://github.com/dxheroes/dx-scanner/commit/fcfa1c7))
+* Remove unnecessary comments. ([4e352eb](https://github.com/dxheroes/dx-scanner/commit/4e352eb))
+* return impact in object ([1d1935d](https://github.com/dxheroes/dx-scanner/commit/1d1935d))
+* Showing error message in debug mode. ([d7c3d2b](https://github.com/dxheroes/dx-scanner/commit/d7c3d2b))
+
 # [1.13.0](https://github.com/dxheroes/dx-scanner/compare/v1.12.0...v1.13.0) (2019-10-24)
 
 
