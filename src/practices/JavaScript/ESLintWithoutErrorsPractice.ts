@@ -8,8 +8,8 @@ import { DxPractice } from '../DxPracticeDecorator';
 import { IPractice } from '../IPractice';
 
 @DxPractice({
-  id: 'JavaScript.ESLintCorrectlyUsedPractice',
-  name: 'Using ESLint Correctly',
+  id: 'JavaScript.ESLintWithoutErrorsPractice',
+  name: 'ESLint Without Errors',
   impact: PracticeImpact.medium,
   suggestion: 'Use the ESLint correctly. You have some errors.',
   reportOnlyOnce: true,
