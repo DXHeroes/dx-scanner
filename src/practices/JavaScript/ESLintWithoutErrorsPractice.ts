@@ -51,7 +51,8 @@ export class ESLintWithoutErrorsPractice implements IPractice {
         _.unset(baseConfig, 'extends');
         options = { ...options, baseConfig, plugins };
       } catch (error) {
-        debug(`Loading .eslintrc file failed with this error:\n${error}`);
+        const eSLintWithoutErrorsPracticeDebug = debug('ESLintWithoutErrorsPractice');
+        eSLintWithoutErrorsPracticeDebug(`Loading .eslintrc file failed with this error: ${error}`);
 
         content = await ctx.fileInspector.readFile(eslintConfig[0].path);
         baseConfig = yaml.safeLoad(content);

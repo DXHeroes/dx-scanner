@@ -204,7 +204,8 @@ export class Scanner {
         evaluation = await practice.evaluate({ ...practiceContext, config: practiceConfig });
       } catch (error) {
         evaluation = PracticeEvaluationResult.unknown;
-        debug(`The ${practice.getMetadata().name} practice failed with this error:\n${error}`);
+        const practiceDebug = debug('practice');
+        practiceDebug(`The ${practice.getMetadata().name} practice failed with this error:\n${error}`);
       }
 
       const practiceWithContext = {
