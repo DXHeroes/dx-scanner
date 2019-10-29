@@ -1,7 +1,6 @@
 {
   "extends": [
-    "config:base",
-    ":preserveSemverRanges"
+    "config:base"
   ],
   "automerge": true,
   "major": {
