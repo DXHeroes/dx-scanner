@@ -5940,10 +5940,10 @@ npm-cache-filename@~1.0.2:
   resolved "https://registry.yarnpkg.com/npm-cache-filename/-/npm-cache-filename-1.0.2.tgz#ded306c5b0bfc870a9e9faf823bc5f283e05ae11"
   integrity sha1-3tMGxbC/yHCp6fr4I7xfKD4FrhE=
 
-npm-check-updates@3.1.25:
-  version "3.1.25"
-  resolved "https://registry.yarnpkg.com/npm-check-updates/-/npm-check-updates-3.1.25.tgz#69b22fcecd4c10722fe3ff66bc5de3810355445c"
-  integrity sha512-B2tAgclEby1VyoN4cZp5Zm+iam72jQV1c2uZIcoNwB0cBbJQZaI1Xj+uxkYkoDs2w4DuaM1hQUavIZgfGKkCgg==
+npm-check-updates@3.1.26:
+  version "3.1.26"
+  resolved "https://registry.yarnpkg.com/npm-check-updates/-/npm-check-updates-3.1.26.tgz#506d6d9e06b3d433bbc0ade37dd8a4686cb28ba9"
+  integrity sha512-TQSMJgS7AdbdPsK5TsCNMa+7vdL7HLQrXKrwLMxPLiJtrnye9HEqJZK+U8VdbSq+qrjdt5lgm0g5vRmSSSOcvw==
   dependencies:
     chalk "^2.4.2"
     cint "^8.2.1"
