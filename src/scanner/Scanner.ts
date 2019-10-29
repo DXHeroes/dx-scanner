@@ -182,10 +182,12 @@ export class Scanner {
       : console.log(util.inspect(reportString, { showHidden: false, depth: null }));
 
     const notPracticingPracticesToFail = reportArguments.filter(
-      (practice) => practice.evaluation === PracticeEvaluationResult.notPracticing && (practice.impact === this.argumentsProvider.fail || this.argumentsProvider.fail === "all"),
+      (practice) =>
+        practice.evaluation === PracticeEvaluationResult.notPracticing &&
+        (practice.impact === this.argumentsProvider.fail || this.argumentsProvider.fail === 'all'),
     );
 
-    if (notPracticingPracticesToFail.length > 0 || this.argumentsProvider.fail === 'all') {
+    if (notPracticingPracticesToFail.length > 0) {
       process.exit(1);
     }
   }
