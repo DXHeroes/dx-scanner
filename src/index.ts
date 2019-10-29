@@ -20,7 +20,8 @@ class DXScannerCommand extends Command {
     // flag with no value (-f, --force)
     force: flags.boolean({ char: 'f' }),
     json: flags.boolean({ char: 'j', description: 'Output in JSON' }),
-    init: flags.boolean({ char: 'i', description: 'Install DX Scanner in your folder' }),
+    init: flags.boolean({ char: 'i', description: 'Install DX Scanner in your folder.' }),
+    fail: flags.string({ description: 'Run scanner in failure mode.\nSet to high, medium, small or all.' }),
   };
 
   static args = [{ name: 'path' }];
@@ -29,6 +30,7 @@ class DXScannerCommand extends Command {
     const { args, flags } = this.parse(DXScannerCommand);
     let authorization = flags.authorization ? flags.authorization : undefined;
     const json = flags.json ? flags.json : undefined;
+    const fail = flags.fail ? flags.fail : undefined;
 
     const notifier = updateNotifier({ pkg: this.config.pjson });
 
@@ -43,7 +45,7 @@ class DXScannerCommand extends Command {
     const scanPath = args.path || process.cwd();
     cli.action.start(`Scanning URI: ${scanPath}`);
 
-    const container = createRootContainer({ uri: scanPath, auth: authorization, json: json });
+    const container = createRootContainer({ uri: scanPath, auth: authorization, json: json, fail: fail });
     const scanner = container.get(Scanner);
 
     try {

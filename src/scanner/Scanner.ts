@@ -162,25 +162,36 @@ export class Scanner {
    */
   private async report(practicesWithContext: PracticeWithContext[]): Promise<void> {
     const relevantPractices = practicesWithContext;
+    const reportArguments = relevantPractices.map((p) => {
+      const config = p.componentContext.configProvider.getOverriddenPractice(p.practice.getMetadata().id);
+      const overridenImpact = config.impact;
 
-    const reportString = this.reporter.report(
-      relevantPractices.map((p) => {
-        const config = p.componentContext.configProvider.getOverriddenPractice(p.practice.getMetadata().id);
-        const overridenImpact = config.impact;
+      return {
+        component: p.componentContext.projectComponent,
+        practice: p.practice.getMetadata(),
+        evaluation: p.evaluation,
+        impact: <PracticeImpact>(overridenImpact ? overridenImpact : p.practice.getMetadata().impact),
+        isOn: p.isOn,
+      };
+    });
 
-        return {
-          component: p.componentContext.projectComponent,
-          practice: p.practice.getMetadata(),
-          evaluation: p.evaluation,
-          impact: <PracticeImpact>(overridenImpact ? overridenImpact : p.practice.getMetadata().impact),
-          isOn: p.isOn,
-        };
-      }),
-    );
+    const reportString = this.reporter.report(reportArguments);
 
     typeof reportString === 'string'
       ? console.log(reportString)
       : console.log(util.inspect(reportString, { showHidden: false, depth: null }));
+
+    let fail = false;
+    for (const practice of reportArguments) {
+      if (practice.evaluation === PracticeEvaluationResult.notPracticing) {
+        if (practice.impact === this.argumentsProvider.fail || this.argumentsProvider.fail === 'all') {
+          fail = true;
+        }
+      }
+    }
+    if (fail || this.argumentsProvider.fail === 'all') {
+      process.exit(1);
+    }
   }
 
   /**

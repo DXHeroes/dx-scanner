@@ -127,4 +127,5 @@ export interface ArgumentsProvider {
   uri: string;
   auth?: string;
   json?: boolean;
+  fail?: string;
 }
