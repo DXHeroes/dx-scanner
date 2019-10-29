@@ -1,3 +1,11 @@
+## [1.13.2](https://github.com/dxheroes/dx-scanner/compare/v1.13.1...v1.13.2) (2019-10-29)
+
+
+### Bug Fixes
+
+* **deps:** pin dependencies ([f9612f5](https://github.com/dxheroes/dx-scanner/commit/f9612f5))
+* **practice:** upgrade ncu to new version with fixed process.on in for loop ([d19ae2f](https://github.com/dxheroes/dx-scanner/commit/d19ae2f))
+
 ## [1.13.1](https://github.com/dxheroes/dx-scanner/compare/v1.13.0...v1.13.1) (2019-10-25)
 
 
