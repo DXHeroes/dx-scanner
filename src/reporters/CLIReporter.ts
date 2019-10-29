@@ -24,7 +24,7 @@ export class CLIReporter implements IReporter {
 
     for (const cwp of componentsWithPractices) {
       if (cwp.component.repositoryPath) {
-        repoName = GitServiceUtils.getUrlToRepo(cwp.component.repositoryPath, cwp.component.path.replace(componentsSharedSubpath, ''));
+        repoName = ReporterUtils.getPathOrRepoUrl(cwp.component.repositoryPath, cwp.component.path.replace(componentsSharedSubpath, ''));
       } else {
         repoName = cwp.component.path;
       }

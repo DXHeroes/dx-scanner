@@ -9,6 +9,7 @@ import {
 } from '../../src/model';
 import { DeepPartial } from '../../src/lib/deepPartial';
 import _ from 'lodash';
+import path from 'path';
 
 export const practiceWithContextFactory = (
   practiceWithContext: DeepPartial<PracticeWithContextForReporter> = {},
@@ -16,8 +17,8 @@ export const practiceWithContextFactory = (
   return _.merge(
     {
       component: {
-        repositoryPath: './',
-        path: './',
+        repositoryPath: path.resolve('./'),
+        path: path.resolve('./'),
         language: ProgrammingLanguage.JavaScript,
         framework: ProjectComponentFramework.UNKNOWN,
         type: ProjectComponentType.UNKNOWN,
