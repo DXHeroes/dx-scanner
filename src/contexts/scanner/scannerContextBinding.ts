@@ -55,5 +55,5 @@ const bindFileAccess = (scanningStrategy: ScanningStrategy, container: Container
 
 const bindLanguageDetectors = (container: Container) => {
   container.bind(Types.ILanguageDetector).to(JavaScriptLanguageDetector);
-  container.bind(Types.ILanguageDetector).to(PythonLanguageDetector);
+  // container.bind(Types.ILanguageDetector).to(PythonLanguageDetector); // unbind until the Python is fully supported
 };
