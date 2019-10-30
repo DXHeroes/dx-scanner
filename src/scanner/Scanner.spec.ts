@@ -1,19 +1,12 @@
-import { createRootContainer, createTestContainer, TestContainerContext } from '../inversify.config';
 import { Container } from 'inversify';
+import { createRootContainer } from '../inversify.config';
 import { Scanner } from './Scanner';
-import { practiceWithContextFactory } from '../../test/factories/PracticeWithContextFactory';
-import { PracticeEvaluationResult } from '../model';
 
 describe('Scanner', () => {
   let rootContainer: Container;
-  let containerCtx: TestContainerContext;
 
   beforeEach(() => {
     rootContainer = createRootContainer({ uri: '.' });
-  });
-
-  beforeAll(async () => {
-    containerCtx = createTestContainer();
   });
 
   it('Can be instantiated from container', () => {
