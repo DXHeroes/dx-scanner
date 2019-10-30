@@ -1,3 +1,10 @@
+## [1.13.3](https://github.com/dxheroes/dx-scanner/compare/v1.13.2...v1.13.3) (2019-10-30)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @oclif/command to v1.5.19 ([75bcef3](https://github.com/dxheroes/dx-scanner/commit/75bcef3))
+
 ## [1.13.2](https://github.com/dxheroes/dx-scanner/compare/v1.13.1...v1.13.2) (2019-10-29)
 
 
