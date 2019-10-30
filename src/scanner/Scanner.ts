@@ -180,7 +180,7 @@ export class Scanner {
       ? console.log(reportString)
       : console.log(util.inspect(reportString, { showHidden: false, depth: null }));
 
-    const notPracticingPracticesToFail = ScannerUtils.filterNotPracticingPracticesToFail(reportArguments, this.argumentsProvider);
+    const notPracticingPracticesToFail = ScannerUtils.filterNotPracticingPracticesToFail(relevantPractices, this.argumentsProvider);
     if (notPracticingPracticesToFail.length > 0) {
       process.exit(1);
     }
