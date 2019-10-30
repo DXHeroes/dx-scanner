@@ -1,3 +1,35 @@
+## [1.13.5](https://github.com/dxheroes/dx-scanner/compare/v1.13.4...v1.13.5) (2019-10-30)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @oclif/config to v1.13.3 ([43d6a81](https://github.com/dxheroes/dx-scanner/commit/43d6a81))
+* **deps:** update dependency @oclif/plugin-help to v2.2.1 ([a8567b0](https://github.com/dxheroes/dx-scanner/commit/a8567b0))
+* **deps:** update dependency oclif to v1.14.2 ([0a7eabf](https://github.com/dxheroes/dx-scanner/commit/0a7eabf))
+* **deps:** update dependency ts-node to v8.4.1 ([47aec18](https://github.com/dxheroes/dx-scanner/commit/47aec18))
+
+## [1.13.4](https://github.com/dxheroes/dx-scanner/compare/v1.13.3...v1.13.4) (2019-10-30)
+
+
+### Bug Fixes
+
+* **deps:** update dependency eslint to v6.6.0 ([ae11775](https://github.com/dxheroes/dx-scanner/commit/ae11775))
+
+## [1.13.3](https://github.com/dxheroes/dx-scanner/compare/v1.13.2...v1.13.3) (2019-10-30)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @oclif/command to v1.5.19 ([75bcef3](https://github.com/dxheroes/dx-scanner/commit/75bcef3))
+
+## [1.13.2](https://github.com/dxheroes/dx-scanner/compare/v1.13.1...v1.13.2) (2019-10-29)
+
+
+### Bug Fixes
+
+* **deps:** pin dependencies ([f9612f5](https://github.com/dxheroes/dx-scanner/commit/f9612f5))
+* **practice:** upgrade ncu to new version with fixed process.on in for loop ([d19ae2f](https://github.com/dxheroes/dx-scanner/commit/d19ae2f))
+
 ## [1.13.1](https://github.com/dxheroes/dx-scanner/compare/v1.13.0...v1.13.1) (2019-10-25)
 
 
