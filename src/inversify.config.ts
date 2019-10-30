@@ -10,7 +10,14 @@ import { IFileInspector } from './inspectors/IFileInspector';
 import { IPackageInspector } from './inspectors/IPackageInspector';
 import { IssueTrackingInspector } from './inspectors/IssueTrackingInspector';
 import { JavaScriptPackageInspector } from './inspectors/package/JavaScriptPackageInspector';
-import { ProgrammingLanguage, ProjectComponent, ProjectComponentFramework, ProjectComponentPlatform, ProjectComponentType } from './model';
+import {
+  ProgrammingLanguage,
+  ProjectComponent,
+  ProjectComponentFramework,
+  ProjectComponentPlatform,
+  ProjectComponentType,
+  PracticeImpact,
+} from './model';
 import { practices } from './practices';
 import { IPracticeWithMetadata } from './practices/DxPracticeDecorator';
 import { CLIReporter } from './reporters/CLIReporter';
@@ -127,5 +134,5 @@ export interface ArgumentsProvider {
   uri: string;
   auth?: string;
   json?: boolean;
-  fail?: PracticeImpact | "all";
+  fail?: PracticeImpact | 'all';
 }

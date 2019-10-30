@@ -6,6 +6,7 @@ import cli from 'cli-ux';
 import { ServiceError } from './lib/errors';
 import updateNotifier from 'update-notifier';
 import { ScanningStrategyDetectorUtils } from './detectors/utils/ScanningStrategyDetectorUtils';
+import { PracticeImpact } from './model';
 // import { ScanningStrategyDetectorUtils } from './utils/ScanningStrategyDetectorUtils';
 
 class DXScannerCommand extends Command {
@@ -30,7 +31,7 @@ class DXScannerCommand extends Command {
     const { args, flags } = this.parse(DXScannerCommand);
     let authorization = flags.authorization ? flags.authorization : undefined;
     const json = flags.json ? flags.json : undefined;
-    const fail = flags.fail ? flags.fail : undefined;
+    const fail = flags.fail ? flags.fail : PracticeImpact.high;
 
     const notifier = updateNotifier({ pkg: this.config.pjson });
 
@@ -45,7 +46,7 @@ class DXScannerCommand extends Command {
     const scanPath = args.path || process.cwd();
     cli.action.start(`Scanning URI: ${scanPath}`);
 
-    const container = createRootContainer({ uri: scanPath, auth: authorization, json: json, fail: fail });
+    const container = createRootContainer({ uri: scanPath, auth: authorization, json: json, fail: <PracticeImpact>fail });
     const scanner = container.get(Scanner);
 
     try {

@@ -174,6 +174,7 @@ export class Scanner {
         isOn: p.isOn,
       };
     });
+    console.log(reportArguments, 'reportArg');
 
     const reportString = this.reporter.report(reportArguments);
 
@@ -181,11 +182,14 @@ export class Scanner {
       ? console.log(reportString)
       : console.log(util.inspect(reportString, { showHidden: false, depth: null }));
 
-    const notPracticingPracticesToFail = reportArguments.filter(
-      (practice) =>
-        practice.evaluation === PracticeEvaluationResult.notPracticing &&
-        (practice.impact === this.argumentsProvider.fail || this.argumentsProvider.fail === 'all'),
-    );
+    let notPracticingPracticesToFail = [];
+    if (this.argumentsProvider.fail !== 'off') {
+      notPracticingPracticesToFail = reportArguments.filter(
+        (practice) =>
+          practice.evaluation === PracticeEvaluationResult.notPracticing &&
+          (practice.impact === this.argumentsProvider.fail || this.argumentsProvider.fail === 'all'),
+      );
+    }
 
     if (notPracticingPracticesToFail.length > 0) {
       process.exit(1);
