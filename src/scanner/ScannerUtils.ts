@@ -121,8 +121,14 @@ export class ScannerUtils {
     }
   };
 
-  static filterNotPracticingPracticesToFail = (relevantPractices: PracticeWithContextForReporter[], argumentsProvider: ArgumentsProvider) => {
-    return reportArguments.filter(
+  /**
+   * Filter out not practicing practices while they are of the same impact as fail value or higher, or of value 'all'.
+   */
+  static filterNotPracticingPracticesToFail = (
+    relevantPractices: PracticeWithContextForReporter[],
+    argumentsProvider: ArgumentsProvider,
+  ) => {
+    return relevantPractices.filter(
       (practice) =>
         practice.evaluation === PracticeEvaluationResult.notPracticing &&
         (_.includes(ScannerUtils.getImpactFailureLevels(argumentsProvider.fail), practice.impact) || argumentsProvider.fail === 'all'),
