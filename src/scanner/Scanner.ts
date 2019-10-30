@@ -22,7 +22,7 @@ import {
   PracticeImpact,
 } from '../model';
 import { IPracticeWithMetadata } from '../practices/DxPracticeDecorator';
-import { IReporter, PracticeWithContextForReporter } from '../reporters/IReporter';
+import { IReporter } from '../reporters/IReporter';
 import { ScannerContextFactory, Types } from '../types';
 import { ScannerUtils } from './ScannerUtils';
 import _ from 'lodash';

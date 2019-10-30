@@ -7,7 +7,6 @@ import { PracticeImpact, PracticeEvaluationResult } from '../model';
 import { IPracticeWithMetadata } from '../practices/DxPracticeDecorator';
 import { IPractice } from '../practices/IPractice';
 import { PracticeWithContext } from './Scanner';
-import { assertNever } from '../lib/assertNever';
 import { PracticeWithContextForReporter } from '../reporters/IReporter';
 import { ArgumentsProvider } from '../inversify.config';
 
