@@ -175,7 +175,7 @@ export class Scanner {
       };
     });
 
-    const reportString = this.reporter.report(reportArguments);
+    const reportString = this.reporter.report(relevantPractices);
 
     typeof reportString === 'string'
       ? console.log(reportString)
