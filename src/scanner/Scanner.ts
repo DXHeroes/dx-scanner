@@ -161,26 +161,29 @@ export class Scanner {
    * Report result with specific reporter
    */
   private async report(practicesWithContext: PracticeWithContext[]): Promise<void> {
-    const relevantPractices = practicesWithContext;
+    const relevantPractices = practicesWithContext.map((p) => {
+      const config = p.componentContext.configProvider.getOverriddenPractice(p.practice.getMetadata().id);
+      const overridenImpact = config.impact;
 
-    const reportString = this.reporter.report(
-      relevantPractices.map((p) => {
-        const config = p.componentContext.configProvider.getOverriddenPractice(p.practice.getMetadata().id);
-        const overridenImpact = config.impact;
+      return {
+        component: p.componentContext.projectComponent,
+        practice: p.practice.getMetadata(),
+        evaluation: p.evaluation,
+        impact: <PracticeImpact>(overridenImpact ? overridenImpact : p.practice.getMetadata().impact),
+        isOn: p.isOn,
+      };
+    });
 
-        return {
-          component: p.componentContext.projectComponent,
-          practice: p.practice.getMetadata(),
-          evaluation: p.evaluation,
-          impact: <PracticeImpact>(overridenImpact ? overridenImpact : p.practice.getMetadata().impact),
-          isOn: p.isOn,
-        };
-      }),
-    );
+    const reportString = this.reporter.report(relevantPractices);
 
     typeof reportString === 'string'
       ? console.log(reportString)
       : console.log(util.inspect(reportString, { showHidden: false, depth: null }));
+
+    const notPracticingPracticesToFail = ScannerUtils.filterNotPracticingPracticesToFail(relevantPractices, this.argumentsProvider);
+    if (notPracticingPracticesToFail.length > 0) {
+      process.exit(1);
+    }
   }
 
   /**
