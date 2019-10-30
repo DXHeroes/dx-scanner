@@ -1,3 +1,13 @@
+## [1.13.5](https://github.com/dxheroes/dx-scanner/compare/v1.13.4...v1.13.5) (2019-10-30)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @oclif/config to v1.13.3 ([43d6a81](https://github.com/dxheroes/dx-scanner/commit/43d6a81))
+* **deps:** update dependency @oclif/plugin-help to v2.2.1 ([a8567b0](https://github.com/dxheroes/dx-scanner/commit/a8567b0))
+* **deps:** update dependency oclif to v1.14.2 ([0a7eabf](https://github.com/dxheroes/dx-scanner/commit/0a7eabf))
+* **deps:** update dependency ts-node to v8.4.1 ([47aec18](https://github.com/dxheroes/dx-scanner/commit/47aec18))
+
 ## [1.13.4](https://github.com/dxheroes/dx-scanner/compare/v1.13.3...v1.13.4) (2019-10-30)
 
 
