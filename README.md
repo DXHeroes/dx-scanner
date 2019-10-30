@@ -43,32 +43,6 @@ Ruby | 🚧
 
 ### Usage
 
-**Scan repository**
-```
-dx-scanner https://github.com/DXHeroes/dx-scanner
-```
-**Scan local path**
-```
-dx-scanner ~/my-project
-```
-
-**All options**
-
-```
-dx-scanner [path]
-```
-
-**Aliases**
-```
-dx-scanner [path]
-
-dxscanner [path]
-
-dxs [path]
-```
-## Flags Usage 🏳️
-**Use flags to let DX Scanner do what you want!**
-
 ```
 Scan your project for possible DX recommendations.
 
