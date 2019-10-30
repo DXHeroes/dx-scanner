@@ -1,3 +1,23 @@
+# [1.14.0](https://github.com/dxheroes/dx-scanner/compare/v1.13.5...v1.14.0) (2019-10-30)
+
+
+### Bug Fixes
+
+* add filtering method to ScannerUtils and remove it from Scanner, ([03bf0e8](https://github.com/dxheroes/dx-scanner/commit/03bf0e8))
+* arguments of getImpactFailureLevels(), ([53a15d6](https://github.com/dxheroes/dx-scanner/commit/53a15d6))
+* lint code ([4bba638](https://github.com/dxheroes/dx-scanner/commit/4bba638))
+* lint code ([121bbd2](https://github.com/dxheroes/dx-scanner/commit/121bbd2))
+* Refactor code using .filter() method. ([f114c6e](https://github.com/dxheroes/dx-scanner/commit/f114c6e))
+* remove constant and use practiceWitchContextFactory instead ([181d79a](https://github.com/dxheroes/dx-scanner/commit/181d79a))
+* remove unnecessary code ([397e44e](https://github.com/dxheroes/dx-scanner/commit/397e44e))
+* set default fail argument to high; ([7e27427](https://github.com/dxheroes/dx-scanner/commit/7e27427))
+
+
+### Features
+
+* **CI failure:** fail on recursive impacts ([31f6558](https://github.com/dxheroes/dx-scanner/commit/31f6558))
+* **CLI:** add default value of fail ([7198ca7](https://github.com/dxheroes/dx-scanner/commit/7198ca7))
+
 ## [1.13.5](https://github.com/dxheroes/dx-scanner/compare/v1.13.4...v1.13.5) (2019-10-30)
 
 
