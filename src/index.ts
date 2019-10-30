@@ -46,7 +46,7 @@ class DXScannerCommand extends Command {
     const scanPath = args.path || process.cwd();
     cli.action.start(`Scanning URI: ${scanPath}`);
 
-    const container = createRootContainer({ uri: scanPath, auth: authorization, json: json, fail: <PracticeImpact>fail });
+    const container = createRootContainer({ uri: scanPath, auth: authorization, json: json, fail: <PracticeImpact | 'all'>fail });
     const scanner = container.get(Scanner);
 
     try {
