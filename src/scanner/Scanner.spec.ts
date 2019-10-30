@@ -1,9 +1,10 @@
-import { createRootContainer } from '../inversify.config';
 import { Container } from 'inversify';
+import { createRootContainer } from '../inversify.config';
 import { Scanner } from './Scanner';
 
 describe('Scanner', () => {
   let rootContainer: Container;
+
   beforeEach(() => {
     rootContainer = createRootContainer({ uri: '.' });
   });

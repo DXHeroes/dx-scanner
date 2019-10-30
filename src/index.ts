@@ -6,6 +6,7 @@ import cli from 'cli-ux';
 import { ServiceError } from './lib/errors';
 import updateNotifier from 'update-notifier';
 import { ScanningStrategyDetectorUtils } from './detectors/utils/ScanningStrategyDetectorUtils';
+import { PracticeImpact } from './model';
 // import { ScanningStrategyDetectorUtils } from './utils/ScanningStrategyDetectorUtils';
 
 class DXScannerCommand extends Command {
@@ -20,7 +21,11 @@ class DXScannerCommand extends Command {
     // flag with no value (-f, --force)
     force: flags.boolean({ char: 'f' }),
     json: flags.boolean({ char: 'j', description: 'Output in JSON' }),
-    init: flags.boolean({ char: 'i', description: 'Install DX Scanner in your folder' }),
+    init: flags.boolean({ char: 'i', description: 'Install DX Scanner in your folder.' }),
+    fail: flags.string({
+      options: ['high', 'medium', 'small', 'off', 'all'],
+      description: 'Run scanner in failure mode.',
+    }),
   };
 
   static args = [{ name: 'path' }];
@@ -29,6 +34,7 @@ class DXScannerCommand extends Command {
     const { args, flags } = this.parse(DXScannerCommand);
     let authorization = flags.authorization ? flags.authorization : undefined;
     const json = flags.json ? flags.json : undefined;
+    const fail = flags.fail ? <PracticeImpact | 'all'>flags.fail : PracticeImpact.high;
 
     const notifier = updateNotifier({ pkg: this.config.pjson });
 
@@ -43,7 +49,7 @@ class DXScannerCommand extends Command {
     const scanPath = args.path || process.cwd();
     cli.action.start(`Scanning URI: ${scanPath}`);
 
-    const container = createRootContainer({ uri: scanPath, auth: authorization, json: json });
+    const container = createRootContainer({ uri: scanPath, auth: authorization, json, fail });
     const scanner = container.get(Scanner);
 
     try {

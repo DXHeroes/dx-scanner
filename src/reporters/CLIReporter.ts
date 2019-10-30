@@ -3,7 +3,6 @@ import { injectable } from 'inversify';
 import { PracticeImpact, PracticeMetadata, PracticeEvaluationResult } from '../model';
 import { IReporter, PracticeWithContextForReporter } from './IReporter';
 import { sharedSubpath } from '../detectors/utils';
-import { GitServiceUtils } from '../services/git/GitServiceUtils';
 import { ReporterUtils } from './ReporterUtils';
 
 @injectable()

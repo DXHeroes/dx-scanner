@@ -13,10 +13,15 @@ import { DeprecatedTSLintPractice } from '../practices/JavaScript/DeprecatedTSLi
 import { ESLintUsedPractice } from '../practices/JavaScript/ESLintUsedPractice';
 import { JsGitignoreCorrectlySetPractice } from '../practices/JavaScript/JsGitignoreCorrectlySetPractice';
 import { TypeScriptUsedPractice } from '../practices/JavaScript/TypeScriptUsedPractice';
+import { PracticeWithContextForReporter } from '../reporters/IReporter';
 import { ScannerUtils } from './ScannerUtils';
 import { FirstTestPractice, InvalidTestPractice, SecondTestPractice } from './__MOCKS__';
+import { practiceWithContextFactory } from '../../test/factories/PracticeWithContextFactory';
 
 describe('ScannerUtils', () => {
+  const notPracticingHighImpactPracticeWithCtx: PracticeWithContextForReporter[] = [];
+  notPracticingHighImpactPracticeWithCtx.push(practiceWithContextFactory({ evaluation: PracticeEvaluationResult.notPracticing }));
+
   describe('#sortPractices', () => {
     it('sorts practices correctly ', async () => {
       const practices = [DeprecatedTSLintPractice, ESLintUsedPractice, TypeScriptUsedPractice].map(ScannerUtils.initPracticeWithMetadata);
@@ -109,6 +114,18 @@ describe('ScannerUtils', () => {
 
       expect(filteredPractices.practicesOff.length).toBeGreaterThanOrEqual(1);
       expect(filteredPractices.customApplicablePractices.length).toBeGreaterThanOrEqual(2);
+    });
+
+    it('Filter correctly if practice impact is high and fail=high', () => {
+      const argumentsProvider = { uri: '.', fail: PracticeImpact.high };
+      const result = ScannerUtils.filterNotPracticingPracticesToFail(notPracticingHighImpactPracticeWithCtx, argumentsProvider);
+      expect(result).toHaveLength(1);
+    });
+
+    it('Filter correctly if practice impact is high and fail=off', () => {
+      const argumentsProvider = { uri: '.', fail: PracticeImpact.off };
+      const result = ScannerUtils.filterNotPracticingPracticesToFail(notPracticingHighImpactPracticeWithCtx, argumentsProvider);
+      expect(result).toHaveLength(0);
     });
   });
 });
