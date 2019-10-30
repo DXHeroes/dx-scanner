@@ -13,12 +13,15 @@ import { DeprecatedTSLintPractice } from '../practices/JavaScript/DeprecatedTSLi
 import { ESLintUsedPractice } from '../practices/JavaScript/ESLintUsedPractice';
 import { JsGitignoreCorrectlySetPractice } from '../practices/JavaScript/JsGitignoreCorrectlySetPractice';
 import { TypeScriptUsedPractice } from '../practices/JavaScript/TypeScriptUsedPractice';
+import { PracticeWithContextForReporter } from '../reporters/IReporter';
 import { ScannerUtils } from './ScannerUtils';
 import { FirstTestPractice, InvalidTestPractice, SecondTestPractice } from './__MOCKS__';
-import { PracticeWithContextForReporter } from '../reporters/IReporter';
-import { LanguageContext } from '../contexts/language/LanguageContext';
+import { practiceWithContextFactory } from '../../test/factories/PracticeWithContextFactory';
 
 describe('ScannerUtils', () => {
+  const notPracticingHighImpactPracticeWithCtx: PracticeWithContextForReporter[] = [];
+  notPracticingHighImpactPracticeWithCtx.push(practiceWithContextFactory({ evaluation: PracticeEvaluationResult.notPracticing }));
+
   describe('#sortPractices', () => {
     it('sorts practices correctly ', async () => {
       const practices = [DeprecatedTSLintPractice, ESLintUsedPractice, TypeScriptUsedPractice].map(ScannerUtils.initPracticeWithMetadata);
@@ -115,41 +118,14 @@ describe('ScannerUtils', () => {
 
     it('Filter correctly if practice impact is high and fail=high', () => {
       const argumentsProvider = { uri: '.', fail: PracticeImpact.high };
-      const result = ScannerUtils.filterNotPracticingPracticesToFail(reportArguments, argumentsProvider);
+      const result = ScannerUtils.filterNotPracticingPracticesToFail(notPracticingHighImpactPracticeWithCtx, argumentsProvider);
       expect(result).toHaveLength(1);
     });
 
     it('Filter correctly if practice impact is high and fail=off', () => {
       const argumentsProvider = { uri: '.', fail: PracticeImpact.off };
-      const result = ScannerUtils.filterNotPracticingPracticesToFail(reportArguments, argumentsProvider);
+      const result = ScannerUtils.filterNotPracticingPracticesToFail(notPracticingHighImpactPracticeWithCtx, argumentsProvider);
       expect(result).toHaveLength(0);
     });
   });
 });
-
-const reportArguments: PracticeWithContextForReporter[] = [
-  {
-    component: {
-      framework: ProjectComponentFramework.UNKNOWN,
-      language: ProgrammingLanguage.JavaScript,
-      path: '/var/folders/w2/1gzmv1n51bs2z13yd5558ny80000gn/T/dx-scannerIrp1iV',
-      platform: ProjectComponentPlatform.UNKNOWN,
-      repositoryPath: 'https://github.com/DXHeroes/empty-js',
-      type: ProjectComponentType.Library,
-    },
-    practice: {
-      id: 'LanguageIndependent.GitignoreIsPresent',
-      name: 'Having a .gitignore',
-      impact: PracticeImpact.high,
-      suggestion:
-        'Add gitignore which allow you to ignore files, such as editor backup files, build products or local configuration overrides that you never want to commit into a repository.',
-      reportOnlyOnce: true,
-      url: 'https://git-scm.com/docs/gitignore',
-      defaultImpact: PracticeImpact.high,
-      //matcher: ['JsGitignoreIsPresentPractice'],
-    },
-    evaluation: PracticeEvaluationResult.notPracticing,
-    impact: PracticeImpact.high,
-    isOn: true,
-  },
-];
