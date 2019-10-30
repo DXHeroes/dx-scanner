@@ -1,6 +1,6 @@
 import 'reflect-metadata';
 import { createRootContainer } from './inversify.config';
-import { Scanner } from './scanner/Scanner';
+import { Scanner, ScanResult } from './scanner/Scanner';
 import { Command, flags } from '@oclif/command';
 import cli from 'cli-ux';
 import { ServiceError } from './lib/errors';
@@ -52,8 +52,9 @@ class DXScannerCommand extends Command {
     const container = createRootContainer({ uri: scanPath, auth: authorization, json, fail });
     const scanner = container.get(Scanner);
 
+    let scanResult: ScanResult;
     try {
-      await scanner.scan();
+      scanResult = await scanner.scan();
     } catch (error) {
       if (error instanceof ServiceError) {
         ScanningStrategyDetectorUtils.isGitHubPath(scanPath)
@@ -65,7 +66,7 @@ class DXScannerCommand extends Command {
         const container = createRootContainer({ uri: scanPath, auth: authorization, json: json });
         const scanner = container.get(Scanner);
 
-        await scanner.scan();
+        scanResult = await scanner.scan();
       } else {
         throw error;
       }
@@ -76,6 +77,10 @@ class DXScannerCommand extends Command {
     const hrend = process.hrtime(hrstart);
 
     console.info('Scan duration %ds.', hrend[0]);
+
+    if (scanResult.shouldExitOnEnd) {
+      process.exit(1);
+    }
   }
 }
 
