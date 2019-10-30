@@ -182,14 +182,12 @@ export class Scanner {
       ? console.log(reportString)
       : console.log(util.inspect(reportString, { showHidden: false, depth: null }));
 
-    let notPracticingPracticesToFail = [];
-    if (this.argumentsProvider.fail !== 'off') {
-      notPracticingPracticesToFail = reportArguments.filter(
-        (practice) =>
-          practice.evaluation === PracticeEvaluationResult.notPracticing &&
-          (practice.impact === this.argumentsProvider.fail || this.argumentsProvider.fail === 'all'),
-      );
-    }
+    const notPracticingPracticesToFail = reportArguments.filter(
+      (practice) =>
+        practice.evaluation === PracticeEvaluationResult.notPracticing &&
+        (_.includes(ScannerUtils.getImpactFailureLevels(this.argumentsProvider.fail), practice.impact) ||
+          this.argumentsProvider.fail === 'all'),
+    );
 
     if (notPracticingPracticesToFail.length > 0) {
       process.exit(1);
