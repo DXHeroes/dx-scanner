@@ -31,8 +31,7 @@ class DXScannerCommand extends Command {
     const { args, flags } = this.parse(DXScannerCommand);
     let authorization = flags.authorization ? flags.authorization : undefined;
     const json = flags.json ? flags.json : undefined;
-    const fail = flags.fail ? <PracticeImpact | "all">flags.fail : PracticeImpact.high;
-
+    const fail = flags.fail ? <PracticeImpact | 'all'>flags.fail : PracticeImpact.high;
     const notifier = updateNotifier({ pkg: this.config.pjson });
 
     // const name = flags.name || 'world';
