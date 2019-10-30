@@ -7,6 +7,7 @@ import { PracticeImpact } from '../model';
 import { IPracticeWithMetadata } from '../practices/DxPracticeDecorator';
 import { IPractice } from '../practices/IPractice';
 import { PracticeWithContext } from './Scanner';
+import { assertNever } from '../lib/assertNever';
 
 /**
  * Scanner helpers & utilities
@@ -99,4 +100,24 @@ export class ScannerUtils {
 
     return { customApplicablePractices, practicesOff };
   }
+
+  /**
+   * Get all levels to fail on
+   */
+  static getImpactFailureLevels = (impact: PracticeImpact) => {
+    switch (impact) {
+      case PracticeImpact.high:
+        return [PracticeImpact.high];
+      case PracticeImpact.medium:
+        return [PracticeImpact.high, PracticeImpact.medium];
+      case PracticeImpact.small:
+        return [PracticeImpact.high, PracticeImpact.medium, PracticeImpact.small];
+      case PracticeImpact.hint:
+        return [PracticeImpact.high, PracticeImpact.medium, PracticeImpact.small, PracticeImpact.hint];
+      case PracticeImpact.off:
+        return [];
+      default:
+        return assertNever(impact);
+    }
+  };
 }

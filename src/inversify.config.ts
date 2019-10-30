@@ -127,5 +127,5 @@ export interface ArgumentsProvider {
   uri: string;
   auth?: string;
   json?: boolean;
-  fail?: PracticeImpact | "all";
+  fail?: PracticeImpact | 'all';
 }
