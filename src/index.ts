@@ -22,7 +22,10 @@ class DXScannerCommand extends Command {
     force: flags.boolean({ char: 'f' }),
     json: flags.boolean({ char: 'j', description: 'Output in JSON' }),
     init: flags.boolean({ char: 'i', description: 'Install DX Scanner in your folder.' }),
-    fail: flags.string({ description: 'Run scanner in failure mode.\nSet to high, medium, small, off or all.' }),
+    fail: flags.string({
+      options: ['high', 'medium', 'small', 'off', 'all'],
+      description: 'Run scanner in failure mode.',
+    }),
   };
 
   static args = [{ name: 'path' }];
@@ -31,7 +34,9 @@ class DXScannerCommand extends Command {
     const { args, flags } = this.parse(DXScannerCommand);
     let authorization = flags.authorization ? flags.authorization : undefined;
     const json = flags.json ? flags.json : undefined;
-    const fail = flags.fail ? <PracticeImpact | "all">flags.fail : PracticeImpact.high;
+    console.log('flags.fail :', flags.fail);
+
+    const fail = flags.fail ? <PracticeImpact | 'all'>flags.fail : PracticeImpact.high;
 
     const notifier = updateNotifier({ pkg: this.config.pjson });
 
