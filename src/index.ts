@@ -22,7 +22,7 @@ class DXScannerCommand extends Command {
     force: flags.boolean({ char: 'f' }),
     json: flags.boolean({ char: 'j', description: 'Output in JSON' }),
     init: flags.boolean({ char: 'i', description: 'Install DX Scanner in your folder.' }),
-    fail: flags.string({ description: 'Run scanner in failure mode.\nSet to high, medium, small or all.' }),
+    fail: flags.string({ description: 'Run scanner in failure mode.\nSet to high, medium, small, off or all.' }),
   };
 
   static args = [{ name: 'path' }];
