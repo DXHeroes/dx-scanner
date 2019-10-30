@@ -161,7 +161,6 @@ export class Scanner {
    * Report result with specific reporter
    */
   private async report(practicesWithContext: PracticeWithContext[]): Promise<void> {
-    const relevantPractices = practicesWithContext;
     const relevantPractices = practicesWithContext.map((p) => {
       const config = p.componentContext.configProvider.getOverriddenPractice(p.practice.getMetadata().id);
       const overridenImpact = config.impact;
