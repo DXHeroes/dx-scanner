@@ -1,3 +1,10 @@
+## [1.13.4](https://github.com/dxheroes/dx-scanner/compare/v1.13.3...v1.13.4) (2019-10-30)
+
+
+### Bug Fixes
+
+* **deps:** update dependency eslint to v6.6.0 ([ae11775](https://github.com/dxheroes/dx-scanner/commit/ae11775))
+
 ## [1.13.3](https://github.com/dxheroes/dx-scanner/compare/v1.13.2...v1.13.3) (2019-10-30)
 
 
