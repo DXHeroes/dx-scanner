@@ -11,6 +11,7 @@ import { PracticeImpact } from './model';
 
 class DXScannerCommand extends Command {
   static description = 'Scan your project for possible DX recommendations.';
+  static usage = ['[PATH] [OPTIONS]'];
 
   static flags = {
     // add --version flag to show CLI version
@@ -26,27 +27,22 @@ class DXScannerCommand extends Command {
     }),
   };
 
-  static args = [{ name: 'path' }];
+  static args = [{ name: 'path', default: process.cwd() }];
 
-  static examples = ['dx-scanner ./', 'dx-scanner github.com/DXHeroes/dx-scanner', 'dx-scanner . --fail=high'];
+  static aliases = ['dxs', 'dxscanner'];
+  static examples = ['dx-scanner', 'dx-scanner ./ --fail=high', 'dx-scanner github.com/DXHeroes/dx-scanner'];
 
   async run() {
     const { args, flags } = this.parse(DXScannerCommand);
+    const scanPath = args.path;
+
     let authorization = flags.authorization ? flags.authorization : undefined;
     const json = flags.json ? flags.json : undefined;
     const fail = flags.fail ? <PracticeImpact | 'all'>flags.fail : PracticeImpact.high;
 
     const notifier = updateNotifier({ pkg: this.config.pjson });
-
-    // const name = flags.name || 'world';
-    // this.log(`hello ${name} from ./src/index.ts`);
-    // if (args.file && flags.force) {
-    //   this.log(`you input --force and --file: ${args.file}`);
-    // }
-
     const hrstart = process.hrtime();
 
-    const scanPath = args.path || process.cwd();
     cli.action.start(`Scanning URI: ${scanPath}`);
 
     const container = createRootContainer({ uri: scanPath, auth: authorization, json, fail });
