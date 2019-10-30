@@ -7,7 +7,7 @@ import { PracticeContext } from '../../contexts/practice/PracticeContext';
   id: 'JavaScript.GitignoreCorrectlySet',
   name: 'Set .gitignore Correctly',
   impact: PracticeImpact.high,
-  suggestion: 'Scripts in the .gitignore set as usual.',
+  suggestion: 'Set scripts in the .gitignore as usual.',
   reportOnlyOnce: true,
   url: 'https://github.com/github/gitignore/blob/master/Node.gitignore',
   dependsOn: { practicing: ['LanguageIndependent.GitignoreIsPresent'] },

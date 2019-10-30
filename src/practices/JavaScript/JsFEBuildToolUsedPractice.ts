@@ -5,9 +5,9 @@ import { PracticeContext } from '../../contexts/practice/PracticeContext';
 
 @DxPractice({
   id: 'JavaScript.FEBuildtoolUsed',
-  name: 'Using JS Frontend Build Tool',
+  name: 'Use JS Frontend Build Tools',
   impact: PracticeImpact.medium,
-  suggestion: 'Use a build tools to to automate all the menial and error prone tasks in web development.',
+  suggestion: 'Use build tools to automate all the menial and error prone tasks in web development.',
   reportOnlyOnce: true,
   url: 'https://webpack.js.org/',
 })
