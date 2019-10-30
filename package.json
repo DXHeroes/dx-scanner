@@ -51,7 +51,7 @@
     "semver": "6.3.0",
     "simple-git": "1.126.0",
     "toposort": "2.0.2",
-    "ts-node": "8.3.0",
+    "ts-node": "8.4.1",
     "tslib": "1.10.0",
     "typescript": "3.6.4",
     "update-notifier": "3.0.1"
