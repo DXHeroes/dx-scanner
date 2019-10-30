@@ -35,6 +35,7 @@ export class Scanner {
   private readonly practices: IPracticeWithMetadata[];
   private readonly argumentsProvider: ArgumentsProvider;
   private readonly scanDebug: debug.Debugger;
+  private shouldExitOnEnd = false;
 
   constructor(
     @inject(ScanningStrategyDetector) scanStrategyDetector: ScanningStrategyDetector,
@@ -52,7 +53,7 @@ export class Scanner {
     this.scanDebug = debug('scanner');
   }
 
-  async scan(): Promise<void> {
+  async scan(): Promise<ScanResult> {
     let scanStrategy = await this.scanStrategyDetector.detect();
     this.scanDebug(`Scan strategy: ${inspect(scanStrategy)}`);
     scanStrategy = await this.preprocessData(scanStrategy);
@@ -70,6 +71,8 @@ export class Scanner {
         projectComponents.length,
       )}; Practices: ${inspect(componentsWithPractices.length)}.`,
     );
+
+    return { shouldExitOnEnd: this.shouldExitOnEnd };
   }
 
   /**
@@ -182,7 +185,7 @@ export class Scanner {
 
     const notPracticingPracticesToFail = ScannerUtils.filterNotPracticingPracticesToFail(relevantPractices, this.argumentsProvider);
     if (notPracticingPracticesToFail.length > 0) {
-      process.exit(1);
+      this.shouldExitOnEnd = true;
     }
   }
 
@@ -259,3 +262,7 @@ export interface PracticeWithContext {
   evaluation: PracticeEvaluationResult;
   isOn: boolean;
 }
+
+export type ScanResult = {
+  shouldExitOnEnd: boolean;
+};
