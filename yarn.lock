@@ -6297,10 +6297,10 @@ object.pick@^1.3.0:
   dependencies:
     isobject "^3.0.1"
 
-oclif@1.14.1:
-  version "1.14.1"
-  resolved "https://registry.yarnpkg.com/oclif/-/oclif-1.14.1.tgz#fc66e7050bb668ec318aba1715223042f6f59e38"
-  integrity sha512-i5uBHAMOyTujMM1L8mgzQBNzzgH2r4GAtHOnBoN2Noh8U553RWOtJJNz/4+zIMz6KDjHj5sxC5Nmrzl+L+oZOg==
+oclif@1.14.2:
+  version "1.14.2"
+  resolved "https://registry.yarnpkg.com/oclif/-/oclif-1.14.2.tgz#6599ab4bc28d884724e25bd1730b05925286657a"
+  integrity sha512-o5h/Ed8RiDRXC5OC8Qpm8XRKiA+wqCUj9ZC/ZOOvRnSmOaUus8moqG8Rg7i6UC/d5TUASpL7eeeTWM3gsSBexg==
   dependencies:
     "@oclif/command" "^1.5.8"
     "@oclif/config" "^1.12.6"

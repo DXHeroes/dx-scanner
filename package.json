@@ -46,7 +46,7 @@
     "memfs": "2.15.5",
     "node-filter-async": "1.1.3",
     "npm-check-updates": "3.1.26",
-    "oclif": "1.14.1",
+    "oclif": "1.14.2",
     "reflect-metadata": "0.1.13",
     "semver": "6.3.0",
     "simple-git": "1.126.0",
