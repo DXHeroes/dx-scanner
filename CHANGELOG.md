@@ -1,3 +1,10 @@
+## [1.14.1](https://github.com/dxheroes/dx-scanner/compare/v1.14.0...v1.14.1) (2019-10-30)
+
+
+### Bug Fixes
+
+* **core:** exit after the printing the debug ([8623d57](https://github.com/dxheroes/dx-scanner/commit/8623d57))
+
 # [1.14.0](https://github.com/dxheroes/dx-scanner/compare/v1.13.5...v1.14.0) (2019-10-30)
 
 
