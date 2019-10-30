@@ -69,24 +69,29 @@ dxs [path]
 ## Flags Usage 🏳️
 **Use flags to let DX Scanner do what you want!**
 
-Insert your auth code if your repo is private.
 ```
-dxs -a=AUTH_CODE
+Scan your project for possible DX recommendations.
 
-dxs [path] -a=AUTH_CODE
-```
-Insert impact on which dxs command should fail. See possible impacts below. If you use *small* impact dxs command fail also if you don't practice some practices with medium or high impact.
-```
-dxs --fail=PRACTICE_IMPACT
-```
-Use *all* if you want dxs command fail whenever you have some not practicing practices.
-```
-dxs --fail=all
-```
-Use *j* flag if you want the report in JSON. 
-```
-dxs -j
-```
+USAGE
+  $ dx-scanner [PATH] [OPTIONS]
+
+OPTIONS
+  -a, --authorization=authorization  Credentials to the repository.
+  -h, --help                         Help
+  -i, --init                         Initialize DX Scanner configuration
+  -j, --json                         Print report in JSON
+  -v, --version                      output the version number
+  --fail=high|medium|small|off|all   Run scanner in failure mode.
+
+ALIASES
+  $ dx-scanner dxs
+  $ dx-scanner dxscanner
+
+EXAMPLES
+  dx-scanner
+  dx-scanner ./ --fail=high
+  dx-scanner github.com/DXHeroes/dx-scanner
+  ```
 
 ## Configuration ⚙️
 Add ```dxscannerrc.*``` config file to change default configuration. It can be a ```.json```, ```.yml```, and even a dotfile!
