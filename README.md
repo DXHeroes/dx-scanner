@@ -122,7 +122,7 @@ Example :
 }
 ```
 
-## Score Counting 💯
+## Score Computation 💯
 Every practice impact has a value which is used for counting overall DX Score.
 
 ```
