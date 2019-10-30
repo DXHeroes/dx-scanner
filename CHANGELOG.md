@@ -1,3 +1,10 @@
+## [1.14.2](https://github.com/dxheroes/dx-scanner/compare/v1.14.1...v1.14.2) (2019-10-30)
+
+
+### Bug Fixes
+
+* **detectors:** unbind PythonLanguageDetector until fully supported ([c521abf](https://github.com/dxheroes/dx-scanner/commit/c521abf))
+
 ## [1.14.1](https://github.com/dxheroes/dx-scanner/compare/v1.14.0...v1.14.1) (2019-10-30)
 
 
