@@ -14,14 +14,12 @@ class DXScannerCommand extends Command {
 
   static flags = {
     // add --version flag to show CLI version
-    version: flags.version({ char: 'v', description: 'Current version' }),
+    version: flags.version({ char: 'v', description: 'output the version number' }),
     help: flags.help({ char: 'h', description: 'Help' }),
     // flag with a value (-n, --name=VALUE)
     authorization: flags.string({ char: 'a', description: 'Credentials to the repository.' }),
-    // flag with no value (-f, --force)
-    force: flags.boolean({ char: 'f' }),
-    json: flags.boolean({ char: 'j', description: 'Output in JSON' }),
-    init: flags.boolean({ char: 'i', description: 'Install DX Scanner in your folder.' }),
+    json: flags.boolean({ char: 'j', description: 'Print report in JSON' }),
+    init: flags.boolean({ char: 'i', description: 'Initialize DX Scanner configuration' }),
     fail: flags.string({
       options: ['high', 'medium', 'small', 'off', 'all'],
       description: 'Run scanner in failure mode.',
@@ -29,6 +27,8 @@ class DXScannerCommand extends Command {
   };
 
   static args = [{ name: 'path' }];
+
+  static examples = ['dx-scanner ./', 'dx-scanner github.com/DXHeroes/dx-scanner', 'dx-scanner . --fail=high'];
 
   async run() {
     const { args, flags } = this.parse(DXScannerCommand);
