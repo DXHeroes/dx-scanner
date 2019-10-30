@@ -22,7 +22,7 @@ import {
   PracticeImpact,
 } from '../model';
 import { IPracticeWithMetadata } from '../practices/DxPracticeDecorator';
-import { IReporter } from '../reporters/IReporter';
+import { IReporter, PracticeWithContextForReporter } from '../reporters/IReporter';
 import { ScannerContextFactory, Types } from '../types';
 import { ScannerUtils } from './ScannerUtils';
 import _ from 'lodash';
@@ -174,7 +174,6 @@ export class Scanner {
         isOn: p.isOn,
       };
     });
-    console.log(reportArguments, 'reportArg');
 
     const reportString = this.reporter.report(reportArguments);
 
@@ -182,13 +181,7 @@ export class Scanner {
       ? console.log(reportString)
       : console.log(util.inspect(reportString, { showHidden: false, depth: null }));
 
-    const notPracticingPracticesToFail = reportArguments.filter(
-      (practice) =>
-        practice.evaluation === PracticeEvaluationResult.notPracticing &&
-        (_.includes(ScannerUtils.getImpactFailureLevels(this.argumentsProvider.fail), practice.impact) ||
-          this.argumentsProvider.fail === 'all'),
-    );
-
+    const notPracticingPracticesToFail = ScannerUtils.filterNotPracticingPracticesToFail(reportArguments, this.argumentsProvider);
     if (notPracticingPracticesToFail.length > 0) {
       process.exit(1);
     }

@@ -3,11 +3,13 @@ import filterAsync from 'node-filter-async';
 import toposort from 'toposort';
 import { ProjectComponentContext } from '../contexts/projectComponent/ProjectComponentContext';
 import { ErrorFactory } from '../lib/errors';
-import { PracticeImpact } from '../model';
+import { PracticeImpact, PracticeEvaluationResult } from '../model';
 import { IPracticeWithMetadata } from '../practices/DxPracticeDecorator';
 import { IPractice } from '../practices/IPractice';
 import { PracticeWithContext } from './Scanner';
 import { assertNever } from '../lib/assertNever';
+import { PracticeWithContextForReporter } from '../reporters/IReporter';
+import { ArgumentsProvider } from '../inversify.config';
 
 /**
  * Scanner helpers & utilities
@@ -117,5 +119,13 @@ export class ScannerUtils {
       default:
         return [];
     }
+  };
+
+  static filterNotPracticingPracticesToFail = (reportArguments: PracticeWithContextForReporter[], argumentsProvider: ArgumentsProvider) => {
+    return reportArguments.filter(
+      (practice) =>
+        practice.evaluation === PracticeEvaluationResult.notPracticing &&
+        (_.includes(ScannerUtils.getImpactFailureLevels(argumentsProvider.fail), practice.impact) || argumentsProvider.fail === 'all'),
+    );
   };
 }
