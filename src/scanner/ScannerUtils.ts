@@ -121,7 +121,7 @@ export class ScannerUtils {
     }
   };
 
-  static filterNotPracticingPracticesToFail = (reportArguments: PracticeWithContextForReporter[], argumentsProvider: ArgumentsProvider) => {
+  static filterNotPracticingPracticesToFail = (relevantPractices: PracticeWithContextForReporter[], argumentsProvider: ArgumentsProvider) => {
     return reportArguments.filter(
       (practice) =>
         practice.evaluation === PracticeEvaluationResult.notPracticing &&
