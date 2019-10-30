@@ -66,6 +66,27 @@ dxscanner [path]
 
 dxs [path]
 ```
+## Flags Usage 🏳️
+**Use flags to let DX Scanner do what you want!**
+
+Insert your auth code if your repo is private.
+```
+dxs -a=AUTH_CODE
+
+dxs [path] -a=AUTH_CODE
+```
+Insert impact on which dxs command should fail. See possible impacts below. If you use *small* impact dxs command fail also if you don't practice some practices with medium or high impact.
+```
+dxs --fail=PRACTICE_IMPACT
+```
+Use *all* if you want dxs command fail whenever you have some not practicing practices.
+```
+dxs --fail=all
+```
+Use *j* flag if you want the report in JSON. 
+```
+dxs -j
+```
 
 ## Configuration ⚙️
 Add ```dxscannerrc.*``` config file to change default configuration. It can be a ```.json```, ```.yml```, and even a dotfile!
@@ -95,6 +116,21 @@ Example :
     }
 }
 ```
+
+## Score Counting 💯
+Every practice impact has a value which is used for counting overall DX Score.
+
+```
+high = 100 points
+
+medium = 75 points
+
+small = 50 points 
+
+hint = 25 points
+```
+
+If you switched off some practices they are not included in counting (0 points).
 
 ## Contributing 👩‍💻 👨‍💻
 Feel free to contribute to our DX Scanner. Please follow the [Contribution Guide](CONTRIBUTING.md).
