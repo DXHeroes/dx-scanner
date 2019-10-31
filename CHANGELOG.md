@@ -1,3 +1,12 @@
+## [1.15.1](https://github.com/dxheroes/dx-scanner/compare/v1.15.0...v1.15.1) (2019-10-31)
+
+
+### Bug Fixes
+
+* **CIUsedPractice:** respect config filed for Azure and Circle CI ([4efa8cb](https://github.com/dxheroes/dx-scanner/commit/4efa8cb))
+* **FileInspector:** do not throw error if scanning for a files in subfolders ([7f2f5d9](https://github.com/dxheroes/dx-scanner/commit/7f2f5d9))
+* **JS Practices:** mark as notPracticing if not exists `scripts` in package.json ([e2893e7](https://github.com/dxheroes/dx-scanner/commit/e2893e7))
+
 # [1.15.0](https://github.com/dxheroes/dx-scanner/compare/v1.14.3...v1.15.0) (2019-10-31)
 
 
