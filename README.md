@@ -43,32 +43,32 @@ Ruby | 🚧
 
 ### Usage
 
-**Scan repository**
 ```
-dx-scanner https://github.com/DXHeroes/dx-scanner
-```
-**Scan local path**
-```
-dx-scanner ~/my-project
-```
+Scan your project for possible DX recommendations.
 
-**All options**
+USAGE
+  $ dx-scanner [PATH] [OPTIONS]
 
-```
-dx-scanner [path]
-```
+OPTIONS
+  -a, --authorization=authorization  Credentials to the repository.
+  -h, --help                         Help
+  -i, --init                         Initialize DX Scanner configuration
+  -j, --json                         Print report in JSON
+  -v, --version                      output the version number
+  --fail=high|medium|small|off|all   Run scanner in failure mode.
 
-**Aliases**
-```
-dx-scanner [path]
+ALIASES
+  $ dx-scanner dxs
+  $ dx-scanner dxscanner
 
-dxscanner [path]
-
-dxs [path]
-```
+EXAMPLES
+  dx-scanner
+  dx-scanner ./ --fail=high
+  dx-scanner github.com/DXHeroes/dx-scanner
+  ```
 
 ## Configuration ⚙️
-Add ```dxscannerrc.*``` config file to change default configuration. It can be a ```.json```, ```.yml```, and even a dotfile!
+Add ```dxscannerrc.*``` config file to change default configuration settings. It can be a ```.json```, ```.yml```, and even a dotfile!
 
 **Practices**  
 You can switch off practices you do not want to scan or change its impact. Use the id of the practice.
@@ -95,6 +95,21 @@ Example :
     }
 }
 ```
+
+## Score Computation 💯
+Impact of each practice is represented by a specific value. DX Scanner uses the values to count the overall DX Score.
+
+```
+high = 100 points
+
+medium = 75 points
+
+small = 50 points 
+
+hint = 25 points
+```
+
+The practices you have switched off are not included in the calculation (0 points).
 
 ## Contributing 👩‍💻 👨‍💻
 Feel free to contribute to our DX Scanner. Please follow the [Contribution Guide](CONTRIBUTING.md).
