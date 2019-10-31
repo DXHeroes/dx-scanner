@@ -4,7 +4,7 @@ import { DxPractice } from '../DxPracticeDecorator';
 import { PracticeContext } from '../../contexts/practice/PracticeContext';
 
 @DxPractice({
-  id: 'JavaScript.GitignoreCorrectlySet',
+  id: 'TypeScript.GitignoreCorrectlySet',
   name: 'Set .gitignore Correctly',
   impact: PracticeImpact.high,
   suggestion: 'Scripts in the .gitignore set as usual.',
@@ -12,9 +12,9 @@ import { PracticeContext } from '../../contexts/practice/PracticeContext';
   url: 'https://github.com/github/gitignore/blob/master/Node.gitignore',
   dependsOn: { practicing: ['LanguageIndependent.GitignoreIsPresent'] },
 })
-export class JsGitignoreCorrectlySetPractice implements IPractice {
+export class TsGitignoreCorrectlySetPractice implements IPractice {
   async isApplicable(ctx: PracticeContext): Promise<boolean> {
-    return ctx.projectComponent.language === ProgrammingLanguage.JavaScript;
+    return ctx.projectComponent.language === ProgrammingLanguage.TypeScript;
   }
 
   async evaluate(ctx: PracticeContext): Promise<PracticeEvaluationResult> {
@@ -31,6 +31,10 @@ export class JsGitignoreCorrectlySetPractice implements IPractice {
     const content = await ctx.fileInspector.readFile('.gitignore');
     const parsedGitignore = parseGitignore(content);
 
+    // folders with compiled code
+    const buildRegex = parsedGitignore.find((value: string) => /build/.test(value));
+    const libRegex = parsedGitignore.find((value: string) => /lib/.test(value));
+    const distRegex = parsedGitignore.find((value: string) => /dist/.test(value));
     // lockfiles
     const packageJsonRegex = parsedGitignore.find((value: string) => /package-lock\.json/.test(value));
     const yarnLockRegex = parsedGitignore.find((value: string) => /yarn\.lock/.test(value));
@@ -41,7 +45,14 @@ export class JsGitignoreCorrectlySetPractice implements IPractice {
     const errorLogRegex = parsedGitignore.find((value: string) => /\.log/.test(value));
     const debugRegex = parsedGitignore.find((value: string) => /debug/.test(value));
 
-    if ((packageJsonRegex || yarnLockRegex) && nodeModulesRegex && debugRegex && errorLogRegex && coverageRegex) {
+    if (
+      (buildRegex || libRegex || distRegex) &&
+      (packageJsonRegex || yarnLockRegex) &&
+      nodeModulesRegex &&
+      debugRegex &&
+      errorLogRegex &&
+      coverageRegex
+    ) {
       return PracticeEvaluationResult.practicing;
     }
 

@@ -1,15 +1,15 @@
-import { JsGitignoreIsPresentPractice } from './JsGitignoreIsPresentPractice';
+import { GitignoreIsPresentPractice } from './GitignoreIsPresentPractice';
 import { PracticeEvaluationResult } from '../../model';
 import { TestContainerContext, createTestContainer } from '../../inversify.config';
 
-describe('JsGitignoreIsPresentPractice', () => {
-  let practice: JsGitignoreIsPresentPractice;
+describe('GitignoreIsPresentPractice', () => {
+  let practice: GitignoreIsPresentPractice;
   let containerCtx: TestContainerContext;
 
   beforeAll(() => {
     containerCtx = createTestContainer();
-    containerCtx.container.bind('JsGitignoreIsPresentPractice').to(JsGitignoreIsPresentPractice);
-    practice = containerCtx.container.get('JsGitignoreIsPresentPractice');
+    containerCtx.container.bind('GitignoreIsPresentPractice').to(GitignoreIsPresentPractice);
+    practice = containerCtx.container.get('GitignoreIsPresentPractice');
   });
 
   afterEach(async () => {
