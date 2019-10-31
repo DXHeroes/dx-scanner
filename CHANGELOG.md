@@ -1,3 +1,10 @@
+# [1.15.0](https://github.com/dxheroes/dx-scanner/compare/v1.14.3...v1.15.0) (2019-10-31)
+
+
+### Features
+
+* **practices:** split gitignore correctly set to separated JS & TS ([bb69702](https://github.com/dxheroes/dx-scanner/commit/bb69702))
+
 ## [1.14.3](https://github.com/dxheroes/dx-scanner/compare/v1.14.2...v1.14.3) (2019-10-31)
 
 
