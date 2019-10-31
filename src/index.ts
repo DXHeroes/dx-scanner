@@ -20,6 +20,7 @@ class DXScannerCommand extends Command {
     // flag with a value (-n, --name=VALUE)
     authorization: flags.string({ char: 'a', description: 'Credentials to the repository.' }),
     json: flags.boolean({ char: 'j', description: 'Print report in JSON' }),
+    recursive: flags.boolean({ char: 'r', description: 'Scan all components recursively in all sub folders' }),
     init: flags.boolean({ char: 'i', description: 'Initialize DX Scanner configuration' }),
     fail: flags.string({
       options: ['high', 'medium', 'small', 'off', 'all'],
@@ -45,7 +46,7 @@ class DXScannerCommand extends Command {
 
     cli.action.start(`Scanning URI: ${scanPath}`);
 
-    const container = createRootContainer({ uri: scanPath, auth: authorization, json, fail });
+    const container = createRootContainer({ uri: scanPath, auth: authorization, json, fail, recursive: flags.recursive });
     const scanner = container.get(Scanner);
 
     let scanResult: ScanResult;
@@ -59,7 +60,7 @@ class DXScannerCommand extends Command {
               'Insert your Bitbucket app password.\nhttps://confluence.atlassian.com/bitbucket/app-passwords-828781300.html\n',
             ));
 
-        const container = createRootContainer({ uri: scanPath, auth: authorization, json: json });
+        const container = createRootContainer({ uri: scanPath, auth: authorization, json, fail, recursive: flags.recursive });
         const scanner = container.get(Scanner);
 
         scanResult = await scanner.scan();

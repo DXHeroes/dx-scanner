@@ -27,6 +27,7 @@ import { ScannerContextFactory, Types } from '../types';
 import { ScannerUtils } from './ScannerUtils';
 import _ from 'lodash';
 import { sharedSubpath } from '../detectors/utils';
+import cli from 'cli-ux';
 
 @injectable()
 export class Scanner {
@@ -155,9 +156,12 @@ export class Scanner {
     let relevantComponents = componentsWithContext;
 
     // run only for root component if not set explicitly to run recursively
-    if (!this.argumentsProvider.recursive) {
+    if (!this.argumentsProvider.recursive && relevantComponents.length > 1) {
       const componentsSharedPath = sharedSubpath(relevantComponents.map((cwc) => cwc.component.path));
       relevantComponents = relevantComponents.filter((cwc) => cwc.component.path === componentsSharedPath);
+      cli.info(
+        `Found more than 1 component. To scan all ${componentsWithContext.length} components run the scanner with an argument --recursive`,
+      );
     }
 
     const practicesWithComponentContext = await Promise.all(relevantComponents.map((cwctx) => this.detectPracticesForComponent(cwctx)));
