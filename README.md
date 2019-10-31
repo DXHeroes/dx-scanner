@@ -71,7 +71,7 @@ EXAMPLES
 Add ```dxscannerrc.*``` config file to change default configuration settings. It can be a ```.json```, ```.yml```, and even a dotfile!
 
 **Practices**  
-You can switch off practices you do not want to scan or change its impact. Use the id of the practice.
+You can switch off practices you do not want to scan or change their impact. Use the id of the practice.
 
 Possible impact:
 ```
