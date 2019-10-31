@@ -14,10 +14,11 @@ import { JsPackageManagementUsedPractice } from './JavaScript/JsPackageManagemen
 import { DeprecatedTSLintPractice } from './JavaScript/DeprecatedTSLintPractice';
 import { DockerizationUsedPractice } from './LanguageIndependent/DockerizationUsedPractice';
 import { EditorConfigIsPresentPractice } from './LanguageIndependent/EditorConfigIsPresentPractice';
-import { JsGitignoreIsPresentPractice } from './JavaScript/JsGitignoreIsPresentPractice';
+import { GitignoreIsPresentPractice } from './LanguageIndependent/GitignoreIsPresentPractice';
 import { JsGitignoreCorrectlySetPractice } from './JavaScript/JsGitignoreCorrectlySetPractice';
 import { DependenciesVersionPractice } from './JavaScript/DependenciesVersionPractice';
 import { ESLintWithoutErrorsPractice } from './JavaScript/ESLintWithoutErrorsPractice';
+import { TsGitignoreCorrectlySetPractice } from './TypeScript/TsGitignoreCorrectlySetPractice';
 
 // register practices here
 export const practices = [
@@ -39,6 +40,7 @@ export const practices = [
   DockerizationUsedPractice,
   EditorConfigIsPresentPractice,
   DependenciesVersionPractice,
-  JsGitignoreIsPresentPractice,
+  GitignoreIsPresentPractice,
   JsGitignoreCorrectlySetPractice,
+  TsGitignoreCorrectlySetPractice,
 ];
