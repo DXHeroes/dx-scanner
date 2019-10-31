@@ -26,6 +26,7 @@ import { IReporter } from '../reporters/IReporter';
 import { ScannerContextFactory, Types } from '../types';
 import { ScannerUtils } from './ScannerUtils';
 import _ from 'lodash';
+import { sharedSubpath } from '../detectors/utils';
 
 @injectable()
 export class Scanner {
@@ -151,7 +152,15 @@ export class Scanner {
    * Detect applicable practices for each component
    */
   private async detectPractices(componentsWithContext: ProjectComponentAndLangContext[]): Promise<PracticeWithContext[]> {
-    const practicesWithComponentContext = await Promise.all(componentsWithContext.map((cwctx) => this.detectPracticesForComponent(cwctx)));
+    let relevantComponents = componentsWithContext;
+
+    // run only for root component if not set explicitly to run recursively
+    if (!this.argumentsProvider.recursive) {
+      const componentsSharedPath = sharedSubpath(relevantComponents.map((cwc) => cwc.component.path));
+      relevantComponents = relevantComponents.filter((cwc) => cwc.component.path === componentsSharedPath);
+    }
+
+    const practicesWithComponentContext = await Promise.all(relevantComponents.map((cwctx) => this.detectPracticesForComponent(cwctx)));
     const practicesWithContext = _.flatten(practicesWithComponentContext);
 
     this.scanDebug('Applicable practices:');
