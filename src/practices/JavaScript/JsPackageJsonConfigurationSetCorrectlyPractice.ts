@@ -39,17 +39,16 @@ export class JsPackageJsonConfigurationSetCorrectlyPractice implements IPractice
       }
     }
 
-    if (parsedPackageJson.scripts) {
-      if (
-        parsedPackageJson.scripts.test &&
-        parsedPackageJson.scripts.lint &&
-        parsedPackageJson.scripts.build &&
-        parsedPackageJson.scripts.start
-      ) {
-        return PracticeEvaluationResult.practicing;
-      }
-      return PracticeEvaluationResult.notPracticing;
+    if (
+      parsedPackageJson.scripts &&
+      parsedPackageJson.scripts.test &&
+      parsedPackageJson.scripts.lint &&
+      parsedPackageJson.scripts.build &&
+      parsedPackageJson.scripts.start
+    ) {
+      return PracticeEvaluationResult.practicing;
     }
-    return PracticeEvaluationResult.unknown;
+
+    return PracticeEvaluationResult.notPracticing;
   }
 }

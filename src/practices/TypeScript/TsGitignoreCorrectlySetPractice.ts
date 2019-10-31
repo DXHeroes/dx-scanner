@@ -43,13 +43,11 @@ export class TsGitignoreCorrectlySetPractice implements IPractice {
     // misc
     const coverageRegex = parsedGitignore.find((value: string) => /coverage/.test(value));
     const errorLogRegex = parsedGitignore.find((value: string) => /\.log/.test(value));
-    const debugRegex = parsedGitignore.find((value: string) => /debug/.test(value));
 
     if (
       (buildRegex || libRegex || distRegex) &&
       (packageJsonRegex || yarnLockRegex) &&
       nodeModulesRegex &&
-      debugRegex &&
       errorLogRegex &&
       coverageRegex
     ) {

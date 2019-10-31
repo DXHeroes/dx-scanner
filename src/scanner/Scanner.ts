@@ -216,7 +216,7 @@ export class Scanner {
         evaluation = await practice.evaluate({ ...practiceContext, config: practiceConfig });
       } catch (error) {
         evaluation = PracticeEvaluationResult.unknown;
-        const practiceDebug = debug('practice');
+        const practiceDebug = debug('practices');
         practiceDebug(`The ${practice.getMetadata().name} practice failed with this error:\n${error}`);
       }
 
