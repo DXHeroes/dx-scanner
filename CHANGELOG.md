@@ -1,3 +1,11 @@
+## [1.14.3](https://github.com/dxheroes/dx-scanner/compare/v1.14.2...v1.14.3) (2019-10-31)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @octokit/rest to v16.34.1 ([047eaa8](https://github.com/dxheroes/dx-scanner/commit/047eaa8))
+* **deps:** update dependency memfs to v2.16.1 ([391dcd8](https://github.com/dxheroes/dx-scanner/commit/391dcd8))
+
 ## [1.14.2](https://github.com/dxheroes/dx-scanner/compare/v1.14.1...v1.14.2) (2019-10-30)
 
 
