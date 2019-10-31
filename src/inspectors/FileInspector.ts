@@ -83,6 +83,7 @@ export class FileInspector implements IFileInspector {
     options?: {
       ignoreSubPaths?: string[];
       shallow?: boolean;
+      ignoreErrors?: boolean;
     },
   ): Promise<Metadata[]> {
     return this.cache.getOrSet(`${this.basePath}:scanFor:${fileName}:${path}:${options}`, async () => {
@@ -90,7 +91,15 @@ export class FileInspector implements IFileInspector {
       options = options || {};
       options.ignoreSubPaths = options.ignoreSubPaths || [];
       let result: Metadata[] = [];
-      const dirContents = await this.readDirectory(path);
+      let dirContents: string[] = [];
+
+      try {
+        dirContents = await this.readDirectory(path);
+      } catch (error) {
+        if (error.code !== 'ENOENT' || (error.code === 'ENOENT' && options.ignoreErrors !== true)) {
+          throw error;
+        }
+      }
 
       debug(`Scanning for ${fileName.toString()} in ${path}`);
       if (options.ignoreSubPaths) {
