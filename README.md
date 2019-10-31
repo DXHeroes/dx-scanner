@@ -68,7 +68,7 @@ EXAMPLES
   ```
 
 ## Configuration ⚙️
-Add ```dxscannerrc.*``` config file to change default configuration. It can be a ```.json```, ```.yml```, and even a dotfile!
+Add ```dxscannerrc.*``` config file to change default configuration settings. It can be a ```.json```, ```.yml```, and even a dotfile!
 
 **Practices**  
 You can switch off practices you do not want to scan or change its impact. Use the id of the practice.
@@ -97,7 +97,7 @@ Example :
 ```
 
 ## Score Computation 💯
-Every practice impact has a value which is used for counting overall DX Score.
+Impact of each practice is represented by a specific value. DX Scanner uses the values to count the overall DX Score.
 
 ```
 high = 100 points
@@ -109,7 +109,7 @@ small = 50 points
 hint = 25 points
 ```
 
-If you switched off some practices they are not included in counting (0 points).
+The practices you have switched off are not included in the calculation (0 points).
 
 ## Contributing 👩‍💻 👨‍💻
 Feel free to contribute to our DX Scanner. Please follow the [Contribution Guide](CONTRIBUTING.md).
