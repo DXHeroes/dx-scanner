@@ -5,9 +5,9 @@ import { PracticeContext } from '../../contexts/practice/PracticeContext';
 
 @DxPractice({
   id: 'LanguageIndependent.LicenseIsPresent',
-  name: 'Having a License file',
+  name: 'Create a License File',
   impact: PracticeImpact.medium,
-  suggestion: 'Add License to let others know what they can and can not do with your code.',
+  suggestion: 'Add a license to your repository to let others know what they can and can not do with your code.',
   reportOnlyOnce: true,
   url: 'https://choosealicense.com/licenses/',
 })

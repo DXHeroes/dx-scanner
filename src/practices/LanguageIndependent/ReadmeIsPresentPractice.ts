@@ -5,9 +5,9 @@ import { PracticeContext } from '../../contexts/practice/PracticeContext';
 
 @DxPractice({
   id: 'LanguageIndependent.ReadmeIsPresent',
-  name: 'Having a Readme file',
+  name: 'Create a Readme File',
   impact: PracticeImpact.high,
-  suggestion: 'Add Readme to tell other people why your project is useful, what they can do with your project, and how they can use it.',
+  suggestion: 'Add a Readme file to tell other people why is your project useful, what can they do with your project, and how can they use it.',
   reportOnlyOnce: true,
   url: 'https://dxkb.io/p/readme',
 })
