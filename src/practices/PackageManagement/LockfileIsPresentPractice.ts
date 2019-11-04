@@ -7,7 +7,7 @@ import { PracticeContext } from '../../contexts/practice/PracticeContext';
   id: 'LanguageIndependent.LockfileIsPresent',
   name: 'Having a Lockfile',
   impact: PracticeImpact.high,
-  suggestion: 'Commit lockfile to git to have reliable assmebly across developers and environments',
+  suggestion: 'Commit lockfile to git to have reliable assembly across developers and environments',
   reportOnlyOnce: true,
   url: 'https://www.npmjs.com/package/lockfile',
 })
