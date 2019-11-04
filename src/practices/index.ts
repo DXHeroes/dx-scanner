@@ -19,6 +19,8 @@ import { EditorConfigIsPresentPractice } from './LanguageIndependent/EditorConfi
 import { JsGitignoreIsPresentPractice } from './JavaScript/JsGitignoreIsPresentPractice';
 import { JsGitignoreCorrectlySetPractice } from './JavaScript/JsGitignoreCorrectlySetPractice';
 import { DependenciesVersionPractice } from './LanguageIndependent/DependenciesVersionPractice';
+import { JavaGitignoreIsPresentPractice } from './Java/JavaGitignoreIsPresentPractice';
+import { JavaGitignoreCorrectlySetPractice } from './Java/JavaGitignoreCorrectlySetPractice';
 
 // register practices here
 export const practices = [
@@ -43,4 +45,6 @@ export const practices = [
   DependenciesVersionPractice,
   JsGitignoreIsPresentPractice,
   JsGitignoreCorrectlySetPractice,
+  JavaGitignoreIsPresentPractice,
+  JavaGitignoreCorrectlySetPractice,
 ];
