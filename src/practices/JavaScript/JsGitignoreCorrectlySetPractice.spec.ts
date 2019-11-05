@@ -15,6 +15,7 @@ describe('JsGitignoreCorrectlySetPractice', () => {
 
   afterEach(async () => {
     containerCtx.virtualFileSystemService.clearFileSystem();
+    containerCtx.practiceContext.fileInspector!.purgeCache();
   });
 
   it('Returns practicing if the .gitignore is set correctly', async () => {

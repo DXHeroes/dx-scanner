@@ -1,20 +1,28 @@
-import { IDetector } from './IDetector';
-import git from 'simple-git/promise';
-import { ScanningStrategyDetectorUtils } from './utils/ScanningStrategyDetectorUtils';
 import gitUrlParse from 'git-url-parse';
-import { injectable, inject } from 'inversify';
-import { ErrorFactory } from '../lib/errors';
-import { Types } from '../types';
+import { inject, injectable } from 'inversify';
+import git from 'simple-git/promise';
 import { ArgumentsProvider } from '../inversify.config';
+import { ErrorFactory } from '../lib/errors';
+import { BitbucketService } from '../services/bitbucket/BitbucketService';
 import { GitHubService } from '../services/git/GitHubService';
+import { Types } from '../types';
+import { IDetector } from './IDetector';
+import { ScanningStrategyDetectorUtils } from './utils/ScanningStrategyDetectorUtils';
+import { GitServiceUtils } from '../services/git/GitServiceUtils';
 
 @injectable()
 export class ScanningStrategyDetector implements IDetector<string, ScanningStrategy> {
   private gitHubService: GitHubService;
+  private bitbucketService: BitbucketService;
   private readonly argumentsProvider: ArgumentsProvider;
 
-  constructor(@inject(GitHubService) gitHubService: GitHubService, @inject(Types.ArgumentsProvider) argumentsProvider: ArgumentsProvider) {
+  constructor(
+    @inject(GitHubService) gitHubService: GitHubService,
+    @inject(BitbucketService) bitbucketService: BitbucketService,
+    @inject(Types.ArgumentsProvider) argumentsProvider: ArgumentsProvider,
+  ) {
     this.gitHubService = gitHubService;
+    this.bitbucketService = bitbucketService;
     this.argumentsProvider = argumentsProvider;
   }
 
@@ -59,6 +67,10 @@ export class ScanningStrategyDetector implements IDetector<string, ScanningStrat
       return ServiceType.local;
     }
 
+    if (ScanningStrategyDetectorUtils.isBitbucketPath(path)) {
+      return ServiceType.bitbucket;
+    }
+
     throw ErrorFactory.newInternalError('Unable to detect scanning strategy');
   };
 
@@ -86,6 +98,19 @@ export class ScanningStrategyDetector implements IDetector<string, ScanningStrat
           return AccessType.private;
         }
         return AccessType.public;
+      }
+    }
+
+    if (remoteService.serviceType === ServiceType.bitbucket) {
+      const parsedUrl = GitServiceUtils.getOwnerAndRepoName(remoteService.remoteUrl);
+
+      try {
+        await this.bitbucketService.getRepo(parsedUrl.owner, parsedUrl.repoName);
+      } catch (error) {
+        if (error.code === 401 || error.code === 404 || error.code === 403) {
+          throw ErrorFactory.newArgumentError('You passed bad credentials or non existing repo.');
+        }
+        throw error;
       }
     }
 
@@ -132,6 +157,7 @@ export interface ScanningStrategy {
 
 export enum ServiceType {
   github = 'github',
+  bitbucket = 'bitbucket',
   git = 'git',
   local = 'local',
 }

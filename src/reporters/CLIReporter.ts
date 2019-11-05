@@ -1,67 +1,74 @@
-import { blue, bold, Color, green, grey, italic, red, reset, underline, yellow } from 'colors';
-import { inject, injectable } from 'inversify';
-import { PracticeAndComponent, PracticeImpact, PracticeMetadata } from '../model';
-import { IPracticeWithMetadata } from '../practices/DxPracticeDecorator';
-import { Types } from '../types';
-import { ComponentReport, IReporter } from './IReporter';
-import { JSONReporter } from './JSONReporter';
+import { blue, bold, Color, green, grey, italic, red, reset, underline, yellow, cyan } from 'colors';
+import { injectable } from 'inversify';
+import { PracticeImpact, PracticeMetadata, PracticeEvaluationResult } from '../model';
+import { IReporter, PracticeWithContextForReporter } from './IReporter';
 import { sharedSubpath } from '../detectors/utils';
-import { GitServiceUtils } from '../services/git/GitServiceUtils';
+import { ReporterUtils } from './ReporterUtils';
 
 @injectable()
 export class CLIReporter implements IReporter {
-  private readonly JSONReporter: JSONReporter;
-
-  constructor(@inject(Types.JSONReporter) JSONReporter: JSONReporter) {
-    this.JSONReporter = JSONReporter;
-  }
-
-  report(practicesAndComponents: PracticeAndComponent[], practicesOff: IPracticeWithMetadata[]): string {
+  report(practicesAndComponents: PracticeWithContextForReporter[]): string {
     const lines: string[] = [];
 
-    const report = this.JSONReporter.report(practicesAndComponents, practicesOff);
+    const componentsWithPractices = ReporterUtils.getComponentsWithPractices(practicesAndComponents);
+    const dxScore = ReporterUtils.computeDXScore(practicesAndComponents);
 
     lines.push(bold(blue('----------------------------')));
     lines.push(bold(blue('|                          |')));
     lines.push(bold(blue('|     DX Scanner Result    |')));
     lines.push(bold(blue('|                          |')));
-    lines.push(bold(blue('----------------------------')));
 
     let repoName;
-    const componentsSharedSubpath = sharedSubpath(report.components.map((c) => c.path));
+    const componentsSharedSubpath = sharedSubpath(componentsWithPractices.map((c) => c.component.path));
 
-    for (const component of report.components) {
-      lines.push('\n----------------------------\n');
-      lines.push(bold(blue('Developer Experience Report for:')));
-
-      if (component.repositoryPath) {
-        repoName = GitServiceUtils.getUrlToRepo(component.repositoryPath, component.path.replace(componentsSharedSubpath, ''));
+    for (const cwp of componentsWithPractices) {
+      if (cwp.component.repositoryPath) {
+        repoName = ReporterUtils.getPathOrRepoUrl(cwp.component.repositoryPath, cwp.component.path.replace(componentsSharedSubpath, ''));
       } else {
-        repoName = component.path;
+        repoName = cwp.component.path;
       }
-      lines.push(repoName);
-      lines.push('\n----------------------------');
+
+      lines.push(bold(blue('----------------------------')));
+      lines.push('');
+      lines.push(bold(blue(`Developer Experience Report for ${italic(repoName)}`)));
+      lines.push(cyan(bold(`DX Score: ${dxScore.components.find((c) => c.path === cwp.component.path)!.value}`)));
+      lines.push('');
 
       for (const key in PracticeImpact) {
-        const impact = <PracticeImpact>PracticeImpact[key];
+        const impact = PracticeImpact[key as keyof typeof PracticeImpact];
 
-        const impactLine = this.emitImpactSegment(component, impact);
+        const impactLine = this.emitImpactSegment(cwp.practicesAndComponents, impact);
         impactLine && lines.push(impactLine);
+      }
+
+      const practicesAndComponentsUnknown = cwp.practicesAndComponents.filter(
+        (p) => p.isOn && p.evaluation === PracticeEvaluationResult.unknown,
+      );
+      if (practicesAndComponentsUnknown.length > 0) {
+        lines.push(bold(red('Evaluation of these practices failed:')));
+        lines.push('');
+
+        for (const p of practicesAndComponentsUnknown) {
+          lines.push(red(`- ${bold(p.practice.name)}`));
+        }
+        lines.push('');
+      }
+
+      const practicesAndComponentsOff = cwp.practicesAndComponents.filter((p) => !p.isOn);
+      if (practicesAndComponentsOff.length > 0) {
+        lines.push(bold(red('You have turned off these practices:')));
+        lines.push('');
+
+        for (const p of practicesAndComponentsOff) {
+          lines.push(red(`- ${italic(p.practice.name)}`));
+        }
+        lines.push('');
       }
     }
 
     lines.push('----------------------------');
     lines.push('');
-
-    practicesOff.length === 0
-      ? lines.push(bold(yellow('No practices were switched off.')))
-      : lines.push(bold(red('You switched off these practices:')));
-    for (const practice of practicesOff) {
-      lines.push(red(`- ${italic(practice.getMetadata().name)}`));
-    }
-
-    lines.push('');
-    lines.push('----------------------------');
+    lines.push(bold(cyan(`Your overall score is ${dxScore.value}.`)));
     lines.push('');
     lines.push(italic(blue('Implementation is not adoption.')));
     lines.push(italic(blue('We can help you with both. :-)')));
@@ -70,15 +77,15 @@ export class CLIReporter implements IReporter {
     return lines.join('\n');
   }
 
-  private emitImpactSegment(component: ComponentReport, impact: PracticeImpact): string | undefined {
+  private emitImpactSegment(practicesAndComponents: PracticeWithContextForReporter[], impact: PracticeImpact): string | undefined {
     const lines: string[] = [];
 
-    const practices = component.practices.filter((practice) => practice.impact === impact);
-    if (practices.length === 0) {
-      return undefined;
-    }
+    const practices = practicesAndComponents.filter(
+      (p) => p.impact === impact && p.isOn === true && p.evaluation === PracticeEvaluationResult.notPracticing,
+    );
 
-    lines.push(reset(''));
+    if (practices.length === 0) return undefined;
+
     let color = blue;
 
     if (impact === PracticeImpact.high) {
@@ -90,16 +97,19 @@ export class CLIReporter implements IReporter {
     } else if (impact === PracticeImpact.small) {
       color = green;
       lines.push(bold(color('Improvements with minor impact:\n')));
+    } else if (impact === PracticeImpact.off) {
+      color = grey;
+      lines.push(bold(color('These practices are off:\n')));
     } else {
       color = grey;
       lines.push(bold(color('Also consider:')));
     }
 
-    for (const practice of practices) {
-      lines.push(this.linesForPractice(practice, color));
+    for (const practiceWithContext of practices) {
+      lines.push(this.linesForPractice(practiceWithContext.practice, color));
 
-      if (practice.defaultImpact !== practice.impact) {
-        lines.push(bold(this.changedImpact(practice, (color = grey))));
+      if (practiceWithContext.practice.defaultImpact !== practiceWithContext.practice.impact) {
+        lines.push(bold(this.changedImpact(practiceWithContext.practice, (color = grey))));
       }
     }
 
@@ -107,7 +117,6 @@ export class CLIReporter implements IReporter {
     return lines.join('\n');
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   private linesForPractice(practice: PracticeMetadata, color: Color): string {
     const findingPath = '';
     const practiceLineTexts = [reset(color(`- ${bold(practice.name)} - ${italic(practice.suggestion)}`))];

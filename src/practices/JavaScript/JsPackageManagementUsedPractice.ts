@@ -5,9 +5,9 @@ import { PracticeContext } from '../../contexts/practice/PracticeContext';
 
 @DxPractice({
   id: 'Javascript.PackageManagementUsed',
-  name: 'Using JS Package Management',
+  name: 'Use JS Package Management',
   impact: PracticeImpact.high, //which impact?
-  suggestion: 'Add package.json, which provides a simple way to keep track of packages that are being used in application.',
+  suggestion: 'Use Package.json to keep track of packages that are being used in your application.',
   reportOnlyOnce: true,
   url: 'https://docs.npmjs.com/files/package.json',
 })

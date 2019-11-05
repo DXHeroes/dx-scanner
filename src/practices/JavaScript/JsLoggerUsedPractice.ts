@@ -5,10 +5,10 @@ import { PracticeContext } from '../../contexts/practice/PracticeContext';
 
 @DxPractice({
   id: 'JavaScript.LoggerUsed',
-  name: 'Using JS Logger',
+  name: 'Use a JS Logging Library',
   impact: PracticeImpact.small,
   suggestion:
-    'Use a logger to help cut down on errors and even cyber attacks. Winston is the most widely used logging library in the JavaScript community.',
+    'Use a logging library to avoid errors and even cyber attacks. The most widely used logging library in the JavaScript community is Winston.',
   reportOnlyOnce: true,
   url: 'https://www.npmjs.com/package/winston/',
 })

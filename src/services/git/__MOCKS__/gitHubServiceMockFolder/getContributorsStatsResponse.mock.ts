@@ -24,6 +24,6 @@ export const getContributorsStatsResponse = [
         c: 0,
       },
     ],
-    author: new UserItem(251370, 'Spaceghost'),
+    author: new UserItem('251370', 'Spaceghost'),
   },
 ];

@@ -5,10 +5,10 @@ import { PracticeContext } from '../../contexts/practice/PracticeContext';
 
 @DxPractice({
   id: 'JavaScript.TypeScriptUsed',
-  name: 'Writing in Typescript',
+  name: 'Write in Typescript',
   impact: PracticeImpact.medium,
   suggestion:
-    'Start writing in TypeScript to catch many errors at compile-time. TypeScript simplifies JavaScript code, making it easier to read and debug.',
+    'Start writing in TypeScript to catch errors during compile-time. TypeScript simplifies JavaScript code, making it easier to read and debug.',
   reportOnlyOnce: true,
   url: 'https://www.typescriptlang.org/',
 })

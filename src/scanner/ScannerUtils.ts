@@ -3,10 +3,12 @@ import filterAsync from 'node-filter-async';
 import toposort from 'toposort';
 import { ProjectComponentContext } from '../contexts/projectComponent/ProjectComponentContext';
 import { ErrorFactory } from '../lib/errors';
-import { PracticeImpact } from '../model';
+import { PracticeImpact, PracticeEvaluationResult } from '../model';
 import { IPracticeWithMetadata } from '../practices/DxPracticeDecorator';
 import { IPractice } from '../practices/IPractice';
 import { PracticeWithContext } from './Scanner';
+import { PracticeWithContextForReporter } from '../reporters/IReporter';
+import { ArgumentsProvider } from '../inversify.config';
 
 /**
  * Scanner helpers & utilities
@@ -60,7 +62,6 @@ export class ScannerUtils {
    */
   static isFulfilled(practice: IPracticeWithMetadata, evaluatedPractices: PracticeWithContext[]): boolean {
     const practiceMetadata = practice.getMetadata();
-
     if (!practiceMetadata.dependsOn) return true;
 
     for (const evaluation of _.keys(practiceMetadata.dependsOn)) {
@@ -91,13 +92,45 @@ export class ScannerUtils {
 
     /* Filter out turned off practices */
     const customApplicablePractices = applicablePractices.filter(
-      (p) => componentContext.configProvider.getOverridenPractice(p.getMetadata().id) !== PracticeImpact.off,
+      (p) => componentContext.configProvider.getOverriddenPractice(p.getMetadata().id) !== PracticeImpact.off,
     );
 
     const practicesOff = applicablePractices.filter(
-      (p) => componentContext.configProvider.getOverridenPractice(p.getMetadata().id) === PracticeImpact.off,
+      (p) => componentContext.configProvider.getOverriddenPractice(p.getMetadata().id) === PracticeImpact.off,
     );
 
     return { customApplicablePractices, practicesOff };
   }
+
+  /**
+   * Get all levels to fail on
+   */
+  static getImpactFailureLevels = (impact: PracticeImpact | 'all' | undefined) => {
+    switch (impact) {
+      case PracticeImpact.high:
+        return [PracticeImpact.high];
+      case PracticeImpact.medium:
+        return [PracticeImpact.high, PracticeImpact.medium];
+      case PracticeImpact.small:
+        return [PracticeImpact.high, PracticeImpact.medium, PracticeImpact.small];
+      case PracticeImpact.hint:
+        return [PracticeImpact.high, PracticeImpact.medium, PracticeImpact.small, PracticeImpact.hint];
+      default:
+        return [];
+    }
+  };
+
+  /**
+   * Filter out not practicing practices while they are of the same impact as fail value or higher, or of value 'all'.
+   */
+  static filterNotPracticingPracticesToFail = (
+    relevantPractices: PracticeWithContextForReporter[],
+    argumentsProvider: ArgumentsProvider,
+  ) => {
+    return relevantPractices.filter(
+      (practice) =>
+        practice.evaluation === PracticeEvaluationResult.notPracticing &&
+        (_.includes(ScannerUtils.getImpactFailureLevels(argumentsProvider.fail), practice.impact) || argumentsProvider.fail === 'all'),
+    );
+  };
 }

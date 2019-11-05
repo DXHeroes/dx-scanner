@@ -33,8 +33,8 @@ export const getPullCommitsResponse = [
     url: 'https://api.github.com/repos/octocat/Hello-World/commits/7044a8a032e85b6ab611033b2ac8af7ce85805b2',
     html_url: 'https://github.com/octocat/Hello-World/commit/7044a8a032e85b6ab611033b2ac8af7ce85805b2',
     comments_url: 'https://api.github.com/repos/octocat/Hello-World/commits/7044a8a032e85b6ab611033b2ac8af7ce85805b2/comments',
-    author: new UserItem(777449, 'unoju'),
-    committer: new UserItem(777449, 'unoju'),
+    author: new UserItem('777449', 'unoju'),
+    committer: new UserItem('777449', 'unoju'),
     parents: [
       {
         sha: '553c2077f0edc3d5dc5d17262f6aa498e69d6f8e',

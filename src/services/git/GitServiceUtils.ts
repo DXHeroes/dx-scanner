@@ -6,10 +6,11 @@ export class GitServiceUtils {
   static getUrlToRepo = (url: string, path?: string | undefined, branch = 'master') => {
     const parsedUrl = gitUrlParse(url);
 
-    let completeUrl = parsedUrl.toString('https');
+    let completeUrl = `${parsedUrl.protocol}://${parsedUrl.source}/${parsedUrl.owner}/${parsedUrl.name}`;
+    const sourceUrl = <GitService | null>parsedUrl.source;
 
-    if (path) {
-      completeUrl += GitServiceUtils.getPath(<GitService>parsedUrl.source, path, branch || parsedUrl.ref);
+    if (path && sourceUrl) {
+      completeUrl += GitServiceUtils.getPath(sourceUrl, path, branch || parsedUrl.ref);
     }
 
     return completeUrl;

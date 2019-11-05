@@ -5,9 +5,9 @@ import { IPractice } from '../IPractice';
 
 @DxPractice({
   id: 'JavaScript.ESLintUsed',
-  name: 'Using ESLint',
+  name: 'Use ESLint',
   impact: PracticeImpact.medium,
-  suggestion: 'Use a linter to catch dangerous code constructs. ESLint is the most widely used linter in the JavaScript community.',
+  suggestion: 'Use Linter to catch dangerous code constructs. ESLint is the most widely used Linter in the JavaScript community.',
   reportOnlyOnce: true,
   url: 'https://eslint.org/',
 })

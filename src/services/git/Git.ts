@@ -2,13 +2,13 @@ import { Repository } from '../../model';
 import { isArray } from 'util';
 import { inject, injectable } from 'inversify';
 import { ErrorFactory } from '../../lib/errors/ErrorFactory';
-import { GitHubPullRequestState } from '../../services/git/IGitHubService';
 import * as nodePath from 'path';
 import { Metadata, MetadataType, IProjectFilesBrowserService } from '../model';
 import { Types } from '../../types';
 import { ProjectIssueBrowserService as ContentRepositoryBrowserService } from '../../model';
 import { Directory, File, Symlink } from './model';
 import { GitServiceUtils } from './GitServiceUtils';
+import { GitHubPullRequestState } from './IGitHubService';
 
 @injectable()
 export class Git implements IProjectFilesBrowserService {
@@ -38,6 +38,7 @@ export class Git implements IProjectFilesBrowserService {
     let result = await this.getRepoContent(await this.followSymLinks(path));
     if (result !== null && !isArray(result)) {
       result = result as File;
+      if (!result.content) return '';
       return Buffer.from(result.content, result.encoding).toString('utf-8');
     } else {
       throw ErrorFactory.newInternalError(`${path} is not a file`);
@@ -154,6 +155,6 @@ export class Git implements IProjectFilesBrowserService {
         }
       }
     }
-    return nodePath.join(name, path);
+    return nodePath.posix.join(name, path);
   }
 }

@@ -2,16 +2,22 @@ import { PracticeImpact } from '../model';
 
 export interface IConfigProvider {
   init(): Promise<void>;
-  getOverridenPractice(practiceId: string): PracticeImpact;
+  getOverriddenPractice(practiceId: string): PracticeConfig;
 }
 
 export interface Config {
   practices?: {
-    [key in Practices]?: PracticeImpact;
+    [key in Practices]?: PracticeImpact | PracticeConfig;
   };
   tokens?: {
     [key in Service]: string;
   };
+}
+
+export interface PracticeConfig {
+  eslintIgnore?: string[];
+  useEslintrc?: boolean;
+  impact?: string;
 }
 
 enum Service {
@@ -38,6 +44,7 @@ enum Practices {
   'LanguageIndependent.DependenciesVersionPractice' = 'LanguageIndependent.DependenciesVersionPractice',
   'JavaScript.JsGitignoreIsPresentPractice' = 'JavaScript.JsGitignoreIsPresentPractice',
   'JavaScript.JsGitignoreCorrectlySetPractice' = 'JavaScript.JsGitignoreCorrectlySetPractice',
+  'JavaScript.ESLintCorrectlyUsedPractice' = 'JavaScript.ESLintCorrectlyUsedPractice',
   UnitTestPractice = 'UnitTestPractice',
   PullRequestPractice = 'PullRequestPractice',
 }

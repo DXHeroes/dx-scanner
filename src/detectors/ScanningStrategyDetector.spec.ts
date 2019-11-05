@@ -34,7 +34,7 @@ describe('ScanningStrategyDetector', () => {
 
     it('local path with remote public GitHub', async () => {
       const repoPath = 'git@github.com:DXHeroes/dx-scanner.git';
-      new GitHubNock(1, 'DXHeroes', 1, 'dx-scanner').getRepo('').reply(200);
+      new GitHubNock('1', 'DXHeroes', 1, 'dx-scanner').getRepo('').reply(200);
 
       mockedGit.mockImplementation(() => {
         return {
@@ -56,7 +56,7 @@ describe('ScanningStrategyDetector', () => {
 
     it('local path with remote private GitHub', async () => {
       const repoPath = 'git@github.com:DXHeroes/dx-scanner-private.git';
-      new GitHubNock(1, 'DXHeroes', 1, 'dx-scanner-private').getRepo('').reply(404);
+      new GitHubNock('1', 'DXHeroes', 1, 'dx-scanner-private').getRepo('').reply(404);
 
       mockedGit.mockImplementation(() => {
         return {
@@ -72,7 +72,7 @@ describe('ScanningStrategyDetector', () => {
 
     it('remote public GitHub', async () => {
       const repoPath = 'https://github.com/DXHeroes/dx-scanner.git';
-      new GitHubNock(1, 'DXHeroes', 1, 'dx-scanner').getRepo('').reply(200);
+      new GitHubNock('1', 'DXHeroes', 1, 'dx-scanner').getRepo('').reply(200);
       const container = createTestContainer({ uri: repoPath });
 
       const result = await container.scanningStrategyDetector.detect();
@@ -87,7 +87,7 @@ describe('ScanningStrategyDetector', () => {
 
     it('remote private GitHub', async () => {
       const repoPath = 'https://github.com/DXHeroes/dx-scanner-private.git';
-      new GitHubNock(1, 'DXHeroes', 1, 'dx-scanner-private').getRepo('').reply(404);
+      new GitHubNock('1', 'DXHeroes', 1, 'dx-scanner-private').getRepo('').reply(404);
       const container = createTestContainer({ uri: repoPath, auth: 'bad AT' });
 
       await expect(container.scanningStrategyDetector.detect()).rejects.toThrow('bad credentials');
@@ -95,7 +95,7 @@ describe('ScanningStrategyDetector', () => {
 
     it('remote public GitHub without protocol in the URL', async () => {
       const repoPath = 'github.com/DXHeroes/dx-scanner.git';
-      new GitHubNock(1, 'DXHeroes', 1, 'dx-scanner').getRepo('').reply(200);
+      new GitHubNock('1', 'DXHeroes', 1, 'dx-scanner').getRepo('').reply(200);
       const container = createTestContainer({ uri: repoPath });
 
       const result = await container.scanningStrategyDetector.detect();

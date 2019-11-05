@@ -14,19 +14,7 @@ export class JavaScriptComponentDetector implements IProjectComponentDetector {
   }
 
   async detectComponent(langAtPath: LanguageAtPath): Promise<ProjectComponent[]> {
-    const backendPackages = [
-      'express',
-      'node',
-      'koa',
-      'hapi',
-      'flatiron',
-      'locomotive',
-      'nodal',
-      '@adonisjs/framework',
-      'thinkjs',
-      'sails',
-      '@types/node',
-    ];
+    const backendPackages = ['express', 'koa', 'hapi', 'flatiron', 'locomotive', 'nodal', '@adonisjs/framework', 'thinkjs', 'sails'];
 
     const frontendPackages = ['webpack', 'jquery', 'gulp', 'grunt', 'browserify', 'babel'];
 
@@ -46,7 +34,7 @@ export class JavaScriptComponentDetector implements IProjectComponentDetector {
         path: langAtPath.path,
         platform: frontendOrBackend ? frontendOrBackend : ProjectComponentPlatform.UNKNOWN,
         repositoryPath: undefined,
-        type: ProjectComponentType.Application,
+        type: frontendOrBackend ? ProjectComponentType.Application : ProjectComponentType.Library,
       },
     ];
   }

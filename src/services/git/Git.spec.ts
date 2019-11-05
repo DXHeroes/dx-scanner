@@ -9,7 +9,7 @@ describe('Git', () => {
   beforeAll(() => {
     service = new GitHubService({ uri: '.' });
     git = new Git({ url: 'https://github.com/DXHeroes/dx-scanner.git' }, service);
-    gitHubNock = new GitHubNock(1, 'DXHeroes', 1, 'dx-scanner');
+    gitHubNock = new GitHubNock('1', 'DXHeroes', 1, 'dx-scanner');
   });
 
   beforeEach(() => {
@@ -278,7 +278,7 @@ describe('Git', () => {
 
   describe('#getContributorCount', () => {
     it('returns the number of contributors', async () => {
-      gitHubNock.getContributors([{ id: 251370, login: 'Spaceghost' }, { id: 583231, login: 'octocat' }]);
+      gitHubNock.getContributors([{ id: '251370', login: 'Spaceghost' }, { id: '583231', login: 'octocat' }]);
 
       const result = await git.getContributorCount();
       expect(result).toEqual(2);
