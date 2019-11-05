@@ -5,9 +5,9 @@ import { PracticeContext } from '../../contexts/practice/PracticeContext';
 
 @DxPractice({
   id: 'LanguageIndependent.EditorConfigIsPresent',
-  name: 'Having an .editorconfig',
+  name: 'Use .editorconfig',
   impact: PracticeImpact.small,
-  suggestion: 'Add .editorconfig to define and maintain consistent coding styles between different editors and IDEs.',
+  suggestion: 'Add .editorconfig to your repository to define and maintain consistent coding styles between different editions and IDEs.',
   reportOnlyOnce: true,
   url: 'https://editorconfig.org/',
 })

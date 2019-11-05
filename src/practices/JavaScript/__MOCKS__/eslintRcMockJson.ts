@@ -1,0 +1,74 @@
+export const eslintrRcJson = {
+  parser: '@typescript-eslint/parser',
+  plugins: ['@typescript-eslint', 'prettier'],
+  env: {
+    es6: true,
+    node: true,
+  },
+  extends: ['plugin:@typescript-eslint/recommended', 'prettier/@typescript-eslint', 'plugin:prettier/recommended'],
+  globals: {
+    Atomics: 'readonly',
+    SharedArrayBuffer: 'readonly',
+  },
+  parserOptions: {
+    ecmaVersion: 2018,
+    sourceType: 'module',
+    project: './tsconfig.json',
+  },
+  rules: {
+    quotes: ['off'],
+    eqeqeq: ['warn', 'always'],
+    'no-process-env': ['warn'],
+    'no-var': ['warn'],
+    'sort-imports': ['off'],
+    'func-style': ['error', 'expression'],
+    'prefer-arrow-callback': ['error'],
+    '@typescript-eslint/explicit-function-return-type': [
+      'off',
+      {
+        allowTypedFunctionExpressions: true,
+        allowExpressions: true,
+      },
+    ],
+    '@typescript-eslint/await-thenable': ['warn'],
+    '@typescript-eslint/no-use-before-define': ['off'],
+    '@typescript-eslint/no-angle-bracket-type-assertion': ['off'],
+    '@typescript-eslint/no-require-imports': ['warn'],
+    '@typescript-eslint/no-unnecessary-type-assertion': ['warn'],
+    '@typescript-eslint/prefer-string-starts-ends-with': ['warn'],
+    '@typescript-eslint/interface-name-prefix': ['off'],
+    '@typescript-eslint/prefer-interface': ['off'],
+    '@typescript-eslint/explicit-member-accessibility': [
+      'warn',
+      {
+        accessibility: 'no-public',
+      },
+    ],
+    '@typescript-eslint/no-misused-promises': ['error'],
+    '@typescript-eslint/no-floating-promises': ['error'],
+    '@typescript-eslint/consistent-type-assertions': ['off'],
+    '@typescript-eslint/no-non-null-assertion': ['off'],
+    'prettier/prettier': [
+      'warn',
+      {
+        trailingComma: 'all',
+        singleQuote: true,
+        printWidth: 140,
+        tabWidth: 2,
+        arrowParens: 'always',
+      },
+      {
+        usePrettierrc: false,
+      },
+    ],
+  },
+  overrides: [
+    {
+      files: ['*.spec.ts'],
+      excludedFiles: ['lib/*'],
+      rules: {
+        '@typescript-eslint/explicit-function-return-type': 'off',
+      },
+    },
+  ],
+};

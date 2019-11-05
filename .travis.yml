@@ -14,7 +14,7 @@ cache:
 
 env:
   - YARN_GPG=no # ref.: https://travis-ci.community/t/timeout-after-build-finished-and-succeeded/1336
-  
+
 matrix:
   fast_finish: true
   allow_failures:
@@ -24,6 +24,8 @@ script:
   - yarn build
   - yarn test --coverage
   - bin/run -v
+  - yarn test:codecov:upload
+  - bin/run . --fail=high
 
 jobs:
   include:
@@ -39,7 +41,7 @@ jobs:
       - bin/run https://github.com/DXHeroes/dx-scanner
       - bin/run https://github.com/moment/luxon
       - bin/run https://github.com/intoli/remote-browser
-      - dxs 
+      - dxs
     os: windows
   - os: linux
   - stage: release

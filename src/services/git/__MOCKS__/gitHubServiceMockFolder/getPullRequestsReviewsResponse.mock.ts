@@ -5,7 +5,7 @@ export const getPullRequestsReviewsResponse = [
   {
     id: 41231978,
     node_id: 'MDE3OlB1bGxSZXF1ZXN0UmV2aWV3NDEyMzE5Nzg=',
-    user: new UserItem(1999050, 'pedrorijo91'),
+    user: new UserItem('1999050', 'pedrorijo91'),
     body: '',
     state: 'COMMENTED',
     html_url: 'https://github.com/octocat/Hello-World/pull/1#pullrequestreview-41231978',
@@ -25,7 +25,7 @@ export const getPullRequestsReviewsResponse = [
   {
     id: 134751616,
     node_id: 'MDE3OlB1bGxSZXF1ZXN0UmV2aWV3MTM0NzUxNjE2',
-    user: new UserItem(13119311, 'alexanderclin'),
+    user: new UserItem('13119311', 'alexanderclin'),
     body: '',
     state: 'COMMENTED',
     html_url: 'https://github.com/octocat/Hello-World/pull/1#pullrequestreview-134751616',
@@ -45,7 +45,7 @@ export const getPullRequestsReviewsResponse = [
   {
     id: 134757534,
     node_id: 'MDE3OlB1bGxSZXF1ZXN0UmV2aWV3MTM0NzU3NTM0',
-    user: new UserItem(19191220, 'jonathantsang'),
+    user: new UserItem('19191220', 'jonathantsang'),
     body: '',
     state: 'COMMENTED',
     html_url: 'https://github.com/octocat/Hello-World/pull/1#pullrequestreview-134757534',
@@ -65,7 +65,7 @@ export const getPullRequestsReviewsResponse = [
   {
     id: 135027960,
     node_id: 'MDE3OlB1bGxSZXF1ZXN0UmV2aWV3MTM1MDI3OTYw',
-    user: new UserItem(19191220, 'jonathantsang'),
+    user: new UserItem('19191220', 'jonathantsang'),
     body: '',
     state: 'COMMENTED',
     html_url: 'https://github.com/octocat/Hello-World/pull/1#pullrequestreview-135027960',

@@ -4,7 +4,7 @@ export enum GitService {
 
 export interface UserInfo {
   login: string;
-  id: number;
+  id: string;
   url: string;
 }
 
@@ -14,9 +14,9 @@ export interface PullRequest {
   url: string;
   body: string;
   createdAt: string;
-  updatedAt: string | undefined | null;
-  closedAt: string | undefined | null;
-  mergedAt: string | undefined | null;
+  updatedAt: string | null;
+  closedAt: string | null;
+  mergedAt: string | null;
   state: string;
   base: { repo: Repo };
 }
@@ -62,17 +62,23 @@ export interface RepoContent {
   path: string;
   sha: string;
   size: number;
-  type: 'dir' | 'file' | 'symlink';
+  type: RepoContentType;
+}
+
+export enum RepoContentType {
+  dir = 'dir',
+  file = 'file',
+  symlink = 'symlink',
 }
 
 export interface File extends RepoContent {
-  type: 'file';
-  content: string;
-  encoding: BufferEncoding;
+  type: RepoContentType.file;
+  content: string | undefined;
+  encoding: BufferEncoding | undefined;
 }
 
 export interface Symlink extends RepoContent {
-  type: 'symlink';
+  type: RepoContentType.symlink;
   target: string;
 }
 
@@ -80,11 +86,11 @@ export type Directory = Array<RepoContent>;
 
 export interface Issue {
   user: UserInfo;
-  id: number;
+  id: string;
   url: string;
   body: string;
   createdAt: string;
-  updatedAt: string | undefined;
+  updatedAt: string;
   closedAt: string | null;
   state: string;
   pullRequestUrl?: string;
@@ -127,7 +133,7 @@ interface Tree {
 
 interface Repo {
   url: string;
-  id: number;
+  id: string;
   name: string;
   owner: UserInfo;
 }

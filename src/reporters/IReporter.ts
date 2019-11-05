@@ -1,24 +1,31 @@
 import {
-  PracticeAndComponent,
   PracticeImpact,
   ProjectComponentPlatform,
   ProgrammingLanguage,
   ProjectComponent,
   PracticeMetadata,
+  PracticeEvaluationResult,
 } from '../model';
-import { IPracticeWithMetadata } from '../practices/DxPracticeDecorator';
 
 export interface IReporter {
-  report(practicesAndComponents: PracticeAndComponent[], practicesOff: IPracticeWithMetadata[]): string | JSONReport;
+  report(practicesAndComponents: PracticeWithContextForReporter[]): string | JSONReport;
 }
 
-export type JSONReport = { uri: string; components: ComponentReport[]; practicesOff?: string[] };
+export type JSONReport = { uri: string; components: ComponentReport[] };
 
 export interface ComponentReport extends ProjectComponent {
   path: string;
   language: ProgrammingLanguage;
   platform: ProjectComponentPlatform;
   practices: Omit<PracticeMetadata, 'dependsOn' | 'reportOnlyOnce'>[];
+}
+
+export interface PracticeWithContextForReporter {
+  component: ProjectComponent;
+  practice: PracticeMetadata;
+  impact: PracticeImpact;
+  evaluation: PracticeEvaluationResult;
+  isOn: boolean;
 }
 
 export interface PracticeInfo {

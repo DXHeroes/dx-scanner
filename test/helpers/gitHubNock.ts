@@ -4,7 +4,7 @@ import * as nodePath from 'path';
 export class GitHubNock {
   repository: Repository;
 
-  constructor(ownerId: number, ownerLogin: string, repoId: number, repoName: string) {
+  constructor(ownerId: string, ownerLogin: string, repoId: number, repoName: string) {
     this.repository = new Repository(repoId, repoName, new UserItem(ownerId, ownerLogin));
   }
 
@@ -51,7 +51,7 @@ export class GitHubNock {
     return this.getPullsInternal(number, undefined, responseBody, persist);
   }
 
-  getContributors(contributors: { id: number; login: string }[], persist = true): Contributor[] {
+  getContributors(contributors: { id: string; login: string }[], persist = true): Contributor[] {
     const url = this.repository.contributors_url;
     const params = {};
     const code = 200;
@@ -381,7 +381,7 @@ export class DirectoryItem extends RepoContent {
 
 export class UserItem {
   login: string;
-  id: number;
+  id: string;
   node_id = 'MDQ6VXNlcjE=';
   avatar_url: string;
   gravatar_id = '';
@@ -399,7 +399,7 @@ export class UserItem {
   type = 'User';
   site_admin = false;
 
-  constructor(id: number, login: string) {
+  constructor(id: string, login: string) {
     this.login = login;
     this.id = id;
     // eslint-disable-next-line @typescript-eslint/camelcase

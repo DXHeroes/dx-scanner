@@ -6,7 +6,7 @@ export const getContributorsStatsServiceResponse: Paginated<ContributorStats> = 
   hasPreviousPage: false,
   items: [
     {
-      author: { id: 251370, login: 'Spaceghost', url: 'https://api.github.com/users/Spaceghost' },
+      author: { id: '251370', login: 'Spaceghost', url: 'https://api.github.com/users/Spaceghost' },
       total: 1,
       weeks: [
         { additions: 1, commits: 1, deletions: 1, startOfTheWeek: 1315699200 },

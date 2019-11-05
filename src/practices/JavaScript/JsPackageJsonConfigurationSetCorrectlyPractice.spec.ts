@@ -14,6 +14,7 @@ describe('JsPackageJsonConfigurationSetCorrectlyPractice', () => {
 
   afterEach(async () => {
     containerCtx.virtualFileSystemService.clearFileSystem();
+    containerCtx.practiceContext.fileInspector!.purgeCache();
   });
 
   it('Returns practicing if scripts build, start, test, lint are used', async () => {

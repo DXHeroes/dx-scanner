@@ -5,11 +5,11 @@ import { PracticeContext } from '../../contexts/practice/PracticeContext';
 
 @DxPractice({
   id: 'LanguageIndependent.LockfileIsPresent',
-  name: 'Having a Lockfile',
+  name: 'Create a Lockfile',
   impact: PracticeImpact.high,
-  suggestion: 'Commit lockfile to git to have reliable assmebly across developers and environments',
+  suggestion: 'Commit a lockfile to git to have a reliable assembly across environments',
   reportOnlyOnce: true,
-  url: 'https://www.npmjs.com/package/lockfile',
+  url: 'https://dxkb.io/p/lockfile',
 })
 export class LockfileIsPresentPractice implements IPractice {
   async isApplicable(): Promise<boolean> {

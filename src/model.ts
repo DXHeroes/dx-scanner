@@ -53,9 +53,11 @@ export enum ProgrammingLanguage {
   JavaScript = 'JavaScript',
   TypeScript = 'TypeScript',
   Go = 'Go',
+  PHP = 'PHP',
   Clojure = 'Clojure',
   Haskell = 'Haskell',
   Elixir = 'Elixir',
+  Python = 'Python',
   UNKNOWN = 'UNKNOWN',
 }
 
@@ -199,11 +201,6 @@ export enum GitFLow {
   UNKNOWN = 'UNKNOWN',
   Github = 'Github',
   Git = 'Git',
-}
-
-export interface PracticeAndComponent {
-  practice: PracticeMetadata;
-  component: ProjectComponent;
 }
 
 export type ProjectIssueBrowserService = GitHubService;

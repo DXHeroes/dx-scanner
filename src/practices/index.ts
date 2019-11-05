@@ -1,9 +1,7 @@
-import { PullRequestPractice } from './Collaboration/PullRequestPractice';
 import { TypeScriptUsedPractice } from './JavaScript/TypeScriptUsedPractice';
 import { PrettierUsedPractice } from './JavaScript/PrettierUsedPractice';
 import { ESLintUsedPractice } from './JavaScript/ESLintUsedPractice';
 import { LockfileIsPresentPractice } from './PackageManagement/LockfileIsPresentPractice';
-import { UnitTestPractice } from './Testing/UnitTestPractice';
 import { JsFrontendTestingFrameworkUsedPractice } from './JavaScript/JsFrontendTestingFrameworkUsedPractice';
 import { JsLoggerUsedPractice } from './JavaScript/JsLoggerUsedPractice';
 import { LicenseIsPresentPractice } from './LanguageIndependent/LicenseIsPresentPractice';
@@ -16,18 +14,19 @@ import { JsPackageManagementUsedPractice } from './JavaScript/JsPackageManagemen
 import { DeprecatedTSLintPractice } from './JavaScript/DeprecatedTSLintPractice';
 import { DockerizationUsedPractice } from './LanguageIndependent/DockerizationUsedPractice';
 import { EditorConfigIsPresentPractice } from './LanguageIndependent/EditorConfigIsPresentPractice';
-import { JsGitignoreIsPresentPractice } from './JavaScript/JsGitignoreIsPresentPractice';
+import { GitignoreIsPresentPractice } from './LanguageIndependent/GitignoreIsPresentPractice';
 import { JsGitignoreCorrectlySetPractice } from './JavaScript/JsGitignoreCorrectlySetPractice';
-import { DependenciesVersionPractice } from './LanguageIndependent/DependenciesVersionPractice';
+import { DependenciesVersionPractice } from './JavaScript/DependenciesVersionPractice';
+import { ESLintWithoutErrorsPractice } from './JavaScript/ESLintWithoutErrorsPractice';
+import { TsGitignoreCorrectlySetPractice } from './TypeScript/TsGitignoreCorrectlySetPractice';
 
 // register practices here
 export const practices = [
-  PullRequestPractice,
   TypeScriptUsedPractice,
   PrettierUsedPractice,
   ESLintUsedPractice,
+  ESLintWithoutErrorsPractice,
   LockfileIsPresentPractice,
-  UnitTestPractice,
   JsFrontendTestingFrameworkUsedPractice,
   JsBackendTestingFrameworkUsedPractice,
   JsLoggerUsedPractice,
@@ -41,6 +40,7 @@ export const practices = [
   DockerizationUsedPractice,
   EditorConfigIsPresentPractice,
   DependenciesVersionPractice,
-  JsGitignoreIsPresentPractice,
+  GitignoreIsPresentPractice,
   JsGitignoreCorrectlySetPractice,
+  TsGitignoreCorrectlySetPractice,
 ];

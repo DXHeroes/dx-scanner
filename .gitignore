@@ -12,3 +12,5 @@
 
 # Ignore packs
 dx-scanner-v*.tgz
+
+.DS_Store

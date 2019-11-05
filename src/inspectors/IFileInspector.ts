@@ -15,6 +15,8 @@ export interface IFileInspector {
     options?: {
       ignoreSubPaths?: string[];
       shallow?: boolean;
+      ignoreErrors?: boolean;
     },
   ): Promise<Metadata[]>;
+  purgeCache(): void;
 }

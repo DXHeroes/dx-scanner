@@ -6,25 +6,29 @@
 [![Downloads/week](https://img.shields.io/npm/dw/dx-scanner.svg)](https://npmjs.org/package/dx-scanner)
 ![GitHub contributors](https://img.shields.io/github/contributors/DXHeroes/dx-scanner)
 [![All Contributors](https://img.shields.io/badge/all_contributors-5-orange.svg)](#contributors-)
-[![License: CC BY-NC-SA 4.0](https://img.shields.io/badge/License-CC%20BY--NC--SA%204.0-lightgrey.svg)](https://creativecommons.org/licenses/by-nc-sa/4.0/) 
+[![NPM](https://img.shields.io/npm/l/dx-scanner)](LICENSE)
 [![oclif](https://img.shields.io/badge/cli-oclif-brightgreen.svg)](https://oclif.io)
 ![TypeScript](https://img.shields.io/badge/%3C%2F%3E-Typescript-blue)
 [![Twitter Follow](https://img.shields.io/twitter/follow/DX_Heroes?style=social)](https://twitter.com/DX_Heroes)
 
 # DX Scanner
 
-DX Scanner is an open source library that allows you to “measure” Developer Experience directly based on your source code. DX Scanner recommends practices that can help you with improving your product development.
+DX Scanner is an open source CLI tool that allows you to “measure” Developer Experience directly based on your source code. DX Scanner recommends practices that can help you with improving your product development.
+
+![DX Scanner Demo](./demo.svg)
+
 
 ## What language is supported?
 
 Language | Supported
 ------------ | -------------
 JavaScript/TypeScript | ✅
-Ruby | 🚧
-C# | 🚧
-Java | 🚧
+Java | 🏁
 Python | 🚧
+PHP | 🚧
 C++ | 🚧
+C# | 🚧
+Ruby | 🚧
 
 ## Getting Started 🏁
 
@@ -39,35 +43,35 @@ C++ | 🚧
 
 ### Usage
 
-**Scan repository**
 ```
-dx-scanner https://github.com/DXHeroes/dx-scanner
-```
-**Scan local path**
-```
-dx-scanner ~/my-project
-```
+Scan your project for possible DX recommendations.
 
-**All options**
+USAGE
+  $ dx-scanner [PATH] [OPTIONS]
 
-```
-dx-scanner [path]
-```
+OPTIONS
+  -a, --authorization=authorization  Credentials to the repository.
+  -h, --help                         Help
+  -i, --init                         Initialize DX Scanner configuration
+  -j, --json                         Print report in JSON
+  -v, --version                      output the version number
+  --fail=high|medium|small|off|all   Run scanner in failure mode.
 
-**Aliases**
-```
-dx-scanner [path]
+ALIASES
+  $ dx-scanner dxs
+  $ dx-scanner dxscanner
 
-dxscanner [path]
-
-dxs [path]
-```
+EXAMPLES
+  dx-scanner
+  dx-scanner ./ --fail=high
+  dx-scanner github.com/DXHeroes/dx-scanner
+  ```
 
 ## Configuration ⚙️
-Add ```dxscannerrc.*``` config file to change default configuration. It can be a ```.json```, ```.yml```, and even a dotfile!
+Add ```dxscannerrc.*``` config file to change default configuration settings. It can be a ```.json```, ```.yml```, and even a dotfile!
 
 **Practices**  
-You can switch off practices you do not want to scan or change its impact. Use the id of the practice.
+You can switch off practices you do not want to scan or change their impact. Use the id of the practice.
 
 Possible impact:
 ```
@@ -92,12 +96,27 @@ Example :
 }
 ```
 
+## Score Computation 💯
+Impact of each practice is represented by a specific value. DX Scanner uses the values to count the overall DX Score.
+
+```
+high = 100 points
+
+medium = 75 points
+
+small = 50 points 
+
+hint = 25 points
+```
+
+The practices you have switched off are not included in the calculation (0 points).
+
 ## Contributing 👩‍💻 👨‍💻
 Feel free to contribute to our DX Scanner. Please follow the [Contribution Guide](CONTRIBUTING.md).
 
 ## License 📝
 
-The DX Scanner open source project is licensed under the [Attribution-NonCommercial-ShareAlike 4.0 International License](https://creativecommons.org/licenses/by-nc-sa/4.0/).
+The DX Scanner open source project is licensed under the [MIT](LICENSE).
 
 ## Contributors ✨
 
