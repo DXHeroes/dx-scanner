@@ -7,9 +7,9 @@ import ncu from 'npm-check-updates';
 
 @DxPractice({
   id: 'LanguageIndependent.DependenciesVersion',
-  name: 'Updated Dependencies',
+  name: 'Update Dependencies',
   impact: PracticeImpact.high,
-  suggestion: 'Keep the dependencies updated to eliminate security concerns and compatibility issues. Try to use Renovate Bot.',
+  suggestion: 'Keep the dependencies updated to eliminate security concerns and compatibility issues. Use, for example, Renovate Bot.',
   reportOnlyOnce: true,
   url: 'https://renovatebot.com/',
 })

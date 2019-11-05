@@ -5,10 +5,10 @@ import { PracticeContext } from '../../contexts/practice/PracticeContext';
 
 @DxPractice({
   id: 'JavaScript.BackendTestingFrameworkUsed',
-  name: 'Using JS Backend Testing Framework',
+  name: 'Use JS Backend Testing Frameworks',
   impact: PracticeImpact.high,
   suggestion:
-    'Use a tests to point out the defects and errors that were made during the development phases. Jest and Mocha are the most widely used testing frameworks in the JavaScript community.',
+    'Use tests to point out the defects and errors that were made during the development phases. The most widely used testing frameworks in the JavaScript community are Jest and Mocha.',
   reportOnlyOnce: true,
   url: 'https://dxkb.io/p/unit-testing',
 })

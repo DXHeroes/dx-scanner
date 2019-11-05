@@ -5,10 +5,10 @@ import { PracticeContext } from '../../contexts/practice/PracticeContext';
 
 @DxPractice({
   id: 'LanguageIndependent.GitignoreIsPresent',
-  name: 'Having a .gitignore',
+  name: 'Create a .gitignore',
   impact: PracticeImpact.high,
   suggestion:
-    'Add gitignore which allow you to ignore files, such as editor backup files, build products or local configuration overrides that you never want to commit into a repository.',
+    'Add .gitignore to your directory. .gitignore allows you to ignore files, such as editor backup files, build products or local configuration overrides that you never want to commit into a repository.',
   reportOnlyOnce: true,
   url: 'https://git-scm.com/docs/gitignore',
 })

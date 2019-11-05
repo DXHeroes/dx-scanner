@@ -7,10 +7,10 @@ import { Metadata } from '../../services/model';
 
 @DxPractice({
   id: 'LanguageIndependent.CIUsedPractice',
-  name: 'Using Continuous Integration',
+  name: 'Use Continuous Integration',
   impact: PracticeImpact.high,
   suggestion:
-    'Continuous Integration (CI) is a practice of daily integrating code changes. Use CI to reduce the integration risk, improve code quality and more.',
+    'Continuous Integration (CI) is a practice of daily integrating code changes. Use CI to reduce the integration risk, improve code quality, and more.',
   reportOnlyOnce: true,
   url: 'https://dxkb.io/p/continuous-integration',
 })
