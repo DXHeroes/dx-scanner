@@ -83,8 +83,8 @@
   },
   "engineStrict": true,
   "engines": {
-    "node": ">=10.15.3",
-    "yarn": "^1.15.2"
+    "node": "^12",
+    "yarn": "^1"
   },
   "main": "lib/src/index.js",
   "bin": {
