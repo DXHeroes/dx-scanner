@@ -135,4 +135,5 @@ export interface ArgumentsProvider {
   auth?: string;
   json?: boolean;
   fail?: PracticeImpact | 'all';
+  recursive?: boolean;
 }

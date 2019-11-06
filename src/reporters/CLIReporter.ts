@@ -121,7 +121,7 @@ export class CLIReporter implements IReporter {
     const findingPath = '';
     const practiceLineTexts = [reset(color(`- ${bold(practice.name)} - ${italic(practice.suggestion)}`))];
     if (practice.url) {
-      practiceLineTexts.push(color(italic(`${findingPath}(${practice.url})`)));
+      practiceLineTexts.push(color(`${findingPath}${practice.url}`));
     }
 
     return practiceLineTexts.join(' ');

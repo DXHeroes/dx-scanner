@@ -1,3 +1,18 @@
+# [1.16.0](https://github.com/dxheroes/dx-scanner/compare/v1.15.2...v1.16.0) (2019-11-05)
+
+
+### Bug Fixes
+
+* **CLI auth:** prompt Bitbucket credentials only if a path is bbucket url ([999dd25](https://github.com/dxheroes/dx-scanner/commit/999dd25))
+* **CLIReporter:** remove brackets after links ([7472643](https://github.com/dxheroes/dx-scanner/commit/7472643))
+* scan recursively if found 0 components in a root path ([3801970](https://github.com/dxheroes/dx-scanner/commit/3801970))
+
+
+### Features
+
+* **scanner:** run on a root component only if not specified ([7a3d413](https://github.com/dxheroes/dx-scanner/commit/7a3d413))
+* **scanner:** run on a root component only if not specified ([609e450](https://github.com/dxheroes/dx-scanner/commit/609e450))
+
 ## [1.15.2](https://github.com/dxheroes/dx-scanner/compare/v1.15.1...v1.15.2) (2019-11-03)
 
 
