@@ -3,11 +3,10 @@ import { createRootContainer } from './inversify.config';
 import { Scanner, ScanResult } from './scanner/Scanner';
 import { Command, flags } from '@oclif/command';
 import cli from 'cli-ux';
-import { ServiceError } from './lib/errors';
+import { ServiceError, ErrorCode } from './lib/errors';
 import updateNotifier from 'update-notifier';
 import { ScanningStrategyDetectorUtils } from './detectors/utils/ScanningStrategyDetectorUtils';
 import { PracticeImpact } from './model';
-// import { ScanningStrategyDetectorUtils } from './utils/ScanningStrategyDetectorUtils';
 
 class DXScannerCommand extends Command {
   static description = 'Scan your project for possible DX recommendations.';
@@ -53,7 +52,7 @@ class DXScannerCommand extends Command {
     try {
       scanResult = await scanner.scan();
     } catch (error) {
-      if (error instanceof ServiceError) {
+      if (error instanceof ServiceError && error.code === ErrorCode.AUTHORIZATION_ERROR) {
         if (ScanningStrategyDetectorUtils.isGitHubPath(scanPath)) {
           authorization = await cli.prompt('Insert your GitHub personal access token.\nhttps://github.com/settings/tokens\n');
         } else if (ScanningStrategyDetectorUtils.isBitbucketPath(scanPath)) {
