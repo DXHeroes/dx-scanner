@@ -54,6 +54,7 @@ OPTIONS
   -h, --help                         Help
   -i, --init                         Initialize DX Scanner configuration
   -j, --json                         Print report in JSON
+  -r, --recursive                    Scan all components recursively in all sub folders
   -v, --version                      output the version number
   --fail=high|medium|small|off|all   Run scanner in failure mode.
 
@@ -65,7 +66,7 @@ EXAMPLES
   dx-scanner
   dx-scanner ./ --fail=high
   dx-scanner github.com/DXHeroes/dx-scanner
-  ```
+```
 
 ## Configuration ⚙️
 Add ```dxscannerrc.*``` config file to change default configuration settings. It can be a ```.json```, ```.yml```, and even a dotfile!
