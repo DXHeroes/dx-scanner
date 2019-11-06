@@ -27,7 +27,7 @@ export class JavaPackageInspector extends PackageInspectorBase {
       } else {
         const isGradle: boolean = await this.fileInspector.exists('build.gradle');
         if (!isGradle) {
-          ErrorFactory.newInternalError('Unsupported Java project architecture');
+          throw ErrorFactory.newInternalError('Unsupported Java project architecture');
         }
         const gradleFileString = await this.fileInspector.readFile('build.gradle');
         await this.resolveGradleFileString(gradleFileString);
