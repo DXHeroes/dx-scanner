@@ -7,7 +7,7 @@ import { PracticeContext } from '../../contexts/practice/PracticeContext';
   id: 'Java.GitignoreCorrectlySet',
   name: 'Set .gitignore Correctly',
   impact: PracticeImpact.high,
-  suggestion: 'Scripts in the .gitignore set as usual.',
+  suggestion: 'Set patterns in the .gitignore as usual.',
   reportOnlyOnce: true,
   url: 'https://github.com/github/gitignore/blob/master/Java.gitignore',
   dependsOn: { practicing: ['LanguageIndependent.GitignoreIsPresent'] },
@@ -37,13 +37,7 @@ export class JavaGitignoreCorrectlySetPractice implements IPractice {
     const jarRegex = parsedGitignore.find((value: string) => /\*\.jar/.test(value));
     const warRegex = parsedGitignore.find((value: string) => /\*\.war/.test(value));
 
-    const javaGitignore = () => {
-      if (compiledClassRegex && logRegex && jarRegex && warRegex) {
-        return true;
-      }
-    };
-
-    if (!javaGitignore) {
+    if (!(compiledClassRegex && logRegex && jarRegex && warRegex)) {
       return PracticeEvaluationResult.notPracticing;
     }
 
@@ -56,7 +50,7 @@ export class JavaGitignoreCorrectlySetPractice implements IPractice {
         return PracticeEvaluationResult.practicing;
       }
     }
-    return PracticeEvaluationResult.notPracticing;
+    return PracticeEvaluationResult.unknown;
   }
 
   private async resolveGitignorePractice(parsedGitignore: string[], javaArchitecture: string) {

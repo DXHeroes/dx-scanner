@@ -1,5 +1,5 @@
 import { IPractice } from '../IPractice';
-import { PracticeEvaluationResult, PracticeImpact, ProgrammingLanguage } from '../../model';
+import { PracticeEvaluationResult, PracticeImpact } from '../../model';
 import { DxPractice } from '../DxPracticeDecorator';
 import { PracticeContext } from '../../contexts/practice/PracticeContext';
 
@@ -13,12 +13,8 @@ import { PracticeContext } from '../../contexts/practice/PracticeContext';
   url: 'https://git-scm.com/docs/gitignore',
 })
 export class GitignoreIsPresentPractice implements IPractice {
-  async isApplicable(ctx: PracticeContext): Promise<boolean> {
-    return (
-      ctx.projectComponent.language === ProgrammingLanguage.JavaScript ||
-      ctx.projectComponent.language === ProgrammingLanguage.TypeScript ||
-      ctx.projectComponent.language === ProgrammingLanguage.Java
-    );
+  async isApplicable(): Promise<boolean> {
+    return true;
   }
 
   async evaluate(ctx: PracticeContext): Promise<PracticeEvaluationResult> {
