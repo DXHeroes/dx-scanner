@@ -14,4 +14,11 @@ export class ErrorFactory {
       message: message,
     });
   }
+
+  static newAuthorizationError(message = 'Unauthorized') {
+    return new ServiceError({
+      code: ErrorCode.AUTHORIZATION_ERROR,
+      message: message,
+    });
+  }
 }
