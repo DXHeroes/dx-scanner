@@ -5,9 +5,10 @@ import { PracticeContext } from '../../contexts/practice/PracticeContext';
 
 @DxPractice({
   id: 'JavaScript.PrettierUsed',
-  name: 'Format your code',
+  name: 'Format your code automatically',
   impact: PracticeImpact.small,
-  suggestion: 'Use a tool for code formatting. For example, Prettier saves your time and energy and makes your code style consistent.',
+  suggestion:
+    'Use a tool for automated code formatting. For example, Prettier saves your time and energy and makes your code style consistent.',
   reportOnlyOnce: true,
   url: 'https://prettier.io/',
 })
