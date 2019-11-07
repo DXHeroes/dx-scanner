@@ -23,7 +23,7 @@ DX Scanner is an open source CLI tool that allows you to “measure” Developer
 Language | Supported
 ------------ | -------------
 JavaScript/TypeScript | ✅
-Java | 🏁
+Java | ✅
 Python | 🚧
 PHP | 🚧
 C++ | 🚧

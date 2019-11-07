@@ -1,5 +1,5 @@
 import { TsGitignoreCorrectlySetPractice } from './TsGitignoreCorrectlySetPractice';
-import { gitignoreContent } from '../../detectors/__MOCKS__/gitignoreContent.mock';
+import { gitignoreContent } from '../../detectors/__MOCKS__/JavaScript/gitignoreContent.mock';
 import { PracticeEvaluationResult } from '../../model';
 import { TestContainerContext, createTestContainer } from '../../inversify.config';
 
