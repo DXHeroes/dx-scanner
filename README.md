@@ -55,8 +55,9 @@ OPTIONS
   -i, --init                         Initialize DX Scanner configuration
   -j, --json                         Print report in JSON
   -r, --recursive                    Scan all components recursively in all sub folders
-  -v, --version                      output the version number
-  --fail=high|medium|small|off|all   Run scanner in failure mode.
+  -v, --version                      Output the version number
+  --fail=high|medium|small|off|all   Run scanner in failure mode. Exits process with code 1 for any non-practicing condition of
+                                     given level.
 
 ALIASES
   $ dx-scanner dxs

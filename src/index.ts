@@ -14,7 +14,7 @@ class DXScannerCommand extends Command {
 
   static flags = {
     // add --version flag to show CLI version
-    version: flags.version({ char: 'v', description: 'output the version number' }),
+    version: flags.version({ char: 'v', description: 'Output the version number' }),
     help: flags.help({ char: 'h', description: 'Help' }),
     // flag with a value (-n, --name=VALUE)
     authorization: flags.string({ char: 'a', description: 'Credentials to the repository.' }),
@@ -23,7 +23,7 @@ class DXScannerCommand extends Command {
     init: flags.boolean({ char: 'i', description: 'Initialize DX Scanner configuration' }),
     fail: flags.string({
       options: ['high', 'medium', 'small', 'off', 'all'],
-      description: 'Run scanner in failure mode.',
+      description: 'Run scanner in failure mode. Exits process with code 1 for any non-practicing condition of given level.',
     }),
   };
 
