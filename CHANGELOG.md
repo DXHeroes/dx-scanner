@@ -1,3 +1,10 @@
+## [1.17.2](https://github.com/dxheroes/dx-scanner/compare/v1.17.1...v1.17.2) (2019-11-07)
+
+
+### Bug Fixes
+
+* **deps:** update dependency npm-check-updates to v3.2.1 ([28412af](https://github.com/dxheroes/dx-scanner/commit/28412af))
+
 ## [1.17.1](https://github.com/dxheroes/dx-scanner/compare/v1.17.0...v1.17.1) (2019-11-07)
 
 
