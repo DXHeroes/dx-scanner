@@ -1,3 +1,10 @@
+## [1.17.1](https://github.com/dxheroes/dx-scanner/compare/v1.17.0...v1.17.1) (2019-11-07)
+
+
+### Bug Fixes
+
+* Name of practice. ([83875f6](https://github.com/dxheroes/dx-scanner/commit/83875f6))
+
 # [1.17.0](https://github.com/dxheroes/dx-scanner/compare/v1.16.0...v1.17.0) (2019-11-07)
 
 
