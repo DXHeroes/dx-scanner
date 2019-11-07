@@ -1,3 +1,17 @@
+# [1.17.0](https://github.com/dxheroes/dx-scanner/compare/v1.16.0...v1.17.0) (2019-11-07)
+
+
+### Bug Fixes
+
+* **deps:** update dependency glob to v7.1.6 ([09fd91f](https://github.com/dxheroes/dx-scanner/commit/09fd91f))
+* **java:** added Java into context for GitignoreIsPresent ([d777527](https://github.com/dxheroes/dx-scanner/commit/d777527))
+* better AUTH error handling in index.ts ([203d3c2](https://github.com/dxheroes/dx-scanner/commit/203d3c2))
+
+
+### Features
+
+* **java:** re-defined Java practice for .gitignore ([73451ac](https://github.com/dxheroes/dx-scanner/commit/73451ac))
+
 # [1.16.0](https://github.com/dxheroes/dx-scanner/compare/v1.15.2...v1.16.0) (2019-11-05)
 
 
