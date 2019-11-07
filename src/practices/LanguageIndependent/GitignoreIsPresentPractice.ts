@@ -15,7 +15,9 @@ import { PracticeContext } from '../../contexts/practice/PracticeContext';
 export class GitignoreIsPresentPractice implements IPractice {
   async isApplicable(ctx: PracticeContext): Promise<boolean> {
     return (
-      ctx.projectComponent.language === ProgrammingLanguage.JavaScript || ctx.projectComponent.language === ProgrammingLanguage.TypeScript
+      ctx.projectComponent.language === ProgrammingLanguage.JavaScript ||
+      ctx.projectComponent.language === ProgrammingLanguage.TypeScript ||
+      ctx.projectComponent.language === ProgrammingLanguage.Java
     );
   }
 
