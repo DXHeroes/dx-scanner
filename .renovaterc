@@ -1,8 +1,10 @@
 {
   "extends": [
-    "config:base",
-    ":pinAllExceptPeerDependencies"
+    "config:js-app",
+    ":rebaseStalePrs",
+    ":disableRateLimiting"
   ],
+  "automergeType": "branch",
   "automerge": true,
   "major": {
     "automerge": false
