@@ -9,12 +9,14 @@ import { Types } from '../types';
 import { IDetector } from './IDetector';
 import { ScanningStrategyDetectorUtils } from './utils/ScanningStrategyDetectorUtils';
 import { GitServiceUtils } from '../services/git/GitServiceUtils';
+import debug from 'debug';
 
 @injectable()
 export class ScanningStrategyDetector implements IDetector<string, ScanningStrategy> {
   private gitHubService: GitHubService;
   private bitbucketService: BitbucketService;
   private readonly argumentsProvider: ArgumentsProvider;
+  private readonly detectorDebug: debug.Debugger;
 
   constructor(
     @inject(GitHubService) gitHubService: GitHubService,
@@ -24,6 +26,7 @@ export class ScanningStrategyDetector implements IDetector<string, ScanningStrat
     this.gitHubService = gitHubService;
     this.bitbucketService = bitbucketService;
     this.argumentsProvider = argumentsProvider;
+    this.detectorDebug = debug('scanningStrategyDetector');
   }
 
   async detect() {
@@ -87,8 +90,9 @@ export class ScanningStrategyDetector implements IDetector<string, ScanningStrat
       try {
         response = await this.gitHubService.getRepo(parsedUrl.owner, parsedUrl.name);
       } catch (error) {
+        this.detectorDebug(error.message);
         if (error.status === 401 || error.status === 404 || error.status === 403) {
-          throw ErrorFactory.newArgumentError('You passed bad credentials or non existing repo.');
+          throw ErrorFactory.newAuthorizationError('You passed bad credentials or non existing repo.');
         }
         throw error;
       }
@@ -99,16 +103,15 @@ export class ScanningStrategyDetector implements IDetector<string, ScanningStrat
         }
         return AccessType.public;
       }
-    }
-
-    if (remoteService.serviceType === ServiceType.bitbucket) {
+    } else if (remoteService.serviceType === ServiceType.bitbucket) {
       const parsedUrl = GitServiceUtils.getOwnerAndRepoName(remoteService.remoteUrl);
 
       try {
         await this.bitbucketService.getRepo(parsedUrl.owner, parsedUrl.repoName);
       } catch (error) {
+        this.detectorDebug(error.message);
         if (error.code === 401 || error.code === 404 || error.code === 403) {
-          throw ErrorFactory.newArgumentError('You passed bad credentials or non existing repo.');
+          throw ErrorFactory.newAuthorizationError('You passed bad credentials or non existing repo.');
         }
         throw error;
       }

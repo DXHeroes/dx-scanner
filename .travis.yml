@@ -25,7 +25,7 @@ script:
   - yarn test --coverage
   - bin/run -v
   - yarn test:codecov:upload
-  - bin/run . --fail=high
+  - DEBUG=* bin/run . --fail=high
 
 jobs:
   include:
@@ -41,7 +41,7 @@ jobs:
       - bin/run https://github.com/DXHeroes/dx-scanner
       - bin/run https://github.com/moment/luxon
       - bin/run https://github.com/intoli/remote-browser
-      - dxs
+      - bin/run
     os: windows
   - os: linux
   - stage: release

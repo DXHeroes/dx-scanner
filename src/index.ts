@@ -3,11 +3,10 @@ import { createRootContainer } from './inversify.config';
 import { Scanner, ScanResult } from './scanner/Scanner';
 import { Command, flags } from '@oclif/command';
 import cli from 'cli-ux';
-import { ServiceError } from './lib/errors';
+import { ServiceError, ErrorCode } from './lib/errors';
 import updateNotifier from 'update-notifier';
 import { ScanningStrategyDetectorUtils } from './detectors/utils/ScanningStrategyDetectorUtils';
 import { PracticeImpact } from './model';
-// import { ScanningStrategyDetectorUtils } from './utils/ScanningStrategyDetectorUtils';
 
 class DXScannerCommand extends Command {
   static description = 'Scan your project for possible DX recommendations.';
@@ -15,7 +14,7 @@ class DXScannerCommand extends Command {
 
   static flags = {
     // add --version flag to show CLI version
-    version: flags.version({ char: 'v', description: 'output the version number' }),
+    version: flags.version({ char: 'v', description: 'Output the version number' }),
     help: flags.help({ char: 'h', description: 'Help' }),
     // flag with a value (-n, --name=VALUE)
     authorization: flags.string({ char: 'a', description: 'Credentials to the repository.' }),
@@ -24,7 +23,7 @@ class DXScannerCommand extends Command {
     init: flags.boolean({ char: 'i', description: 'Initialize DX Scanner configuration' }),
     fail: flags.string({
       options: ['high', 'medium', 'small', 'off', 'all'],
-      description: 'Run scanner in failure mode.',
+      description: 'Run scanner in failure mode. Exits process with code 1 for any non-practicing condition of given level.',
     }),
   };
 
@@ -53,7 +52,7 @@ class DXScannerCommand extends Command {
     try {
       scanResult = await scanner.scan();
     } catch (error) {
-      if (error instanceof ServiceError) {
+      if (error instanceof ServiceError && error.code === ErrorCode.AUTHORIZATION_ERROR) {
         if (ScanningStrategyDetectorUtils.isGitHubPath(scanPath)) {
           authorization = await cli.prompt('Insert your GitHub personal access token.\nhttps://github.com/settings/tokens\n');
         } else if (ScanningStrategyDetectorUtils.isBitbucketPath(scanPath)) {

@@ -1,7 +1,8 @@
 import { ErrorCode } from './model';
 
 export class ServiceError extends Error {
-  private code: string;
+  readonly code: ErrorCode;
+
   constructor(params: ServiceErrorParams) {
     super(params.message);
 

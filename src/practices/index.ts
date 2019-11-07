@@ -16,6 +16,7 @@ import { DockerizationUsedPractice } from './LanguageIndependent/DockerizationUs
 import { EditorConfigIsPresentPractice } from './LanguageIndependent/EditorConfigIsPresentPractice';
 import { GitignoreIsPresentPractice } from './LanguageIndependent/GitignoreIsPresentPractice';
 import { JsGitignoreCorrectlySetPractice } from './JavaScript/JsGitignoreCorrectlySetPractice';
+import { JavaGitignoreCorrectlySetPractice } from './Java/JavaGitignoreCorrectlySetPractice';
 import { DependenciesVersionPractice } from './JavaScript/DependenciesVersionPractice';
 import { ESLintWithoutErrorsPractice } from './JavaScript/ESLintWithoutErrorsPractice';
 import { TsGitignoreCorrectlySetPractice } from './TypeScript/TsGitignoreCorrectlySetPractice';
@@ -42,5 +43,6 @@ export const practices = [
   DependenciesVersionPractice,
   GitignoreIsPresentPractice,
   JsGitignoreCorrectlySetPractice,
+  JavaGitignoreCorrectlySetPractice,
   TsGitignoreCorrectlySetPractice,
 ];

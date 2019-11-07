@@ -1,6 +1,6 @@
 import { injectable } from 'inversify';
-import { ILanguageDetector } from '../ILanguageDetector';
-import { LanguageAtPath, ProgrammingLanguage } from '../../model';
+import { ILanguageDetector } from '../../ILanguageDetector';
+import { LanguageAtPath, ProgrammingLanguage } from '../../../model';
 
 @injectable()
 export class JavaScriptDetector implements ILanguageDetector {

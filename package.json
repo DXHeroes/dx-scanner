@@ -39,6 +39,7 @@
     "eslint": "6.6.0",
     "eslint-plugin-eslint-plugin": "2.1.0",
     "git-url-parse": "11.1.2",
+    "gradle-to-js": "^2.0.0",
     "glob": "7.1.6",
     "inversify": "5.0.1",
     "js-yaml": "3.13.1",
@@ -53,6 +54,7 @@
     "toposort": "2.0.2",
     "ts-node": "8.4.1",
     "tslib": "1.10.0",
+    "xml2js": "^0.4.22",
     "typescript": "3.7.2",
     "update-notifier": "3.0.1"
   },
@@ -68,6 +70,7 @@
     "@types/rimraf": "2.0.3",
     "@types/semver": "6.2.0",
     "@types/toposort": "2.0.3",
+    "@types/xml2js": "^0.4.5",
     "@types/update-notifier": "2.5.0",
     "@typescript-eslint/eslint-plugin": "2.6.1",
     "@typescript-eslint/parser": "2.6.1",
