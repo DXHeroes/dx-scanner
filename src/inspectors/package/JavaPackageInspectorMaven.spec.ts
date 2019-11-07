@@ -1,5 +1,5 @@
 import { JavaPackageInspector } from './JavaPackageInspector';
-import { pomXMLContents } from '../../detectors/__MOCKS__/pomXMLContents.mock';
+import { pomXMLContents } from '../../detectors/__MOCKS__/Java/pomXMLContents.mock';
 import { TestContainerContext, createTestContainer } from '../../inversify.config';
 
 describe('JavaPackageInspector Maven', () => {

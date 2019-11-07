@@ -1,16 +1,18 @@
-import { JsGitignoreCorrectlySetPractice } from './JsGitignoreCorrectlySetPractice';
-import { gitignoreContent } from '../../detectors/__MOCKS__/JavaScript/gitignoreContent.mock';
+import { JavaGitignoreCorrectlySetPractice } from './JavaGitignoreCorrectlySetPractice';
+import { gitignoreContent } from '../../detectors/__MOCKS__/Java/gitignoreContent.mock';
 import { PracticeEvaluationResult } from '../../model';
 import { TestContainerContext, createTestContainer } from '../../inversify.config';
+import { pomXMLContents } from '../../detectors/__MOCKS__/Java/pomXMLContents.mock';
+import { buildGRADLEContents } from '../../detectors/__MOCKS__/Java/buildGRADLEContents.mock';
 
-describe('JsGitignoreCorrectlySetPractice', () => {
-  let practice: JsGitignoreCorrectlySetPractice;
+describe('JavaGitignoreCorrectlySetPractice', () => {
+  let practice: JavaGitignoreCorrectlySetPractice;
   let containerCtx: TestContainerContext;
 
   beforeAll(() => {
     containerCtx = createTestContainer();
-    containerCtx.container.bind('JsGitignoreCorrectlySetPractice').to(JsGitignoreCorrectlySetPractice);
-    practice = containerCtx.container.get('JsGitignoreCorrectlySetPractice');
+    containerCtx.container.bind('JavaGitignoreCorrectlySetPractice').to(JavaGitignoreCorrectlySetPractice);
+    practice = containerCtx.container.get('JavaGitignoreCorrectlySetPractice');
   });
 
   afterEach(async () => {
@@ -18,9 +20,20 @@ describe('JsGitignoreCorrectlySetPractice', () => {
     containerCtx.practiceContext.fileInspector!.purgeCache();
   });
 
-  it('Returns practicing if the .gitignore is set correctly', async () => {
+  it('Returns practicing if the .gitignore is set correctly for MAVEN', async () => {
     containerCtx.virtualFileSystemService.setFileSystem({
       '.gitignore': gitignoreContent,
+      'pom.xml': pomXMLContents,
+    });
+
+    const evaluated = await practice.evaluate(containerCtx.practiceContext);
+    expect(evaluated).toEqual(PracticeEvaluationResult.practicing);
+  });
+
+  it('Returns practicing if the .gitignore is set correctly for GRADLE', async () => {
+    containerCtx.virtualFileSystemService.setFileSystem({
+      '.gitignore': gitignoreContent,
+      'build.gradle': buildGRADLEContents,
     });
 
     const evaluated = await practice.evaluate(containerCtx.practiceContext);

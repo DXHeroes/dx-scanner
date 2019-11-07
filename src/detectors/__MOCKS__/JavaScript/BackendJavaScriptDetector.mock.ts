@@ -1,5 +1,11 @@
-import { IProjectComponentDetector } from '../IProjectComponentDetector';
-import { LanguageAtPath, ProjectComponent, ProjectComponentFramework, ProjectComponentPlatform, ProjectComponentType } from '../../model';
+import { IProjectComponentDetector } from '../../IProjectComponentDetector';
+import {
+  LanguageAtPath,
+  ProjectComponent,
+  ProjectComponentFramework,
+  ProjectComponentPlatform,
+  ProjectComponentType,
+} from '../../../model';
 import { injectable } from 'inversify';
 
 @injectable()

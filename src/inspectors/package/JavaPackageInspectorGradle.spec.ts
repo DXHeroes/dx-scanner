@@ -1,6 +1,6 @@
 import { JavaPackageInspector } from './JavaPackageInspector';
 import { TestContainerContext, createTestContainer } from '../../inversify.config';
-import { buildGRADLEContents } from '../../detectors/__MOCKS__/buildGRADLEContents.mock';
+import { buildGRADLEContents } from '../../detectors/__MOCKS__/Java/buildGRADLEContents.mock';
 
 describe('JavaPackageInspector Gradle', () => {
   let inspector: JavaPackageInspector;
