@@ -66,12 +66,17 @@ export class Scanner {
     const projectComponents = await this.detectProjectComponents(languagesAtPaths, scannerContext, scanStrategy);
     this.scanDebug(`Components (${projectComponents.length}):`, inspect(projectComponents));
     const componentsWithPractices = await this.detectPractices(projectComponents);
-    this.scanDebug(`Practices (${componentsWithPractices.length}):`, inspect(componentsWithPractices));
-    await this.report(componentsWithPractices);
+    this.scanDebug(`Practices (${componentsWithPractices.practicesWithContext.length}):`, inspect(componentsWithPractices));
+    await this.report(componentsWithPractices.practicesWithContext);
+    if (componentsWithPractices.isMoreThanOneComponent) {
+      cli.info(
+        `Found more than 1 component. To scan all ${projectComponents.length} components run the scanner with an argument --recursive\n`,
+      );
+    }
     this.scanDebug(
       `Overall scan stats. LanguagesAtPaths: ${inspect(languagesAtPaths.length)}; Components: ${inspect(
         projectComponents.length,
-      )}; Practices: ${inspect(componentsWithPractices.length)}.`,
+      )}; Practices: ${inspect(componentsWithPractices.practicesWithContext.length)}.`,
     );
 
     return { shouldExitOnEnd: this.shouldExitOnEnd };
@@ -152,31 +157,18 @@ export class Scanner {
   /**
    * Detect applicable practices for each component
    */
-  private async detectPractices(componentsWithContext: ProjectComponentAndLangContext[]): Promise<PracticeWithContext[]> {
-    let relevantComponents = componentsWithContext;
-
-    // run only for root component if not set explicitly to run recursively
-
-    if (!this.argumentsProvider.recursive && relevantComponents.length > 1) {
-      const componentsSharedPath = sharedSubpath(relevantComponents.map((cwc) => cwc.component.path));
-      const componentsAtRootPath = relevantComponents.filter((cwc) => cwc.component.path === componentsSharedPath);
-
-      // do not scan only root path if found 0 components there
-      if (componentsAtRootPath.length > 0) {
-        relevantComponents = componentsAtRootPath;
-        cli.info(
-          `Found more than 1 component. To scan all ${componentsWithContext.length} components run the scanner with an argument --recursive`,
-        );
-      }
-    }
+  //: Promise<PracticeWithContext[]>
+  private async detectPractices(componentsWithContext: ProjectComponentAndLangContext[]) {
+    const relevantComponents = await this.getRelevantComponents(componentsWithContext);
 
     const practicesWithComponentContext = await Promise.all(relevantComponents.map((cwctx) => this.detectPracticesForComponent(cwctx)));
     const practicesWithContext = _.flatten(practicesWithComponentContext);
 
     this.scanDebug('Applicable practices:');
     this.scanDebug(practicesWithContext.map((p) => p.practice.getMetadata().name));
+    const isMoreThanOneComponent = relevantComponents.length === componentsWithContext.length ? false : true;
 
-    return practicesWithContext;
+    return { practicesWithContext, isMoreThanOneComponent };
   }
 
   /**
@@ -267,12 +259,35 @@ export class Scanner {
 
     return practicesWithContext;
   }
+
+  /**
+   * Get all relevant components.
+   */
+  private async getRelevantComponents(componentsWithContext: ProjectComponentAndLangContext[]) {
+    let relevantComponents = componentsWithContext;
+
+    if (!this.argumentsProvider.recursive && relevantComponents.length > 1) {
+      const componentsSharedPath = sharedSubpath(relevantComponents.map((cwc) => cwc.component.path));
+      const componentsAtRootPath = relevantComponents.filter((cwc) => cwc.component.path === componentsSharedPath);
+
+      // do not scan only root path if found 0 components there
+      if (componentsAtRootPath.length > 0) {
+        relevantComponents = componentsAtRootPath;
+      }
+    }
+    return relevantComponents;
+  }
 }
 
 interface ProjectComponentAndLangContext {
   component: ProjectComponent;
   languageContext: LanguageContext;
 }
+
+// interface PracticesWithCtxAndComponentsValue {
+//   practicesWithContext: Promise<PracticeWithContext[]>;
+//   isMoreThanOneComponent: boolean;
+// }
 
 export interface PracticeWithContext {
   componentContext: ProjectComponentContext;
