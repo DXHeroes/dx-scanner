@@ -1,3 +1,10 @@
+## [1.17.3](https://github.com/dxheroes/dx-scanner/compare/v1.17.2...v1.17.3) (2019-11-11)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @octokit/rest to v16.35.0 ([8444d64](https://github.com/dxheroes/dx-scanner/commit/8444d64))
+
 ## [1.17.2](https://github.com/dxheroes/dx-scanner/compare/v1.17.1...v1.17.2) (2019-11-07)
 
 
