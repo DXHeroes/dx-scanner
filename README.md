@@ -1,3 +1,7 @@
+[![Tweet](https://img.shields.io/twitter/url/http/shields.io.svg?style=social)](https://twitter.com/intent/tweet?text=DX%20Scanner%20is%20an%20open%20source%20CLI%20tool%20that%20allows%20you%20to%20“measure”%20Developer%20Experience%20directly%20based%20on%20your%20source%20code.&url=https://github.com/DXHeroes/dx-scanner&via=dx_heroes&hashtags=developer-experience,dxheroes,developers)
+
+# DX Scanner
+
 [![Version](https://img.shields.io/npm/v/dx-scanner.svg)](https://npmjs.org/package/dx-scanner)
 [![Travis (.org)](https://img.shields.io/travis/DXHeroes/dx-scanner)](https://travis-ci.org/DXHeroes/dx-scanner)
 ![Codecov](https://img.shields.io/codecov/c/github/DXHeroes/dx-scanner)
@@ -9,9 +13,6 @@
 [![NPM](https://img.shields.io/npm/l/dx-scanner)](LICENSE)
 [![oclif](https://img.shields.io/badge/cli-oclif-brightgreen.svg)](https://oclif.io)
 ![TypeScript](https://img.shields.io/badge/%3C%2F%3E-Typescript-blue)
-[![Twitter Follow](https://img.shields.io/twitter/follow/DX_Heroes?style=social)](https://twitter.com/DX_Heroes)
-
-# DX Scanner
 
 DX Scanner is an open source CLI tool that allows you to “measure” Developer Experience directly based on your source code. DX Scanner recommends practices that can help you with improving your product development.
 

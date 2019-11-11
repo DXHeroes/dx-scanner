@@ -1,3 +1,31 @@
+## [1.17.4](https://github.com/dxheroes/dx-scanner/compare/v1.17.3...v1.17.4) (2019-11-11)
+
+
+### Bug Fixes
+
+* **deps:** update dependency ts-node to v8.5.0 ([b554ce8](https://github.com/dxheroes/dx-scanner/commit/b554ce8))
+
+## [1.17.3](https://github.com/dxheroes/dx-scanner/compare/v1.17.2...v1.17.3) (2019-11-11)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @octokit/rest to v16.35.0 ([8444d64](https://github.com/dxheroes/dx-scanner/commit/8444d64))
+
+## [1.17.2](https://github.com/dxheroes/dx-scanner/compare/v1.17.1...v1.17.2) (2019-11-07)
+
+
+### Bug Fixes
+
+* **deps:** update dependency npm-check-updates to v3.2.1 ([28412af](https://github.com/dxheroes/dx-scanner/commit/28412af))
+
+## [1.17.1](https://github.com/dxheroes/dx-scanner/compare/v1.17.0...v1.17.1) (2019-11-07)
+
+
+### Bug Fixes
+
+* Name of practice. ([83875f6](https://github.com/dxheroes/dx-scanner/commit/83875f6))
+
 # [1.17.0](https://github.com/dxheroes/dx-scanner/compare/v1.16.0...v1.17.0) (2019-11-07)
 
 
