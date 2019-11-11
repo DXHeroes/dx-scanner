@@ -284,11 +284,6 @@ interface ProjectComponentAndLangContext {
   languageContext: LanguageContext;
 }
 
-// interface PracticesWithCtxAndComponentsValue {
-//   practicesWithContext: Promise<PracticeWithContext[]>;
-//   isMoreThanOneComponent: boolean;
-// }
-
 export interface PracticeWithContext {
   componentContext: ProjectComponentContext;
   practiceContext: PracticeContext;
