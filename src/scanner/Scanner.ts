@@ -27,6 +27,7 @@ import { ScannerContextFactory, Types } from '../types';
 import { ScannerUtils } from './ScannerUtils';
 import _ from 'lodash';
 import { sharedSubpath } from '../detectors/utils';
+import { cli } from 'cli-ux';
 
 @injectable()
 export class Scanner {
@@ -37,7 +38,7 @@ export class Scanner {
   private readonly argumentsProvider: ArgumentsProvider;
   private readonly scanDebug: debug.Debugger;
   private shouldExitOnEnd = false;
-  private totalComponents: ProjectComponentAndLangContext[] | undefined;
+  private allDetectedComponents: ProjectComponentAndLangContext[] | undefined;
 
   constructor(
     @inject(ScanningStrategyDetector) scanStrategyDetector: ScanningStrategyDetector,
@@ -53,7 +54,7 @@ export class Scanner {
     this.practices = practices;
     this.argumentsProvider = argumentsProvider;
     this.scanDebug = debug('scanner');
-    this.totalComponents = undefined;
+    this.allDetectedComponents = undefined;
   }
 
   async scan(): Promise<ScanResult> {
@@ -147,7 +148,7 @@ export class Scanner {
         }
       }
     }
-    this.totalComponents = components;
+    this.allDetectedComponents = components;
     const relevantComponents = await this.getRelevantComponents(components);
     return { relevantComponents, components };
   }
@@ -186,10 +187,10 @@ export class Scanner {
       ? console.log(reportString)
       : console.log(util.inspect(reportString, { showHidden: false, depth: null }));
 
-    if (this.totalComponents!.length > 1 && !this.argumentsProvider.recursive) {
-      console.info(
+    if (this.allDetectedComponents!.length > 1 && !this.argumentsProvider.recursive) {
+      cli.info(
         `Found more than 1 component. To scan all ${
-          this.totalComponents!.length
+          this.allDetectedComponents!.length
         } components run the scanner with an argument --recursive\n`,
       );
     }
