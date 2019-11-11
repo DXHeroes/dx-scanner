@@ -66,13 +66,13 @@ export class Scanner {
     const languagesAtPaths = await this.detectLanguagesAtPaths(scannerContext);
     this.scanDebug(`LanguagesAtPaths (${languagesAtPaths.length}):`, inspect(languagesAtPaths));
     const projectComponents = await this.detectProjectComponents(languagesAtPaths, scannerContext, scanStrategy);
-    this.scanDebug(`Components (${projectComponents.relevantComponents.length}):`, inspect(projectComponents));
-    const practicesWithContext = await this.detectPractices(projectComponents.relevantComponents);
+    this.scanDebug(`Components (${projectComponents.length}):`, inspect(projectComponents));
+    const practicesWithContext = await this.detectPractices(projectComponents);
     this.scanDebug(`Practices (${practicesWithContext.length}):`, inspect(practicesWithContext));
     await this.report(practicesWithContext);
     this.scanDebug(
       `Overall scan stats. LanguagesAtPaths: ${inspect(languagesAtPaths.length)}; Components: ${inspect(
-        projectComponents.components.length,
+        this.allDetectedComponents!.length,
       )}; Practices: ${inspect(practicesWithContext.length)}.`,
     );
 
@@ -149,8 +149,7 @@ export class Scanner {
       }
     }
     this.allDetectedComponents = components;
-    const relevantComponents = await this.getRelevantComponents(components);
-    return { relevantComponents, components };
+    return await this.getRelevantComponents(components);
   }
   /**
    * Detect applicable practices for each component
