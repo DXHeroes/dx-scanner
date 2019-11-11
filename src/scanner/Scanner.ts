@@ -27,7 +27,6 @@ import { ScannerContextFactory, Types } from '../types';
 import { ScannerUtils } from './ScannerUtils';
 import _ from 'lodash';
 import { sharedSubpath } from '../detectors/utils';
-import cli from 'cli-ux';
 
 @injectable()
 export class Scanner {
@@ -38,6 +37,7 @@ export class Scanner {
   private readonly argumentsProvider: ArgumentsProvider;
   private readonly scanDebug: debug.Debugger;
   private shouldExitOnEnd = false;
+  private totalComponents: ProjectComponentAndLangContext[] | undefined;
 
   constructor(
     @inject(ScanningStrategyDetector) scanStrategyDetector: ScanningStrategyDetector,
@@ -53,6 +53,7 @@ export class Scanner {
     this.practices = practices;
     this.argumentsProvider = argumentsProvider;
     this.scanDebug = debug('scanner');
+    this.totalComponents = undefined;
   }
 
   async scan(): Promise<ScanResult> {
@@ -64,19 +65,14 @@ export class Scanner {
     const languagesAtPaths = await this.detectLanguagesAtPaths(scannerContext);
     this.scanDebug(`LanguagesAtPaths (${languagesAtPaths.length}):`, inspect(languagesAtPaths));
     const projectComponents = await this.detectProjectComponents(languagesAtPaths, scannerContext, scanStrategy);
-    this.scanDebug(`Components (${projectComponents.length}):`, inspect(projectComponents));
-    const componentsWithPractices = await this.detectPractices(projectComponents);
-    this.scanDebug(`Practices (${componentsWithPractices.practicesWithContext.length}):`, inspect(componentsWithPractices));
-    await this.report(componentsWithPractices.practicesWithContext);
-    if (componentsWithPractices.isMoreThanOneComponent) {
-      cli.info(
-        `Found more than 1 component. To scan all ${projectComponents.length} components run the scanner with an argument --recursive\n`,
-      );
-    }
+    this.scanDebug(`Components (${projectComponents.relevantComponents.length}):`, inspect(projectComponents));
+    const practicesWithContext = await this.detectPractices(projectComponents.relevantComponents);
+    this.scanDebug(`Practices (${practicesWithContext.length}):`, inspect(practicesWithContext));
+    await this.report(practicesWithContext);
     this.scanDebug(
       `Overall scan stats. LanguagesAtPaths: ${inspect(languagesAtPaths.length)}; Components: ${inspect(
-        projectComponents.length,
-      )}; Practices: ${inspect(componentsWithPractices.practicesWithContext.length)}.`,
+        projectComponents.components.length,
+      )}; Practices: ${inspect(practicesWithContext.length)}.`,
     );
 
     return { shouldExitOnEnd: this.shouldExitOnEnd };
@@ -151,24 +147,21 @@ export class Scanner {
         }
       }
     }
-    return components;
+    this.totalComponents = components;
+    const relevantComponents = await this.getRelevantComponents(components);
+    return { relevantComponents, components };
   }
-
   /**
    * Detect applicable practices for each component
    */
-  //: Promise<PracticeWithContext[]>
-  private async detectPractices(componentsWithContext: ProjectComponentAndLangContext[]) {
-    const relevantComponents = await this.getRelevantComponents(componentsWithContext);
-
-    const practicesWithComponentContext = await Promise.all(relevantComponents.map((cwctx) => this.detectPracticesForComponent(cwctx)));
+  private async detectPractices(componentsWithContext: ProjectComponentAndLangContext[]): Promise<PracticeWithContext[]> {
+    const practicesWithComponentContext = await Promise.all(componentsWithContext.map((cwctx) => this.detectPracticesForComponent(cwctx)));
     const practicesWithContext = _.flatten(practicesWithComponentContext);
 
     this.scanDebug('Applicable practices:');
     this.scanDebug(practicesWithContext.map((p) => p.practice.getMetadata().name));
-    const isMoreThanOneComponent = relevantComponents.length === componentsWithContext.length ? false : true;
 
-    return { practicesWithContext, isMoreThanOneComponent };
+    return practicesWithContext;
   }
 
   /**
@@ -187,12 +180,19 @@ export class Scanner {
         isOn: p.isOn,
       };
     });
-
     const reportString = this.reporter.report(relevantPractices);
 
     typeof reportString === 'string'
       ? console.log(reportString)
       : console.log(util.inspect(reportString, { showHidden: false, depth: null }));
+
+    if (this.totalComponents!.length > 1 && !this.argumentsProvider.recursive) {
+      console.info(
+        `Found more than 1 component. To scan all ${
+          this.totalComponents!.length
+        } components run the scanner with an argument --recursive\n`,
+      );
+    }
 
     const notPracticingPracticesToFail = ScannerUtils.filterNotPracticingPracticesToFail(relevantPractices, this.argumentsProvider);
     if (notPracticingPracticesToFail.length > 0) {
