@@ -1,3 +1,10 @@
+## [1.17.6](https://github.com/dxheroes/dx-scanner/compare/v1.17.5...v1.17.6) (2019-11-12)
+
+
+### Bug Fixes
+
+* use Regex for finding tslint package ([8010dd4](https://github.com/dxheroes/dx-scanner/commit/8010dd4))
+
 ## [1.17.5](https://github.com/dxheroes/dx-scanner/compare/v1.17.4...v1.17.5) (2019-11-12)
 
 
