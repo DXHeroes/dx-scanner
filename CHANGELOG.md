@@ -1,3 +1,14 @@
+## [1.17.5](https://github.com/dxheroes/dx-scanner/compare/v1.17.4...v1.17.5) (2019-11-12)
+
+
+### Bug Fixes
+
+* Log msg about number of components under report. ([532c786](https://github.com/dxheroes/dx-scanner/commit/532c786))
+* refactor logging msg about number of components, ([e62a490](https://github.com/dxheroes/dx-scanner/commit/e62a490))
+* remove comment ([b2c5cd6](https://github.com/dxheroes/dx-scanner/commit/b2c5cd6))
+* remove unnecessary returning ([0d33fd3](https://github.com/dxheroes/dx-scanner/commit/0d33fd3))
+* rename totalComponents, ([9acb9ad](https://github.com/dxheroes/dx-scanner/commit/9acb9ad))
+
 ## [1.17.4](https://github.com/dxheroes/dx-scanner/compare/v1.17.3...v1.17.4) (2019-11-11)
 
 
