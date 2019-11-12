@@ -27,7 +27,7 @@ import { ScannerContextFactory, Types } from '../types';
 import { ScannerUtils } from './ScannerUtils';
 import _ from 'lodash';
 import { sharedSubpath } from '../detectors/utils';
-import cli from 'cli-ux';
+import { cli } from 'cli-ux';
 
 @injectable()
 export class Scanner {
@@ -38,6 +38,7 @@ export class Scanner {
   private readonly argumentsProvider: ArgumentsProvider;
   private readonly scanDebug: debug.Debugger;
   private shouldExitOnEnd = false;
+  private allDetectedComponents: ProjectComponentAndLangContext[] | undefined;
 
   constructor(
     @inject(ScanningStrategyDetector) scanStrategyDetector: ScanningStrategyDetector,
@@ -53,6 +54,7 @@ export class Scanner {
     this.practices = practices;
     this.argumentsProvider = argumentsProvider;
     this.scanDebug = debug('scanner');
+    this.allDetectedComponents = undefined;
   }
 
   async scan(): Promise<ScanResult> {
@@ -65,13 +67,13 @@ export class Scanner {
     this.scanDebug(`LanguagesAtPaths (${languagesAtPaths.length}):`, inspect(languagesAtPaths));
     const projectComponents = await this.detectProjectComponents(languagesAtPaths, scannerContext, scanStrategy);
     this.scanDebug(`Components (${projectComponents.length}):`, inspect(projectComponents));
-    const componentsWithPractices = await this.detectPractices(projectComponents);
-    this.scanDebug(`Practices (${componentsWithPractices.length}):`, inspect(componentsWithPractices));
-    await this.report(componentsWithPractices);
+    const practicesWithContext = await this.detectPractices(projectComponents);
+    this.scanDebug(`Practices (${practicesWithContext.length}):`, inspect(practicesWithContext));
+    await this.report(practicesWithContext);
     this.scanDebug(
       `Overall scan stats. LanguagesAtPaths: ${inspect(languagesAtPaths.length)}; Components: ${inspect(
-        projectComponents.length,
-      )}; Practices: ${inspect(componentsWithPractices.length)}.`,
+        this.allDetectedComponents!.length,
+      )}; Practices: ${inspect(practicesWithContext.length)}.`,
     );
 
     return { shouldExitOnEnd: this.shouldExitOnEnd };
@@ -146,31 +148,14 @@ export class Scanner {
         }
       }
     }
-    return components;
+    this.allDetectedComponents = components;
+    return await this.getRelevantComponents(components);
   }
-
   /**
    * Detect applicable practices for each component
    */
   private async detectPractices(componentsWithContext: ProjectComponentAndLangContext[]): Promise<PracticeWithContext[]> {
-    let relevantComponents = componentsWithContext;
-
-    // run only for root component if not set explicitly to run recursively
-
-    if (!this.argumentsProvider.recursive && relevantComponents.length > 1) {
-      const componentsSharedPath = sharedSubpath(relevantComponents.map((cwc) => cwc.component.path));
-      const componentsAtRootPath = relevantComponents.filter((cwc) => cwc.component.path === componentsSharedPath);
-
-      // do not scan only root path if found 0 components there
-      if (componentsAtRootPath.length > 0) {
-        relevantComponents = componentsAtRootPath;
-        cli.info(
-          `Found more than 1 component. To scan all ${componentsWithContext.length} components run the scanner with an argument --recursive`,
-        );
-      }
-    }
-
-    const practicesWithComponentContext = await Promise.all(relevantComponents.map((cwctx) => this.detectPracticesForComponent(cwctx)));
+    const practicesWithComponentContext = await Promise.all(componentsWithContext.map((cwctx) => this.detectPracticesForComponent(cwctx)));
     const practicesWithContext = _.flatten(practicesWithComponentContext);
 
     this.scanDebug('Applicable practices:');
@@ -195,12 +180,19 @@ export class Scanner {
         isOn: p.isOn,
       };
     });
-
     const reportString = this.reporter.report(relevantPractices);
 
     typeof reportString === 'string'
       ? console.log(reportString)
       : console.log(util.inspect(reportString, { showHidden: false, depth: null }));
+
+    if (this.allDetectedComponents!.length > 1 && !this.argumentsProvider.recursive) {
+      cli.info(
+        `Found more than 1 component. To scan all ${
+          this.allDetectedComponents!.length
+        } components run the scanner with an argument --recursive\n`,
+      );
+    }
 
     const notPracticingPracticesToFail = ScannerUtils.filterNotPracticingPracticesToFail(relevantPractices, this.argumentsProvider);
     if (notPracticingPracticesToFail.length > 0) {
@@ -266,6 +258,24 @@ export class Scanner {
     }
 
     return practicesWithContext;
+  }
+
+  /**
+   * Get all relevant components.
+   */
+  private async getRelevantComponents(componentsWithContext: ProjectComponentAndLangContext[]) {
+    let relevantComponents = componentsWithContext;
+
+    if (!this.argumentsProvider.recursive && relevantComponents.length > 1) {
+      const componentsSharedPath = sharedSubpath(relevantComponents.map((cwc) => cwc.component.path));
+      const componentsAtRootPath = relevantComponents.filter((cwc) => cwc.component.path === componentsSharedPath);
+
+      // do not scan only root path if found 0 components there
+      if (componentsAtRootPath.length > 0) {
+        relevantComponents = componentsAtRootPath;
+      }
+    }
+    return relevantComponents;
   }
 }
 
