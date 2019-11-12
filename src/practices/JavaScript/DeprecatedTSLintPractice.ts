@@ -20,7 +20,8 @@ export class DeprecatedTSLintPractice implements IPractice {
 
   async evaluate(ctx: PracticeContext): Promise<PracticeEvaluationResult> {
     if (ctx.packageInspector) {
-      if (ctx.packageInspector.hasPackage('tslint')) {
+      const tslintRegex = new RegExp('tslint');
+      if (ctx.packageInspector.hasPackage(tslintRegex)) {
         return PracticeEvaluationResult.notPracticing;
       }
 
