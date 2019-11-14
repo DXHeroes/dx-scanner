@@ -1,3 +1,10 @@
+## [1.17.7](https://github.com/dxheroes/dx-scanner/compare/v1.17.6...v1.17.7) (2019-11-14)
+
+
+### Bug Fixes
+
+* **deps:** update dependency bitbucket to v1.15.2 ([bc24600](https://github.com/dxheroes/dx-scanner/commit/bc24600))
+
 ## [1.17.6](https://github.com/dxheroes/dx-scanner/compare/v1.17.5...v1.17.6) (2019-11-12)
 
 
