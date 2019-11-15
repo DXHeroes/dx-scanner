@@ -1,3 +1,10 @@
+## [1.17.8](https://github.com/dxheroes/dx-scanner/compare/v1.17.7...v1.17.8) (2019-11-15)
+
+
+### Bug Fixes
+
+* **deps:** update dependency ts-node to v8.5.2 ([93dcdd3](https://github.com/dxheroes/dx-scanner/commit/93dcdd3))
+
 ## [1.17.7](https://github.com/dxheroes/dx-scanner/compare/v1.17.6...v1.17.7) (2019-11-14)
 
 
