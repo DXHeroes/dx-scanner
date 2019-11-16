@@ -107,7 +107,11 @@ export class ScanningStrategyDetector implements IDetector<string, ScanningStrat
       const parsedUrl = GitServiceUtils.getOwnerAndRepoName(remoteService.remoteUrl);
 
       try {
-        await this.bitbucketService.getRepo(parsedUrl.owner, parsedUrl.repoName);
+        const response = await this.bitbucketService.getRepo(parsedUrl.owner, parsedUrl.repoName);
+        if (response.data.is_private === true) {
+          return AccessType.private;
+        }
+        return AccessType.public;
       } catch (error) {
         this.detectorDebug(error.message);
         if (error.code === 401 || error.code === 404 || error.code === 403) {
