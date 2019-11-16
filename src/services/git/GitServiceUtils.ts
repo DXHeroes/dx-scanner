@@ -29,6 +29,8 @@ export class GitServiceUtils {
     switch (service) {
       case GitService.github:
         return `/tree/${branch}${path}`;
+      case GitService.bitbucket:
+        return `/src/${branch}${path}`;
 
       default:
         return assertNever(service);
