@@ -1,3 +1,11 @@
+## [1.17.9](https://github.com/dxheroes/dx-scanner/compare/v1.17.8...v1.17.9) (2019-11-16)
+
+
+### Bug Fixes
+
+* **bitbucket:** attempt to fix bitbucket URL parsing ([ef1a4d8](https://github.com/dxheroes/dx-scanner/commit/ef1a4d8))
+* **bitbucket:** catch private/public repository attribute ([0aa04e6](https://github.com/dxheroes/dx-scanner/commit/0aa04e6))
+
 ## [1.17.8](https://github.com/dxheroes/dx-scanner/compare/v1.17.7...v1.17.8) (2019-11-15)
 
 
