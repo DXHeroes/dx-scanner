@@ -43,11 +43,19 @@ export class BitbucketService implements ICVSService {
 
     this.client = new Bitbucket(clientOptions);
 
-    const username = GitUrlParse(argumentsProvider.uri).owner;
+    let username: string;
+    let password: string | undefined;
+    if (argumentsProvider.auth?.includes(':')) {
+      username = argumentsProvider.auth.split(':')[0];
+      password = argumentsProvider.auth.split(':')[1];
+    } else {
+      username = GitUrlParse(argumentsProvider.uri).owner;
+      password = argumentsProvider.auth;
+    }
 
     let auth: Bitbucket.Auth;
     if (argumentsProvider.auth) {
-      auth = { type: 'apppassword', username: username, password: argumentsProvider.auth };
+      auth = { type: 'apppassword', username, password: password! };
       this.client.authenticate(auth);
     }
   }
