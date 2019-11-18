@@ -2,7 +2,7 @@ import { PracticeImpact } from '../model';
 
 export interface IConfigProvider {
   init(): Promise<void>;
-  getOverriddenPractice(practiceId: string): PracticeConfig;
+  getOverriddenPractice(practiceId: string): PracticeConfig | undefined;
 }
 
 export interface Config {
