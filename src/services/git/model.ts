@@ -1,5 +1,6 @@
 export enum GitService {
   github = 'github.com',
+  bitbucket = 'bitbucket.org',
 }
 
 export interface UserInfo {

@@ -1,3 +1,46 @@
+# [1.18.0](https://github.com/dxheroes/dx-scanner/compare/v1.17.10...v1.18.0) (2019-11-18)
+
+
+### Features
+
+* **cli:** do not require -a argument, accept env variable DX_GIT_SERVICE_TOKEN ([c10fdf9](https://github.com/dxheroes/dx-scanner/commit/c10fdf9))
+
+## [1.17.10](https://github.com/dxheroes/dx-scanner/compare/v1.17.9...v1.17.10) (2019-11-18)
+
+
+### Bug Fixes
+
+* **cli:** remove sh because windows doesn't have it installed ([51402a0](https://github.com/dxheroes/dx-scanner/commit/51402a0))
+
+## [1.17.9](https://github.com/dxheroes/dx-scanner/compare/v1.17.8...v1.17.9) (2019-11-16)
+
+
+### Bug Fixes
+
+* **bitbucket:** attempt to fix bitbucket URL parsing ([ef1a4d8](https://github.com/dxheroes/dx-scanner/commit/ef1a4d8))
+* **bitbucket:** catch private/public repository attribute ([0aa04e6](https://github.com/dxheroes/dx-scanner/commit/0aa04e6))
+
+## [1.17.8](https://github.com/dxheroes/dx-scanner/compare/v1.17.7...v1.17.8) (2019-11-15)
+
+
+### Bug Fixes
+
+* **deps:** update dependency ts-node to v8.5.2 ([93dcdd3](https://github.com/dxheroes/dx-scanner/commit/93dcdd3))
+
+## [1.17.7](https://github.com/dxheroes/dx-scanner/compare/v1.17.6...v1.17.7) (2019-11-14)
+
+
+### Bug Fixes
+
+* **deps:** update dependency bitbucket to v1.15.2 ([bc24600](https://github.com/dxheroes/dx-scanner/commit/bc24600))
+
+## [1.17.6](https://github.com/dxheroes/dx-scanner/compare/v1.17.5...v1.17.6) (2019-11-12)
+
+
+### Bug Fixes
+
+* use Regex for finding tslint package ([8010dd4](https://github.com/dxheroes/dx-scanner/commit/8010dd4))
+
 ## [1.17.5](https://github.com/dxheroes/dx-scanner/compare/v1.17.4...v1.17.5) (2019-11-12)
 
 
