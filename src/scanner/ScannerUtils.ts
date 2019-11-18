@@ -25,7 +25,7 @@ export class ScannerUtils {
    * Topological sort of directed ascyclic graphs
    */
   static sortPractices(practices: IPracticeWithMetadata[]): IPracticeWithMetadata[] {
-    const graph: [string, (string | undefined)][] = [];
+    const graph: [string, string | undefined][] = [];
     let dependentPractices: string[] = [];
 
     const allPracticeConstructors = practices.map((p) => p.getMetadata().id);
@@ -92,11 +92,11 @@ export class ScannerUtils {
 
     /* Filter out turned off practices */
     const customApplicablePractices = applicablePractices.filter(
-      (p) => componentContext.configProvider.getOverriddenPractice(p.getMetadata().id) !== PracticeImpact.off,
+      (p) => componentContext.configProvider.getOverriddenPractice(p.getMetadata().id).impact !== PracticeImpact.off,
     );
 
     const practicesOff = applicablePractices.filter(
-      (p) => componentContext.configProvider.getOverriddenPractice(p.getMetadata().id) === PracticeImpact.off,
+      (p) => componentContext.configProvider.getOverriddenPractice(p.getMetadata().id).impact === PracticeImpact.off,
     );
 
     return { customApplicablePractices, practicesOff };
