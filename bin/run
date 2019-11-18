@@ -1,5 +1,4 @@
-#!/bin/sh
-":" //# http://sambal.org/?p=1014 ; exec /usr/bin/env node --no-warnings "$0" "$@"
+#!/usr/bin/env node
 /* eslint-disable @typescript-eslint/no-var-requires, @typescript-eslint/no-require-imports */
 
 const fs = require('fs');
