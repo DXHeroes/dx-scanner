@@ -1,3 +1,10 @@
+## [1.17.10](https://github.com/dxheroes/dx-scanner/compare/v1.17.9...v1.17.10) (2019-11-18)
+
+
+### Bug Fixes
+
+* **cli:** remove sh because windows doesn't have it installed ([51402a0](https://github.com/dxheroes/dx-scanner/commit/51402a0))
+
 ## [1.17.9](https://github.com/dxheroes/dx-scanner/compare/v1.17.8...v1.17.9) (2019-11-16)
 
 
