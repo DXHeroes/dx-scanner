@@ -81,7 +81,7 @@
     "nock": "11.7.0",
     "prettier": "1.19.1",
     "rimraf": "3.0.0",
-    "semantic-release": "15.13.30",
+    "semantic-release": "15.13.31",
     "ts-jest": "24.1.0"
   },
   "engineStrict": true,
