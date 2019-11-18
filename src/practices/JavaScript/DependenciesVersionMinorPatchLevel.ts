@@ -7,7 +7,7 @@ import { IPractice } from '../IPractice';
 @DxPractice({
   id: 'LanguageIndependent.DependenciesVersionMinorPatchLevel',
   name: 'Update Dependencies of Minor or Patch Level',
-  impact: PracticeImpact.small,
+  impact: PracticeImpact.high,
   suggestion: 'Keep the dependencies updated to eliminate security concerns and compatibility issues. Use, for example, Renovate Bot.',
   reportOnlyOnce: true,
   url: 'https://renovatebot.com/',
