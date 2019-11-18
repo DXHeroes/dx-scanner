@@ -17,7 +17,7 @@ class DXScannerCommand extends Command {
     version: flags.version({ char: 'v', description: 'Output the version number' }),
     help: flags.help({ char: 'h', description: 'Help' }),
     // flag with a value (-n, --name=VALUE)
-    authorization: flags.string({ char: 'a', description: 'Credentials to the repository.' }),
+    authorization: flags.string({ char: 'a', description: 'Credentials to the repository. (in format "token" or "username:token")' }),
     json: flags.boolean({ char: 'j', description: 'Print report in JSON' }),
     recursive: flags.boolean({ char: 'r', description: 'Scan all components recursively in all sub folders' }),
     init: flags.boolean({ char: 'i', description: 'Initialize DX Scanner configuration' }),
