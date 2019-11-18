@@ -12,7 +12,7 @@ import { IPractice } from '../IPractice';
   reportOnlyOnce: true,
   url: 'https://renovatebot.com/',
 })
-export class DependenciesVersionPractice implements IPractice {
+export class DependenciesVersionMajorLevel implements IPractice {
   async isApplicable(ctx: PracticeContext): Promise<boolean> {
     return (
       ctx.projectComponent.language === ProgrammingLanguage.JavaScript || ctx.projectComponent.language === ProgrammingLanguage.TypeScript

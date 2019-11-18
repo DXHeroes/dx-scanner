@@ -1,5 +1,5 @@
 import { PracticeEvaluationResult } from '../../model';
-import { DependenciesVersionPractice } from './DependenciesVersionPractice';
+import { DependenciesVersionMajorLevel } from './DependenciesVersionMajorLevel';
 import { createTestContainer, TestContainerContext } from '../../inversify.config';
 import ncu from 'npm-check-updates';
 import { JavaScriptPackageInspector } from '../../inspectors/package/JavaScriptPackageInspector';
@@ -7,7 +7,7 @@ import { mockPackage } from '../../../test/helpers/mockPackage';
 jest.mock('npm-check-updates');
 
 describe('DependenciesVersionPractice of Major Level', () => {
-  let practice: DependenciesVersionPractice;
+  let practice: DependenciesVersionMajorLevel;
   let containerCtx: TestContainerContext;
   const mockedNcu = <jest.Mock>ncu.run;
   const MockedJSPackageInspector = <jest.Mock<JavaScriptPackageInspector>>(<unknown>JavaScriptPackageInspector);
@@ -15,7 +15,7 @@ describe('DependenciesVersionPractice of Major Level', () => {
 
   beforeAll(async () => {
     containerCtx = createTestContainer();
-    containerCtx.container.bind('DependenciesVersionPractice').to(DependenciesVersionPractice);
+    containerCtx.container.bind('DependenciesVersionPractice').to(DependenciesVersionMajorLevel);
     practice = containerCtx.container.get('DependenciesVersionPractice');
     mockJsPackageInspector = new MockedJSPackageInspector();
   });

@@ -17,7 +17,7 @@ import { EditorConfigIsPresentPractice } from './LanguageIndependent/EditorConfi
 import { GitignoreIsPresentPractice } from './LanguageIndependent/GitignoreIsPresentPractice';
 import { JsGitignoreCorrectlySetPractice } from './JavaScript/JsGitignoreCorrectlySetPractice';
 import { JavaGitignoreCorrectlySetPractice } from './Java/JavaGitignoreCorrectlySetPractice';
-import { DependenciesVersionPractice } from './JavaScript/DependenciesVersionPractice';
+import { DependenciesVersionMajorLevel } from './JavaScript/DependenciesVersionMajorLevel';
 import { ESLintWithoutErrorsPractice } from './JavaScript/ESLintWithoutErrorsPractice';
 import { TsGitignoreCorrectlySetPractice } from './TypeScript/TsGitignoreCorrectlySetPractice';
 
@@ -40,7 +40,7 @@ export const practices = [
   DeprecatedTSLintPractice,
   DockerizationUsedPractice,
   EditorConfigIsPresentPractice,
-  DependenciesVersionPractice,
+  DependenciesVersionMajorLevel,
   GitignoreIsPresentPractice,
   JsGitignoreCorrectlySetPractice,
   JavaGitignoreCorrectlySetPractice,
