@@ -51,14 +51,13 @@ USAGE
   $ dx-scanner [PATH] [OPTIONS]
 
 OPTIONS
-  -a, --authorization=authorization  Credentials to the repository.
+  -a, --authorization=authorization  Credentials to the repository. (in format "token" or "username:token"; can be set as ENV variable DX_GIT_SERVICE_TOKEN)
   -h, --help                         Help
   -i, --init                         Initialize DX Scanner configuration
   -j, --json                         Print report in JSON
   -r, --recursive                    Scan all components recursively in all sub folders
   -v, --version                      Output the version number
-  --fail=high|medium|small|off|all   Run scanner in failure mode. Exits process with code 1 for any non-practicing condition of
-                                     given level.
+  --fail=high|medium|small|off|all   Run scanner in failure mode. Exits process with code 1 for any non-practicing condition of given level.
 
 ALIASES
   $ dx-scanner dxs
