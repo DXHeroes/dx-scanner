@@ -2,7 +2,8 @@
   "extends": [
     "config:js-app",
     ":rebaseStalePrs",
-    ":disableRateLimiting"
+    "group:allNonMajor",
+    "schedule:earlyMondays"
   ],
   "automergeType": "branch",
   "automerge": true,
