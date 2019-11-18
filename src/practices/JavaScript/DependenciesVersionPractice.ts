@@ -6,7 +6,7 @@ import { IPractice } from '../IPractice';
 
 @DxPractice({
   id: 'LanguageIndependent.DependenciesVersionMajorLevel',
-  name: 'Update Dependencies with Major Level',
+  name: 'Update Dependencies of Major Level',
   impact: PracticeImpact.small,
   suggestion: 'Keep the dependencies updated to eliminate security concerns and compatibility issues. Use, for example, Renovate Bot.',
   reportOnlyOnce: true,
