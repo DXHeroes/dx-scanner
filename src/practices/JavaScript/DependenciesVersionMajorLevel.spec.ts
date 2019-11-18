@@ -15,8 +15,8 @@ describe('DependenciesVersionPractice of Major Level', () => {
 
   beforeAll(async () => {
     containerCtx = createTestContainer();
-    containerCtx.container.bind('DependenciesVersionPractice').to(DependenciesVersionMajorLevel);
-    practice = containerCtx.container.get('DependenciesVersionPractice');
+    containerCtx.container.bind('DependenciesVersionMajorLevel').to(DependenciesVersionMajorLevel);
+    practice = containerCtx.container.get('DependenciesVersionMajorLevel');
     mockJsPackageInspector = new MockedJSPackageInspector();
   });
 
