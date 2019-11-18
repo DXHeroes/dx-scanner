@@ -1,3 +1,10 @@
+# [1.18.0](https://github.com/dxheroes/dx-scanner/compare/v1.17.10...v1.18.0) (2019-11-18)
+
+
+### Features
+
+* **cli:** do not require -a argument, accept env variable DX_GIT_SERVICE_TOKEN ([c10fdf9](https://github.com/dxheroes/dx-scanner/commit/c10fdf9))
+
 ## [1.17.10](https://github.com/dxheroes/dx-scanner/compare/v1.17.9...v1.17.10) (2019-11-18)
 
 
