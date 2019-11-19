@@ -2,7 +2,8 @@ import { PracticeContext } from '../../contexts/practice/PracticeContext';
 import { PracticeEvaluationResult, PracticeImpact, ProgrammingLanguage } from '../../model';
 import { DxPractice } from '../DxPracticeDecorator';
 import { IPractice } from '../IPractice';
-import { DependenciesVersionMajorLevel, SemverVersion } from './DependenciesVersionMajorLevel';
+import { DependenciesVersionMajorLevel } from './DependenciesVersionMajorLevel';
+import { SemverLevel } from '../../inspectors/package/PackageInspectorBase';
 
 @DxPractice({
   id: 'LanguageIndependent.DependenciesVersionMinorPatchLevel',
@@ -27,8 +28,8 @@ export class DependenciesVersionMinorPatchLevel extends DependenciesVersionMajor
     const pkgs = ctx.packageInspector.packages;
     const result = await DependenciesVersionMajorLevel.runNcu(pkgs);
 
-    const patchLevel = DependenciesVersionMajorLevel.isPracticing(result, SemverVersion.patch, ctx);
-    const minorLevel = DependenciesVersionMajorLevel.isPracticing(result, SemverVersion.minor, ctx);
+    const patchLevel = DependenciesVersionMajorLevel.isPracticing(result, SemverLevel.patch, ctx);
+    const minorLevel = DependenciesVersionMajorLevel.isPracticing(result, SemverLevel.minor, ctx);
 
     if (patchLevel === PracticeEvaluationResult.notPracticing || minorLevel === PracticeEvaluationResult.notPracticing) {
       return PracticeEvaluationResult.notPracticing;

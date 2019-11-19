@@ -1,7 +1,7 @@
 import ncu from 'npm-check-updates';
 import { PracticeContext } from '../../contexts/practice/PracticeContext';
 import { Package } from '../../inspectors/IPackageInspector';
-import { PackageInspectorBase } from '../../inspectors/package/PackageInspectorBase';
+import { PackageInspectorBase, SemverLevel } from '../../inspectors/package/PackageInspectorBase';
 import { PracticeEvaluationResult, PracticeImpact, ProgrammingLanguage } from '../../model';
 import { DxPractice } from '../DxPracticeDecorator';
 import { IPractice } from '../IPractice';
@@ -29,7 +29,7 @@ export class DependenciesVersionMajorLevel implements IPractice {
     const pkgs = ctx.packageInspector.packages;
     const result = await DependenciesVersionMajorLevel.runNcu(pkgs);
 
-    const practiceEvaluationResult = DependenciesVersionMajorLevel.isPracticing(result, SemverVersion.major, ctx);
+    const practiceEvaluationResult = DependenciesVersionMajorLevel.isPracticing(result, SemverLevel.major, ctx);
     return practiceEvaluationResult ? PracticeEvaluationResult.notPracticing : PracticeEvaluationResult.practicing;
   }
 
@@ -50,7 +50,7 @@ export class DependenciesVersionMajorLevel implements IPractice {
 
   static isPracticing(
     result: { [key: string]: string },
-    semverVersion: SemverVersion,
+    semverVersion: SemverLevel,
     ctx: PracticeContext,
   ): PracticeEvaluationResult | undefined {
     for (const packageName in result) {
@@ -69,8 +69,3 @@ export class DependenciesVersionMajorLevel implements IPractice {
   }
 }
 
-export enum SemverVersion {
-  major = 'major',
-  minor = 'minor',
-  patch = 'patch',
-}
