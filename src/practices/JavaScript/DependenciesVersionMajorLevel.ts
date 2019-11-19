@@ -10,7 +10,7 @@ import { IPractice } from '../IPractice';
   id: 'LanguageIndependent.DependenciesVersionMajorLevel',
   name: 'Update Dependencies of Major Level',
   impact: PracticeImpact.small,
-  suggestion: 'Keep the dependencies updated to eliminate security concerns and compatibility issues. Use, for example, Renovate Bot.',
+  suggestion: 'Keep the dependencies updated to have all possible features. Use, for example, Renovate Bot.',
   reportOnlyOnce: true,
   url: 'https://renovatebot.com/',
 })
@@ -54,10 +54,10 @@ export class DependenciesVersionMajorLevel implements IPractice {
     ctx: PracticeContext,
   ): PracticeEvaluationResult | undefined {
     for (const packageName in result) {
-      const parsedVersion = PackageInspectorBase.semverToPackageVersion(result[property]);
+      const parsedVersion = PackageInspectorBase.semverToPackageVersion(result[packageName]);
       if (parsedVersion) {
         for (const pkg of ctx.packageInspector!.packages!) {
-          if (pkg.name === property) {
+          if (pkg.name === packageName) {
             if (parsedVersion[semverVersion] > pkg.lockfileVersion[semverVersion]) {
               return PracticeEvaluationResult.notPracticing;
             }
