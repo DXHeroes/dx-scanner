@@ -1,8 +1,8 @@
 import { PracticeContext } from '../../contexts/practice/PracticeContext';
-import { evaluateBySemverLevel, SemverVersion } from '../../detectors/utils';
 import { PracticeEvaluationResult, PracticeImpact, ProgrammingLanguage } from '../../model';
 import { DxPractice } from '../DxPracticeDecorator';
 import { IPractice } from '../IPractice';
+import { DependenciesVersionMajorLevel, SemverVersion } from './DependenciesVersionMajorLevel';
 
 @DxPractice({
   id: 'LanguageIndependent.DependenciesVersionMinorPatchLevel',
@@ -12,7 +12,7 @@ import { IPractice } from '../IPractice';
   reportOnlyOnce: true,
   url: 'https://renovatebot.com/',
 })
-export class DependenciesVersionMinorPatchLevel implements IPractice {
+export class DependenciesVersionMinorPatchLevel extends DependenciesVersionMajorLevel implements IPractice {
   async isApplicable(ctx: PracticeContext): Promise<boolean> {
     return (
       ctx.projectComponent.language === ProgrammingLanguage.JavaScript || ctx.projectComponent.language === ProgrammingLanguage.TypeScript
@@ -20,9 +20,17 @@ export class DependenciesVersionMinorPatchLevel implements IPractice {
   }
 
   async evaluate(ctx: PracticeContext): Promise<PracticeEvaluationResult> {
-    const minor = await evaluateBySemverLevel(ctx, SemverVersion.minor);
-    const patch = await evaluateBySemverLevel(ctx, SemverVersion.patch);
-    if (patch === PracticeEvaluationResult.notPracticing || minor === PracticeEvaluationResult.notPracticing) {
+    if (ctx.fileInspector === undefined || ctx.packageInspector === undefined) {
+      return PracticeEvaluationResult.unknown;
+    }
+
+    const pkgs = ctx.packageInspector.packages;
+    const result = await DependenciesVersionMajorLevel.runNcu(pkgs);
+
+    const patchLevel = DependenciesVersionMajorLevel.isPracticing(result, SemverVersion.patch, ctx);
+    const minorLevel = DependenciesVersionMajorLevel.isPracticing(result, SemverVersion.minor, ctx);
+
+    if (patchLevel === PracticeEvaluationResult.notPracticing || minorLevel === PracticeEvaluationResult.notPracticing) {
       return PracticeEvaluationResult.notPracticing;
     }
     return PracticeEvaluationResult.practicing;

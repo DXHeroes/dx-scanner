@@ -1,5 +1,7 @@
+import ncu from 'npm-check-updates';
 import { PracticeContext } from '../../contexts/practice/PracticeContext';
-import { evaluateBySemverLevel, SemverVersion } from '../../detectors/utils';
+import { Package } from '../../inspectors/IPackageInspector';
+import { PackageInspectorBase } from '../../inspectors/package/PackageInspectorBase';
 import { PracticeEvaluationResult, PracticeImpact, ProgrammingLanguage } from '../../model';
 import { DxPractice } from '../DxPracticeDecorator';
 import { IPractice } from '../IPractice';
@@ -20,6 +22,55 @@ export class DependenciesVersionMajorLevel implements IPractice {
   }
 
   async evaluate(ctx: PracticeContext): Promise<PracticeEvaluationResult> {
-    return evaluateBySemverLevel(ctx, SemverVersion.major);
+    if (ctx.fileInspector === undefined || ctx.packageInspector === undefined) {
+      return PracticeEvaluationResult.unknown;
+    }
+
+    const pkgs = ctx.packageInspector.packages;
+    const result = await DependenciesVersionMajorLevel.runNcu(pkgs);
+
+    const practiceEvaluationResult = DependenciesVersionMajorLevel.isPracticing(result, SemverVersion.major, ctx);
+    return practiceEvaluationResult ? PracticeEvaluationResult.notPracticing : PracticeEvaluationResult.practicing;
   }
+
+  static async runNcu(pkgs: Package[] | undefined) {
+    const fakePkgJson: { dependencies: { [key: string]: string } } = { dependencies: {} };
+
+    pkgs &&
+      pkgs.forEach((p) => {
+        fakePkgJson.dependencies[p.name] = p.requestedVersion.value;
+      });
+
+    const result = await ncu.run({
+      packageData: JSON.stringify(fakePkgJson),
+    });
+
+    return result;
+  }
+
+  static isPracticing(
+    result: { [key: string]: string },
+    semverVersion: SemverVersion,
+    ctx: PracticeContext,
+  ): PracticeEvaluationResult | undefined {
+    for (const property in result) {
+      const parsedVersion = PackageInspectorBase.semverToPackageVersion(result[property]);
+      if (parsedVersion) {
+        for (const pkg of ctx.packageInspector!.packages!) {
+          if (pkg.name === property) {
+            if (parsedVersion[semverVersion] > pkg.lockfileVersion[semverVersion]) {
+              return PracticeEvaluationResult.notPracticing;
+            }
+          }
+        }
+      }
+    }
+    return undefined;
+  }
+}
+
+export enum SemverVersion {
+  major = 'major',
+  minor = 'minor',
+  patch = 'patch',
 }
