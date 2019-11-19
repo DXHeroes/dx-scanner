@@ -170,7 +170,7 @@ export class Scanner {
   private async report(practicesWithContext: PracticeWithContext[]): Promise<void> {
     const relevantPractices = practicesWithContext.map((p) => {
       const config = p.componentContext.configProvider.getOverriddenPractice(p.practice.getMetadata().id);
-      const overridenImpact = config.impact;
+      const overridenImpact = config?.impact;
 
       return {
         component: p.componentContext.projectComponent,
