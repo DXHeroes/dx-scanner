@@ -1,8 +1,10 @@
 import { inject, injectable } from 'inversify';
 import { ProjectIssueBrowserService as ContentRepositoryBrowserService } from '../model';
+import { GitHubPullRequestState } from '../services/git/IGitHubService';
 import { Types } from '../types';
 import { ListGetterOptions } from './common/ListGetterOptions';
-import { ICollaborationInspector, PullRequestState } from './ICollaborationInspector';
+import { ICollaborationInspector } from './ICollaborationInspector';
+import { BitbucketPullRequestState } from '../services/git/ICVSService';
 
 @injectable()
 export class CollaborationInspector implements ICollaborationInspector {
@@ -12,7 +14,11 @@ export class CollaborationInspector implements ICollaborationInspector {
     this.service = service;
   }
 
-  async getPullRequests(owner: string, repo: string, options?: ListGetterOptions<{ state?: PullRequestState }>) {
+  async getPullRequests(
+    owner: string,
+    repo: string,
+    options?: ListGetterOptions<{ state?: GitHubPullRequestState | BitbucketPullRequestState }>,
+  ) {
     return this.service.getPullRequests(owner, repo, options);
   }
 

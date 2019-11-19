@@ -1,13 +1,13 @@
 import { ListGetterOptions } from '../../inspectors/common/ListGetterOptions';
-import { PullRequest, PullRequestReview, Commit, Contributor, ContributorStats, Issue, Directory, File, Symlink, PullFiles } from './model';
 import { Paginated } from '../../inspectors/common/Paginated';
 import { GitHubPullRequestState } from './IGitHubService';
+import { Commit, Contributor, ContributorStats, Directory, File, Issue, PullFiles, PullRequest, PullRequestReview, Symlink } from './model';
 
 export interface ICVSService {
   getPullRequests(
     owner: string,
     repo: string,
-    options?: ListGetterOptions<{ state?: GitHubPullRequestState }>,
+    options?: ListGetterOptions<{ state?: GitHubPullRequestState | BitbucketPullRequestState }>,
   ): Promise<Paginated<PullRequest>>;
   getPullRequestReviews(owner: string, repo: string, prNumber: number): Promise<Paginated<PullRequestReview>>;
   getPullRequestFiles(owner: string, repo: string, prNumber: number): Promise<Paginated<PullFiles>>;
@@ -18,4 +18,11 @@ export interface ICVSService {
   getIssues(owner: string, repo: string): Promise<Paginated<Issue>>;
   getIssue(owner: string, repo: string, issueNumber: number): Promise<Issue>;
   getRepoContent(owner: string, repo: string, path: string): Promise<File | Symlink | Directory | null>;
+}
+
+export enum BitbucketPullRequestState {
+  open = 'OPEN',
+  closed = 'MERGED',
+  declined = 'DECLINED',
+  superseded = 'SUPERSEDED',
 }
