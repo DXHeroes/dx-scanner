@@ -1,2 +1,2 @@
 practices:
-  LanguageIndependent.DependenciesVersionMajorLevel: medium
+  LanguageIndependent.DependenciesVersionMinorPatchLevel: medium
