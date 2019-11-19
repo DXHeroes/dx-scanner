@@ -1,3 +1,11 @@
+## [1.18.2](https://github.com/dxheroes/dx-scanner/compare/v1.18.1...v1.18.2) (2019-11-19)
+
+
+### Bug Fixes
+
+* **configuration:** customized practices are not coumputed to the final DX Score now ([7c854d3](https://github.com/dxheroes/dx-scanner/commit/7c854d3))
+* **configuration:** customized practices are not coumputed to the final DX Score now ([b5873ee](https://github.com/dxheroes/dx-scanner/commit/b5873ee))
+
 ## [1.18.1](https://github.com/dxheroes/dx-scanner/compare/v1.18.0...v1.18.1) (2019-11-18)
 
 
