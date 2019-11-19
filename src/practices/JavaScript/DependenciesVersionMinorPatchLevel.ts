@@ -7,7 +7,7 @@ import { SemverLevel } from '../../inspectors/package/PackageInspectorBase';
 
 @DxPractice({
   id: 'LanguageIndependent.DependenciesVersionMinorPatchLevel',
-  name: 'Update Dependencies of Minor or Patch Level',
+  name: 'Update Dependencies of Minor and Patch Level',
   impact: PracticeImpact.high,
   suggestion: 'Keep the dependencies updated to eliminate security concerns and compatibility issues. Use, for example, Renovate Bot.',
   reportOnlyOnce: true,
