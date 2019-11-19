@@ -288,27 +288,24 @@ export class BitbucketService implements ICVSService {
       username: owner,
     };
     const response = await this.client.repositories.listCommits(params);
-    const items = response.data.values.map(async (val: any) => {
-      // const ownerName = <string>(
-      //   (await this.client.users.get({ username: `${val.destination.repository.full_name.split('/').shift()}` })).data.nickname
-      // );
-      return {
-        sha: val.hash,
-        url: val.links.html.href,
-        message: val.rendered.message,
-        author: {
-          name: val.author.user.nickname,
-          email: undefined,
-          date: val.date,
-        },
-        tree: {
-          //////////////////
-          sha: response.data.tree.sha,
-          url: response.data.tree.url,
-        },
-        verified: response.data.verification.verified,
-      };
-    });
+    const items = response.data.values.map((val: any) => ({
+      sha: val.hash,
+      url: val.links.html.href,
+      message: val.rendered.message.raw,
+      author: {
+        name: val.author.user.nickname,
+        email: undefined,
+        date: val.date,
+      },
+      tree: [
+        val.parents.map((par: any) => ({
+          sha: par.hash,
+          url: par.links.html.href,
+        })),
+      ],
+      // TODO
+      verified: null,
+    }));
     const pagination = this.getPagination(response.data);
 
     return { items, ...pagination };
