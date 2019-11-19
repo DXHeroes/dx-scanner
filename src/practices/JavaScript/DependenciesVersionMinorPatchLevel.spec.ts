@@ -6,7 +6,7 @@ import { PracticeEvaluationResult } from '../../model';
 import { DependenciesVersionMinorPatchLevel } from './DependenciesVersionMinorPatchLevel';
 jest.mock('npm-check-updates');
 
-describe('DependenciesVersionPractice of Major Level', () => {
+describe('DependenciesVersionPractice of Minor and Patch Level', () => {
   let practice: DependenciesVersionMinorPatchLevel;
   let containerCtx: TestContainerContext;
   const mockedNcu = <jest.Mock>ncu.run;
