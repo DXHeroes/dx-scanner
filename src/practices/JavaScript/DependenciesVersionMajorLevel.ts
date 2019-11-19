@@ -30,7 +30,7 @@ export class DependenciesVersionMajorLevel implements IPractice {
     const result = await DependenciesVersionMajorLevel.runNcu(pkgs);
 
     const practiceEvaluationResult = DependenciesVersionMajorLevel.isPracticing(result, SemverLevel.major, ctx);
-    return practiceEvaluationResult ? PracticeEvaluationResult.notPracticing : PracticeEvaluationResult.practicing;
+    return practiceEvaluationResult || PracticeEvaluationResult.practicing;
   }
 
   static async runNcu(pkgs: Package[] | undefined) {
