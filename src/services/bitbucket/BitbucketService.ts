@@ -283,7 +283,11 @@ export class BitbucketService implements ICVSService {
   }
 
   async getRepoCommits(owner: string, repo: string) {
-    throw new Error('Method not implemented yet.');
+    const params: Bitbucket.Params.RepositoriesListCommits = {
+      repo_slug: repo,
+      username: owner,
+    };
+    return await this.client.repositories.listCommits(params);
   }
 
   async getCommit(owner: string, repo: string, commitSha: string): Promise<Commit> {
