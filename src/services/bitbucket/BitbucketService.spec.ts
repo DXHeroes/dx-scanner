@@ -7,6 +7,9 @@ import { getPullCommits } from '../git/__MOCKS__/bitbucketServiceMockFolder/getP
 import { getIssuesResponse } from '../git/__MOCKS__/bitbucketServiceMockFolder/getIssuesResponse';
 import { getIssueResponse } from '../git/__MOCKS__/bitbucketServiceMockFolder/getIssueResponse';
 import { getIssueCommentsResponse } from '../git/__MOCKS__/bitbucketServiceMockFolder/getIssueCommentsResponse';
+import { GitHubPullRequestState } from '../git/IGitHubService';
+import { BitbucketPullRequestState } from '../git/ICVSService';
+import { ListGetterOptions } from '../../inspectors/common/ListGetterOptions';
 
 describe('Bitbucket Service', () => {
   let service: BitbucketService;
@@ -61,5 +64,21 @@ describe('Bitbucket Service', () => {
 
     const response = await service.getIssueComments('pypy', 'pypy', 3086);
     expect(response).toMatchObject(getIssueCommentsResponse);
+  });
+
+  it('returns declined pull requests in own interface', async () => {
+    const state: ListGetterOptions<{ state?: BitbucketPullRequestState }> = {
+      filter: {
+        state: BitbucketPullRequestState.declined,
+      },
+    };
+
+    nock(bitbucketNock.url)
+      .get('/users/pypy')
+      .reply(200);
+    bitbucketNock.getApiResponse('pullrequests', undefined, undefined, state.filter!.state);
+
+    const response = await service.getPullRequests('pypy', 'pypy', state);
+    expect(response).toMatchObject(getPullRequestsResponse);
   });
 });

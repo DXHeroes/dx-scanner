@@ -11,9 +11,12 @@ export class BitbucketNock {
     this.url = 'https://api.bitbucket.org/2.0';
   }
 
-  getApiResponse(resource: string, id?: number, value?: string): nock.Scope {
+  getApiResponse(resource: string, id?: number, value?: string, state?: string): nock.Scope {
     let url = `${this.url}/repositories/${this.user}/${this.repoName}/${resource}`;
     let response;
+
+    let params = {};
+    const persist = true;
 
     if (value !== undefined) {
       switch (value) {
@@ -34,6 +37,9 @@ export class BitbucketNock {
             response = new PullRequest().pullRequest;
           } else {
             response = new PullRequests().pullrequests;
+            if (state) {
+              params = { state: state };
+            }
           }
           break;
         case 'issues':
@@ -49,9 +55,6 @@ export class BitbucketNock {
           throw Error('You passed wrong value or id');
       }
     }
-
-    const params = {};
-    const persist = true;
 
     return BitbucketNock.get(url, params, persist).reply(200, response);
   }
