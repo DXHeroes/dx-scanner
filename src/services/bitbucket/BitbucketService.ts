@@ -25,7 +25,9 @@ import {
   Directory,
   File,
 } from '../git/model';
-import { ICVSService } from '../git/ICVSService';
+import { ICVSService, BitbucketPullRequestState } from '../git/ICVSService';
+import { ListGetterOptions } from '../../inspectors/common/ListGetterOptions';
+import { PullRequestState } from '../../inspectors/ICollaborationInspector';
 const debug = Debug('cli:services:git:bitbucket-service');
 
 @injectable()
@@ -73,46 +75,59 @@ export class BitbucketService implements ICVSService {
     return this.unwrap(this.client.repositories.get(params));
   }
 
-  async getPullRequests(owner: string, repo: string): Promise<Paginated<PullRequest>> {
+  async getPullRequests(
+    owner: string,
+    repo: string,
+    options?: ListGetterOptions<{ state?: BitbucketPullRequestState }>,
+  ): Promise<Paginated<PullRequest>> {
     const params: Bitbucket.Params.PullrequestsList = {
       repo_slug: repo,
       username: owner,
     };
 
+    let state;
+    if (options !== undefined && options.filter !== undefined && options.filter.state !== undefined) {
+      state = options.filter.state;
+      Object.assign(params, { state: state });
+    }
+
     const response = <DeepRequired<Bitbucket.Response<Bitbucket.Schema.PaginatedPullrequests>>>await this.client.pullrequests.list(params);
     const url = 'www.bitbucket.org';
 
-    const values = response.data.values.map(async (val) => ({
-      user: {
-        id: val.author.uuid,
-        login: val.author.nickname,
-        url: val.author.links.html.href,
-      },
-      url: val.links.html.href,
-      body: val.description,
-      createdAt: val.created_on,
-      updatedAt: val.updated_on,
-      //TODO
-      closedAt: null,
-      //TODO
-      mergedAt: null,
-      state: val.state,
-      id: val.id,
-      base: {
-        repo: {
-          url: val.destination.repository.links.html.href,
-          name: val.destination.repository.name,
-          id: val.destination.repository.uuid,
-          owner: {
-            login: <string>val.destination.repository.full_name.split('/').shift(),
-            id: <string>(await this.client.users.get({ username: `${val.destination.repository.full_name.split('/').shift()}` })).data.uuid
-              ? <string>(await this.client.users.get({ username: `${val.destination.repository.full_name.split('/').shift()}` })).data.uuid
-              : 'undefined',
-            url: url.concat(`/${val.destination.repository.full_name.split('/').shift()}`),
+    const values = response.data.values.map(async (val) => {
+      const ownerId = <string>(
+        (await this.client.users.get({ username: `${val.destination.repository.full_name.split('/').shift()}` })).data.uuid
+      );
+      return {
+        user: {
+          id: val.author.uuid,
+          login: val.author.nickname,
+          url: val.author.links.html.href,
+        },
+        url: val.links.html.href,
+        body: val.description,
+        createdAt: val.created_on,
+        updatedAt: val.updated_on,
+        //TODO
+        closedAt: null,
+        //TODO
+        mergedAt: null,
+        state: val.state,
+        id: val.id,
+        base: {
+          repo: {
+            url: val.destination.repository.links.html.href,
+            name: val.destination.repository.name,
+            id: val.destination.repository.uuid,
+            owner: {
+              login: <string>val.destination.repository.full_name.split('/').shift(),
+              id: ownerId ? ownerId : 'undefined',
+              url: url.concat(`/${val.destination.repository.full_name.split('/').shift()}`),
+            },
           },
         },
-      },
-    }));
+      };
+    });
 
     const pagination = this.getPagination(response.data);
 
