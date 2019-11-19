@@ -1,7 +1,8 @@
-import { injectable, inject } from 'inversify';
+import { inject, injectable } from 'inversify';
 import { ProjectIssueBrowserService as ContentRepositoryBrowserService } from '../model';
 import { Types } from '../types';
-import { ICollaborationInspector } from './ICollaborationInspector';
+import { ListGetterOptions } from './common/ListGetterOptions';
+import { ICollaborationInspector, PullRequestState } from './ICollaborationInspector';
 
 @injectable()
 export class CollaborationInspector implements ICollaborationInspector {
@@ -11,8 +12,8 @@ export class CollaborationInspector implements ICollaborationInspector {
     this.service = service;
   }
 
-  async getPullRequests(owner: string, repo: string) {
-    return this.service.getPullRequests(owner, repo);
+  async getPullRequests(owner: string, repo: string, options?: ListGetterOptions<{ state?: PullRequestState }>) {
+    return this.service.getPullRequests(owner, repo, options);
   }
 
   async getPullRequest(owner: string, repo: string, prNumber: number) {
