@@ -89,6 +89,14 @@ export class Scanner {
     if (localPath === undefined && remoteUrl !== undefined && serviceType !== ServiceType.local) {
       const cloneUrl = new url.URL(remoteUrl);
       localPath = fs.mkdtempSync(path.join(os.tmpdir(), 'dx-scanner'));
+
+      if (this.argumentsProvider.auth?.includes(':')) {
+        cloneUrl.username = this.argumentsProvider.auth.split(':')[0];
+        cloneUrl.password = this.argumentsProvider.auth.split(':')[1];
+      } else if (this.argumentsProvider.auth) {
+        cloneUrl.password = this.argumentsProvider.auth;
+      }
+
       await git()
         .silent(true)
         .clone(cloneUrl.href, localPath);

@@ -1,3 +1,10 @@
+## [1.18.1](https://github.com/dxheroes/dx-scanner/compare/v1.18.0...v1.18.1) (2019-11-18)
+
+
+### Bug Fixes
+
+* **bitbucket:** do not require bitbucket credentials twice ([381ca6f](https://github.com/dxheroes/dx-scanner/commit/381ca6f))
+
 # [1.18.0](https://github.com/dxheroes/dx-scanner/compare/v1.17.10...v1.18.0) (2019-11-18)
 
 
