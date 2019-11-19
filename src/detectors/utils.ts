@@ -1,10 +1,6 @@
-import { PackageManagement, PracticeEvaluationResult } from '../model';
 import { intersection, keys } from 'lodash';
 import * as nodePath from 'path';
-import { coerce, valid } from 'semver';
-import { PackageVersion } from '../inspectors/IPackageInspector';
-import { PracticeContext } from '../contexts/practice/PracticeContext';
-import ncu from 'npm-check-updates';
+import { PackageManagement } from '../model';
 
 export const fileExtensionRegExp = (extensions: string[]): RegExp => {
   const regExpString = `.*\\.(${extensions.join('|').replace('.', '\\.')})$`;
@@ -60,59 +56,3 @@ export const hasOneOfPackages = (packages: string[], packageManagement?: Package
   }
   return false;
 };
-
-export const semverToPackageVersion = (semverString: string): PackageVersion | undefined => {
-  const coerced = coerce(semverString);
-  if (coerced) {
-    const version = valid(coerced);
-    if (version) {
-      const splitted = version.split('.');
-      return {
-        value: semverString,
-        major: splitted[0],
-        minor: splitted[1],
-        patch: splitted[2],
-      };
-    }
-  }
-  return undefined;
-};
-
-export const evaluateBySemverLevel = async (ctx: PracticeContext, semverVersion: SemverVersion) => {
-  if (ctx.fileInspector === undefined || ctx.packageInspector === undefined) {
-    return PracticeEvaluationResult.unknown;
-  }
-
-  const pkgs = ctx.packageInspector.packages;
-  const fakePkgJson: { dependencies: { [key: string]: string } } = { dependencies: {} };
-
-  pkgs &&
-    pkgs.forEach((p) => {
-      fakePkgJson.dependencies[p.name] = p.requestedVersion.value;
-    });
-
-  const result = await ncu.run({
-    packageData: JSON.stringify(fakePkgJson),
-  });
-
-  for (const property in result) {
-    const parsedVersion = semverToPackageVersion(result[property]);
-    if (parsedVersion) {
-      for (const pkg of ctx.packageInspector.packages!) {
-        if (pkg.name === property) {
-          if (parsedVersion[semverVersion] > pkg.lockfileVersion[semverVersion]) {
-            return PracticeEvaluationResult.notPracticing;
-          }
-        }
-      }
-    }
-  }
-
-  return PracticeEvaluationResult.practicing;
-};
-
-export enum SemverVersion {
-  major = 'major',
-  minor = 'minor',
-  patch = 'patch',
-}
