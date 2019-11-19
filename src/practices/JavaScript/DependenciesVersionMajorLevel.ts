@@ -53,7 +53,7 @@ export class DependenciesVersionMajorLevel implements IPractice {
     semverVersion: SemverVersion,
     ctx: PracticeContext,
   ): PracticeEvaluationResult | undefined {
-    for (const property in result) {
+    for (const packageName in result) {
       const parsedVersion = PackageInspectorBase.semverToPackageVersion(result[property]);
       if (parsedVersion) {
         for (const pkg of ctx.packageInspector!.packages!) {
