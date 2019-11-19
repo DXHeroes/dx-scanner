@@ -45,7 +45,7 @@ export class BitbucketService implements ICVSService {
 
     let username: string;
     let password: string | undefined;
-    if (argumentsProvider.auth?.includes(':')) {
+    if (argumentsProvider.auth && argumentsProvider.auth.includes(':')) {
       username = argumentsProvider.auth.split(':')[0];
       password = argumentsProvider.auth.split(':')[1];
     } else {
