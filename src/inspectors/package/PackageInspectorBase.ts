@@ -49,7 +49,12 @@ export abstract class PackageInspectorBase implements IPackageInspector, IInitia
     if (!this.packages) {
       return false;
     }
-    if (intersection(this.packages.map((p) => p.name), packages).length > 0) {
+    if (
+      intersection(
+        this.packages.map((p) => p.name),
+        packages,
+      ).length > 0
+    ) {
       return true;
     }
     return false;

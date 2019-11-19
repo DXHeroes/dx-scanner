@@ -1,7 +1,6 @@
 import { Container } from 'inversify';
 import { JavaScriptLanguageDetector } from '../../detectors/JavaScript/JavaScriptLanguageDetector';
 import { JavaLanguageDetector } from '../../detectors/Java/JavaLanguageDetector';
-import { PythonLanguageDetector } from '../../detectors/Python/PythonLanguageDetector';
 import { ScanningStrategy, ServiceType } from '../../detectors/ScanningStrategyDetector';
 import { FileInspector } from '../../inspectors/FileInspector';
 import { GitInspector } from '../../inspectors/GitInspector';

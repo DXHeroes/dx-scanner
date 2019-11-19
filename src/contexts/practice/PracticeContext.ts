@@ -14,4 +14,5 @@ export interface PracticeContext {
   collaborationInspector: ICollaborationInspector | undefined;
   fileInspector: IFileInspector | undefined;
   config?: PracticeConfig | PracticeImpact;
+  root: { fileInspector: IFileInspector | undefined };
 }
