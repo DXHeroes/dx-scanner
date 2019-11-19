@@ -28,8 +28,8 @@ export class DependenciesVersionMinorPatchLevel extends DependenciesVersionMajor
     const pkgs = ctx.packageInspector.packages;
     const result = await DependenciesVersionMajorLevel.runNcu(pkgs);
 
-    const patchLevel = DependenciesVersionMajorLevel.isPracticing(result, SemverLevel.patch, ctx);
-    const minorLevel = DependenciesVersionMajorLevel.isPracticing(result, SemverLevel.minor, ctx);
+    const patchLevel = DependenciesVersionMajorLevel.isPracticing(result, SemverLevel.patch, pkgs!);
+    const minorLevel = DependenciesVersionMajorLevel.isPracticing(result, SemverLevel.minor, pkgs!);
 
     if (patchLevel === PracticeEvaluationResult.notPracticing || minorLevel === PracticeEvaluationResult.notPracticing) {
       return PracticeEvaluationResult.notPracticing;

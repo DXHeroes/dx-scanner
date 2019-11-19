@@ -29,7 +29,7 @@ export class DependenciesVersionMajorLevel implements IPractice {
     const pkgs = ctx.packageInspector.packages;
     const result = await DependenciesVersionMajorLevel.runNcu(pkgs);
 
-    const practiceEvaluationResult = DependenciesVersionMajorLevel.isPracticing(result, SemverLevel.major, ctx);
+    const practiceEvaluationResult = DependenciesVersionMajorLevel.isPracticing(result, SemverLevel.major, pkgs!);
     return practiceEvaluationResult || PracticeEvaluationResult.practicing;
   }
 
@@ -51,12 +51,12 @@ export class DependenciesVersionMajorLevel implements IPractice {
   static isPracticing(
     result: { [key: string]: string },
     semverVersion: SemverLevel,
-    ctx: PracticeContext,
+    pkgs: Package[],
   ): PracticeEvaluationResult | undefined {
     for (const packageName in result) {
       const parsedVersion = PackageInspectorBase.semverToPackageVersion(result[packageName]);
       if (parsedVersion) {
-        for (const pkg of ctx.packageInspector!.packages!) {
+        for (const pkg of pkgs) {
           if (pkg.name === packageName) {
             if (parsedVersion[semverVersion] > pkg.lockfileVersion[semverVersion]) {
               return PracticeEvaluationResult.notPracticing;
@@ -68,4 +68,3 @@ export class DependenciesVersionMajorLevel implements IPractice {
     return undefined;
   }
 }
-
