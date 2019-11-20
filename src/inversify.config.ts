@@ -75,8 +75,6 @@ export const createTestContainer = (
   container.bind(Types.IProjectFilesBrowser).toConstantValue(vfss);
   container.bind(Types.IContentRepositoryBrowser).to(GitHubService);
   container.bind(Types.IFileInspector).to(FileInspector);
-  container.bind(Types.IIssueTrackingInspector).to(IssueTrackingInspector);
-  container.bind(Types.ICollaborationInspector).to(CollaborationInspector);
   container.bind(Types.IPackageInspector).to(JavaScriptPackageInspector);
 
   const scanningStrategyDetector = container.get<ScanningStrategyDetector>(ScanningStrategyDetector);
