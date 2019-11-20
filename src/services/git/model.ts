@@ -35,7 +35,7 @@ export interface Commit {
   url: string;
   author: Author;
   message: string;
-  tree: Tree;
+  tree: Tree | Tree[];
   verified: boolean;
 }
 
