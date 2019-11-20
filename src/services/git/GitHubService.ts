@@ -177,7 +177,7 @@ export class GitHubService implements ICVSService {
    *
    * Sha can be SHA or branch name.
    */
-  async getRepoCommits(owner: string, repo: string, sha?: string) {
+  async getRepoCommits(owner: string, repo: string, sha?: string): Promise<Paginated<Commit>> {
     let url = 'GET /repos/:owner/:repo/commits';
     if (sha !== undefined) {
       url = `${url}?state=${sha}`;

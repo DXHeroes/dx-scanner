@@ -282,7 +282,7 @@ export class BitbucketService implements ICVSService {
     throw new Error('Method not implemented yet.');
   }
 
-  async getRepoCommits(owner: string, repo: string) {
+  async getRepoCommits(owner: string, repo: string): Promise<Paginated<Commit>> {
     throw new Error('Method not implemented yet.');
   }
 
