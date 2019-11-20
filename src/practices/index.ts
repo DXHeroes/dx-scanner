@@ -20,6 +20,7 @@ import { JavaGitignoreCorrectlySetPractice } from './Java/JavaGitignoreCorrectly
 import { DependenciesVersionPractice } from './JavaScript/DependenciesVersionPractice';
 import { ESLintWithoutErrorsPractice } from './JavaScript/ESLintWithoutErrorsPractice';
 import { TsGitignoreCorrectlySetPractice } from './TypeScript/TsGitignoreCorrectlySetPractice';
+import { DoesPullRequests } from './LanguageIndependent/DoesPullRequests';
 
 // register practices here
 export const practices = [
@@ -45,4 +46,5 @@ export const practices = [
   JsGitignoreCorrectlySetPractice,
   JavaGitignoreCorrectlySetPractice,
   TsGitignoreCorrectlySetPractice,
+  DoesPullRequests,
 ];
