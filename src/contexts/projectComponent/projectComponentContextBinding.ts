@@ -34,7 +34,7 @@ const createProjectComponentContainer = (projectComponent: ProjectComponent, roo
           projectComponent: projectComponent,
           packageInspector: ctx.container.get(Types.IPackageInspector),
           gitInspector,
-          issueTrackingInspector: ctx.container.get(Types.IIssueTrackingInspector),,
+          issueTrackingInspector: ctx.container.get(Types.IIssueTrackingInspector),
           collaborationInspector: ctx.container.get(Types.ICollaborationInspector),
           fileInspector: ctx.container.get(Types.IFileInspector),
         };
