@@ -174,9 +174,35 @@ export class GitHubService implements ICVSService {
    *
    * The response will include a verification object that describes the result of verifying the commit's signature.
    * To see the included fields in the verification object see https://octokit.github.io/rest.js/#pagination.
+   *
+   * Sha can be SHA or branch name.
    */
-  async getRepoCommits(owner: string, repo: string) {
-    return this.unwrap(this.client.repos.listCommits({ owner, repo }));
+  async getRepoCommits(owner: string, repo: string, sha?: string) {
+    let url = 'GET /repos/:owner/:repo/commits';
+    if (sha !== undefined) {
+      url = `${url}?state=${sha}`;
+    }
+
+    const response = await this.paginate(url, owner, repo);
+
+    const items = response.map((val) => ({
+      sha: val.sha,
+      url: val.url,
+      message: val.commit.message,
+      author: {
+        name: val.commit.author.name,
+        email: val.commit.author.email,
+        date: val.commit.author.date,
+      },
+      tree: {
+        sha: val.commit.tree.sha,
+        url: val.commit.tree.url,
+      },
+      verified: val.commit.verification.verified,
+    }));
+    const pagination = this.getPagination(response.length);
+
+    return { items, ...pagination };
   }
 
   /**
