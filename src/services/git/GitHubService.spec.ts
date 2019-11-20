@@ -105,11 +105,12 @@ describe('GitHub Service', () => {
     expect(response).toMatchObject(getPullsReviewsServiceResponse);
   });
 
-  it('returns commits in own interface', async () => {
-    new GitHubNock('1', 'octocat', 1, 'Hello-World').getCommits().reply(200, getRepoCommitsResponse);
+  it.only('returns commits in own interface', async () => {
+    //new GitHubNock('1', 'octocat', 1, 'Hello-World').getCommits().reply(200, getRepoCommitsResponse);
     const response = await service.getRepoCommits('octocat', 'Hello-World');
+    console.log(response);
 
-    expect(response.data).toMatchObject(getRepoCommitsResponse);
+    expect(response).toMatchObject(getRepoCommitsResponse);
   });
 
   it('returns commits in own interface', async () => {
