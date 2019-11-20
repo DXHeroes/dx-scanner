@@ -1,8 +1,7 @@
 import { Paginated } from '../../../../inspectors/common/Paginated';
 
 import { PullCommits } from '../../model';
-//: Paginated<PullCommits>
-export const getRepoCommits = {
+export const getRepoCommits: Paginated<PullCommits> = {
   items: [
     {
       sha: 'f9c2cfcfaafa644dcc286ce2fc8b3386d46c11df',
