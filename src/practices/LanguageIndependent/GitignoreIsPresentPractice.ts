@@ -18,14 +18,16 @@ export class GitignoreIsPresentPractice implements IPractice {
   }
 
   async evaluate(ctx: PracticeContext): Promise<PracticeEvaluationResult> {
-    if (ctx.fileInspector === undefined) {
+    if (!ctx.fileInspector || !ctx.root.fileInspector) {
       return PracticeEvaluationResult.unknown;
     }
 
     const regexGitignore = new RegExp('.gitignore', 'i');
 
     const files = await ctx.fileInspector.scanFor(regexGitignore, '/', { shallow: true });
-    if (files.length > 0) {
+    const rootFiles = await ctx.root.fileInspector.scanFor(regexGitignore, '/', { shallow: true });
+
+    if (files.length > 0 || rootFiles.length > 0) {
       return PracticeEvaluationResult.practicing;
     }
 

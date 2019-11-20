@@ -18,14 +18,15 @@ export class ReadmeIsPresentPractice implements IPractice {
   }
 
   async evaluate(ctx: PracticeContext): Promise<PracticeEvaluationResult> {
-    if (ctx.fileInspector === undefined) {
+    if (!ctx.fileInspector || !ctx.root.fileInspector) {
       return PracticeEvaluationResult.unknown;
     }
 
-    const regexLReadme = new RegExp('readme', 'i');
+    const regexReadme = new RegExp('readme', 'i');
 
-    const files = await ctx.fileInspector.scanFor(regexLReadme, '/', { shallow: true });
-    if (files.length > 0) {
+    const files = await ctx.fileInspector.scanFor(regexReadme, '/', { shallow: true });
+    const rootFiles = await ctx.root.fileInspector.scanFor(regexReadme, '/', { shallow: true });
+    if (files.length > 0 || rootFiles.length > 0) {
       return PracticeEvaluationResult.practicing;
     }
 

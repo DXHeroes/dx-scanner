@@ -17,13 +17,14 @@ export class DockerizationUsedPractice implements IPractice {
   }
 
   async evaluate(ctx: PracticeContext): Promise<PracticeEvaluationResult> {
-    if (ctx.fileInspector === undefined) {
+    if (!ctx.fileInspector || !ctx.root.fileInspector) {
       return PracticeEvaluationResult.unknown;
     }
 
     const regexDocker = new RegExp(/dockerfile|docker-compose\.yml/, 'i');
-    const docker = await ctx.fileInspector.scanFor(regexDocker, '/');
-    if (docker.length > 0) {
+    const dockerfiles = await ctx.fileInspector.scanFor(regexDocker, '/');
+    const rootDockerfiles = await ctx.root.fileInspector.scanFor(regexDocker, '/', { shallow: true });
+    if (dockerfiles.length > 0 && rootDockerfiles.length > 0) {
       return PracticeEvaluationResult.practicing;
     }
 

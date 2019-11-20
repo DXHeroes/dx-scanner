@@ -54,10 +54,13 @@ class DXScannerCommand extends Command {
     } catch (error) {
       if (error instanceof ServiceError && error.code === ErrorCode.AUTHORIZATION_ERROR) {
         if (ScanningStrategyDetectorUtils.isGitHubPath(scanPath)) {
-          authorization = await cli.prompt('Insert your GitHub personal access token.\nhttps://github.com/settings/tokens\n');
+          authorization = await cli.prompt('Insert your GitHub personal access token.\nhttps://github.com/settings/tokens\n', {
+            type: 'hide',
+          });
         } else if (ScanningStrategyDetectorUtils.isBitbucketPath(scanPath)) {
           authorization = await cli.prompt(
             'Insert your Bitbucket app password.\nhttps://confluence.atlassian.com/bitbucket/app-passwords-828781300.html\n',
+            { type: 'hide' },
           );
         }
 

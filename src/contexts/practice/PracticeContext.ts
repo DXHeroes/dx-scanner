@@ -7,12 +7,45 @@ import { PracticeImpact, ProjectComponent } from '../../model';
 import { PracticeConfig } from '../IConfigProvider';
 
 export interface PracticeContext {
+  /**
+   * Current component(app)
+   */
   projectComponent: ProjectComponent;
+
+  /**
+   * Works with package managers. You can read all installed project's dependencies.
+   */
   packageInspector: IPackageInspector | undefined;
+
+  /**
+   * Lists commits, authors, tags
+   */
   gitInspector: IGitInspector | undefined;
+
+  /**
+   * Works with issues/tasks in a project management tool
+   */
   issueTrackingInspector: IIssueTrackingInspector | undefined;
+
+  /**
+   * Pull Requests, Commits in a Pull Request
+   */
   collaborationInspector: ICollaborationInspector | undefined;
+
+  /**
+   * Lists files relatively to the base path of component
+   */
   fileInspector: IFileInspector | undefined;
+
+  /**
+   * Configured settings for a practice
+   */
   config?: PracticeConfig | PracticeImpact;
-  root: { fileInspector: IFileInspector | undefined };
+
+  /**
+   * Inspectors mapped to from the root of repository
+   */
+  root: {
+    fileInspector: IFileInspector | undefined;
+  };
 }
