@@ -65,7 +65,7 @@ describe('Bitbucket Service', () => {
     expect(response).toMatchObject(getIssueCommentsResponse);
   });
 
-  it('returns repo commits in own interfae', async () => {
+  it('returns repo commits in own interface', async () => {
     bitbucketNock.getApiResponse('commits');
 
     const response = await service.getRepoCommits('pypy', 'pypy');
