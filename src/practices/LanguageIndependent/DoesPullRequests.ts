@@ -40,7 +40,7 @@ export class DoesPullRequests implements IPractice {
     const ownerAndRepoName = GitServiceUtils.getOwnerAndRepoName(repoName);
 
     const pullRequests = await ctx.collaborationInspector.getPullRequests(ownerAndRepoName.owner, ownerAndRepoName.repoName);
-    const repoCommits = await ctx.collaborationInspector.getRepoCommits(ownerAndRepoName.owner, ownerAndRepoName.repoName, 'master');
+    const repoCommits = await ctx.collaborationInspector.getRepoCommits(ownerAndRepoName.owner, ownerAndRepoName.repoName);
 
     const prDate = new Date(repoCommits.items[0].author.date).getTime();
     const commitDate = new Date(pullRequests.items[0].createdAt).getTime();
