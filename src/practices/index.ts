@@ -17,10 +17,11 @@ import { EditorConfigIsPresentPractice } from './LanguageIndependent/EditorConfi
 import { GitignoreIsPresentPractice } from './LanguageIndependent/GitignoreIsPresentPractice';
 import { JsGitignoreCorrectlySetPractice } from './JavaScript/JsGitignoreCorrectlySetPractice';
 import { JavaGitignoreCorrectlySetPractice } from './Java/JavaGitignoreCorrectlySetPractice';
-import { DependenciesVersionPractice } from './JavaScript/DependenciesVersionPractice';
+import { DependenciesVersionMajorLevel } from './JavaScript/DependenciesVersionMajorLevel';
 import { ESLintWithoutErrorsPractice } from './JavaScript/ESLintWithoutErrorsPractice';
 import { TsGitignoreCorrectlySetPractice } from './TypeScript/TsGitignoreCorrectlySetPractice';
-import { DoesPullRequests } from './LanguageIndependent/DoesPullRequests';
+import { DoesPullRequestsPractice } from './LanguageIndependent/DoesPullRequests';
+import { DependenciesVersionMinorPatchLevel } from './JavaScript/DependenciesVersionMinorPatchLevel';
 
 // register practices here
 export const practices = [
@@ -41,10 +42,11 @@ export const practices = [
   DeprecatedTSLintPractice,
   DockerizationUsedPractice,
   EditorConfigIsPresentPractice,
-  DependenciesVersionPractice,
+  DependenciesVersionMajorLevel,
+  DependenciesVersionMinorPatchLevel,
   GitignoreIsPresentPractice,
   JsGitignoreCorrectlySetPractice,
   JavaGitignoreCorrectlySetPractice,
   TsGitignoreCorrectlySetPractice,
-  DoesPullRequests,
+  DoesPullRequestsPractice,
 ];

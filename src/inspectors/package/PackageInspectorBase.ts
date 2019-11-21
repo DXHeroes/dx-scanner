@@ -87,3 +87,9 @@ export abstract class PackageInspectorBase implements IPackageInspector, IInitia
     return undefined;
   }
 }
+
+export enum SemverLevel {
+  major = 'major',
+  minor = 'minor',
+  patch = 'patch',
+}
