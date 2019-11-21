@@ -31,16 +31,12 @@ export class DoesPullRequestsPractice implements IPractice {
     const pullRequests = await ctx.collaborationInspector.getPullRequests(ownerAndRepoName.owner, ownerAndRepoName.repoName);
     const repoCommits = await ctx.collaborationInspector.getRepoCommits(ownerAndRepoName.owner, ownerAndRepoName.repoName);
 
-    let prDate;
-
-    if (pullRequests.items.length > 0) {
-      prDate = new Date(pullRequests.items[0].createdAt).getTime();
-    } else {
+    if (pullRequests.items.length === 0) {
       return PracticeEvaluationResult.notPracticing;
     }
 
+    const prDate = new Date(pullRequests.items[0].createdAt).getTime();
     const commitDate = new Date(repoCommits.items[0].author.date).getTime();
-
     const daysInMilliseconds = moment.duration(30, 'days').asMilliseconds();
 
     if (prDate > commitDate - daysInMilliseconds) {
