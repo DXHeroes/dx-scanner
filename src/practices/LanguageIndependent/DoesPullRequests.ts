@@ -31,7 +31,7 @@ export class DoesPullRequests implements IPractice {
     const pullRequests = await ctx.collaborationInspector.getPullRequests(ownerAndRepoName.owner, ownerAndRepoName.repoName);
     const repoCommits = await ctx.collaborationInspector.getRepoCommits(ownerAndRepoName.owner, ownerAndRepoName.repoName);
 
-    let prDate, commitDate;
+    let prDate;
 
     if (pullRequests.items.length > 0) {
       prDate = new Date(pullRequests.items[0].createdAt).getTime();
@@ -39,13 +39,11 @@ export class DoesPullRequests implements IPractice {
       return PracticeEvaluationResult.notPracticing;
     }
 
-    if (repoCommits.items.length > 0) {
-      commitDate = new Date(repoCommits.items[0].author.date).getTime();
-    }
+    const commitDate = new Date(repoCommits.items[0].author.date).getTime();
 
     const daysInMilliseconds = moment.duration(30, 'days').asMilliseconds();
 
-    if (prDate > <number>commitDate - daysInMilliseconds) {
+    if (prDate > commitDate - daysInMilliseconds) {
       return PracticeEvaluationResult.practicing;
     }
 
