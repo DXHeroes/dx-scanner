@@ -37,7 +37,7 @@ describe('TsGitignoreCorrectlySetPractice', () => {
   });
 
   it('Returns unknown if there is no fileInspector', async () => {
-    const evaluated = await practice.evaluate({ ...containerCtx.practiceContext, fileInspector: undefined });
+    const evaluated = await practice.evaluate({ ...containerCtx.practiceContext, ...{ root: { fileInspector: undefined } } });
     expect(evaluated).toEqual(PracticeEvaluationResult.unknown);
   });
 });

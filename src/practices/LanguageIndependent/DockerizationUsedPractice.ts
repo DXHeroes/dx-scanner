@@ -24,7 +24,7 @@ export class DockerizationUsedPractice implements IPractice {
     const regexDocker = new RegExp(/dockerfile|docker-compose\.yml/, 'i');
     const dockerfiles = await ctx.fileInspector.scanFor(regexDocker, '/');
     const rootDockerfiles = await ctx.root.fileInspector.scanFor(regexDocker, '/', { shallow: true });
-    if (dockerfiles.length > 0 && rootDockerfiles.length > 0) {
+    if (dockerfiles.length > 0 || rootDockerfiles.length > 0) {
       return PracticeEvaluationResult.practicing;
     }
 
