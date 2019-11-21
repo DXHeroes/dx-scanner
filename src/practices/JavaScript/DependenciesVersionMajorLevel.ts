@@ -27,14 +27,13 @@ export class DependenciesVersionMajorLevel implements IPractice {
     }
 
     const pkgs = ctx.packageInspector.packages;
-    const result = await DependenciesVersionMajorLevel.runNcu(pkgs);
-    let practiceEvaluationResult;
-
-    if (pkgs !== undefined) {
-      practiceEvaluationResult = DependenciesVersionMajorLevel.isPracticing(result, SemverLevel.major, pkgs);
-    } else {
+    if (pkgs === undefined) {
       return PracticeEvaluationResult.unknown;
     }
+
+    const result = await DependenciesVersionMajorLevel.runNcu(pkgs);
+    const practiceEvaluationResult = DependenciesVersionMajorLevel.isPracticing(result, SemverLevel.major, pkgs);
+
     return practiceEvaluationResult || PracticeEvaluationResult.practicing;
   }
 
