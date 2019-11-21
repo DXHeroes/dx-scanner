@@ -13,7 +13,7 @@ import moment from 'moment';
   impact: PracticeImpact.medium,
   suggestion: 'Do pull requests. It helps you catch the bad code before it is merged into the main codebase.',
   reportOnlyOnce: true,
-  url: 'https://developerexperience.io/practices/pull-requests',
+  url: 'https://dxkb.io/p/pull-requests',
 })
 export class DoesPullRequests implements IPractice {
   async isApplicable(): Promise<boolean> {
