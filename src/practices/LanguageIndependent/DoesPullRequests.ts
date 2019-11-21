@@ -15,7 +15,7 @@ import moment from 'moment';
   reportOnlyOnce: true,
   url: 'https://dxkb.io/p/pull-requests',
 })
-export class DoesPullRequests implements IPractice {
+export class DoesPullRequestsPractice implements IPractice {
   async isApplicable(): Promise<boolean> {
     return true;
   }
