@@ -24,20 +24,8 @@ export class DoesPullRequests implements IPractice {
     if (ctx.fileInspector === undefined || ctx.collaborationInspector === undefined) {
       return PracticeEvaluationResult.unknown;
     }
-    const paths = [];
-    let repoName;
-    paths.push(ctx.projectComponent.path);
 
-    //reused code from CLIReporter -> refactor it
-    const componentsSharedSubpath = sharedSubpath(paths);
-    if (ctx.projectComponent.repositoryPath) {
-      repoName = ReporterUtils.getPathOrRepoUrl(
-        ctx.projectComponent.repositoryPath,
-        ctx.projectComponent.path.replace(componentsSharedSubpath, ''),
-      );
-    } else {
-      repoName = ctx.projectComponent.path;
-    }
+    const repoName = GitServiceUtils.getRepoName(ctx.projectComponent.repositoryPath, ctx.projectComponent.path);
     const ownerAndRepoName = GitServiceUtils.getOwnerAndRepoName(repoName);
 
     const pullRequests = await ctx.collaborationInspector.getPullRequests(ownerAndRepoName.owner, ownerAndRepoName.repoName);
