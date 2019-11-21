@@ -8,6 +8,8 @@ import { bindProjectComponentContext } from '../projectComponent/projectComponen
 import { JavaPackageInspector } from '../../inspectors/package/JavaPackageInspector';
 import { JavaComponentDetector } from '../../detectors/Java/JavaComponentDetector';
 import { LanguageContext } from './LanguageContext';
+import { CollaborationInspector } from '../../inspectors/CollaborationInspector';
+import { IssueTrackingInspector } from '../../inspectors/IssueTrackingInspector';
 
 export const bindLanguageContext = (container: Container) => {
   container.bind(Types.LanguageContextFactory).toFactory(
@@ -28,6 +30,7 @@ const createLanguageContainer = (languageAtPath: LanguageAtPath, rootContainer: 
   bindComponentDetectors(container);
   bindProjectComponentContext(container);
   bindPackageInspectors(languageAtPath, container);
+  bindCollaborationInspectors(container);
 
   container.bind(LanguageContext).toSelf();
   return container;
@@ -87,6 +90,17 @@ const bindComponentDetectors = (container: Container) => {
   container.bind(Types.ProjectComponentDetectorFactory).toFactory((ctx) => {
     return getProjectComponentDetectorFactory(ctx.container as Container);
   });
+};
+
+const bindCollaborationInspectors = (container: Container) => {
+  container
+    .bind(Types.ICollaborationInspector)
+    .to(CollaborationInspector)
+    .inSingletonScope();
+  container
+    .bind(Types.IIssueTrackingInspector)
+    .to(IssueTrackingInspector)
+    .inSingletonScope();
 };
 
 export const DETECT_LANGUAGE_TAG = 'language';

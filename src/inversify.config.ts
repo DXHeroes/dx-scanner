@@ -30,6 +30,7 @@ import { GitHubService } from './services/git/GitHubService';
 import { Types } from './types';
 import { BitbucketService } from './services/bitbucket/BitbucketService';
 import { ICollaborationInspector } from './inspectors/ICollaborationInspector';
+import { IIssueTrackingInspector } from './inspectors/IIssueTrackingInspector';
 
 export const createRootContainer = (args: ArgumentsProvider): Container => {
   const container = new Container();
@@ -42,8 +43,6 @@ export const createRootContainer = (args: ArgumentsProvider): Container => {
   container.bind(FileSystemService).toSelf();
   container.bind(GitHubService).toSelf();
   container.bind(BitbucketService).toSelf();
-  container.bind(Types.ICollaborationInspector).to(CollaborationInspector);
-  container.bind(Types.IIssueTrackingInspector).to(IssueTrackingInspector);
   // register practices
   practices.forEach((practice) => {
     container.bind<IPracticeWithMetadata>(Types.Practice).toConstantValue(ScannerUtils.initPracticeWithMetadata(practice));
@@ -76,6 +75,8 @@ export const createTestContainer = (
   container.bind(Types.IContentRepositoryBrowser).to(GitHubService);
   container.bind(Types.IFileInspector).to(FileInspector);
   container.bind(Types.IPackageInspector).to(JavaScriptPackageInspector);
+  container.bind(Types.ICollaborationInspector).to(CollaborationInspector);
+  container.bind(Types.IIssueTrackingInspector).to(IssueTrackingInspector);
 
   const scanningStrategyDetector = container.get<ScanningStrategyDetector>(ScanningStrategyDetector);
   const fileSystemService = container.get<FileSystemService>(FileSystemService);
@@ -127,7 +128,7 @@ export interface TestContainerContext {
 export interface TestPracticeContext extends PracticeContext {
   packageInspector: IPackageInspector;
   fileInspector: IFileInspector;
-  issueTrackingInspector: IssueTrackingInspector;
+  issueTrackingInspector: IIssueTrackingInspector;
   collaborationInspector: ICollaborationInspector;
 }
 
