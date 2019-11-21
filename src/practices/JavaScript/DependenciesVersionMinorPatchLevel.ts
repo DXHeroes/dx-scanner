@@ -32,6 +32,8 @@ export class DependenciesVersionMinorPatchLevel extends DependenciesVersionMajor
     if (pkgs !== undefined) {
       patchLevel = DependenciesVersionMajorLevel.isPracticing(result, SemverLevel.patch, pkgs);
       minorLevel = DependenciesVersionMajorLevel.isPracticing(result, SemverLevel.minor, pkgs);
+    } else {
+      return PracticeEvaluationResult.unknown;
     }
 
     if (patchLevel === PracticeEvaluationResult.notPracticing || minorLevel === PracticeEvaluationResult.notPracticing) {

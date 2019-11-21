@@ -32,6 +32,8 @@ export class DependenciesVersionMajorLevel implements IPractice {
 
     if (pkgs !== undefined) {
       practiceEvaluationResult = DependenciesVersionMajorLevel.isPracticing(result, SemverLevel.major, pkgs);
+    } else {
+      return PracticeEvaluationResult.unknown;
     }
     return practiceEvaluationResult || PracticeEvaluationResult.practicing;
   }
