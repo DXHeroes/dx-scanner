@@ -34,4 +34,13 @@ describe('DoesPullRequests', () => {
     const evaluated = await practice.evaluate(containerCtx.practiceContext);
     expect(evaluated).toEqual(PracticeEvaluationResult.practicing);
   });
+
+  it('return notPracticing if there is no PR which is newer than last commit in master minus 30 days', async () => {
+    containerCtx.practiceContext.projectComponent.repositoryPath = 'https://github.com/octocat/Hello-World';
+    new GitHubNock('1', 'octocat', 1296269, 'Hello-World').getPulls([]);
+    new GitHubNock('1', 'octocat', 1, 'Hello-World').getCommits().reply(200, getRepoCommitsResponse);
+
+    const evaluated = await practice.evaluate(containerCtx.practiceContext);
+    expect(evaluated).toEqual(PracticeEvaluationResult.notPracticing);
+  });
 });
