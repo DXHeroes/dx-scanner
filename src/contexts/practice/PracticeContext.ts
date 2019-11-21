@@ -38,7 +38,7 @@ export interface PracticeContext {
   fileInspector: IFileInspector | undefined;
 
   /**
-   * Configured settings for a practice
+   * Customized configuration for a practice read from DX config file
    */
   config?: PracticeConfig | PracticeImpact;
 
