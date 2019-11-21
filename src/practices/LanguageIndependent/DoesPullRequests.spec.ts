@@ -1,12 +1,12 @@
 import { createTestContainer, TestContainerContext } from '../../inversify.config';
 import { PracticeEvaluationResult } from '../../model';
-import { DoesPullRequests } from './DoesPullRequests';
+import { DoesPullRequestsPractice } from './DoesPullRequests';
 import nock from 'nock';
 import { GitHubNock } from '../../../test/helpers/gitHubNock';
 import { getRepoCommitsResponse } from '../../services/git/__MOCKS__/gitHubServiceMockFolder/getRepoCommitsResponse.mock';
 
 describe('DoesPullRequests', () => {
-  let practice: DoesPullRequests;
+  let practice: DoesPullRequestsPractice;
   let containerCtx: TestContainerContext;
 
   beforeEach(async () => {
@@ -15,7 +15,7 @@ describe('DoesPullRequests', () => {
 
   beforeAll(() => {
     containerCtx = createTestContainer();
-    containerCtx.container.bind('DoesPullRequests').to(DoesPullRequests);
+    containerCtx.container.bind('DoesPullRequests').to(DoesPullRequestsPractice);
     practice = containerCtx.container.get('DoesPullRequests');
   });
 
