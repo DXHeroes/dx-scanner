@@ -5,6 +5,7 @@ import { ReporterUtils } from '../../reporters/ReporterUtils';
 import { GitServiceUtils } from '../../services/git/GitServiceUtils';
 import { DxPractice } from '../DxPracticeDecorator';
 import { IPractice } from '../IPractice';
+import moment from 'moment';
 
 @DxPractice({
   id: 'LanguageIndependent.DoesPullRequests',
@@ -45,7 +46,9 @@ export class DoesPullRequests implements IPractice {
     const prDate = new Date(repoCommits.items[0].author.date).getTime();
     const commitDate = new Date(pullRequests.items[0].createdAt).getTime();
 
-    if (prDate > commitDate - 1000 * 60 * 60 * 24 * 30) {
+    const daysInMilliseconds = moment.duration(30, 'days').asMilliseconds();
+
+    if (prDate > commitDate - daysInMilliseconds) {
       return PracticeEvaluationResult.practicing;
     }
 
