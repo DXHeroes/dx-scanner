@@ -17,7 +17,11 @@ class DXScannerCommand extends Command {
     version: flags.version({ char: 'v', description: 'Output the version number' }),
     help: flags.help({ char: 'h', description: 'Help' }),
     // flag with a value (-n, --name=VALUE)
-    authorization: flags.string({ char: 'a', description: 'Credentials to the repository.' }),
+    authorization: flags.string({
+      char: 'a',
+      description:
+        'Credentials to the repository. (in format "token" or "username:token"; can be set as ENV variable DX_GIT_SERVICE_TOKEN)',
+    }),
     json: flags.boolean({ char: 'j', description: 'Print report in JSON' }),
     recursive: flags.boolean({ char: 'r', description: 'Scan all components recursively in all sub folders' }),
     init: flags.boolean({ char: 'i', description: 'Initialize DX Scanner configuration' }),
@@ -36,7 +40,7 @@ class DXScannerCommand extends Command {
     const { args, flags } = this.parse(DXScannerCommand);
     const scanPath = args.path;
 
-    let authorization = flags.authorization ? flags.authorization : undefined;
+    let authorization = flags.authorization ? flags.authorization : this.loadAuthTokenFromEnvs();
     const json = flags.json ? flags.json : undefined;
     const fail = flags.fail ? <PracticeImpact | 'all'>flags.fail : PracticeImpact.high;
 
@@ -54,12 +58,12 @@ class DXScannerCommand extends Command {
     } catch (error) {
       if (error instanceof ServiceError && error.code === ErrorCode.AUTHORIZATION_ERROR) {
         if (ScanningStrategyDetectorUtils.isGitHubPath(scanPath)) {
-          authorization = await cli.prompt('Insert your GitHub personal access token.\nhttps://github.com/settings/tokens\n', {
+          authorization = await cli.prompt('Insert your GitHub personal access token. https://github.com/settings/tokens\n', {
             type: 'hide',
           });
         } else if (ScanningStrategyDetectorUtils.isBitbucketPath(scanPath)) {
           authorization = await cli.prompt(
-            'Insert your Bitbucket app password.\nhttps://confluence.atlassian.com/bitbucket/app-passwords-828781300.html\n',
+            'Insert your Bitbucket credentials (in format "appPassword" or "username:appPasword"). https://confluence.atlassian.com/bitbucket/app-passwords-828781300.html\n',
             { type: 'hide' },
           );
         }
@@ -83,6 +87,15 @@ class DXScannerCommand extends Command {
       process.exit(1);
     }
   }
+
+  /**
+   * Loads API token from environment variables
+   */
+  private loadAuthTokenFromEnvs = (): string | undefined => {
+    // eslint-disable-next-line no-process-env
+    const ev = process.env;
+    return ev.DX_GIT_SERVICE_TOKEN || ev.GITHUB_TOKEN;
+  };
 }
 
 export = DXScannerCommand;

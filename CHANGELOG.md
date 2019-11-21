@@ -1,3 +1,32 @@
+## [1.18.2](https://github.com/dxheroes/dx-scanner/compare/v1.18.1...v1.18.2) (2019-11-19)
+
+
+### Bug Fixes
+
+* **configuration:** customized practices are not coumputed to the final DX Score now ([7c854d3](https://github.com/dxheroes/dx-scanner/commit/7c854d3))
+* **configuration:** customized practices are not coumputed to the final DX Score now ([b5873ee](https://github.com/dxheroes/dx-scanner/commit/b5873ee))
+
+## [1.18.1](https://github.com/dxheroes/dx-scanner/compare/v1.18.0...v1.18.1) (2019-11-18)
+
+
+### Bug Fixes
+
+* **bitbucket:** do not require bitbucket credentials twice ([381ca6f](https://github.com/dxheroes/dx-scanner/commit/381ca6f))
+
+# [1.18.0](https://github.com/dxheroes/dx-scanner/compare/v1.17.10...v1.18.0) (2019-11-18)
+
+
+### Features
+
+* **cli:** do not require -a argument, accept env variable DX_GIT_SERVICE_TOKEN ([c10fdf9](https://github.com/dxheroes/dx-scanner/commit/c10fdf9))
+
+## [1.17.10](https://github.com/dxheroes/dx-scanner/compare/v1.17.9...v1.17.10) (2019-11-18)
+
+
+### Bug Fixes
+
+* **cli:** remove sh because windows doesn't have it installed ([51402a0](https://github.com/dxheroes/dx-scanner/commit/51402a0))
+
 ## [1.17.9](https://github.com/dxheroes/dx-scanner/compare/v1.17.8...v1.17.9) (2019-11-16)
 
 
