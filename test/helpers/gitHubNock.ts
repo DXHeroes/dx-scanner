@@ -44,7 +44,7 @@ export class GitHubNock {
       // eslint-disable-next-line @typescript-eslint/camelcase
       if (!created_at) {
         // eslint-disable-next-line @typescript-eslint/camelcase
-        created_at = '2000-03-06T23:06:50Z';
+        created_at = '2012-03-06T23:06:50Z';
       }
       // eslint-disable-next-line @typescript-eslint/camelcase
       if (!updated_at) {
