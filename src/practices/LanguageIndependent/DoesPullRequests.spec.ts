@@ -63,4 +63,16 @@ describe('DoesPullRequests', () => {
     const evaluated = await practice.evaluate(containerCtx.practiceContext);
     expect(evaluated).toEqual(PracticeEvaluationResult.notPracticing);
   });
+
+  it('return true as it is always applicable', async () => {
+    const applicable = await practice.isApplicable();
+    expect(applicable).toEqual(true);
+  });
+
+  it('return unknown if there is no collaborationInspector', async () => {
+    containerCtx.practiceContext.collaborationInspector = undefined;
+
+    const evaluated = await practice.evaluate(containerCtx.practiceContext);
+    expect(evaluated).toEqual(PracticeEvaluationResult.unknown);
+  });
 });
