@@ -95,7 +95,10 @@ export class GitInspector implements IGitInspector {
     }
 
     const commits = await this.getCommits({});
-    const items = uniqWith(commits.items.map((commit) => commit.author), isEqual);
+    const items = uniqWith(
+      commits.items.map((commit) => commit.author),
+      isEqual,
+    );
 
     return paginate(items, options.pagination);
   }

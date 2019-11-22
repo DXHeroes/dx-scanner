@@ -18,7 +18,7 @@ export class TypeScriptUsedPractice implements IPractice {
   }
 
   async evaluate(): Promise<PracticeEvaluationResult> {
-    // Always match this
+    // Always match this for JavaScript
     return PracticeEvaluationResult.notPracticing;
   }
 }
