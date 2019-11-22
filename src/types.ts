@@ -26,6 +26,7 @@ export const Types = {
   IIssueTrackingInspector: Symbol('IIssueTrackingInspector'),
   IContentRepositoryBrowser: Symbol('IContentRepositoryBrowser'),
   IFileInspector: Symbol('IFileInspector'),
+  IRootFileInspector: Symbol('IRootFileInspector'),
   IProjectFilesBrowser: Symbol('IProjectFilesBrowser'),
   RepositoryPath: Symbol('RepositoryPath'),
   //Language context level

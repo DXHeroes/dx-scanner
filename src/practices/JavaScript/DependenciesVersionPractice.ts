@@ -21,7 +21,7 @@ export class DependenciesVersionPractice implements IPractice {
   }
 
   async evaluate(ctx: PracticeContext): Promise<PracticeEvaluationResult> {
-    if (ctx.fileInspector === undefined || ctx.packageInspector === undefined) {
+    if (!ctx.fileInspector || !ctx.packageInspector) {
       return PracticeEvaluationResult.unknown;
     }
 

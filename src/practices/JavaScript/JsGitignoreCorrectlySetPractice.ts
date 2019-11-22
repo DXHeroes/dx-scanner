@@ -18,7 +18,7 @@ export class JsGitignoreCorrectlySetPractice implements IPractice {
   }
 
   async evaluate(ctx: PracticeContext): Promise<PracticeEvaluationResult> {
-    if (ctx.fileInspector === undefined) {
+    if (!ctx.root.fileInspector) {
       return PracticeEvaluationResult.unknown;
     }
 
@@ -28,7 +28,7 @@ export class JsGitignoreCorrectlySetPractice implements IPractice {
         .split(/\r?\n/)
         .filter((content) => content.trim() !== '' && !content.startsWith('#'));
     };
-    const content = await ctx.fileInspector.readFile('.gitignore');
+    const content = await ctx.root.fileInspector.readFile('.gitignore');
     const parsedGitignore = parseGitignore(content);
 
     // lockfiles

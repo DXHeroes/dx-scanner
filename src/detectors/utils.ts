@@ -1,6 +1,6 @@
-import { PackageManagement } from '../model';
 import { intersection, keys } from 'lodash';
 import * as nodePath from 'path';
+import { PackageManagement } from '../model';
 
 export const fileExtensionRegExp = (extensions: string[]): RegExp => {
   const regExpString = `.*\\.(${extensions.join('|').replace('.', '\\.')})$`;

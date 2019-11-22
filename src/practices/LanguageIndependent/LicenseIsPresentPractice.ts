@@ -17,14 +17,15 @@ export class LicenseIsPresentPractice implements IPractice {
   }
 
   async evaluate(ctx: PracticeContext): Promise<PracticeEvaluationResult> {
-    if (ctx.fileInspector === undefined) {
+    if (!ctx.fileInspector || !ctx.root.fileInspector) {
       return PracticeEvaluationResult.unknown;
     }
 
     const regexLicense = new RegExp('license', 'i');
 
     const files = await ctx.fileInspector.scanFor(regexLicense, '/', { shallow: true });
-    if (files.length > 0) {
+    const rootFiles = await ctx.root.fileInspector.scanFor(regexLicense, '/', { shallow: true });
+    if (files.length > 0 || rootFiles.length > 0) {
       return PracticeEvaluationResult.practicing;
     }
 
