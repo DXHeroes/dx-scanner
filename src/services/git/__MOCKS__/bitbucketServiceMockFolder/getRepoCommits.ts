@@ -18,12 +18,11 @@ export const getRepoCommits: Paginated<PullCommits> = {
           email: 'undefined',
           date: '2019-11-19T10:48:09+00:00',
         },
-        tree: [
-          {
-            sha: '5c9a3fd99fc743f49aaad30952397ab34ad4f40b',
-            url: 'https://bitbucket.org/pypy/pypy/commits/5c9a3fd99fc743f49aaad30952397ab34ad4f40b',
-          },
-        ],
+        tree: {
+          sha: '5c9a3fd99fc743f49aaad30952397ab34ad4f40b',
+          url: 'https://bitbucket.org/pypy/pypy/commits/5c9a3fd99fc743f49aaad30952397ab34ad4f40b',
+        },
+
         verified: false,
       },
     },
