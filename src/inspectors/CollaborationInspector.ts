@@ -1,24 +1,18 @@
 import { inject, injectable } from 'inversify';
-import { ProjectIssueBrowserService as ContentRepositoryBrowserService } from '../model';
-import { GitHubPullRequestState } from '../services/git/IGitHubService';
 import { Types } from '../types';
 import { ListGetterOptions } from './common/ListGetterOptions';
-import { ICollaborationInspector } from './ICollaborationInspector';
-import { BitbucketPullRequestState } from '../services/git/ICVSService';
+import { ICollaborationInspector, PullRequestState } from './ICollaborationInspector';
+import { CSVService } from '../model';
 
 @injectable()
 export class CollaborationInspector implements ICollaborationInspector {
-  private service: ContentRepositoryBrowserService;
+  private service: CSVService;
 
-  constructor(@inject(Types.IContentRepositoryBrowser) service: ContentRepositoryBrowserService) {
+  constructor(@inject(Types.IContentRepositoryBrowser) service: CSVService) {
     this.service = service;
   }
 
-  async getPullRequests(
-    owner: string,
-    repo: string,
-    options?: ListGetterOptions<{ state?: GitHubPullRequestState | BitbucketPullRequestState }>,
-  ) {
+  async getPullRequests(owner: string, repo: string, options?: ListGetterOptions<{ state?: PullRequestState }>) {
     return this.service.getPullRequests(owner, repo, options);
   }
 

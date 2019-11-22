@@ -25,9 +25,10 @@ import {
   Directory,
   File,
 } from '../git/model';
-import { ICVSService, BitbucketPullRequestState } from '../git/ICVSService';
+import { ICVSService, BitbucketPullRequestState, CSVService } from '../git/ICVSService';
 import { ListGetterOptions } from '../../inspectors/common/ListGetterOptions';
 import { PullRequestState } from '../../inspectors/ICollaborationInspector';
+import { CSVServicesUtils } from '../git/CSVServicesUtils';
 const debug = Debug('cli:services:git:bitbucket-service');
 
 @injectable()
@@ -78,7 +79,7 @@ export class BitbucketService implements ICVSService {
   async getPullRequests(
     owner: string,
     repo: string,
-    options?: ListGetterOptions<{ state?: BitbucketPullRequestState }>,
+    options?: ListGetterOptions<{ state?: PullRequestState }>,
   ): Promise<Paginated<PullRequest>> {
     const params: Bitbucket.Params.PullrequestsList = {
       repo_slug: repo,
@@ -87,7 +88,8 @@ export class BitbucketService implements ICVSService {
 
     let state;
     if (options !== undefined && options.filter !== undefined && options.filter.state !== undefined) {
-      state = options.filter.state;
+      state = CSVServicesUtils.getPRState(options.filter.state, CSVService.bitbucket);
+      console.log(state);
       Object.assign(params, { state: state });
     }
 

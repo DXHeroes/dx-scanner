@@ -1,5 +1,5 @@
 import nock from 'nock';
-import { BitbucketNock } from '../../../test/helpers/bitbucketNock';
+import { BitbucketNock, PullRequest } from '../../../test/helpers/bitbucketNock';
 import { BitbucketService } from './BitbucketService';
 import { getPullRequestsResponse } from '../git/__MOCKS__/bitbucketServiceMockFolder/getPullRequestsResponse';
 import { getPullRequestResponse } from '../git/__MOCKS__/bitbucketServiceMockFolder/getPullRequestResponse';
@@ -10,6 +10,7 @@ import { getIssueCommentsResponse } from '../git/__MOCKS__/bitbucketServiceMockF
 import { GitHubPullRequestState } from '../git/IGitHubService';
 import { BitbucketPullRequestState } from '../git/ICVSService';
 import { ListGetterOptions } from '../../inspectors/common/ListGetterOptions';
+import { PullRequestState } from '../../inspectors/ICollaborationInspector';
 
 describe('Bitbucket Service', () => {
   let service: BitbucketService;
@@ -67,17 +68,16 @@ describe('Bitbucket Service', () => {
   });
 
   it('returns declined pull requests in own interface', async () => {
-    const state: ListGetterOptions<{ state?: BitbucketPullRequestState }> = {
+    const state: ListGetterOptions<{ state?: PullRequestState }> = {
       filter: {
-        state: BitbucketPullRequestState.declined,
+        state: PullRequestState.closed,
       },
     };
 
     nock(bitbucketNock.url)
       .get('/users/pypy')
       .reply(200);
-    bitbucketNock.getApiResponse('pullrequests', undefined, undefined, state.filter!.state);
-
+    bitbucketNock.getApiResponse('pullrequests', undefined, undefined, 'MERGED');
     const response = await service.getPullRequests('pypy', 'pypy', state);
     expect(response).toMatchObject(getPullRequestsResponse);
   });

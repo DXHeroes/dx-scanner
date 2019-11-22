@@ -1,21 +1,20 @@
-import { Repository } from '../../model';
-import { isArray } from 'util';
 import { inject, injectable } from 'inversify';
-import { ErrorFactory } from '../../lib/errors/ErrorFactory';
 import * as nodePath from 'path';
-import { Metadata, MetadataType, IProjectFilesBrowserService } from '../model';
+import { isArray } from 'util';
+import { PullRequestState } from '../../inspectors/ICollaborationInspector';
+import { ErrorFactory } from '../../lib/errors/ErrorFactory';
+import { CSVService, Repository } from '../../model';
 import { Types } from '../../types';
-import { ProjectIssueBrowserService as ContentRepositoryBrowserService } from '../../model';
-import { Directory, File, Symlink } from './model';
+import { IProjectFilesBrowserService, Metadata, MetadataType } from '../model';
 import { GitServiceUtils } from './GitServiceUtils';
-import { GitHubPullRequestState } from './IGitHubService';
+import { Directory, File, Symlink } from './model';
 
 @injectable()
 export class Git implements IProjectFilesBrowserService {
   private repository: Repository;
-  private service: ContentRepositoryBrowserService;
+  private service: CSVService;
 
-  constructor(repository: Repository, @inject(Types.IContentRepositoryBrowser) service: ContentRepositoryBrowserService) {
+  constructor(repository: Repository, @inject(Types.IContentRepositoryBrowser) service: CSVService) {
     this.repository = repository;
     this.service = service;
   }
@@ -116,7 +115,7 @@ export class Git implements IProjectFilesBrowserService {
 
   async getPullRequestCount(): Promise<number> {
     const params = GitServiceUtils.getOwnerAndRepoName(this.repository.url);
-    return this.service.getPullRequests(params.owner, params.repoName, { filter: { state: GitHubPullRequestState.all } }).then((r) => {
+    return this.service.getPullRequests(params.owner, params.repoName, { filter: { state: PullRequestState.all } }).then((r) => {
       if (!r) {
         throw ErrorFactory.newInternalError('Could not get pull requests');
       }

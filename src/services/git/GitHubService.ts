@@ -17,7 +17,7 @@ import { ErrorFactory } from '../../lib/errors';
 import { ICache } from '../../scanner/cache/ICache';
 import { InMemoryCache } from '../../scanner/cache/InMemoryCache';
 import { Types } from '../../types';
-import { ICVSService, BitbucketPullRequestState } from './ICVSService';
+import { ICVSService, BitbucketPullRequestState, CSVService } from './ICVSService';
 import {
   Commit,
   Contributor,
@@ -34,6 +34,7 @@ import {
   Symlink,
 } from './model';
 import { GitHubPullRequestState } from './IGitHubService';
+import { CSVServicesUtils } from './CSVServicesUtils';
 const debug = Debug('cli:services:git:github-service');
 
 @injectable()
@@ -70,11 +71,12 @@ export class GitHubService implements ICVSService {
   async getPullRequests(
     owner: string,
     repo: string,
-    options?: ListGetterOptions<{ state?: GitHubPullRequestState | BitbucketPullRequestState }>,
+    options?: ListGetterOptions<{ state?: PullRequestState }>,
   ): Promise<Paginated<PullRequest>> {
     let url = 'GET /repos/:owner/:repo/pulls';
     if (options !== undefined && options.filter !== undefined && options.filter.state !== undefined) {
-      url = `${url}?state=${options.filter.state}`;
+      const state = CSVServicesUtils.getPRState(options.filter.state, CSVService.github);
+      url = `${url}?state=${state}`;
     }
     const response: PullsListResponseItem[] = await this.paginate(url, owner, repo);
 
