@@ -26,19 +26,62 @@ export class GitHubNock {
   }
 
   getPulls(
-    pulls: { number: number; state: string; title: string; body: string; head: string; base: string }[],
+    pulls: {
+      number: number;
+      state: string;
+      title: string;
+      body: string;
+      head: string;
+      base: string;
+      created_at?: string;
+      updated_at?: string;
+    }[],
     queryState?: string,
     persist = true,
   ): PullRequestItem[] {
-    const responseBody = pulls.map(
-      ({ number, state, title, body, head, base }) =>
-        new PullRequestItem(number, state, title, body, new BranchItem(head, this.repository), new BranchItem(base, this.repository)),
-    );
+    // eslint-disable-next-line @typescript-eslint/camelcase
+    const responseBody = pulls.map(({ number, state, title, body, head, base, created_at, updated_at }) => {
+      // eslint-disable-next-line @typescript-eslint/camelcase
+      console.log(created_at, '44');
+      // eslint-disable-next-line @typescript-eslint/camelcase
+      if (!created_at) {
+        // eslint-disable-next-line @typescript-eslint/camelcase
+        created_at = '2000-03-06T23:06:50Z';
+      }
+      // eslint-disable-next-line @typescript-eslint/camelcase
+      if (!updated_at) {
+        // eslint-disable-next-line @typescript-eslint/camelcase
+        updated_at = created_at;
+      }
+      console.log(created_at, '50');
+      return new PullRequestItem(
+        number,
+        state,
+        title,
+        body,
+        new BranchItem(head, this.repository),
+        new BranchItem(base, this.repository),
+        created_at,
+        updated_at,
+      );
+    });
 
     return this.getPullsInternal(undefined, queryState, responseBody, persist);
   }
 
-  getPull(number: number, state: string, title: string, body: string, head: string, base: string, persist = true): PullRequest {
+  getPull(
+    number: number,
+    state: string,
+    title: string,
+    body: string,
+    head: string,
+    base: string,
+    persist = true,
+    // eslint-disable-next-line @typescript-eslint/camelcase
+    created_at: string,
+    // eslint-disable-next-line @typescript-eslint/camelcase
+    updated_at: string,
+  ): PullRequest {
     const responseBody = new PullRequest(
       number,
       state,
@@ -46,6 +89,8 @@ export class GitHubNock {
       body,
       new BranchItem(head, this.repository),
       new BranchItem(base, this.repository),
+      created_at,
+      updated_at,
     );
 
     return this.getPullsInternal(number, undefined, responseBody, persist);
@@ -468,7 +513,7 @@ export class PullRequestItem {
   body: string;
   labels = [];
   milestone = null;
-  created_at = '2012-03-06T23:06:50Z';
+  created_at: string;
   updated_at = '2012-03-06T23:06:50Z';
   closed_at = '2012-03-06T23:06:50Z';
   merged_at = '2012-03-06T23:06:50Z';
@@ -491,7 +536,16 @@ export class PullRequestItem {
   };
   author_association = 'OWNER';
 
-  constructor(number: number, state: string, title: string, body: string, head: BranchItem, base: BranchItem) {
+  constructor(
+    number: number,
+    state: string,
+    title: string,
+    body: string,
+    head: BranchItem,
+    base: BranchItem,
+    createdAt: string,
+    updatedAt: string,
+  ) {
     this.number = number;
     this.base = base;
     this.head = head;
@@ -518,6 +572,10 @@ export class PullRequestItem {
     this.title = title;
     this.user = this.head.user;
     this.body = body;
+    // eslint-disable-next-line @typescript-eslint/camelcase
+    this.created_at = createdAt;
+    // eslint-disable-next-line @typescript-eslint/camelcase
+    this.updated_at = updatedAt;
     this._links = {
       self: { href: this.url },
       html: { href: this.html_url },
