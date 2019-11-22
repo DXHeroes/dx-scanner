@@ -42,8 +42,6 @@ export class GitHubNock {
     // eslint-disable-next-line @typescript-eslint/camelcase
     const responseBody = pulls.map(({ number, state, title, body, head, base, created_at, updated_at }) => {
       // eslint-disable-next-line @typescript-eslint/camelcase
-      console.log(created_at, '44');
-      // eslint-disable-next-line @typescript-eslint/camelcase
       if (!created_at) {
         // eslint-disable-next-line @typescript-eslint/camelcase
         created_at = '2000-03-06T23:06:50Z';
@@ -53,7 +51,6 @@ export class GitHubNock {
         // eslint-disable-next-line @typescript-eslint/camelcase
         updated_at = created_at;
       }
-      console.log(created_at, '50');
       return new PullRequestItem(
         number,
         state,
