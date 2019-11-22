@@ -20,21 +20,21 @@ export class CIUsedPractice implements IPractice {
   }
 
   async evaluate(ctx: PracticeContext): Promise<PracticeEvaluationResult> {
-    if (ctx.fileInspector === undefined) {
+    if (!ctx.root.fileInspector) {
       return PracticeEvaluationResult.unknown;
     }
 
     const filesInRootRegex = new RegExp(/\.gitlab\-ci\.yml|\.travis\.yml|\.jenkins\.yml|appveyor\.yml|azure\-pipelines\.yml/, 'i');
     const filesInFoldersToSearch: { fileName: string; path: string }[] = [{ fileName: 'config.yml', path: '.circleci' }];
 
-    const filesInRoot = await ctx.fileInspector.scanFor(filesInRootRegex, '/', { shallow: true, ignoreErrors: true });
+    const filesInRoot = await ctx.root.fileInspector.scanFor(filesInRootRegex, '/', { shallow: true, ignoreErrors: true });
     let filesInFolders: Metadata[] = [];
 
     // search for config files in subfolders in a root of component
     if (filesInRoot.length === 0) {
       const foundFilesInFolders = await Promise.all(
         filesInFoldersToSearch.map((fif) => {
-          return ctx.fileInspector!.scanFor(fif.fileName, fif.path, { shallow: true, ignoreErrors: true });
+          return ctx.root.fileInspector!.scanFor(fif.fileName, fif.path, { shallow: true, ignoreErrors: true });
         }),
       );
       filesInFolders = _.flatten(foundFilesInFolders);

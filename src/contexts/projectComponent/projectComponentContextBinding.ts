@@ -37,6 +37,9 @@ const createProjectComponentContainer = (projectComponent: ProjectComponent, roo
           issueTrackingInspector: ctx.container.get(Types.IIssueTrackingInspector),
           collaborationInspector: ctx.container.get(Types.ICollaborationInspector),
           fileInspector: ctx.container.get(Types.IFileInspector),
+          root: {
+            fileInspector: ctx.container.get(Types.IRootFileInspector),
+          },
         };
       };
     },

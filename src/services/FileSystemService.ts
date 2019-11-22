@@ -13,7 +13,7 @@ import { ErrorFactory } from '../lib/errors';
  */
 @injectable()
 export class FileSystemService implements IProjectFilesBrowserService {
-  protected fileSystem: IFs | (typeof fs);
+  protected fileSystem: IFs | typeof fs;
   private virtualVolume: VSVolume | undefined;
 
   constructor({ isVirtual = false } = {}) {

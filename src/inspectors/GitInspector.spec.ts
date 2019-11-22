@@ -362,7 +362,10 @@ describe('GitInspector', () => {
 
       const { items } = await gitInspector.getAuthors({ pagination: { page: 1, perPage: 2 } });
 
-      expect(items).toStrictEqual([{ name: 'test4', email: 'test4@example.com' }, { name: 'test3', email: 'test3@example.com' }]);
+      expect(items).toStrictEqual([
+        { name: 'test4', email: 'test4@example.com' },
+        { name: 'test3', email: 'test3@example.com' },
+      ]);
     });
 
     it('returns remaining repository authors if pagination specifies a greater subset', async () => {

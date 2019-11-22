@@ -1,3 +1,32 @@
+# [1.19.0](https://github.com/dxheroes/dx-scanner/compare/v1.18.2...v1.19.0) (2019-11-21)
+
+
+### Bug Fixes
+
+* add condition ([46ce6d6](https://github.com/dxheroes/dx-scanner/commit/46ce6d6))
+* https://github.com/DXHeroes/dx-scanner/pull/162/files#r347909025 ([849f794](https://github.com/dxheroes/dx-scanner/commit/849f794)), closes [/github.com/DXHeroes/dx-scanner/pull/162/files#r347909025](https://github.com//github.com/DXHeroes/dx-scanner/pull/162/files/issues/r347909025)
+* impact of practice ([dab0aa2](https://github.com/dxheroes/dx-scanner/commit/dab0aa2))
+* name of practice ([db00219](https://github.com/dxheroes/dx-scanner/commit/db00219))
+* name of practice ([8dd07f1](https://github.com/dxheroes/dx-scanner/commit/8dd07f1))
+* name of practice ([f2d5ee4](https://github.com/dxheroes/dx-scanner/commit/f2d5ee4))
+* refactor code ([04fcb84](https://github.com/dxheroes/dx-scanner/commit/04fcb84))
+* refactor code (extend the other practice with the first one) ([e7467fa](https://github.com/dxheroes/dx-scanner/commit/e7467fa))
+* remove unnecessary code ([6a9f403](https://github.com/dxheroes/dx-scanner/commit/6a9f403))
+* rename files and class ([dbd4cb0](https://github.com/dxheroes/dx-scanner/commit/dbd4cb0))
+* rename property to packageName, ([ea1b3d0](https://github.com/dxheroes/dx-scanner/commit/ea1b3d0))
+* rename SemverVersion to SemverLevel ([ec67b85](https://github.com/dxheroes/dx-scanner/commit/ec67b85))
+* rename SemverVersion to SemverLevel and move it ([a7c4fc4](https://github.com/dxheroes/dx-scanner/commit/a7c4fc4))
+* return PracticeEvaluationResult.unknown if there are no packages ([56adcf2](https://github.com/dxheroes/dx-scanner/commit/56adcf2))
+* tests as the practice has changed ([f5aa230](https://github.com/dxheroes/dx-scanner/commit/f5aa230))
+* wording ([51b7460](https://github.com/dxheroes/dx-scanner/commit/51b7460))
+
+
+### Features
+
+* add semverToPackageVersion() method, ([27ee181](https://github.com/dxheroes/dx-scanner/commit/27ee181))
+* add Update Dependencies With Minor or Patch Level practice and tests for that ([1569601](https://github.com/dxheroes/dx-scanner/commit/1569601))
+* change practice 'Update Dependencies' to 'Update Dependencies with Major Level' ([3daf397](https://github.com/dxheroes/dx-scanner/commit/3daf397))
+
 ## [1.18.2](https://github.com/dxheroes/dx-scanner/compare/v1.18.1...v1.18.2) (2019-11-19)
 
 

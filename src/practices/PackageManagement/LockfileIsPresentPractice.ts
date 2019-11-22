@@ -17,7 +17,7 @@ export class LockfileIsPresentPractice implements IPractice {
   }
 
   async evaluate(ctx: PracticeContext): Promise<PracticeEvaluationResult> {
-    if (ctx.fileInspector === undefined) {
+    if (!ctx.fileInspector) {
       return PracticeEvaluationResult.unknown;
     }
 

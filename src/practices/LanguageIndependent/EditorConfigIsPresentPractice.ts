@@ -17,14 +17,15 @@ export class EditorConfigIsPresentPractice implements IPractice {
   }
 
   async evaluate(ctx: PracticeContext): Promise<PracticeEvaluationResult> {
-    if (ctx.fileInspector === undefined) {
+    if (!ctx.fileInspector || !ctx.root.fileInspector) {
       return PracticeEvaluationResult.unknown;
     }
 
-    const regexGitignore = new RegExp('.editorconfig', 'i');
+    const regexEditorcfg = new RegExp('.editorconfig', 'i');
 
-    const files = await ctx.fileInspector.scanFor(regexGitignore, '/', { shallow: true });
-    if (files.length > 0) {
+    const files = await ctx.fileInspector.scanFor(regexEditorcfg, '/', { shallow: true });
+    const rootFiles = await ctx.root.fileInspector.scanFor(regexEditorcfg, '/', { shallow: true });
+    if (files.length > 0 || rootFiles.length > 0) {
       return PracticeEvaluationResult.practicing;
     }
 

@@ -102,6 +102,7 @@ export const createTestContainer = (
     issueTrackingInspector,
     collaborationInspector,
     fileInspector,
+    root: { fileInspector },
   };
 
   return {
