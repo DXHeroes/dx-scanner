@@ -1,11 +1,9 @@
+import moment from 'moment';
 import { PracticeContext } from '../../contexts/practice/PracticeContext';
-import { sharedSubpath } from '../../detectors/utils';
 import { PracticeEvaluationResult, PracticeImpact } from '../../model';
-import { ReporterUtils } from '../../reporters/ReporterUtils';
 import { GitServiceUtils } from '../../services/git/GitServiceUtils';
 import { DxPractice } from '../DxPracticeDecorator';
 import { IPractice } from '../IPractice';
-import moment from 'moment';
 
 @DxPractice({
   id: 'LanguageIndependent.DoesPullRequests',
@@ -36,9 +34,9 @@ export class DoesPullRequestsPractice implements IPractice {
       return PracticeEvaluationResult.notPracticing;
     }
 
-    const latestPRUpdate = pullRequests.items.map((item) => new Date(item.updatedAt || item.createdAt).getTime());
-    const descendingSortedPrDates = latestPRUpdate.sort((prA, prB) => prB - prA);
+    const latestPRsUpdate = pullRequests.items.map((item) => new Date(item.updatedAt || item.createdAt).getTime());
 
+    const descendingSortedPrDates = latestPRsUpdate.sort((prA, prB) => prB - prA);
     const descendingSortedCommitDate = repoCommits.items.sort(
       (commitA, commitB) => new Date(commitB.author.date).getTime() - new Date(commitA.author.date).getTime(),
     );
