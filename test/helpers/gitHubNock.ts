@@ -75,10 +75,20 @@ export class GitHubNock {
     base: string,
     persist = true,
     // eslint-disable-next-line @typescript-eslint/camelcase
-    created_at: string,
+    created_at?: string,
     // eslint-disable-next-line @typescript-eslint/camelcase
-    updated_at: string,
+    updated_at?: string,
   ): PullRequest {
+    // eslint-disable-next-line @typescript-eslint/camelcase
+    if (!created_at) {
+      // eslint-disable-next-line @typescript-eslint/camelcase
+      created_at = '2012-03-06T23:06:50Z';
+    }
+    // eslint-disable-next-line @typescript-eslint/camelcase
+    if (!updated_at) {
+      // eslint-disable-next-line @typescript-eslint/camelcase
+      updated_at = created_at;
+    }
     const responseBody = new PullRequest(
       number,
       state,
