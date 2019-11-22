@@ -28,6 +28,7 @@ export class DoesPullRequestsPractice implements IPractice {
     const repoName = GitServiceUtils.getRepoName(ctx.projectComponent.repositoryPath, ctx.projectComponent.path);
     const ownerAndRepoName = GitServiceUtils.getOwnerAndRepoName(repoName);
 
+    //TODO add filtering
     const pullRequests = await ctx.collaborationInspector.getPullRequests(ownerAndRepoName.owner, ownerAndRepoName.repoName);
     const repoCommits = await ctx.collaborationInspector.getRepoCommits(ownerAndRepoName.owner, ownerAndRepoName.repoName);
 
@@ -35,8 +36,15 @@ export class DoesPullRequestsPractice implements IPractice {
       return PracticeEvaluationResult.notPracticing;
     }
 
-    const prDate = new Date(pullRequests.items[0].createdAt).getTime();
-    const commitDate = new Date(repoCommits.items[0].author.date).getTime();
+    const latestPRUpdate = pullRequests.items.map((item) => new Date(item.updatedAt || item.createdAt).getTime());
+    const descendingSortedPrDates = latestPRUpdate.sort((prA, prB) => prB - prA);
+
+    const descendingSortedCommitDate = repoCommits.items.sort(
+      (commitA, commitB) => new Date(commitB.author.date).getTime() - new Date(commitA.author.date).getTime(),
+    );
+
+    const prDate = descendingSortedPrDates[0];
+    const commitDate = new Date(descendingSortedCommitDate[0].author.date).getTime();
     const daysInMilliseconds = moment.duration(30, 'days').asMilliseconds();
 
     if (prDate > commitDate - daysInMilliseconds) {
