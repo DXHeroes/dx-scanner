@@ -95,11 +95,10 @@ export class BitbucketService implements ICVSService {
 
     const response = <DeepRequired<Bitbucket.Response<Bitbucket.Schema.PaginatedPullrequests>>>await this.client.pullrequests.list(params);
     const url = 'www.bitbucket.org';
+    const ownerId = <string>(await this.client.users.get({ username: owner })).data.uuid;
+    const urlOwner = url.concat(`/${owner}`);
 
     const values = response.data.values.map(async (val) => {
-      const ownerId = <string>(
-        (await this.client.users.get({ username: `${val.destination.repository.full_name.split('/').shift()}` })).data.uuid
-      );
       return {
         user: {
           id: val.author.uuid,
@@ -122,9 +121,9 @@ export class BitbucketService implements ICVSService {
             name: val.destination.repository.name,
             id: val.destination.repository.uuid,
             owner: {
-              login: <string>val.destination.repository.full_name.split('/').shift(),
-              id: ownerId ? ownerId : 'undefined',
-              url: url.concat(`/${val.destination.repository.full_name.split('/').shift()}`),
+              login: owner,
+              id: ownerId,
+              url: urlOwner,
             },
           },
         },
