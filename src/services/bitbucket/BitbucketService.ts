@@ -298,10 +298,10 @@ export class BitbucketService implements ICVSService {
           email: 'undefined',
           date: val.date,
         },
-        tree: val.parents.map((par) => ({
-          sha: par.hash,
-          url: par.links.html.href,
-        })),
+        tree: {
+          sha: val.parents[0].hash,
+          url: val.parents[0].links.html.href,
+        },
         // TODO
         verified: false,
       },
