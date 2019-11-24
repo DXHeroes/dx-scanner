@@ -13,12 +13,11 @@ export const initialize = (scanPath: string, container: Container) => {
   }
 };
 
-export const createYAML = (yamlPath: string, container: Container) => {
+const createYAML = (yamlPath: string, container: Container) => {
   let yamlInitContent = `# practices:`;
   const initializedPractices: ContainerPracticeMetadata[] = container.getAll(Types.Practice);
   for (const practice of initializedPractices) {
     const dataObject = practice.getMetadata();
-    console.log(dataObject.id);
     yamlInitContent += `\n#    ${dataObject.id}: ${dataObject.impact}`;
   }
   fs.writeFile(yamlPath, yamlInitContent, (err) => {
