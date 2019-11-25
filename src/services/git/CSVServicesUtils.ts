@@ -15,7 +15,7 @@ export class CSVServicesUtils {
           return GitHubPullRequestState.closed;
         case PullRequestState.all:
           return GitHubPullRequestState.all;
-        case undefined:
+        default:
           return undefined;
       }
     }
