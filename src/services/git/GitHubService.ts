@@ -17,8 +17,8 @@ import { ErrorFactory } from '../../lib/errors';
 import { ICache } from '../../scanner/cache/ICache';
 import { InMemoryCache } from '../../scanner/cache/InMemoryCache';
 import { Types } from '../../types';
-import { VCSServicesUtils } from './CSVServicesUtils';
-import { IVCSService, VCSService } from './ICVSService';
+import { VCSServicesUtils } from './VCSServicesUtils';
+import { IVCSService, VCSService } from './IVCSService';
 import {
   Commit,
   Contributor,

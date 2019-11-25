@@ -25,10 +25,10 @@ import {
   Directory,
   File,
 } from '../git/model';
-import { VCSService, IVCSService, BitbucketPullRequestState } from '../git/ICVSService';
+import { VCSService, IVCSService, BitbucketPullRequestState } from '../git/IVCSService';
 import { ListGetterOptions } from '../../inspectors/common/ListGetterOptions';
 import { PullRequestState } from '../../inspectors/ICollaborationInspector';
-import { VCSServicesUtils } from '../git/CSVServicesUtils';
+import { VCSServicesUtils } from '../git/VCSServicesUtils';
 const debug = Debug('cli:services:git:bitbucket-service');
 
 @injectable()

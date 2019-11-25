@@ -1,5 +1,5 @@
 import { PullRequestState } from '../../inspectors/ICollaborationInspector';
-import { BitbucketPullRequestState, VCSService } from './ICVSService';
+import { BitbucketPullRequestState, VCSService } from './IVCSService';
 import { GitHubPullRequestState } from './IGitHubService';
 
 export class VCSServicesUtils {
