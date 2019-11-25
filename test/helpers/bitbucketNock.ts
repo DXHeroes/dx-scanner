@@ -689,7 +689,6 @@ export class RepoCommit {
 }
 
 export class RepoCommits {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   repoCommits: BitbucketCommit;
   constructor() {
     this.repoCommits = {
