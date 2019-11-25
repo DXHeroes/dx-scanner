@@ -28,7 +28,7 @@ export class CSVServicesUtils {
           return BitbucketPullRequestState.closed;
         case PullRequestState.all:
           return BitbucketPullRequestState.open && BitbucketPullRequestState.closed && BitbucketPullRequestState.declined;
-        case undefined:
+        default:
           return undefined;
       }
     }
