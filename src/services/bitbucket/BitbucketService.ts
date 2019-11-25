@@ -88,8 +88,13 @@ export class BitbucketService implements IVCSService {
 
     let state;
     if (options?.filter?.state) {
-      state = <BitbucketPullRequestState>VCSServicesUtils.getPRState(options.filter.state, VCSService.bitbucket);
+      state = VCSServicesUtils.getPRState(options.filter.state, VCSService.bitbucket);
       if (state) {
+        if (state.length > 1) {
+          state = <BitbucketPullRequestState[]>state;
+          //params = { ...params, state };
+        }
+        state = <BitbucketPullRequestState>state;
         params = { ...params, state };
       }
     }
