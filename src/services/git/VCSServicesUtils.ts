@@ -6,7 +6,7 @@ export class VCSServicesUtils {
   static getPRState = (
     state: PullRequestState | undefined,
     service: VCSService,
-  ): GitHubPullRequestState | BitbucketPullRequestState | undefined => {
+  ): GitHubPullRequestState | BitbucketPullRequestState | BitbucketPullRequestState[] | undefined => {
     if (service === VCSService.github) {
       switch (state) {
         case PullRequestState.open:
@@ -27,7 +27,7 @@ export class VCSServicesUtils {
         case PullRequestState.closed:
           return BitbucketPullRequestState.closed;
         case PullRequestState.all:
-          return BitbucketPullRequestState.open && BitbucketPullRequestState.closed && BitbucketPullRequestState.declined;
+          return [BitbucketPullRequestState.open, BitbucketPullRequestState.closed, BitbucketPullRequestState.declined];
         default:
           return undefined;
       }
