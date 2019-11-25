@@ -25,14 +25,14 @@ import {
   Directory,
   File,
 } from '../git/model';
-import { ICVSService, BitbucketPullRequestState, CSVService } from '../git/ICVSService';
+import { VCSService, IVCSService, BitbucketPullRequestState } from '../git/ICVSService';
 import { ListGetterOptions } from '../../inspectors/common/ListGetterOptions';
 import { PullRequestState } from '../../inspectors/ICollaborationInspector';
-import { CSVServicesUtils } from '../git/CSVServicesUtils';
+import { VCSServicesUtils } from '../git/CSVServicesUtils';
 const debug = Debug('cli:services:git:bitbucket-service');
 
 @injectable()
-export class BitbucketService implements ICVSService {
+export class BitbucketService implements IVCSService {
   private readonly client: Bitbucket;
   private cache: ICache;
   private callCount = 0;
@@ -81,15 +81,17 @@ export class BitbucketService implements ICVSService {
     repo: string,
     options?: ListGetterOptions<{ state?: PullRequestState }>,
   ): Promise<Paginated<PullRequest>> {
-    const params: Bitbucket.Params.PullrequestsList = {
+    let params: Bitbucket.Params.PullrequestsList = {
       repo_slug: repo,
       username: owner,
     };
 
     let state;
     if (options?.filter?.state) {
-      state = CSVServicesUtils.getPRState(options.filter.state, CSVService.bitbucket);
-      params = { ...params, state }
+      state = <BitbucketPullRequestState>VCSServicesUtils.getPRState(options.filter.state, VCSService.bitbucket);
+      if (state) {
+        params = { ...params, state };
+      }
     }
 
     const response = <DeepRequired<Bitbucket.Response<Bitbucket.Schema.PaginatedPullrequests>>>await this.client.pullrequests.list(params);
