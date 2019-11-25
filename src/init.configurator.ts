@@ -14,6 +14,7 @@ export const initialize = (scanPath: string, container: Container) => {
     createYAML(yamlPath, container);
   }
   cli.action.stop();
+  process.exit(0);
 };
 
 const createYAML = (yamlPath: string, container: Container) => {
