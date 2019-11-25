@@ -87,7 +87,7 @@ export class BitbucketService implements ICVSService {
     };
 
     let state;
-    if (options !== undefined && options.filter !== undefined && options.filter.state !== undefined) {
+    if (options?.filter?.state) {
       state = CSVServicesUtils.getPRState(options.filter.state, CSVService.bitbucket);
       Object.assign(params, { state: state });
     }
