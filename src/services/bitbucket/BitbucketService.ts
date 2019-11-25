@@ -361,7 +361,7 @@ export class BitbucketService implements ICVSService {
   }
 }
 
-interface BitbucketCommit {
+export interface BitbucketCommit {
   next: string;
   page: number;
   pagelen: number;

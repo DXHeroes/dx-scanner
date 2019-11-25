@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/camelcase */
 import nock from 'nock';
+import { BitbucketCommit } from '../../src/services/bitbucket/BitbucketService';
 
 export class BitbucketNock {
   user: string;
@@ -689,13 +690,15 @@ export class RepoCommit {
 
 export class RepoCommits {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  repoCommits: any;
+  repoCommits: BitbucketCommit;
   constructor() {
     this.repoCommits = {
       values: [new RepoCommit().repoCommit],
       pagelen: 20,
       page: 1,
       size: 14,
+      next: '',
+      previous: '',
     };
   }
 }
