@@ -45,7 +45,7 @@ export class BitbucketService implements ICVSService {
 
     let username: string;
     let password: string | undefined;
-    if (argumentsProvider.auth && argumentsProvider.auth.includes(':')) {
+    if (argumentsProvider.auth?.includes(':')) {
       username = argumentsProvider.auth.split(':')[0];
       password = argumentsProvider.auth.split(':')[1];
     } else {
@@ -142,7 +142,7 @@ export class BitbucketService implements ICVSService {
       createdAt: response.data.created_on,
       updatedAt: response.data.updated_on,
       //TODO
-      closedAt: 'undefined',
+      closedAt: null,
       //TODO
       mergedAt: null,
       state: response.data.state,
@@ -267,10 +267,10 @@ export class BitbucketService implements ICVSService {
         url: val.user.links.html.href,
       },
       url: val.links.html.href,
-      body: val.content.raw ? val.content.raw : 'undefined',
+      body: val.content.raw,
       createdAt: val.created_on,
-      updatedAt: val.updated_on ? val.updated_on : 'undefined',
-      authorAssociation: val.author_association ? val.author_association : 'undefined',
+      updatedAt: val.updated_on,
+      authorAssociation: val.author_association,
       id: val.id,
     }));
     const pagination = this.getPagination(response.data);
@@ -295,7 +295,7 @@ export class BitbucketService implements ICVSService {
         message: val.rendered.message.raw,
         author: {
           name: val.author.user.nickname,
-          email: 'undefined',
+          email: this.extractEmailFromString(val.author.raw) || '',
           date: val.date,
         },
         tree: {
@@ -359,6 +359,13 @@ export class BitbucketService implements ICVSService {
 
     return { totalCount, hasNextPage, hasPreviousPage, page, perPage };
   }
+
+  private extractEmailFromString = (text: string): string | undefined => {
+    const emailRegex = /[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+/gim;
+    const email = text.match(emailRegex);
+    if (email) return email[0];
+    return undefined;
+  };
 }
 
 export interface BitbucketCommit {

@@ -7,7 +7,6 @@ import { getPullCommits } from '../git/__MOCKS__/bitbucketServiceMockFolder/getP
 import { getIssuesResponse } from '../git/__MOCKS__/bitbucketServiceMockFolder/getIssuesResponse';
 import { getIssueResponse } from '../git/__MOCKS__/bitbucketServiceMockFolder/getIssueResponse';
 import { getIssueCommentsResponse } from '../git/__MOCKS__/bitbucketServiceMockFolder/getIssueCommentsResponse';
-import util from 'util';
 import { getRepoCommits } from '../git/__MOCKS__/bitbucketServiceMockFolder/getRepoCommits';
 
 describe('Bitbucket Service', () => {
