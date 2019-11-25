@@ -2,13 +2,13 @@ import { inject, injectable } from 'inversify';
 import { Types } from '../types';
 import { ListGetterOptions } from './common/ListGetterOptions';
 import { ICollaborationInspector, PullRequestState } from './ICollaborationInspector';
-import { CSVService } from '../model';
+import { VCSService } from '../model';
 
 @injectable()
 export class CollaborationInspector implements ICollaborationInspector {
-  private service: CSVService;
+  private service: VCSService;
 
-  constructor(@inject(Types.IContentRepositoryBrowser) service: CSVService) {
+  constructor(@inject(Types.IContentRepositoryBrowser) service: VCSService) {
     this.service = service;
   }
 

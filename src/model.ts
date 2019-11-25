@@ -1,6 +1,5 @@
-import { GitHubService } from './services/git/GitHubService';
 import { BitbucketService } from './services/bitbucket/BitbucketService';
-import { CSVServicesUtils } from './services/git/CSVServicesUtils';
+import { GitHubService } from './services/git/GitHubService';
 
 // New model starts here
 

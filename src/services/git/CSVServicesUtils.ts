@@ -1,13 +1,13 @@
 import { PullRequestState } from '../../inspectors/ICollaborationInspector';
-import { BitbucketPullRequestState, CSVService } from './ICVSService';
+import { BitbucketPullRequestState, VCSService } from './ICVSService';
 import { GitHubPullRequestState } from './IGitHubService';
 
-export class CSVServicesUtils {
+export class VCSServicesUtils {
   static getPRState = (
     state: PullRequestState | undefined,
-    service: CSVService,
+    service: VCSService,
   ): GitHubPullRequestState | BitbucketPullRequestState | undefined => {
-    if (service === CSVService.github) {
+    if (service === VCSService.github) {
       switch (state) {
         case PullRequestState.open:
           return GitHubPullRequestState.open;
@@ -20,7 +20,7 @@ export class CSVServicesUtils {
       }
     }
 
-    if (service === CSVService.bitbucket) {
+    if (service === VCSService.bitbucket) {
       switch (state) {
         case PullRequestState.open:
           return BitbucketPullRequestState.open;

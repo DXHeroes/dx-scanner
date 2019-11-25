@@ -3,7 +3,7 @@ import { Paginated } from '../../inspectors/common/Paginated';
 import { PullRequestState } from '../../inspectors/ICollaborationInspector';
 import { Commit, Contributor, ContributorStats, Directory, File, Issue, PullFiles, PullRequest, PullRequestReview, Symlink } from './model';
 
-export interface ICVSService {
+export interface IVCSService {
   getPullRequests(owner: string, repo: string, options?: ListGetterOptions<{ state?: PullRequestState }>): Promise<Paginated<PullRequest>>;
   getPullRequestReviews(owner: string, repo: string, prNumber: number): Promise<Paginated<PullRequestReview>>;
   getPullRequestFiles(owner: string, repo: string, prNumber: number): Promise<Paginated<PullFiles>>;
@@ -16,7 +16,7 @@ export interface ICVSService {
   getRepoContent(owner: string, repo: string, path: string): Promise<File | Symlink | Directory | null>;
 }
 
-export enum CSVService {
+export enum VCSService {
   github = 'GitHub',
   bitbucket = 'Bitbucket',
 }

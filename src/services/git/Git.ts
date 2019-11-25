@@ -3,7 +3,7 @@ import * as nodePath from 'path';
 import { isArray } from 'util';
 import { PullRequestState } from '../../inspectors/ICollaborationInspector';
 import { ErrorFactory } from '../../lib/errors/ErrorFactory';
-import { CSVService, Repository } from '../../model';
+import { Repository, VCSService } from '../../model';
 import { Types } from '../../types';
 import { IProjectFilesBrowserService, Metadata, MetadataType } from '../model';
 import { GitServiceUtils } from './GitServiceUtils';
@@ -12,9 +12,9 @@ import { Directory, File, Symlink } from './model';
 @injectable()
 export class Git implements IProjectFilesBrowserService {
   private repository: Repository;
-  private service: CSVService;
+  private service: VCSService;
 
-  constructor(repository: Repository, @inject(Types.IContentRepositoryBrowser) service: CSVService) {
+  constructor(repository: Repository, @inject(Types.IContentRepositoryBrowser) service: VCSService) {
     this.repository = repository;
     this.service = service;
   }
