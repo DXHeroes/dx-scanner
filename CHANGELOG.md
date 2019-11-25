@@ -1,3 +1,11 @@
+# [1.20.0](https://github.com/dxheroes/dx-scanner/compare/v1.19.0...v1.20.0) (2019-11-25)
+
+
+### Features
+
+* **fileInspector:** file inspector with root base path to scan files in whole root folder ([d0d66c3](https://github.com/dxheroes/dx-scanner/commit/d0d66c3))
+* **practices:** use root FileInspector ([caa6a72](https://github.com/dxheroes/dx-scanner/commit/caa6a72))
+
 # [1.19.0](https://github.com/dxheroes/dx-scanner/compare/v1.18.2...v1.19.0) (2019-11-21)
 
 
