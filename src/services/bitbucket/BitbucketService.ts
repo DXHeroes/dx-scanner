@@ -89,7 +89,7 @@ export class BitbucketService implements ICVSService {
     let state;
     if (options?.filter?.state) {
       state = CSVServicesUtils.getPRState(options.filter.state, CSVService.bitbucket);
-      Object.assign(params, { state: state });
+      params = { ...params, state }
     }
 
     const response = <DeepRequired<Bitbucket.Response<Bitbucket.Schema.PaginatedPullrequests>>>await this.client.pullrequests.list(params);
