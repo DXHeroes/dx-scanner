@@ -17,7 +17,6 @@ import { ErrorFactory } from '../../lib/errors';
 import { ICache } from '../../scanner/cache/ICache';
 import { InMemoryCache } from '../../scanner/cache/InMemoryCache';
 import { Types } from '../../types';
-import { VCSServicesUtils } from './VCSServicesUtils';
 import { IVCSService, VCSService } from './IVCSService';
 import {
   Commit,
@@ -34,6 +33,8 @@ import {
   RepoContentType,
   Symlink,
 } from './model';
+import { VCSServicesUtils } from './VCSServicesUtils';
+import qs from 'qs';
 const debug = Debug('cli:services:git:github-service');
 
 @injectable()
@@ -75,7 +76,8 @@ export class GitHubService implements IVCSService {
     let url = 'GET /repos/:owner/:repo/pulls';
     if (options !== undefined && options.filter !== undefined && options.filter.state !== undefined) {
       const state = VCSServicesUtils.getPRState(options.filter.state, VCSService.github);
-      url = `${url}?state=${state}`;
+      const stateForUri = qs.stringify({ state: state }, { addQueryPrefix: true });
+      url = `${url}${stateForUri}`;
     }
     const response: PullsListResponseItem[] = await this.paginate(url, owner, repo);
 
