@@ -89,13 +89,12 @@ export class BitbucketService implements ICVSService {
     let state;
     if (options !== undefined && options.filter !== undefined && options.filter.state !== undefined) {
       state = CSVServicesUtils.getPRState(options.filter.state, CSVService.bitbucket);
-      console.log(state);
       Object.assign(params, { state: state });
     }
 
     const response = <DeepRequired<Bitbucket.Response<Bitbucket.Schema.PaginatedPullrequests>>>await this.client.pullrequests.list(params);
     const url = 'www.bitbucket.org';
-    const ownerId = <string>(await this.client.users.get({ username: owner })).data.uuid;
+    const ownerId = String((await this.client.users.get({ username: owner })).data.uuid);
     const urlOwner = url.concat(`/${owner}`);
 
     const values = response.data.values.map(async (val) => {

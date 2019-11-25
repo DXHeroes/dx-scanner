@@ -1,16 +1,14 @@
 import nock from 'nock';
-import { BitbucketNock, PullRequest } from '../../../test/helpers/bitbucketNock';
-import { BitbucketService } from './BitbucketService';
-import { getPullRequestsResponse } from '../git/__MOCKS__/bitbucketServiceMockFolder/getPullRequestsResponse';
-import { getPullRequestResponse } from '../git/__MOCKS__/bitbucketServiceMockFolder/getPullRequestResponse';
-import { getPullCommits } from '../git/__MOCKS__/bitbucketServiceMockFolder/getPullCommits';
-import { getIssuesResponse } from '../git/__MOCKS__/bitbucketServiceMockFolder/getIssuesResponse';
-import { getIssueResponse } from '../git/__MOCKS__/bitbucketServiceMockFolder/getIssueResponse';
-import { getIssueCommentsResponse } from '../git/__MOCKS__/bitbucketServiceMockFolder/getIssueCommentsResponse';
-import { GitHubPullRequestState } from '../git/IGitHubService';
-import { BitbucketPullRequestState } from '../git/ICVSService';
+import { BitbucketNock } from '../../../test/helpers/bitbucketNock';
 import { ListGetterOptions } from '../../inspectors/common/ListGetterOptions';
 import { PullRequestState } from '../../inspectors/ICollaborationInspector';
+import { getIssueCommentsResponse } from '../git/__MOCKS__/bitbucketServiceMockFolder/getIssueCommentsResponse';
+import { getIssueResponse } from '../git/__MOCKS__/bitbucketServiceMockFolder/getIssueResponse';
+import { getIssuesResponse } from '../git/__MOCKS__/bitbucketServiceMockFolder/getIssuesResponse';
+import { getPullCommits } from '../git/__MOCKS__/bitbucketServiceMockFolder/getPullCommits';
+import { getPullRequestResponse } from '../git/__MOCKS__/bitbucketServiceMockFolder/getPullRequestResponse';
+import { getPullRequestsResponse } from '../git/__MOCKS__/bitbucketServiceMockFolder/getPullRequestsResponse';
+import { BitbucketService } from './BitbucketService';
 
 describe('Bitbucket Service', () => {
   let service: BitbucketService;
