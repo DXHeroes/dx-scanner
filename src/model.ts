@@ -205,4 +205,4 @@ export enum GitFLow {
   Git = 'Git',
 }
 
-export type CSVService = GitHubService | BitbucketService;
+export type VCSService = GitHubService | BitbucketService;
