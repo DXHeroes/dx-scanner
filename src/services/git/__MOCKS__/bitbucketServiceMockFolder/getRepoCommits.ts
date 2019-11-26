@@ -15,7 +15,7 @@ export const getRepoCommits: Paginated<PullCommits> = {
           'and implement ctx_Arg_Parse.',
         author: {
           name: 'antocuni',
-          email: 'undefined',
+          email: 'anto.cuni@gmail.com',
           date: '2019-11-19T10:48:09+00:00',
         },
         tree: {
