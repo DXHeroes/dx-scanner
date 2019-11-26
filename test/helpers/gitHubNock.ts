@@ -236,9 +236,9 @@ export class Repository {
   has_downloads = true;
   archived = false;
   disabled = false;
-  pushed_at = '2012-03-06T23:06:50Z';
-  created_at = '2012-03-06T23:06:50Z';
-  updated_at = '2012-03-06T23:06:50Z';
+  pushed_at = '2011-01-26T19:06:43Z';
+  created_at = '2011-01-26T19:01:12Z';
+  updated_at = '2011-01-26T19:14:43Z';
   permissions = {
     admin: true,
     push: true,
@@ -458,9 +458,9 @@ export class PullRequestItem {
   labels = [];
   milestone = null;
   created_at: string;
-  updated_at = '2012-03-06T23:06:50Z';
-  closed_at = '2012-03-06T23:06:50Z';
-  merged_at = '2012-03-06T23:06:50Z';
+  updated_at = '2011-01-26T19:01:12Z';
+  closed_at = '2011-01-26T19:01:12Z';
+  merged_at = '2011-01-26T19:01:12Z';
   merge_commit_sha = 'e5bd3914e2e596debea16f433f57875b5b90bcd6';
   assignee = null;
   assignees = [];
