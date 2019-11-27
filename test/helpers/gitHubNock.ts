@@ -42,7 +42,7 @@ export class GitHubNock {
   ): PullRequestItem[] {
     const responseBody = pulls.map(({ number, state, title, body, head, base, created_at, updated_at }) => {
       if (!created_at) {
-        created_at = '2012-03-06T23:06:50Z';
+        created_at = '2011-01-26T19:01:12Z';
       }
 
       if (!updated_at) {
@@ -77,7 +77,7 @@ export class GitHubNock {
     updated_at?: string,
   ): PullRequest {
     if (!created_at) {
-      created_at = '2012-03-06T23:06:50Z';
+      created_at = '2011-01-26T19:01:12Z';
     }
 
     if (!updated_at) {
