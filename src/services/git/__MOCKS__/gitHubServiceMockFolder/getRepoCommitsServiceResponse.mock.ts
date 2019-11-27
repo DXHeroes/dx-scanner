@@ -10,7 +10,7 @@ export const getRepoCommitsServiceResponse: Paginated<Commit> = {
       author: {
         name: 'The Octocat',
         email: 'octocat@nowhere.com',
-        date: '2012-03-06T23:06:50Z',
+        date: '2011-01-14T04:42:41Z',
       },
       tree: {
         sha: 'b4eecafa9be2f2006ce1b709d6857b07069b4608',
@@ -25,7 +25,7 @@ export const getRepoCommitsServiceResponse: Paginated<Commit> = {
       author: {
         name: 'Johnneylee Jack Rollins',
         email: 'johnneylee.rollins@gmail.com',
-        date: '2011-09-14T04:42:41Z',
+        date: '2011-01-14T04:42:41Z',
       },
       tree: {
         sha: 'b4eecafa9be2f2006ce1b709d6857b07069b4608',
@@ -40,7 +40,7 @@ export const getRepoCommitsServiceResponse: Paginated<Commit> = {
       author: {
         name: 'cameronmcefee',
         email: 'cameron@github.com',
-        date: '2011-01-26T19:06:08Z',
+        date: '2011-01-14T04:42:41Z',
       },
       tree: {
         sha: 'fcf4a9bba6857422971d67147517eb5edfdbf48d',
