@@ -1,6 +1,8 @@
 import gitUrlParse from 'git-url-parse';
 import { GitService } from './model';
 import { assertNever } from '../../lib/assertNever';
+import { ReporterUtils } from '../../reporters/ReporterUtils';
+import { sharedSubpath } from '../../detectors/utils';
 
 export class GitServiceUtils {
   static getUrlToRepo = (url: string, path?: string | undefined, branch = 'master') => {
@@ -35,5 +37,23 @@ export class GitServiceUtils {
       default:
         return assertNever(service);
     }
+  };
+
+  static getRepoName = (repositoryPath: string | undefined, path: string): string => {
+    if (repositoryPath) {
+      return GitServiceUtils.getPathOrRepoUrl(repositoryPath);
+    } else {
+      return path;
+    }
+  };
+
+  static getPathOrRepoUrl = (url: string, path?: string | undefined, branch = 'master') => {
+    const parsedUrl = gitUrlParse(url);
+
+    if (parsedUrl.protocol === 'file') {
+      return url;
+    }
+
+    return GitServiceUtils.getUrlToRepo(url, path, branch);
   };
 }

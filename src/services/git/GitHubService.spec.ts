@@ -25,6 +25,8 @@ import { GitHubNock } from '../../../test/helpers/gitHubNock';
 import { getRepoCommitsResponse } from './__MOCKS__/gitHubServiceMockFolder/getRepoCommitsResponse.mock';
 import { File } from './model';
 import { GitHubPullRequestState } from './IGitHubService';
+import util from 'util';
+import { getRepoCommitsServiceResponse } from './__MOCKS__/gitHubServiceMockFolder/getRepoCommitsServiceResponse.mock';
 
 describe('GitHub Service', () => {
   let service: GitHubService;
@@ -109,7 +111,7 @@ describe('GitHub Service', () => {
     new GitHubNock('1', 'octocat', 1, 'Hello-World').getCommits().reply(200, getRepoCommitsResponse);
     const response = await service.getRepoCommits('octocat', 'Hello-World');
 
-    expect(response.data).toMatchObject(getRepoCommitsResponse);
+    expect(response).toMatchObject(getRepoCommitsServiceResponse);
   });
 
   it('returns commits in own interface', async () => {
