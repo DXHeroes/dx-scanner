@@ -77,7 +77,7 @@ export class CLIReporter implements IReporter {
     const lines: string[] = [];
 
     const practices = practicesAndComponents.filter(
-      (p) => p.impact === impact && p.isOn === true && p.evaluation === PracticeEvaluationResult.notPracticing,
+      (p) => p.overridenImpact === impact && p.isOn === true && p.evaluation === PracticeEvaluationResult.notPracticing,
     );
 
     if (practices.length === 0) return undefined;
@@ -104,8 +104,8 @@ export class CLIReporter implements IReporter {
     for (const practiceWithContext of practices) {
       lines.push(this.linesForPractice(practiceWithContext.practice, color));
 
-      if (practiceWithContext.practice.defaultImpact !== practiceWithContext.practice.impact) {
-        lines.push(bold(this.changedImpact(practiceWithContext.practice, (color = grey))));
+      if (practiceWithContext.practice.impact !== practiceWithContext.overridenImpact) {
+        lines.push(bold(this.changedImpact(practiceWithContext, (color = grey))));
       }
     }
 
@@ -123,11 +123,13 @@ export class CLIReporter implements IReporter {
     return practiceLineTexts.join(' ');
   }
 
-  private changedImpact(practice: PracticeMetadata, color: Color) {
+  private changedImpact(practiceWithContext: PracticeWithContextForReporter, color: Color) {
     const practiceLineTexts = [
       reset(
         color(
-          `You changed impact of ${bold(practice.name)} from ${underline(<string>practice.defaultImpact)} to ${underline(practice.impact)}`,
+          `  You changed impact of ${bold(practiceWithContext.practice.name)} from ${underline(
+            practiceWithContext.practice.impact,
+          )} to ${underline(practiceWithContext.overridenImpact)}.`,
         ),
       ),
     ];

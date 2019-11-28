@@ -26,7 +26,7 @@ describe('ReporterUtils', () => {
     });
 
     it('one practicing practice and one skipped practicing', () => {
-      notPracticingHighImpactPracticeWithCtx.impact = PracticeImpact.off;
+      notPracticingHighImpactPracticeWithCtx.overridenImpact = PracticeImpact.off;
       notPracticingHighImpactPracticeWithCtx.isOn = false;
 
       const result = ReporterUtils.computeDXScore([practicingHighImpactPracticeWithCtx, notPracticingHighImpactPracticeWithCtx]);

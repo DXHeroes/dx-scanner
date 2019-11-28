@@ -1,3 +1,35 @@
+## [1.21.1](https://github.com/dxheroes/dx-scanner/compare/v1.21.0...v1.21.1) (2019-11-28)
+
+
+### Bug Fixes
+
+* **practices:** unify impact and defaultImpact to impact and ove… ([#170](https://github.com/dxheroes/dx-scanner/issues/170)) ([65adccb](https://github.com/dxheroes/dx-scanner/commit/65adccb))
+* case of id in a practice ([cf00f5a](https://github.com/dxheroes/dx-scanner/commit/cf00f5a))
+* change ID of practices for dependencies ([1bbcfe8](https://github.com/dxheroes/dx-scanner/commit/1bbcfe8))
+* **practices:** unify impact and defaultImpact to impact and overridenImpact ([55ae3f8](https://github.com/dxheroes/dx-scanner/commit/55ae3f8))
+
+# [1.21.0](https://github.com/dxheroes/dx-scanner/compare/v1.20.0...v1.21.0) (2019-11-28)
+
+
+### Bug Fixes
+
+* add email of an author ([ec651b5](https://github.com/dxheroes/dx-scanner/commit/ec651b5))
+* add the return type ([dfe3320](https://github.com/dxheroes/dx-scanner/commit/dfe3320))
+* add type of mocked response and fix the response ([869c21a](https://github.com/dxheroes/dx-scanner/commit/869c21a))
+* add type to repoCommits ([e3953ea](https://github.com/dxheroes/dx-scanner/commit/e3953ea))
+* auth is possibly undefined ([dc1f0f4](https://github.com/dxheroes/dx-scanner/commit/dc1f0f4))
+* mocked response ([6c5a7cb](https://github.com/dxheroes/dx-scanner/commit/6c5a7cb))
+* return repo commit in own interface ([c1cd1e4](https://github.com/dxheroes/dx-scanner/commit/c1cd1e4))
+* tests and interfaces ([c746286](https://github.com/dxheroes/dx-scanner/commit/c746286))
+* use one interface for both PullCommits and RepoCommits ([e936108](https://github.com/dxheroes/dx-scanner/commit/e936108))
+* via https://github.com/DXHeroes/dx-scanner/pull/165#discussion_r348598072 ([9052e1f](https://github.com/dxheroes/dx-scanner/commit/9052e1f)), closes [/github.com/DXHeroes/dx-scanner/pull/165#discussion_r348598072](https://github.com//github.com/DXHeroes/dx-scanner/pull/165/issues/discussion_r348598072)
+
+
+### Features
+
+* add RepoCommit and RepoCommits class; ([9ccfead](https://github.com/dxheroes/dx-scanner/commit/9ccfead))
+* implement getRepoCommits() ([8cd4fec](https://github.com/dxheroes/dx-scanner/commit/8cd4fec))
+
 # [1.20.0](https://github.com/dxheroes/dx-scanner/compare/v1.19.0...v1.20.0) (2019-11-25)
 
 
