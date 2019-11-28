@@ -12,7 +12,7 @@ export class BitbucketNock {
     this.url = 'https://api.bitbucket.org/2.0';
   }
 
-  getApiResponse(resource: string, id?: number, value?: string): nock.Scope {
+  getApiResponse(resource: string, id?: number | string, value?: string): nock.Scope {
     let url = `${this.url}/repositories/${this.user}/${this.repoName}/${resource}`;
     let response;
 
@@ -50,6 +50,10 @@ export class BitbucketNock {
           break;
         case 'commits':
           response = new RepoCommits().repoCommits;
+          break;
+        case 'commit':
+          url = url.concat(`/${id}`);
+          response = new RepoCommit().repoCommit;
           break;
         default:
           throw Error('You passed wrong value or id');
