@@ -10,7 +10,7 @@ export const getPullRequestResponse: PullRequest = {
   body: 'Added a floor() ufunc to micronumpy',
   createdAt: '2011-06-22T19:44:39.555192+00:00',
   updatedAt: '2011-06-23T13:52:30.230741+00:00',
-  closedAt: 'undefined',
+  closedAt: null,
   mergedAt: null,
   state: 'DECLINED',
   id: 1,
