@@ -4,7 +4,7 @@ import { DxPractice } from '../DxPracticeDecorator';
 import { PracticeContext } from '../../contexts/practice/PracticeContext';
 
 @DxPractice({
-  id: 'Javascript.PackageJsonConfigurationSetCorrectly',
+  id: 'JavaScript.PackageJsonConfigurationSetCorrectly',
   name: 'Configure Scripts in package.json',
   impact: PracticeImpact.medium,
   suggestion:
