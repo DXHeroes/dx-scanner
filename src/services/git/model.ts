@@ -101,10 +101,10 @@ export interface IssueComment {
   user: UserInfo;
   id: number;
   url: string;
-  body: string;
+  body: string | undefined;
   createdAt: string;
   updatedAt: string | undefined;
-  authorAssociation: string;
+  authorAssociation: string | undefined;
 }
 
 export interface PullFiles {

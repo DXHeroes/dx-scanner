@@ -7,6 +7,7 @@ import { getPullCommits } from '../git/__MOCKS__/bitbucketServiceMockFolder/getP
 import { getIssuesResponse } from '../git/__MOCKS__/bitbucketServiceMockFolder/getIssuesResponse';
 import { getIssueResponse } from '../git/__MOCKS__/bitbucketServiceMockFolder/getIssueResponse';
 import { getIssueCommentsResponse } from '../git/__MOCKS__/bitbucketServiceMockFolder/getIssueCommentsResponse';
+import { getRepoCommits } from '../git/__MOCKS__/bitbucketServiceMockFolder/getRepoCommits';
 
 describe('Bitbucket Service', () => {
   let service: BitbucketService;
@@ -61,5 +62,12 @@ describe('Bitbucket Service', () => {
 
     const response = await service.getIssueComments('pypy', 'pypy', 3086);
     expect(response).toMatchObject(getIssueCommentsResponse);
+  });
+
+  it('returns repo commits in own interface', async () => {
+    bitbucketNock.getApiResponse('commits');
+
+    const response = await service.getRepoCommits('pypy', 'pypy');
+    expect(response).toMatchObject(getRepoCommits);
   });
 });
