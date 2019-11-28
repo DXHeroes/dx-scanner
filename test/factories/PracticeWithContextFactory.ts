@@ -31,7 +31,7 @@ export const practiceWithContextFactory = (
         impact: PracticeImpact.high,
         url: '.',
       },
-      impact: PracticeImpact.high,
+      overridenImpact: PracticeImpact.high,
       evaluation: PracticeEvaluationResult.practicing,
       isOn: true,
     },

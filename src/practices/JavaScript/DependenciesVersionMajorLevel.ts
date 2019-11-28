@@ -7,7 +7,7 @@ import { DxPractice } from '../DxPracticeDecorator';
 import { IPractice } from '../IPractice';
 
 @DxPractice({
-  id: 'LanguageIndependent.DependenciesVersionMajorLevel',
+  id: 'JavaScript.DependenciesVersionMajorLevel',
   name: 'Update Dependencies of Major Level',
   impact: PracticeImpact.small,
   suggestion: 'Keep the dependencies updated to have all possible features. Use, for example, Renovate Bot.',
