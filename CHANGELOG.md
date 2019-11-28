@@ -1,3 +1,13 @@
+## [1.21.1](https://github.com/dxheroes/dx-scanner/compare/v1.21.0...v1.21.1) (2019-11-28)
+
+
+### Bug Fixes
+
+* **practices:** unify impact and defaultImpact to impact and ove… ([#170](https://github.com/dxheroes/dx-scanner/issues/170)) ([65adccb](https://github.com/dxheroes/dx-scanner/commit/65adccb))
+* case of id in a practice ([cf00f5a](https://github.com/dxheroes/dx-scanner/commit/cf00f5a))
+* change ID of practices for dependencies ([1bbcfe8](https://github.com/dxheroes/dx-scanner/commit/1bbcfe8))
+* **practices:** unify impact and defaultImpact to impact and overridenImpact ([55ae3f8](https://github.com/dxheroes/dx-scanner/commit/55ae3f8))
+
 # [1.21.0](https://github.com/dxheroes/dx-scanner/compare/v1.20.0...v1.21.0) (2019-11-28)
 
 
