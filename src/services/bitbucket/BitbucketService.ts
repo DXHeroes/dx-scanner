@@ -320,7 +320,6 @@ export class BitbucketService implements ICVSService {
     const response = <DeepRequired<Bitbucket.Response<Bitbucket.Schema.Commit>>>await this.client.commits.get(params);
     return {
       sha: response.data.hash,
-
       url: response.data.links.html.href,
       message: response.data.rendered.message.raw,
       author: {
