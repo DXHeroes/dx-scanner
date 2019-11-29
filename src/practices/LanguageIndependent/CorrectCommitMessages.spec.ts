@@ -1,19 +1,15 @@
+import nock from 'nock';
+import { CollaborationInspector } from '../../inspectors/CollaborationInspector';
 import { createTestContainer, TestContainerContext } from '../../inversify.config';
 import { PracticeEvaluationResult } from '../../model';
-import nock from 'nock';
-import { GitHubNock } from '../../../test/helpers/gitHubNock';
-import { getRepoCommitsResponse } from '../../services/git/__MOCKS__/gitHubServiceMockFolder/getRepoCommitsResponse.mock';
+import { getRepoCommitsServiceResponse } from '../../services/git/__MOCKS__/gitHubServiceMockFolder/getRepoCommitsServiceResponse.mock';
 import { CorrectCommitMessagesPractice } from './CorrectCommitMessages';
-import { CollaborationInspector } from '../../inspectors/CollaborationInspector';
-import { GitHubService } from '../../services/git/GitHubService';
 
 describe('CorrectCommitMessages', () => {
   let practice: CorrectCommitMessagesPractice;
   let containerCtx: TestContainerContext;
   const MockedCollaborationInspector = <jest.Mock<CollaborationInspector>>(<unknown>CollaborationInspector);
   let mockCollaborationInspector: CollaborationInspector;
-  let mockGithubService: GitHubService;
-  const MockedGithubService = <jest.Mock<GitHubService>>(<unknown>GitHubService);
 
   beforeEach(async () => {
     nock.cleanAll();
@@ -24,7 +20,6 @@ describe('CorrectCommitMessages', () => {
     containerCtx.container.bind('CorrectCommitMessagesPractice').to(CorrectCommitMessagesPractice);
     practice = containerCtx.container.get('CorrectCommitMessagesPractice');
     mockCollaborationInspector = new MockedCollaborationInspector();
-    mockGithubService = new GitHubService({ uri: '.' });
   });
 
   afterEach(async () => {
@@ -32,26 +27,33 @@ describe('CorrectCommitMessages', () => {
     containerCtx.practiceContext.fileInspector!.purgeCache();
   });
 
-  // it('return practicing if the commit messages are correct', async () => {
-  //   // containerCtx.practiceContext.projectComponent.repositoryPath = 'https://github.com/octocat/Hello-World';
-  //   // new GitHubNock('1', 'octocat', 1, 'Hello-World').getCommits().reply(200, getRepoCommitsResponse);
+  it('return practicing if the commit messages are correct', async () => {
+    mockCollaborationInspector.getRepoCommits = async () => {
+      getRepoCommitsServiceResponse.items.forEach((item) => {
+        item.message = 'fix: correct commit message';
+      });
+      return getRepoCommitsServiceResponse;
+    };
 
-  //   const getRepoCommits = (mockCollaborationInspector.getRepoCommits = async (owner: string, repo: string, sha?: string) => {
-  //     return mockGithubService.getRepoCommits(owner, repo, sha);
-  //   });
-
-  //   const response = await getRepoCommits('pypy', 'pypy');
-  //   console.log(response);
-
-  //   const evaluated = await practice.evaluate(containerCtx.practiceContext);
-  //   expect(evaluated).toEqual(PracticeEvaluationResult.practicing);
-  // });
+    const evaluated = await practice.evaluate({
+      ...containerCtx.practiceContext,
+      collaborationInspector: mockCollaborationInspector,
+    });
+    expect(evaluated).toEqual(PracticeEvaluationResult.practicing);
+  });
 
   it('return not practicing if the commit messages are incorrect', async () => {
-    containerCtx.practiceContext.projectComponent.repositoryPath = 'https://github.com/octocat/Hello-World';
-    new GitHubNock('1', 'octocat', 1, 'Hello-World').getCommits().reply(200, getRepoCommitsResponse);
+    mockCollaborationInspector.getRepoCommits = async () => {
+      getRepoCommitsServiceResponse.items.forEach((item) => {
+        item.message = 'Incorrect commit message';
+      });
+      return getRepoCommitsServiceResponse;
+    };
 
-    const evaluated = await practice.evaluate(containerCtx.practiceContext);
+    const evaluated = await practice.evaluate({
+      ...containerCtx.practiceContext,
+      collaborationInspector: mockCollaborationInspector,
+    });
     expect(evaluated).toEqual(PracticeEvaluationResult.notPracticing);
   });
 });

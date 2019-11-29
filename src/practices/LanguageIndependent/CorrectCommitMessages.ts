@@ -1,9 +1,9 @@
-import { IPractice } from '../IPractice';
-import { PracticeEvaluationResult, PracticeImpact } from '../../model';
-import { DxPractice } from '../DxPracticeDecorator';
-import { PracticeContext } from '../../contexts/practice/PracticeContext';
-import { GitServiceUtils } from '../../services/git/GitServiceUtils';
 import * as parser from 'parse-commit-message';
+import { PracticeContext } from '../../contexts/practice/PracticeContext';
+import { PracticeEvaluationResult, PracticeImpact } from '../../model';
+import { GitServiceUtils } from '../../services/git/GitServiceUtils';
+import { DxPractice } from '../DxPracticeDecorator';
+import { IPractice } from '../IPractice';
 
 @DxPractice({
   id: 'LanguageIndependent.CorrectCommitMessages',
