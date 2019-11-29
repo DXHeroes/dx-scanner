@@ -27,7 +27,7 @@ describe('CorrectCommitMessages', () => {
     containerCtx.practiceContext.fileInspector!.purgeCache();
   });
 
-  it('return practicing if the commit messages are correct', async () => {
+  it('returns practicing if the commit messages are correct', async () => {
     mockCollaborationInspector.getRepoCommits = async () => {
       getRepoCommitsServiceResponse.items.forEach((item) => {
         item.message = 'fix: correct commit message';
@@ -42,7 +42,7 @@ describe('CorrectCommitMessages', () => {
     expect(evaluated).toEqual(PracticeEvaluationResult.practicing);
   });
 
-  it('return not practicing if the commit messages are incorrect', async () => {
+  it('returns not practicing if the commit messages are incorrect', async () => {
     mockCollaborationInspector.getRepoCommits = async () => {
       getRepoCommitsServiceResponse.items.forEach((item) => {
         item.message = 'Incorrect commit message';
@@ -55,5 +55,15 @@ describe('CorrectCommitMessages', () => {
       collaborationInspector: mockCollaborationInspector,
     });
     expect(evaluated).toEqual(PracticeEvaluationResult.notPracticing);
+  });
+
+  it('returns unknown if there is no collaborationInspector', async () => {
+    const evaluated = await practice.evaluate({ ...containerCtx.practiceContext, collaborationInspector: undefined });
+    expect(evaluated).toEqual(PracticeEvaluationResult.unknown);
+  });
+
+  it('returns always true, as it is always applicable', async () => {
+    const response = await practice.isApplicable();
+    expect(response).toBe(true);
   });
 });
