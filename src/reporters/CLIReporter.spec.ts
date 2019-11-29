@@ -24,23 +24,23 @@ describe('CLIReporter', () => {
         practicingHighImpactPracticeWithCtx,
         notPracticingHighImpactPracticeWithCtx,
         practiceWithContextFactory({
-          impact: PracticeImpact.medium,
+          overridenImpact: PracticeImpact.medium,
           evaluation: PracticeEvaluationResult.notPracticing,
         }),
         practiceWithContextFactory({
-          impact: PracticeImpact.small,
+          overridenImpact: PracticeImpact.small,
           evaluation: PracticeEvaluationResult.notPracticing,
         }),
         practiceWithContextFactory({
-          impact: PracticeImpact.hint,
+          overridenImpact: PracticeImpact.hint,
           evaluation: PracticeEvaluationResult.notPracticing,
         }),
         practiceWithContextFactory({
-          impact: PracticeImpact.off,
+          overridenImpact: PracticeImpact.off,
           evaluation: PracticeEvaluationResult.notPracticing,
           isOn: false,
         }),
-        practiceWithContextFactory({ impact: PracticeImpact.high, evaluation: PracticeEvaluationResult.unknown }),
+        practiceWithContextFactory({ overridenImpact: PracticeImpact.high, evaluation: PracticeEvaluationResult.unknown }),
       ]);
 
       expect(result).toContain('Improvements with highest impact');

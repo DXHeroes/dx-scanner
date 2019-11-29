@@ -184,7 +184,7 @@ export class Scanner {
         component: p.componentContext.projectComponent,
         practice: p.practice.getMetadata(),
         evaluation: p.evaluation,
-        impact: <PracticeImpact>(overridenImpact ? overridenImpact : p.practice.getMetadata().impact),
+        overridenImpact: <PracticeImpact>(overridenImpact ? overridenImpact : p.practice.getMetadata().impact),
         isOn: p.isOn,
       };
     });
