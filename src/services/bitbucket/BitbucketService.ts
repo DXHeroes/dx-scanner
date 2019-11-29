@@ -283,7 +283,30 @@ export class BitbucketService implements ICVSService {
   }
 
   async getRepoCommits(owner: string, repo: string): Promise<Paginated<Commit>> {
-    throw new Error('Method not implemented yet.');
+    const params: Bitbucket.Params.RepositoriesListCommits = {
+      repo_slug: repo,
+      username: owner,
+    };
+    const response = <DeepRequired<Bitbucket.Response<BitbucketCommit>>>await this.client.repositories.listCommits(params);
+    const items = response.data.values.map((val) => ({
+      sha: val.hash,
+      url: val.links.html.href,
+      message: val.rendered.message.raw,
+      author: {
+        name: val.author.user.nickname,
+        email: this.extractEmailFromString(val.author.raw) || '',
+        date: val.date,
+      },
+      tree: {
+        sha: val.parents[0].hash,
+        url: val.parents[0].links.html.href,
+      },
+      // TODO
+      verified: false,
+    }));
+    const pagination = this.getPagination(response.data);
+
+    return { items, ...pagination };
   }
 
   async getCommit(owner: string, repo: string, commitSha: string): Promise<Commit> {
