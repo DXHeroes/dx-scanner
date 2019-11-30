@@ -4,7 +4,7 @@ import { Package } from '../../inspectors/IPackageInspector';
 import { PackageInspectorBase, SemverLevel } from '../../inspectors/package/PackageInspectorBase';
 import { PracticeEvaluationResult, PracticeImpact, ProgrammingLanguage } from '../../model';
 import { DxPractice } from '../DxPracticeDecorator';
-import { IPractice } from '../IPractice';
+import { PracticeBase } from '../PracticeBase';
 
 @DxPractice({
   id: 'JavaScript.DependenciesVersionMajorLevel',
@@ -14,7 +14,7 @@ import { IPractice } from '../IPractice';
   reportOnlyOnce: true,
   url: 'https://renovatebot.com/',
 })
-export class DependenciesVersionMajorLevel implements IPractice {
+export class DependenciesVersionMajorLevel extends PracticeBase {
   async isApplicable(ctx: PracticeContext): Promise<boolean> {
     return (
       ctx.projectComponent.language === ProgrammingLanguage.JavaScript || ctx.projectComponent.language === ProgrammingLanguage.TypeScript
@@ -22,22 +22,20 @@ export class DependenciesVersionMajorLevel implements IPractice {
   }
 
   async evaluate(ctx: PracticeContext): Promise<PracticeEvaluationResult> {
-    if (ctx.fileInspector === undefined || ctx.packageInspector === undefined) {
+    if (!ctx.fileInspector || !ctx.packageInspector) {
       return PracticeEvaluationResult.unknown;
     }
 
     const pkgs = ctx.packageInspector.packages;
-    if (pkgs === undefined) {
+    if (!pkgs) {
       return PracticeEvaluationResult.unknown;
     }
 
-    const result = await DependenciesVersionMajorLevel.runNcu(pkgs);
-    const practiceEvaluationResult = DependenciesVersionMajorLevel.isPracticing(result, SemverLevel.major, pkgs);
-
-    return practiceEvaluationResult || PracticeEvaluationResult.practicing;
+    const result = await this.runNcu(pkgs);
+    return this.isPracticing(result, SemverLevel.major, pkgs);
   }
 
-  static async runNcu(pkgs: Package[] | undefined) {
+  async runNcu(pkgs: Package[] | undefined) {
     const fakePkgJson: { dependencies: { [key: string]: string } } = { dependencies: {} };
 
     pkgs &&
@@ -45,30 +43,33 @@ export class DependenciesVersionMajorLevel implements IPractice {
         fakePkgJson.dependencies[p.name] = p.requestedVersion.value;
       });
 
-    const result = await ncu.run({
+    const pkgsToBeUpdated = await ncu.run({
       packageData: JSON.stringify(fakePkgJson),
     });
 
-    return result;
+    return pkgsToBeUpdated;
   }
 
-  static isPracticing(
-    result: { [key: string]: string },
-    semverVersion: SemverLevel,
-    pkgs: Package[],
-  ): PracticeEvaluationResult | undefined {
-    for (const packageName in result) {
-      const parsedVersion = PackageInspectorBase.semverToPackageVersion(result[packageName]);
+  isPracticing(pkgsWithNewVersion: { [key: string]: string }, semverLevel: SemverLevel, pkgs: Package[]): PracticeEvaluationResult {
+    // packages with Major level to be updated
+    const pkgsToUpdate: { name: string; newVersion: string; currentVersion: string }[] = [];
+
+    for (const packageName in pkgsWithNewVersion) {
+      const parsedVersion = PackageInspectorBase.semverToPackageVersion(pkgsWithNewVersion[packageName]);
       if (parsedVersion) {
         for (const pkg of pkgs) {
           if (pkg.name === packageName) {
-            if (parsedVersion[semverVersion] > pkg.lockfileVersion[semverVersion]) {
-              return PracticeEvaluationResult.notPracticing;
+            if (parsedVersion[semverLevel] > pkg.lockfileVersion[semverLevel]) {
+              pkgsToUpdate.push({ name: pkg.name, newVersion: parsedVersion.value, currentVersion: pkg.lockfileVersion.value });
             }
           }
         }
       }
     }
-    return undefined;
+
+    this.data.detail = 'any';
+
+    if (pkgsToUpdate.length > 0) return PracticeEvaluationResult.notPracticing;
+    return PracticeEvaluationResult.practicing;
   }
 }
