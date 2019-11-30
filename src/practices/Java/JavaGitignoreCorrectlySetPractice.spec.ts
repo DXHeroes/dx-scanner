@@ -1,9 +1,9 @@
 import { JavaGitignoreCorrectlySetPractice } from './JavaGitignoreCorrectlySetPractice';
-import { gitignoreContent } from '../../detectors/__MOCKS__/Java/gitignoreContent.mock';
 import { PracticeEvaluationResult } from '../../model';
 import { TestContainerContext, createTestContainer } from '../../inversify.config';
 import { pomXMLContents } from '../../detectors/__MOCKS__/Java/pomXMLContents.mock';
 import { buildGRADLEContents } from '../../detectors/__MOCKS__/Java/buildGRADLEContents.mock';
+import { gitignoreContent } from '../../detectors/__MOCKS__/Java/gitignoreContent.mock';
 
 describe('JavaGitignoreCorrectlySetPractice', () => {
   let practice: JavaGitignoreCorrectlySetPractice;

@@ -6,11 +6,6 @@ import path from 'path';
 import git from 'simple-git/promise';
 import url from 'url';
 import util, { inspect } from 'util';
-import { LanguageContext } from '../contexts/language/LanguageContext';
-import { PracticeContext } from '../contexts/practice/PracticeContext';
-import { ProjectComponentContext } from '../contexts/projectComponent/ProjectComponentContext';
-import { ScannerContext } from '@contexts/scanner/ScannerContext';
-import { ScanningStrategy, ScanningStrategyDetector, ServiceType } from '../detectors/ScanningStrategyDetector';
 import { ArgumentsProvider } from '../inversify.config';
 import {
   LanguageAtPath,
@@ -23,11 +18,16 @@ import {
 } from '../model';
 import { IPracticeWithMetadata } from '../practices/DxPracticeDecorator';
 import { ScannerContextFactory, Types } from '../types';
-import { ScannerUtils } from '@core/ScannerUtils';
+import { ScannerUtils } from '../scanner/ScannerUtils';
 import _ from 'lodash';
-import { sharedSubpath } from '../detectors/utils';
 import { cli } from 'cli-ux';
-import { IReporter } from '@reporters/IReporter';
+import { ScanningStrategyDetector, ScanningStrategy, ServiceType } from '../detectors';
+import { IReporter } from '../reporters';
+import { ScannerContext } from '../contexts/scanner/ScannerContext';
+import { sharedSubpath } from '../detectors/utils';
+import { LanguageContext } from '../contexts/language/LanguageContext';
+import { ProjectComponentContext } from '../contexts/projectComponent/ProjectComponentContext';
+import { PracticeContext } from '../contexts/practice/PracticeContext';
 
 @injectable()
 export class Scanner {

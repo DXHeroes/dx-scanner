@@ -1,4 +1,4 @@
-import { PracticeWithContextForReporter } from '@reporters/IReporter';
+import { PracticeWithContextForReporter } from '../../reporters/IReporter';
 import {
   ProgrammingLanguage,
   ProjectComponentFramework,
