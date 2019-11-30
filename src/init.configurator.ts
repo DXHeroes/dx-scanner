@@ -5,12 +5,15 @@ import { cli } from 'cli-ux';
 import { IPracticeWithMetadata } from './practices/DxPracticeDecorator';
 
 export const initialize = (scanPath: string, container: Container) => {
-  const yamlPath = `${scanPath}/.dxscannerrc.yaml`;
-  cli.action.start(`Initializing configuration: ${yamlPath}`);
+  const filePath = `${scanPath}/.dxscannerrc`;
+  cli.action.start(`Initializing configuration: ${filePath}.yaml`);
   // check if .dxscannerrc.yaml already exists
-  const yamlExists: boolean = fs.existsSync(yamlPath);
-  if (!yamlExists) {
-    createYAML(yamlPath, container);
+  const fileExists: boolean = fs.existsSync(`${filePath}`);
+  const yamlExists: boolean = fs.existsSync(`${filePath}.yaml`);
+  const ymlExists: boolean = fs.existsSync(`${filePath}.yml`);
+  const jsonExists: boolean = fs.existsSync(`${filePath}.json`);
+  if (!yamlExists && !fileExists && !ymlExists && !jsonExists) {
+    createYAML(`${filePath}.yaml`, container);
   }
   cli.action.stop();
   process.exit(0);
