@@ -1,5 +1,5 @@
 import nock from 'nock';
-import { BitbucketNock } from '../../../test/helpers/bitbucketNock';
+import { BitbucketNock } from '../../test/helpers/bitbucketNock';
 import { BitbucketService } from './BitbucketService';
 import { getPullRequestsResponse } from '../git/__MOCKS__/bitbucketServiceMockFolder/getPullRequestsResponse';
 import { getPullRequestResponse } from '../git/__MOCKS__/bitbucketServiceMockFolder/getPullRequestResponse';

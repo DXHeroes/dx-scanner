@@ -7,7 +7,7 @@ import { getIssueResponse } from '../services/git/__MOCKS__/gitHubServiceMockFol
 import { getIssueServiceResponse } from '../services/git/__MOCKS__/gitHubServiceMockFolder/getIssueServiceResponse.mock';
 import nock from 'nock';
 import { TestContainerContext, createTestContainer } from '../inversify.config';
-import { GitHubNock } from '../../test/helpers/gitHubNock';
+import { GitHubNock } from '../test/helpers/gitHubNock';
 
 describe('Issue Tracking Inspector', () => {
   let inspector: IssueTrackingInspector;

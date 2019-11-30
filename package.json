@@ -45,6 +45,7 @@
     "js-yaml": "3.13.1",
     "lodash": "4.17.15",
     "memfs": "2.16.1",
+    "module-alias": "^2.2.2",
     "node-filter-async": "1.1.3",
     "npm-check-updates": "3.2.1",
     "oclif": "1.14.2",
@@ -109,5 +110,16 @@
     "developer experience",
     "dxheroes",
     "code analysis"
-  ]
+  ],
+  "_moduleAliases": {
+    "@contexts": "lib/contexts",
+    "@detectors": "lib/detectors",
+    "@inspectors": "lib/inspectors",
+    "@libs": "lib/libs",
+    "@practices": "lib/practices",
+    "@reporters": "lib/reporters",
+    "@core": "lib/scanner",
+    "@services": "lib/services",
+    "@test": "lib/test"
+}
 }

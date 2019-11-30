@@ -21,7 +21,7 @@ import { getPullsFilesResponse } from './__MOCKS__/gitHubServiceMockFolder/getPu
 import { getPullsFilesServiceResponse } from './__MOCKS__/gitHubServiceMockFolder/getPullFilesServiceResponse.mock';
 import { getPullCommitsResponse } from './__MOCKS__/gitHubServiceMockFolder/getPullsCommitsResponse.mock';
 import { getPullCommitsServiceResponse } from './__MOCKS__/gitHubServiceMockFolder/getPullCommitsServiceResponse.mock';
-import { GitHubNock } from '../../../test/helpers/gitHubNock';
+import { GitHubNock } from '../../test/helpers/gitHubNock';
 import { getRepoCommitsResponse } from './__MOCKS__/gitHubServiceMockFolder/getRepoCommitsResponse.mock';
 import { File } from './model';
 import { GitHubPullRequestState } from './IGitHubService';

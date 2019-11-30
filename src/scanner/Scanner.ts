@@ -9,7 +9,7 @@ import util, { inspect } from 'util';
 import { LanguageContext } from '../contexts/language/LanguageContext';
 import { PracticeContext } from '../contexts/practice/PracticeContext';
 import { ProjectComponentContext } from '../contexts/projectComponent/ProjectComponentContext';
-import { ScannerContext } from '../contexts/scanner/ScannerContext';
+import { ScannerContext } from '@contexts/scanner/ScannerContext';
 import { ScanningStrategy, ScanningStrategyDetector, ServiceType } from '../detectors/ScanningStrategyDetector';
 import { ArgumentsProvider } from '../inversify.config';
 import {
@@ -22,12 +22,12 @@ import {
   PracticeImpact,
 } from '../model';
 import { IPracticeWithMetadata } from '../practices/DxPracticeDecorator';
-import { IReporter } from '../reporters/IReporter';
 import { ScannerContextFactory, Types } from '../types';
-import { ScannerUtils } from './ScannerUtils';
+import { ScannerUtils } from '@core/ScannerUtils';
 import _ from 'lodash';
 import { sharedSubpath } from '../detectors/utils';
 import { cli } from 'cli-ux';
+import { IReporter } from '@reporters/IReporter';
 
 @injectable()
 export class Scanner {

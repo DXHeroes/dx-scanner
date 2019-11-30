@@ -8,7 +8,7 @@ import { getPullCommitsServiceResponse } from '../services/git/__MOCKS__/gitHubS
 import nock from 'nock';
 import { TestContainerContext } from '../inversify.config';
 import { createTestContainer } from '../inversify.config';
-import { GitHubNock } from '../../test/helpers/gitHubNock';
+import { GitHubNock } from '../test/helpers/gitHubNock';
 
 describe('Collaboration Inspector', () => {
   let inspector: CollaborationInspector;

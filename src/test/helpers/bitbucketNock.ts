@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/camelcase */
 import nock from 'nock';
-import { BitbucketCommit } from '../../src/services/bitbucket/BitbucketService';
+import { BitbucketCommit } from '../../services/bitbucket/BitbucketService';
 
 export class BitbucketNock {
   user: string;
