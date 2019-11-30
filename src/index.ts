@@ -7,7 +7,6 @@ import { ServiceError, ErrorCode } from './lib/errors';
 import updateNotifier from 'update-notifier';
 import { ScanningStrategyDetectorUtils } from './detectors/utils/ScanningStrategyDetectorUtils';
 import { PracticeImpact } from './model';
-import { initialize } from './init.configurator';
 
 class DXScannerCommand extends Command {
   static description = 'Scan your project for possible DX recommendations.';
@@ -53,7 +52,10 @@ class DXScannerCommand extends Command {
     const container = createRootContainer({ uri: scanPath, auth: authorization, json, fail, recursive: flags.recursive });
     const scanner = container.get(Scanner);
 
-    flags.init ? initialize(scanPath, container) : undefined;
+    if (flags.init) {
+      await scanner.init();
+      process.exit(0);
+    }
 
     let scanResult: ScanResult;
     try {
