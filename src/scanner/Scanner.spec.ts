@@ -39,5 +39,25 @@ describe('Scanner', () => {
       exists = await containerCtx.virtualFileSystemService.exists('/.dxscannerrc.yaml');
       expect(exists).toEqual(true);
     });
+
+    it('configuration file is not created if a similar file exists', async () => {
+      containerCtx.container.rebind(FileSystemService).toConstantValue(containerCtx.virtualFileSystemService);
+      const scanner = containerCtx.container.get(Scanner);
+
+      containerCtx.virtualFileSystemService.setFileSystem({
+        '/.dxscannerrc.json': '',
+      });
+
+      let exists = await containerCtx.virtualFileSystemService.exists('/.dxscannerrc.json');
+      expect(exists).toEqual(true);
+
+      exists = await containerCtx.virtualFileSystemService.exists('/.dxscannerrc.yaml');
+      expect(exists).toEqual(false);
+
+      await scanner.init();
+
+      exists = await containerCtx.virtualFileSystemService.exists('/.dxscannerrc.yaml');
+      expect(exists).toEqual(false);
+    });
   });
 });
