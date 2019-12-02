@@ -2003,13 +2003,6 @@ collapse-white-space@^1.0.2:
   resolved "https://registry.yarnpkg.com/collapse-white-space/-/collapse-white-space-1.0.5.tgz#c2495b699ab1ed380d29a1091e01063e75dbbe3a"
   integrity sha512-703bOOmytCYAX9cXYqoikYIx6twmFCXsnzRQheBcTG3nzKYBR4P/+wkYeH+Mvj7qUz8zZDtdyzbxfnEi/kYzRQ==
 
-collect-mentions@^1.0.2:
-  version "1.0.2"
-  resolved "https://registry.yarnpkg.com/collect-mentions/-/collect-mentions-1.0.2.tgz#30734fcb33cbf8999cf7fd6d9c3133045f0b4dcc"
-  integrity sha512-/jRhzWp5bkZnvgtR+agXT0RvYKBXOl4uG+eKA6ip3tp1x+jRAV36jW2TceKutOeuEPjHKaQ6DJjeh5zvZF0fWQ==
-  dependencies:
-    mentions-regex "^2.0.3"
-
 collection-visit@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/collection-visit/-/collection-visit-1.0.0.tgz#4bc0373c164bc3291b4d368c829cf1a80a59dca0"
@@ -2477,11 +2470,6 @@ decompress-response@^3.2.0, decompress-response@^3.3.0:
   dependencies:
     mimic-response "^1.0.0"
 
-dedent@^0.7.0:
-  version "0.7.0"
-  resolved "https://registry.yarnpkg.com/dedent/-/dedent-0.7.0.tgz#2495ddbaf6eb874abb0e1be9df22d2e5a544326c"
-  integrity sha1-JJXduvbrh0q7Dhvp3yLS5aVEMmw=
-
 deep-eql@^3.0.1:
   version "3.0.1"
   resolved "https://registry.yarnpkg.com/deep-eql/-/deep-eql-3.0.1.tgz#dfc9404400ad1c8fe023e7da1df1c147c4b444df"
@@ -2901,11 +2889,6 @@ eslint@6.7.2:
     table "^5.2.3"
     text-table "^0.2.0"
     v8-compile-cache "^2.0.3"
-
-esm@^3.0.84:
-  version "3.2.25"
-  resolved "https://registry.yarnpkg.com/esm/-/esm-3.2.25.tgz#342c18c29d56157688ba5ce31f8431fbb795cc10"
-  integrity sha512-U1suiZ2oDVWv4zPO56S0NcR5QriEahGtdN2OR6FiOG4WJvcjBVFB0qI4+eKoWFH483PKGuLuu6V8Z4T5g63UVA==
 
 espree@^6.1.2:
   version "6.1.2"
@@ -5744,11 +5727,6 @@ memfs@2.17.1:
     fast-extend "0.0.2"
     fs-monkey "^0.3.3"
 
-mentions-regex@^2.0.3:
-  version "2.0.3"
-  resolved "https://registry.yarnpkg.com/mentions-regex/-/mentions-regex-2.0.3.tgz#442717a0048e53c2d2e2ae5e63a4e54a55ca9603"
-  integrity sha1-RCcXoASOU8LS4q5eY6TlSlXKlgM=
-
 meow@^3.6.0, meow@^3.7.0:
   version "3.7.0"
   resolved "https://registry.yarnpkg.com/meow/-/meow-3.7.0.tgz#72cb668b425228290abbfa856892587308a801fb"
@@ -5924,11 +5902,6 @@ mixin-deep@^1.2.0:
   dependencies:
     for-in "^1.0.2"
     is-extendable "^1.0.1"
-
-mixin-deep@^2.0.0:
-  version "2.0.1"
-  resolved "https://registry.yarnpkg.com/mixin-deep/-/mixin-deep-2.0.1.tgz#9a6946bef4a368401b784970ae3caaaa6bab02fa"
-  integrity sha512-imbHQNRglyaplMmjBLL3V5R6Bfq5oM+ivds3SKgc6oRtzErEnBUUc5No11Z2pilkUvl42gJvi285xTNswcKCMA==
 
 mkdirp@0.x, mkdirp@^0.5.0, mkdirp@^0.5.1, mkdirp@~0.5.0, mkdirp@~0.5.1:
   version "0.5.1"
@@ -6910,16 +6883,6 @@ parent-module@^1.0.0:
   integrity sha512-GQ2EWRpQV8/o+Aw8YqtfZZPfNRWZYkbidE9k5rpl/hC3vtHHBfGm2Ifi6qWV+coDGkrUKZAxE3Lot5kcsRlh+g==
   dependencies:
     callsites "^3.0.0"
-
-parse-commit-message@^3.2.3:
-  version "3.2.3"
-  resolved "https://registry.yarnpkg.com/parse-commit-message/-/parse-commit-message-3.2.3.tgz#96a0b2e3fb295aece355d3a8bd326b6a6f555372"
-  integrity sha512-JujCvCYUrjhmaRHb2AuzR9mAos9JE/5+ZftAaFoGtPhoJ9KNQcgx6JtrWGmGFkVjfky5qTBRjzJeFZla1Po0/A==
-  dependencies:
-    collect-mentions "^1.0.2"
-    dedent "^0.7.0"
-    esm "^3.0.84"
-    mixin-deep "^2.0.0"
 
 parse-entities@^1.0.2, parse-entities@^1.1.0:
   version "1.2.2"
