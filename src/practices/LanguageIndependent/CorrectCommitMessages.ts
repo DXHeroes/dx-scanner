@@ -11,7 +11,7 @@ import { IPractice } from '../IPractice';
   impact: PracticeImpact.small,
   suggestion: '',
   reportOnlyOnce: true,
-  url: 'https://www.conventionalcommits.org/en/v1.0.0/',
+  url: 'https://www.conventionalcommits.org/',
 })
 export class CorrectCommitMessagesPractice implements IPractice {
   async isApplicable(): Promise<boolean> {
