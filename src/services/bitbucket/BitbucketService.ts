@@ -25,7 +25,8 @@ import {
   Directory,
   File,
 } from '../git/model';
-import { ICVSService } from '../git/ICVSService';
+import { ICVSService, BitbucketPullRequestState } from '../git/ICVSService';
+import { BitbucketIssueState } from '../../inspectors/IIssueTrackingInspector';
 const debug = Debug('cli:services:git:bitbucket-service');
 
 @injectable()
@@ -92,10 +93,8 @@ export class BitbucketService implements ICVSService {
       body: val.description,
       createdAt: val.created_on,
       updatedAt: val.updated_on,
-      //TODO
-      closedAt: null,
-      //TODO
-      mergedAt: null,
+      closedAt: val.state === BitbucketPullRequestState.closed || val.state === BitbucketPullRequestState.declined ? val.updated_on : null,
+      mergedAt: val.state === BitbucketPullRequestState.closed ? val.updated_on : null,
       state: val.state,
       id: val.id,
       base: {
@@ -141,10 +140,11 @@ export class BitbucketService implements ICVSService {
       body: response.data.summary.raw,
       createdAt: response.data.created_on,
       updatedAt: response.data.updated_on,
-      //TODO
-      closedAt: null,
-      //TODO
-      mergedAt: null,
+      closedAt:
+        response.data.state === BitbucketPullRequestState.closed || response.data.state === BitbucketPullRequestState.declined
+          ? response.data.updated_on
+          : null,
+      mergedAt: response.data.state === BitbucketPullRequestState.closed ? response.data.updated_on : null,
       state: response.data.state,
       id: response.data.id,
       base: {
@@ -215,8 +215,7 @@ export class BitbucketService implements ICVSService {
       body: val.content.raw,
       createdAt: val.created_on,
       updatedAt: val.updated_on,
-      //TODO
-      closedAt: null,
+      closedAt: val.state === BitbucketIssueState.resolved || val.state === BitbucketIssueState.closed ? val.updated_on : null,
       state: val.state,
       id: val.repository.uuid,
     }));
@@ -244,8 +243,10 @@ export class BitbucketService implements ICVSService {
       body: response.data.content.raw,
       createdAt: response.data.created_on,
       updatedAt: response.data.updated_on,
-      //TODO
-      closedAt: null,
+      closedAt:
+        response.data.state === BitbucketIssueState.resolved || response.data.state === BitbucketIssueState.closed
+          ? response.data.updated_on
+          : null,
       state: response.data.state,
     };
   }
