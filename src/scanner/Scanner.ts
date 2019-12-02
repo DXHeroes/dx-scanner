@@ -28,12 +28,14 @@ import { ScannerUtils } from './ScannerUtils';
 import _ from 'lodash';
 import { sharedSubpath } from '../detectors/utils';
 import { cli } from 'cli-ux';
+import { FileSystemService } from '../services/FileSystemService';
 
 @injectable()
 export class Scanner {
   private readonly scanStrategyDetector: ScanningStrategyDetector;
   private readonly scannerContextFactory: ScannerContextFactory;
   private readonly reporter: IReporter;
+  private readonly fileSystemService: FileSystemService;
   private readonly practices: IPracticeWithMetadata[];
   private readonly argumentsProvider: ArgumentsProvider;
   private readonly scanDebug: debug.Debugger;
@@ -44,6 +46,7 @@ export class Scanner {
     @inject(ScanningStrategyDetector) scanStrategyDetector: ScanningStrategyDetector,
     @inject(Types.ScannerContextFactory) scannerContextFactory: ScannerContextFactory,
     @inject(Types.IReporter) reporter: IReporter,
+    @inject(FileSystemService) fileSystemService: FileSystemService,
     // inject all practices registered under Types.Practice in inversify config
     @multiInject(Types.Practice) practices: IPracticeWithMetadata[],
     @inject(Types.ArgumentsProvider) argumentsProvider: ArgumentsProvider,
@@ -51,6 +54,7 @@ export class Scanner {
     this.scanStrategyDetector = scanStrategyDetector;
     this.scannerContextFactory = scannerContextFactory;
     this.reporter = reporter;
+    this.fileSystemService = fileSystemService;
     this.practices = practices;
     this.argumentsProvider = argumentsProvider;
     this.scanDebug = debug('scanner');
@@ -77,6 +81,24 @@ export class Scanner {
     );
 
     return { shouldExitOnEnd: this.shouldExitOnEnd };
+  }
+
+  /**
+   * Initialize Scanner configuration
+   */
+  async init(): Promise<void> {
+    const filePath = `/.dxscannerrc`;
+    cli.action.start(`Initializing configuration: ${filePath}.yaml`);
+    // check if .dxscannerrc.yaml already exists
+    const fileExists: boolean = await this.fileSystemService.exists(`${filePath}`);
+    const yamlExists: boolean = await this.fileSystemService.exists(`${filePath}.yaml`);
+    const ymlExists: boolean = await this.fileSystemService.exists(`${filePath}.yml`);
+    const jsonExists: boolean = await this.fileSystemService.exists(`${filePath}.json`);
+
+    if (!yamlExists && !fileExists && !ymlExists && !jsonExists) {
+      await this.createConfiguration();
+    }
+    cli.action.stop();
   }
 
   /**
@@ -284,6 +306,17 @@ export class Scanner {
       }
     }
     return relevantComponents;
+  }
+
+  private async createConfiguration() {
+    let yamlInitContent = `# practices:`;
+    // get Metadata and sort it alphabetically using id
+    const sortedInitializedPractices = this.practices.sort((a, b) => a.getMetadata().id.localeCompare(b.getMetadata().id));
+    for (const practice of sortedInitializedPractices) {
+      const dataObject = practice.getMetadata();
+      yamlInitContent += `\n#    ${dataObject.id}: ${dataObject.impact}`;
+    }
+    await this.fileSystemService.createFile(`/.dxscannerrc.yaml`, yamlInitContent);
   }
 }
 
