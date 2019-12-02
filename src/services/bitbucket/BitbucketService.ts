@@ -164,7 +164,7 @@ export class BitbucketService implements IVCSService {
       createdAt: response.data.created_on,
       updatedAt: response.data.updated_on,
       //TODO
-      closedAt: 'undefined',
+      closedAt: null,
       //TODO
       mergedAt: null,
       state: response.data.state,
@@ -289,10 +289,10 @@ export class BitbucketService implements IVCSService {
         url: val.user.links.html.href,
       },
       url: val.links.html.href,
-      body: val.content.raw ? val.content.raw : 'undefined',
+      body: val.content.raw,
       createdAt: val.created_on,
-      updatedAt: val.updated_on ? val.updated_on : 'undefined',
-      authorAssociation: val.author_association ? val.author_association : 'undefined',
+      updatedAt: val.updated_on,
+      authorAssociation: val.author_association,
       id: val.id,
     }));
     const pagination = this.getPagination(response.data);
@@ -304,12 +304,58 @@ export class BitbucketService implements IVCSService {
     throw new Error('Method not implemented yet.');
   }
 
-  async getRepoCommits(owner: string, repo: string) {
-    throw new Error('Method not implemented yet.');
+  async getRepoCommits(owner: string, repo: string): Promise<Paginated<PullCommits>> {
+    const params: Bitbucket.Params.RepositoriesListCommits = {
+      repo_slug: repo,
+      username: owner,
+    };
+    const response = <DeepRequired<Bitbucket.Response<BitbucketCommit>>>await this.client.repositories.listCommits(params);
+    const items = response.data.values.map((val) => ({
+      sha: val.hash,
+      commit: {
+        url: val.links.html.href,
+        message: val.rendered.message.raw,
+        author: {
+          name: val.author.user.nickname,
+          email: this.extractEmailFromString(val.author.raw) || '',
+          date: val.date,
+        },
+        tree: {
+          sha: val.parents[0].hash,
+          url: val.parents[0].links.html.href,
+        },
+        // TODO
+        verified: false,
+      },
+    }));
+    const pagination = this.getPagination(response.data);
+
+    return { items, ...pagination };
   }
 
   async getCommit(owner: string, repo: string, commitSha: string): Promise<Commit> {
-    throw new Error('Method not implemented yet.');
+    const params: Bitbucket.Params.CommitsGet = {
+      node: commitSha,
+      repo_slug: repo,
+      username: owner,
+    };
+    const response = <DeepRequired<Bitbucket.Response<Bitbucket.Schema.Commit>>>await this.client.commits.get(params);
+    return {
+      sha: response.data.hash,
+      url: response.data.links.html.href,
+      message: response.data.rendered.message.raw,
+      author: {
+        name: response.data.author.user.nickname,
+        email: this.extractEmailFromString(response.data.author.raw) || '',
+        date: response.data.date,
+      },
+      tree: {
+        sha: response.data.parents[0].hash,
+        url: response.data.parents[0].links.html.href,
+      },
+      // TODO
+      verified: false,
+    };
   }
 
   async getContributors(owner: string, repo: string): Promise<Paginated<Contributor>> {
@@ -356,9 +402,16 @@ export class BitbucketService implements IVCSService {
 
     return { totalCount, hasNextPage, hasPreviousPage, page, perPage };
   }
+
+  private extractEmailFromString = (text: string): string | undefined => {
+    const emailRegex = /[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+/gim;
+    const email = text.match(emailRegex);
+    if (email) return email[0];
+    return undefined;
+  };
 }
 
-interface BitbucketCommit {
+export interface BitbucketCommit {
   next: string;
   page: number;
   pagelen: number;

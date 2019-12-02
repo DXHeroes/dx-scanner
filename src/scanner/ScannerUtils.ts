@@ -128,9 +128,9 @@ export class ScannerUtils {
     argumentsProvider: ArgumentsProvider,
   ) => {
     return relevantPractices.filter(
-      (practice) =>
-        practice.evaluation === PracticeEvaluationResult.notPracticing &&
-        (_.includes(ScannerUtils.getImpactFailureLevels(argumentsProvider.fail), practice.impact) || argumentsProvider.fail === 'all'),
+      (pctx) =>
+        pctx.evaluation === PracticeEvaluationResult.notPracticing &&
+        (_.includes(ScannerUtils.getImpactFailureLevels(argumentsProvider.fail), pctx.overridenImpact) || argumentsProvider.fail === 'all'),
     );
   };
 }
