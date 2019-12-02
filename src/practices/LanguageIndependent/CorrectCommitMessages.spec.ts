@@ -5,7 +5,7 @@ import { PracticeEvaluationResult } from '../../model';
 import { getRepoCommitsServiceResponse } from '../../services/git/__MOCKS__/gitHubServiceMockFolder/getRepoCommitsServiceResponse.mock';
 import { CorrectCommitMessagesPractice } from './CorrectCommitMessages';
 
-describe('CorrectCommitMessages', () => {
+describe('CorrectCommitMessagesPractice', () => {
   let practice: CorrectCommitMessagesPractice;
   let containerCtx: TestContainerContext;
   const MockedCollaborationInspector = <jest.Mock<CollaborationInspector>>(<unknown>CollaborationInspector);
