@@ -29,7 +29,7 @@ export class CorrectCommitMessagesPractice implements IPractice {
     const repoCommits = await ctx.collaborationInspector.getRepoCommits(ownerAndRepoName.owner, ownerAndRepoName.repoName);
     const messages = repoCommits.items.map((val) => val.message);
 
-    const areCorrectMessages = parser.validate(messages, false);
+    const areMessagesCorrect = parser.validate(messages, false);
 
     return areMessagesCorrect ? PracticeEvaluationResult.practicing : PracticeEvaluationResult.notPracticing;
   }
