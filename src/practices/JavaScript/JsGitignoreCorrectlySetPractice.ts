@@ -31,16 +31,13 @@ export class JsGitignoreCorrectlySetPractice implements IPractice {
     const content = await ctx.root.fileInspector.readFile('.gitignore');
     const parsedGitignore = parseGitignore(content);
 
-    // lockfiles
-    const packageJsonRegex = parsedGitignore.find((value: string) => /package-lock\.json/.test(value));
-    const yarnLockRegex = parsedGitignore.find((value: string) => /yarn\.lock/.test(value));
     // node_modules
     const nodeModulesRegex = parsedGitignore.find((value: string) => /node_modules/.test(value));
     // misc
     const coverageRegex = parsedGitignore.find((value: string) => /coverage/.test(value));
     const errorLogRegex = parsedGitignore.find((value: string) => /\.log/.test(value));
 
-    if ((packageJsonRegex || yarnLockRegex) && nodeModulesRegex && errorLogRegex && coverageRegex) {
+    if (nodeModulesRegex && errorLogRegex && coverageRegex) {
       return PracticeEvaluationResult.practicing;
     }
 
