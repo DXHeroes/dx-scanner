@@ -31,6 +31,6 @@ export class CorrectCommitMessagesPractice implements IPractice {
 
     const areCorrectMessages = parser.validate(messages, false);
 
-    return areCorrectMessages ? PracticeEvaluationResult.practicing : PracticeEvaluationResult.notPracticing;
+    return areMessagesCorrect ? PracticeEvaluationResult.practicing : PracticeEvaluationResult.notPracticing;
   }
 }
