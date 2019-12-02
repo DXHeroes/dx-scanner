@@ -3,7 +3,7 @@ import { CollaborationInspector } from '../../inspectors/CollaborationInspector'
 import { createTestContainer, TestContainerContext } from '../../inversify.config';
 import { PracticeEvaluationResult } from '../../model';
 import { getRepoCommitsServiceResponse } from '../../services/git/__MOCKS__/gitHubServiceMockFolder/getRepoCommitsServiceResponse.mock';
-import { CorrectCommitMessagesPractice } from './CorrectCommitMessages';
+import { CorrectCommitMessagesPractice } from './CorrectCommitMessagesPractice';
 
 describe('CorrectCommitMessagesPractice', () => {
   let practice: CorrectCommitMessagesPractice;

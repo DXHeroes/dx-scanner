@@ -22,7 +22,7 @@ import { ESLintWithoutErrorsPractice } from './JavaScript/ESLintWithoutErrorsPra
 import { TsGitignoreCorrectlySetPractice } from './TypeScript/TsGitignoreCorrectlySetPractice';
 import { DoesPullRequestsPractice } from './LanguageIndependent/DoesPullRequests';
 import { DependenciesVersionMinorPatchLevel } from './JavaScript/DependenciesVersionMinorPatchLevel';
-import { CorrectCommitMessagesPractice } from './LanguageIndependent/CorrectCommitMessages';
+import { CorrectCommitMessagesPractice } from './LanguageIndependent/CorrectCommitMessagesPractice';
 
 // register practices here
 export const practices = [
