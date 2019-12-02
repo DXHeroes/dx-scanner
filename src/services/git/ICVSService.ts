@@ -19,3 +19,10 @@ export interface ICVSService {
   getIssue(owner: string, repo: string, issueNumber: number): Promise<Issue>;
   getRepoContent(owner: string, repo: string, path: string): Promise<File | Symlink | Directory | null>;
 }
+
+export enum BitbucketPullRequestState {
+  open = 'OPEN',
+  closed = 'MERGED',
+  declined = 'DECLINED',
+  superseded = 'SUPERSEDED',
+}
