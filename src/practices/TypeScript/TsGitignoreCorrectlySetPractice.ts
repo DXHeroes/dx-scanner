@@ -35,13 +35,22 @@ export class TsGitignoreCorrectlySetPractice implements IPractice {
     const buildRegex = parsedGitignore.find((value: string) => /build/.test(value));
     const libRegex = parsedGitignore.find((value: string) => /lib/.test(value));
     const distRegex = parsedGitignore.find((value: string) => /dist/.test(value));
+    // lockfiles
+    const packageJsonRegex = parsedGitignore.find((value: string) => /package-lock\.json/.test(value));
+    const yarnLockRegex = parsedGitignore.find((value: string) => /yarn\.lock/.test(value));
     // node_modules
     const nodeModulesRegex = parsedGitignore.find((value: string) => /node_modules/.test(value));
     // misc
     const coverageRegex = parsedGitignore.find((value: string) => /coverage/.test(value));
     const errorLogRegex = parsedGitignore.find((value: string) => /\.log/.test(value));
 
-    if ((buildRegex || libRegex || distRegex) && nodeModulesRegex && errorLogRegex && coverageRegex) {
+    if (
+      (buildRegex || libRegex || distRegex) &&
+      !(packageJsonRegex && yarnLockRegex) &&
+      nodeModulesRegex &&
+      errorLogRegex &&
+      coverageRegex
+    ) {
       return PracticeEvaluationResult.practicing;
     }
 
