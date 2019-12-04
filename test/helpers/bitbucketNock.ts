@@ -34,11 +34,11 @@ export class BitbucketNock {
       switch (value) {
         case 'comments':
           url = url.concat(`/${id}/${value}`);
-          response = new IssueComments().issueComments;
+          response = new IssueCommentsMock().issueComments;
           break;
         case 'commits':
           url = url.concat(`/${id}/${value}`);
-          response = new Commits().commits;
+          response = new CommitsMock().commits;
           break;
       }
     } else {
@@ -46,29 +46,29 @@ export class BitbucketNock {
         case 'pullrequests':
           if (id !== undefined) {
             url = url.concat(`/${id}`);
-            response = new PullRequest(<BitbucketPullRequestState>state).pullRequest;
+            response = new PullRequestMock(<BitbucketPullRequestState>state).pullRequest;
           } else {
             if (typeof state !== 'string') {
               const pullRequests: Bitbucket.Schema.Pullrequest[] = [];
               state.forEach((state) => {
-                pullRequests.push(new PullRequest(state).pullRequest);
+                pullRequests.push(new PullRequestMock(state).pullRequest);
               });
 
               const stateForUri = qs.stringify({ state: state }, { addQueryPrefix: true, indices: false, arrayFormat: 'repeat' });
               url = url.concat(`${stateForUri}`);
 
-              response = new PullRequests(pullRequests).pullrequests;
+              response = new PullRequestsMock(pullRequests).pullrequests;
 
               params = { state: state };
             } else if (state === BitbucketPullRequestState.open) {
-              const pullRequest = new PullRequest(state).pullRequest;
-              response = new PullRequests([pullRequest]).pullrequests;
+              const pullRequest = new PullRequestMock(state).pullRequest;
+              response = new PullRequestsMock([pullRequest]).pullrequests;
             } else {
               const stateForUri = qs.stringify({ state: state }, { addQueryPrefix: true, indices: false, arrayFormat: 'repeat' });
               url = url.concat(`${stateForUri}`);
 
-              const pullRequest = new PullRequest(<BitbucketPullRequestState>state).pullRequest;
-              response = new PullRequests([pullRequest]).pullrequests;
+              const pullRequest = new PullRequestMock(<BitbucketPullRequestState>state).pullRequest;
+              response = new PullRequestsMock([pullRequest]).pullrequests;
 
               params = { state: state };
             }
@@ -77,17 +77,17 @@ export class BitbucketNock {
         case 'issues':
           if (id !== undefined) {
             url = url.concat(`/${id}`);
-            response = new Issue().issue;
+            response = new IssueMock().issue;
           } else {
-            response = new Issues().issues;
+            response = new IssuesMock().issues;
           }
           break;
         case 'commits':
-          response = new RepoCommits().repoCommits;
+          response = new RepoCommitsMock().repoCommits;
           break;
         case 'commit':
           url = url.concat(`/${id}`);
-          response = new RepoCommit().repoCommit;
+          response = new RepoCommitMock().repoCommit;
           break;
         default:
           throw Error('You passed wrong value or id');
@@ -113,7 +113,7 @@ export class BitbucketNock {
   }
 }
 
-export class Issues {
+export class IssuesMock {
   issues: Bitbucket.Schema.PaginatedIssues;
   constructor() {
     this.issues = {
@@ -121,12 +121,12 @@ export class Issues {
       size: 3070,
       page: 1,
       next: 'https://api.bitbucket.org/2.0/repositories/pypy/pypy/issues?page=2',
-      values: [new Issue().issue],
+      values: [new IssueMock().issue],
     };
   }
 }
 
-export class Issue {
+export class IssueMock {
   issue: Bitbucket.Schema.Issue;
   constructor() {
     this.issue = {
@@ -226,7 +226,7 @@ export class Issue {
   }
 }
 
-export class PullRequests {
+export class PullRequestsMock {
   pullrequests: Bitbucket.Schema.PaginatedPullrequests;
 
   constructor(pullRequests: (Bitbucket.Schema.Pullrequest & Bitbucket.Schema.Object)[]) {
@@ -240,7 +240,7 @@ export class PullRequests {
   }
 }
 
-export class PullRequest {
+export class PullRequestMock {
   pullRequest: Bitbucket.Schema.Pullrequest & Bitbucket.Schema.Object;
   state: BitbucketPullRequestState;
   constructor(state: BitbucketPullRequestState) {
@@ -385,7 +385,7 @@ export class PullRequest {
   }
 }
 
-export class Commits {
+export class CommitsMock {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   commits: any;
   constructor() {
@@ -538,7 +538,7 @@ export class Commits {
   }
 }
 
-export class IssueComment {
+export class IssueCommentMock {
   issueComment: Bitbucket.Schema.IssueComment;
   constructor() {
     this.issueComment = {
@@ -609,19 +609,19 @@ export class IssueComment {
   }
 }
 
-export class IssueComments {
+export class IssueCommentsMock {
   issueComments: Bitbucket.Schema.PaginatedIssueComments;
   constructor() {
     this.issueComments = {
       pagelen: 20,
-      values: [new IssueComment().issueComment],
+      values: [new IssueCommentMock().issueComment],
       page: 1,
       size: 14,
     };
   }
 }
 
-export class RepoCommit {
+export class RepoCommitMock {
   repoCommit: Bitbucket.Schema.Commit;
   constructor() {
     this.repoCommit = {
@@ -728,11 +728,11 @@ export class RepoCommit {
   }
 }
 
-export class RepoCommits {
+export class RepoCommitsMock {
   repoCommits: BitbucketCommit;
   constructor() {
     this.repoCommits = {
-      values: [new RepoCommit().repoCommit],
+      values: [new RepoCommitMock().repoCommit],
       pagelen: 20,
       page: 1,
       size: 14,
