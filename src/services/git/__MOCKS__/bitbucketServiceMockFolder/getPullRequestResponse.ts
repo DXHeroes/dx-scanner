@@ -12,7 +12,7 @@ export const getPullRequestResponse: PullRequest = {
   updatedAt: '2011-06-23T13:52:30.230741+00:00',
   closedAt: null,
   mergedAt: null,
-  state: 'DECLINED',
+  state: 'OPEN',
   id: 1,
   base: {
     repo: {

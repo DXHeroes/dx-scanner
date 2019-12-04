@@ -1,6 +1,8 @@
 /* eslint-disable @typescript-eslint/camelcase */
 import nock from 'nock';
+import qs from 'qs';
 import { BitbucketCommit } from '../../src/services/bitbucket/BitbucketService';
+import { BitbucketPullRequestState } from '../../src/services/git/IVCSService';
 
 export class BitbucketNock {
   user: string;
@@ -12,12 +14,21 @@ export class BitbucketNock {
     this.url = 'https://api.bitbucket.org/2.0';
   }
 
-  getApiResponse(resource: string, id?: number | string, value?: string, state?: string): nock.Scope {
+  getApiResponse(
+    resource: string,
+    id?: number | string,
+    value?: string,
+    state?: BitbucketPullRequestState | BitbucketPullRequestState[],
+  ): nock.Scope {
     let url = `${this.url}/repositories/${this.user}/${this.repoName}/${resource}`;
     let response;
 
     let params = {};
     const persist = true;
+
+    if (state === undefined) {
+      state = BitbucketPullRequestState.open;
+    }
 
     if (value !== undefined) {
       switch (value) {
@@ -35,10 +46,30 @@ export class BitbucketNock {
         case 'pullrequests':
           if (id !== undefined) {
             url = url.concat(`/${id}`);
-            response = new PullRequest().pullRequest;
+            response = new PullRequest(<BitbucketPullRequestState>state).pullRequest;
           } else {
-            response = new PullRequests().pullrequests;
-            if (state) {
+            if (typeof state !== 'string') {
+              const pullRequests: Bitbucket.Schema.Pullrequest[] = [];
+              state.forEach((state) => {
+                pullRequests.push(new PullRequest(state).pullRequest);
+              });
+
+              const stateForUri = qs.stringify({ state: state }, { addQueryPrefix: true, indices: false, arrayFormat: 'repeat' });
+              url = url.concat(`${stateForUri}`);
+
+              response = new PullRequests(pullRequests).pullrequests;
+
+              params = { state: state };
+            } else if (state === BitbucketPullRequestState.open) {
+              const pullRequest = new PullRequest(state).pullRequest;
+              response = new PullRequests([pullRequest]).pullrequests;
+            } else {
+              const stateForUri = qs.stringify({ state: state }, { addQueryPrefix: true, indices: false, arrayFormat: 'repeat' });
+              url = url.concat(`${stateForUri}`);
+
+              const pullRequest = new PullRequest(<BitbucketPullRequestState>state).pullRequest;
+              response = new PullRequests([pullRequest]).pullrequests;
+
               params = { state: state };
             }
           }
@@ -198,20 +229,22 @@ export class Issue {
 export class PullRequests {
   pullrequests: Bitbucket.Schema.PaginatedPullrequests;
 
-  constructor() {
+  constructor(pullRequests: (Bitbucket.Schema.Pullrequest & Bitbucket.Schema.Object)[]) {
     this.pullrequests = {
       page: 1,
       next: 'https://api.bitbucket.org/2.0/repositories/pypy/pypy/pullrequests?page=2',
       pagelen: 10,
       size: 20,
-      values: [new PullRequest().pullRequest],
+      values: pullRequests,
     };
   }
 }
 
 export class PullRequest {
   pullRequest: Bitbucket.Schema.Pullrequest & Bitbucket.Schema.Object;
-  constructor() {
+  state: BitbucketPullRequestState;
+  constructor(state: BitbucketPullRequestState) {
+    this.state = state;
     this.pullRequest = {
       description: 'Added a floor() ufunc to micronumpy',
       links: {
@@ -302,7 +335,7 @@ export class PullRequest {
         },
       },
       comment_count: 0,
-      state: 'DECLINED',
+      state: this.state,
       task_count: 0,
       participants: [],
       reason: 'already merged',

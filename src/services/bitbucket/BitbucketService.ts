@@ -29,6 +29,8 @@ import { VCSService, IVCSService, BitbucketPullRequestState } from '../git/IVCSS
 import { ListGetterOptions } from '../../inspectors/common/ListGetterOptions';
 import { PullRequestState } from '../../inspectors/ICollaborationInspector';
 import { VCSServicesUtils } from '../git/VCSServicesUtils';
+import axios from 'axios';
+import qs from 'qs';
 const debug = Debug('cli:services:git:bitbucket-service');
 
 @injectable()
@@ -81,28 +83,20 @@ export class BitbucketService implements IVCSService {
     repo: string,
     options?: ListGetterOptions<{ state?: PullRequestState }>,
   ): Promise<Paginated<PullRequest>> {
-    let params: Bitbucket.Params.PullrequestsList = {
-      repo_slug: repo,
-      username: owner,
-    };
-
     let state;
     if (options?.filter?.state) {
       state = VCSServicesUtils.getPRState(options.filter.state, VCSService.bitbucket);
-      if (state) {
-        if (state.length > 1) {
-          state = <BitbucketPullRequestState[]>state;
-          //params = { ...params, state };
-        }
-        state = <BitbucketPullRequestState>state;
-        params = { ...params, state };
-      }
+    }
+    const stateForUri = qs.stringify({ state: state }, { addQueryPrefix: true, indices: false, arrayFormat: 'repeat' });
+    let apiUrl = `https://api.bitbucket.org/2.0/repositories/${owner}/${repo}/pullrequests`;
+    if (stateForUri) {
+      apiUrl = apiUrl.concat(`${stateForUri}`);
     }
 
-    const response = <DeepRequired<Bitbucket.Response<Bitbucket.Schema.PaginatedPullrequests>>>await this.client.pullrequests.list(params);
-    const url = 'www.bitbucket.org';
+    const ownerUrl = `www.bitbucket.org/${owner}`;
     const ownerId = String((await this.client.users.get({ username: owner })).data.uuid);
-    const urlOwner = url.concat(`/${owner}`);
+
+    const response: DeepRequired<Bitbucket.Response<Bitbucket.Schema.PaginatedPullrequests>> = await axios.get(apiUrl);
 
     const values = response.data.values.map(async (val) => {
       return {
@@ -129,7 +123,7 @@ export class BitbucketService implements IVCSService {
             owner: {
               login: owner,
               id: ownerId,
-              url: urlOwner,
+              url: ownerUrl,
             },
           },
         },

@@ -33,7 +33,7 @@
     "@types/js-yaml": "3.12.1",
     "@types/qs": "^6.9.0",
     "@types/yaml": "^1.2.0",
-    "axios": "0.19.0",
+    "axios": "^0.19.0",
     "bitbucket": "1.15.2",
     "colors": "1.4.0",
     "cross-env": "6.0.3",
