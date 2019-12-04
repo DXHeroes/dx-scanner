@@ -48,29 +48,25 @@ export class BitbucketNock {
             url = url.concat(`/${id}`);
             response = new PullRequestMock(<BitbucketPullRequestState>state).pullRequest;
           } else {
-            if (typeof state !== 'string') {
-              const pullRequests: Bitbucket.Schema.Pullrequest[] = [];
-              state.forEach((state) => {
-                pullRequests.push(new PullRequestMock(state).pullRequest);
-              });
-
-              const stateForUri = qs.stringify({ state: state }, { addQueryPrefix: true, indices: false, arrayFormat: 'repeat' });
-              url = url.concat(`${stateForUri}`);
-
-              response = new PullRequestsMock(pullRequests).pullrequests;
-
-              params = { state: state };
-            } else if (state === BitbucketPullRequestState.open) {
+            if (state === BitbucketPullRequestState.open) {
               const pullRequest = new PullRequestMock(state).pullRequest;
               response = new PullRequestsMock([pullRequest]).pullrequests;
             } else {
               const stateForUri = qs.stringify({ state: state }, { addQueryPrefix: true, indices: false, arrayFormat: 'repeat' });
               url = url.concat(`${stateForUri}`);
-
-              const pullRequest = new PullRequestMock(<BitbucketPullRequestState>state).pullRequest;
-              response = new PullRequestsMock([pullRequest]).pullrequests;
-
               params = { state: state };
+
+              if (typeof state !== 'string') {
+                const pullRequests: Bitbucket.Schema.Pullrequest[] = [];
+                state.forEach((state) => {
+                  pullRequests.push(new PullRequestMock(state).pullRequest);
+                });
+
+                response = new PullRequestsMock(pullRequests).pullrequests;
+              } else {
+                const pullRequest = new PullRequestMock(<BitbucketPullRequestState>state).pullRequest;
+                response = new PullRequestsMock([pullRequest]).pullrequests;
+              }
             }
           }
           break;

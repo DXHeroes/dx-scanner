@@ -94,7 +94,7 @@ export class BitbucketService implements IVCSService {
     }
 
     const ownerUrl = `www.bitbucket.org/${owner}`;
-    const ownerId =`${await this.client.users.get({ username: owner })).data.uuid}`;
+    const ownerId =`${(await this.client.users.get({ username: owner })).data.uuid}`;
 
     const response: DeepRequired<Bitbucket.Response<Bitbucket.Schema.PaginatedPullrequests>> = await axios.get(apiUrl);
 
