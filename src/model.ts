@@ -72,24 +72,24 @@ export interface Repository {
   authString?: string;
 }
 
-export interface Project {
-  components: DeprecatedProjectComponent[];
-}
+// export interface Project {
+//   components: DeprecatedProjectComponent[];
+// }
 
-/**
- * @deprecated
- */
-export interface DeprecatedProjectComponent {
-  githubUrl?: string;
-  path: string;
-  git?: GitInfo;
-  language: ProgrammingLanguage;
-  type: ProjectComponentType;
-  platform: ProjectComponentPlatform;
-  framework: ProjectComponentFramework;
-  packageManagement?: PackageManagement;
-  testing: TestingInfo;
-}
+// /**
+//  * @deprecated
+//  */
+// export interface DeprecatedProjectComponent {
+//   githubUrl?: string;
+//   path: string;
+//   git?: GitInfo;
+//   language: ProgrammingLanguage;
+//   type: ProjectComponentType;
+//   platform: ProjectComponentPlatform;
+//   framework: ProjectComponentFramework;
+//   packageManagement?: PackageManagement;
+//   testing: TestingInfo;
+// }
 
 export interface PracticeMetadata {
   id: string;

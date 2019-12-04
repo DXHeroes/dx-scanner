@@ -4,6 +4,7 @@ import { PracticeImpact, PracticeMetadata, PracticeEvaluationResult } from '../m
 import { IReporter, PracticeWithContextForReporter } from './IReporter';
 import { sharedSubpath } from '../detectors/utils';
 import { ReporterUtils } from './ReporterUtils';
+import { PracticeDetail } from '../practices/IPractice';
 
 @injectable()
 export class CLIReporter implements IReporter {
@@ -108,8 +109,12 @@ export class CLIReporter implements IReporter {
     for (const practiceWithContext of practices) {
       lines.push(this.linesForPractice(practiceWithContext.practice, color));
 
+      if (practiceWithContext.practice.data?.details) {
+        lines.push(practiceWithContext.practice.data.details.map((d) => this.renderDetail(d, (color = grey))).join(' '));
+      }
+
       if (practiceWithContext.practice.impact !== practiceWithContext.overridenImpact) {
-        lines.push(bold(this.changedImpact(practiceWithContext, (color = grey))));
+        lines.push(bold(this.lineForChangedImpact(practiceWithContext, (color = grey))));
       }
     }
 
@@ -127,16 +132,15 @@ export class CLIReporter implements IReporter {
     return practiceLineTexts.join(' ');
   }
 
-  private changedImpact(practiceWithContext: PracticeWithContextForReporter, color: Color) {
-    const practiceLineTexts = [
-      reset(
-        color(
-          `  You changed impact of ${bold(practiceWithContext.practice.name)} from ${underline(
-            practiceWithContext.practice.impact,
-          )} to ${underline(practiceWithContext.overridenImpact)}.`,
-        ),
+  private lineForChangedImpact(practiceWithContext: PracticeWithContextForReporter, color: Color) {
+    return reset(
+      color(
+        `  Impact changed from ${underline(practiceWithContext.practice.impact)} to ${underline(practiceWithContext.overridenImpact)}.`,
       ),
-    ];
-    return practiceLineTexts.join(' ');
+    );
+  }
+
+  private renderDetail(detail: PracticeDetail, color: Color) {
+    return reset(color(`${detail}`));
   }
 }

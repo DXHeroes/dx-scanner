@@ -4,6 +4,7 @@ import { DxPractice } from '../DxPracticeDecorator';
 import { IPractice } from '../IPractice';
 import { DependenciesVersionMajorLevel } from './DependenciesVersionMajorLevel';
 import { SemverLevel } from '../../inspectors/package/PackageInspectorBase';
+import { flatten } from 'lodash';
 
 @DxPractice({
   id: 'JavaScript.DependenciesVersionMinorPatchLevel',
@@ -21,24 +22,21 @@ export class DependenciesVersionMinorPatchLevel extends DependenciesVersionMajor
   }
 
   async evaluate(ctx: PracticeContext): Promise<PracticeEvaluationResult> {
-    if (ctx.fileInspector === undefined || ctx.packageInspector === undefined) {
+    if (!ctx.fileInspector || !ctx.packageInspector || !ctx.packageInspector.packages) {
       return PracticeEvaluationResult.unknown;
     }
 
     const pkgs = ctx.packageInspector.packages;
-    if (pkgs === undefined) {
-      return PracticeEvaluationResult.unknown;
-    }
 
-    const result = await DependenciesVersionMajorLevel.runNcu(pkgs);
+    const result = await this.runNcu(pkgs);
 
-    const patchLevel = DependenciesVersionMajorLevel.isPracticing(result, SemverLevel.patch, pkgs);
-    const minorLevel = DependenciesVersionMajorLevel.isPracticing(result, SemverLevel.minor, pkgs);
+    const patchLevelPkgs = this.packagesToBeUpdated(result, SemverLevel.patch, pkgs);
+    const minorLevelPkgs = this.packagesToBeUpdated(result, SemverLevel.minor, pkgs);
+    this.setData(flatten([patchLevelPkgs, minorLevelPkgs]));
 
-    if (patchLevel === PracticeEvaluationResult.notPracticing || minorLevel === PracticeEvaluationResult.notPracticing) {
+    if (patchLevelPkgs.length > 0 || minorLevelPkgs.length > 0) {
       return PracticeEvaluationResult.notPracticing;
     }
-
     return PracticeEvaluationResult.practicing;
   }
 }

@@ -22,17 +22,17 @@ export class DependenciesVersionMajorLevel extends PracticeBase {
   }
 
   async evaluate(ctx: PracticeContext): Promise<PracticeEvaluationResult> {
-    if (!ctx.fileInspector || !ctx.packageInspector) {
+    if (!ctx.fileInspector || !ctx.packageInspector || !ctx.packageInspector.packages) {
       return PracticeEvaluationResult.unknown;
     }
-
     const pkgs = ctx.packageInspector.packages;
-    if (!pkgs) {
-      return PracticeEvaluationResult.unknown;
-    }
 
     const result = await this.runNcu(pkgs);
-    return this.isPracticing(result, SemverLevel.major, pkgs);
+    const pkgsToUpdate = this.packagesToBeUpdated(result, SemverLevel.major, pkgs);
+    this.setData(pkgsToUpdate);
+
+    if (pkgsToUpdate.length > 0) return PracticeEvaluationResult.notPracticing;
+    return PracticeEvaluationResult.practicing;
   }
 
   async runNcu(pkgs: Package[] | undefined) {
@@ -50,9 +50,9 @@ export class DependenciesVersionMajorLevel extends PracticeBase {
     return pkgsToBeUpdated;
   }
 
-  isPracticing(pkgsWithNewVersion: { [key: string]: string }, semverLevel: SemverLevel, pkgs: Package[]): PracticeEvaluationResult {
+  packagesToBeUpdated(pkgsWithNewVersion: { [key: string]: string }, semverLevel: SemverLevel, pkgs: Package[]) {
     // packages with Major level to be updated
-    const pkgsToUpdate: { name: string; newVersion: string; currentVersion: string }[] = [];
+    const pkgsToUpdate: PkgToUpdate[] = [];
 
     for (const packageName in pkgsWithNewVersion) {
       const parsedVersion = PackageInspectorBase.semverToPackageVersion(pkgsWithNewVersion[packageName]);
@@ -67,9 +67,12 @@ export class DependenciesVersionMajorLevel extends PracticeBase {
       }
     }
 
-    this.data.detail = 'any';
+    return pkgsToUpdate;
+  }
 
-    if (pkgsToUpdate.length > 0) return PracticeEvaluationResult.notPracticing;
-    return PracticeEvaluationResult.practicing;
+  setData(pkgsToUpdate: PkgToUpdate[]): void {
+    this.data.details = [{ headers: ['Name', 'New', 'Current'], data: pkgsToUpdate }];
   }
 }
+
+export type PkgToUpdate = { name: string; newVersion: string; currentVersion: string };

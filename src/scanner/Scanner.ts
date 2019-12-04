@@ -28,6 +28,7 @@ import { ScannerUtils } from './ScannerUtils';
 import _ from 'lodash';
 import { sharedSubpath } from '../detectors/utils';
 import { cli } from 'cli-ux';
+import { PracticeData } from '../practices/IPractice';
 
 @injectable()
 export class Scanner {
@@ -182,7 +183,7 @@ export class Scanner {
 
       return {
         component: p.componentContext.projectComponent,
-        practice: p.practice.getMetadata(),
+        practice: { ...p.practice.getMetadata(), data: p.practice.data },
         evaluation: p.evaluation,
         overridenImpact: <PracticeImpact>(overridenImpact ? overridenImpact : p.practice.getMetadata().impact),
         isOn: p.isOn,

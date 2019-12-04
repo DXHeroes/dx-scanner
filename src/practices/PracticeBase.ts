@@ -1,12 +1,12 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 
-import { IPractice } from './IPractice';
+import { IPractice, PracticeData } from './IPractice';
 import { ErrorFactory } from '../lib/errors';
 import { PracticeEvaluationResult } from '../model';
 import { PracticeContext } from '../contexts/practice/PracticeContext';
 
-export abstract class PracticeBase<T extends PracticeBaseData> implements IPractice {
-  data: T;
+export abstract class PracticeBase<T = {}> implements IPractice<T> {
+  data: Partial<T> & PracticeData;
 
   constructor() {
     this.data = {};
@@ -20,7 +20,3 @@ export abstract class PracticeBase<T extends PracticeBaseData> implements IPract
     throw ErrorFactory.newInternalError('Method not implemented.');
   }
 }
-
-type PracticeBaseData = {
-  detail?: string;
-};
