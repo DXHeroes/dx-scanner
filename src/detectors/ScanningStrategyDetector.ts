@@ -44,7 +44,7 @@ export class ScanningStrategyDetector implements IDetector<string, ScanningStrat
       serviceType = remoteService.serviceType;
       remoteUrl = remoteService.remoteUrl;
 
-      if (remoteService.remoteUrl) {
+      if (remoteService.remoteUrl && this.argumentsProvider.auth) {
         accessType = await this.determineRemoteAccessType(remoteService);
       }
     } else {
