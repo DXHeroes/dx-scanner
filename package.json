@@ -1,7 +1,7 @@
 {
   "name": "dx-scanner",
   "description": "Scan your project for possible DX recommendations.",
-  "version": "1.23.1",
+  "version": "1.23.2",
   "author": "DX Heroes LTD <info@dxheroes.io> (https://dxheroes.io)",
   "homepage": "https://github.com/dxheroes/dx-scanner",
   "repository": "ssh://git@github.com/dxheroes/dx-scanner.git",
@@ -10,7 +10,7 @@
   "scripts": {
     "build": "rimraf lib && tsc -b",
     "build:watch": "yarn build -w",
-    "lint": "eslint --ext .ts 'src' 'test' 'typings'",
+    "lint": "eslint --ext .ts 'src' 'types'",
     "lint:fix": "yarn lint --fix",
     "prepack": "yarn build",
     "start": "./bin/run",
@@ -95,7 +95,7 @@
     "node": "^12",
     "yarn": "^1"
   },
-  "main": "lib/src/index.js",
+  "main": "lib/index.js",
   "bin": {
     "dx-scanner": "./bin/run",
     "dxscanner": "./bin/run",

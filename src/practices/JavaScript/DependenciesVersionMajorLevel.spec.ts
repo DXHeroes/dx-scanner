@@ -3,7 +3,7 @@ import { DependenciesVersionMajorLevel } from './DependenciesVersionMajorLevel';
 import { createTestContainer, TestContainerContext } from '../../inversify.config';
 import ncu from 'npm-check-updates';
 import { JavaScriptPackageInspector } from '../../inspectors/package/JavaScriptPackageInspector';
-import { mockPackage } from '../../../test/helpers/mockPackage';
+import { mockPackage } from '../../test/helpers/mockPackage';
 jest.mock('npm-check-updates');
 
 describe('DependenciesVersionPractice of Major Level', () => {

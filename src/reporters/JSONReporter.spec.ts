@@ -1,5 +1,5 @@
 import { JSONReporter } from './JSONReporter';
-import { practiceWithContextFactory } from '../../test/factories/PracticeWithContextFactory';
+import { practiceWithContextFactory } from '../test/factories/PracticeWithContextFactory';
 import { PracticeEvaluationResult } from '../model';
 
 describe('JSONReporter', () => {

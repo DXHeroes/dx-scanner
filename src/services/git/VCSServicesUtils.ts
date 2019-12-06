@@ -3,10 +3,7 @@ import { BitbucketPullRequestState, VCSService } from './IVCSService';
 import { GitHubPullRequestState } from './IGitHubService';
 
 export class VCSServicesUtils {
-  static getPRState = (
-    state: PullRequestState | undefined,
-    service: VCSService,
-  ): GitHubPullRequestState | BitbucketPullRequestState | BitbucketPullRequestState[] | undefined => {
+  static getPRState = (state: PullRequestState | undefined, service: VCSService) => {
     if (service === VCSService.github) {
       switch (state) {
         case PullRequestState.open:
