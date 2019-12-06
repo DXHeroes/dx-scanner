@@ -1,7 +1,7 @@
 {
   "name": "dx-scanner",
   "description": "Scan your project for possible DX recommendations.",
-  "version": "1.22.0",
+  "version": "1.22.1",
   "author": "DX Heroes LTD <info@dxheroes.io> (https://dxheroes.io)",
   "homepage": "https://github.com/dxheroes/dx-scanner",
   "repository": "ssh://git@github.com/dxheroes/dx-scanner.git",
@@ -45,7 +45,7 @@
     "inversify": "5.0.1",
     "js-yaml": "3.13.1",
     "lodash": "4.17.15",
-    "memfs": "2.17.1",
+    "memfs": "3.0.1",
     "node-filter-async": "1.1.3",
     "npm-check-updates": "3.2.2",
     "oclif": "1.15.1",
