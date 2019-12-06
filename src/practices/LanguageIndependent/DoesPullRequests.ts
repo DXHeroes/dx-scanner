@@ -4,6 +4,7 @@ import { PracticeEvaluationResult, PracticeImpact } from '../../model';
 import { GitServiceUtils } from '../../services/git/GitServiceUtils';
 import { DxPractice } from '../DxPracticeDecorator';
 import { IPractice } from '../IPractice';
+import { PullRequestState } from '../../inspectors/ICollaborationInspector';
 
 @DxPractice({
   id: 'LanguageIndependent.DoesPullRequests',
@@ -26,8 +27,9 @@ export class DoesPullRequestsPractice implements IPractice {
     const repoName = GitServiceUtils.getRepoName(ctx.projectComponent.repositoryPath, ctx.projectComponent.path);
     const ownerAndRepoName = GitServiceUtils.getOwnerAndRepoName(repoName);
 
-    //TODO add filtering
-    const pullRequests = await ctx.collaborationInspector.getPullRequests(ownerAndRepoName.owner, ownerAndRepoName.repoName);
+    const pullRequests = await ctx.collaborationInspector.getPullRequests(ownerAndRepoName.owner, ownerAndRepoName.repoName, {
+      filter: { state: PullRequestState.all },
+    });
     const repoCommits = await ctx.collaborationInspector.getRepoCommits(ownerAndRepoName.owner, ownerAndRepoName.repoName);
 
     if (pullRequests.items.length === 0) {

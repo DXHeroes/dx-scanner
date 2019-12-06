@@ -1,3 +1,14 @@
+## [1.23.1](https://github.com/dxheroes/dx-scanner/compare/v1.23.0...v1.23.1) (2019-12-06)
+
+
+### Bug Fixes
+
+*  add BitbucketIssueState enum ([563a7eb](https://github.com/dxheroes/dx-scanner/commit/563a7eb))
+* add BitbucketPRState ([e05ca58](https://github.com/dxheroes/dx-scanner/commit/e05ca58))
+* add value closedAt and mergedAt dynamically ([cf4bf51](https://github.com/dxheroes/dx-scanner/commit/cf4bf51))
+* define tests better ([422f962](https://github.com/dxheroes/dx-scanner/commit/422f962))
+* mergedAt and closedAt values, also fix tests for that ([e2e6dc6](https://github.com/dxheroes/dx-scanner/commit/e2e6dc6))
+
 # [1.23.0](https://github.com/dxheroes/dx-scanner/compare/v1.22.1...v1.23.0) (2019-12-06)
 
 
