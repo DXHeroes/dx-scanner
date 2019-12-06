@@ -1,18 +1,19 @@
-import { injectable, inject } from 'inversify';
-import { ProjectIssueBrowserService as ContentRepositoryBrowserService } from '../model';
+import { inject, injectable } from 'inversify';
 import { Types } from '../types';
-import { ICollaborationInspector } from './ICollaborationInspector';
+import { ListGetterOptions } from './common/ListGetterOptions';
+import { ICollaborationInspector, PullRequestState } from './ICollaborationInspector';
+import { VCSService } from '../model';
 
 @injectable()
 export class CollaborationInspector implements ICollaborationInspector {
-  private service: ContentRepositoryBrowserService;
+  private service: VCSService;
 
-  constructor(@inject(Types.IContentRepositoryBrowser) service: ContentRepositoryBrowserService) {
+  constructor(@inject(Types.IContentRepositoryBrowser) service: VCSService) {
     this.service = service;
   }
 
-  async getPullRequests(owner: string, repo: string) {
-    return this.service.getPullRequests(owner, repo);
+  async getPullRequests(owner: string, repo: string, options?: ListGetterOptions<{ state?: PullRequestState }>) {
+    return this.service.getPullRequests(owner, repo, options);
   }
 
   async getPullRequest(owner: string, repo: string, prNumber: number) {
