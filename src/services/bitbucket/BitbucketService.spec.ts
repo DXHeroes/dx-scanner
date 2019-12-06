@@ -36,7 +36,7 @@ describe('Bitbucket Service', () => {
   });
 
   it('returns all pull requests in own interface', async () => {
-    const state = VCSServicesUtils.getPRState(PullRequestState.all, VCSService.bitbucket);
+    const state = <BitbucketPullRequestState>VCSServicesUtils.getPRState(PullRequestState.all, VCSService.bitbucket);
     nock(bitbucketNock.url)
       .get('/users/pypy')
       .reply(200);
