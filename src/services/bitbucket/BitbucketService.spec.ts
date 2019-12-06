@@ -2,22 +2,16 @@ import nock from 'nock';
 import { BitbucketNock } from '../../../test/helpers/bitbucketNock';
 import { ListGetterOptions } from '../../inspectors/common/ListGetterOptions';
 import { PullRequestState } from '../../inspectors/ICollaborationInspector';
+import { BitbucketPullRequestState, VCSService } from '../git/IVCSService';
+import { VCSServicesUtils } from '../git/VCSServicesUtils';
 import { getIssueCommentsResponse } from '../git/__MOCKS__/bitbucketServiceMockFolder/getIssueCommentsResponse';
 import { getIssueResponse } from '../git/__MOCKS__/bitbucketServiceMockFolder/getIssueResponse';
 import { getIssuesResponse } from '../git/__MOCKS__/bitbucketServiceMockFolder/getIssuesResponse';
 import { getPullCommits } from '../git/__MOCKS__/bitbucketServiceMockFolder/getPullCommits';
 import { getPullRequestResponse } from '../git/__MOCKS__/bitbucketServiceMockFolder/getPullRequestResponse';
-import {
-  getOpenPullRequestsResponse,
-  getMergedPullRequestsResponse,
-  getAllPullrequestsResponse,
-} from '../git/__MOCKS__/bitbucketServiceMockFolder/getPullRequestsResponse';
-import { BitbucketService } from './BitbucketService';
-import { getRepoCommits } from '../git/__MOCKS__/bitbucketServiceMockFolder/getRepoCommits';
 import { getRepoCommit } from '../git/__MOCKS__/bitbucketServiceMockFolder/getRepoCommit';
-import { BitbucketPullRequestState, VCSService } from '../git/IVCSService';
-import { VCSServicesUtils } from '../git/VCSServicesUtils';
-import util from 'util';
+import { getRepoCommits } from '../git/__MOCKS__/bitbucketServiceMockFolder/getRepoCommits';
+import { BitbucketService } from './BitbucketService';
 
 describe('Bitbucket Service', () => {
   let service: BitbucketService;
@@ -36,6 +30,7 @@ describe('Bitbucket Service', () => {
     bitbucketNock.getApiResponse('pullrequests');
 
     const response = await service.getPullRequests('pypy', 'pypy');
+    const getOpenPullRequestsResponse = bitbucketNock.mockBitbucketPullRequestResponse(BitbucketPullRequestState.open);
     expect(response).toMatchObject(getOpenPullRequestsResponse);
   });
 
@@ -47,10 +42,15 @@ describe('Bitbucket Service', () => {
     bitbucketNock.getApiResponse('pullrequests', undefined, undefined, state);
 
     const response = await service.getPullRequests('pypy', 'pypy', { filter: { state: PullRequestState.all } });
-    expect(response).toMatchObject(getAllPullrequestsResponse);
+    const allPullrequestsResponse = bitbucketNock.mockBitbucketPullRequestResponse(state);
+
+    expect(response).toMatchObject(allPullrequestsResponse);
   });
 
   it('returns pull request in own interface', async () => {
+    nock(bitbucketNock.url)
+      .get('/users/pypy')
+      .reply(200);
     bitbucketNock.getApiResponse('pullrequests', 1);
 
     const response = await service.getPullRequest('pypy', 'pypy', 1);
@@ -98,6 +98,8 @@ describe('Bitbucket Service', () => {
     bitbucketNock.getApiResponse('pullrequests', undefined, undefined, BitbucketPullRequestState.closed);
 
     const response = await service.getPullRequests('pypy', 'pypy', state);
+    const getMergedPullRequestsResponse = bitbucketNock.mockBitbucketPullRequestResponse(BitbucketPullRequestState.closed);
+
     expect(response).toMatchObject(getMergedPullRequestsResponse);
   });
 
