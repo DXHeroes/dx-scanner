@@ -1,5 +1,4 @@
 import 'reflect-metadata';
-import 'module-alias/register';
 import { createRootContainer } from './inversify.config';
 import { Scanner, ScanResult } from './scanner/Scanner';
 import { Command, flags } from '@oclif/command';
