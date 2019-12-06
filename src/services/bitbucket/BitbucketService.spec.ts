@@ -23,7 +23,7 @@ describe('Bitbucket Service', () => {
     bitbucketNock = new BitbucketNock('pypy', 'pypy');
   });
 
-  it('returns pull requests in own interface', async () => {
+  it('returns open pull requests in own interface', async () => {
     nock(bitbucketNock.url)
       .get('/users/pypy')
       .reply(200);
@@ -47,7 +47,7 @@ describe('Bitbucket Service', () => {
     expect(response).toMatchObject(allPullrequestsResponse);
   });
 
-  it('returns pull request in own interface', async () => {
+  it('returns specific pull request in own interface', async () => {
     nock(bitbucketNock.url)
       .get('/users/pypy')
       .reply(200);

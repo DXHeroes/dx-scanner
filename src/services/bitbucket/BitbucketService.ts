@@ -25,6 +25,7 @@ import {
   Directory,
   File,
 } from '../git/model';
+import { BitbucketIssueState } from '../../inspectors/IIssueTrackingInspector';
 import { VCSService, IVCSService, BitbucketPullRequestState } from '../git/IVCSService';
 import { ListGetterOptions } from '../../inspectors/common/ListGetterOptions';
 import { PullRequestState } from '../../inspectors/ICollaborationInspector';
@@ -109,10 +110,9 @@ export class BitbucketService implements IVCSService {
         body: val.description,
         createdAt: val.created_on,
         updatedAt: val.updated_on,
-        //TODO
-        closedAt: null,
-        //TODO
-        mergedAt: null,
+        closedAt:
+          val.state === BitbucketPullRequestState.closed || val.state === BitbucketPullRequestState.declined ? val.updated_on : null,
+        mergedAt: val.state === BitbucketPullRequestState.closed ? val.updated_on : null,
         state: val.state,
         id: val.id,
         base: {
@@ -160,10 +160,11 @@ export class BitbucketService implements IVCSService {
       body: response.data.summary.raw,
       createdAt: response.data.created_on,
       updatedAt: response.data.updated_on,
-      //TODO
-      closedAt: null,
-      //TODO
-      mergedAt: null,
+      closedAt:
+        response.data.state === BitbucketPullRequestState.closed || response.data.state === BitbucketPullRequestState.declined
+          ? response.data.updated_on
+          : null,
+      mergedAt: response.data.state === BitbucketPullRequestState.closed ? response.data.updated_on : null,
       state: response.data.state,
       id: response.data.id,
       base: {
@@ -234,8 +235,7 @@ export class BitbucketService implements IVCSService {
       body: val.content.raw,
       createdAt: val.created_on,
       updatedAt: val.updated_on,
-      //TODO
-      closedAt: null,
+      closedAt: val.state === BitbucketIssueState.resolved || val.state === BitbucketIssueState.closed ? val.updated_on : null,
       state: val.state,
       id: val.repository.uuid,
     }));
@@ -263,8 +263,10 @@ export class BitbucketService implements IVCSService {
       body: response.data.content.raw,
       createdAt: response.data.created_on,
       updatedAt: response.data.updated_on,
-      //TODO
-      closedAt: null,
+      closedAt:
+        response.data.state === BitbucketIssueState.resolved || response.data.state === BitbucketIssueState.closed
+          ? response.data.updated_on
+          : null,
       state: response.data.state,
     };
   }
