@@ -3,6 +3,10 @@ import nock from 'nock';
 import qs from 'qs';
 import { BitbucketCommit } from '../../src/services/bitbucket/BitbucketService';
 import { BitbucketPullRequestState } from '../../src/services/git/IVCSService';
+import { Paginated } from '../../src/inspectors/common/Paginated';
+import { getPullRequestResponse } from '../../src/services/git/__MOCKS__/bitbucketServiceMockFolder/getPullRequestResponse';
+import { PullRequest } from '../../src/services/git/model';
+import _ from 'lodash';
 
 export class BitbucketNock {
   user: string;
@@ -106,6 +110,32 @@ export class BitbucketNock {
       interceptor.query(params);
     }
     return interceptor;
+  }
+
+  mockBitbucketPullRequestResponse(states: BitbucketPullRequestState | BitbucketPullRequestState[]): Paginated<PullRequest> {
+    const pullRequests: PullRequest[] = [];
+
+    const paginatedPullrequests: Paginated<PullRequest> = {
+      items: [getPullRequestResponse],
+      hasNextPage: true,
+      hasPreviousPage: false,
+      page: 1,
+      perPage: typeof states === 'string' ? 1 : states.length,
+      totalCount: typeof states === 'string' ? 1 : states.length,
+    };
+
+    if (typeof states !== 'string') {
+      states.forEach((state) => {
+        const pullrequest = _.cloneDeep(getPullRequestResponse);
+        pullrequest.state = state;
+        pullRequests.push(pullrequest);
+      });
+      paginatedPullrequests.items = pullRequests;
+    } else {
+      getPullRequestResponse.state = states;
+      paginatedPullrequests.items = [getPullRequestResponse];
+    }
+    return paginatedPullrequests;
   }
 }
 
