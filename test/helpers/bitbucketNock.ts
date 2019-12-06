@@ -112,7 +112,7 @@ export class BitbucketNock {
     return interceptor;
   }
 
-  mockBitbucketPullRequestResponse(states: BitbucketPullRequestState | BitbucketPullRequestState[]): Paginated<PullRequest> {
+  mockBitbucketPullRequestsResponse(states: BitbucketPullRequestState | BitbucketPullRequestState[]): Paginated<PullRequest> {
     const pullRequests: PullRequest[] = [];
 
     const paginatedPullrequests: Paginated<PullRequest> = {

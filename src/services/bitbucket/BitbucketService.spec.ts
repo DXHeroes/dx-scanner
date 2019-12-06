@@ -30,7 +30,7 @@ describe('Bitbucket Service', () => {
     bitbucketNock.getApiResponse('pullrequests');
 
     const response = await service.getPullRequests('pypy', 'pypy');
-    const getOpenPullRequestsResponse = bitbucketNock.mockBitbucketPullRequestResponse(BitbucketPullRequestState.open);
+    const getOpenPullRequestsResponse = bitbucketNock.mockBitbucketPullRequestsResponse(BitbucketPullRequestState.open);
     expect(response).toMatchObject(getOpenPullRequestsResponse);
   });
 
@@ -42,7 +42,7 @@ describe('Bitbucket Service', () => {
     bitbucketNock.getApiResponse('pullrequests', undefined, undefined, state);
 
     const response = await service.getPullRequests('pypy', 'pypy', { filter: { state: PullRequestState.all } });
-    const allPullrequestsResponse = bitbucketNock.mockBitbucketPullRequestResponse(state);
+    const allPullrequestsResponse = bitbucketNock.mockBitbucketPullRequestsResponse(state);
 
     expect(response).toMatchObject(allPullrequestsResponse);
   });
@@ -98,7 +98,7 @@ describe('Bitbucket Service', () => {
     bitbucketNock.getApiResponse('pullrequests', undefined, undefined, BitbucketPullRequestState.closed);
 
     const response = await service.getPullRequests('pypy', 'pypy', state);
-    const getMergedPullRequestsResponse = bitbucketNock.mockBitbucketPullRequestResponse(BitbucketPullRequestState.closed);
+    const getMergedPullRequestsResponse = bitbucketNock.mockBitbucketPullRequestsResponse(BitbucketPullRequestState.closed);
 
     expect(response).toMatchObject(getMergedPullRequestsResponse);
   });
