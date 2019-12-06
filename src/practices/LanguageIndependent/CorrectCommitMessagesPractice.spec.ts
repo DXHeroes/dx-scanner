@@ -4,6 +4,9 @@ import { createTestContainer, TestContainerContext } from '../../inversify.confi
 import { PracticeEvaluationResult } from '../../model';
 import { getRepoCommitsServiceResponse } from '../../services/git/__MOCKS__/gitHubServiceMockFolder/getRepoCommitsServiceResponse.mock';
 import { CorrectCommitMessagesPractice } from './CorrectCommitMessagesPractice';
+import { Paginated } from '../../inspectors/common/Paginated';
+import { Commit } from '../../services/git/model';
+import _ from 'lodash';
 
 describe('CorrectCommitMessagesPractice', () => {
   let practice: CorrectCommitMessagesPractice;
@@ -29,10 +32,7 @@ describe('CorrectCommitMessagesPractice', () => {
 
   it('returns practicing if the commit messages are correct', async () => {
     mockCollaborationInspector.getRepoCommits = async () => {
-      getRepoCommitsServiceResponse.items.forEach((item) => {
-        item.message = 'fix: correct commit message';
-      });
-      return getRepoCommitsServiceResponse;
+      return changeRepoCommitsMessages('fix: correct commit message');
     };
 
     const evaluated = await practice.evaluate({
@@ -44,10 +44,7 @@ describe('CorrectCommitMessagesPractice', () => {
 
   it('returns not practicing if the commit messages are incorrect', async () => {
     mockCollaborationInspector.getRepoCommits = async () => {
-      getRepoCommitsServiceResponse.items.forEach((item) => {
-        item.message = 'Incorrect commit message';
-      });
-      return getRepoCommitsServiceResponse;
+      return changeRepoCommitsMessages('Incorrect commit message');
     };
 
     const evaluated = await practice.evaluate({
@@ -66,4 +63,27 @@ describe('CorrectCommitMessagesPractice', () => {
     const response = await practice.isApplicable();
     expect(response).toBe(true);
   });
+
+  const changeRepoCommitsMessages = (message: string) => {
+    const paginatedRepoCommits: Paginated<Commit> = {
+      items: getRepoCommitsServiceResponse.items,
+      hasNextPage: true,
+      hasPreviousPage: false,
+      page: 1,
+      perPage: getRepoCommitsServiceResponse.items.length,
+      totalCount: getRepoCommitsServiceResponse.items.length,
+    };
+    if (getRepoCommitsServiceResponse.items.length > 1) {
+      const repoCommits: Commit[] = _.cloneDeep(getRepoCommitsServiceResponse.items);
+      repoCommits.forEach((repoCommit) => {
+        repoCommit.message = message;
+        repoCommits.push(repoCommit);
+      });
+
+      paginatedRepoCommits.items = repoCommits;
+    } else {
+      getRepoCommitsServiceResponse.items[0].message = message;
+    }
+    return paginatedRepoCommits;
+  };
 });
