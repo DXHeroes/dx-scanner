@@ -1,3 +1,35 @@
+# [1.23.0](https://github.com/dxheroes/dx-scanner/compare/v1.22.1...v1.23.0) (2019-12-06)
+
+
+### Bug Fixes
+
+* add BitbucketPullRequestState because of CollaborationInspector to the options ([74fe662](https://github.com/dxheroes/dx-scanner/commit/74fe662))
+* add filtering to the getPullRequests() ([90b995b](https://github.com/dxheroes/dx-scanner/commit/90b995b))
+* add qs ([6022e9e](https://github.com/dxheroes/dx-scanner/commit/6022e9e))
+* auth is possibly undefined ([1f35259](https://github.com/dxheroes/dx-scanner/commit/1f35259))
+* data of owner ([fa0d129](https://github.com/dxheroes/dx-scanner/commit/fa0d129))
+* delete unnecessary mock file ([952bb79](https://github.com/dxheroes/dx-scanner/commit/952bb79))
+* fix tests and use mockBitbucketPullRequestResponse() ([1b6be4a](https://github.com/dxheroes/dx-scanner/commit/1b6be4a))
+* get the info about user only once as it is always the same ([f54425d](https://github.com/dxheroes/dx-scanner/commit/f54425d))
+* rename CVS to VCS ([c8c2f09](https://github.com/dxheroes/dx-scanner/commit/c8c2f09))
+* rename files ([4a2d83d](https://github.com/dxheroes/dx-scanner/commit/4a2d83d))
+* rename interfaces - add mock to the end of the name ([0ff0093](https://github.com/dxheroes/dx-scanner/commit/0ff0093))
+* return array of states ([7f19213](https://github.com/dxheroes/dx-scanner/commit/7f19213))
+* retype return type from getPRState() ([1769b52](https://github.com/dxheroes/dx-scanner/commit/1769b52))
+* stringify undefined value ([2ddd585](https://github.com/dxheroes/dx-scanner/commit/2ddd585))
+* typo ([0815844](https://github.com/dxheroes/dx-scanner/commit/0815844))
+* use axios because bitbucket client can't allow to get all pullrequests. Write tests for that. ([03eafcf](https://github.com/dxheroes/dx-scanner/commit/03eafcf))
+* use different interfaces for GitHub PR and Bitbucket PR ([7d2ecb5](https://github.com/dxheroes/dx-scanner/commit/7d2ecb5))
+* use own definition of PR -> implement getPRState() to get the state specific for services ([2b67091](https://github.com/dxheroes/dx-scanner/commit/2b67091))
+* use qs library ([42a10e5](https://github.com/dxheroes/dx-scanner/commit/42a10e5))
+* values of owner ([c3c5ab2](https://github.com/dxheroes/dx-scanner/commit/c3c5ab2))
+
+
+### Features
+
+* add mockBitbucketPullRequestResponse() ([905fd11](https://github.com/dxheroes/dx-scanner/commit/905fd11))
+* add options for filtering in CollaborationInspector ([572371b](https://github.com/dxheroes/dx-scanner/commit/572371b))
+
 ## [1.22.1](https://github.com/dxheroes/dx-scanner/compare/v1.22.0...v1.22.1) (2019-12-06)
 
 
