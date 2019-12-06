@@ -1,44 +1,44 @@
-import { injectable, inject } from 'inversify';
-import {
-  PullRequest,
-  Contributor,
-  PullRequestReview,
-  Commit,
-  ContributorStats,
-  Directory,
-  File,
-  Issue,
-  PullFiles,
-  PullCommits,
-  IssueComment,
-  Symlink,
-  RepoContentType,
-} from './model';
-import { ICVSService } from './ICVSService';
-import { Paginated } from '../../inspectors/common/Paginated';
-import {
+import Octokit, {
   IssuesListForRepoResponseItem,
   PullsListResponseItem,
   PullsListReviewsResponseItem,
   ReposGetContributorsStatsResponseItem,
 } from '@octokit/rest';
-import { isArray } from 'util';
-import { ListGetterOptions } from '../../inspectors/common/ListGetterOptions';
-import Octokit from '@octokit/rest';
 import { grey } from 'colors';
-import { inspect } from 'util';
 import Debug from 'debug';
-import { delay } from '../../lib/delay';
-import { Types } from '../../types';
+import { inject, injectable } from 'inversify';
+import { inspect, isArray } from 'util';
+import { ListGetterOptions } from '../../inspectors/common/ListGetterOptions';
+import { Paginated } from '../../inspectors/common/Paginated';
+import { PullRequestState } from '../../inspectors/ICollaborationInspector';
 import { ArgumentsProvider } from '../../inversify.config';
+import { delay } from '../../lib/delay';
+import { ErrorFactory } from '../../lib/errors';
 import { ICache } from '../../scanner/cache/ICache';
 import { InMemoryCache } from '../../scanner/cache/InMemoryCache';
-import { GitHubPullRequestState } from './IGitHubService';
-import { ErrorFactory } from '../../lib/errors';
+import { Types } from '../../types';
+import { IVCSService, VCSService } from './IVCSService';
+import {
+  Commit,
+  Contributor,
+  ContributorStats,
+  Directory,
+  File,
+  Issue,
+  IssueComment,
+  PullCommits,
+  PullFiles,
+  PullRequest,
+  PullRequestReview,
+  RepoContentType,
+  Symlink,
+} from './model';
+import { VCSServicesUtils } from './VCSServicesUtils';
+import qs from 'qs';
 const debug = Debug('cli:services:git:github-service');
 
 @injectable()
-export class GitHubService implements ICVSService {
+export class GitHubService implements IVCSService {
   private readonly client: Octokit;
   private cache: ICache;
   private callCount = 0;
@@ -71,11 +71,13 @@ export class GitHubService implements ICVSService {
   async getPullRequests(
     owner: string,
     repo: string,
-    options?: ListGetterOptions<{ state?: GitHubPullRequestState }>,
+    options?: ListGetterOptions<{ state?: PullRequestState }>,
   ): Promise<Paginated<PullRequest>> {
     let url = 'GET /repos/:owner/:repo/pulls';
     if (options !== undefined && options.filter !== undefined && options.filter.state !== undefined) {
-      url = `${url}?state=${options.filter.state}`;
+      const state = VCSServicesUtils.getPRState(options.filter.state, VCSService.github);
+      const stateForUri = qs.stringify({ state: state }, { addQueryPrefix: true });
+      url = `${url}${stateForUri}`;
     }
     const response: PullsListResponseItem[] = await this.paginate(url, owner, repo);
 

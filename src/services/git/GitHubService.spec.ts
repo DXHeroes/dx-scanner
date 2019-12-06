@@ -21,10 +21,11 @@ import { getPullsFilesResponse } from './__MOCKS__/gitHubServiceMockFolder/getPu
 import { getPullsFilesServiceResponse } from './__MOCKS__/gitHubServiceMockFolder/getPullFilesServiceResponse.mock';
 import { getPullCommitsResponse } from './__MOCKS__/gitHubServiceMockFolder/getPullsCommitsResponse.mock';
 import { getPullCommitsServiceResponse } from './__MOCKS__/gitHubServiceMockFolder/getPullCommitsServiceResponse.mock';
-import { GitHubNock } from '../../../test/helpers/gitHubNock';
+import { GitHubNock, PullRequest } from '../../../test/helpers/gitHubNock';
 import { getRepoCommitsResponse } from './__MOCKS__/gitHubServiceMockFolder/getRepoCommitsResponse.mock';
 import { File } from './model';
 import { GitHubPullRequestState } from './IGitHubService';
+import { PullRequestState } from '../../inspectors/ICollaborationInspector';
 
 describe('GitHub Service', () => {
   let service: GitHubService;
@@ -70,7 +71,7 @@ describe('GitHub Service', () => {
         'open',
       );
 
-      const response = await service.getPullRequests('octocat', 'Hello-World', { filter: { state: GitHubPullRequestState.open } });
+      const response = await service.getPullRequests('octocat', 'Hello-World', { filter: { state: PullRequestState.open } });
       expect(response.items.map((item) => item.state)).toMatchObject(['open']);
     });
 
@@ -80,7 +81,7 @@ describe('GitHub Service', () => {
         'closed',
       );
 
-      const response = await service.getPullRequests('octocat', 'Hello-World', { filter: { state: GitHubPullRequestState.closed } });
+      const response = await service.getPullRequests('octocat', 'Hello-World', { filter: { state: PullRequestState.closed } });
       expect(response.items.map((item) => item.state)).toMatchObject(['closed']);
     });
 
@@ -93,7 +94,7 @@ describe('GitHub Service', () => {
         'all',
       );
 
-      const response = await service.getPullRequests('octocat', 'Hello-World', { filter: { state: GitHubPullRequestState.all } });
+      const response = await service.getPullRequests('octocat', 'Hello-World', { filter: { state: PullRequestState.all } });
       expect(response.items.map((item) => item.state)).toMatchObject(['open', 'closed']);
     });
   });
