@@ -94,7 +94,7 @@ export class BitbucketService implements IVCSService {
     }
 
     const ownerUrl = `www.bitbucket.org/${owner}`;
-    const ownerId =`${(await this.client.users.get({ username: owner })).data.uuid}`;
+    const ownerId = `${(await this.client.users.get({ username: owner })).data.uuid}`;
 
     const response: DeepRequired<Bitbucket.Response<Bitbucket.Schema.PaginatedPullrequests>> = await axios.get(apiUrl);
 
@@ -144,6 +144,9 @@ export class BitbucketService implements IVCSService {
       username: owner,
     };
 
+    const ownerUrl = `www.bitbucket.org/${owner}`;
+    const ownerId = `${(await this.client.users.get({ username: owner })).data.uuid}`;
+
     const response = <DeepRequired<Bitbucket.Response<Bitbucket.Schema.Pullrequest>>>await this.client.pullrequests.get(params);
     response.data;
 
@@ -169,9 +172,9 @@ export class BitbucketService implements IVCSService {
           name: response.data.destination.repository.name,
           id: response.data.destination.repository.uuid,
           owner: {
-            login: response.data.author.nickname,
-            id: response.data.author.uuid,
-            url: response.data.author.links.html.href,
+            login: owner,
+            id: ownerId,
+            url: ownerUrl,
           },
         },
       },
