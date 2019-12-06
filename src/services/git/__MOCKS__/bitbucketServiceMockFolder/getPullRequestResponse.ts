@@ -12,7 +12,7 @@ export const getPullRequestResponse: PullRequest = {
   updatedAt: '2011-06-23T13:52:30.230741+00:00',
   closedAt: '2011-06-23T13:52:30.230741+00:00',
   mergedAt: null,
-  state: 'DECLINED',
+  state: 'OPEN',
   id: 1,
   base: {
     repo: {
@@ -20,9 +20,9 @@ export const getPullRequestResponse: PullRequest = {
       name: 'pypy',
       id: '{54220cd1-b139-4188-9455-1e13e663f1ac}',
       owner: {
-        login: 'landtuna',
-        id: '{9d65d517-4898-47ac-9d2f-fd902d25d9f6}',
-        url: 'https://bitbucket.org/%7B9d65d517-4898-47ac-9d2f-fd902d25d9f6%7D/',
+        login: 'pypy',
+        id: 'undefined',
+        url: 'www.bitbucket.org/pypy',
       },
     },
   },
