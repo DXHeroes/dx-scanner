@@ -2,8 +2,6 @@
 import { GitHubService } from './GitHubService';
 import nock from 'nock';
 import { GitHubNock } from '../../test/helpers/gitHubNock';
-import { File } from './model';
-import { GitHubPullRequestState } from './IGitHubService';
 import {
   getPullsServiceResponse,
   getPullRequestsReviewsResponse,
@@ -11,20 +9,22 @@ import {
   getRepoCommitsResponse,
   getCommitResponse,
   getCommitServiceResponse,
+  getContributorsServiceResponse,
   getContributorsStatsResponse,
+  getContributorsStatsServiceResponse,
   getRepoContentServiceResponseFile,
   getRepoContentServiceResponseDir,
   getIssuesResponse,
   getIssuesServiceResponse,
   getIssueCommentsResponse,
+  getIssueCommentsServiceResponse,
   getPullsFilesResponse,
   getPullsFilesServiceResponse,
   getPullCommitsResponse,
   getPullCommitsServiceResponse,
-  getContributorsServiceResponse,
-  getContributorsStatsServiceResponse,
-  getIssueCommentsServiceResponse,
 } from './__MOCKS__/gitHubServiceMockFolder';
+import { PullRequestState } from '../../inspectors';
+import { File } from './model';
 
 describe('GitHub Service', () => {
   let service: GitHubService;
@@ -70,7 +70,7 @@ describe('GitHub Service', () => {
         'open',
       );
 
-      const response = await service.getPullRequests('octocat', 'Hello-World', { filter: { state: GitHubPullRequestState.open } });
+      const response = await service.getPullRequests('octocat', 'Hello-World', { filter: { state: PullRequestState.open } });
       expect(response.items.map((item) => item.state)).toMatchObject(['open']);
     });
 
@@ -80,7 +80,7 @@ describe('GitHub Service', () => {
         'closed',
       );
 
-      const response = await service.getPullRequests('octocat', 'Hello-World', { filter: { state: GitHubPullRequestState.closed } });
+      const response = await service.getPullRequests('octocat', 'Hello-World', { filter: { state: PullRequestState.closed } });
       expect(response.items.map((item) => item.state)).toMatchObject(['closed']);
     });
 
@@ -93,7 +93,7 @@ describe('GitHub Service', () => {
         'all',
       );
 
-      const response = await service.getPullRequests('octocat', 'Hello-World', { filter: { state: GitHubPullRequestState.all } });
+      const response = await service.getPullRequests('octocat', 'Hello-World', { filter: { state: PullRequestState.all } });
       expect(response.items.map((item) => item.state)).toMatchObject(['open', 'closed']);
     });
   });

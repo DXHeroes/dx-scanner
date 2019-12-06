@@ -1,3 +1,24 @@
+## [1.22.1](https://github.com/dxheroes/dx-scanner/compare/v1.22.0...v1.22.1) (2019-12-06)
+
+
+### Bug Fixes
+
+* **deps:** update dependency memfs to v3 ([6c8c259](https://github.com/dxheroes/dx-scanner/commit/6c8c259))
+
+# [1.22.0](https://github.com/dxheroes/dx-scanner/compare/v1.21.1...v1.22.0) (2019-12-02)
+
+
+### Bug Fixes
+
+* **cli:** added an action start and stop to --init ([88edb72](https://github.com/dxheroes/dx-scanner/commit/88edb72))
+* **cli:** added more conditions to check for existing files for --init ([5e98e0f](https://github.com/dxheroes/dx-scanner/commit/5e98e0f))
+* **cli:** using sync method to write files & practices are sorted alphabetically ([fb46b95](https://github.com/dxheroes/dx-scanner/commit/fb46b95))
+
+
+### Features
+
+* **cli:** --init command creates a yaml config file ([29f0cbc](https://github.com/dxheroes/dx-scanner/commit/29f0cbc))
+
 ## [1.21.1](https://github.com/dxheroes/dx-scanner/compare/v1.21.0...v1.21.1) (2019-11-28)
 
 

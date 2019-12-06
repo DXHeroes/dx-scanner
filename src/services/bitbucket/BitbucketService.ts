@@ -25,11 +25,16 @@ import {
   Directory,
   File,
 } from '../git/model';
-import { ICVSService } from '../git/ICVSService';
+import { VCSService, IVCSService, BitbucketPullRequestState } from '../git/IVCSService';
+import { ListGetterOptions } from '../../inspectors/common/ListGetterOptions';
+import { PullRequestState } from '../../inspectors/ICollaborationInspector';
+import { VCSServicesUtils } from '../git/VCSServicesUtils';
+import axios from 'axios';
+import qs from 'qs';
 const debug = Debug('cli:services:git:bitbucket-service');
 
 @injectable()
-export class BitbucketService implements ICVSService {
+export class BitbucketService implements IVCSService {
   private readonly client: Bitbucket;
   private cache: ICache;
   private callCount = 0;
@@ -45,7 +50,7 @@ export class BitbucketService implements ICVSService {
 
     let username: string;
     let password: string | undefined;
-    if (argumentsProvider.auth?.includes(':')) {
+    if (argumentsProvider.auth && argumentsProvider.auth.includes(':')) {
       username = argumentsProvider.auth.split(':')[0];
       password = argumentsProvider.auth.split(':')[1];
     } else {
@@ -73,46 +78,57 @@ export class BitbucketService implements ICVSService {
     return this.unwrap(this.client.repositories.get(params));
   }
 
-  async getPullRequests(owner: string, repo: string): Promise<Paginated<PullRequest>> {
-    const params: Bitbucket.Params.PullrequestsList = {
-      repo_slug: repo,
-      username: owner,
-    };
+  async getPullRequests(
+    owner: string,
+    repo: string,
+    options?: ListGetterOptions<{ state?: PullRequestState }>,
+  ): Promise<Paginated<PullRequest>> {
+    let state;
+    if (options?.filter?.state) {
+      state = VCSServicesUtils.getPRState(options.filter.state, VCSService.bitbucket);
+    }
+    const stateForUri = qs.stringify({ state: state }, { addQueryPrefix: true, indices: false, arrayFormat: 'repeat' });
+    let apiUrl = `https://api.bitbucket.org/2.0/repositories/${owner}/${repo}/pullrequests`;
+    if (stateForUri) {
+      apiUrl = apiUrl.concat(`${stateForUri}`);
+    }
 
-    const response = <DeepRequired<Bitbucket.Response<Bitbucket.Schema.PaginatedPullrequests>>>await this.client.pullrequests.list(params);
-    const url = 'www.bitbucket.org';
+    const ownerUrl = `www.bitbucket.org/${owner}`;
+    const ownerId = `${(await this.client.users.get({ username: owner })).data.uuid}`;
 
-    const values = response.data.values.map(async (val) => ({
-      user: {
-        id: val.author.uuid,
-        login: val.author.nickname,
-        url: val.author.links.html.href,
-      },
-      url: val.links.html.href,
-      body: val.description,
-      createdAt: val.created_on,
-      updatedAt: val.updated_on,
-      //TODO
-      closedAt: null,
-      //TODO
-      mergedAt: null,
-      state: val.state,
-      id: val.id,
-      base: {
-        repo: {
-          url: val.destination.repository.links.html.href,
-          name: val.destination.repository.name,
-          id: val.destination.repository.uuid,
-          owner: {
-            login: <string>val.destination.repository.full_name.split('/').shift(),
-            id: <string>(await this.client.users.get({ username: `${val.destination.repository.full_name.split('/').shift()}` })).data.uuid
-              ? <string>(await this.client.users.get({ username: `${val.destination.repository.full_name.split('/').shift()}` })).data.uuid
-              : 'undefined',
-            url: url.concat(`/${val.destination.repository.full_name.split('/').shift()}`),
+    const response: DeepRequired<Bitbucket.Response<Bitbucket.Schema.PaginatedPullrequests>> = await axios.get(apiUrl);
+
+    const values = response.data.values.map(async (val) => {
+      return {
+        user: {
+          id: val.author.uuid,
+          login: val.author.nickname,
+          url: val.author.links.html.href,
+        },
+        url: val.links.html.href,
+        body: val.description,
+        createdAt: val.created_on,
+        updatedAt: val.updated_on,
+        //TODO
+        closedAt: null,
+        //TODO
+        mergedAt: null,
+        state: val.state,
+        id: val.id,
+        base: {
+          repo: {
+            url: val.destination.repository.links.html.href,
+            name: val.destination.repository.name,
+            id: val.destination.repository.uuid,
+            owner: {
+              login: owner,
+              id: ownerId,
+              url: ownerUrl,
+            },
           },
         },
-      },
-    }));
+      };
+    });
 
     const pagination = this.getPagination(response.data);
 
@@ -127,6 +143,9 @@ export class BitbucketService implements ICVSService {
       repo_slug: repo,
       username: owner,
     };
+
+    const ownerUrl = `www.bitbucket.org/${owner}`;
+    const ownerId = `${(await this.client.users.get({ username: owner })).data.uuid}`;
 
     const response = <DeepRequired<Bitbucket.Response<Bitbucket.Schema.Pullrequest>>>await this.client.pullrequests.get(params);
     response.data;
@@ -153,9 +172,9 @@ export class BitbucketService implements ICVSService {
           name: response.data.destination.repository.name,
           id: response.data.destination.repository.uuid,
           owner: {
-            login: response.data.author.nickname,
-            id: response.data.author.uuid,
-            url: response.data.author.links.html.href,
+            login: owner,
+            id: ownerId,
+            url: ownerUrl,
           },
         },
       },
