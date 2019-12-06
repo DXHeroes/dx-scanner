@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/camelcase */
 import nock from 'nock';
 import * as nodePath from 'path';
 
@@ -26,19 +27,62 @@ export class GitHubNock {
   }
 
   getPulls(
-    pulls: { number: number; state: string; title: string; body: string; head: string; base: string }[],
+    pulls: {
+      number: number;
+      state: string;
+      title: string;
+      body: string;
+      head: string;
+      base: string;
+      created_at?: string;
+      updated_at?: string;
+    }[],
     queryState?: string,
     persist = true,
   ): PullRequestItem[] {
-    const responseBody = pulls.map(
-      ({ number, state, title, body, head, base }) =>
-        new PullRequestItem(number, state, title, body, new BranchItem(head, this.repository), new BranchItem(base, this.repository)),
-    );
+    const responseBody = pulls.map(({ number, state, title, body, head, base, created_at, updated_at }) => {
+      if (!created_at) {
+        created_at = '2011-01-26T19:01:12Z';
+      }
+
+      if (!updated_at) {
+        updated_at = created_at;
+      }
+      return new PullRequestItem(
+        number,
+        state,
+        title,
+        body,
+        new BranchItem(head, this.repository),
+        new BranchItem(base, this.repository),
+        created_at,
+        updated_at,
+      );
+    });
 
     return this.getPullsInternal(undefined, queryState, responseBody, persist);
   }
 
-  getPull(number: number, state: string, title: string, body: string, head: string, base: string, persist = true): PullRequest {
+  getPull(
+    number: number,
+    state: string,
+    title: string,
+    body: string,
+    head: string,
+    base: string,
+    persist = true,
+
+    created_at?: string,
+
+    updated_at?: string,
+  ): PullRequest {
+    if (!created_at) {
+      created_at = '2011-01-26T19:01:12Z';
+    }
+
+    if (!updated_at) {
+      updated_at = created_at;
+    }
     const responseBody = new PullRequest(
       number,
       state,
@@ -46,6 +90,8 @@ export class GitHubNock {
       body,
       new BranchItem(head, this.repository),
       new BranchItem(base, this.repository),
+      created_at,
+      updated_at,
     );
 
     return this.getPullsInternal(number, undefined, responseBody, persist);
@@ -209,92 +255,49 @@ export class Repository {
     this.id = id;
     this.name = name;
     this.owner = owner;
-    // eslint-disable-next-line @typescript-eslint/camelcase
     this.full_name = `${this.owner.login}/${this.name}`;
-    // eslint-disable-next-line @typescript-eslint/camelcase
     this.html_url = `${this.owner.html_url}/${this.name}`;
     this.url = `https://api.github.com/repos/${this.full_name}`;
-    // eslint-disable-next-line @typescript-eslint/camelcase
     this.archive_url = `${this.url}/{archive_format}{/ref}`;
-    // eslint-disable-next-line @typescript-eslint/camelcase
     this.assignees_url = `${this.url}/assignees{/user}`;
-    // eslint-disable-next-line @typescript-eslint/camelcase
     this.blobs_url = `${this.url}/git/blobs{/sha}`;
-    // eslint-disable-next-line @typescript-eslint/camelcase
     this.branches_url = `${this.url}/branches{/branch}`;
-    // eslint-disable-next-line @typescript-eslint/camelcase
     this.collaborators_url = `${this.url}/collaborators{/collaborator}`;
-    // eslint-disable-next-line @typescript-eslint/camelcase
     this.comments_url = `${this.url}/comments{/number}`;
-    // eslint-disable-next-line @typescript-eslint/camelcase
     this.commits_url = `${this.url}/commits{/sha}`;
-    // eslint-disable-next-line @typescript-eslint/camelcase
     this.compare_url = `${this.url}/compare/{base}...{head}`;
-    // eslint-disable-next-line @typescript-eslint/camelcase
     this.contents_url = `${this.url}/contents/{+path}`;
-    // eslint-disable-next-line @typescript-eslint/camelcase
     this.contributors_url = `${this.url}/contributors`;
-    // eslint-disable-next-line @typescript-eslint/camelcase
     this.deployments_url = `${this.url}/deployments`;
-    // eslint-disable-next-line @typescript-eslint/camelcase
     this.downloads_url = `${this.url}/downloads`;
-    // eslint-disable-next-line @typescript-eslint/camelcase
     this.events_url = `${this.url}/events`;
-    // eslint-disable-next-line @typescript-eslint/camelcase
     this.forks_url = `${this.url}/forks`;
-    // eslint-disable-next-line @typescript-eslint/camelcase
     this.git_commits_url = `${this.url}/git/commits{/sha}`;
-    // eslint-disable-next-line @typescript-eslint/camelcase
     this.git_refs_url = `${this.url}/git/refs{/sha}`;
-    // eslint-disable-next-line @typescript-eslint/camelcase
     this.git_tags_url = `${this.url}/git/tags{/sha}`;
-    // eslint-disable-next-line @typescript-eslint/camelcase
     this.git_url = `git:github.com/${this.full_name}.git`;
-    // eslint-disable-next-line @typescript-eslint/camelcase
     this.issue_comment_url = `${this.url}/issues/comments{/number}`;
-    // eslint-disable-next-line @typescript-eslint/camelcase
     this.issue_events_url = `${this.url}/issues/events{/number}`;
-    // eslint-disable-next-line @typescript-eslint/camelcase
     this.issues_url = `${this.url}/issues{/number}`;
-    // eslint-disable-next-line @typescript-eslint/camelcase
     this.keys_url = `${this.url}/keys{/key_id}`;
-    // eslint-disable-next-line @typescript-eslint/camelcase
     this.labels_url = `${this.url}/labels{/name}`;
-    // eslint-disable-next-line @typescript-eslint/camelcase
     this.languages_url = `${this.url}/languages`;
-    // eslint-disable-next-line @typescript-eslint/camelcase
     this.merges_url = `${this.url}/merges`;
-    // eslint-disable-next-line @typescript-eslint/camelcase
     this.milestones_url = `${this.url}/milestones{/number}`;
-    // eslint-disable-next-line @typescript-eslint/camelcase
     this.notifications_url = `${this.url}/notifications{?since,all,participating}`;
-    // eslint-disable-next-line @typescript-eslint/camelcase
     this.pulls_url = `${this.url}/pulls{/number}`;
-    // eslint-disable-next-line @typescript-eslint/camelcase
     this.releases_url = `${this.url}/releases{/id}`;
-    // eslint-disable-next-line @typescript-eslint/camelcase
     this.ssh_url = `git@github.com:${this.full_name}.git`;
-    // eslint-disable-next-line @typescript-eslint/camelcase
     this.stargazers_url = `${this.url}/stargazers`;
-    // eslint-disable-next-line @typescript-eslint/camelcase
     this.statuses_url = `${this.url}/statuses/{sha}`;
-    // eslint-disable-next-line @typescript-eslint/camelcase
     this.subscribers_url = `${this.url}/subscribers`;
-    // eslint-disable-next-line @typescript-eslint/camelcase
     this.subscription_url = `${this.url}/subscription`;
-    // eslint-disable-next-line @typescript-eslint/camelcase
     this.tags_url = `${this.url}/tags`;
-    // eslint-disable-next-line @typescript-eslint/camelcase
     this.teams_url = `${this.url}/teams`;
-    // eslint-disable-next-line @typescript-eslint/camelcase
     this.trees_url = `${this.url}/git/trees{/sha}`;
-    // eslint-disable-next-line @typescript-eslint/camelcase
     this.clone_url = `https://github.com/${this.full_name}.git`;
-    // eslint-disable-next-line @typescript-eslint/camelcase
     this.mirror_url = `git:git.example.com/${this.full_name}`;
-    // eslint-disable-next-line @typescript-eslint/camelcase
     this.hooks_url = `${this.url}/hooks`;
-    // eslint-disable-next-line @typescript-eslint/camelcase
     this.svn_url = `https://svn.github.com/${this.full_name}`;
   }
 }
@@ -333,11 +336,8 @@ class RepoContent {
     this.sha = sha;
     this.size = 0;
     this.url = repository.contents_url.replace('{+path}', `${this.path}?ref=${ref}`);
-    // eslint-disable-next-line @typescript-eslint/camelcase
     this.html_url = `${repository.html_url}/${gitType}/${ref}/${this.path}`;
-    // eslint-disable-next-line @typescript-eslint/camelcase
     this.git_url = gitPattern.replace('{/sha}', `/${this.sha}`);
-    // eslint-disable-next-line @typescript-eslint/camelcase
     this.download_url = downloadable
       ? `https://raw.githubusercontent.com/${repository.owner.login}/${repository.name}/${ref}/${this.path}`
       : null;
@@ -402,28 +402,17 @@ export class UserItem {
   constructor(id: string, login: string) {
     this.login = login;
     this.id = id;
-    // eslint-disable-next-line @typescript-eslint/camelcase
-    this.avatar_url = `https://avatars3.githubusercontent.com/u/${this.id}`;
+    this.avatar_url = `https://avatars3.githubusercontent.cm/u/${this.id}`;
     this.url = `https://api.github.com/users/${this.login}`;
-    // eslint-disable-next-line @typescript-eslint/camelcase
     this.html_url = `https://github.com/${this.login}`;
-    // eslint-disable-next-line @typescript-eslint/camelcase
     this.followers_url = `${this.url}/followers`;
-    // eslint-disable-next-line @typescript-eslint/camelcase
     this.following_url = `${this.url}/following{/other_user}`;
-    // eslint-disable-next-line @typescript-eslint/camelcase
     this.gists_url = `${this.url}/gists{/gist_id}`;
-    // eslint-disable-next-line @typescript-eslint/camelcase
     this.starred_url = `${this.url}/starred{/owner}{/repo}`;
-    // eslint-disable-next-line @typescript-eslint/camelcase
     this.subscriptions_url = `${this.url}/subscriptions`;
-    // eslint-disable-next-line @typescript-eslint/camelcase
     this.organizations_url = `${this.url}/orgs`;
-    // eslint-disable-next-line @typescript-eslint/camelcase
     this.repos_url = `${this.url}/repos`;
-    // eslint-disable-next-line @typescript-eslint/camelcase
     this.events_url = `${this.url}/events{/privacy}`;
-    // eslint-disable-next-line @typescript-eslint/camelcase
     this.received_events_url = `${this.url}/received_events`;
   }
 }
@@ -468,7 +457,7 @@ export class PullRequestItem {
   body: string;
   labels = [];
   milestone = null;
-  created_at = '2011-01-26T19:01:12Z';
+  created_at: string;
   updated_at = '2011-01-26T19:01:12Z';
   closed_at = '2011-01-26T19:01:12Z';
   merged_at = '2011-01-26T19:01:12Z';
@@ -491,41 +480,41 @@ export class PullRequestItem {
   };
   author_association = 'OWNER';
 
-  constructor(number: number, state: string, title: string, body: string, head: BranchItem, base: BranchItem) {
+  constructor(
+    number: number,
+    state: string,
+    title: string,
+    body: string,
+    head: BranchItem,
+    base: BranchItem,
+    createdAt: string,
+    updatedAt: string,
+  ) {
     this.number = number;
     this.base = base;
     this.head = head;
     this.url = this.base.repo.pulls_url.replace('{/number}', `/${this.number}`);
-    // eslint-disable-next-line @typescript-eslint/camelcase
     this.commits_url = `${this.url}/commits`;
-    // eslint-disable-next-line @typescript-eslint/camelcase
     this.review_comments_url = `${this.url}/comments`;
-    // eslint-disable-next-line @typescript-eslint/camelcase
     this.review_comment_url = `${this.base.repo.pulls_url.replace('{/number}', '')}/comments{/number}`;
-    // eslint-disable-next-line @typescript-eslint/camelcase
     this.issue_url = this.base.repo.issues_url.replace('{/number}', `/${this.number}`);
-    // eslint-disable-next-line @typescript-eslint/camelcase
     this.comments_url = `${this.issue_url}/comments`;
-    // eslint-disable-next-line @typescript-eslint/camelcase
     this.html_url = `${this.base.repo.html_url}/pull/${this.number}`;
-    // eslint-disable-next-line @typescript-eslint/camelcase
     this.diff_url = `${this.html_url}.diff`;
-    // eslint-disable-next-line @typescript-eslint/camelcase
     this.patch_url = `${this.html_url}.patch`;
-    // eslint-disable-next-line @typescript-eslint/camelcase
     this.statuses_url = this.head.repo.statuses_url.replace('{sha}', this.head.ref);
     this.state = state;
     this.title = title;
     this.user = this.head.user;
     this.body = body;
+    this.created_at = createdAt;
+    this.updated_at = updatedAt;
     this._links = {
       self: { href: this.url },
       html: { href: this.html_url },
       issue: { href: this.issue_url },
       comments: { href: this.comments_url },
-      // eslint-disable-next-line @typescript-eslint/camelcase
       review_comments: { href: this.review_comments_url },
-      // eslint-disable-next-line @typescript-eslint/camelcase
       review_comment: { href: this.review_comment_url },
       commits: { href: this.commits_url },
       statuses: { href: this.statuses_url },

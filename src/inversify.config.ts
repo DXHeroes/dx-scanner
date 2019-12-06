@@ -25,6 +25,8 @@ import { bindScanningContext } from './contexts/scanner/scannerContextBinding';
 import { Scanner, ScannerUtils } from './scanner';
 import { FileSystemService, GitHubService } from './services';
 import { BitbucketService } from './services/bitbucket/BitbucketService';
+import { ICollaborationInspector } from './inspectors/ICollaborationInspector';
+import { IIssueTrackingInspector } from './inspectors/IIssueTrackingInspector';
 import { PracticeContext } from './contexts/practice/PracticeContext';
 import { packageJSONContents } from './detectors/__MOCKS__/JavaScript/packageJSONContents.mock';
 
@@ -70,9 +72,9 @@ export const createTestContainer = (
   container.bind(Types.IProjectFilesBrowser).toConstantValue(vfss);
   container.bind(Types.IContentRepositoryBrowser).to(GitHubService);
   container.bind(Types.IFileInspector).to(FileInspector);
-  container.bind(Types.IIssueTrackingInspector).to(IssueTrackingInspector);
-  container.bind(Types.ICollaborationInspector).to(CollaborationInspector);
   container.bind(Types.IPackageInspector).to(JavaScriptPackageInspector);
+  container.bind(Types.ICollaborationInspector).to(CollaborationInspector);
+  container.bind(Types.IIssueTrackingInspector).to(IssueTrackingInspector);
 
   const scanningStrategyDetector = container.get<ScanningStrategyDetector>(ScanningStrategyDetector);
   const fileSystemService = container.get<FileSystemService>(FileSystemService);
@@ -125,8 +127,8 @@ export interface TestContainerContext {
 export interface TestPracticeContext extends PracticeContext {
   packageInspector: IPackageInspector;
   fileInspector: IFileInspector;
-  issueTrackingInspector: IssueTrackingInspector;
-  collaborationInspector: CollaborationInspector;
+  issueTrackingInspector: IIssueTrackingInspector;
+  collaborationInspector: ICollaborationInspector;
 }
 
 export interface ArgumentsProvider {

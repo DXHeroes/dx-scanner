@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/camelcase */
-import { GitHubService } from './GitHubService';
 import nock from 'nock';
+import { GitHubService } from './GitHubService';
 import { GitHubNock } from '../../test/helpers/gitHubNock';
 import {
   getPullsServiceResponse,
@@ -25,6 +25,7 @@ import {
 } from './__MOCKS__/gitHubServiceMockFolder';
 import { PullRequestState } from '../../inspectors';
 import { File } from './model';
+import { getRepoCommitsServiceResponse } from './__MOCKS__/gitHubServiceMockFolder/getRepoCommitsServiceResponse.mock';
 
 describe('GitHub Service', () => {
   let service: GitHubService;
@@ -109,7 +110,7 @@ describe('GitHub Service', () => {
     new GitHubNock('1', 'octocat', 1, 'Hello-World').getCommits().reply(200, getRepoCommitsResponse);
     const response = await service.getRepoCommits('octocat', 'Hello-World');
 
-    expect(response.data).toMatchObject(getRepoCommitsResponse);
+    expect(response).toMatchObject(getRepoCommitsServiceResponse);
   });
 
   it('returns commits in own interface', async () => {
