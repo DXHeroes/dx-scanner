@@ -1,5 +1,5 @@
-import { GitHubService } from './services/git/GitHubService';
 import { BitbucketService } from './services/bitbucket/BitbucketService';
+import { GitHubService } from './services/git/GitHubService';
 
 // New model starts here
 
@@ -203,4 +203,4 @@ export enum GitFLow {
   Git = 'Git',
 }
 
-export type ProjectIssueBrowserService = GitHubService | BitbucketService;
+export type VCSService = GitHubService | BitbucketService;
