@@ -1,31 +1,31 @@
 /* eslint-disable @typescript-eslint/camelcase */
 import nock from 'nock';
-import { GitHubNock } from '../../../test/helpers/gitHubNock';
-import { PullRequestState } from '../../inspectors/ICollaborationInspector';
 import { GitHubService } from './GitHubService';
-import { File } from './model';
-import { getCommitResponse } from './__MOCKS__/gitHubServiceMockFolder/getCommitResponse.mock';
-import { getCommitServiceResponse } from './__MOCKS__/gitHubServiceMockFolder/getCommitServiceResponse.mock';
-import { getContributorsServiceResponse } from './__MOCKS__/gitHubServiceMockFolder/getContributorsServiceResponse.mock';
-import { getContributorsStatsResponse } from './__MOCKS__/gitHubServiceMockFolder/getContributorsStatsResponse.mock';
-import { getContributorsStatsServiceResponse } from './__MOCKS__/gitHubServiceMockFolder/getContributorsStatsServiceResponse.mock';
-import { getIssueCommentsResponse } from './__MOCKS__/gitHubServiceMockFolder/getIssueCommentsResponse.mock';
-import { getIssueCommentsServiceResponse } from './__MOCKS__/gitHubServiceMockFolder/getIssueCommentsServiceResponse.mock';
-import { getIssuesResponse } from './__MOCKS__/gitHubServiceMockFolder/getIssuesResponse.mock';
-import { getIssuesServiceResponse } from './__MOCKS__/gitHubServiceMockFolder/getIssuesServiceResponse.mock';
-import { getPullCommitsServiceResponse } from './__MOCKS__/gitHubServiceMockFolder/getPullCommitsServiceResponse.mock';
-import { getPullsFilesServiceResponse } from './__MOCKS__/gitHubServiceMockFolder/getPullFilesServiceResponse.mock';
-import { getPullRequestsReviewsResponse } from './__MOCKS__/gitHubServiceMockFolder/getPullRequestsReviewsResponse.mock';
-import { getPullCommitsResponse } from './__MOCKS__/gitHubServiceMockFolder/getPullsCommitsResponse.mock';
-import { getPullsFilesResponse } from './__MOCKS__/gitHubServiceMockFolder/getPullsFiles.mock';
-import { getPullsReviewsServiceResponse } from './__MOCKS__/gitHubServiceMockFolder/getPullsReviewsServiceResponse.mock';
-import { getPullsServiceResponse } from './__MOCKS__/gitHubServiceMockFolder/getPullsServiceResponse.mock';
-import { getRepoCommitsResponse } from './__MOCKS__/gitHubServiceMockFolder/getRepoCommitsResponse.mock';
-import { getRepoCommitsServiceResponse } from './__MOCKS__/gitHubServiceMockFolder/getRepoCommitsServiceResponse.mock';
+import { GitHubNock } from '../../test/helpers/gitHubNock';
 import {
-  getRepoContentServiceResponseDir,
+  getPullsServiceResponse,
+  getPullRequestsReviewsResponse,
+  getPullsReviewsServiceResponse,
+  getRepoCommitsResponse,
+  getCommitResponse,
+  getCommitServiceResponse,
+  getContributorsServiceResponse,
+  getContributorsStatsResponse,
+  getContributorsStatsServiceResponse,
   getRepoContentServiceResponseFile,
-} from './__MOCKS__/gitHubServiceMockFolder/getRepoContentServiceResponse.mock';
+  getRepoContentServiceResponseDir,
+  getIssuesResponse,
+  getIssuesServiceResponse,
+  getIssueCommentsResponse,
+  getIssueCommentsServiceResponse,
+  getPullsFilesResponse,
+  getPullsFilesServiceResponse,
+  getPullCommitsResponse,
+  getPullCommitsServiceResponse,
+} from './__MOCKS__/gitHubServiceMockFolder';
+import { PullRequestState } from '../../inspectors';
+import { File } from './model';
+import { getRepoCommitsServiceResponse } from './__MOCKS__/gitHubServiceMockFolder/getRepoCommitsServiceResponse.mock';
 
 describe('GitHub Service', () => {
   let service: GitHubService;

@@ -2,7 +2,7 @@ import { createTestContainer, TestContainerContext } from '../../inversify.confi
 import { PracticeEvaluationResult } from '../../model';
 import { DoesPullRequestsPractice } from './DoesPullRequests';
 import nock from 'nock';
-import { GitHubNock } from '../../../test/helpers/gitHubNock';
+import { GitHubNock } from '../../test/helpers/gitHubNock';
 import { getRepoCommitsResponse } from '../../services/git/__MOCKS__/gitHubServiceMockFolder/getRepoCommitsResponse.mock';
 import { PullRequestState } from '../../inspectors/ICollaborationInspector';
 

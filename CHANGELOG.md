@@ -1,3 +1,10 @@
+## [1.23.2](https://github.com/dxheroes/dx-scanner/compare/v1.23.1...v1.23.2) (2019-12-06)
+
+
+### Bug Fixes
+
+* type ([71733fd](https://github.com/dxheroes/dx-scanner/commit/71733fd))
+
 ## [1.23.1](https://github.com/dxheroes/dx-scanner/compare/v1.23.0...v1.23.1) (2019-12-06)
 
 

@@ -1,8 +1,8 @@
 import { JavaScriptPackageInspector } from './JavaScriptPackageInspector';
 import { DependencyType } from '../IPackageInspector';
-import { packageJSONContents } from '../../detectors/__MOCKS__';
 import { TestContainerContext, createTestContainer } from '../../inversify.config';
 import { DirectoryJSON } from 'memfs/lib/volume';
+import { packageJSONContents } from '../../detectors/__MOCKS__/JavaScript/packageJSONContents.mock';
 
 describe('JavaScriptPackageInspector', () => {
   let inspector: JavaScriptPackageInspector;

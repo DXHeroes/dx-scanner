@@ -1,5 +1,5 @@
 import ncu from 'npm-check-updates';
-import { mockPackage } from '../../../test/helpers/mockPackage';
+import { mockPackage } from '../../test/helpers/mockPackage';
 import { JavaScriptPackageInspector } from '../../inspectors/package/JavaScriptPackageInspector';
 import { createTestContainer, TestContainerContext } from '../../inversify.config';
 import { PracticeEvaluationResult } from '../../model';

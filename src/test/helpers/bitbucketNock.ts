@@ -1,11 +1,11 @@
 /* eslint-disable @typescript-eslint/camelcase */
 import nock from 'nock';
+import { BitbucketCommit } from '../../services/bitbucket/BitbucketService';
+import { BitbucketPullRequestState } from '../../services/git/IVCSService';
 import qs from 'qs';
-import { BitbucketCommit } from '../../src/services/bitbucket/BitbucketService';
-import { BitbucketPullRequestState } from '../../src/services/git/IVCSService';
-import { Paginated } from '../../src/inspectors/common/Paginated';
-import { getPullRequestResponse } from '../../src/services/git/__MOCKS__/bitbucketServiceMockFolder/getPullRequestResponse';
-import { PullRequest } from '../../src/services/git/model';
+import { Paginated } from '../../inspectors';
+import { PullRequest } from '../../services/git/model';
+import { getPullRequestResponse } from '../../services/git/__MOCKS__/bitbucketServiceMockFolder';
 import _ from 'lodash';
 
 export class BitbucketNock {
