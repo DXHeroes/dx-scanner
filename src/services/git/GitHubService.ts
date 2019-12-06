@@ -182,7 +182,8 @@ export class GitHubService implements IVCSService {
   async getRepoCommits(owner: string, repo: string, sha?: string): Promise<Paginated<Commit>> {
     let url = 'GET /repos/:owner/:repo/commits';
     if (sha !== undefined) {
-      url = `${url}?state=${sha}`;
+      const stateForUri = qs.stringify({ state: sha }, { addQueryPrefix: true });
+      url = `${url}${stateForUri}`;
     }
 
     const response = await this.paginate(url, owner, repo);
