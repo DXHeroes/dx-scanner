@@ -127,12 +127,26 @@ export class BitbucketNock {
     if (typeof states !== 'string') {
       states.forEach((state) => {
         const pullrequest = _.cloneDeep(getPullRequestResponse);
+
         pullrequest.state = state;
+        pullrequest.closedAt =
+          pullrequest.state === BitbucketPullRequestState.closed || pullrequest.state === BitbucketPullRequestState.declined
+            ? pullrequest.updatedAt
+            : null;
+        pullrequest.mergedAt = pullrequest.state === BitbucketPullRequestState.closed ? pullrequest.updatedAt : null;
+
         pullRequests.push(pullrequest);
       });
+
       paginatedPullrequests.items = pullRequests;
     } else {
       getPullRequestResponse.state = states;
+      getPullRequestResponse.closedAt =
+        states === BitbucketPullRequestState.closed || states === BitbucketPullRequestState.declined
+          ? getPullRequestResponse.updatedAt
+          : null;
+      getPullRequestResponse.mergedAt = states === BitbucketPullRequestState.closed ? getPullRequestResponse.updatedAt : null;
+
       paginatedPullrequests.items = [getPullRequestResponse];
     }
     return paginatedPullrequests;
