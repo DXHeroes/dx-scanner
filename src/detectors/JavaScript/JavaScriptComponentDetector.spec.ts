@@ -1,7 +1,7 @@
 import { JavaScriptComponentDetector } from './JavaScriptComponentDetector';
 import { ProgrammingLanguage, ProjectComponentPlatform } from '../../model';
 import { JavaScriptPackageInspector } from '../../inspectors/package/JavaScriptPackageInspector';
-import { mockPackage } from '../../../test/helpers/mockPackage';
+import { mockPackage } from '../../test/helpers/mockPackage';
 jest.mock('../../inspectors/package/JavaScriptPackageInspector');
 
 describe('JavaScriptComponentDetector', () => {

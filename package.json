@@ -10,7 +10,7 @@
   "scripts": {
     "build": "rimraf lib && tsc -b",
     "build:watch": "yarn build -w",
-    "lint": "eslint --ext .ts 'src' 'test' 'typings'",
+    "lint": "eslint --ext .ts 'src' 'types'",
     "lint:fix": "yarn lint --fix",
     "prepack": "yarn build",
     "start": "./bin/run",
@@ -94,7 +94,7 @@
     "node": "^12",
     "yarn": "^1"
   },
-  "main": "lib/src/index.js",
+  "main": "lib/index.js",
   "bin": {
     "dx-scanner": "./bin/run",
     "dxscanner": "./bin/run",

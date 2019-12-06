@@ -1,6 +1,6 @@
 import { PracticeEvaluationResult, PracticeImpact } from '../model';
 import { ReporterUtils } from './ReporterUtils';
-import { practiceWithContextFactory } from '../../test/factories/PracticeWithContextFactory';
+import { practiceWithContextFactory } from '../test/factories/PracticeWithContextFactory';
 
 describe('ReporterUtils', () => {
   const practicingHighImpactPracticeWithCtx = practiceWithContextFactory();
