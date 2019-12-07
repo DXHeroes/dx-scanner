@@ -4,13 +4,13 @@ import { IIssueTrackingInspector } from './IIssueTrackingInspector';
 import { Paginated } from './common/Paginated';
 import { Issue, IssueComment } from '../services/git/model';
 import { Types } from '../types';
-import { ProjectIssueBrowserService } from '../model';
+import { VCSService } from '../model';
 
 @injectable()
 export class IssueTrackingInspector implements IIssueTrackingInspector {
-  private service: ProjectIssueBrowserService;
+  private service: VCSService;
 
-  constructor(@inject(Types.IContentRepositoryBrowser) service: ProjectIssueBrowserService) {
+  constructor(@inject(Types.IContentRepositoryBrowser) service: VCSService) {
     this.service = service;
   }
 

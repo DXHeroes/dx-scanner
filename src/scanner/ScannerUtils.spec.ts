@@ -16,7 +16,7 @@ import { TypeScriptUsedPractice } from '../practices/JavaScript/TypeScriptUsedPr
 import { PracticeWithContextForReporter } from '../reporters/IReporter';
 import { ScannerUtils } from './ScannerUtils';
 import { FirstTestPractice, InvalidTestPractice, SecondTestPractice } from './__MOCKS__';
-import { practiceWithContextFactory } from '../../test/factories/PracticeWithContextFactory';
+import { practiceWithContextFactory } from '../test/factories/PracticeWithContextFactory';
 
 describe('ScannerUtils', () => {
   const notPracticingHighImpactPracticeWithCtx: PracticeWithContextForReporter[] = [];

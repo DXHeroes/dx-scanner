@@ -20,7 +20,9 @@ import { JavaGitignoreCorrectlySetPractice } from './Java/JavaGitignoreCorrectly
 import { DependenciesVersionMajorLevel } from './JavaScript/DependenciesVersionMajorLevel';
 import { ESLintWithoutErrorsPractice } from './JavaScript/ESLintWithoutErrorsPractice';
 import { TsGitignoreCorrectlySetPractice } from './TypeScript/TsGitignoreCorrectlySetPractice';
+import { DoesPullRequestsPractice } from './LanguageIndependent/DoesPullRequests';
 import { DependenciesVersionMinorPatchLevel } from './JavaScript/DependenciesVersionMinorPatchLevel';
+import { CorrectCommitMessagesPractice } from './LanguageIndependent/CorrectCommitMessagesPractice';
 import { JavaDependenciesVersionMajorLevel } from './Java/JavaDependenciesVersionMajorLevel';
 
 // register practices here
@@ -49,4 +51,6 @@ export const practices = [
   JsGitignoreCorrectlySetPractice,
   JavaGitignoreCorrectlySetPractice,
   TsGitignoreCorrectlySetPractice,
+  DoesPullRequestsPractice,
+  CorrectCommitMessagesPractice,
 ];

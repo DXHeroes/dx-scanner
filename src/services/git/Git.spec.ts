@@ -1,5 +1,5 @@
 import { Git } from './Git';
-import { GitHubNock } from '../../../test/helpers/gitHubNock';
+import { GitHubNock } from '../../test/helpers/gitHubNock';
 import nock from 'nock';
 import { GitHubService } from './GitHubService';
 
