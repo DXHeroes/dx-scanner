@@ -21,6 +21,7 @@ import { DependenciesVersionMajorLevel } from './JavaScript/DependenciesVersionM
 import { ESLintWithoutErrorsPractice } from './JavaScript/ESLintWithoutErrorsPractice';
 import { TsGitignoreCorrectlySetPractice } from './TypeScript/TsGitignoreCorrectlySetPractice';
 import { DependenciesVersionMinorPatchLevel } from './JavaScript/DependenciesVersionMinorPatchLevel';
+import { JavaDependenciesVersionMajorLevel } from './Java/JavaDependenciesVersionMajorLevel';
 
 // register practices here
 export const practices = [
@@ -42,6 +43,7 @@ export const practices = [
   DockerizationUsedPractice,
   EditorConfigIsPresentPractice,
   DependenciesVersionMajorLevel,
+  JavaDependenciesVersionMajorLevel,
   DependenciesVersionMinorPatchLevel,
   GitignoreIsPresentPractice,
   JsGitignoreCorrectlySetPractice,
