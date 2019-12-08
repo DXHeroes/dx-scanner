@@ -7,6 +7,7 @@ import { Paginated } from '../../inspectors';
 import { PullRequest } from '../../services/git/model';
 import { getPullRequestResponse } from '../../services/git/__MOCKS__/bitbucketServiceMockFolder';
 import _ from 'lodash';
+import moment from 'moment';
 
 export class BitbucketNock {
   user: string;
@@ -112,40 +113,54 @@ export class BitbucketNock {
     return interceptor;
   }
 
-  mockBitbucketPullRequestsResponse(states: BitbucketPullRequestState | BitbucketPullRequestState[]): Paginated<PullRequest> {
+  mockBitbucketPullRequestsResponse(args: {
+    states?: BitbucketPullRequestState | BitbucketPullRequestState[];
+    updatedAt?: number;
+  }): Paginated<PullRequest> {
     const pullRequests: PullRequest[] = [];
+    if (!args.states) {
+      return {
+        items: [],
+        totalCount: 0,
+        hasNextPage: false,
+        hasPreviousPage: false,
+        page: 1,
+        perPage: 0,
+      };
+    }
 
     const paginatedPullrequests: Paginated<PullRequest> = {
       items: [getPullRequestResponse],
       hasNextPage: true,
       hasPreviousPage: false,
       page: 1,
-      perPage: typeof states === 'string' ? 1 : states.length,
-      totalCount: typeof states === 'string' ? 1 : states.length,
+      perPage: typeof args.states === 'string' ? 1 : args.states.length,
+      totalCount: typeof args.states === 'string' ? 1 : args.states.length,
     };
 
-    if (typeof states !== 'string') {
-      states.forEach((state) => {
+    if (typeof args.states !== 'string') {
+      args.states.forEach((state) => {
         const pullrequest = _.cloneDeep(getPullRequestResponse);
 
         pullrequest.state = state;
+        pullrequest.updatedAt = moment(args.updatedAt).format();
         pullrequest.closedAt =
           pullrequest.state === BitbucketPullRequestState.closed || pullrequest.state === BitbucketPullRequestState.declined
             ? pullrequest.updatedAt
             : null;
         pullrequest.mergedAt = pullrequest.state === BitbucketPullRequestState.closed ? pullrequest.updatedAt : null;
-
         pullRequests.push(pullrequest);
       });
 
       paginatedPullrequests.items = pullRequests;
     } else {
-      getPullRequestResponse.state = states;
+      getPullRequestResponse.state = args.states;
+      getPullRequestResponse.updatedAt = moment(args.updatedAt).format();
       getPullRequestResponse.closedAt =
-        states === BitbucketPullRequestState.closed || states === BitbucketPullRequestState.declined
+        args.states === BitbucketPullRequestState.closed || args.states === BitbucketPullRequestState.declined
           ? getPullRequestResponse.updatedAt
           : null;
-      getPullRequestResponse.mergedAt = states === BitbucketPullRequestState.closed ? getPullRequestResponse.updatedAt : null;
+      getPullRequestResponse.mergedAt = args.states === BitbucketPullRequestState.closed ? getPullRequestResponse.updatedAt : null;
 
       paginatedPullrequests.items = [getPullRequestResponse];
     }
