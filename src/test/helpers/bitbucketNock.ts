@@ -143,7 +143,9 @@ export class BitbucketNock {
         const pullrequest = _.cloneDeep(getPullRequestResponse);
 
         pullrequest.state = state;
-        pullrequest.updatedAt = moment(args.updatedAt).format();
+        if (args.updatedAt) {
+          pullrequest.updatedAt = moment(args.updatedAt).format('YYYY-MM-DDTHH:mm:ss.SSSSSSZ');
+        }
         pullrequest.closedAt =
           pullrequest.state === BitbucketPullRequestState.closed || pullrequest.state === BitbucketPullRequestState.declined
             ? pullrequest.updatedAt
@@ -155,7 +157,9 @@ export class BitbucketNock {
       paginatedPullrequests.items = pullRequests;
     } else {
       getPullRequestResponse.state = args.states;
-      getPullRequestResponse.updatedAt = moment(args.updatedAt).format();
+      if (args.updatedAt) {
+        getPullRequestResponse.updatedAt = moment(args.updatedAt).format('YYYY-MM-DDTHH:mm:ss.SSSSSSZ');
+      }
       getPullRequestResponse.closedAt =
         args.states === BitbucketPullRequestState.closed || args.states === BitbucketPullRequestState.declined
           ? getPullRequestResponse.updatedAt
