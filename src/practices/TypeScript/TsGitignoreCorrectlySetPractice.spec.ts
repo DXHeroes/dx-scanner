@@ -34,6 +34,7 @@ describe('TsGitignoreCorrectlySetPractice', () => {
 
     const evaluated = await practice.evaluate(containerCtx.practiceContext);
     expect(evaluated).toEqual(PracticeEvaluationResult.notPracticing);
+    expect(practice.data.details).not.toBeUndefined();
   });
 
   it('Returns unknown if there is no fileInspector', async () => {

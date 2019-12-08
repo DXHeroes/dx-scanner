@@ -1,11 +1,10 @@
 import { PracticeContext } from '../../contexts/practice/PracticeContext';
 import { Package } from '../../inspectors/IPackageInspector';
-import { SemverLevel } from '../../inspectors/package/PackageInspectorBase';
+import { SemverLevel, PackageInspectorBase } from '../../inspectors/package/PackageInspectorBase';
 import { PracticeEvaluationResult, PracticeImpact, ProgrammingLanguage } from '../../model';
 import { DxPractice } from '../DxPracticeDecorator';
 import { IPractice } from '../IPractice';
 import * as axios from 'axios';
-import { DependenciesVersionMajorLevel } from '../JavaScript/DependenciesVersionMajorLevel';
 
 @DxPractice({
   id: 'Java.DependenciesVersionMajorLevel',
@@ -32,7 +31,7 @@ export class JavaDependenciesVersionMajorLevel implements IPractice {
     }
 
     const result = await JavaDependenciesVersionMajorLevel.searchMavenCentral(pkgs, 5);
-    const practiceEvaluationResult = DependenciesVersionMajorLevel.isPracticing(result, SemverLevel.major, pkgs);
+    const practiceEvaluationResult = JavaDependenciesVersionMajorLevel.isPracticing(result, SemverLevel.major, pkgs);
 
     return practiceEvaluationResult || PracticeEvaluationResult.practicing;
   }
@@ -50,5 +49,25 @@ export class JavaDependenciesVersionMajorLevel implements IPractice {
       }
     }
     return latestVersionsJson;
+  }
+
+  static isPracticing(
+    result: { [key: string]: string },
+    semverVersion: SemverLevel,
+    pkgs: Package[],
+  ): PracticeEvaluationResult | undefined {
+    for (const packageName in result) {
+      const parsedVersion = PackageInspectorBase.semverToPackageVersion(result[packageName]);
+      if (parsedVersion) {
+        for (const pkg of pkgs) {
+          if (pkg.name === packageName) {
+            if (parsedVersion[semverVersion] > pkg.lockfileVersion[semverVersion]) {
+              return PracticeEvaluationResult.notPracticing;
+            }
+          }
+        }
+      }
+    }
+    return undefined;
   }
 }
