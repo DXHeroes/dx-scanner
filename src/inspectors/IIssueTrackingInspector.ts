@@ -7,6 +7,14 @@ export enum IssueState {
   all = 'all',
 }
 
+export enum BitbucketIssueState {
+  new = 'new',
+  closed = 'closed',
+  duplicate = 'duplicate',
+  resolved = 'resolved',
+  invalid = 'invalid',
+}
+
 export interface IIssueTrackingInspector {
   getIssues(owner: string, repo: string): Promise<Paginated<Issue>>;
   getIssue(owner: string, repo: string, id: number): Promise<Issue>;

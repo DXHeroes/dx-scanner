@@ -31,5 +31,7 @@ export const getPullsServiceResponse: Paginated<PullRequest> = {
   ],
   page: 1,
   perPage: 1,
+
+
   totalCount: 1,
 };

@@ -1,4 +1,4 @@
-import { UserItem } from '../../../../../test/helpers/gitHubNock';
+import { UserItem } from '../../../../test/helpers/gitHubNock';
 
 /* eslint-disable @typescript-eslint/camelcase */
 export const getRepoCommitsResponse = [
@@ -9,12 +9,12 @@ export const getRepoCommitsResponse = [
       author: {
         name: 'The Octocat',
         email: 'octocat@nowhere.com',
-        date: '2012-03-06T23:06:50Z',
+        date: '2011-01-14T04:42:41Z',
       },
       committer: {
         name: 'The Octocat',
         email: 'octocat@nowhere.com',
-        date: '2012-03-06T23:06:50Z',
+        date: '2011-01-14T04:42:41Z',
       },
       message: 'Merge pull request #6 from Spaceghost/patch-1\n\nNew line at end of file.',
       tree: {
@@ -55,12 +55,12 @@ export const getRepoCommitsResponse = [
       author: {
         name: 'Johnneylee Jack Rollins',
         email: 'johnneylee.rollins@gmail.com',
-        date: '2011-09-14T04:42:41Z',
+        date: '2011-01-14T04:42:41Z',
       },
       committer: {
         name: 'Johnneylee Jack Rollins',
         email: 'johnneylee.rollins@gmail.com',
-        date: '2011-09-14T04:42:41Z',
+        date: '2011-01-14T04:42:41Z',
       },
       message: 'New line at end of file. --Signed off by Spaceghost',
       tree: {
@@ -96,7 +96,7 @@ export const getRepoCommitsResponse = [
       author: {
         name: 'cameronmcefee',
         email: 'cameron@github.com',
-        date: '2011-01-26T19:06:08Z',
+        date: '2011-01-14T04:42:41Z',
       },
       committer: {
         name: 'cameronmcefee',

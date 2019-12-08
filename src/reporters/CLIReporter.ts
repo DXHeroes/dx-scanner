@@ -5,6 +5,7 @@ import { IReporter, PracticeWithContextForReporter } from './IReporter';
 import { sharedSubpath } from '../detectors/utils';
 import { ReporterUtils } from './ReporterUtils';
 import { PracticeDetail } from '../practices/IPractice';
+import { GitServiceUtils } from '../services/git/GitServiceUtils';
 
 @injectable()
 export class CLIReporter implements IReporter {
@@ -20,14 +21,9 @@ export class CLIReporter implements IReporter {
     lines.push(bold(blue('|                          |')));
 
     let repoName;
-    const componentsSharedSubpath = sharedSubpath(componentsWithPractices.map((c) => c.component.path));
 
     for (const cwp of componentsWithPractices) {
-      if (cwp.component.repositoryPath) {
-        repoName = ReporterUtils.getPathOrRepoUrl(cwp.component.repositoryPath, cwp.component.path.replace(componentsSharedSubpath, ''));
-      } else {
-        repoName = cwp.component.path;
-      }
+      repoName = GitServiceUtils.getRepoName(cwp.component.repositoryPath, cwp.component.path);
 
       lines.push(bold(blue('----------------------------')));
       lines.push('');

@@ -1,15 +1,5 @@
 import { Container } from 'inversify';
 import { DirectoryJSON } from 'memfs/lib/volume';
-import { PracticeContext } from './contexts/practice/PracticeContext';
-import { bindScanningContext } from './contexts/scanner/scannerContextBinding';
-import { ScanningStrategyDetector } from './detectors/ScanningStrategyDetector';
-import { packageJSONContents } from './detectors/__MOCKS__';
-import { CollaborationInspector } from './inspectors/CollaborationInspector';
-import { FileInspector } from './inspectors/FileInspector';
-import { IFileInspector } from './inspectors/IFileInspector';
-import { IPackageInspector } from './inspectors/IPackageInspector';
-import { IssueTrackingInspector } from './inspectors/IssueTrackingInspector';
-import { JavaScriptPackageInspector } from './inspectors/package/JavaScriptPackageInspector';
 import {
   ProgrammingLanguage,
   ProjectComponent,
@@ -20,15 +10,25 @@ import {
 } from './model';
 import { practices } from './practices';
 import { IPracticeWithMetadata } from './practices/DxPracticeDecorator';
-import { CLIReporter } from './reporters/CLIReporter';
-import { IReporter } from './reporters/IReporter';
-import { JSONReporter } from './reporters/JSONReporter';
-import { Scanner } from './scanner/Scanner';
-import { ScannerUtils } from './scanner/ScannerUtils';
-import { FileSystemService } from './services/FileSystemService';
-import { GitHubService } from './services/git/GitHubService';
 import { Types } from './types';
+import { IReporter, JSONReporter, CLIReporter } from './reporters';
+import { ScanningStrategyDetector } from './detectors';
+import {
+  FileInspector,
+  IssueTrackingInspector,
+  CollaborationInspector,
+  JavaScriptPackageInspector,
+  IFileInspector,
+  IPackageInspector,
+} from './inspectors';
+import { bindScanningContext } from './contexts/scanner/scannerContextBinding';
+import { Scanner, ScannerUtils } from './scanner';
+import { FileSystemService, GitHubService } from './services';
 import { BitbucketService } from './services/bitbucket/BitbucketService';
+import { ICollaborationInspector } from './inspectors/ICollaborationInspector';
+import { IIssueTrackingInspector } from './inspectors/IIssueTrackingInspector';
+import { PracticeContext } from './contexts/practice/PracticeContext';
+import { packageJSONContents } from './detectors/__MOCKS__/JavaScript/packageJSONContents.mock';
 
 export const createRootContainer = (args: ArgumentsProvider): Container => {
   const container = new Container();
@@ -72,9 +72,9 @@ export const createTestContainer = (
   container.bind(Types.IProjectFilesBrowser).toConstantValue(vfss);
   container.bind(Types.IContentRepositoryBrowser).to(GitHubService);
   container.bind(Types.IFileInspector).to(FileInspector);
-  container.bind(Types.IIssueTrackingInspector).to(IssueTrackingInspector);
-  container.bind(Types.ICollaborationInspector).to(CollaborationInspector);
   container.bind(Types.IPackageInspector).to(JavaScriptPackageInspector);
+  container.bind(Types.ICollaborationInspector).to(CollaborationInspector);
+  container.bind(Types.IIssueTrackingInspector).to(IssueTrackingInspector);
 
   const scanningStrategyDetector = container.get<ScanningStrategyDetector>(ScanningStrategyDetector);
   const fileSystemService = container.get<FileSystemService>(FileSystemService);
@@ -127,8 +127,8 @@ export interface TestContainerContext {
 export interface TestPracticeContext extends PracticeContext {
   packageInspector: IPackageInspector;
   fileInspector: IFileInspector;
-  issueTrackingInspector: IssueTrackingInspector;
-  collaborationInspector: CollaborationInspector;
+  issueTrackingInspector: IIssueTrackingInspector;
+  collaborationInspector: ICollaborationInspector;
 }
 
 export interface ArgumentsProvider {

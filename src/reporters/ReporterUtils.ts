@@ -1,22 +1,10 @@
-import { PracticeWithContextForReporter } from './IReporter';
 import _ from 'lodash';
-import { ProjectComponent, PracticeEvaluationResult, PracticeImpact, PracticeMetadata } from '../model';
-import { DXScoreResult, DXScoreOverallResult } from './model';
 import { assertNever } from '../lib/assertNever';
-import { GitServiceUtils } from '../services/git/GitServiceUtils';
-import gitUrlParse from 'git-url-parse';
+import { PracticeEvaluationResult, PracticeImpact, PracticeMetadata, ProjectComponent } from '../model';
+import { PracticeWithContextForReporter } from './IReporter';
+import { DXScoreOverallResult, DXScoreResult } from './model';
 
 export class ReporterUtils {
-  static getPathOrRepoUrl = (url: string, path?: string | undefined, branch = 'master') => {
-    const parsedUrl = gitUrlParse(url);
-
-    if (parsedUrl.protocol === 'file') {
-      return url;
-    }
-
-    return GitServiceUtils.getUrlToRepo(url, path, branch);
-  };
-
   static getComponentsWithPractices(practicesAndComponents: PracticeWithContextForReporter[]) {
     const result: {
       component: ProjectComponent;

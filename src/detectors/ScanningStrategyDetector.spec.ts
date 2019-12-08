@@ -2,7 +2,7 @@ import { ServiceType, AccessType } from './ScanningStrategyDetector';
 import git from 'simple-git/promise';
 import nock from 'nock';
 import { createTestContainer } from '../inversify.config';
-import { GitHubNock } from '../../test/helpers/gitHubNock';
+import { GitHubNock } from '../test/helpers/gitHubNock';
 jest.mock('simple-git/promise');
 
 describe('ScanningStrategyDetector', () => {
