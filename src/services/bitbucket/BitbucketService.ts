@@ -96,7 +96,7 @@ export class BitbucketService implements IVCSService {
 
     const ownerUrl = `www.bitbucket.org/${owner}`;
 
-    //Bitbucket use two types of accounts - user and team. The request for users uuid fails if it is a team account.
+    //Bitbucket uses two types of accounts - user and team. The request for users' uuid fails if it is a team account.
     let ownerId: string;
     try {
       ownerId = `${(await this.client.users.get({ username: owner })).data.uuid}`;
@@ -154,6 +154,7 @@ export class BitbucketService implements IVCSService {
     };
 
     const ownerUrl = `www.bitbucket.org/${owner}`;
+    //Bitbucket use two types of accounts - user and team. The request for users uuid fails if it is a team account.
     let ownerId = '';
     try {
       ownerId = `${(await this.client.users.get({ username: owner })).data.uuid}`;
