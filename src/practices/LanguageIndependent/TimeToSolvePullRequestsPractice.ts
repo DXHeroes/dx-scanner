@@ -6,15 +6,15 @@ import { DxPractice } from '../DxPracticeDecorator';
 import { IPractice } from '../IPractice';
 
 @DxPractice({
-  id: 'LanguageIndependent.TimeToSolve',
-  name: '',
+  id: 'LanguageIndependent.TimeToSolvePullRequests',
+  name: 'Solve Pull Requests Continuously',
   impact: PracticeImpact.medium,
-  suggestion: '',
+  suggestion: 'Do not have an open Pull Request more than 30 days. Review PRs continuously.',
   reportOnlyOnce: true,
   url: 'https://dxkb.io/p/pull-requests',
   dependsOn: { practicing: ['LanguageIndependent.DoesPullRequests'] },
 })
-export class TimeToSolvePractice implements IPractice {
+export class TimeToSolvePullRequestsPractice implements IPractice {
   async isApplicable(): Promise<boolean> {
     return true;
   }

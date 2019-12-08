@@ -23,7 +23,7 @@ import { TsGitignoreCorrectlySetPractice } from './TypeScript/TsGitignoreCorrect
 import { DoesPullRequestsPractice } from './LanguageIndependent/DoesPullRequests';
 import { DependenciesVersionMinorPatchLevel } from './JavaScript/DependenciesVersionMinorPatchLevel';
 import { CorrectCommitMessagesPractice } from './LanguageIndependent/CorrectCommitMessagesPractice';
-import { TimeToSolvePractice } from './LanguageIndependent/TimeToSolvePractice';
+import { TimeToSolvePullRequestsPractice } from './LanguageIndependent/TimeToSolvePractice';
 
 // register practices here
 export const practices = [
@@ -52,5 +52,5 @@ export const practices = [
   TsGitignoreCorrectlySetPractice,
   DoesPullRequestsPractice,
   CorrectCommitMessagesPractice,
-  TimeToSolvePractice,
+  TimeToSolvePullRequestsPractice,
 ];

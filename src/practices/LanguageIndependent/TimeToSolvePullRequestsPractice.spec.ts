@@ -5,10 +5,10 @@ import { createTestContainer, TestContainerContext } from '../../inversify.confi
 import { PracticeEvaluationResult } from '../../model';
 import { BitbucketPullRequestState } from '../../services';
 import { BitbucketNock } from '../../test/helpers/bitbucketNock';
-import { TimeToSolvePractice } from './TimeToSolvePractice';
+import { TimeToSolvePullRequestsPractice } from './TimeToSolvePullRequestsPractice';
 
-describe('TimeToSolvePractice', () => {
-  let practice: TimeToSolvePractice;
+describe('TimeToSolvePullRequestsPractice', () => {
+  let practice: TimeToSolvePullRequestsPractice;
   let containerCtx: TestContainerContext;
   let bitbucketNock: BitbucketNock;
   const MockedCollaborationInspector = <jest.Mock<CollaborationInspector>>(<unknown>CollaborationInspector);
@@ -22,7 +22,7 @@ describe('TimeToSolvePractice', () => {
   beforeAll(() => {
     const args = { uri: 'https://bitbucket.org/pypy/pypy' };
     containerCtx = createTestContainer(args);
-    containerCtx.container.bind('TimeToSolvePractice').to(TimeToSolvePractice);
+    containerCtx.container.bind('TimeToSolvePractice').to(TimeToSolvePullRequestsPractice);
     practice = containerCtx.container.get('TimeToSolvePractice');
     mockCollaborationInspector = new MockedCollaborationInspector();
   });
