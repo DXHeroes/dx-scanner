@@ -95,12 +95,12 @@ export class BitbucketService implements IVCSService {
     }
 
     const ownerUrl = `www.bitbucket.org/${owner}`;
-    let ownerId: string | null;
+    let ownerId: string;
     try {
-      ownerId = `${(await this.client.users.get({ username: 'atlassian' })).data.uuid}`;
+      ownerId = `${(await this.client.users.get({ username: owner })).data.uuid}`;
     } catch (error) {
       if (error.message.includes('is a team account')) {
-        ownerId = null;
+        ownerId = `${(await this.client.teams.get({ username: owner })).data.uuid}`;
       }
     }
 
@@ -129,7 +129,7 @@ export class BitbucketService implements IVCSService {
             id: val.destination.repository.uuid,
             owner: {
               login: owner,
-              id: <string>ownerId,
+              id: ownerId,
               url: ownerUrl,
             },
           },
@@ -152,8 +152,14 @@ export class BitbucketService implements IVCSService {
     };
 
     const ownerUrl = `www.bitbucket.org/${owner}`;
-    const ownerId = `${(await this.client.users.get({ username: owner })).data.uuid}`;
-
+    let ownerId = '';
+    try {
+      ownerId = `${(await this.client.users.get({ username: owner })).data.uuid}`;
+    } catch (error) {
+      if (error.message.includes('is a team account')) {
+        ownerId = `${(await this.client.teams.get({ username: owner })).data.uuid}`;
+      }
+    }
     const response = <DeepRequired<Bitbucket.Response<Bitbucket.Schema.Pullrequest>>>await this.client.pullrequests.get(params);
     response.data;
 
