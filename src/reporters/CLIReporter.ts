@@ -2,10 +2,11 @@ import { blue, bold, Color, green, grey, italic, red, reset, underline, yellow, 
 import { injectable } from 'inversify';
 import { PracticeImpact, PracticeMetadata, PracticeEvaluationResult } from '../model';
 import { IReporter, PracticeWithContextForReporter } from './IReporter';
-import { sharedSubpath } from '../detectors/utils';
 import { ReporterUtils } from './ReporterUtils';
 import { PracticeDetail } from '../practices/IPractice';
 import { GitServiceUtils } from '../services/git/GitServiceUtils';
+import { ReportDetailType, ReporterData } from './ReporterData';
+import { assertNever } from '../lib/assertNever';
 
 @injectable()
 export class CLIReporter implements IReporter {
@@ -106,11 +107,12 @@ export class CLIReporter implements IReporter {
       lines.push(this.linesForPractice(practiceWithContext.practice, color));
 
       if (practiceWithContext.practice.data?.details) {
-        lines.push(practiceWithContext.practice.data.details.map((d) => this.renderDetail(d, (color = grey))).join(' '));
+        const linesWithDetail = practiceWithContext.practice.data.details.map((d) => this.renderDetail(d)).join(' ');
+        lines.push(reset(grey(linesWithDetail)));
       }
 
       if (practiceWithContext.practice.impact !== practiceWithContext.overridenImpact) {
-        lines.push(bold(this.lineForChangedImpact(practiceWithContext, (color = grey))));
+        lines.push(reset(bold(this.lineForChangedImpact(practiceWithContext, grey))));
       }
     }
 
@@ -136,7 +138,16 @@ export class CLIReporter implements IReporter {
     );
   }
 
-  private renderDetail(detail: PracticeDetail, color: Color) {
-    return reset(color(`${detail}`));
+  private renderDetail(detail: PracticeDetail) {
+    switch (detail.type) {
+      case ReportDetailType.table:
+        return ReporterData.table(detail.headers, detail.data);
+
+      case ReportDetailType.text:
+        return detail.text;
+
+      default:
+        return assertNever(detail);
+    }
   }
 }

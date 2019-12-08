@@ -1,7 +1,8 @@
-import { IPractice } from '../IPractice';
 import { PracticeEvaluationResult, PracticeImpact, ProgrammingLanguage } from '../../model';
 import { DxPractice } from '../DxPracticeDecorator';
 import { PracticeContext } from '../../contexts/practice/PracticeContext';
+import { PracticeBase } from '../PracticeBase';
+import { ReportDetailType } from '../../reporters/ReporterData';
 
 @DxPractice({
   id: 'JavaScript.PackageJsonConfigurationSetCorrectly',
@@ -13,7 +14,7 @@ import { PracticeContext } from '../../contexts/practice/PracticeContext';
   url: 'https://docs.npmjs.com/files/package.json',
   dependsOn: { practicing: ['Javascript.PackageManagementUsed'] },
 })
-export class JsPackageJsonConfigurationSetCorrectlyPractice implements IPractice {
+export class JsPackageJsonConfigurationSetCorrectlyPractice extends PracticeBase {
   async isApplicable(ctx: PracticeContext): Promise<boolean> {
     return (
       ctx.projectComponent.language === ProgrammingLanguage.JavaScript || ctx.projectComponent.language === ProgrammingLanguage.TypeScript
@@ -21,7 +22,7 @@ export class JsPackageJsonConfigurationSetCorrectlyPractice implements IPractice
   }
 
   async evaluate(ctx: PracticeContext): Promise<PracticeEvaluationResult> {
-    if (ctx.fileInspector === undefined) {
+    if (!ctx.fileInspector) {
       return PracticeEvaluationResult.unknown;
     }
 
@@ -49,6 +50,13 @@ export class JsPackageJsonConfigurationSetCorrectlyPractice implements IPractice
       return PracticeEvaluationResult.practicing;
     }
 
+    this.setData();
     return PracticeEvaluationResult.notPracticing;
+  }
+
+  private setData() {
+    this.data.details = [
+      { type: ReportDetailType.text, text: "The package.json doesn't have configured scripts correctly. The most common scripts are build, start, test and lint." }
+    ];
   }
 }

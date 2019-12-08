@@ -2,7 +2,7 @@ import { PracticeContext } from '../../contexts/practice/PracticeContext';
 import { PracticeEvaluationResult, PracticeImpact, ProgrammingLanguage } from '../../model';
 import { DxPractice } from '../DxPracticeDecorator';
 import { IPractice } from '../IPractice';
-import { DependenciesVersionMajorLevel } from './DependenciesVersionMajorLevel';
+import { DependenciesVersionMajorLevelPractice } from './DependenciesVersionMajorLevel';
 import { SemverLevel } from '../../inspectors/package/PackageInspectorBase';
 import { flatten } from 'lodash';
 
@@ -10,11 +10,11 @@ import { flatten } from 'lodash';
   id: 'JavaScript.DependenciesVersionMinorPatchLevel',
   name: 'Update Dependencies of Minor and Patch Level',
   impact: PracticeImpact.high,
-  suggestion: 'Keep the dependencies updated to eliminate security concerns and compatibility issues. Use, for example, Renovate Bot.',
+  suggestion: 'Keep the dependencies updated to eliminate security concerns and compatibility issues. Use, for example, npm-check-updates.',
   reportOnlyOnce: true,
-  url: 'https://renovatebot.com/',
+  url: 'https://github.com/tjunnone/npm-check-updates',
 })
-export class DependenciesVersionMinorPatchLevel extends DependenciesVersionMajorLevel implements IPractice {
+export class DependenciesVersionMinorPatchLevelPractice extends DependenciesVersionMajorLevelPractice implements IPractice {
   async isApplicable(ctx: PracticeContext): Promise<boolean> {
     return (
       ctx.projectComponent.language === ProgrammingLanguage.JavaScript || ctx.projectComponent.language === ProgrammingLanguage.TypeScript

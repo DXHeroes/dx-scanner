@@ -5,16 +5,17 @@ import { PackageInspectorBase, SemverLevel } from '../../inspectors/package/Pack
 import { PracticeEvaluationResult, PracticeImpact, ProgrammingLanguage } from '../../model';
 import { DxPractice } from '../DxPracticeDecorator';
 import { PracticeBase } from '../PracticeBase';
+import { ReportDetailType } from '../../reporters/ReporterData';
 
 @DxPractice({
   id: 'JavaScript.DependenciesVersionMajorLevel',
   name: 'Update Dependencies of Major Level',
   impact: PracticeImpact.small,
-  suggestion: 'Keep the dependencies updated to have all possible features. Use, for example, Renovate Bot.',
+  suggestion: 'Keep the dependencies updated to have all possible features. Use, for example, npm-check-updates.',
   reportOnlyOnce: true,
-  url: 'https://renovatebot.com/',
+  url: 'https://github.com/tjunnone/npm-check-updates',
 })
-export class DependenciesVersionMajorLevel extends PracticeBase {
+export class DependenciesVersionMajorLevelPractice extends PracticeBase {
   async isApplicable(ctx: PracticeContext): Promise<boolean> {
     return (
       ctx.projectComponent.language === ProgrammingLanguage.JavaScript || ctx.projectComponent.language === ProgrammingLanguage.TypeScript
@@ -71,7 +72,7 @@ export class DependenciesVersionMajorLevel extends PracticeBase {
   }
 
   setData(pkgsToUpdate: PkgToUpdate[]): void {
-    this.data.details = [{ headers: ['Name', 'New', 'Current'], data: pkgsToUpdate }];
+    this.data.details = [{ type: ReportDetailType.table, headers: ['Name', 'New', 'Current'], data: pkgsToUpdate }];
   }
 }
 

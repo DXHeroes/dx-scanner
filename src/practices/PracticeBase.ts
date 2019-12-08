@@ -4,7 +4,9 @@ import { IPractice, PracticeData } from './IPractice';
 import { ErrorFactory } from '../lib/errors';
 import { PracticeEvaluationResult } from '../model';
 import { PracticeContext } from '../contexts/practice/PracticeContext';
+import { injectable } from 'inversify';
 
+@injectable()
 export abstract class PracticeBase<T = {}> implements IPractice<T> {
   data: Partial<T> & PracticeData;
 
