@@ -27,11 +27,15 @@ describe('Bitbucket Service', () => {
   it('returns open pull requests in own interface', async () => {
     nock(bitbucketNock.url)
       .get('/users/pypy')
-      .reply(200);
+      .replyWithError('is a team account');
+
+    nock(bitbucketNock.url)
+      .get('/teams/pypy')
+      .reply(200, { uuid: '{f122f6a4-9111-4431-9f88-884d8cedd194}' });
     bitbucketNock.getApiResponse('pullrequests');
 
     const response = await service.getPullRequests('pypy', 'pypy');
-    const getOpenPullRequestsResponse = bitbucketNock.mockBitbucketPullRequestsResponse(BitbucketPullRequestState.open);
+    const getOpenPullRequestsResponse = bitbucketNock.mockBitbucketPullRequestsResponse({ states: BitbucketPullRequestState.open });
     expect(response).toMatchObject(getOpenPullRequestsResponse);
   });
 
@@ -39,11 +43,15 @@ describe('Bitbucket Service', () => {
     const state = <BitbucketPullRequestState>VCSServicesUtils.getPRState(PullRequestState.all, VCSService.bitbucket);
     nock(bitbucketNock.url)
       .get('/users/pypy')
-      .reply(200);
+      .replyWithError('is a team account');
+
+    nock(bitbucketNock.url)
+      .get('/teams/pypy')
+      .reply(200, { uuid: '{f122f6a4-9111-4431-9f88-884d8cedd194}' });
     bitbucketNock.getApiResponse('pullrequests', undefined, undefined, state);
 
     const response = await service.getPullRequests('pypy', 'pypy', { filter: { state: PullRequestState.all } });
-    const allPullrequestsResponse = bitbucketNock.mockBitbucketPullRequestsResponse(state);
+    const allPullrequestsResponse = bitbucketNock.mockBitbucketPullRequestsResponse({ states: state });
 
     expect(response).toMatchObject(allPullrequestsResponse);
   });
@@ -51,7 +59,11 @@ describe('Bitbucket Service', () => {
   it('returns specific pull request in own interface', async () => {
     nock(bitbucketNock.url)
       .get('/users/pypy')
-      .reply(200);
+      .replyWithError('is a team account');
+
+    nock(bitbucketNock.url)
+      .get('/teams/pypy')
+      .reply(200, { uuid: '{f122f6a4-9111-4431-9f88-884d8cedd194}' });
     bitbucketNock.getApiResponse('pullrequests', 1);
 
     const response = await service.getPullRequest('pypy', 'pypy', 1);
@@ -95,11 +107,19 @@ describe('Bitbucket Service', () => {
 
     nock(bitbucketNock.url)
       .get('/users/pypy')
+      .replyWithError('is a team account');
+
+    nock(bitbucketNock.url)
+      .get('/teams/pypy')
+      .reply(200, { uuid: '{f122f6a4-9111-4431-9f88-884d8cedd194}' });
+
+    nock(bitbucketNock.url)
+      .get('/users/pypy')
       .reply(200);
     bitbucketNock.getApiResponse('pullrequests', undefined, undefined, BitbucketPullRequestState.closed);
 
     const response = await service.getPullRequests('pypy', 'pypy', state);
-    const getMergedPullRequestsResponse = bitbucketNock.mockBitbucketPullRequestsResponse(BitbucketPullRequestState.closed);
+    const getMergedPullRequestsResponse = bitbucketNock.mockBitbucketPullRequestsResponse({ states: BitbucketPullRequestState.closed });
 
     expect(response).toMatchObject(getMergedPullRequestsResponse);
   });
