@@ -64,7 +64,7 @@ export class TsGitignoreCorrectlySetPractice extends PracticeBase {
       {
         type: ReportDetailType.text,
         text:
-          'You should ignore one of lock file (package-lock.json or yarn.lock), node_modules folder, coverage folder and log files (*.log)',
+          'You should ignore one of build folder (build, dist or lib), one of lock file (package-lock.json or yarn.lock), node_modules folder, coverage folder and log files (*.log)',
       },
     ];
   }

@@ -34,6 +34,7 @@ describe('DependenciesVersionPractice of Major Level', () => {
 
     const evaluated = await practice.evaluate(containerCtx.practiceContext);
     expect(evaluated).toEqual(PracticeEvaluationResult.notPracticing);
+    expect(practice.data.details).not.toBeUndefined();
   });
 
   it('practicing if newest package version dependency of major level', async () => {
