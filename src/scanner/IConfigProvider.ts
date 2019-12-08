@@ -45,6 +45,4 @@ enum Practices {
   'JavaScript.JsGitignoreIsPresentPractice' = 'JavaScript.JsGitignoreIsPresentPractice',
   'JavaScript.JsGitignoreCorrectlySetPractice' = 'JavaScript.JsGitignoreCorrectlySetPractice',
   'JavaScript.ESLintCorrectlyUsedPractice' = 'JavaScript.ESLintCorrectlyUsedPractice',
-  UnitTestPractice = 'UnitTestPractice',
-  PullRequestPractice = 'PullRequestPractice',
 }
