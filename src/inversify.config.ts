@@ -70,7 +70,7 @@ export const createTestContainer = (
 
   // FileSystemService as default ProjectBrowser
   container.bind(Types.IProjectFilesBrowser).toConstantValue(vfss);
-  projectComponent?.repositoryPath?.includes('github')
+  args?.uri.includes('github')
     ? container.bind(Types.IContentRepositoryBrowser).to(GitHubService)
     : container.bind(Types.IContentRepositoryBrowser).to(BitbucketService);
   container.bind(Types.IFileInspector).to(FileInspector);

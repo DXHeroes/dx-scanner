@@ -15,7 +15,8 @@ describe('DoesPullRequests', () => {
   });
 
   beforeAll(() => {
-    containerCtx = createTestContainer();
+    const args = { uri: 'https://github.com/octocat/Hello-World' };
+    containerCtx = createTestContainer(args);
     containerCtx.container.bind('DoesPullRequests').to(DoesPullRequestsPractice);
     practice = containerCtx.container.get('DoesPullRequests');
   });

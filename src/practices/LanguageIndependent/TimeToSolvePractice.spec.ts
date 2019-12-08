@@ -20,7 +20,8 @@ describe('TimeToSolvePractice', () => {
   });
 
   beforeAll(() => {
-    containerCtx = createTestContainer();
+    const args = { uri: 'https://bitbucket.org/pypy/pypy' };
+    containerCtx = createTestContainer(args);
     containerCtx.container.bind('TimeToSolvePractice').to(TimeToSolvePractice);
     practice = containerCtx.container.get('TimeToSolvePractice');
     mockCollaborationInspector = new MockedCollaborationInspector();
@@ -32,7 +33,6 @@ describe('TimeToSolvePractice', () => {
   });
 
   it('returns practicing if there are open pullrequests updated or created less than 30 days from now', async () => {
-    containerCtx.practiceContext.projectComponent.repositoryPath = 'https://bitbucket.org/pypy/pypy';
     nock(bitbucketNock.url)
       .get('/users/pypy')
       .reply(200);
@@ -51,7 +51,6 @@ describe('TimeToSolvePractice', () => {
   });
 
   it('returns practicing if there are open pullrequests updated or created more than 30 days from now', async () => {
-    containerCtx.practiceContext.projectComponent.repositoryPath = 'https://bitbucket.org/pypy/pypy';
     nock(bitbucketNock.url)
       .get('/users/pypy')
       .reply(200);

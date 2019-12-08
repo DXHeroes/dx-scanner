@@ -16,7 +16,8 @@ describe('Issue Tracking Inspector', () => {
   let containerCtx: TestContainerContext;
 
   beforeAll(async () => {
-    containerCtx = createTestContainer();
+    const args = { uri: 'https://github.com/octocat/Hello-World' };
+    containerCtx = createTestContainer(args);
     inspector = <IssueTrackingInspector>containerCtx.practiceContext.issueTrackingInspector;
   });
 
