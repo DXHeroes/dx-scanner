@@ -70,9 +70,7 @@ export const createTestContainer = (
 
   // FileSystemService as default ProjectBrowser
   container.bind(Types.IProjectFilesBrowser).toConstantValue(vfss);
-  args?.uri.includes('github')
-    ? container.bind(Types.IContentRepositoryBrowser).to(GitHubService)
-    : container.bind(Types.IContentRepositoryBrowser).to(BitbucketService);
+  container.bind(Types.IContentRepositoryBrowser).to(GitHubService);
   container.bind(Types.IFileInspector).to(FileInspector);
   container.bind(Types.IPackageInspector).to(JavaScriptPackageInspector);
   container.bind(Types.ICollaborationInspector).to(CollaborationInspector);

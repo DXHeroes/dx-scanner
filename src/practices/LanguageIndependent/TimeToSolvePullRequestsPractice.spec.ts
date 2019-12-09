@@ -3,9 +3,10 @@ import nock from 'nock';
 import { CollaborationInspector } from '../../inspectors';
 import { createTestContainer, TestContainerContext } from '../../inversify.config';
 import { PracticeEvaluationResult } from '../../model';
-import { BitbucketPullRequestState } from '../../services';
+import { BitbucketPullRequestState, BitbucketService } from '../../services';
 import { BitbucketNock } from '../../test/helpers/bitbucketNock';
 import { TimeToSolvePullRequestsPractice } from './TimeToSolvePullRequestsPractice';
+import { Types } from '../../types';
 
 describe('TimeToSolvePullRequestsPractice', () => {
   let practice: TimeToSolvePullRequestsPractice;
@@ -20,9 +21,9 @@ describe('TimeToSolvePullRequestsPractice', () => {
   });
 
   beforeAll(() => {
-    const args = { uri: 'https://bitbucket.org/pypy/pypy' };
-    containerCtx = createTestContainer(args);
+    containerCtx = createTestContainer();
     containerCtx.container.bind('TimeToSolvePractice').to(TimeToSolvePullRequestsPractice);
+    containerCtx.container.rebind(Types.IContentRepositoryBrowser).to(BitbucketService);
     practice = containerCtx.container.get('TimeToSolvePractice');
     mockCollaborationInspector = new MockedCollaborationInspector();
   });

@@ -17,8 +17,7 @@ describe('Collaboration Inspector', () => {
   let containerCtx: TestContainerContext;
 
   beforeAll(async () => {
-    const args = { uri: 'https://github.com/octocat/Hello-World' };
-    containerCtx = createTestContainer(args);
+    containerCtx = createTestContainer();
     inspector = <CollaborationInspector>containerCtx.practiceContext.collaborationInspector;
   });
 
