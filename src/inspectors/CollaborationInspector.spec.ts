@@ -26,7 +26,6 @@ describe('Collaboration Inspector', () => {
   });
 
   it('returns paginated pull requests', async () => {
-    containerCtx.practiceContext.projectComponent.repositoryPath = 'www.github.com';
     new GitHubNock('1', 'octocat', 1296269, 'Hello-World').getPulls([
       { number: 1347, state: 'open', title: 'new-feature', body: 'Please pull these awesome changes', head: 'new-topic', base: 'master' },
     ]);
