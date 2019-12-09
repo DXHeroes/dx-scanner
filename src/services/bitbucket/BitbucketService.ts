@@ -96,15 +96,7 @@ export class BitbucketService implements IVCSService {
 
     const ownerUrl = `www.bitbucket.org/${owner}`;
 
-    //Bitbucket uses two types of accounts - user and team. The request for users' uuid fails if it is a team account.
-    let ownerId: string;
-    try {
-      ownerId = `${(await this.client.users.get({ username: owner })).data.uuid}`;
-    } catch (error) {
-      if (error.message.includes('is a team account')) {
-        ownerId = `${(await this.client.teams.get({ username: owner })).data.uuid}`;
-      }
-    }
+    const ownerId = <string>(await this.client.repositories.get({ repo_slug: repo, username: owner })).data.owner?.uuid;
 
     const response: DeepRequired<Bitbucket.Response<Bitbucket.Schema.PaginatedPullrequests>> = await axios.get(apiUrl);
 
@@ -154,15 +146,8 @@ export class BitbucketService implements IVCSService {
     };
 
     const ownerUrl = `www.bitbucket.org/${owner}`;
-    //Bitbucket use two types of accounts - user and team. The request for users uuid fails if it is a team account.
-    let ownerId = '';
-    try {
-      ownerId = `${(await this.client.users.get({ username: owner })).data.uuid}`;
-    } catch (error) {
-      if (error.message.includes('is a team account')) {
-        ownerId = `${(await this.client.teams.get({ username: owner })).data.uuid}`;
-      }
-    }
+    const ownerId = <string>(await this.client.repositories.get({ repo_slug: repo, username: owner })).data.owner?.uuid;
+
     const response = <DeepRequired<Bitbucket.Response<Bitbucket.Schema.Pullrequest>>>await this.client.pullrequests.get(params);
     response.data;
 
