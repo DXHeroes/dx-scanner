@@ -98,6 +98,14 @@ export class BitbucketNock {
     return BitbucketNock.get(url, params, persist).reply(200, response);
   }
 
+  getOwnerId() {
+    const url = `${this.url}/repositories/${this.user}/${this.repoName}`;
+    const params = {};
+    const persist = true;
+    const response = { owner: { uuid: '{f122f6a4-9111-4431-9f88-884d8cedd194}' } };
+    return BitbucketNock.get(url, params, persist).reply(200, response);
+  }
+
   private static get(url: string, params: nock.DataMatcherMap, persist = true): nock.Interceptor {
     const urlObj = new URL(url);
 
