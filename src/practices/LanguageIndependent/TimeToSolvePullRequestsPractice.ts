@@ -30,10 +30,6 @@ export class TimeToSolvePullRequestsPractice implements IPractice {
     //Both GitHub API and Bitbucket API returns open pullrequests defaultly
     const pullRequests = await ctx.collaborationInspector.getPullRequests(ownerAndRepoName.owner, ownerAndRepoName.repoName);
 
-    if (pullRequests.items.length === 0) {
-      return PracticeEvaluationResult.practicing;
-    }
-
     const latestPRsUpdate = pullRequests.items.map((item) => new Date(item.updatedAt || item.createdAt).getTime());
 
     const daysInMilliseconds = moment.duration(30, 'days').asMilliseconds();
