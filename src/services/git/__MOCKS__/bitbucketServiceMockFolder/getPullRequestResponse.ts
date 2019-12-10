@@ -21,7 +21,7 @@ export const getPullRequestResponse: PullRequest = {
       id: '{54220cd1-b139-4188-9455-1e13e663f1ac}',
       owner: {
         login: 'pypy',
-        id: 'undefined',
+        id: '{f122f6a4-9111-4431-9f88-884d8cedd194}',
         url: 'www.bitbucket.org/pypy',
       },
     },
