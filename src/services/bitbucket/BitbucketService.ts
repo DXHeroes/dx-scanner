@@ -99,40 +99,40 @@ export class BitbucketService implements IVCSService {
 
     const response: DeepRequired<Bitbucket.Response<Bitbucket.Schema.PaginatedPullrequests>> = await axios.get(apiUrl);
 
-    const values = response.data.values.map(async (val) => {
-      return {
-        user: {
-          id: val.author.uuid,
-          login: val.author.nickname,
-          url: val.author.links.html.href,
-        },
-        url: val.links.html.href,
-        body: val.description,
-        createdAt: val.created_on,
-        updatedAt: val.updated_on,
-        closedAt:
-          val.state === BitbucketPullRequestState.closed || val.state === BitbucketPullRequestState.declined ? val.updated_on : null,
-        mergedAt: val.state === BitbucketPullRequestState.closed ? val.updated_on : null,
-        state: val.state,
-        id: val.id,
-        base: {
-          repo: {
-            url: val.destination.repository.links.html.href,
-            name: val.destination.repository.name,
-            id: val.destination.repository.uuid,
-            owner: {
-              login: owner,
-              id: ownerId,
-              url: ownerUrl,
+    const items = await Promise.all(
+      response.data.values.map(async (val) => {
+        return {
+          user: {
+            id: val.author.uuid,
+            login: val.author.nickname,
+            url: val.author.links.html.href,
+          },
+          url: val.links.html.href,
+          body: val.description,
+          createdAt: val.created_on,
+          updatedAt: val.updated_on,
+          closedAt:
+            val.state === BitbucketPullRequestState.closed || val.state === BitbucketPullRequestState.declined ? val.updated_on : null,
+          mergedAt: val.state === BitbucketPullRequestState.closed ? val.updated_on : null,
+          state: val.state,
+          id: val.id,
+          base: {
+            repo: {
+              url: val.destination.repository.links.html.href,
+              name: val.destination.repository.name,
+              id: val.destination.repository.uuid,
+              owner: {
+                login: owner,
+                id: ownerId,
+                url: ownerUrl,
+              },
             },
           },
-        },
-      };
-    });
+        };
+      }),
+    );
 
     const pagination = this.getPagination(response.data);
-
-    const items = await Promise.all(values);
 
     return { items, ...pagination };
   }
@@ -195,24 +195,40 @@ export class BitbucketService implements IVCSService {
 
     const response = <DeepRequired<Bitbucket.Response<BitbucketCommit>>>await this.client.pullrequests.listCommits(params);
 
-    const items = response.data.values.map((val) => ({
-      sha: val.hash,
-      commit: {
-        url: val.links.html.href,
-        message: val.message,
-        author: {
-          name: val.author.raw,
-          email: 'undefined',
-          date: val.date,
-        },
-        tree: {
+    const items = await Promise.all(
+      response.data.values.map(async (val) => {
+        const diffValues = <Bitbucket.Schema.Diffstat[]>(
+          (await this.client.repositories.getPullRequestDiffStat({ repo_slug: repo, username: owner, pull_request_id: `${prNumber}` })).data
+            .values
+        );
+        let linesAdded = 0;
+        let linesRemoved = 0;
+        diffValues.forEach((val) => {
+          linesAdded += <number>val.lines_added;
+          linesRemoved += <number>val.lines_removed;
+        });
+        return {
           sha: val.hash,
-          url: val.links.html.href,
-        },
-        //TODO
-        verified: false,
-      },
-    }));
+          commit: {
+            url: val.links.html.href,
+            message: val.message,
+            author: {
+              name: val.author.raw,
+              email: 'undefined',
+              date: val.date,
+            },
+            linesAdded: linesAdded,
+            linesRemoved: linesRemoved,
+            tree: {
+              sha: val.hash,
+              url: val.links.html.href,
+            },
+            //TODO
+            verified: false,
+          },
+        };
+      }),
+    );
     const pagination = this.getPagination(response.data);
 
     return { items, ...pagination };
@@ -309,22 +325,37 @@ export class BitbucketService implements IVCSService {
       username: owner,
     };
     const response = <DeepRequired<Bitbucket.Response<BitbucketCommit>>>await this.client.repositories.listCommits(params);
-    const items = response.data.values.map((val) => ({
-      sha: val.hash,
-      url: val.links.html.href,
-      message: val.rendered.message.raw,
-      author: {
-        name: val.author.user.nickname,
-        email: this.extractEmailFromString(val.author.raw) || '',
-        date: val.date,
-      },
-      tree: {
-        sha: val.parents[0].hash,
-        url: val.parents[0].links.html.href,
-      },
-      // TODO
-      verified: false,
-    }));
+    const items = await Promise.all(
+      response.data.values.map(async (val) => {
+        const diffValues = <Bitbucket.Schema.Diffstat[]>(
+          (await this.client.repositories.listDiffStats({ repo_slug: repo, username: owner, spec: val.hash })).data.values
+        );
+        let linesAdded = 0;
+        let linesRemoved = 0;
+        diffValues.forEach((val) => {
+          linesAdded += <number>val.lines_added;
+          linesRemoved += <number>val.lines_removed;
+        });
+        return {
+          sha: val.hash,
+          url: val.links.html.href,
+          message: val.rendered.message.raw,
+          author: {
+            name: val.author.user.nickname,
+            email: this.extractEmailFromString(val.author.raw) || '',
+            date: val.date,
+          },
+          linesAdded: linesAdded,
+          linesRemoved: linesRemoved,
+          tree: {
+            sha: val.parents[0].hash,
+            url: val.parents[0].links.html.href,
+          },
+          // TODO
+          verified: false,
+        };
+      }),
+    );
     const pagination = this.getPagination(response.data);
 
     return { items, ...pagination };
@@ -337,6 +368,15 @@ export class BitbucketService implements IVCSService {
       username: owner,
     };
     const response = <DeepRequired<Bitbucket.Response<Bitbucket.Schema.Commit>>>await this.client.commits.get(params);
+    const diffValues = <Bitbucket.Schema.Diffstat[]>(
+      (await this.client.repositories.listDiffStats({ repo_slug: repo, username: owner, spec: commitSha })).data.values
+    );
+    let linesAdded = 0;
+    let linesRemoved = 0;
+    diffValues.forEach((val) => {
+      linesAdded += <number>val.lines_added;
+      linesRemoved += <number>val.lines_removed;
+    });
     return {
       sha: response.data.hash,
       url: response.data.links.html.href,
@@ -346,6 +386,8 @@ export class BitbucketService implements IVCSService {
         email: this.extractEmailFromString(response.data.author.raw) || '',
         date: response.data.date,
       },
+      linesAdded: linesAdded,
+      linesRemoved: linesRemoved,
       tree: {
         sha: response.data.parents[0].hash,
         url: response.data.parents[0].links.html.href,

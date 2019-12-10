@@ -36,6 +36,8 @@ export interface Commit {
   author: Author;
   message: string;
   tree: Tree;
+  linesAdded: number;
+  linesRemoved: number;
   verified: boolean;
 }
 

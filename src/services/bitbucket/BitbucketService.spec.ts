@@ -53,6 +53,7 @@ describe('Bitbucket Service', () => {
 
   it('returns pullrequest commits in own interface', async () => {
     bitbucketNock.getApiResponse('pullrequests', 622, 'commits');
+    bitbucketNock.getAdditionsAndDeletions('622', true);
 
     const response = await service.getPullCommits('pypy', 'pypy', 622);
     expect(response).toMatchObject(getPullCommits);
@@ -97,6 +98,7 @@ describe('Bitbucket Service', () => {
 
   it('returns repo commits in own interface', async () => {
     bitbucketNock.getApiResponse('commits');
+    bitbucketNock.getAdditionsAndDeletions('f9c2cfcfaafa644dcc286ce2fc8b3386d46c11df');
 
     const response = await service.getRepoCommits('pypy', 'pypy');
     expect(response).toMatchObject(getRepoCommits);
@@ -104,6 +106,7 @@ describe('Bitbucket Service', () => {
 
   it('return on commit in own interface', async () => {
     bitbucketNock.getApiResponse('commit', '961b3a27');
+    bitbucketNock.getAdditionsAndDeletions('961b3a27');
 
     const response = await service.getCommit('pypy', 'pypy', '961b3a27');
     expect(response).toMatchObject(getRepoCommit);
