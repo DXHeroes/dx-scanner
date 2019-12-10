@@ -34,7 +34,7 @@ export class TimeToSolvePullRequestsPractice implements IPractice {
 
     const daysInMilliseconds = moment.duration(30, 'days').asMilliseconds();
     const now = Date.now();
-    const openPullrequestsTooLong = [];
+    const openPullRequestsTooLong = [];
 
     latestPRsUpdate.forEach((prDate) => {
       if (now - prDate > daysInMilliseconds) {
