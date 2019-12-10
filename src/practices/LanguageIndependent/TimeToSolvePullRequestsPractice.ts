@@ -38,11 +38,11 @@ export class TimeToSolvePullRequestsPractice implements IPractice {
 
     latestPRsUpdate.forEach((prDate) => {
       if (now - prDate > daysInMilliseconds) {
-        openPullrequestsTooLong.push(prDate);
+        openPullRequestsTooLong.push(prDate);
       }
     });
 
-    if (openPullrequestsTooLong.length === 0) {
+    if (openPullRequestsTooLong.length === 0) {
       return PracticeEvaluationResult.practicing;
     }
 
