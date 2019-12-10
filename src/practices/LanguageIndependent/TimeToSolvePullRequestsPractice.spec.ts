@@ -65,18 +65,6 @@ describe('TimeToSolvePullRequestsPractice', () => {
     expect(evaluated).toEqual(PracticeEvaluationResult.notPracticing);
   });
 
-  it('returns practicing if there are no open pullrequest', async () => {
-    mockCollaborationInspector.getPullRequests = async () => {
-      return bitbucketNock.mockBitbucketPullRequestsResponse({});
-    };
-
-    const evaluated = await practice.evaluate({
-      ...containerCtx.practiceContext,
-      collaborationInspector: mockCollaborationInspector,
-    });
-    expect(evaluated).toEqual(PracticeEvaluationResult.practicing);
-  });
-
   it('returns always true, as it is always applicable', async () => {
     const response = await practice.isApplicable();
     expect(response).toBe(true);
