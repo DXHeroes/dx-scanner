@@ -1,3 +1,12 @@
+# [1.26.0](https://github.com/dxheroes/dx-scanner/compare/v1.25.0...v1.26.0) (2019-12-11)
+
+
+### Features
+
+* **CLIReporter:** add rich suggestion text to the report ([2db8559](https://github.com/dxheroes/dx-scanner/commit/2db8559))
+* **CLIReporter:** show detailed info (collected data) from practices ([30458ce](https://github.com/dxheroes/dx-scanner/commit/30458ce))
+* collect data from practices ([4fa1b85](https://github.com/dxheroes/dx-scanner/commit/4fa1b85))
+
 # [1.25.0](https://github.com/dxheroes/dx-scanner/compare/v1.24.0...v1.25.0) (2019-12-10)
 
 
