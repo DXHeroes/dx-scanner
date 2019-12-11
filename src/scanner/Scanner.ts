@@ -204,7 +204,7 @@ export class Scanner {
 
       return {
         component: p.componentContext.projectComponent,
-        practice: p.practice.getMetadata(),
+        practice: { ...p.practice.getMetadata(), data: p.practice.data },
         evaluation: p.evaluation,
         overridenImpact: <PracticeImpact>(overridenImpact ? overridenImpact : p.practice.getMetadata().impact),
         isOn: p.isOn,

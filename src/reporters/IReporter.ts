@@ -6,6 +6,7 @@ import {
   PracticeMetadata,
   PracticeEvaluationResult,
 } from '../model';
+import { PracticeData } from '../practices/IPractice';
 
 export interface IReporter {
   report(practicesAndComponents: PracticeWithContextForReporter[]): string | JSONReport;
@@ -22,7 +23,7 @@ export interface ComponentReport extends ProjectComponent {
 
 export interface PracticeWithContextForReporter {
   component: ProjectComponent;
-  practice: PracticeMetadata;
+  practice: PracticeMetadata & { data?: PracticeData };
   overridenImpact: PracticeImpact;
   evaluation: PracticeEvaluationResult;
   isOn: boolean;

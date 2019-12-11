@@ -2,6 +2,8 @@ import { IPractice } from '../IPractice';
 import { PracticeEvaluationResult, PracticeImpact, ProgrammingLanguage } from '../../model';
 import { DxPractice } from '../DxPracticeDecorator';
 import { PracticeContext } from '../../contexts/practice/PracticeContext';
+import { PracticeBase } from '../PracticeBase';
+import { ReportDetailType } from '../../reporters/ReporterData';
 
 @DxPractice({
   id: 'JavaScript.GitignoreCorrectlySet',
@@ -12,7 +14,7 @@ import { PracticeContext } from '../../contexts/practice/PracticeContext';
   url: 'https://github.com/github/gitignore/blob/master/Node.gitignore',
   dependsOn: { practicing: ['LanguageIndependent.GitignoreIsPresent'] },
 })
-export class JsGitignoreCorrectlySetPractice implements IPractice {
+export class JsGitignoreCorrectlySetPractice extends PracticeBase {
   async isApplicable(ctx: PracticeContext): Promise<boolean> {
     return ctx.projectComponent.language === ProgrammingLanguage.JavaScript;
   }
@@ -44,6 +46,17 @@ export class JsGitignoreCorrectlySetPractice implements IPractice {
       return PracticeEvaluationResult.practicing;
     }
 
+    this.setData();
     return PracticeEvaluationResult.notPracticing;
+  }
+
+  private setData() {
+    this.data.details = [
+      {
+        type: ReportDetailType.text,
+        text:
+          'You should ignore one of the lock files (package-lock.json or yarn.lock), node_modules folder, coverage folder and log files (*.log)',
+      },
+    ];
   }
 }

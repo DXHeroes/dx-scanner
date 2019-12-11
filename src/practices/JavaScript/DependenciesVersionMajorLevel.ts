@@ -4,17 +4,18 @@ import { Package } from '../../inspectors/IPackageInspector';
 import { PackageInspectorBase, SemverLevel } from '../../inspectors/package/PackageInspectorBase';
 import { PracticeEvaluationResult, PracticeImpact, ProgrammingLanguage } from '../../model';
 import { DxPractice } from '../DxPracticeDecorator';
-import { IPractice } from '../IPractice';
+import { PracticeBase } from '../PracticeBase';
+import { ReportDetailType } from '../../reporters/ReporterData';
 
 @DxPractice({
   id: 'JavaScript.DependenciesVersionMajorLevel',
   name: 'Update Dependencies of Major Level',
   impact: PracticeImpact.small,
-  suggestion: 'Keep the dependencies updated to have all possible features. Use, for example, Renovate Bot.',
+  suggestion: 'Keep the dependencies updated to have all possible features. Use, for example, npm-check-updates.',
   reportOnlyOnce: true,
-  url: 'https://renovatebot.com/',
+  url: 'https://github.com/tjunnone/npm-check-updates',
 })
-export class DependenciesVersionMajorLevel implements IPractice {
+export class DependenciesVersionMajorLevelPractice extends PracticeBase {
   async isApplicable(ctx: PracticeContext): Promise<boolean> {
     return (
       ctx.projectComponent.language === ProgrammingLanguage.JavaScript || ctx.projectComponent.language === ProgrammingLanguage.TypeScript
@@ -22,22 +23,20 @@ export class DependenciesVersionMajorLevel implements IPractice {
   }
 
   async evaluate(ctx: PracticeContext): Promise<PracticeEvaluationResult> {
-    if (ctx.fileInspector === undefined || ctx.packageInspector === undefined) {
+    if (!ctx.fileInspector || !ctx.packageInspector || !ctx.packageInspector.packages) {
       return PracticeEvaluationResult.unknown;
     }
-
     const pkgs = ctx.packageInspector.packages;
-    if (pkgs === undefined) {
-      return PracticeEvaluationResult.unknown;
-    }
 
-    const result = await DependenciesVersionMajorLevel.runNcu(pkgs);
-    const practiceEvaluationResult = DependenciesVersionMajorLevel.isPracticing(result, SemverLevel.major, pkgs);
+    const result = await this.runNcu(pkgs);
+    const pkgsToUpdate = this.packagesToBeUpdated(result, SemverLevel.major, pkgs);
+    this.setData(pkgsToUpdate);
 
-    return practiceEvaluationResult || PracticeEvaluationResult.practicing;
+    if (pkgsToUpdate.length > 0) return PracticeEvaluationResult.notPracticing;
+    return PracticeEvaluationResult.practicing;
   }
 
-  static async runNcu(pkgs: Package[] | undefined) {
+  async runNcu(pkgs: Package[] | undefined) {
     const fakePkgJson: { dependencies: { [key: string]: string } } = { dependencies: {} };
 
     pkgs &&
@@ -45,30 +44,36 @@ export class DependenciesVersionMajorLevel implements IPractice {
         fakePkgJson.dependencies[p.name] = p.requestedVersion.value;
       });
 
-    const result = await ncu.run({
+    const pkgsToBeUpdated = await ncu.run({
       packageData: JSON.stringify(fakePkgJson),
     });
 
-    return result;
+    return pkgsToBeUpdated;
   }
 
-  static isPracticing(
-    result: { [key: string]: string },
-    semverVersion: SemverLevel,
-    pkgs: Package[],
-  ): PracticeEvaluationResult | undefined {
-    for (const packageName in result) {
-      const parsedVersion = PackageInspectorBase.semverToPackageVersion(result[packageName]);
+  packagesToBeUpdated(pkgsWithNewVersion: { [key: string]: string }, semverLevel: SemverLevel, pkgs: Package[]) {
+    // packages with Major level to be updated
+    const pkgsToUpdate: PkgToUpdate[] = [];
+
+    for (const packageName in pkgsWithNewVersion) {
+      const parsedVersion = PackageInspectorBase.semverToPackageVersion(pkgsWithNewVersion[packageName]);
       if (parsedVersion) {
         for (const pkg of pkgs) {
           if (pkg.name === packageName) {
-            if (parsedVersion[semverVersion] > pkg.lockfileVersion[semverVersion]) {
-              return PracticeEvaluationResult.notPracticing;
+            if (parsedVersion[semverLevel] > pkg.lockfileVersion[semverLevel]) {
+              pkgsToUpdate.push({ name: pkg.name, newVersion: parsedVersion.value, currentVersion: pkg.lockfileVersion.value });
             }
           }
         }
       }
     }
-    return undefined;
+
+    return pkgsToUpdate;
+  }
+
+  setData(pkgsToUpdate: PkgToUpdate[]): void {
+    this.data.details = [{ type: ReportDetailType.table, headers: ['Name', 'New', 'Current'], data: pkgsToUpdate }];
   }
 }
+
+export type PkgToUpdate = { name: string; newVersion: string; currentVersion: string };

@@ -1,7 +1,10 @@
 import { PracticeEvaluationResult } from '../model';
 import { PracticeContext } from '../contexts/practice/PracticeContext';
+import { ReportTable, ReportText } from '../reporters/ReporterData';
 
-export interface IPractice {
+export interface IPractice<T extends {} = {}> {
+  data?: Partial<T> & PracticeData;
+
   /**
    * Returns true if this practice is applicable for the given project component
    *
@@ -21,3 +24,9 @@ export interface IPractice {
    */
   evaluate(ctx: PracticeContext): Promise<PracticeEvaluationResult>;
 }
+
+export type PracticeData = {
+  details?: PracticeDetail[];
+};
+
+export type PracticeDetail = ReportTable | ReportText;
