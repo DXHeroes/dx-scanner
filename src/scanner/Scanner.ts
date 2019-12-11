@@ -5,7 +5,7 @@ import os from 'os';
 import path from 'path';
 import git from 'simple-git/promise';
 import url from 'url';
-import util, { inspect } from 'util';
+import { inspect } from 'util';
 import { ArgumentsProvider } from '../inversify.config';
 import {
   LanguageAtPath,
@@ -34,7 +34,7 @@ import { PracticeContext } from '../contexts/practice/PracticeContext';
 export class Scanner {
   private readonly scanStrategyDetector: ScanningStrategyDetector;
   private readonly scannerContextFactory: ScannerContextFactory;
-  private readonly reporter: IReporter;
+  private readonly reporters: IReporter[];
   private readonly fileSystemService: FileSystemService;
   private readonly practices: IPracticeWithMetadata[];
   private readonly argumentsProvider: ArgumentsProvider;
@@ -45,7 +45,7 @@ export class Scanner {
   constructor(
     @inject(ScanningStrategyDetector) scanStrategyDetector: ScanningStrategyDetector,
     @inject(Types.ScannerContextFactory) scannerContextFactory: ScannerContextFactory,
-    @inject(Types.IReporter) reporter: IReporter,
+    @multiInject(Types.IReporter) reporters: IReporter[],
     @inject(FileSystemService) fileSystemService: FileSystemService,
     // inject all practices registered under Types.Practice in inversify config
     @multiInject(Types.Practice) practices: IPracticeWithMetadata[],
@@ -53,7 +53,7 @@ export class Scanner {
   ) {
     this.scanStrategyDetector = scanStrategyDetector;
     this.scannerContextFactory = scannerContextFactory;
-    this.reporter = reporter;
+    this.reporters = reporters;
     this.fileSystemService = fileSystemService;
     this.practices = practices;
     this.argumentsProvider = argumentsProvider;
@@ -210,11 +210,9 @@ export class Scanner {
         isOn: p.isOn,
       };
     });
-    const reportString = this.reporter.report(relevantPractices);
 
-    typeof reportString === 'string'
-      ? console.log(reportString)
-      : console.log(util.inspect(reportString, { showHidden: false, depth: null }));
+    console.log(this.reporters.length);
+    // await Promise.all(this.reporters.map((r) => r.report(relevantPractices)));
 
     if (this.allDetectedComponents!.length > 1 && !this.argumentsProvider.recursive) {
       cli.info(

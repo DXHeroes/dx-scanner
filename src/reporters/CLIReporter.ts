@@ -10,7 +10,12 @@ import { assertNever } from '../lib/assertNever';
 
 @injectable()
 export class CLIReporter implements IReporter {
-  report(practicesAndComponents: PracticeWithContextForReporter[]): string {
+  async report(practicesAndComponents: PracticeWithContextForReporter[]): Promise<void> {
+    const reportString = this.buildReport(practicesAndComponents);
+    console.log(reportString);
+  }
+
+  private buildReport(practicesAndComponents: PracticeWithContextForReporter[]): string {
     const lines: string[] = [];
 
     const componentsWithPractices = ReporterUtils.getComponentsWithPractices(practicesAndComponents);

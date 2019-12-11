@@ -3,6 +3,7 @@ import { injectable, inject } from 'inversify';
 import { Types } from '../types';
 import { ArgumentsProvider } from '../inversify.config';
 import _ from 'lodash';
+import { inspect } from 'util';
 
 @injectable()
 export class JSONReporter implements IReporter {
@@ -12,7 +13,12 @@ export class JSONReporter implements IReporter {
     this.argumentsProvider = argumentsProvider;
   }
 
-  report(practicesAndComponents: PracticeWithContextForReporter[]): JSONReport {
+  async report(practicesAndComponents: PracticeWithContextForReporter[]): Promise<void> {
+    const reportString = this.buildReport(practicesAndComponents);
+    console.log(inspect(reportString, { showHidden: false, depth: null }));
+  }
+
+  private buildReport(practicesAndComponents: PracticeWithContextForReporter[]): JSONReport {
     const report: JSONReport = {
       uri: this.argumentsProvider.uri,
       components: [],

@@ -34,8 +34,17 @@ export const createRootContainer = (args: ArgumentsProvider): Container => {
   const container = new Container();
   bindScanningStrategyDetectors(container);
   bindScanningContext(container);
-  args.json ? container.bind<IReporter>(Types.IReporter).to(JSONReporter) : container.bind<IReporter>(Types.IReporter).to(CLIReporter);
-  container.bind(Types.JSONReporter).to(JSONReporter);
+
+  if (args.json) {
+    container.bind<IReporter>(Types.IReporter).to(JSONReporter);
+  } else {
+    container.bind<IReporter>(Types.IReporter).to(CLIReporter);
+  }
+
+  if (args.ci) {
+    container.bind<IReporter>(Types.IReporter).to(JSONReporter);
+  }
+
   container.bind(Types.ArgumentsProvider).toConstantValue(args);
   container.bind(Scanner).toSelf();
   container.bind(FileSystemService).toSelf();
@@ -57,7 +66,10 @@ export const createTestContainer = (
   structure?: DirectoryJSON,
   projectComponent?: ProjectComponent,
 ): TestContainerContext => {
-  const container = createRootContainer(args ? args : { uri: './' });
+  const container = createRootContainer({
+    ...{ uri: './', auth: undefined, json: false, fail: PracticeImpact.high, recursive: true, ci: false },
+    ...args,
+  });
 
   if (!structure) {
     structure = {
@@ -133,8 +145,9 @@ export interface TestPracticeContext extends PracticeContext {
 
 export interface ArgumentsProvider {
   uri: string;
-  auth?: string;
-  json?: boolean;
-  fail?: PracticeImpact | 'all';
-  recursive?: boolean;
+  auth: string | undefined;
+  json: boolean | undefined;
+  fail: PracticeImpact | 'all';
+  recursive: boolean;
+  ci: boolean;
 }

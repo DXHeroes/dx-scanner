@@ -9,7 +9,7 @@ import {
 import { PracticeData } from '../practices/IPractice';
 
 export interface IReporter {
-  report(practicesAndComponents: PracticeWithContextForReporter[]): string | JSONReport;
+  report(practicesAndComponents: PracticeWithContextForReporter[]): Promise<void>;
 }
 
 export type JSONReport = { uri: string; components: ComponentReport[] };
