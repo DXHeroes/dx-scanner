@@ -106,11 +106,9 @@ export class BitbucketNock {
     return BitbucketNock.get(url, params, persist).reply(200, response);
   }
 
-  getAdditionsAndDeletions(sha: string, pullRequestCommit?: boolean) {
-    let url = `${this.url}/repositories/${this.user}/${this.repoName}/diffstat/${sha}`;
-    if (pullRequestCommit) {
-      url = `${this.url}/repositories/${this.user}/${this.repoName}/pullrequests/${sha}/diffstat`;
-    }
+  getAdditionsAndDeletions(sha: string) {
+    const url = `${this.url}/repositories/${this.user}/${this.repoName}/pullrequests/${sha}/diffstat`;
+
     const params = {};
     const persist = true;
     const response = { values: [{ lines_removed: 1, lines_added: 2 }] };

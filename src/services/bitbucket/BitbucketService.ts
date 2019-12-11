@@ -372,7 +372,23 @@ export class BitbucketService implements IVCSService {
     throw new Error('Method not implemented yet.');
   }
 
-  // async getDiffStat(owner: string, repo: string, sha: string) {}
+  async getPullsDiffStat(owner: string, repo: string, sha: string) {
+    const diffStatData = (await this.client.pullrequests.getDiffStat({ repo_slug: repo, username: owner, pull_request_id: sha })).data;
+
+    let linesRemoved = 0,
+      linesAdded = 0;
+
+    diffStatData.values.forEach((val: { lines_removed: number; lines_added: number }) => {
+      linesRemoved += val.lines_removed;
+      linesAdded += val.lines_added;
+    });
+
+    return {
+      additions: linesAdded,
+      deletions: linesRemoved,
+      changes: linesAdded + linesRemoved,
+    };
+  }
 
   private unwrap<T>(clientPromise: Promise<Bitbucket.Response<T>>) {
     return clientPromise

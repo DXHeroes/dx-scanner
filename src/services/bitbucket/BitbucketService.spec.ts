@@ -102,10 +102,17 @@ describe('Bitbucket Service', () => {
     expect(response).toMatchObject(getRepoCommits);
   });
 
-  it('return on commit in own interface', async () => {
+  it('returns one commit in own interface', async () => {
     bitbucketNock.getApiResponse('commit', '961b3a27');
 
     const response = await service.getCommit('pypy', 'pypy', '961b3a27');
     expect(response).toMatchObject(getRepoCommit);
+  });
+
+  it('returns pulls diff stat in own interface', async () => {
+    bitbucketNock.getAdditionsAndDeletions('622');
+
+    const response = await service.getPullsDiffStat('pypy', 'pypy', '622');
+    expect(response).toMatchObject({ additions: 2, deletions: 1, changes: 3 });
   });
 });
