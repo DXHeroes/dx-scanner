@@ -17,11 +17,11 @@ import { EditorConfigIsPresentPractice } from './LanguageIndependent/EditorConfi
 import { GitignoreIsPresentPractice } from './LanguageIndependent/GitignoreIsPresentPractice';
 import { JsGitignoreCorrectlySetPractice } from './JavaScript/JsGitignoreCorrectlySetPractice';
 import { JavaGitignoreCorrectlySetPractice } from './Java/JavaGitignoreCorrectlySetPractice';
-import { DependenciesVersionMajorLevel } from './JavaScript/DependenciesVersionMajorLevel';
+import { DependenciesVersionMajorLevelPractice } from './JavaScript/DependenciesVersionMajorLevel';
 import { ESLintWithoutErrorsPractice } from './JavaScript/ESLintWithoutErrorsPractice';
 import { TsGitignoreCorrectlySetPractice } from './TypeScript/TsGitignoreCorrectlySetPractice';
 import { DoesPullRequestsPractice } from './LanguageIndependent/DoesPullRequests';
-import { DependenciesVersionMinorPatchLevel } from './JavaScript/DependenciesVersionMinorPatchLevel';
+import { DependenciesVersionMinorPatchLevelPractice } from './JavaScript/DependenciesVersionMinorPatchLevel';
 import { CorrectCommitMessagesPractice } from './LanguageIndependent/CorrectCommitMessagesPractice';
 import { TimeToSolvePullRequestsPractice } from './LanguageIndependent/TimeToSolvePullRequestsPractice';
 
@@ -44,8 +44,8 @@ export const practices = [
   DeprecatedTSLintPractice,
   DockerizationUsedPractice,
   EditorConfigIsPresentPractice,
-  DependenciesVersionMajorLevel,
-  DependenciesVersionMinorPatchLevel,
+  DependenciesVersionMajorLevelPractice,
+  DependenciesVersionMinorPatchLevelPractice,
   GitignoreIsPresentPractice,
   JsGitignoreCorrectlySetPractice,
   JavaGitignoreCorrectlySetPractice,

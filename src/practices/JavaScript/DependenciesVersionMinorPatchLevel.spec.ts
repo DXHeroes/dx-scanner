@@ -3,11 +3,11 @@ import { mockPackage } from '../../test/helpers/mockPackage';
 import { JavaScriptPackageInspector } from '../../inspectors/package/JavaScriptPackageInspector';
 import { createTestContainer, TestContainerContext } from '../../inversify.config';
 import { PracticeEvaluationResult } from '../../model';
-import { DependenciesVersionMinorPatchLevel } from './DependenciesVersionMinorPatchLevel';
+import { DependenciesVersionMinorPatchLevelPractice } from './DependenciesVersionMinorPatchLevel';
 jest.mock('npm-check-updates');
 
 describe('DependenciesVersionPractice of Minor and Patch Level', () => {
-  let practice: DependenciesVersionMinorPatchLevel;
+  let practice: DependenciesVersionMinorPatchLevelPractice;
   let containerCtx: TestContainerContext;
   const mockedNcu = <jest.Mock>ncu.run;
   const MockedJSPackageInspector = <jest.Mock<JavaScriptPackageInspector>>(<unknown>JavaScriptPackageInspector);
@@ -15,7 +15,7 @@ describe('DependenciesVersionPractice of Minor and Patch Level', () => {
 
   beforeAll(async () => {
     containerCtx = createTestContainer();
-    containerCtx.container.bind('DependenciesVersionMinorPatchLevel').to(DependenciesVersionMinorPatchLevel);
+    containerCtx.container.bind('DependenciesVersionMinorPatchLevel').to(DependenciesVersionMinorPatchLevelPractice);
     practice = containerCtx.container.get('DependenciesVersionMinorPatchLevel');
     mockJsPackageInspector = new MockedJSPackageInspector();
   });
@@ -34,6 +34,7 @@ describe('DependenciesVersionPractice of Minor and Patch Level', () => {
 
     const evaluated = await practice.evaluate(containerCtx.practiceContext);
     expect(evaluated).toEqual(PracticeEvaluationResult.notPracticing);
+    expect(practice.data.details).not.toBeUndefined();
   });
 
   it('practicing if newest package version dependency of minor or patch level', async () => {
