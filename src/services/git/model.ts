@@ -20,6 +20,7 @@ export interface PullRequest {
   mergedAt: string | null;
   state: string;
   base: { repo: Repo };
+  lines?: Lines;
 }
 
 export interface PullRequestReview {
@@ -36,8 +37,6 @@ export interface Commit {
   author: Author;
   message: string;
   tree: Tree;
-  linesAdded: number;
-  linesRemoved: number;
   verified: boolean;
 }
 
@@ -121,6 +120,12 @@ export interface PullFiles {
 export interface PullCommits {
   sha: string;
   commit: Commit;
+}
+
+interface Lines {
+  additions: number;
+  deletions: number;
+  changes: number;
 }
 
 interface Author {
