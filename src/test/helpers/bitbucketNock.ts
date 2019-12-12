@@ -3,7 +3,7 @@ import nock from 'nock';
 import { BitbucketCommit } from '../../services/bitbucket/BitbucketService';
 import { BitbucketPullRequestState } from '../../services/git/IVCSService';
 import qs from 'qs';
-import { Paginated } from '../../inspectors';
+import { Paginated, PaginationParams } from '../../inspectors';
 import { PullRequest } from '../../services/git/model';
 import { getPullRequestResponse } from '../../services/git/__MOCKS__/bitbucketServiceMockFolder';
 import _ from 'lodash';
@@ -24,6 +24,7 @@ export class BitbucketNock {
     id?: number | string,
     value?: string,
     state?: BitbucketPullRequestState | BitbucketPullRequestState[],
+    pagination?: PaginationParams,
   ): nock.Scope {
     let url = `${this.url}/repositories/${this.user}/${this.repoName}/${resource}`;
     let response;
@@ -72,6 +73,17 @@ export class BitbucketNock {
                 const pullRequest = new PullRequestMock(<BitbucketPullRequestState>state).pullRequest;
                 response = new PullRequestsMock([pullRequest]).pullrequests;
               }
+            }
+            if (pagination) {
+              const paginationForUri = qs.stringify(
+                { page: pagination?.page, pagelen: pagination?.perPage },
+                { addQueryPrefix: true, indices: false },
+              );
+              params = { page: pagination.page, pagelen: pagination.perPage };
+
+              url = url.concat(`${paginationForUri}`);
+              const pullRequest = new PullRequestMock(<BitbucketPullRequestState>state).pullRequest;
+              response = new PullRequestsMock([pullRequest]).pullrequests;
             }
           }
           break;

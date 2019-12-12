@@ -27,7 +27,17 @@ describe('Bitbucket Service', () => {
   it('returns open pull requests in own interface', async () => {
     bitbucketNock.getOwnerId();
     bitbucketNock.getApiResponse('pullrequests');
+
     const response = await service.getPullRequests('pypy', 'pypy');
+    const getOpenPullRequestsResponse = bitbucketNock.mockBitbucketPullRequestsResponse({ states: BitbucketPullRequestState.open });
+    expect(response).toMatchObject(getOpenPullRequestsResponse);
+  });
+
+  it('returns one open pull requests in own interface', async () => {
+    bitbucketNock.getOwnerId();
+    bitbucketNock.getApiResponse('pullrequests', undefined, undefined, BitbucketPullRequestState.open, { page: 1, perPage: 1 });
+
+    const response = await service.getPullRequests('pypy', 'pypy', { pagination: { page: 1, perPage: 1 } });
     const getOpenPullRequestsResponse = bitbucketNock.mockBitbucketPullRequestsResponse({ states: BitbucketPullRequestState.open });
     expect(response).toMatchObject(getOpenPullRequestsResponse);
   });
