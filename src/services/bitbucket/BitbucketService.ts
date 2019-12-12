@@ -84,15 +84,17 @@ export class BitbucketService implements IVCSService {
     repo: string,
     options?: ListGetterOptions<{ state?: PullRequestState }>,
   ): Promise<Paginated<PullRequest>> {
-    let state;
-    if (options?.filter?.state) {
-      state = VCSServicesUtils.getPRState(options.filter.state, VCSService.bitbucket);
-    }
-    const stateForUri = qs.stringify({ state: state }, { addQueryPrefix: true, indices: false, arrayFormat: 'repeat' });
     let apiUrl = `https://api.bitbucket.org/2.0/repositories/${owner}/${repo}/pullrequests`;
-    if (stateForUri) {
-      apiUrl = apiUrl.concat(`${stateForUri}`);
-    }
+
+    const state = VCSServicesUtils.getPRState(options?.filter?.state, VCSService.bitbucket);
+    const stateForUri = qs.stringify({ state: state }, { addQueryPrefix: true, indices: false, arrayFormat: 'repeat' });
+
+    const paginationForUri = qs.stringify(
+      { page: options?.pagination?.page, pagelen: options?.pagination?.perPage },
+      { addQueryPrefix: true, indices: false },
+    );
+
+    apiUrl = apiUrl.concat(`${stateForUri}${paginationForUri}`);
 
     const ownerUrl = `www.bitbucket.org/${owner}`;
     const ownerId = `${(await this.client.repositories.get({ repo_slug: repo, username: owner })).data.owner?.uuid}`;
