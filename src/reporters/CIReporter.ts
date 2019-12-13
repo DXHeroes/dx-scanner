@@ -6,6 +6,7 @@ import { VCSServiceType, GitHubService, IVCSService, BitbucketService } from '..
 import { CIReporterUtils, CIReporterConfig } from './CIReporterUtils';
 import { assertNever } from '../lib/assertNever';
 import { debug } from 'debug';
+import { CreateUpdatePullRequestComment } from '../services/git/model';
 
 @injectable()
 export class CIReporter implements IReporter {
@@ -14,9 +15,9 @@ export class CIReporter implements IReporter {
   private d: debug.Debugger;
 
   constructor(@inject(Types.ArgumentsProvider) argumentsProvider: ArgumentsProvider) {
+    this.d = debug('CIReporter');
     this.argumentsProvider = argumentsProvider;
     this.config = this.detectConfiguration();
-    this.d = debug('CIReporter');
     this.d(this.config);
   }
 
@@ -34,6 +35,7 @@ export class CIReporter implements IReporter {
     }
 
     const reportString = this.buildReport(practicesAndComponents);
+    this.d(reportString);
     await this.postMessage(reportString);
   }
 
@@ -42,7 +44,7 @@ export class CIReporter implements IReporter {
     return 'Hello world!';
   }
 
-  private async postMessage(message: string): Promise<void> {
+  private async postMessage(message: string): Promise<CreateUpdatePullRequestComment> {
     //TODO: post to specific service
     let client: IVCSService | undefined;
 
@@ -65,7 +67,7 @@ export class CIReporter implements IReporter {
     // );
 
     // post a comment
-    await client!.createPullRequestComment(
+    return await client!.createPullRequestComment(
       this.config!.repository.owner,
       this.config!.repository.name,
       this.config!.pullRequestId!,
@@ -79,18 +81,23 @@ export class CIReporter implements IReporter {
 
     if (ev.TRAVIS && ev.TRAVIS_REPO_SLUG) {
       // detect Travis config
+      this.d('Is Travis');
       return CIReporterUtils.loadConfigurationTravis();
     } else if (ev.APPVEYOR === 'True' || ev.APPVEYOR === 'true') {
       // detect Appveyor config
+      this.d('Is Appveyor');
       return CIReporterUtils.loadConfigurationAppveyor();
     } else if (ev.GITHUB_ACTIONS === 'true') {
       // detect GitHub Actions config
+      this.d('Is Github');
       return CIReporterUtils.loadConfigurationGitHubActions();
     } else if (ev.BITBUCKET_BUILD_NUMBER) {
       // detect Bitbucket config
+      this.d('Is Bitbucket');
       return CIReporterUtils.loadConfigurationBitbucket();
     } else {
       // not supported yet
+      this.d('Is undefined CI');
       return undefined;
     }
   }

@@ -38,40 +38,46 @@ const debug = Debug('cli:services:git:bitbucket-service');
 @injectable()
 export class BitbucketService implements IVCSService {
   private readonly client: Bitbucket;
+  private readonly argumentsProvider: ArgumentsProvider;
   private cache: ICache;
   private callCount = 0;
+  private authenticated = false;
 
   constructor(@inject(Types.ArgumentsProvider) argumentsProvider: ArgumentsProvider) {
     this.cache = new InMemoryCache();
-
-    const clientOptions: Bitbucket.Options = {
+    this.argumentsProvider = argumentsProvider;
+    this.client = new Bitbucket({
       hideNotice: true,
-    };
-
-    this.client = new Bitbucket(clientOptions);
-
-    let username: string;
-    let password: string | undefined;
-    if (argumentsProvider.auth && argumentsProvider.auth.includes(':')) {
-      username = argumentsProvider.auth.split(':')[0];
-      password = argumentsProvider.auth.split(':')[1];
-    } else {
-      username = GitUrlParse(argumentsProvider.uri).owner;
-      password = argumentsProvider.auth;
-    }
-
-    let auth: Bitbucket.Auth;
-    if (argumentsProvider.auth) {
-      auth = { type: 'apppassword', username, password: password! };
-      this.client.authenticate(auth);
-    }
+    });
   }
 
   purgeCache() {
     this.cache.purge();
   }
 
+  authenticate() {
+    if (this.authenticated || !this.argumentsProvider.auth) return;
+
+    let username: string;
+    let password: string | undefined;
+    if (this.argumentsProvider.auth && this.argumentsProvider.auth.includes(':')) {
+      username = this.argumentsProvider.auth.split(':')[0];
+      password = this.argumentsProvider.auth.split(':')[1];
+    } else {
+      username = GitUrlParse(this.argumentsProvider.uri).owner;
+      password = this.argumentsProvider.auth;
+    }
+
+    let auth: Bitbucket.Auth;
+    if (this.argumentsProvider.auth) {
+      auth = { type: 'apppassword', username, password };
+      this.client.authenticate(auth);
+      this.authenticated = true; // set authentication to instance
+    }
+  }
+
   getRepo(owner: string, repo: string) {
+    this.authenticate();
     const params: Bitbucket.Params.RepositoriesGet = {
       repo_slug: repo,
       username: owner,
@@ -85,6 +91,7 @@ export class BitbucketService implements IVCSService {
     repo: string,
     options?: ListGetterOptions<{ state?: PullRequestState }>,
   ): Promise<Paginated<PullRequest>> {
+    this.authenticate();
     let state;
     if (options?.filter?.state) {
       state = VCSServicesUtils.getPRState(options.filter.state, VCSServiceType.bitbucket);
@@ -139,6 +146,7 @@ export class BitbucketService implements IVCSService {
   }
 
   async getPullRequest(owner: string, repo: string, prNumber: number): Promise<PullRequest> {
+    this.authenticate();
     const params = {
       pull_request_id: prNumber,
       repo_slug: repo,
@@ -149,7 +157,6 @@ export class BitbucketService implements IVCSService {
     const ownerId = `${(await this.client.repositories.get({ repo_slug: repo, username: owner })).data.owner?.uuid}`;
 
     const response = <DeepRequired<Bitbucket.Response<Bitbucket.Schema.Pullrequest>>>await this.client.pullrequests.get(params);
-    response.data;
 
     return {
       user: {
@@ -184,10 +191,12 @@ export class BitbucketService implements IVCSService {
   }
 
   async getPullRequestFiles(owner: string, repo: string, prNumber: number): Promise<Paginated<PullFiles>> {
+    this.authenticate();
     throw new Error('Method not implemented yet.');
   }
 
   async getPullCommits(owner: string, repo: string, prNumber: number): Promise<Paginated<PullCommits>> {
+    this.authenticate();
     const params: Bitbucket.Params.PullrequestsListCommits = {
       pull_request_id: prNumber.toString(),
       repo_slug: repo,
@@ -220,6 +229,7 @@ export class BitbucketService implements IVCSService {
   }
 
   async getIssues(owner: string, repo: string): Promise<Paginated<Issue>> {
+    this.authenticate();
     const params: Bitbucket.Params.IssueTrackerList = {
       repo_slug: repo,
       username: owner,
@@ -246,6 +256,7 @@ export class BitbucketService implements IVCSService {
   }
 
   async getIssue(owner: string, repo: string, issueNumber: number): Promise<Issue> {
+    this.authenticate();
     const params: Bitbucket.Params.IssueTrackerGet = {
       issue_id: issueNumber.toString(),
       repo_slug: repo,
@@ -273,6 +284,7 @@ export class BitbucketService implements IVCSService {
   }
 
   async getIssueComments(owner: string, repo: string, issueNumber: number): Promise<Paginated<IssueComment>> {
+    this.authenticate();
     const params: Bitbucket.Params.IssueTrackerListComments = {
       issue_id: issueNumber.toString(),
       repo_slug: repo,
@@ -301,10 +313,12 @@ export class BitbucketService implements IVCSService {
   }
 
   async getPullRequestReviews(owner: string, repo: string, prNumber: number): Promise<Paginated<PullRequestReview>> {
+    this.authenticate();
     throw new Error('Method not implemented yet.');
   }
 
   async getRepoCommits(owner: string, repo: string): Promise<Paginated<Commit>> {
+    this.authenticate();
     const params: Bitbucket.Params.RepositoriesListCommits = {
       repo_slug: repo,
       username: owner,
@@ -332,6 +346,7 @@ export class BitbucketService implements IVCSService {
   }
 
   async getCommit(owner: string, repo: string, commitSha: string): Promise<Commit> {
+    this.authenticate();
     const params: Bitbucket.Params.CommitsGet = {
       node: commitSha,
       repo_slug: repo,
@@ -360,6 +375,7 @@ export class BitbucketService implements IVCSService {
    * List Comments for a Pull Request
    */
   async getPullRequestComments(owner: string, repo: string, prNumber: number): Promise<Paginated<PullRequestComment>> {
+    this.authenticate();
     const response = <DeepRequired<Bitbucket.Response<Bitbucket.Schema.PaginatedPullrequestComments>>>(
       await this.client.pullrequests.listComments({ pull_request_id: prNumber, repo_slug: repo, username: owner })
     );
@@ -382,6 +398,7 @@ export class BitbucketService implements IVCSService {
    * Add Comment to a Pull Request
    */
   async createPullRequestComment(owner: string, repo: string, prNumber: number, body: string): Promise<CreateUpdatePullRequestComment> {
+    this.authenticate();
     const response = <DeepRequired<Bitbucket.Response<Bitbucket.Schema.Comment>>>await this.client.pullrequests.createComment({
       pull_request_id: prNumber,
       repo_slug: repo,
@@ -410,6 +427,7 @@ export class BitbucketService implements IVCSService {
     body: string,
     pullRequestId: number,
   ): Promise<CreateUpdatePullRequestComment> {
+    this.authenticate();
     const response = <DeepRequired<Bitbucket.Response<Bitbucket.Schema.Comment>>>await this.client.pullrequests.updateComment({
       pull_request_id: `${pullRequestId}`,
       comment_id: `${commentId}`,
@@ -430,14 +448,17 @@ export class BitbucketService implements IVCSService {
   }
 
   async getContributors(owner: string, repo: string): Promise<Paginated<Contributor>> {
+    this.authenticate();
     throw new Error('Method not implemented yet.');
   }
 
   async getContributorsStats(owner: string, repo: string): Promise<Paginated<ContributorStats>> {
+    this.authenticate();
     throw new Error('Method not implemented yet.');
   }
 
   async getRepoContent(owner: string, repo: string, path: string): Promise<File | Symlink | Directory | null> {
+    this.authenticate();
     throw new Error('Method not implemented yet.');
   }
 
