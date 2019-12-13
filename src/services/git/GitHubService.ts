@@ -74,11 +74,18 @@ export class GitHubService implements IVCSService {
     options?: ListGetterOptions<{ state?: PullRequestState }>,
   ): Promise<Paginated<PullRequest>> {
     let url = 'GET /repos/:owner/:repo/pulls';
-    if (options !== undefined && options.filter !== undefined && options.filter.state !== undefined) {
-      const state = VCSServicesUtils.getPRState(options.filter.state, VCSService.github);
-      const stateForUri = qs.stringify({ state: state }, { addQueryPrefix: true });
-      url = `${url}${stateForUri}`;
-    }
+
+    const state = VCSServicesUtils.getPRState(options?.filter?.state, VCSService.github);
+    const stateForUri = qs.stringify({ state: state }, { addQueryPrefix: true, indices: false, arrayFormat: 'repeat' });
+
+    const paginationForUri = qs.stringify(
+      // eslint-disable-next-line @typescript-eslint/camelcase
+      { page: options?.pagination?.page, per_page: options?.pagination?.perPage },
+      { addQueryPrefix: true, indices: false },
+    );
+
+    url = url.concat(`${stateForUri}${paginationForUri}`);
+
     const response: PullsListResponseItem[] = await this.paginate(url, owner, repo);
 
     const items = response.map((val) => ({
@@ -473,7 +480,14 @@ export class GitHubService implements IVCSService {
   /**
    * Get all results across all pages.
    */
-  private async paginate(uri: string, owner: string, repo: string, prNumber?: number, issueNumber?: number) {
+  private async paginate(
+    uri: string,
+    owner: string,
+    repo: string,
+    prNumber?: number,
+    issueNumber?: number,
+    options?: ListGetterOptions<{ state?: PullRequestState }>,
+  ) {
     const object = {
       owner: owner,
       repo: repo,
@@ -485,6 +499,11 @@ export class GitHubService implements IVCSService {
     if (issueNumber) {
       // eslint-disable-next-line @typescript-eslint/camelcase
       Object.assign(object, { issue_number: issueNumber });
+    }
+
+    if (options?.pagination) {
+      // eslint-disable-next-line @typescript-eslint/camelcase
+      Object.assign(object, { page: options.pagination.page, per_page: options.pagination.perPage });
     }
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
