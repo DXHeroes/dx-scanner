@@ -1,3 +1,45 @@
+# [1.26.0](https://github.com/dxheroes/dx-scanner/compare/v1.25.0...v1.26.0) (2019-12-11)
+
+
+### Features
+
+* **CLIReporter:** add rich suggestion text to the report ([2db8559](https://github.com/dxheroes/dx-scanner/commit/2db8559))
+* **CLIReporter:** show detailed info (collected data) from practices ([30458ce](https://github.com/dxheroes/dx-scanner/commit/30458ce))
+* collect data from practices ([4fa1b85](https://github.com/dxheroes/dx-scanner/commit/4fa1b85))
+
+# [1.25.0](https://github.com/dxheroes/dx-scanner/compare/v1.24.0...v1.25.0) (2019-12-10)
+
+
+### Bug Fixes
+
+* add a comment ([26ea99f](https://github.com/dxheroes/dx-scanner/commit/26ea99f))
+* add a comment about logic to try catch ([9c8bba4](https://github.com/dxheroes/dx-scanner/commit/9c8bba4))
+* add possibility return no pullrequests by not passing state ([633caea](https://github.com/dxheroes/dx-scanner/commit/633caea))
+* as the bitbucket fails if the account is a team account add possibility to ownerId be a null ([37bc6f2](https://github.com/dxheroes/dx-scanner/commit/37bc6f2))
+* change updatedAt only if it's provided ([ec2f240](https://github.com/dxheroes/dx-scanner/commit/ec2f240))
+* get the ownerId via repo info with one request ([2b83d63](https://github.com/dxheroes/dx-scanner/commit/2b83d63))
+* getting ownerId if it's team account ([bd86a78](https://github.com/dxheroes/dx-scanner/commit/bd86a78))
+* implement getOwnerId() in bitbucketNock ([81daee8](https://github.com/dxheroes/dx-scanner/commit/81daee8))
+* invalid letter case ([c1aa97d](https://github.com/dxheroes/dx-scanner/commit/c1aa97d))
+* path ([af50b8d](https://github.com/dxheroes/dx-scanner/commit/af50b8d))
+* rebind IContentRepositoryBrowser in practice instead of binding in inversify.config.ts ([1141cad](https://github.com/dxheroes/dx-scanner/commit/1141cad))
+* reflect used service ([48b3429](https://github.com/dxheroes/dx-scanner/commit/48b3429))
+* remove unnecessary code ([4118637](https://github.com/dxheroes/dx-scanner/commit/4118637))
+* remove unnecessary condition ([0fe3e8b](https://github.com/dxheroes/dx-scanner/commit/0fe3e8b))
+* remove unnecessary line of code ([269f384](https://github.com/dxheroes/dx-scanner/commit/269f384))
+* remove unnecessary test ([cd746f4](https://github.com/dxheroes/dx-scanner/commit/cd746f4))
+* rename practice and files. Add name and suggestion text. ([9e18b76](https://github.com/dxheroes/dx-scanner/commit/9e18b76))
+* tests ([e9f9943](https://github.com/dxheroes/dx-scanner/commit/e9f9943))
+* tests as it is possible to get team account id ([c9f7d91](https://github.com/dxheroes/dx-scanner/commit/c9f7d91))
+* use arguments provider uri to detect if bind GithubService or BitbucketService ([ba705b4](https://github.com/dxheroes/dx-scanner/commit/ba705b4))
+* value of owner id ([c56e67f](https://github.com/dxheroes/dx-scanner/commit/c56e67f))
+* wrong letter case ([f8bd6a5](https://github.com/dxheroes/dx-scanner/commit/f8bd6a5))
+
+
+### Features
+
+* add TimeToSolvePractice ([a667a78](https://github.com/dxheroes/dx-scanner/commit/a667a78))
+
 # [1.24.0](https://github.com/dxheroes/dx-scanner/compare/v1.23.2...v1.24.0) (2019-12-06)
 
 

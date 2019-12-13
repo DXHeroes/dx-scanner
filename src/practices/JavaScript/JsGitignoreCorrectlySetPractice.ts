@@ -54,7 +54,7 @@ export class JsGitignoreCorrectlySetPractice extends PracticeBase {
       {
         type: ReportDetailType.text,
         text:
-          'You should ignore one of lock file (package-lock.json or yarn.lock), node_modules folder, coverage folder and log files (*.log)',
+          'You should ignore one of the lock files (package-lock.json or yarn.lock), node_modules folder, coverage folder and log files (*.log)',
       },
     ];
   }
