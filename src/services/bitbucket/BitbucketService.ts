@@ -144,7 +144,7 @@ export class BitbucketService implements IVCSService {
     return { items, ...pagination };
   }
 
-  async getPullRequest(owner: string, repo: string, prNumber: number): Promise<PullRequest> {
+  async getPullRequest(owner: string, repo: string, prNumber: number, withDiffStat?: boolean): Promise<PullRequest> {
     const params = {
       pull_request_id: prNumber,
       repo_slug: repo,
@@ -156,8 +156,7 @@ export class BitbucketService implements IVCSService {
 
     const response = <DeepRequired<Bitbucket.Response<Bitbucket.Schema.Pullrequest>>>await this.client.pullrequests.get(params);
     response.data;
-
-    return {
+    const pullRequest = {
       user: {
         id: response.data.author.uuid,
         login: response.data.author.nickname,
@@ -187,6 +186,11 @@ export class BitbucketService implements IVCSService {
         },
       },
     };
+    if (withDiffStat) {
+      const lines = await this.getPullsDiffStat(owner, repo, `${prNumber}`);
+      return { ...pullRequest, lines };
+    }
+    return pullRequest;
   }
 
   async getPullRequestFiles(owner: string, repo: string, prNumber: number): Promise<Paginated<PullFiles>> {
