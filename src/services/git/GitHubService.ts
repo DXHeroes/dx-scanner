@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/camelcase */
 import Octokit, {
   IssuesListForRepoResponseItem,
   PullsListResponseItem,
@@ -11,13 +12,12 @@ import { inspect, isArray } from 'util';
 import { ListGetterOptions } from '../../inspectors/common/ListGetterOptions';
 import { Paginated } from '../../inspectors/common/Paginated';
 import { PullRequestState } from '../../inspectors/ICollaborationInspector';
-import { ArgumentsProvider } from '../../inversify.config';
 import { delay } from '../../lib/delay';
 import { ErrorFactory } from '../../lib/errors';
 import { ICache } from '../../scanner/cache/ICache';
 import { InMemoryCache } from '../../scanner/cache/InMemoryCache';
 import { Types } from '../../types';
-import { IVCSService, VCSService } from './IVCSService';
+import { IVCSService, VCSServiceType } from './IVCSService';
 import {
   Commit,
   Contributor,
@@ -32,9 +32,12 @@ import {
   PullRequestReview,
   RepoContentType,
   Symlink,
+  PullRequestComment,
+  CreateUpdatePullRequestComment,
 } from './model';
 import { VCSServicesUtils } from './VCSServicesUtils';
 import qs from 'qs';
+import { ArgumentsProvider } from '../../scanner';
 const debug = Debug('cli:services:git:github-service');
 
 @injectable()
@@ -75,7 +78,7 @@ export class GitHubService implements IVCSService {
   ): Promise<Paginated<PullRequest>> {
     let url = 'GET /repos/:owner/:repo/pulls';
     if (options !== undefined && options.filter !== undefined && options.filter.state !== undefined) {
-      const state = VCSServicesUtils.getPRState(options.filter.state, VCSService.github);
+      const state = VCSServicesUtils.getPRState(options.filter.state, VCSServiceType.github);
       const stateForUri = qs.stringify({ state: state }, { addQueryPrefix: true });
       url = `${url}${stateForUri}`;
     }
@@ -401,6 +404,9 @@ export class GitHubService implements IVCSService {
     };
   }
 
+  /**
+   * Get All Comments for an Issue
+   */
   async getIssueComments(owner: string, repo: string, issueNumber: number): Promise<Paginated<IssueComment>> {
     const response = await this.paginate('GET /repos/:owner/:repo/issues/:issue_number/comments', owner, repo, undefined, issueNumber);
 
@@ -468,6 +474,75 @@ export class GitHubService implements IVCSService {
 
     const pagination = this.getPagination(response.length);
     return { items, ...pagination };
+  }
+
+  /**
+   * List Comments for a Pull Request
+   */
+  async getPullRequestComments(owner: string, repo: string, prNumber: number): Promise<Paginated<PullRequestComment>> {
+    const response: Octokit.PullsListCommentsResponse = await this.paginate(
+      'GET /repos/:owner/:repo/pulls/:pull_number/comments',
+      owner,
+      repo,
+      prNumber,
+    );
+
+    const items = response.map((comment) => ({
+      user: { id: `${comment.user.id}`, login: comment.user.login, url: comment.user.url },
+      id: comment.id,
+      url: comment.url,
+      body: comment.body,
+      createdAt: comment.created_at,
+      updatedAt: comment.updated_at,
+      authorAssociation: comment.author_association,
+    }));
+
+    const pagination = this.getPagination(response.length);
+    return { items, ...pagination };
+  }
+
+  /**
+   * Add Comment to a Pull Request
+   */
+  async createPullRequestComment(owner: string, repo: string, prNumber: number, body: string): Promise<CreateUpdatePullRequestComment> {
+    const response: Octokit.Response<Octokit.IssuesCreateCommentResponse> = await this.client.issues.createComment({
+      owner,
+      repo,
+      issue_number: prNumber,
+      body,
+    });
+
+    const comment = response.data;
+    return {
+      user: { id: `${comment.user.id}`, login: comment.user.login, url: comment.user.url },
+      id: comment.id,
+      url: comment.url,
+      body: comment.body,
+      createdAt: comment.created_at,
+      updatedAt: comment.updated_at,
+    };
+  }
+
+  /**
+   * Update Comment on a Pull Request
+   */
+  async updatePullRequestComment(owner: string, repo: string, commentId: string, body: string): Promise<CreateUpdatePullRequestComment> {
+    const response: Octokit.Response<Octokit.IssuesUpdateCommentResponse> = await this.client.issues.updateComment({
+      owner,
+      repo,
+      comment_id: Number(commentId),
+      body,
+    });
+
+    const comment = response.data;
+    return {
+      user: { id: `${comment.user.id}`, login: comment.user.login, url: comment.user.url },
+      id: comment.id,
+      url: comment.url,
+      body: comment.body,
+      createdAt: comment.created_at,
+      updatedAt: comment.updated_at,
+    };
   }
 
   /**

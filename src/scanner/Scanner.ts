@@ -6,7 +6,6 @@ import path from 'path';
 import git from 'simple-git/promise';
 import url from 'url';
 import { inspect } from 'util';
-import { ArgumentsProvider } from '../inversify.config';
 import {
   LanguageAtPath,
   PracticeEvaluationResult,
@@ -29,6 +28,7 @@ import { sharedSubpath } from '../detectors/utils';
 import { LanguageContext } from '../contexts/language/LanguageContext';
 import { ProjectComponentContext } from '../contexts/projectComponent/ProjectComponentContext';
 import { PracticeContext } from '../contexts/practice/PracticeContext';
+import { ArgumentsProvider } from '.';
 
 @injectable()
 export class Scanner {

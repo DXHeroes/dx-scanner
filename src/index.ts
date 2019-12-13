@@ -8,6 +8,7 @@ import { ServiceError, ErrorCode } from './lib/errors';
 import updateNotifier from 'update-notifier';
 import { ScanningStrategyDetectorUtils } from './detectors/utils/ScanningStrategyDetectorUtils';
 import { PracticeImpact } from './model';
+import debug from 'debug';
 
 class DXScannerCommand extends Command {
   static description = 'Scan your project for possible DX recommendations.';
@@ -44,6 +45,8 @@ class DXScannerCommand extends Command {
 
   async run() {
     const { args, flags } = this.parse(DXScannerCommand);
+    debug('cli args')(args);
+    debug('cli flags')(flags);
     const scanPath = args.path;
 
     let authorization = flags.authorization ? flags.authorization : this.loadAuthTokenFromEnvs();

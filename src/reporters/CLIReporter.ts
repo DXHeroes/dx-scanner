@@ -15,7 +15,7 @@ export class CLIReporter implements IReporter {
     console.log(reportString);
   }
 
-  private buildReport(practicesAndComponents: PracticeWithContextForReporter[]): string {
+  buildReport(practicesAndComponents: PracticeWithContextForReporter[]): string {
     const lines: string[] = [];
 
     const componentsWithPractices = ReporterUtils.getComponentsWithPractices(practicesAndComponents);

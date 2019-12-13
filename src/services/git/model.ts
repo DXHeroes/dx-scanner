@@ -107,6 +107,19 @@ export interface IssueComment {
   authorAssociation: string | undefined;
 }
 
+export type PullRequestComment = CreateUpdatePullRequestComment & {
+  authorAssociation: string | undefined;
+};
+
+export type CreateUpdatePullRequestComment = {
+  user: UserInfo;
+  id: number;
+  url: string;
+  body: string | undefined;
+  createdAt: string;
+  updatedAt: string | undefined;
+};
+
 export interface PullFiles {
   sha: string;
   fileName: string;

@@ -2,12 +2,13 @@ import { Git } from './Git';
 import { GitHubNock } from '../../test/helpers/gitHubNock';
 import nock from 'nock';
 import { GitHubService } from './GitHubService';
+import { argumentsProviderFactory } from '../../test/factories/ArgumentsProviderFactory';
 
 describe('Git', () => {
   let service: GitHubService, git: Git, gitHubNock: GitHubNock;
 
   beforeAll(() => {
-    service = new GitHubService({ uri: '.' });
+    service = new GitHubService(argumentsProviderFactory({ uri: '.' }));
     git = new Git({ url: 'https://github.com/DXHeroes/dx-scanner.git' }, service);
     gitHubNock = new GitHubNock('1', 'DXHeroes', 1, 'dx-scanner');
   });

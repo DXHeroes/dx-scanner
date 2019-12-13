@@ -8,19 +8,19 @@ describe('CLIReporter', () => {
 
   describe('#report', () => {
     it('one practicing practice', () => {
-      const result = new CLIReporter().report([practicingHighImpactPracticeWithCtx]);
+      const result = new CLIReporter().buildReport([practicingHighImpactPracticeWithCtx]);
 
       expect(result).toContain('DX Score: 100% | 1/1');
     });
 
     it('one practicing practice and one not practicing', () => {
-      const result = new CLIReporter().report([practicingHighImpactPracticeWithCtx, notPracticingHighImpactPracticeWithCtx]);
+      const result = new CLIReporter().buildReport([practicingHighImpactPracticeWithCtx, notPracticingHighImpactPracticeWithCtx]);
 
       expect(result).toContain('DX Score: 50% | 1/2');
     });
 
     it('all impacted practices', () => {
-      const result = new CLIReporter().report([
+      const result = new CLIReporter().buildReport([
         practicingHighImpactPracticeWithCtx,
         notPracticingHighImpactPracticeWithCtx,
         practiceWithContextFactory({

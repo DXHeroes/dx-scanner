@@ -1,9 +1,9 @@
 import { IReporter, JSONReport, PracticeWithContextForReporter } from './IReporter';
 import { injectable, inject } from 'inversify';
 import { Types } from '../types';
-import { ArgumentsProvider } from '../inversify.config';
 import _ from 'lodash';
 import { inspect } from 'util';
+import { ArgumentsProvider } from '../scanner';
 
 @injectable()
 export class JSONReporter implements IReporter {
@@ -18,7 +18,7 @@ export class JSONReporter implements IReporter {
     console.log(inspect(reportString, { showHidden: false, depth: null }));
   }
 
-  private buildReport(practicesAndComponents: PracticeWithContextForReporter[]): JSONReport {
+  buildReport(practicesAndComponents: PracticeWithContextForReporter[]): JSONReport {
     const report: JSONReport = {
       uri: this.argumentsProvider.uri,
       components: [],

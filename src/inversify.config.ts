@@ -1,17 +1,10 @@
 import { Container } from 'inversify';
 import { DirectoryJSON } from 'memfs/lib/volume';
-import {
-  ProgrammingLanguage,
-  ProjectComponent,
-  ProjectComponentFramework,
-  ProjectComponentPlatform,
-  ProjectComponentType,
-  PracticeImpact,
-} from './model';
+import { ProgrammingLanguage, ProjectComponent, ProjectComponentFramework, ProjectComponentPlatform, ProjectComponentType } from './model';
 import { practices } from './practices';
 import { IPracticeWithMetadata } from './practices/DxPracticeDecorator';
 import { Types } from './types';
-import { IReporter, JSONReporter, CLIReporter } from './reporters';
+import { IReporter, JSONReporter, CLIReporter, CIReporter } from './reporters';
 import { ScanningStrategyDetector } from './detectors';
 import {
   FileInspector,
@@ -29,21 +22,14 @@ import { ICollaborationInspector } from './inspectors/ICollaborationInspector';
 import { IIssueTrackingInspector } from './inspectors/IIssueTrackingInspector';
 import { PracticeContext } from './contexts/practice/PracticeContext';
 import { packageJSONContents } from './detectors/__MOCKS__/JavaScript/packageJSONContents.mock';
+import { argumentsProviderFactory } from './test/factories/ArgumentsProviderFactory';
+import { ArgumentsProvider } from './scanner';
 
 export const createRootContainer = (args: ArgumentsProvider): Container => {
   const container = new Container();
   bindScanningStrategyDetectors(container);
   bindScanningContext(container);
-
-  if (args.json) {
-    container.bind<IReporter>(Types.IReporter).to(JSONReporter);
-  } else {
-    container.bind<IReporter>(Types.IReporter).to(CLIReporter);
-  }
-
-  if (args.ci) {
-    container.bind<IReporter>(Types.IReporter).to(JSONReporter);
-  }
+  bindReporters(container, args);
 
   container.bind(Types.ArgumentsProvider).toConstantValue(args);
   container.bind(Scanner).toSelf();
@@ -61,15 +47,24 @@ const bindScanningStrategyDetectors = (container: Container) => {
   container.bind(ScanningStrategyDetector).toSelf();
 };
 
+const bindReporters = (container: Container, args: ArgumentsProvider) => {
+  if (args.json) {
+    container.bind<IReporter>(Types.IReporter).to(JSONReporter);
+  } else {
+    container.bind<IReporter>(Types.IReporter).to(CLIReporter);
+  }
+
+  if (args.ci) {
+    container.bind<IReporter>(Types.IReporter).to(CIReporter);
+  }
+};
+
 export const createTestContainer = (
-  args?: ArgumentsProvider,
+  args?: Partial<ArgumentsProvider>,
   structure?: DirectoryJSON,
   projectComponent?: ProjectComponent,
 ): TestContainerContext => {
-  const container = createRootContainer({
-    ...{ uri: './', auth: undefined, json: false, fail: PracticeImpact.high, recursive: true, ci: false },
-    ...args,
-  });
+  const container = createRootContainer(argumentsProviderFactory(args));
 
   if (!structure) {
     structure = {
@@ -141,13 +136,4 @@ export interface TestPracticeContext extends PracticeContext {
   fileInspector: IFileInspector;
   issueTrackingInspector: IIssueTrackingInspector;
   collaborationInspector: ICollaborationInspector;
-}
-
-export interface ArgumentsProvider {
-  uri: string;
-  auth: string | undefined;
-  json: boolean | undefined;
-  fail: PracticeImpact | 'all';
-  recursive: boolean;
-  ci: boolean;
 }

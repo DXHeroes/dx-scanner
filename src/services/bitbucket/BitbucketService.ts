@@ -5,33 +5,34 @@ import Debug from 'debug';
 import GitUrlParse from 'git-url-parse';
 import { inject, injectable } from 'inversify';
 import { inspect } from 'util';
-import { Paginated } from '../../inspectors/common/Paginated';
-import { ArgumentsProvider } from '../../inversify.config';
-import { DeepRequired } from '../../lib/deepRequired';
+import axios from 'axios';
+import qs from 'qs';
+import { IVCSService, VCSServiceType, BitbucketPullRequestState } from '..';
+import { ArgumentsProvider } from '../../scanner';
 import { ICache } from '../../scanner/cache/ICache';
-import { InMemoryCache } from '../../scanner/cache/InMemoryCache';
 import { Types } from '../../types';
+import { ListGetterOptions, PullRequestState, Paginated } from '../../inspectors';
+import { BitbucketIssueState } from '../../inspectors/IIssueTrackingInspector';
 import {
-  Issue,
-  IssueComment,
-  PullCommits,
   PullRequest,
   PullFiles,
+  PullCommits,
+  Issue,
+  IssueComment,
   PullRequestReview,
   Commit,
+  PullRequestComment,
+  CreateUpdatePullRequestComment,
   Contributor,
   ContributorStats,
   Symlink,
-  Directory,
   File,
+  Directory,
 } from '../git/model';
-import { BitbucketIssueState } from '../../inspectors/IIssueTrackingInspector';
-import { VCSService, IVCSService, BitbucketPullRequestState } from '../git/IVCSService';
-import { ListGetterOptions } from '../../inspectors/common/ListGetterOptions';
-import { PullRequestState } from '../../inspectors/ICollaborationInspector';
 import { VCSServicesUtils } from '../git/VCSServicesUtils';
-import axios from 'axios';
-import qs from 'qs';
+import { DeepRequired } from '../../lib/deepRequired';
+import { InMemoryCache } from '../../scanner/cache';
+
 const debug = Debug('cli:services:git:bitbucket-service');
 
 @injectable()
@@ -86,7 +87,7 @@ export class BitbucketService implements IVCSService {
   ): Promise<Paginated<PullRequest>> {
     let state;
     if (options?.filter?.state) {
-      state = VCSServicesUtils.getPRState(options.filter.state, VCSService.bitbucket);
+      state = VCSServicesUtils.getPRState(options.filter.state, VCSServiceType.bitbucket);
     }
     const stateForUri = qs.stringify({ state: state }, { addQueryPrefix: true, indices: false, arrayFormat: 'repeat' });
     let apiUrl = `https://api.bitbucket.org/2.0/repositories/${owner}/${repo}/pullrequests`;
@@ -352,6 +353,79 @@ export class BitbucketService implements IVCSService {
       },
       // TODO
       verified: false,
+    };
+  }
+
+  /**
+   * List Comments for a Pull Request
+   */
+  async getPullRequestComments(owner: string, repo: string, prNumber: number): Promise<Paginated<PullRequestComment>> {
+    const response = <DeepRequired<Bitbucket.Response<Bitbucket.Schema.PaginatedPullrequestComments>>>(
+      await this.client.pullrequests.listComments({ pull_request_id: prNumber, repo_slug: repo, username: owner })
+    );
+
+    const items = response.data.values.map((comment) => ({
+      user: { id: comment.user.uuid, login: comment.user.username, url: comment.user.website },
+      id: comment.id,
+      url: comment.links.html.href,
+      body: comment.content.markup,
+      createdAt: comment.created_on,
+      updatedAt: comment.updated_on,
+      authorAssociation: comment.user.username,
+    }));
+
+    const pagination = this.getPagination(response.data);
+    return { items, ...pagination };
+  }
+
+  /**
+   * Add Comment to a Pull Request
+   */
+  async createPullRequestComment(owner: string, repo: string, prNumber: number, body: string): Promise<CreateUpdatePullRequestComment> {
+    const response = <DeepRequired<Bitbucket.Response<Bitbucket.Schema.Comment>>>await this.client.pullrequests.createComment({
+      pull_request_id: prNumber,
+      repo_slug: repo,
+      username: owner,
+      _body: { type: 'pullrequest_comment', content: { raw: body, markup: 'markdown' } },
+    });
+
+    const comment = response.data;
+    return {
+      user: { id: `${comment.user.id}`, login: comment.user.login, url: comment.user.url },
+      id: comment.id,
+      url: comment.url,
+      body: comment.body,
+      createdAt: comment.created_at,
+      updatedAt: comment.updated_at,
+    };
+  }
+
+  /**
+   * Update Comment on a Pull Request
+   */
+  async updatePullRequestComment(
+    owner: string,
+    repo: string,
+    commentId: string,
+    body: string,
+    pullRequestId: number,
+  ): Promise<CreateUpdatePullRequestComment> {
+    const response = <DeepRequired<Bitbucket.Response<Bitbucket.Schema.Comment>>>await this.client.pullrequests.updateComment({
+      pull_request_id: `${pullRequestId}`,
+      comment_id: `${commentId}`,
+      repo_slug: repo,
+      username: owner,
+      _body: { type: 'pullrequest_comment', content: { raw: body, markup: 'markdown' } },
+    });
+
+    const comment = response.data;
+    return {
+      user: { id: `${comment.user.id}`, login: comment.user.login, url: comment.user.url },
+      id: comment.id,
+      url: comment.url,
+      body: comment.body,
+      createdAt: comment.created_at,
+      updatedAt: comment.updated_at,
     };
   }
 
