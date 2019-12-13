@@ -211,8 +211,7 @@ export class Scanner {
       };
     });
 
-    console.log(this.reporters.length);
-    // await Promise.all(this.reporters.map((r) => r.report(relevantPractices)));
+    await Promise.all(this.reporters.map((r) => r.report(relevantPractices)));
 
     if (this.allDetectedComponents!.length > 1 && !this.argumentsProvider.recursive) {
       cli.info(
