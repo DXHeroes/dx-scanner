@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/camelcase */
 import nock from 'nock';
 import { GitHubService } from './GitHubService';
-import { GitHubNock } from '../../test/helpers/gitHubNock';
+import { GitHubNock, PullRequest } from '../../test/helpers/gitHubNock';
 import {
   getPullsServiceResponse,
   getPullRequestsReviewsResponse,
@@ -26,6 +26,7 @@ import {
 import { PullRequestState } from '../../inspectors';
 import { File } from './model';
 import { getRepoCommitsServiceResponse } from './__MOCKS__/gitHubServiceMockFolder/getRepoCommitsServiceResponse.mock';
+import _ from 'lodash';
 
 describe('GitHub Service', () => {
   let service: GitHubService;
@@ -54,6 +55,27 @@ describe('GitHub Service', () => {
 
       const response = await service.getPullRequests('octocat', 'Hello-World');
       expect(response).toMatchObject(getPullsServiceResponse);
+    });
+
+    it('returns pulls in own interface with diffStat', async () => {
+      const params = {
+        number: 1347,
+        state: 'open',
+        title: 'new-feature',
+        body: 'Please pull these awesome changes',
+        head: 'new-topic',
+        base: 'master',
+      };
+
+      new GitHubNock('1', 'octocat', 1296269, 'Hello-World').getPulls([params]);
+      new GitHubNock('1', 'octocat', 1296269, 'Hello-World').getPull(1, params.state, params.title, params.body, params.head, params.base);
+
+      const response = await service.getPullRequests('octocat', 'Hello-World', { withDiffStat: true });
+
+      const lines = { additions: 1, deletions: 0, changes: 1 };
+      const getPullsServiceResponseWithDiffStat = _.cloneDeep(getPullsServiceResponse);
+      getPullsServiceResponseWithDiffStat.items[0] = { ...getPullsServiceResponseWithDiffStat.items[0], lines };
+      expect(response).toMatchObject(getPullsServiceResponseWithDiffStat);
     });
 
     it('returns one pull in own interface', async () => {

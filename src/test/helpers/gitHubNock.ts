@@ -72,9 +72,7 @@ export class GitHubNock {
     head: string,
     base: string,
     persist = true,
-
     created_at?: string,
-
     updated_at?: string,
   ): PullRequest {
     if (!created_at) {
