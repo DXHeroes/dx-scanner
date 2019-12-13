@@ -145,6 +145,7 @@ export class BitbucketNock {
   mockBitbucketPullRequestsResponse(args: {
     states?: BitbucketPullRequestState | BitbucketPullRequestState[];
     updatedAt?: number;
+    withDiffStat?: boolean;
   }): Paginated<PullRequest> {
     const pullRequests: PullRequest[] = [];
     if (!args.states) {
@@ -166,6 +167,11 @@ export class BitbucketNock {
       perPage: typeof args.states === 'string' ? 1 : args.states.length,
       totalCount: typeof args.states === 'string' ? 1 : args.states.length,
     };
+    const lines = {
+      additions: 2,
+      deletions: 1,
+      changes: 3,
+    };
 
     if (typeof args.states !== 'string') {
       args.states.forEach((state) => {
@@ -180,7 +186,11 @@ export class BitbucketNock {
             ? pullrequest.updatedAt
             : null;
         pullrequest.mergedAt = pullrequest.state === BitbucketPullRequestState.closed ? pullrequest.updatedAt : null;
-        pullRequests.push(pullrequest);
+        if (args.withDiffStat) {
+          pullRequests.push({ ...pullrequest, lines });
+        } else {
+          pullRequests.push(pullrequest);
+        }
       });
 
       paginatedPullrequests.items = pullRequests;
@@ -194,9 +204,13 @@ export class BitbucketNock {
           ? getPullRequestResponse.updatedAt
           : null;
       getPullRequestResponse.mergedAt = args.states === BitbucketPullRequestState.closed ? getPullRequestResponse.updatedAt : null;
-
-      paginatedPullrequests.items = [getPullRequestResponse];
+      if (args.withDiffStat) {
+        paginatedPullrequests.items = [{ ...getPullRequestResponse, lines }];
+      } else {
+        paginatedPullrequests.items = [getPullRequestResponse];
+      }
     }
+
     return paginatedPullrequests;
   }
 }

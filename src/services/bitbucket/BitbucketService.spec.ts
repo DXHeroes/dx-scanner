@@ -1,18 +1,18 @@
 import nock from 'nock';
-import { BitbucketNock } from '../../test/helpers/bitbucketNock';
-import { BitbucketService } from './BitbucketService';
+import { ListGetterOptions, PullRequestState } from '../../inspectors';
 import {
-  getPullRequestResponse,
-  getPullCommits,
-  getRepoCommits,
-  getRepoCommit,
-  getIssuesResponse,
-  getIssueResponse,
   getIssueCommentsResponse,
+  getIssueResponse,
+  getIssuesResponse,
+  getPullCommits,
+  getPullRequestResponse,
+  getRepoCommit,
+  getRepoCommits,
 } from '../../services/git/__MOCKS__/bitbucketServiceMockFolder';
+import { BitbucketNock } from '../../test/helpers/bitbucketNock';
 import { BitbucketPullRequestState, VCSService } from '../git/IVCSService';
 import { VCSServicesUtils } from '../git/VCSServicesUtils';
-import { PullRequestState, ListGetterOptions } from '../../inspectors';
+import { BitbucketService } from './BitbucketService';
 
 describe('Bitbucket Service', () => {
   let service: BitbucketService;
@@ -39,6 +39,20 @@ describe('Bitbucket Service', () => {
 
     const response = await service.getPullRequests('pypy', 'pypy', { pagination: { page: 1, perPage: 1 } });
     const getOpenPullRequestsResponse = bitbucketNock.mockBitbucketPullRequestsResponse({ states: BitbucketPullRequestState.open });
+    expect(response).toMatchObject(getOpenPullRequestsResponse);
+  });
+
+  it('returns open pull requests with diffStat in own interface', async () => {
+    bitbucketNock.getOwnerId();
+    bitbucketNock.getApiResponse('pullrequests');
+    bitbucketNock.getAdditionsAndDeletions('1');
+
+    const response = await service.getPullRequests('pypy', 'pypy', { withDiffStat: true });
+    const getOpenPullRequestsResponse = bitbucketNock.mockBitbucketPullRequestsResponse({
+      states: BitbucketPullRequestState.open,
+      withDiffStat: true,
+    });
+
     expect(response).toMatchObject(getOpenPullRequestsResponse);
   });
 
