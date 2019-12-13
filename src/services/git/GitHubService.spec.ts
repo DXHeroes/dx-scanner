@@ -56,6 +56,26 @@ describe('GitHub Service', () => {
       expect(response).toMatchObject(getPullsServiceResponse);
     });
 
+    it('returns one pull in own interface', async () => {
+      const pagination = { page: 1, perPage: 1 };
+      new GitHubNock('1', 'octocat', 1296269, 'Hello-World').getPulls(
+        [
+          {
+            number: 1347,
+            state: 'open',
+            title: 'new-feature',
+            body: 'Please pull these awesome changes',
+            head: 'new-topic',
+            base: 'master',
+          },
+        ],
+        undefined,
+        pagination,
+      );
+      const response = await service.getPullRequests('octocat', 'Hello-World', { pagination });
+      expect(response).toMatchObject(getPullsServiceResponse);
+    });
+
     it('returns open pulls by default', async () => {
       new GitHubNock('1', 'octocat', 1296269, 'Hello-World').getPulls([
         { number: 1347, state: 'open', title: 'new-feature', body: 'Please pull these awesome changes', head: 'new-topic', base: 'master' },

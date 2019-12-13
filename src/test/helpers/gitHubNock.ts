@@ -38,6 +38,7 @@ export class GitHubNock {
       updated_at?: string;
     }[],
     queryState?: string,
+    pagination?: { page: number; perPage: number },
     persist = true,
   ): PullRequestItem[] {
     const responseBody = pulls.map(({ number, state, title, body, head, base, created_at, updated_at }) => {
@@ -60,7 +61,7 @@ export class GitHubNock {
       );
     });
 
-    return this.getPullsInternal(undefined, queryState, responseBody, persist);
+    return this.getPullsInternal(undefined, queryState, responseBody, persist, pagination);
   }
 
   getPull(
@@ -94,7 +95,7 @@ export class GitHubNock {
       updated_at,
     );
 
-    return this.getPullsInternal(number, undefined, responseBody, persist);
+    return this.getPullsInternal(number, undefined, responseBody, persist, undefined);
   }
 
   getContributors(contributors: { id: string; login: string }[], persist = true): Contributor[] {
@@ -121,11 +122,17 @@ export class GitHubNock {
     state: string | undefined,
     pulls: T,
     persist = true,
+    pagination: { page: number; perPage: number } | undefined,
   ): T {
     const url = this.repository.pulls_url.replace('{/number}', number !== undefined ? `/${number}` : '');
     const params: nock.DataMatcherMap = {};
     if (state !== undefined) {
       params.state = state;
+    }
+
+    if (pagination) {
+      params.page = pagination.page;
+      params.per_page = pagination.perPage;
     }
 
     GitHubNock.get(url, params, persist).reply(200, pulls);
