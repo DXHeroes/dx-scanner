@@ -122,7 +122,7 @@ export interface PullCommits {
   commit: Commit;
 }
 
-interface Lines {
+export interface Lines {
   additions: number;
   deletions: number;
   changes: number;

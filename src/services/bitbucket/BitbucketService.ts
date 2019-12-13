@@ -101,36 +101,43 @@ export class BitbucketService implements IVCSService {
 
     const response: DeepRequired<Bitbucket.Response<Bitbucket.Schema.PaginatedPullrequests>> = await axios.get(apiUrl);
 
-    const items = response.data.values.map((val) => {
-      return {
-        user: {
-          id: val.author.uuid,
-          login: val.author.nickname,
-          url: val.author.links.html.href,
-        },
-        url: val.links.html.href,
-        body: val.description,
-        createdAt: val.created_on,
-        updatedAt: val.updated_on,
-        closedAt:
-          val.state === BitbucketPullRequestState.closed || val.state === BitbucketPullRequestState.declined ? val.updated_on : null,
-        mergedAt: val.state === BitbucketPullRequestState.closed ? val.updated_on : null,
-        state: val.state,
-        id: val.id,
-        base: {
-          repo: {
-            url: val.destination.repository.links.html.href,
-            name: val.destination.repository.name,
-            id: val.destination.repository.uuid,
-            owner: {
-              login: owner,
-              id: ownerId,
-              url: ownerUrl,
+    const items = await Promise.all(
+      response.data.values.map(async (val) => {
+        const pullRequest = {
+          user: {
+            id: val.author.uuid,
+            login: val.author.nickname,
+            url: val.author.links.html.href,
+          },
+          url: val.links.html.href,
+          body: val.description,
+          createdAt: val.created_on,
+          updatedAt: val.updated_on,
+          closedAt:
+            val.state === BitbucketPullRequestState.closed || val.state === BitbucketPullRequestState.declined ? val.updated_on : null,
+          mergedAt: val.state === BitbucketPullRequestState.closed ? val.updated_on : null,
+          state: val.state,
+          id: val.id,
+          base: {
+            repo: {
+              url: val.destination.repository.links.html.href,
+              name: val.destination.repository.name,
+              id: val.destination.repository.uuid,
+              owner: {
+                login: owner,
+                id: ownerId,
+                url: ownerUrl,
+              },
             },
           },
-        },
-      };
-    });
+        };
+        if (options?.withDiffStat) {
+          const lines = await this.getPullsDiffStat(owner, repo, `${val.id}`);
+          return { ...pullRequest, lines };
+        }
+        return pullRequest;
+      }),
+    );
 
     const pagination = this.getPagination(response.data);
 
