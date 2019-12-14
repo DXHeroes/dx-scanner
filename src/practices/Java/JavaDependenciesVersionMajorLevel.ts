@@ -8,6 +8,7 @@ import { DependenciesVersionEvaluationUtils } from '../utils/DependenciesVersion
 import { PracticeBase } from '../PracticeBase';
 import { PkgToUpdate } from '../JavaScript/DependenciesVersionMajorLevel'; // @Todo: refactor this type to utils?
 import { ReportDetailType } from '../../reporters/ReporterData';
+import qs from 'qs';
 
 @DxPractice({
   id: 'Java.DependenciesVersionMajorLevel',
@@ -43,11 +44,12 @@ export class JavaDependenciesVersionMajorLevel extends PracticeBase {
 
   static async searchMavenCentral(pkgs: Package[] | undefined, rows: number) {
     const latestVersionsJson: { [key: string]: string } = {};
-    const URL = 'http://search.maven.org/solrsearch/select?q=';
+    const URL = 'http://search.maven.org/solrsearch/select?';
     if (pkgs) {
       for (const p of pkgs) {
         const listOfIds = p.name.split(':', 2);
-        const listVersionsEndpoint = `${URL}${listOfIds[0]}+AND+a:${listOfIds[1]}&rows=${rows}&wt=json`;
+        const queryRequest = qs.stringify({ q: `${listOfIds[0]}+AND+a:${listOfIds[1]}`, rows, wt: 'json' }, { encode: false });
+        const listVersionsEndpoint = `${URL}${queryRequest}`;
         await axios.default.get(listVersionsEndpoint).then((response) => {
           latestVersionsJson[p.name] = `${response.data.response.docs.pop().latestVersion}`;
         });
