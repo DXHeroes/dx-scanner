@@ -25,6 +25,7 @@ import { DependenciesVersionMinorPatchLevelPractice } from './JavaScript/Depende
 import { CorrectCommitMessagesPractice } from './LanguageIndependent/CorrectCommitMessagesPractice';
 import { JavaDependenciesVersionMajorLevel } from './Java/JavaDependenciesVersionMajorLevel';
 import { JavaDependenciesVersionMinorPatchLevel } from './Java/JavaDependenciesVersionMinorPatchLevel';
+import { TimeToSolvePullRequestsPractice } from './LanguageIndependent/TimeToSolvePullRequestsPractice';
 
 // register practices here
 export const practices = [
@@ -55,4 +56,5 @@ export const practices = [
   TsGitignoreCorrectlySetPractice,
   DoesPullRequestsPractice,
   CorrectCommitMessagesPractice,
+  TimeToSolvePullRequestsPractice,
 ];
