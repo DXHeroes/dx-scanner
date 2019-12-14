@@ -1,10 +1,13 @@
 import { PracticeContext } from '../../contexts/practice/PracticeContext';
 import { Package } from '../../inspectors/IPackageInspector';
-import { SemverLevel, PackageInspectorBase } from '../../inspectors/package/PackageInspectorBase';
+import { SemverLevel } from '../../inspectors/package/PackageInspectorBase';
 import { PracticeEvaluationResult, PracticeImpact, ProgrammingLanguage } from '../../model';
 import { DxPractice } from '../DxPracticeDecorator';
-import { IPractice } from '../IPractice';
 import * as axios from 'axios';
+import { DependenciesVersionEvaluationUtils } from '../utils/DependenciesVersionEvaluationUtils';
+import { PracticeBase } from '../PracticeBase';
+import { PkgToUpdate } from '../JavaScript/DependenciesVersionMajorLevel'; // @Todo: refactor this type to utils?
+import { ReportDetailType } from '../../reporters/ReporterData';
 
 @DxPractice({
   id: 'Java.DependenciesVersionMajorLevel',
@@ -14,26 +17,28 @@ import * as axios from 'axios';
   reportOnlyOnce: true,
   url: 'https://renovatebot.com/',
 })
-export class JavaDependenciesVersionMajorLevel implements IPractice {
+export class JavaDependenciesVersionMajorLevel extends PracticeBase {
   async isApplicable(ctx: PracticeContext): Promise<boolean> {
     return ctx.projectComponent.language === ProgrammingLanguage.Java || ctx.projectComponent.language === ProgrammingLanguage.Kotlin;
   }
 
   async evaluate(ctx: PracticeContext): Promise<PracticeEvaluationResult> {
-    if (ctx.fileInspector === undefined || ctx.packageInspector === undefined) {
+    if (!ctx.fileInspector || !ctx.packageInspector) {
       return PracticeEvaluationResult.unknown;
     }
 
     const pkgs = ctx.packageInspector.packages;
 
-    if (pkgs === undefined) {
+    if (!pkgs) {
       return PracticeEvaluationResult.unknown;
     }
 
     const result = await JavaDependenciesVersionMajorLevel.searchMavenCentral(pkgs, 5);
-    const practiceEvaluationResult = JavaDependenciesVersionMajorLevel.isPracticing(result, SemverLevel.major, pkgs);
+    const pkgsToUpdate = DependenciesVersionEvaluationUtils.packagesToBeUpdated(result, SemverLevel.major, pkgs);
+    this.setData(pkgsToUpdate);
 
-    return practiceEvaluationResult || PracticeEvaluationResult.practicing;
+    if (pkgsToUpdate.length > 0) return PracticeEvaluationResult.notPracticing;
+    return PracticeEvaluationResult.practicing;
   }
 
   static async searchMavenCentral(pkgs: Package[] | undefined, rows: number) {
@@ -44,30 +49,14 @@ export class JavaDependenciesVersionMajorLevel implements IPractice {
         const listOfIds = p.name.split(':', 2);
         const listVersionsEndpoint = `${URL}${listOfIds[0]}+AND+a:${listOfIds[1]}&rows=${rows}&wt=json`;
         await axios.default.get(listVersionsEndpoint).then((response) => {
-          latestVersionsJson[p.name] = String(response.data.response.docs.pop().latestVersion);
+          latestVersionsJson[p.name] = `${response.data.response.docs.pop().latestVersion}`;
         });
       }
     }
     return latestVersionsJson;
   }
 
-  static isPracticing(
-    result: { [key: string]: string },
-    semverVersion: SemverLevel,
-    pkgs: Package[],
-  ): PracticeEvaluationResult | undefined {
-    for (const packageName in result) {
-      const parsedVersion = PackageInspectorBase.semverToPackageVersion(result[packageName]);
-      if (parsedVersion) {
-        for (const pkg of pkgs) {
-          if (pkg.name === packageName) {
-            if (parsedVersion[semverVersion] > pkg.lockfileVersion[semverVersion]) {
-              return PracticeEvaluationResult.notPracticing;
-            }
-          }
-        }
-      }
-    }
-    return undefined;
+  setData(pkgsToUpdate: PkgToUpdate[]): void {
+    this.data.details = [{ type: ReportDetailType.table, headers: ['Name', 'New', 'Current'], data: pkgsToUpdate }];
   }
 }

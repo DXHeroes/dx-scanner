@@ -3,7 +3,9 @@ import { PracticeEvaluationResult, PracticeImpact, ProgrammingLanguage } from '.
 import { DxPractice } from '../DxPracticeDecorator';
 import { IPractice } from '../IPractice';
 import { JavaDependenciesVersionMajorLevel } from './JavaDependenciesVersionMajorLevel';
+import { DependenciesVersionEvaluationUtils } from '../utils/DependenciesVersionEvaluationUtils';
 import { SemverLevel } from '../../inspectors/package/PackageInspectorBase';
+import { flatten } from 'lodash';
 
 @DxPractice({
   id: 'Java.DependenciesVersionMinorPatchLevel',
@@ -30,13 +32,13 @@ export class JavaDependenciesVersionMinorPatchLevel extends JavaDependenciesVers
 
     const result = await JavaDependenciesVersionMajorLevel.searchMavenCentral(pkgs, 5);
 
-    const patchLevel = JavaDependenciesVersionMajorLevel.isPracticing(result, SemverLevel.patch, pkgs);
-    const minorLevel = JavaDependenciesVersionMajorLevel.isPracticing(result, SemverLevel.minor, pkgs);
+    const patchLevelPkgs = DependenciesVersionEvaluationUtils.packagesToBeUpdated(result, SemverLevel.patch, pkgs);
+    const minorLevelPkgs = DependenciesVersionEvaluationUtils.packagesToBeUpdated(result, SemverLevel.minor, pkgs);
+    this.setData(flatten([patchLevelPkgs, minorLevelPkgs]));
 
-    if (patchLevel === PracticeEvaluationResult.notPracticing || minorLevel === PracticeEvaluationResult.notPracticing) {
+    if (patchLevelPkgs.length > 0 || minorLevelPkgs.length > 0) {
       return PracticeEvaluationResult.notPracticing;
     }
-
     return PracticeEvaluationResult.practicing;
   }
 }
