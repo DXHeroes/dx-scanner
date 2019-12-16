@@ -76,15 +76,14 @@ export class GitHubService implements IVCSService {
     let url = 'GET /repos/:owner/:repo/pulls';
 
     const state = VCSServicesUtils.getPRState(options?.filter?.state, VCSService.github);
-    const stateForUri = qs.stringify({ state: state }, { addQueryPrefix: true, indices: false, arrayFormat: 'repeat' });
 
-    const paginationForUri = qs.stringify(
-      // eslint-disable-next-line @typescript-eslint/camelcase
-      { page: options?.pagination?.page, per_page: options?.pagination?.perPage },
-      { addQueryPrefix: true, indices: false },
+    url = url.concat(
+      `${qs.stringify(
+        // eslint-disable-next-line @typescript-eslint/camelcase
+        { state: state, page: options?.pagination?.page, per_page: options?.pagination?.perPage },
+        { addQueryPrefix: true, indices: false, arrayFormat: 'repeat' },
+      )}`,
     );
-
-    url = url.concat(`${stateForUri}${paginationForUri}`);
 
     const response: PullsListResponseItem[] = await this.paginate(url, owner, repo);
 
