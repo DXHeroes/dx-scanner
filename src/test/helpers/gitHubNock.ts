@@ -26,7 +26,7 @@ export class GitHubNock {
     this.getContents(path, undefined, persist);
   }
 
-  getPulls(
+  getPulls(options: {
     pulls: {
       number: number;
       state: string;
@@ -36,12 +36,15 @@ export class GitHubNock {
       base: string;
       created_at?: string;
       updated_at?: string;
-    }[],
-    queryState?: string,
-    pagination?: { page: number; perPage: number },
-    persist = true,
-  ): PullRequestItem[] {
-    const responseBody = pulls.map(({ number, state, title, body, head, base, created_at, updated_at }) => {
+    }[];
+    queryState?: string;
+    pagination?: { page: number; perPage: number };
+    persist?: boolean;
+  }): PullRequestItem[] {
+    if (!options.persist) {
+      options.persist = true;
+    }
+    const responseBody = options.pulls.map(({ number, state, title, body, head, base, created_at, updated_at }) => {
       if (!created_at) {
         created_at = '2011-01-26T19:01:12Z';
       }
@@ -61,7 +64,12 @@ export class GitHubNock {
       );
     });
 
-    return this.getPullsInternal({ state: queryState, pulls: responseBody, persist: persist, pagination: pagination });
+    return this.getPullsInternal({
+      state: options.queryState,
+      pulls: responseBody,
+      persist: options.persist,
+      pagination: options.pagination,
+    });
   }
 
   getPull(
