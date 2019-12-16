@@ -61,7 +61,7 @@ export class GitHubNock {
       );
     });
 
-    return this.getPullsInternal(undefined, queryState, responseBody, persist, pagination);
+    return this.getPullsInternal({ state: queryState, pulls: responseBody, persist: persist, pagination: pagination });
   }
 
   getPull(
@@ -93,7 +93,7 @@ export class GitHubNock {
       updated_at,
     );
 
-    return this.getPullsInternal(number, undefined, responseBody, persist, undefined);
+    return this.getPullsInternal({ number: number, pulls: responseBody, persist: persist });
   }
 
   getContributors(contributors: { id: string; login: string }[], persist = true): Contributor[] {
@@ -115,26 +115,26 @@ export class GitHubNock {
     return contents;
   }
 
-  private getPullsInternal<T extends PullRequest | PullRequestItem[]>(
-    number: number | undefined,
-    state: string | undefined,
-    pulls: T,
-    persist = true,
-    pagination: { page: number; perPage: number } | undefined,
-  ): T {
-    const url = this.repository.pulls_url.replace('{/number}', number !== undefined ? `/${number}` : '');
+  private getPullsInternal<T extends PullRequest | PullRequestItem[]>(options: {
+    number?: number | undefined;
+    state?: string | undefined;
+    pulls: T;
+    persist: boolean;
+    pagination?: { page: number; perPage: number } | undefined;
+  }): T {
+    const url = this.repository.pulls_url.replace('{/number}', options.number !== undefined ? `/${options.number}` : '');
     const params: nock.DataMatcherMap = {};
-    if (state !== undefined) {
-      params.state = state;
+    if (options.state !== undefined) {
+      params.state = options.state;
     }
 
-    if (pagination) {
-      params.page = pagination.page;
-      params.per_page = pagination.perPage;
+    if (options.pagination) {
+      params.page = options.pagination.page;
+      params.per_page = options.pagination.perPage;
     }
 
-    GitHubNock.get(url, params, persist).reply(200, pulls);
-    return pulls;
+    GitHubNock.get(url, params, options.persist).reply(200, options.pulls);
+    return options.pulls;
   }
 
   getCommits(persist = true): nock.Interceptor {
