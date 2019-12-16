@@ -83,6 +83,7 @@ export class BitbucketService implements IVCSService {
     owner: string,
     repo: string,
     options?: ListGetterOptions<{ state?: PullRequestState }>,
+    withDiffStat?: boolean,
   ): Promise<Paginated<PullRequest>> {
     let apiUrl = `https://api.bitbucket.org/2.0/repositories/${owner}/${repo}/pullrequests`;
 
@@ -131,7 +132,7 @@ export class BitbucketService implements IVCSService {
           },
         };
         // Get number of changes, additions and deletions in PullRequest if the withDiffStat is true
-        if (options?.withDiffStat) {
+        if (withDiffStat) {
           const lines = await this.getPullsDiffStat(owner, repo, `${val.id}`);
           return { ...pullRequest, lines };
         }

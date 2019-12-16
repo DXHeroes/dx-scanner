@@ -79,7 +79,7 @@ describe('GitHub Service', () => {
       new GitHubNock('1', 'octocat', 1296269, 'Hello-World').getPulls({ pulls: [params] });
       new GitHubNock('1', 'octocat', 1296269, 'Hello-World').getPull(1, params.state, params.title, params.body, params.head, params.base);
 
-      const response = await service.getPullRequests('octocat', 'Hello-World', { withDiffStat: true });
+      const response = await service.getPullRequests('octocat', 'Hello-World', undefined, true);
 
       const lines = { additions: 1, deletions: 0, changes: 1 };
       const getPullsServiceResponseWithDiffStat = _.cloneDeep(getPullsServiceResponse);
