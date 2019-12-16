@@ -507,14 +507,7 @@ export class GitHubService implements IVCSService {
   /**
    * Get all results across all pages.
    */
-  private async paginate(
-    uri: string,
-    owner: string,
-    repo: string,
-    prNumber?: number,
-    issueNumber?: number,
-    options?: ListGetterOptions<{ state?: PullRequestState }>,
-  ) {
+  private async paginate(uri: string, owner: string, repo: string, prNumber?: number, issueNumber?: number) {
     const object = {
       owner: owner,
       repo: repo,
@@ -526,11 +519,6 @@ export class GitHubService implements IVCSService {
     if (issueNumber) {
       // eslint-disable-next-line @typescript-eslint/camelcase
       Object.assign(object, { issue_number: issueNumber });
-    }
-
-    if (options?.pagination) {
-      // eslint-disable-next-line @typescript-eslint/camelcase
-      Object.assign(object, { page: options.pagination.page, per_page: options.pagination.perPage });
     }
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
