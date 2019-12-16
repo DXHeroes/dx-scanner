@@ -55,7 +55,7 @@
     "parse-commit-message": "3.2.3",
     "qs": "6.9.1",
     "reflect-metadata": "0.1.13",
-    "semver": "6.3.0",
+    "semver": "7.0.0",
     "simple-git": "1.129.0",
     "table": "5.4.6",
     "toposort": "2.0.2",
