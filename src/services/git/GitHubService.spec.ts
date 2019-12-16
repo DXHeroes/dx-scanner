@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/camelcase */
 import nock from 'nock';
 import { GitHubService } from './GitHubService';
-import { GitHubNock, PullRequest } from '../../test/helpers/gitHubNock';
+import { GitHubNock } from '../../test/helpers/gitHubNock';
 import {
   getPullsServiceResponse,
   getPullRequestsReviewsResponse,
@@ -79,7 +79,7 @@ describe('GitHub Service', () => {
       new GitHubNock('1', 'octocat', 1296269, 'Hello-World').getPulls({ pulls: [params] });
       new GitHubNock('1', 'octocat', 1296269, 'Hello-World').getPull(1, params.state, params.title, params.body, params.head, params.base);
 
-      const response = await service.getPullRequests('octocat', 'Hello-World', undefined, true);
+      const response = await service.getPullRequests('octocat', 'Hello-World', { withDiffStat: true });
 
       const lines = { additions: 1, deletions: 0, changes: 1 };
       const getPullsServiceResponseWithDiffStat = _.cloneDeep(getPullsServiceResponse);

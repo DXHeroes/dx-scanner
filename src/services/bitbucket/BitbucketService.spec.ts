@@ -47,7 +47,7 @@ describe('Bitbucket Service', () => {
     bitbucketNock.getApiResponse({ resource: 'pullrequests' });
     bitbucketNock.getAdditionsAndDeletions('1');
 
-    const response = await service.getPullRequests('pypy', 'pypy', undefined, true);
+    const response = await service.getPullRequests('pypy', 'pypy', { withDiffStat: true });
     const getOpenPullRequestsResponse = bitbucketNock.mockBitbucketPullRequestsResponse({
       states: BitbucketPullRequestState.open,
       withDiffStat: true,

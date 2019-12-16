@@ -71,8 +71,7 @@ export class GitHubService implements IVCSService {
   async getPullRequests(
     owner: string,
     repo: string,
-    options?: ListGetterOptions<{ state?: PullRequestState }>,
-    withDiffStat?: boolean,
+    options?: { withDiffStat?: boolean } & ListGetterOptions<{ state?: PullRequestState }>,
   ): Promise<Paginated<PullRequest>> {
     let url = 'GET /repos/:owner/:repo/pulls';
 
@@ -114,7 +113,7 @@ export class GitHubService implements IVCSService {
           },
         };
         // Get number of changes, additions and deletions in PullRequest if the withDiffStat is true
-        if (withDiffStat) {
+        if (options?.withDiffStat) {
           const lines = await this.getPullsDiffStat(owner, repo, `${val.id}`);
           return { ...pullRequest, lines };
         }

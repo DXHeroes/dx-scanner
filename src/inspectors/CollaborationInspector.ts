@@ -12,7 +12,11 @@ export class CollaborationInspector implements ICollaborationInspector {
     this.service = service;
   }
 
-  async getPullRequests(owner: string, repo: string, options?: ListGetterOptions<{ state?: PullRequestState }>, withDiffStat?: boolean) {
+  async getPullRequests(
+    owner: string,
+    repo: string,
+    options?: { withDiffStat?: boolean } & ListGetterOptions<{ state?: PullRequestState }>,
+  ) {
     return this.service.getPullRequests(owner, repo, options);
   }
 
