@@ -1,3 +1,10 @@
+## [1.26.4](https://github.com/dxheroes/dx-scanner/compare/v1.26.3...v1.26.4) (2019-12-16)
+
+
+### Bug Fixes
+
+* **deps:** update dependency semver to v7 ([76de07d](https://github.com/dxheroes/dx-scanner/commit/76de07d))
+
 ## [1.26.3](https://github.com/dxheroes/dx-scanner/compare/v1.26.2...v1.26.3) (2019-12-16)
 
 
