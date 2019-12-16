@@ -387,6 +387,9 @@ export class BitbucketService implements IVCSService {
     throw new Error('Method not implemented yet.');
   }
 
+  /**
+   * Add additions, deletions and changes of pull request when the getPullRequests() is called with withDiffStat = true
+   */
   async getPullsDiffStat(owner: string, repo: string, prNumber: string) {
     const diffStatData = (await this.client.pullrequests.getDiffStat({ repo_slug: repo, username: owner, pull_request_id: prNumber })).data;
 

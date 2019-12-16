@@ -493,6 +493,9 @@ export class GitHubService implements IVCSService {
     return { items, ...pagination };
   }
 
+  /**
+   * Add additions, deletions and changes of pull request when the getPullRequests() is called with withDiffStat = true
+   */
   async getPullsDiffStat(owner: string, repo: string, prNumber: string) {
     // eslint-disable-next-line @typescript-eslint/camelcase
     const response = await this.unwrap(this.client.pulls.get({ owner, repo, pull_number: <number>(<unknown>prNumber) }));
