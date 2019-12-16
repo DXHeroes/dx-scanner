@@ -216,7 +216,7 @@ export class BitbucketService implements IVCSService {
           message: val.message,
           author: {
             name: val.author.raw,
-            email: 'undefined',
+            email: this.extractEmailFromString(val.author.raw) || '',
             date: val.date,
           },
           tree: {
