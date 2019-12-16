@@ -13,10 +13,10 @@ import qs from 'qs';
 @DxPractice({
   id: 'Java.DependenciesVersionMajorLevel',
   name: 'Update Dependencies of Major Level',
-  impact: PracticeImpact.medium,
-  suggestion: 'Keep the dependencies updated to have all possible features. Use, for example, Renovate Bot.',
+  impact: PracticeImpact.small,
+  suggestion: 'Keep the dependencies updated to have all possible features. Use, for example, versions-maven-plugin',
   reportOnlyOnce: true,
-  url: 'https://renovatebot.com/',
+  url: 'https://www.mojohaus.org/versions-maven-plugin/',
 })
 export class JavaDependenciesVersionMajorLevel extends PracticeBase {
   async isApplicable(ctx: PracticeContext): Promise<boolean> {
@@ -24,15 +24,11 @@ export class JavaDependenciesVersionMajorLevel extends PracticeBase {
   }
 
   async evaluate(ctx: PracticeContext): Promise<PracticeEvaluationResult> {
-    if (!ctx.fileInspector || !ctx.packageInspector) {
+    if (!ctx.fileInspector || !ctx.packageInspector || !ctx.packageInspector.packages) {
       return PracticeEvaluationResult.unknown;
     }
 
     const pkgs = ctx.packageInspector.packages;
-
-    if (!pkgs) {
-      return PracticeEvaluationResult.unknown;
-    }
 
     const result = await JavaDependenciesVersionMajorLevel.searchMavenCentral(pkgs, 5);
     const pkgsToUpdate = DependenciesVersionEvaluationUtils.packagesToBeUpdated(result, SemverLevel.major, pkgs);

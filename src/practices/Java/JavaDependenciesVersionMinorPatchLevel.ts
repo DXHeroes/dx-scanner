@@ -11,9 +11,9 @@ import { flatten } from 'lodash';
   id: 'Java.DependenciesVersionMinorPatchLevel',
   name: 'Update Dependencies of Minor and Patch Level',
   impact: PracticeImpact.high,
-  suggestion: 'Keep the dependencies updated to eliminate security concerns and compatibility issues. Use, for example, Renovate Bot.',
+  suggestion: 'Keep the dependencies updated to have all possible features. Use, for example, versions-maven-plugin',
   reportOnlyOnce: true,
-  url: 'https://renovatebot.com/',
+  url: 'https://www.mojohaus.org/versions-maven-plugin/',
 })
 export class JavaDependenciesVersionMinorPatchLevel extends JavaDependenciesVersionMajorLevel implements IPractice {
   async isApplicable(ctx: PracticeContext): Promise<boolean> {
@@ -21,14 +21,11 @@ export class JavaDependenciesVersionMinorPatchLevel extends JavaDependenciesVers
   }
 
   async evaluate(ctx: PracticeContext): Promise<PracticeEvaluationResult> {
-    if (ctx.fileInspector === undefined || ctx.packageInspector === undefined) {
+    if (!ctx.fileInspector || !ctx.packageInspector || !ctx.packageInspector.packages) {
       return PracticeEvaluationResult.unknown;
     }
 
     const pkgs = ctx.packageInspector.packages;
-    if (pkgs === undefined) {
-      return PracticeEvaluationResult.unknown;
-    }
 
     const result = await JavaDependenciesVersionMajorLevel.searchMavenCentral(pkgs, 5);
 
