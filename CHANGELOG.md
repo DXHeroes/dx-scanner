@@ -1,3 +1,10 @@
+## [1.26.3](https://github.com/dxheroes/dx-scanner/compare/v1.26.2...v1.26.3) (2019-12-16)
+
+
+### Bug Fixes
+
+* **deps:** update dependency update-notifier to v4 ([373ce00](https://github.com/dxheroes/dx-scanner/commit/373ce00))
+
 ## [1.26.2](https://github.com/dxheroes/dx-scanner/compare/v1.26.1...v1.26.2) (2019-12-16)
 
 
