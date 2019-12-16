@@ -131,6 +131,7 @@ export class BitbucketService implements IVCSService {
             },
           },
         };
+        // Get number of changes, additions and deletions in PullRequest if the withDiffStat is true
         if (options?.withDiffStat) {
           const lines = await this.getPullsDiffStat(owner, repo, `${val.id}`);
           return { ...pullRequest, lines };
@@ -186,6 +187,7 @@ export class BitbucketService implements IVCSService {
         },
       },
     };
+    // Get number of changes, additions and deletions in PullRequest if the withDiffStat is true
     if (withDiffStat) {
       const lines = await this.getPullsDiffStat(owner, repo, `${prNumber}`);
       return { ...pullRequest, lines };
