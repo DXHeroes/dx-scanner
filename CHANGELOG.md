@@ -1,3 +1,10 @@
+## [1.26.2](https://github.com/dxheroes/dx-scanner/compare/v1.26.1...v1.26.2) (2019-12-16)
+
+
+### Bug Fixes
+
+* **deps:** update all non-major dependencies ([96f59c9](https://github.com/dxheroes/dx-scanner/commit/96f59c9))
+
 ## [1.26.1](https://github.com/dxheroes/dx-scanner/compare/v1.26.0...v1.26.1) (2019-12-16)
 
 
