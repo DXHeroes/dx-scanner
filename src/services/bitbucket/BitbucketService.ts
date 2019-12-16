@@ -387,8 +387,8 @@ export class BitbucketService implements IVCSService {
     throw new Error('Method not implemented yet.');
   }
 
-  async getPullsDiffStat(owner: string, repo: string, sha: string) {
-    const diffStatData = (await this.client.pullrequests.getDiffStat({ repo_slug: repo, username: owner, pull_request_id: sha })).data;
+  async getPullsDiffStat(owner: string, repo: string, prNumber: string) {
+    const diffStatData = (await this.client.pullrequests.getDiffStat({ repo_slug: repo, username: owner, pull_request_id: prNumber })).data;
 
     let linesRemoved = 0,
       linesAdded = 0;

@@ -493,9 +493,9 @@ export class GitHubService implements IVCSService {
     return { items, ...pagination };
   }
 
-  async getPullsDiffStat(owner: string, repo: string, sha: string) {
+  async getPullsDiffStat(owner: string, repo: string, prNumber: string) {
     // eslint-disable-next-line @typescript-eslint/camelcase
-    const response = await this.unwrap(this.client.pulls.get({ owner, repo, pull_number: <number>(<unknown>sha) }));
+    const response = await this.unwrap(this.client.pulls.get({ owner, repo, pull_number: <number>(<unknown>prNumber) }));
 
     return {
       additions: response.data.additions,
