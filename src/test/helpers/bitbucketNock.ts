@@ -118,8 +118,8 @@ export class BitbucketNock {
     return BitbucketNock.get(url, params, persist).reply(200, response);
   }
 
-  getAdditionsAndDeletions(sha: string) {
-    const url = `${this.url}/repositories/${this.user}/${this.repoName}/pullrequests/${sha}/diffstat`;
+  getAdditionsAndDeletions(prNumber: string) {
+    const url = `${this.url}/repositories/${this.user}/${this.repoName}/pullrequests/${prNumber}/diffstat`;
 
     const params = {};
     const persist = true;
