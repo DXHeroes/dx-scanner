@@ -26,7 +26,7 @@ export class GitHubNock {
     this.getContents(path, undefined, persist);
   }
 
-  getPulls(
+  getPulls(options: {
     pulls: {
       number: number;
       state: string;
@@ -36,11 +36,15 @@ export class GitHubNock {
       base: string;
       created_at?: string;
       updated_at?: string;
-    }[],
-    queryState?: string,
-    persist = true,
-  ): PullRequestItem[] {
-    const responseBody = pulls.map(({ number, state, title, body, head, base, created_at, updated_at }) => {
+    }[];
+    queryState?: string;
+    pagination?: { page: number; perPage: number };
+    persist?: boolean;
+  }): PullRequestItem[] {
+    if (!options.persist) {
+      options.persist = true;
+    }
+    const responseBody = options.pulls.map(({ number, state, title, body, head, base, created_at, updated_at }) => {
       if (!created_at) {
         created_at = '2011-01-26T19:01:12Z';
       }
@@ -60,7 +64,12 @@ export class GitHubNock {
       );
     });
 
-    return this.getPullsInternal(undefined, queryState, responseBody, persist);
+    return this.getPullsInternal({
+      state: options.queryState,
+      pulls: responseBody,
+      persist: options.persist,
+      pagination: options.pagination,
+    });
   }
 
   getPull(
@@ -71,9 +80,7 @@ export class GitHubNock {
     head: string,
     base: string,
     persist = true,
-
     created_at?: string,
-
     updated_at?: string,
   ): PullRequest {
     if (!created_at) {
@@ -94,7 +101,7 @@ export class GitHubNock {
       updated_at,
     );
 
-    return this.getPullsInternal(number, undefined, responseBody, persist);
+    return this.getPullsInternal({ number: number, pulls: responseBody, persist: persist });
   }
 
   getContributors(contributors: { id: string; login: string }[], persist = true): Contributor[] {
@@ -116,20 +123,26 @@ export class GitHubNock {
     return contents;
   }
 
-  private getPullsInternal<T extends PullRequest | PullRequestItem[]>(
-    number: number | undefined,
-    state: string | undefined,
-    pulls: T,
-    persist = true,
-  ): T {
-    const url = this.repository.pulls_url.replace('{/number}', number !== undefined ? `/${number}` : '');
+  private getPullsInternal<T extends PullRequest | PullRequestItem[]>(options: {
+    number?: number | undefined;
+    state?: string | undefined;
+    pulls: T;
+    persist: boolean;
+    pagination?: { page: number; perPage: number } | undefined;
+  }): T {
+    const url = this.repository.pulls_url.replace('{/number}', options.number !== undefined ? `/${options.number}` : '');
     const params: nock.DataMatcherMap = {};
-    if (state !== undefined) {
-      params.state = state;
+    if (options.state !== undefined) {
+      params.state = options.state;
     }
 
-    GitHubNock.get(url, params, persist).reply(200, pulls);
-    return pulls;
+    if (options.pagination) {
+      params.page = options.pagination.page;
+      params.per_page = options.pagination.perPage;
+    }
+
+    GitHubNock.get(url, params, options.persist).reply(200, options.pulls);
+    return options.pulls;
   }
 
   getCommits(persist = true): nock.Interceptor {

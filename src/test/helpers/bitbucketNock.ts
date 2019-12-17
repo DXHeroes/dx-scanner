@@ -3,7 +3,7 @@ import nock from 'nock';
 import { BitbucketCommit } from '../../services/bitbucket/BitbucketService';
 import { BitbucketPullRequestState } from '../../services/git/IVCSService';
 import qs from 'qs';
-import { Paginated } from '../../inspectors';
+import { Paginated, PaginationParams } from '../../inspectors';
 import { PullRequest } from '../../services/git/model';
 import { getPullRequestResponse } from '../../services/git/__MOCKS__/bitbucketServiceMockFolder';
 import _ from 'lodash';
@@ -19,65 +19,77 @@ export class BitbucketNock {
     this.url = 'https://api.bitbucket.org/2.0';
   }
 
-  getApiResponse(
-    resource: string,
-    id?: number | string,
-    value?: string,
-    state?: BitbucketPullRequestState | BitbucketPullRequestState[],
-  ): nock.Scope {
-    let url = `${this.url}/repositories/${this.user}/${this.repoName}/${resource}`;
+  getApiResponse(options: {
+    resource: string;
+    id?: number | string;
+    value?: string;
+    state?: BitbucketPullRequestState | BitbucketPullRequestState[];
+    pagination?: PaginationParams;
+  }): nock.Scope {
+    let url = `${this.url}/repositories/${this.user}/${this.repoName}/${options.resource}`;
     let response;
 
     let params = {};
     const persist = true;
 
-    if (state === undefined) {
-      state = BitbucketPullRequestState.open;
+    if (options.state === undefined) {
+      options.state = BitbucketPullRequestState.open;
     }
 
-    if (value !== undefined) {
-      switch (value) {
+    if (options.value !== undefined) {
+      switch (options.value) {
         case 'comments':
-          url = url.concat(`/${id}/${value}`);
+          url = url.concat(`/${options.id}/${options.value}`);
           response = new IssueCommentsMock().issueComments;
           break;
         case 'commits':
-          url = url.concat(`/${id}/${value}`);
+          url = url.concat(`/${options.id}/${options.value}`);
           response = new CommitsMock().commits;
           break;
       }
     } else {
-      switch (resource) {
+      switch (options.resource) {
         case 'pullrequests':
-          if (id !== undefined) {
-            url = url.concat(`/${id}`);
-            response = new PullRequestMock(<BitbucketPullRequestState>state).pullRequest;
+          if (options.id !== undefined) {
+            url = url.concat(`/${options.id}`);
+            response = new PullRequestMock(<BitbucketPullRequestState>options.state).pullRequest;
           } else {
-            if (state === BitbucketPullRequestState.open) {
-              const pullRequest = new PullRequestMock(state).pullRequest;
+            if (options.state === BitbucketPullRequestState.open) {
+              const pullRequest = new PullRequestMock(options.state).pullRequest;
               response = new PullRequestsMock([pullRequest]).pullrequests;
             } else {
-              const stateForUri = qs.stringify({ state: state }, { addQueryPrefix: true, indices: false, arrayFormat: 'repeat' });
+              const stateForUri = qs.stringify({ state: options.state }, { addQueryPrefix: true, indices: false, arrayFormat: 'repeat' });
               url = url.concat(`${stateForUri}`);
-              params = { state: state };
+              params = { state: options.state };
 
-              if (typeof state !== 'string') {
+              if (typeof options.state !== 'string') {
                 const pullRequests: Bitbucket.Schema.Pullrequest[] = [];
-                state.forEach((state) => {
+                options.state.forEach((state) => {
                   pullRequests.push(new PullRequestMock(state).pullRequest);
                 });
 
                 response = new PullRequestsMock(pullRequests).pullrequests;
               } else {
-                const pullRequest = new PullRequestMock(<BitbucketPullRequestState>state).pullRequest;
+                const pullRequest = new PullRequestMock(<BitbucketPullRequestState>options.state).pullRequest;
                 response = new PullRequestsMock([pullRequest]).pullrequests;
               }
+            }
+            if (options.pagination) {
+              const paginationForUri = qs.stringify(
+                { page: options.pagination?.page, pagelen: options.pagination?.perPage },
+                { addQueryPrefix: true, indices: false },
+              );
+              params = { page: options.pagination.page, pagelen: options.pagination.perPage };
+
+              url = url.concat(`${paginationForUri}`);
+              const pullRequest = new PullRequestMock(<BitbucketPullRequestState>options.state).pullRequest;
+              response = new PullRequestsMock([pullRequest]).pullrequests;
             }
           }
           break;
         case 'issues':
-          if (id !== undefined) {
-            url = url.concat(`/${id}`);
+          if (options.id !== undefined) {
+            url = url.concat(`/${options.id}`);
             response = new IssueMock().issue;
           } else {
             response = new IssuesMock().issues;
@@ -87,7 +99,7 @@ export class BitbucketNock {
           response = new RepoCommitsMock().repoCommits;
           break;
         case 'commit':
-          url = url.concat(`/${id}`);
+          url = url.concat(`/${options.id}`);
           response = new RepoCommitMock().repoCommit;
           break;
         default:
@@ -103,6 +115,15 @@ export class BitbucketNock {
     const params = {};
     const persist = true;
     const response = { owner: { uuid: '{f122f6a4-9111-4431-9f88-884d8cedd194}' } };
+    return BitbucketNock.get(url, params, persist).reply(200, response);
+  }
+
+  getAdditionsAndDeletions(prNumber: string) {
+    const url = `${this.url}/repositories/${this.user}/${this.repoName}/pullrequests/${prNumber}/diffstat`;
+
+    const params = {};
+    const persist = true;
+    const response = { values: [{ lines_removed: 1, lines_added: 2 }] };
     return BitbucketNock.get(url, params, persist).reply(200, response);
   }
 
@@ -124,6 +145,7 @@ export class BitbucketNock {
   mockBitbucketPullRequestsResponse(args: {
     states?: BitbucketPullRequestState | BitbucketPullRequestState[];
     updatedAt?: number;
+    withDiffStat?: boolean;
   }): Paginated<PullRequest> {
     const pullRequests: PullRequest[] = [];
     if (!args.states) {
@@ -145,6 +167,11 @@ export class BitbucketNock {
       perPage: typeof args.states === 'string' ? 1 : args.states.length,
       totalCount: typeof args.states === 'string' ? 1 : args.states.length,
     };
+    const lines = {
+      additions: 2,
+      deletions: 1,
+      changes: 3,
+    };
 
     if (typeof args.states !== 'string') {
       args.states.forEach((state) => {
@@ -159,7 +186,11 @@ export class BitbucketNock {
             ? pullrequest.updatedAt
             : null;
         pullrequest.mergedAt = pullrequest.state === BitbucketPullRequestState.closed ? pullrequest.updatedAt : null;
-        pullRequests.push(pullrequest);
+        if (args.withDiffStat) {
+          pullRequests.push({ ...pullrequest, lines });
+        } else {
+          pullRequests.push(pullrequest);
+        }
       });
 
       paginatedPullrequests.items = pullRequests;
@@ -173,9 +204,13 @@ export class BitbucketNock {
           ? getPullRequestResponse.updatedAt
           : null;
       getPullRequestResponse.mergedAt = args.states === BitbucketPullRequestState.closed ? getPullRequestResponse.updatedAt : null;
-
-      paginatedPullrequests.items = [getPullRequestResponse];
+      if (args.withDiffStat) {
+        paginatedPullrequests.items = [{ ...getPullRequestResponse, lines }];
+      } else {
+        paginatedPullrequests.items = [getPullRequestResponse];
+      }
     }
+
     return paginatedPullrequests;
   }
 }

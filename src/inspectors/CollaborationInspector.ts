@@ -12,12 +12,16 @@ export class CollaborationInspector implements ICollaborationInspector {
     this.service = service;
   }
 
-  async getPullRequests(owner: string, repo: string, options?: ListGetterOptions<{ state?: PullRequestState }>) {
+  async getPullRequests(
+    owner: string,
+    repo: string,
+    options?: { withDiffStat?: boolean } & ListGetterOptions<{ state?: PullRequestState }>,
+  ) {
     return this.service.getPullRequests(owner, repo, options);
   }
 
-  async getPullRequest(owner: string, repo: string, prNumber: number) {
-    return this.service.getPullRequest(owner, repo, prNumber);
+  async getPullRequest(owner: string, repo: string, prNumber: number, withDiffStat?: boolean) {
+    return this.service.getPullRequest(owner, repo, prNumber, withDiffStat);
   }
 
   async getPullRequestFiles(owner: string, repo: string, prNumber: number) {
@@ -30,5 +34,9 @@ export class CollaborationInspector implements ICollaborationInspector {
 
   async getRepoCommits(owner: string, repo: string, sha?: string) {
     return this.service.getRepoCommits(owner, repo, sha);
+  }
+
+  async getPullsDiffStat(owner: string, repo: string, prNumber: string) {
+    return this.service.getPullsDiffStat(owner, repo, prNumber);
   }
 }

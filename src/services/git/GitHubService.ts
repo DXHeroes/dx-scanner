@@ -74,39 +74,55 @@ export class GitHubService implements IVCSService {
   async getPullRequests(
     owner: string,
     repo: string,
-    options?: ListGetterOptions<{ state?: PullRequestState }>,
+    options?: { withDiffStat?: boolean } & ListGetterOptions<{ state?: PullRequestState }>,
   ): Promise<Paginated<PullRequest>> {
     let url = 'GET /repos/:owner/:repo/pulls';
-    if (options !== undefined && options.filter !== undefined && options.filter.state !== undefined) {
-      const state = VCSServicesUtils.getPRState(options.filter.state, VCSServiceType.github);
-      const stateForUri = qs.stringify({ state: state }, { addQueryPrefix: true });
-      url = `${url}${stateForUri}`;
-    }
+
+    const state = VCSServicesUtils.getPRState(options?.filter?.state, VCSServiceType.github);
+
+    url = url.concat(
+      `${qs.stringify(
+        // eslint-disable-next-line @typescript-eslint/camelcase
+        { state: state, page: options?.pagination?.page, per_page: options?.pagination?.perPage },
+        { addQueryPrefix: true, indices: false, arrayFormat: 'repeat' },
+      )}`,
+    );
+
     const response: PullsListResponseItem[] = await this.paginate(url, owner, repo);
 
-    const items = response.map((val) => ({
-      user: {
-        id: val.user.id.toString(),
-        login: val.user.login,
-        url: val.user.url,
-      },
-      url: val.url,
-      body: val.body,
-      createdAt: val.created_at,
-      updatedAt: val.updated_at,
-      closedAt: val.closed_at,
-      mergedAt: val.merged_at,
-      state: val.state,
-      id: val.id,
-      base: {
-        repo: {
-          url: val.base.repo.url,
-          name: val.base.repo.name,
-          id: val.base.repo.id.toString(),
-          owner: { url: val.base.repo.owner.url, id: val.base.repo.owner.id.toString(), login: val.base.repo.owner.login },
-        },
-      },
-    }));
+    const items = await Promise.all(
+      response.map(async (val) => {
+        const pullRequest = {
+          user: {
+            id: val.user.id.toString(),
+            login: val.user.login,
+            url: val.user.url,
+          },
+          url: val.url,
+          body: val.body,
+          createdAt: val.created_at,
+          updatedAt: val.updated_at,
+          closedAt: val.closed_at,
+          mergedAt: val.merged_at,
+          state: val.state,
+          id: val.id,
+          base: {
+            repo: {
+              url: val.base.repo.url,
+              name: val.base.repo.name,
+              id: val.base.repo.id.toString(),
+              owner: { url: val.base.repo.owner.url, id: val.base.repo.owner.id.toString(), login: val.base.repo.owner.login },
+            },
+          },
+        };
+        // Get number of changes, additions and deletions in PullRequest if the withDiffStat is true
+        if (options?.withDiffStat) {
+          const lines = await this.getPullsDiffStat(owner, repo, `${val.id}`);
+          return { ...pullRequest, lines };
+        }
+        return pullRequest;
+      }),
+    );
     const pagination = this.getPagination(response.length);
 
     return { items, ...pagination };
@@ -115,10 +131,10 @@ export class GitHubService implements IVCSService {
   /**
    * Get a single pull request.
    */
-  async getPullRequest(owner: string, repo: string, prNumber: number): Promise<PullRequest> {
+  async getPullRequest(owner: string, repo: string, prNumber: number, withDiffStat?: boolean): Promise<PullRequest> {
     // eslint-disable-next-line @typescript-eslint/camelcase
     const response = await this.unwrap(this.client.pulls.get({ owner, repo, pull_number: prNumber }));
-    return {
+    const pullRequest = {
       user: {
         id: response.data.user.id.toString(),
         login: response.data.user.login,
@@ -145,6 +161,12 @@ export class GitHubService implements IVCSService {
         },
       },
     };
+    // Get number of changes, additions and deletions in PullRequest if the withDiffStat is true
+    if (withDiffStat) {
+      const lines = await this.getPullsDiffStat(owner, repo, `${prNumber}`);
+      return { ...pullRequest, lines };
+    }
+    return pullRequest;
   }
 
   /**
@@ -542,6 +564,21 @@ export class GitHubService implements IVCSService {
       body: comment.body,
       createdAt: comment.created_at,
       updatedAt: comment.updated_at,
+    }
+  }
+
+  /**
+   * Add additions, deletions and changes of pull request when the getPullRequests() is called with withDiffStat = true
+   */
+  async getPullsDiffStat(owner: string, repo: string, prNumber: string) {
+    // eslint-disable-next-line @typescript-eslint/camelcase
+    const response = await this.unwrap(this.client.pulls.get({ owner, repo, pull_number: Number(prNumber) }));
+
+    return {
+      additions: response.data.additions,
+      deletions: response.data.deletions,
+      changes: response.data.additions + response.data.deletions,
+
     };
   }
 
