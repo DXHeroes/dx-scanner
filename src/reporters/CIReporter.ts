@@ -21,7 +21,7 @@ export class CIReporter implements IReporter {
     this.d(this.config);
   }
 
-  async report(practicesAndComponents: PracticeWithContextForReporter[]): Promise<void> {
+  async report(practicesAndComponents: PracticeWithContextForReporter[]): Promise<CreateUpdatePullRequestComment | undefined> {
     if (!this.config) {
       const msg = 'Your CI provider is not supported yet. Please add a feature request on https://github.com/DXHeroes/dx-scanner/issues';
       this.d(msg);
@@ -36,7 +36,7 @@ export class CIReporter implements IReporter {
 
     const reportString = this.buildReport(practicesAndComponents);
     this.d(reportString);
-    await this.postMessage(reportString);
+    return this.postMessage(reportString);
   }
 
   buildReport(practicesAndComponents: PracticeWithContextForReporter[]): string {

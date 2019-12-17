@@ -9,7 +9,8 @@ import {
 import { PracticeData } from '../practices/IPractice';
 
 export interface IReporter {
-  report(practicesAndComponents: PracticeWithContextForReporter[]): Promise<void>;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  report(practicesAndComponents: PracticeWithContextForReporter[]): Promise<any>;
   buildReport(practicesAndComponents: PracticeWithContextForReporter[]): string | JSONReport;
 }
 
