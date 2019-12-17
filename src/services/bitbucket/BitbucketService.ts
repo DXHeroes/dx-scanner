@@ -82,62 +82,69 @@ export class BitbucketService implements IVCSService {
   async getPullRequests(
     owner: string,
     repo: string,
-    options?: ListGetterOptions<{ state?: PullRequestState }>,
+    options?: { withDiffStat?: boolean } & ListGetterOptions<{ state?: PullRequestState }>,
   ): Promise<Paginated<PullRequest>> {
-    let state;
-    if (options?.filter?.state) {
-      state = VCSServicesUtils.getPRState(options.filter.state, VCSService.bitbucket);
-    }
-    const stateForUri = qs.stringify({ state: state }, { addQueryPrefix: true, indices: false, arrayFormat: 'repeat' });
     let apiUrl = `https://api.bitbucket.org/2.0/repositories/${owner}/${repo}/pullrequests`;
-    if (stateForUri) {
-      apiUrl = apiUrl.concat(`${stateForUri}`);
-    }
+
+    const state = VCSServicesUtils.getPRState(options?.filter?.state, VCSService.bitbucket);
+
+    apiUrl = apiUrl.concat(
+      `${qs.stringify(
+        { state: state, page: options?.pagination?.page, pagelen: options?.pagination?.perPage },
+        { addQueryPrefix: true, indices: false, arrayFormat: 'repeat' },
+      )}`,
+    );
 
     const ownerUrl = `www.bitbucket.org/${owner}`;
     const ownerId = `${(await this.client.repositories.get({ repo_slug: repo, username: owner })).data.owner?.uuid}`;
 
     const response: DeepRequired<Bitbucket.Response<Bitbucket.Schema.PaginatedPullrequests>> = await axios.get(apiUrl);
 
-    const values = response.data.values.map(async (val) => {
-      return {
-        user: {
-          id: val.author.uuid,
-          login: val.author.nickname,
-          url: val.author.links.html.href,
-        },
-        url: val.links.html.href,
-        body: val.description,
-        createdAt: val.created_on,
-        updatedAt: val.updated_on,
-        closedAt:
-          val.state === BitbucketPullRequestState.closed || val.state === BitbucketPullRequestState.declined ? val.updated_on : null,
-        mergedAt: val.state === BitbucketPullRequestState.closed ? val.updated_on : null,
-        state: val.state,
-        id: val.id,
-        base: {
-          repo: {
-            url: val.destination.repository.links.html.href,
-            name: val.destination.repository.name,
-            id: val.destination.repository.uuid,
-            owner: {
-              login: owner,
-              id: ownerId,
-              url: ownerUrl,
+    const items = await Promise.all(
+      response.data.values.map(async (val) => {
+        const pullRequest = {
+          user: {
+            id: val.author.uuid,
+            login: val.author.nickname,
+            url: val.author.links.html.href,
+          },
+          url: val.links.html.href,
+          body: val.description,
+          createdAt: val.created_on,
+          updatedAt: val.updated_on,
+          closedAt:
+            val.state === BitbucketPullRequestState.closed || val.state === BitbucketPullRequestState.declined ? val.updated_on : null,
+          mergedAt: val.state === BitbucketPullRequestState.closed ? val.updated_on : null,
+          state: val.state,
+          id: val.id,
+          base: {
+            repo: {
+              url: val.destination.repository.links.html.href,
+              name: val.destination.repository.name,
+              id: val.destination.repository.uuid,
+              owner: {
+                login: owner,
+                id: ownerId,
+                url: ownerUrl,
+              },
             },
           },
-        },
-      };
-    });
+        };
+        // Get number of changes, additions and deletions in PullRequest if the withDiffStat is true
+        if (options?.withDiffStat) {
+          const lines = await this.getPullsDiffStat(owner, repo, `${val.id}`);
+          return { ...pullRequest, lines };
+        }
+        return pullRequest;
+      }),
+    );
 
     const pagination = this.getPagination(response.data);
-
-    const items = await Promise.all(values);
 
     return { items, ...pagination };
   }
 
-  async getPullRequest(owner: string, repo: string, prNumber: number): Promise<PullRequest> {
+  async getPullRequest(owner: string, repo: string, prNumber: number, withDiffStat?: boolean): Promise<PullRequest> {
     const params = {
       pull_request_id: prNumber,
       repo_slug: repo,
@@ -149,8 +156,7 @@ export class BitbucketService implements IVCSService {
 
     const response = <DeepRequired<Bitbucket.Response<Bitbucket.Schema.Pullrequest>>>await this.client.pullrequests.get(params);
     response.data;
-
-    return {
+    const pullRequest = {
       user: {
         id: response.data.author.uuid,
         login: response.data.author.nickname,
@@ -180,6 +186,12 @@ export class BitbucketService implements IVCSService {
         },
       },
     };
+    // Get number of changes, additions and deletions in PullRequest if the withDiffStat is true
+    if (withDiffStat) {
+      const lines = await this.getPullsDiffStat(owner, repo, `${prNumber}`);
+      return { ...pullRequest, lines };
+    }
+    return pullRequest;
   }
 
   async getPullRequestFiles(owner: string, repo: string, prNumber: number): Promise<Paginated<PullFiles>> {
@@ -195,24 +207,27 @@ export class BitbucketService implements IVCSService {
 
     const response = <DeepRequired<Bitbucket.Response<BitbucketCommit>>>await this.client.pullrequests.listCommits(params);
 
-    const items = response.data.values.map((val) => ({
-      sha: val.hash,
-      commit: {
-        url: val.links.html.href,
-        message: val.message,
-        author: {
-          name: val.author.raw,
-          email: 'undefined',
-          date: val.date,
-        },
-        tree: {
-          sha: val.hash,
+    const items = response.data.values.map((val) => {
+      return {
+        sha: val.hash,
+        commit: {
           url: val.links.html.href,
+          message: val.message,
+          author: {
+            name: val.author.raw,
+            email: this.extractEmailFromString(val.author.raw) || '',
+            date: val.date,
+          },
+          tree: {
+            sha: val.hash,
+            url: val.links.html.href,
+          },
+          //TODO
+          verified: false,
         },
-        //TODO
-        verified: false,
-      },
-    }));
+      };
+    });
+
     const pagination = this.getPagination(response.data);
 
     return { items, ...pagination };
@@ -309,22 +324,25 @@ export class BitbucketService implements IVCSService {
       username: owner,
     };
     const response = <DeepRequired<Bitbucket.Response<BitbucketCommit>>>await this.client.repositories.listCommits(params);
-    const items = response.data.values.map((val) => ({
-      sha: val.hash,
-      url: val.links.html.href,
-      message: val.rendered.message.raw,
-      author: {
-        name: val.author.user.nickname,
-        email: this.extractEmailFromString(val.author.raw) || '',
-        date: val.date,
-      },
-      tree: {
-        sha: val.parents[0].hash,
-        url: val.parents[0].links.html.href,
-      },
-      // TODO
-      verified: false,
-    }));
+    const items = response.data.values.map((val) => {
+      return {
+        sha: val.hash,
+        url: val.links.html.href,
+        message: val.rendered.message.raw,
+        author: {
+          name: val.author.user.nickname,
+          email: this.extractEmailFromString(val.author.raw) || '',
+          date: val.date,
+        },
+        tree: {
+          sha: val.parents[0].hash,
+          url: val.parents[0].links.html.href,
+        },
+        // TODO
+        verified: false,
+      };
+    });
+
     const pagination = this.getPagination(response.data);
 
     return { items, ...pagination };
@@ -337,6 +355,7 @@ export class BitbucketService implements IVCSService {
       username: owner,
     };
     const response = <DeepRequired<Bitbucket.Response<Bitbucket.Schema.Commit>>>await this.client.commits.get(params);
+
     return {
       sha: response.data.hash,
       url: response.data.links.html.href,
@@ -365,6 +384,27 @@ export class BitbucketService implements IVCSService {
 
   async getRepoContent(owner: string, repo: string, path: string): Promise<File | Symlink | Directory | null> {
     throw new Error('Method not implemented yet.');
+  }
+
+  /**
+   * Add additions, deletions and changes of pull request when the getPullRequests() is called with withDiffStat = true
+   */
+  async getPullsDiffStat(owner: string, repo: string, prNumber: string) {
+    const diffStatData = (await this.client.pullrequests.getDiffStat({ repo_slug: repo, username: owner, pull_request_id: prNumber })).data;
+
+    let linesRemoved = 0,
+      linesAdded = 0;
+
+    diffStatData.values.forEach((val: { lines_removed: number; lines_added: number }) => {
+      linesRemoved += val.lines_removed;
+      linesAdded += val.lines_added;
+    });
+
+    return {
+      additions: linesAdded,
+      deletions: linesRemoved,
+      changes: linesAdded + linesRemoved,
+    };
   }
 
   private unwrap<T>(clientPromise: Promise<Bitbucket.Response<T>>) {

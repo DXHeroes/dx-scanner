@@ -290,13 +290,13 @@ describe('Git', () => {
 
   describe('#getPullRequestCount', () => {
     it('returns the number of both open and closed pull requests', async () => {
-      gitHubNock.getPulls(
-        [
+      gitHubNock.getPulls({
+        pulls: [
           { number: 1, state: 'open', title: '1', body: '1', head: 'head', base: 'base' },
           { number: 2, state: 'closed', title: '2', body: '2', head: 'head', base: 'base' },
         ],
-        'all',
-      );
+        queryState: 'all',
+      });
 
       const result = await git.getPullRequestCount();
       expect(result).toEqual(2);
