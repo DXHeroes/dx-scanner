@@ -29,6 +29,7 @@ import { sharedSubpath } from '../detectors/utils';
 import { LanguageContext } from '../contexts/language/LanguageContext';
 import { ProjectComponentContext } from '../contexts/projectComponent/ProjectComponentContext';
 import { PracticeContext } from '../contexts/practice/PracticeContext';
+import { ErrorFactory } from '../lib/errors/ErrorFactory';
 
 @injectable()
 export class Scanner {
@@ -86,8 +87,8 @@ export class Scanner {
   /**
    * Initialize Scanner configuration
    */
-  async init(): Promise<void> {
-    const filePath = `/.dxscannerrc`;
+  async init(scanPath: string): Promise<void> {
+    const filePath = `${scanPath}/.dxscannerrc`;
     cli.action.start(`Initializing configuration: ${filePath}.yaml`);
     // check if .dxscannerrc.yaml already exists
     const fileExists: boolean = await this.fileSystemService.exists(`${filePath}`);
@@ -96,7 +97,7 @@ export class Scanner {
     const jsonExists: boolean = await this.fileSystemService.exists(`${filePath}.json`);
 
     if (!yamlExists && !fileExists && !ymlExists && !jsonExists) {
-      await this.createConfiguration();
+      await this.createConfiguration(filePath);
     }
     cli.action.stop();
   }
@@ -308,7 +309,7 @@ export class Scanner {
     return relevantComponents;
   }
 
-  private async createConfiguration() {
+  private async createConfiguration(filePath: string) {
     let yamlInitContent = `# practices:`;
     // get Metadata and sort it alphabetically using id
     const sortedInitializedPractices = this.practices.sort((a, b) => a.getMetadata().id.localeCompare(b.getMetadata().id));
@@ -316,7 +317,11 @@ export class Scanner {
       const dataObject = practice.getMetadata();
       yamlInitContent += `\n#    ${dataObject.id}: ${dataObject.impact}`;
     }
-    await this.fileSystemService.createFile(`/.dxscannerrc.yaml`, yamlInitContent);
+    try {
+      await this.fileSystemService.createFile(`${filePath}.yaml`, yamlInitContent);
+    } catch (err) {
+      throw ErrorFactory.newInternalError(`Error during configuration file initialization: ${err.message}`);
+    }
   }
 }
 
