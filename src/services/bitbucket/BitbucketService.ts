@@ -22,7 +22,7 @@ import {
   PullRequestReview,
   Commit,
   PullRequestComment,
-  CreateUpdatePullRequestComment,
+  CreatedUpdatedPullRequestComment,
   Contributor,
   ContributorStats,
   Symlink,
@@ -424,7 +424,7 @@ export class BitbucketService implements IVCSService {
   /**
    * Add Comment to a Pull Request
    */
-  async createPullRequestComment(owner: string, repo: string, prNumber: number, body: string): Promise<CreateUpdatePullRequestComment> {
+  async createPullRequestComment(owner: string, repo: string, prNumber: number, body: string): Promise<CreatedUpdatedPullRequestComment> {
     this.authenticate();
     const response = <DeepRequired<Bitbucket.Response<Bitbucket.Schema.Comment>>>await this.client.pullrequests.createComment({
       pull_request_id: prNumber,
@@ -450,10 +450,10 @@ export class BitbucketService implements IVCSService {
   async updatePullRequestComment(
     owner: string,
     repo: string,
-    commentId: string,
+    commentId: number,
     body: string,
     pullRequestId: number,
-  ): Promise<CreateUpdatePullRequestComment> {
+  ): Promise<CreatedUpdatedPullRequestComment> {
     this.authenticate();
     const response = <DeepRequired<Bitbucket.Response<Bitbucket.Schema.Comment>>>await this.client.pullrequests.updateComment({
       pull_request_id: `${pullRequestId}`,
