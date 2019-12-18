@@ -27,16 +27,16 @@ describe('Scanner', () => {
   */
 
   describe('#init', () => {
-    it.skip('configuration can be initialized', async () => {
+    it('configuration can be initialized', async () => {
       containerCtx.container.rebind(FileSystemService).toConstantValue(containerCtx.virtualFileSystemService);
       const scanner = containerCtx.container.get(Scanner);
 
-      let exists = await containerCtx.virtualFileSystemService.exists('.dxscannerrc.yaml');
+      let exists = await containerCtx.virtualFileSystemService.exists('/.dxscannerrc.yaml');
       expect(exists).toEqual(false);
 
       await scanner.init('.');
 
-      exists = await containerCtx.virtualFileSystemService.exists('.dxscannerrc.yaml');
+      exists = await containerCtx.virtualFileSystemService.exists('/.dxscannerrc.yaml');
       expect(exists).toEqual(true);
     });
 
@@ -48,15 +48,15 @@ describe('Scanner', () => {
         '.dxscannerrc.json': '',
       });
 
-      let exists = await containerCtx.virtualFileSystemService.exists('.dxscannerrc.json');
+      let exists = await containerCtx.virtualFileSystemService.exists('/.dxscannerrc.json');
       expect(exists).toEqual(true);
 
-      exists = await containerCtx.virtualFileSystemService.exists('.dxscannerrc.yaml');
+      exists = await containerCtx.virtualFileSystemService.exists('/.dxscannerrc.yaml');
       expect(exists).toEqual(false);
 
       await scanner.init('.');
 
-      exists = await containerCtx.virtualFileSystemService.exists('.dxscannerrc.yaml');
+      exists = await containerCtx.virtualFileSystemService.exists('/.dxscannerrc.yaml');
       expect(exists).toEqual(false);
     });
   });

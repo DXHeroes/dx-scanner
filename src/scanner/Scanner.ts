@@ -318,7 +318,7 @@ export class Scanner {
       yamlInitContent += `\n#    ${dataObject.id}: ${dataObject.impact}`;
     }
     try {
-      await this.fileSystemService.createFile(`${filePath}.yaml`, yamlInitContent);
+      await this.fileSystemService.writeFile(`/${filePath}.yaml`, yamlInitContent);
     } catch (err) {
       throw ErrorFactory.newInternalError(`Error during configuration file initialization: ${err.message}`);
     }
