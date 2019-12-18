@@ -13,7 +13,8 @@ cache:
     - node_modules
 
 env:
-  - YARN_GPG=no # ref.: https://travis-ci.community/t/timeout-after-build-finished-and-succeeded/1336
+  matrix:
+  - YARN_GPG=no
 
 matrix:
   fast_finish: true

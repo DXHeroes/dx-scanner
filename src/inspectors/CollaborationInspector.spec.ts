@@ -26,9 +26,11 @@ describe('Collaboration Inspector', () => {
   });
 
   it('returns paginated pull requests', async () => {
-    new GitHubNock('1', 'octocat', 1296269, 'Hello-World').getPulls([
-      { number: 1347, state: 'open', title: 'new-feature', body: 'Please pull these awesome changes', head: 'new-topic', base: 'master' },
-    ]);
+    new GitHubNock('1', 'octocat', 1296269, 'Hello-World').getPulls({
+      pulls: [
+        { number: 1347, state: 'open', title: 'new-feature', body: 'Please pull these awesome changes', head: 'new-topic', base: 'master' },
+      ],
+    });
 
     const response = await inspector.getPullRequests('octocat', 'Hello-World');
     expect(response).toMatchObject(getPullsServiceResponse);

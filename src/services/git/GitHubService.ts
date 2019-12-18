@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/camelcase */
 import Octokit, {
   IssuesListForRepoResponseItem,
   PullsListResponseItem,
@@ -11,13 +12,12 @@ import { inspect, isArray } from 'util';
 import { ListGetterOptions } from '../../inspectors/common/ListGetterOptions';
 import { Paginated } from '../../inspectors/common/Paginated';
 import { PullRequestState } from '../../inspectors/ICollaborationInspector';
-import { ArgumentsProvider } from '../../inversify.config';
 import { delay } from '../../lib/delay';
 import { ErrorFactory } from '../../lib/errors';
 import { ICache } from '../../scanner/cache/ICache';
 import { InMemoryCache } from '../../scanner/cache/InMemoryCache';
 import { Types } from '../../types';
-import { IVCSService, VCSService } from './IVCSService';
+import { IVCSService, VCSServiceType } from './IVCSService';
 import {
   Commit,
   Contributor,
@@ -32,9 +32,12 @@ import {
   PullRequestReview,
   RepoContentType,
   Symlink,
+  PullRequestComment,
+  CreateUpdatePullRequestComment,
 } from './model';
 import { VCSServicesUtils } from './VCSServicesUtils';
 import qs from 'qs';
+import { ArgumentsProvider } from '../../scanner';
 const debug = Debug('cli:services:git:github-service');
 
 @injectable()
@@ -71,39 +74,55 @@ export class GitHubService implements IVCSService {
   async getPullRequests(
     owner: string,
     repo: string,
-    options?: ListGetterOptions<{ state?: PullRequestState }>,
+    options?: { withDiffStat?: boolean } & ListGetterOptions<{ state?: PullRequestState }>,
   ): Promise<Paginated<PullRequest>> {
     let url = 'GET /repos/:owner/:repo/pulls';
-    if (options !== undefined && options.filter !== undefined && options.filter.state !== undefined) {
-      const state = VCSServicesUtils.getPRState(options.filter.state, VCSService.github);
-      const stateForUri = qs.stringify({ state: state }, { addQueryPrefix: true });
-      url = `${url}${stateForUri}`;
-    }
+
+    const state = VCSServicesUtils.getPRState(options?.filter?.state, VCSServiceType.github);
+
+    url = url.concat(
+      `${qs.stringify(
+        // eslint-disable-next-line @typescript-eslint/camelcase
+        { state: state, page: options?.pagination?.page, per_page: options?.pagination?.perPage },
+        { addQueryPrefix: true, indices: false, arrayFormat: 'repeat' },
+      )}`,
+    );
+
     const response: PullsListResponseItem[] = await this.paginate(url, owner, repo);
 
-    const items = response.map((val) => ({
-      user: {
-        id: val.user.id.toString(),
-        login: val.user.login,
-        url: val.user.url,
-      },
-      url: val.url,
-      body: val.body,
-      createdAt: val.created_at,
-      updatedAt: val.updated_at,
-      closedAt: val.closed_at,
-      mergedAt: val.merged_at,
-      state: val.state,
-      id: val.id,
-      base: {
-        repo: {
-          url: val.base.repo.url,
-          name: val.base.repo.name,
-          id: val.base.repo.id.toString(),
-          owner: { url: val.base.repo.owner.url, id: val.base.repo.owner.id.toString(), login: val.base.repo.owner.login },
-        },
-      },
-    }));
+    const items = await Promise.all(
+      response.map(async (val) => {
+        const pullRequest = {
+          user: {
+            id: val.user.id.toString(),
+            login: val.user.login,
+            url: val.user.url,
+          },
+          url: val.url,
+          body: val.body,
+          createdAt: val.created_at,
+          updatedAt: val.updated_at,
+          closedAt: val.closed_at,
+          mergedAt: val.merged_at,
+          state: val.state,
+          id: val.id,
+          base: {
+            repo: {
+              url: val.base.repo.url,
+              name: val.base.repo.name,
+              id: val.base.repo.id.toString(),
+              owner: { url: val.base.repo.owner.url, id: val.base.repo.owner.id.toString(), login: val.base.repo.owner.login },
+            },
+          },
+        };
+        // Get number of changes, additions and deletions in PullRequest if the withDiffStat is true
+        if (options?.withDiffStat) {
+          const lines = await this.getPullsDiffStat(owner, repo, `${val.id}`);
+          return { ...pullRequest, lines };
+        }
+        return pullRequest;
+      }),
+    );
     const pagination = this.getPagination(response.length);
 
     return { items, ...pagination };
@@ -112,10 +131,10 @@ export class GitHubService implements IVCSService {
   /**
    * Get a single pull request.
    */
-  async getPullRequest(owner: string, repo: string, prNumber: number): Promise<PullRequest> {
+  async getPullRequest(owner: string, repo: string, prNumber: number, withDiffStat?: boolean): Promise<PullRequest> {
     // eslint-disable-next-line @typescript-eslint/camelcase
     const response = await this.unwrap(this.client.pulls.get({ owner, repo, pull_number: prNumber }));
-    return {
+    const pullRequest = {
       user: {
         id: response.data.user.id.toString(),
         login: response.data.user.login,
@@ -142,6 +161,12 @@ export class GitHubService implements IVCSService {
         },
       },
     };
+    // Get number of changes, additions and deletions in PullRequest if the withDiffStat is true
+    if (withDiffStat) {
+      const lines = await this.getPullsDiffStat(owner, repo, `${prNumber}`);
+      return { ...pullRequest, lines };
+    }
+    return pullRequest;
   }
 
   /**
@@ -401,6 +426,9 @@ export class GitHubService implements IVCSService {
     };
   }
 
+  /**
+   * Get All Comments for an Issue
+   */
   async getIssueComments(owner: string, repo: string, issueNumber: number): Promise<Paginated<IssueComment>> {
     const response = await this.paginate('GET /repos/:owner/:repo/issues/:issue_number/comments', owner, repo, undefined, issueNumber);
 
@@ -468,6 +496,90 @@ export class GitHubService implements IVCSService {
 
     const pagination = this.getPagination(response.length);
     return { items, ...pagination };
+  }
+
+  /**
+   * List Comments for a Pull Request
+   */
+  async getPullRequestComments(owner: string, repo: string, prNumber: number): Promise<Paginated<PullRequestComment>> {
+    const response: Octokit.PullsListCommentsResponse = await this.paginate(
+      'GET /repos/:owner/:repo/pulls/:pull_number/comments',
+      owner,
+      repo,
+      prNumber,
+    );
+
+    const items = response.map((comment) => ({
+      user: { id: `${comment.user.id}`, login: comment.user.login, url: comment.user.url },
+      id: comment.id,
+      url: comment.url,
+      body: comment.body,
+      createdAt: comment.created_at,
+      updatedAt: comment.updated_at,
+      authorAssociation: comment.author_association,
+    }));
+
+    const pagination = this.getPagination(response.length);
+    return { items, ...pagination };
+  }
+
+  /**
+   * Add Comment to a Pull Request
+   */
+  async createPullRequestComment(owner: string, repo: string, prNumber: number, body: string): Promise<CreateUpdatePullRequestComment> {
+    const response: Octokit.Response<Octokit.IssuesCreateCommentResponse> = await this.client.issues.createComment({
+      owner,
+      repo,
+      issue_number: prNumber,
+      body,
+    });
+
+    const comment = response.data;
+    return {
+      user: { id: `${comment.user.id}`, login: comment.user.login, url: comment.user.url },
+      id: comment.id,
+      url: comment.url,
+      body: comment.body,
+      createdAt: comment.created_at,
+      updatedAt: comment.updated_at,
+    };
+  }
+
+  /**
+   * Update Comment on a Pull Request
+   */
+  async updatePullRequestComment(owner: string, repo: string, commentId: string, body: string): Promise<CreateUpdatePullRequestComment> {
+    const response: Octokit.Response<Octokit.IssuesUpdateCommentResponse> = await this.client.issues.updateComment({
+      owner,
+      repo,
+      comment_id: Number(commentId),
+      body,
+    });
+
+    const comment = response.data;
+    return {
+      user: { id: `${comment.user.id}`, login: comment.user.login, url: comment.user.url },
+      id: comment.id,
+      url: comment.url,
+      body: comment.body,
+      createdAt: comment.created_at,
+      updatedAt: comment.updated_at,
+    }
+  }
+
+  /**
+   * Add additions, deletions and changes of pull request when the getPullRequests() is called with withDiffStat = true
+   */
+  async getPullsDiffStat(owner: string, repo: string, prNumber: string) {
+    // eslint-disable-next-line @typescript-eslint/camelcase
+    const response = await this.unwrap(this.client.pulls.get({ owner, repo, pull_number: Number(prNumber) }));
+
+    return {
+      additions: response.data.additions,
+      deletions: response.data.deletions,
+      changes: response.data.additions + response.data.deletions,
+
+    };
   }
 
   /**

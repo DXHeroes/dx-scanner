@@ -1,13 +1,35 @@
 import { ListGetterOptions } from '../../inspectors/common/ListGetterOptions';
 import { Paginated } from '../../inspectors/common/Paginated';
 import { PullRequestState } from '../../inspectors/ICollaborationInspector';
-import { Commit, Contributor, ContributorStats, Directory, File, Issue, PullFiles, PullRequest, PullRequestReview, Symlink } from './model';
+import {
+  Commit,
+  Contributor,
+  ContributorStats,
+  Directory,
+  File,
+  Issue,
+  PullFiles,
+  PullRequest,
+  PullRequestReview,
+  Symlink,
+  CreateUpdatePullRequestComment,
+  PullRequestComment,
+} from './model';
 
 export interface IVCSService {
   getPullRequests(owner: string, repo: string, options?: ListGetterOptions<{ state?: PullRequestState }>): Promise<Paginated<PullRequest>>;
+  getPullRequest(owner: string, repo: string, prNumber: number): Promise<PullRequest>;
+  getPullRequestComments(owner: string, repo: string, prNumber: number): Promise<Paginated<PullRequestComment>>;
+  createPullRequestComment(owner: string, repo: string, prNumber: number, body: string): Promise<CreateUpdatePullRequestComment>;
+  updatePullRequestComment(
+    owner: string,
+    repo: string,
+    commentId: string,
+    body: string,
+    pullRequestId?: number,
+  ): Promise<CreateUpdatePullRequestComment>;
   getPullRequestReviews(owner: string, repo: string, prNumber: number): Promise<Paginated<PullRequestReview>>;
   getPullRequestFiles(owner: string, repo: string, prNumber: number): Promise<Paginated<PullFiles>>;
-  getPullRequest(owner: string, repo: string, prNumber: number): Promise<PullRequest>;
   getRepoCommits(owner: string, repo: string, sha?: string): Promise<Paginated<Commit>>;
   getCommit(owner: string, repo: string, commitSha: string): Promise<Commit>;
   getContributors(owner: string, repo: string): Promise<Paginated<Contributor>>;
@@ -17,7 +39,7 @@ export interface IVCSService {
   getRepoContent(owner: string, repo: string, path: string): Promise<File | Symlink | Directory | null>;
 }
 
-export enum VCSService {
+export enum VCSServiceType {
   github = 'GitHub',
   bitbucket = 'Bitbucket',
 }

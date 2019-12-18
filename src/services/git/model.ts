@@ -20,6 +20,7 @@ export interface PullRequest {
   mergedAt: string | null;
   state: string;
   base: { repo: Repo };
+  lines?: Lines;
 }
 
 export interface PullRequestReview {
@@ -107,6 +108,19 @@ export interface IssueComment {
   authorAssociation: string | undefined;
 }
 
+export type PullRequestComment = CreateUpdatePullRequestComment & {
+  authorAssociation: string | undefined;
+};
+
+export type CreateUpdatePullRequestComment = {
+  user: UserInfo;
+  id: number;
+  url: string;
+  body: string | undefined;
+  createdAt: string;
+  updatedAt: string | undefined;
+};
+
 export interface PullFiles {
   sha: string;
   fileName: string;
@@ -119,6 +133,12 @@ export interface PullFiles {
 export interface PullCommits {
   sha: string;
   commit: Commit;
+}
+
+export interface Lines {
+  additions: number;
+  deletions: number;
+  changes: number;
 }
 
 interface Author {

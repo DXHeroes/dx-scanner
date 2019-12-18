@@ -27,10 +27,12 @@ describe('DoesPullRequests', () => {
 
   it('return practicing if there is at least one PR which is newer than last commit in master minus 30 days', async () => {
     containerCtx.practiceContext.projectComponent.repositoryPath = 'https://github.com/octocat/Hello-World';
-    new GitHubNock('1', 'octocat', 1296269, 'Hello-World').getPulls(
-      [{ number: 1347, state: 'open', title: 'new-feature', body: 'Please pull these awesome changes', head: 'new-topic', base: 'master' }],
-      PullRequestState.all,
-    );
+    new GitHubNock('1', 'octocat', 1296269, 'Hello-World').getPulls({
+      pulls: [
+        { number: 1347, state: 'open', title: 'new-feature', body: 'Please pull these awesome changes', head: 'new-topic', base: 'master' },
+      ],
+      queryState: PullRequestState.all,
+    });
     new GitHubNock('1', 'octocat', 1, 'Hello-World').getCommits().reply(200, getRepoCommitsResponse);
 
     const evaluated = await practice.evaluate(containerCtx.practiceContext);
@@ -39,7 +41,7 @@ describe('DoesPullRequests', () => {
 
   it('return notPracticing if there is no PR which is newer than last commit in master minus 30 days', async () => {
     containerCtx.practiceContext.projectComponent.repositoryPath = 'https://github.com/octocat/Hello-World';
-    new GitHubNock('1', 'octocat', 1296269, 'Hello-World').getPulls([], PullRequestState.all);
+    new GitHubNock('1', 'octocat', 1296269, 'Hello-World').getPulls({ pulls: [], queryState: PullRequestState.all });
     new GitHubNock('1', 'octocat', 1, 'Hello-World').getCommits().reply(200, getRepoCommitsResponse);
 
     const evaluated = await practice.evaluate(containerCtx.practiceContext);
@@ -48,8 +50,8 @@ describe('DoesPullRequests', () => {
 
   it('return notPracticing if there is PR older than 30 days than the last commit in master', async () => {
     containerCtx.practiceContext.projectComponent.repositoryPath = 'https://github.com/octocat/Hello-World';
-    new GitHubNock('1', 'octocat', 1296269, 'Hello-World').getPulls(
-      [
+    new GitHubNock('1', 'octocat', 1296269, 'Hello-World').getPulls({
+      pulls: [
         {
           number: 1348,
           state: 'opened',
@@ -61,8 +63,8 @@ describe('DoesPullRequests', () => {
           created_at: '2000-03-06T23:06:50Z',
         },
       ],
-      PullRequestState.all,
-    );
+      queryState: PullRequestState.all,
+    });
     new GitHubNock('1', 'octocat', 1, 'Hello-World').getCommits().reply(200, getRepoCommitsResponse);
 
     const evaluated = await practice.evaluate(containerCtx.practiceContext);

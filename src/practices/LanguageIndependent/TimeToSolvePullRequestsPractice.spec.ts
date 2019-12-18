@@ -35,7 +35,7 @@ describe('TimeToSolvePullRequestsPractice', () => {
 
   it('returns practicing if there are open pullrequests updated or created less than 30 days from now', async () => {
     bitbucketNock.getOwnerId();
-    bitbucketNock.getApiResponse('pullrequests', undefined, undefined, BitbucketPullRequestState.open);
+    bitbucketNock.getApiResponse({ resource: 'pullrequests', state: BitbucketPullRequestState.open });
     const args = { states: BitbucketPullRequestState.open, updatedAt: Date.now() - moment.duration(10, 'days').asMilliseconds() };
     mockCollaborationInspector.getPullRequests = async () => {
       return bitbucketNock.mockBitbucketPullRequestsResponse(args);
@@ -51,7 +51,7 @@ describe('TimeToSolvePullRequestsPractice', () => {
 
   it('returns practicing if there are open pullrequests updated or created more than 30 days from now', async () => {
     bitbucketNock.getOwnerId();
-    bitbucketNock.getApiResponse('pullrequests', undefined, undefined, BitbucketPullRequestState.open);
+    bitbucketNock.getApiResponse({ resource: 'pullrequests', state: BitbucketPullRequestState.open });
     const args = { states: BitbucketPullRequestState.open, updatedAt: Date.now() - moment.duration(100, 'days').asMilliseconds() };
     mockCollaborationInspector.getPullRequests = async () => {
       return bitbucketNock.mockBitbucketPullRequestsResponse(args);
