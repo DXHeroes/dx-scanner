@@ -4,9 +4,8 @@ import { SemverLevel } from '../../inspectors/package/PackageInspectorBase';
 import { PracticeEvaluationResult, PracticeImpact, ProgrammingLanguage } from '../../model';
 import { DxPractice } from '../DxPracticeDecorator';
 import * as axios from 'axios';
-import { DependenciesVersionEvaluationUtils } from '../utils/DependenciesVersionEvaluationUtils';
+import { DependenciesVersionEvaluationUtils, PkgToUpdate } from '../utils/DependenciesVersionEvaluationUtils';
 import { PracticeBase } from '../PracticeBase';
-import { PkgToUpdate } from '../JavaScript/DependenciesVersionMajorLevel'; // @Todo: refactor this type to utils?
 import { ReportDetailType } from '../../reporters/ReporterData';
 import qs from 'qs';
 

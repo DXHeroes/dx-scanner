@@ -1,5 +1,4 @@
 import { SemverLevel, Package, PackageInspectorBase } from '../../inspectors';
-import { PkgToUpdate } from '../JavaScript/DependenciesVersionMajorLevel';
 
 export class DependenciesVersionEvaluationUtils {
   static packagesToBeUpdated(pkgsWithNewVersion: { [key: string]: string }, semverLevel: SemverLevel, pkgs: Package[]) {
@@ -21,3 +20,5 @@ export class DependenciesVersionEvaluationUtils {
     return pkgsToUpdate;
   }
 }
+
+export type PkgToUpdate = { name: string; newVersion: string; currentVersion: string };

@@ -3,6 +3,7 @@ import { PracticeEvaluationResult, PracticeImpact, ProgrammingLanguage } from '.
 import { DxPractice } from '../DxPracticeDecorator';
 import { IPractice } from '../IPractice';
 import { DependenciesVersionMajorLevelPractice } from './DependenciesVersionMajorLevel';
+import { DependenciesVersionEvaluationUtils } from '../utils/DependenciesVersionEvaluationUtils';
 import { SemverLevel } from '../../inspectors/package/PackageInspectorBase';
 import { flatten } from 'lodash';
 
@@ -30,8 +31,8 @@ export class DependenciesVersionMinorPatchLevelPractice extends DependenciesVers
 
     const result = await this.runNcu(pkgs);
 
-    const patchLevelPkgs = this.packagesToBeUpdated(result, SemverLevel.patch, pkgs);
-    const minorLevelPkgs = this.packagesToBeUpdated(result, SemverLevel.minor, pkgs);
+    const patchLevelPkgs = DependenciesVersionEvaluationUtils.packagesToBeUpdated(result, SemverLevel.patch, pkgs);
+    const minorLevelPkgs = DependenciesVersionEvaluationUtils.packagesToBeUpdated(result, SemverLevel.minor, pkgs);
     this.setData(flatten([patchLevelPkgs, minorLevelPkgs]));
 
     if (patchLevelPkgs.length > 0 || minorLevelPkgs.length > 0) {
