@@ -185,7 +185,9 @@ export class Scanner {
    * Detect applicable practices for each component
    */
   private async detectPractices(componentsWithContext: ProjectComponentAndLangContext[]): Promise<PracticeWithContext[]> {
-    const practicesWithComponentContext = await Promise.all(componentsWithContext.map((cwctx) => this.detectPracticesForComponent(cwctx)));
+    const practicesWithComponentContext = await Promise.all(
+      componentsWithContext.map(async (cwctx) => await this.detectPracticesForComponent(cwctx)),
+    );
     const practicesWithContext = _.flatten(practicesWithComponentContext);
 
     this.d('Applicable practices:');
@@ -211,15 +213,13 @@ export class Scanner {
       };
     });
 
-    this.d(`RepLen: ${this.reporters.length}`);
-    console.log(`RepLenn: ${this.reporters.length}`);
-
-    await Promise.all(this.reporters.map((r) => r.report(relevantPractices)));
+    this.d(`Reporters length: ${this.reporters.length}`);
+    await Promise.all(this.reporters.map(async (r) => await r.report(relevantPractices)));
 
     if (this.allDetectedComponents!.length > 1 && !this.argumentsProvider.recursive) {
       cli.info(
         `Found more than 1 component. To scan all ${
-        this.allDetectedComponents!.length
+          this.allDetectedComponents!.length
         } components run the scanner with an argument --recursive\n`,
       );
     }

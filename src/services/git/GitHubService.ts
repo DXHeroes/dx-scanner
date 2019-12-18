@@ -33,7 +33,7 @@ import {
   RepoContentType,
   Symlink,
   PullRequestComment,
-  CreateUpdatePullRequestComment,
+  CreatedUpdatedPullRequestComment,
 } from './model';
 import { VCSServicesUtils } from './VCSServicesUtils';
 import qs from 'qs';
@@ -502,10 +502,11 @@ export class GitHubService implements IVCSService {
    * List Comments for a Pull Request
    */
   async getPullRequestComments(owner: string, repo: string, prNumber: number): Promise<Paginated<PullRequestComment>> {
-    const response: Octokit.PullsListCommentsResponse = await this.paginate(
-      'GET /repos/:owner/:repo/pulls/:pull_number/comments',
+    const response: Octokit.IssuesListCommentsResponse = await this.paginate(
+      'GET /repos/:owner/:repo/issues/:issue_number/comments',
       owner,
       repo,
+      prNumber,
       prNumber,
     );
 
@@ -516,7 +517,7 @@ export class GitHubService implements IVCSService {
       body: comment.body,
       createdAt: comment.created_at,
       updatedAt: comment.updated_at,
-      authorAssociation: comment.author_association,
+      authorAssociation: comment.user.login,
     }));
 
     const pagination = this.getPagination(response.length);
@@ -526,7 +527,7 @@ export class GitHubService implements IVCSService {
   /**
    * Add Comment to a Pull Request
    */
-  async createPullRequestComment(owner: string, repo: string, prNumber: number, body: string): Promise<CreateUpdatePullRequestComment> {
+  async createPullRequestComment(owner: string, repo: string, prNumber: number, body: string): Promise<CreatedUpdatedPullRequestComment> {
     const response: Octokit.Response<Octokit.IssuesCreateCommentResponse> = await this.client.issues.createComment({
       owner,
       repo,
@@ -548,11 +549,11 @@ export class GitHubService implements IVCSService {
   /**
    * Update Comment on a Pull Request
    */
-  async updatePullRequestComment(owner: string, repo: string, commentId: string, body: string): Promise<CreateUpdatePullRequestComment> {
+  async updatePullRequestComment(owner: string, repo: string, commentId: number, body: string): Promise<CreatedUpdatedPullRequestComment> {
     const response: Octokit.Response<Octokit.IssuesUpdateCommentResponse> = await this.client.issues.updateComment({
       owner,
       repo,
-      comment_id: Number(commentId),
+      comment_id: commentId,
       body,
     });
 
@@ -564,7 +565,7 @@ export class GitHubService implements IVCSService {
       body: comment.body,
       createdAt: comment.created_at,
       updatedAt: comment.updated_at,
-    }
+    };
   }
 
   /**
@@ -578,7 +579,6 @@ export class GitHubService implements IVCSService {
       additions: response.data.additions,
       deletions: response.data.deletions,
       changes: response.data.additions + response.data.deletions,
-
     };
   }
 

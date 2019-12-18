@@ -108,11 +108,11 @@ export interface IssueComment {
   authorAssociation: string | undefined;
 }
 
-export type PullRequestComment = CreateUpdatePullRequestComment & {
+export type PullRequestComment = CreatedUpdatedPullRequestComment & {
   authorAssociation: string | undefined;
 };
 
-export type CreateUpdatePullRequestComment = {
+export type CreatedUpdatedPullRequestComment = {
   user: UserInfo;
   id: number;
   url: string;

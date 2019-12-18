@@ -5,7 +5,7 @@ import { PracticeWithContextForReporter } from './IReporter';
 import { DXScoreOverallResult, DXScoreResult } from './model';
 
 export class ReporterUtils {
-  static getComponentsWithPractices(practicesAndComponents: PracticeWithContextForReporter[]) {
+  static getComponentsWithPractices(practicesAndComponents: PracticeWithContextForReporter[]): ComponentWithPractices[] {
     const result: {
       component: ProjectComponent;
       practicesAndComponents: PracticeWithContextForReporter[];
@@ -118,3 +118,8 @@ export class ReporterUtils {
     }
   }
 }
+
+export type ComponentWithPractices = {
+  component: ProjectComponent;
+  practicesAndComponents: PracticeWithContextForReporter[];
+};
