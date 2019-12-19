@@ -14,8 +14,8 @@ export interface Paginated<T> {
  * Used pagination params
  */
 export type PaginationParams = {
-  page: number;
-  perPage: number;
+  page?: number;
+  perPage?: number;
 };
 
 /**
@@ -26,7 +26,9 @@ export type PaginationParams = {
  * @returns The page of the specified items.
  */
 export const paginate = <T>(items: T[], params?: PaginationParams): Paginated<T> => {
-  const { page, perPage } = params !== undefined ? params : { page: 0, perPage: items.length };
+  const page = params?.page ? params?.page : 0;
+  const perPage = params?.perPage ? params?.perPage : items.length;
+
   const totalCount = items.length;
   const start = page * perPage;
   const end = start + perPage;
