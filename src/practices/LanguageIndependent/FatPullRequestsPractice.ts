@@ -34,7 +34,7 @@ export class FatPullRequestsPractice implements IPractice {
     });
 
     const descendingSortedPullRequests = pullRequests.items.sort(
-      (A, B) => new Date(B.updatedAt || B.createdAt).getTime() - new Date(A.updatedAt || A.createdAt).getTime(),
+      (a, b) => new Date(b.updatedAt || b.createdAt).getTime() - new Date(a.updatedAt || a.createdAt).getTime(),
     );
     const daysInMilliseconds = moment.duration(30, 'days').asMilliseconds();
     const newestPrDate = new Date(descendingSortedPullRequests[0].updatedAt || descendingSortedPullRequests[0].createdAt).getTime();
