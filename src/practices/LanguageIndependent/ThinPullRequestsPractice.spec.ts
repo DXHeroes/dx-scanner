@@ -6,7 +6,7 @@ import { PracticeEvaluationResult } from '../../model';
 import { BitbucketPullRequestState, BitbucketService } from '../../services';
 import { BitbucketNock } from '../../test/helpers/bitbucketNock';
 import { Types } from '../../types';
-import { ThinPullRequestsPractice } from './FatPullRequestsPractice';
+import { ThinPullRequestsPractice } from './ThinPullRequestsPractice';
 
 describe('ThinPullRequestsPractice', () => {
   let practice: ThinPullRequestsPractice;
