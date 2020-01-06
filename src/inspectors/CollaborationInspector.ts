@@ -3,6 +3,9 @@ import { Types } from '../types';
 import { ListGetterOptions } from './common/ListGetterOptions';
 import { ICollaborationInspector, PullRequestState } from './ICollaborationInspector';
 import { VCSService } from '../model';
+import { PullRequest } from '../services/git/model';
+import { Paginated } from './common/Paginated';
+import _ from 'lodash';
 
 @injectable()
 export class CollaborationInspector implements ICollaborationInspector {
@@ -15,9 +18,13 @@ export class CollaborationInspector implements ICollaborationInspector {
   async getPullRequests(
     owner: string,
     repo: string,
-    options?: { withDiffStat?: boolean } & ListGetterOptions<{ state?: PullRequestState }>,
+    options?: { withDiffStat?: boolean; maxNumberOfPullRequests?: number } & ListGetterOptions<{ state?: PullRequestState }>,
   ) {
-    return this.service.getPullRequests(owner, repo, options);
+    if (options?.maxNumberOfPullRequests !== undefined) {
+      return await this.getMaxNumberOfPullRequests(owner, repo, options);
+    }
+
+    return await this.service.getPullRequests(owner, repo, options);
   }
 
   async getPullRequest(owner: string, repo: string, prNumber: number, withDiffStat?: boolean) {
@@ -38,5 +45,38 @@ export class CollaborationInspector implements ICollaborationInspector {
 
   async getPullsDiffStat(owner: string, repo: string, prNumber: string) {
     return this.service.getPullsDiffStat(owner, repo, prNumber);
+  }
+
+  private async getMaxNumberOfPullRequests(
+    owner: string,
+    repo: string,
+    options: { withDiffStat?: boolean; maxNumberOfPullRequests?: number } & ListGetterOptions<{ state?: PullRequestState }>,
+  ): Promise<Paginated<PullRequest>> {
+    let items: PullRequest[] = [];
+    let hasNextPage = true;
+    let i = 1;
+
+    while (hasNextPage) {
+      const pullRequests = await this.service.getPullRequests(owner, repo, { ...options, ...{ pagination: { page: i } } });
+      //Add pull requstes to the existing array of PRs from another page
+      items = _.merge(items, pullRequests.items);
+
+      if (items.length >= <number>options?.maxNumberOfPullRequests) {
+        //Get maximum n newest pull requests
+        items = _.take(items, options.maxNumberOfPullRequests);
+        break;
+      }
+      hasNextPage = pullRequests.hasNextPage;
+      i++;
+    }
+
+    return {
+      hasNextPage: false,
+      hasPreviousPage: false,
+      items,
+      totalCount: items.length,
+      page: 1,
+      perPage: items.length,
+    };
   }
 }
