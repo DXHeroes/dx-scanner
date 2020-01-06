@@ -6,7 +6,7 @@ export interface ICollaborationInspector {
   getPullRequests(
     owner: string,
     repo: string,
-    options?: { withDiffStat?: boolean } & ListGetterOptions<{ state?: PullRequestState }>,
+    options?: { withDiffStat?: boolean; maxNumberOfPullRequests?: number } & ListGetterOptions<{ state?: PullRequestState }>,
   ): Promise<Paginated<PullRequest>>;
   getPullRequest(owner: string, repo: string, prNumber: number, withDiffStat?: boolean): Promise<PullRequest>;
   getPullCommits(owner: string, repo: string, prNumber: number): Promise<Paginated<PullCommits>>;

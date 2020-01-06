@@ -29,6 +29,7 @@ export class FatPullRequestsPractice implements IPractice {
 
     const pullRequests = await ctx.collaborationInspector.getPullRequests(ownerAndRepoName.owner, ownerAndRepoName.repoName, {
       withDiffStat: true,
+      maxNumberOfPullRequests: 100,
       filter: { state: PullRequestState.all },
     });
 
