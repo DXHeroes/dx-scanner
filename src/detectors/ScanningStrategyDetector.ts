@@ -44,7 +44,7 @@ export class ScanningStrategyDetector implements IDetector<string, ScanningStrat
       serviceType = remoteService.serviceType;
       remoteUrl = remoteService.remoteUrl;
 
-      if (remoteService.remoteUrl && this.argumentsProvider.auth) {
+      if (remoteService.remoteUrl) {
         accessType = await this.determineRemoteAccessType(remoteService);
       }
     } else {
@@ -92,7 +92,7 @@ export class ScanningStrategyDetector implements IDetector<string, ScanningStrat
       } catch (error) {
         this.detectorDebug(error.message);
         if (error.status === 401 || error.status === 404 || error.status === 403) {
-          throw ErrorFactory.newAuthorizationError('You passed bad credentials or non existing repo.');
+          return AccessType.unknown;
         }
         throw error;
       }
@@ -115,7 +115,7 @@ export class ScanningStrategyDetector implements IDetector<string, ScanningStrat
       } catch (error) {
         this.detectorDebug(error.message);
         if (error.code === 401 || error.code === 404 || error.code === 403) {
-          throw ErrorFactory.newAuthorizationError('You passed bad credentials or non existing repo.');
+          return AccessType.unknown;
         }
         throw error;
       }
@@ -172,6 +172,7 @@ export enum ServiceType {
 export enum AccessType {
   private = 'private',
   public = 'public',
+  unknown = 'unknown',
 }
 
 export interface RemoteService {

@@ -10,7 +10,7 @@ import { LanguageContext } from '../contexts/language/LanguageContext';
 import { PracticeContext } from '../contexts/practice/PracticeContext';
 import { ProjectComponentContext } from '../contexts/projectComponent/ProjectComponentContext';
 import { ScannerContext } from '../contexts/scanner/ScannerContext';
-import { ScanningStrategy, ScanningStrategyDetector, ServiceType } from '../detectors/ScanningStrategyDetector';
+import { ScanningStrategy, ScanningStrategyDetector, ServiceType, AccessType } from '../detectors/ScanningStrategyDetector';
 import { ArgumentsProvider } from '../inversify.config';
 import {
   LanguageAtPath,
@@ -59,6 +59,9 @@ export class Scanner {
 
   async scan(): Promise<ScanResult> {
     let scanStrategy = await this.scanStrategyDetector.detect();
+    if (scanStrategy.accessType === AccessType.unknown) {
+      return { shouldExitOnEnd: this.shouldExitOnEnd, needsAuth: true, serviceType: scanStrategy.serviceType };
+    }
     this.scanDebug(`Scan strategy: ${inspect(scanStrategy)}`);
     scanStrategy = await this.preprocessData(scanStrategy);
     this.scanDebug(`Scan strategy (after preprocessing): ${inspect(scanStrategy)}`);
@@ -302,4 +305,6 @@ export interface PracticeWithContext {
 
 export type ScanResult = {
   shouldExitOnEnd: boolean;
+  needsAuth?: boolean;
+  serviceType?: ServiceType;
 };
