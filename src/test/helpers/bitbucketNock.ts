@@ -79,7 +79,7 @@ export class BitbucketNock {
                 { page: options.pagination?.page, pagelen: options.pagination?.perPage },
                 { addQueryPrefix: true, indices: false },
               );
-              params = { page: options.pagination.page, pagelen: options.pagination.perPage };
+              params = _.merge(params, { page: options.pagination.page, pagelen: options.pagination.perPage });
 
               url = url.concat(`${paginationForUri}`);
               const pullRequest = new PullRequestMock(<BitbucketPullRequestState>options.state).pullRequest;
