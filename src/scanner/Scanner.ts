@@ -6,11 +6,6 @@ import path from 'path';
 import git from 'simple-git/promise';
 import url from 'url';
 import util, { inspect } from 'util';
-import { LanguageContext } from '../contexts/language/LanguageContext';
-import { PracticeContext } from '../contexts/practice/PracticeContext';
-import { ProjectComponentContext } from '../contexts/projectComponent/ProjectComponentContext';
-import { ScannerContext } from '../contexts/scanner/ScannerContext';
-import { ScanningStrategy, ScanningStrategyDetector, ServiceType, AccessType } from '../detectors/ScanningStrategyDetector';
 import { ArgumentsProvider } from '../inversify.config';
 import {
   LanguageAtPath,
@@ -26,7 +21,7 @@ import { ScannerContextFactory, Types } from '../types';
 import { ScannerUtils } from '../scanner/ScannerUtils';
 import _ from 'lodash';
 import { cli } from 'cli-ux';
-import { ScanningStrategyDetector, ScanningStrategy, ServiceType } from '../detectors';
+import { ScanningStrategyDetector, ScanningStrategy, ServiceType, AccessType } from '../detectors';
 import { IReporter } from '../reporters';
 import { FileSystemService } from '../services';
 import { ScannerContext } from '../contexts/scanner/ScannerContext';
