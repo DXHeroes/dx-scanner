@@ -1,4 +1,4 @@
-import { PracticeWithContextForReporter } from '../../src/reporters/IReporter';
+import { PracticeWithContextForReporter } from '../../reporters/IReporter';
 import {
   ProgrammingLanguage,
   ProjectComponentFramework,
@@ -6,8 +6,8 @@ import {
   ProjectComponentPlatform,
   PracticeImpact,
   PracticeEvaluationResult,
-} from '../../src/model';
-import { DeepPartial } from '../../src/lib/deepPartial';
+} from '../../model';
+import { DeepPartial } from '../../lib/deepPartial';
 import _ from 'lodash';
 import path from 'path';
 

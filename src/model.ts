@@ -1,3 +1,4 @@
+import { BitbucketService } from './services/bitbucket/BitbucketService';
 import { GitHubService } from './services/git/GitHubService';
 
 // New model starts here
@@ -70,25 +71,6 @@ export interface ScannerConfig {
 export interface Repository {
   url: string;
   authString?: string;
-}
-
-export interface Project {
-  components: DeprecatedProjectComponent[];
-}
-
-/**
- * @deprecated
- */
-export interface DeprecatedProjectComponent {
-  githubUrl?: string;
-  path: string;
-  git?: GitInfo;
-  language: ProgrammingLanguage;
-  type: ProjectComponentType;
-  platform: ProjectComponentPlatform;
-  framework: ProjectComponentFramework;
-  packageManagement?: PackageManagement;
-  testing: TestingInfo;
 }
 
 export interface PracticeMetadata {
@@ -202,4 +184,4 @@ export enum GitFLow {
   Git = 'Git',
 }
 
-export type ProjectIssueBrowserService = GitHubService;
+export type VCSService = GitHubService | BitbucketService;

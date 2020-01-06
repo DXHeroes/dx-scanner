@@ -2,8 +2,11 @@ import { blue, bold, Color, green, grey, italic, red, reset, underline, yellow, 
 import { injectable } from 'inversify';
 import { PracticeImpact, PracticeMetadata, PracticeEvaluationResult } from '../model';
 import { IReporter, PracticeWithContextForReporter } from './IReporter';
-import { sharedSubpath } from '../detectors/utils';
 import { ReporterUtils } from './ReporterUtils';
+import { PracticeDetail } from '../practices/IPractice';
+import { GitServiceUtils } from '../services/git/GitServiceUtils';
+import { ReportDetailType, ReporterData } from './ReporterData';
+import { assertNever } from '../lib/assertNever';
 
 @injectable()
 export class CLIReporter implements IReporter {
@@ -19,14 +22,9 @@ export class CLIReporter implements IReporter {
     lines.push(bold(blue('|                          |')));
 
     let repoName;
-    const componentsSharedSubpath = sharedSubpath(componentsWithPractices.map((c) => c.component.path));
 
     for (const cwp of componentsWithPractices) {
-      if (cwp.component.repositoryPath) {
-        repoName = ReporterUtils.getPathOrRepoUrl(cwp.component.repositoryPath, cwp.component.path.replace(componentsSharedSubpath, ''));
-      } else {
-        repoName = cwp.component.path;
-      }
+      repoName = GitServiceUtils.getRepoName(cwp.component.repositoryPath, cwp.component.path);
 
       lines.push(bold(blue('----------------------------')));
       lines.push('');
@@ -108,8 +106,13 @@ export class CLIReporter implements IReporter {
     for (const practiceWithContext of practices) {
       lines.push(this.linesForPractice(practiceWithContext.practice, color));
 
+      if (practiceWithContext.practice.data?.details) {
+        const linesWithDetail = practiceWithContext.practice.data.details.map((d) => this.renderDetail(d)).join(' ');
+        lines.push(reset(grey(linesWithDetail)));
+      }
+
       if (practiceWithContext.practice.impact !== practiceWithContext.overridenImpact) {
-        lines.push(bold(this.changedImpact(practiceWithContext, (color = grey))));
+        lines.push(reset(bold(this.lineForChangedImpact(practiceWithContext, grey))));
       }
     }
 
@@ -127,16 +130,24 @@ export class CLIReporter implements IReporter {
     return practiceLineTexts.join(' ');
   }
 
-  private changedImpact(practiceWithContext: PracticeWithContextForReporter, color: Color) {
-    const practiceLineTexts = [
-      reset(
-        color(
-          `  You changed impact of ${bold(practiceWithContext.practice.name)} from ${underline(
-            practiceWithContext.practice.impact,
-          )} to ${underline(practiceWithContext.overridenImpact)}.`,
-        ),
+  private lineForChangedImpact(practiceWithContext: PracticeWithContextForReporter, color: Color) {
+    return reset(
+      color(
+        `  Impact changed from ${underline(practiceWithContext.practice.impact)} to ${underline(practiceWithContext.overridenImpact)}.`,
       ),
-    ];
-    return practiceLineTexts.join(' ');
+    );
+  }
+
+  private renderDetail(detail: PracticeDetail) {
+    switch (detail.type) {
+      case ReportDetailType.table:
+        return ReporterData.table(detail.headers, detail.data);
+
+      case ReportDetailType.text:
+        return detail.text;
+
+      default:
+        return assertNever(detail);
+    }
   }
 }

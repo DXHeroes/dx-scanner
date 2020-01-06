@@ -25,11 +25,17 @@ import {
   Directory,
   File,
 } from '../git/model';
-import { ICVSService } from '../git/ICVSService';
+import { BitbucketIssueState } from '../../inspectors/IIssueTrackingInspector';
+import { VCSService, IVCSService, BitbucketPullRequestState } from '../git/IVCSService';
+import { ListGetterOptions } from '../../inspectors/common/ListGetterOptions';
+import { PullRequestState } from '../../inspectors/ICollaborationInspector';
+import { VCSServicesUtils } from '../git/VCSServicesUtils';
+import axios from 'axios';
+import qs from 'qs';
 const debug = Debug('cli:services:git:bitbucket-service');
 
 @injectable()
-export class BitbucketService implements ICVSService {
+export class BitbucketService implements IVCSService {
   private readonly client: Bitbucket;
   private cache: ICache;
   private callCount = 0;
@@ -45,7 +51,7 @@ export class BitbucketService implements ICVSService {
 
     let username: string;
     let password: string | undefined;
-    if (argumentsProvider.auth?.includes(':')) {
+    if (argumentsProvider.auth && argumentsProvider.auth.includes(':')) {
       username = argumentsProvider.auth.split(':')[0];
       password = argumentsProvider.auth.split(':')[1];
     } else {
@@ -73,65 +79,84 @@ export class BitbucketService implements ICVSService {
     return this.unwrap(this.client.repositories.get(params));
   }
 
-  async getPullRequests(owner: string, repo: string): Promise<Paginated<PullRequest>> {
-    const params: Bitbucket.Params.PullrequestsList = {
-      repo_slug: repo,
-      username: owner,
-    };
+  async getPullRequests(
+    owner: string,
+    repo: string,
+    options?: { withDiffStat?: boolean } & ListGetterOptions<{ state?: PullRequestState }>,
+  ): Promise<Paginated<PullRequest>> {
+    let apiUrl = `https://api.bitbucket.org/2.0/repositories/${owner}/${repo}/pullrequests`;
 
-    const response = <DeepRequired<Bitbucket.Response<Bitbucket.Schema.PaginatedPullrequests>>>await this.client.pullrequests.list(params);
-    const url = 'www.bitbucket.org';
+    const state = VCSServicesUtils.getPRState(options?.filter?.state, VCSService.bitbucket);
 
-    const values = response.data.values.map(async (val) => ({
-      user: {
-        id: val.author.uuid,
-        login: val.author.nickname,
-        url: val.author.links.html.href,
-      },
-      url: val.links.html.href,
-      body: val.description,
-      createdAt: val.created_on,
-      updatedAt: val.updated_on,
-      //TODO
-      closedAt: null,
-      //TODO
-      mergedAt: null,
-      state: val.state,
-      id: val.id,
-      base: {
-        repo: {
-          url: val.destination.repository.links.html.href,
-          name: val.destination.repository.name,
-          id: val.destination.repository.uuid,
-          owner: {
-            login: <string>val.destination.repository.full_name.split('/').shift(),
-            id: <string>(await this.client.users.get({ username: `${val.destination.repository.full_name.split('/').shift()}` })).data.uuid
-              ? <string>(await this.client.users.get({ username: `${val.destination.repository.full_name.split('/').shift()}` })).data.uuid
-              : 'undefined',
-            url: url.concat(`/${val.destination.repository.full_name.split('/').shift()}`),
+    apiUrl = apiUrl.concat(
+      `${qs.stringify(
+        { state: state, page: options?.pagination?.page, pagelen: options?.pagination?.perPage },
+        { addQueryPrefix: true, indices: false, arrayFormat: 'repeat' },
+      )}`,
+    );
+
+    const ownerUrl = `www.bitbucket.org/${owner}`;
+    const ownerId = `${(await this.client.repositories.get({ repo_slug: repo, username: owner })).data.owner?.uuid}`;
+
+    const response: DeepRequired<Bitbucket.Response<Bitbucket.Schema.PaginatedPullrequests>> = await axios.get(apiUrl);
+
+    const items = await Promise.all(
+      response.data.values.map(async (val) => {
+        const pullRequest = {
+          user: {
+            id: val.author.uuid,
+            login: val.author.nickname,
+            url: val.author.links.html.href,
           },
-        },
-      },
-    }));
+          url: val.links.html.href,
+          body: val.description,
+          createdAt: val.created_on,
+          updatedAt: val.updated_on,
+          closedAt:
+            val.state === BitbucketPullRequestState.closed || val.state === BitbucketPullRequestState.declined ? val.updated_on : null,
+          mergedAt: val.state === BitbucketPullRequestState.closed ? val.updated_on : null,
+          state: val.state,
+          id: val.id,
+          base: {
+            repo: {
+              url: val.destination.repository.links.html.href,
+              name: val.destination.repository.name,
+              id: val.destination.repository.uuid,
+              owner: {
+                login: owner,
+                id: ownerId,
+                url: ownerUrl,
+              },
+            },
+          },
+        };
+        // Get number of changes, additions and deletions in PullRequest if the withDiffStat is true
+        if (options?.withDiffStat) {
+          const lines = await this.getPullsDiffStat(owner, repo, `${val.id}`);
+          return { ...pullRequest, lines };
+        }
+        return pullRequest;
+      }),
+    );
 
     const pagination = this.getPagination(response.data);
-
-    const items = await Promise.all(values);
 
     return { items, ...pagination };
   }
 
-  async getPullRequest(owner: string, repo: string, prNumber: number): Promise<PullRequest> {
+  async getPullRequest(owner: string, repo: string, prNumber: number, withDiffStat?: boolean): Promise<PullRequest> {
     const params = {
       pull_request_id: prNumber,
       repo_slug: repo,
       username: owner,
     };
 
+    const ownerUrl = `www.bitbucket.org/${owner}`;
+    const ownerId = `${(await this.client.repositories.get({ repo_slug: repo, username: owner })).data.owner?.uuid}`;
+
     const response = <DeepRequired<Bitbucket.Response<Bitbucket.Schema.Pullrequest>>>await this.client.pullrequests.get(params);
     response.data;
-
-    return {
+    const pullRequest = {
       user: {
         id: response.data.author.uuid,
         login: response.data.author.nickname,
@@ -141,10 +166,11 @@ export class BitbucketService implements ICVSService {
       body: response.data.summary.raw,
       createdAt: response.data.created_on,
       updatedAt: response.data.updated_on,
-      //TODO
-      closedAt: null,
-      //TODO
-      mergedAt: null,
+      closedAt:
+        response.data.state === BitbucketPullRequestState.closed || response.data.state === BitbucketPullRequestState.declined
+          ? response.data.updated_on
+          : null,
+      mergedAt: response.data.state === BitbucketPullRequestState.closed ? response.data.updated_on : null,
       state: response.data.state,
       id: response.data.id,
       base: {
@@ -153,13 +179,19 @@ export class BitbucketService implements ICVSService {
           name: response.data.destination.repository.name,
           id: response.data.destination.repository.uuid,
           owner: {
-            login: response.data.author.nickname,
-            id: response.data.author.uuid,
-            url: response.data.author.links.html.href,
+            login: owner,
+            id: ownerId,
+            url: ownerUrl,
           },
         },
       },
     };
+    // Get number of changes, additions and deletions in PullRequest if the withDiffStat is true
+    if (withDiffStat) {
+      const lines = await this.getPullsDiffStat(owner, repo, `${prNumber}`);
+      return { ...pullRequest, lines };
+    }
+    return pullRequest;
   }
 
   async getPullRequestFiles(owner: string, repo: string, prNumber: number): Promise<Paginated<PullFiles>> {
@@ -175,24 +207,27 @@ export class BitbucketService implements ICVSService {
 
     const response = <DeepRequired<Bitbucket.Response<BitbucketCommit>>>await this.client.pullrequests.listCommits(params);
 
-    const items = response.data.values.map((val) => ({
-      sha: val.hash,
-      commit: {
-        url: val.links.html.href,
-        message: val.message,
-        author: {
-          name: val.author.raw,
-          email: 'undefined',
-          date: val.date,
-        },
-        tree: {
-          sha: val.hash,
+    const items = response.data.values.map((val) => {
+      return {
+        sha: val.hash,
+        commit: {
           url: val.links.html.href,
+          message: val.message,
+          author: {
+            name: val.author.raw,
+            email: this.extractEmailFromString(val.author.raw) || '',
+            date: val.date,
+          },
+          tree: {
+            sha: val.hash,
+            url: val.links.html.href,
+          },
+          //TODO
+          verified: false,
         },
-        //TODO
-        verified: false,
-      },
-    }));
+      };
+    });
+
     const pagination = this.getPagination(response.data);
 
     return { items, ...pagination };
@@ -215,8 +250,7 @@ export class BitbucketService implements ICVSService {
       body: val.content.raw,
       createdAt: val.created_on,
       updatedAt: val.updated_on,
-      //TODO
-      closedAt: null,
+      closedAt: val.state === BitbucketIssueState.resolved || val.state === BitbucketIssueState.closed ? val.updated_on : null,
       state: val.state,
       id: val.repository.uuid,
     }));
@@ -244,8 +278,10 @@ export class BitbucketService implements ICVSService {
       body: response.data.content.raw,
       createdAt: response.data.created_on,
       updatedAt: response.data.updated_on,
-      //TODO
-      closedAt: null,
+      closedAt:
+        response.data.state === BitbucketIssueState.resolved || response.data.state === BitbucketIssueState.closed
+          ? response.data.updated_on
+          : null,
       state: response.data.state,
     };
   }
@@ -282,15 +318,15 @@ export class BitbucketService implements ICVSService {
     throw new Error('Method not implemented yet.');
   }
 
-  async getRepoCommits(owner: string, repo: string): Promise<Paginated<PullCommits>> {
+  async getRepoCommits(owner: string, repo: string): Promise<Paginated<Commit>> {
     const params: Bitbucket.Params.RepositoriesListCommits = {
       repo_slug: repo,
       username: owner,
     };
     const response = <DeepRequired<Bitbucket.Response<BitbucketCommit>>>await this.client.repositories.listCommits(params);
-    const items = response.data.values.map((val) => ({
-      sha: val.hash,
-      commit: {
+    const items = response.data.values.map((val) => {
+      return {
+        sha: val.hash,
         url: val.links.html.href,
         message: val.rendered.message.raw,
         author: {
@@ -304,8 +340,9 @@ export class BitbucketService implements ICVSService {
         },
         // TODO
         verified: false,
-      },
-    }));
+      };
+    });
+
     const pagination = this.getPagination(response.data);
 
     return { items, ...pagination };
@@ -318,6 +355,7 @@ export class BitbucketService implements ICVSService {
       username: owner,
     };
     const response = <DeepRequired<Bitbucket.Response<Bitbucket.Schema.Commit>>>await this.client.commits.get(params);
+
     return {
       sha: response.data.hash,
       url: response.data.links.html.href,
@@ -346,6 +384,27 @@ export class BitbucketService implements ICVSService {
 
   async getRepoContent(owner: string, repo: string, path: string): Promise<File | Symlink | Directory | null> {
     throw new Error('Method not implemented yet.');
+  }
+
+  /**
+   * Add additions, deletions and changes of pull request when the getPullRequests() is called with withDiffStat = true
+   */
+  async getPullsDiffStat(owner: string, repo: string, prNumber: string) {
+    const diffStatData = (await this.client.pullrequests.getDiffStat({ repo_slug: repo, username: owner, pull_request_id: prNumber })).data;
+
+    let linesRemoved = 0,
+      linesAdded = 0;
+
+    diffStatData.values.forEach((val: { lines_removed: number; lines_added: number }) => {
+      linesRemoved += val.lines_removed;
+      linesAdded += val.lines_added;
+    });
+
+    return {
+      additions: linesAdded,
+      deletions: linesRemoved,
+      changes: linesAdded + linesRemoved,
+    };
   }
 
   private unwrap<T>(clientPromise: Promise<Bitbucket.Response<T>>) {

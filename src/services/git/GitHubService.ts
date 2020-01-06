@@ -1,44 +1,44 @@
-import { injectable, inject } from 'inversify';
-import {
-  PullRequest,
-  Contributor,
-  PullRequestReview,
-  Commit,
-  ContributorStats,
-  Directory,
-  File,
-  Issue,
-  PullFiles,
-  PullCommits,
-  IssueComment,
-  Symlink,
-  RepoContentType,
-} from './model';
-import { ICVSService } from './ICVSService';
-import { Paginated } from '../../inspectors/common/Paginated';
-import {
+import Octokit, {
   IssuesListForRepoResponseItem,
   PullsListResponseItem,
   PullsListReviewsResponseItem,
   ReposGetContributorsStatsResponseItem,
 } from '@octokit/rest';
-import { isArray } from 'util';
-import { ListGetterOptions } from '../../inspectors/common/ListGetterOptions';
-import Octokit from '@octokit/rest';
 import { grey } from 'colors';
-import { inspect } from 'util';
 import Debug from 'debug';
-import { delay } from '../../lib/delay';
-import { Types } from '../../types';
+import { inject, injectable } from 'inversify';
+import { inspect, isArray } from 'util';
+import { ListGetterOptions } from '../../inspectors/common/ListGetterOptions';
+import { Paginated } from '../../inspectors/common/Paginated';
+import { PullRequestState } from '../../inspectors/ICollaborationInspector';
 import { ArgumentsProvider } from '../../inversify.config';
+import { delay } from '../../lib/delay';
+import { ErrorFactory } from '../../lib/errors';
 import { ICache } from '../../scanner/cache/ICache';
 import { InMemoryCache } from '../../scanner/cache/InMemoryCache';
-import { GitHubPullRequestState } from './IGitHubService';
-import { ErrorFactory } from '../../lib/errors';
+import { Types } from '../../types';
+import { IVCSService, VCSService } from './IVCSService';
+import {
+  Commit,
+  Contributor,
+  ContributorStats,
+  Directory,
+  File,
+  Issue,
+  IssueComment,
+  PullCommits,
+  PullFiles,
+  PullRequest,
+  PullRequestReview,
+  RepoContentType,
+  Symlink,
+} from './model';
+import { VCSServicesUtils } from './VCSServicesUtils';
+import qs from 'qs';
 const debug = Debug('cli:services:git:github-service');
 
 @injectable()
-export class GitHubService implements ICVSService {
+export class GitHubService implements IVCSService {
   private readonly client: Octokit;
   private cache: ICache;
   private callCount = 0;
@@ -71,37 +71,55 @@ export class GitHubService implements ICVSService {
   async getPullRequests(
     owner: string,
     repo: string,
-    options?: ListGetterOptions<{ state?: GitHubPullRequestState }>,
+    options?: { withDiffStat?: boolean } & ListGetterOptions<{ state?: PullRequestState }>,
   ): Promise<Paginated<PullRequest>> {
     let url = 'GET /repos/:owner/:repo/pulls';
-    if (options !== undefined && options.filter !== undefined && options.filter.state !== undefined) {
-      url = `${url}?state=${options.filter.state}`;
-    }
+
+    const state = VCSServicesUtils.getPRState(options?.filter?.state, VCSService.github);
+
+    url = url.concat(
+      `${qs.stringify(
+        // eslint-disable-next-line @typescript-eslint/camelcase
+        { state: state, page: options?.pagination?.page, per_page: options?.pagination?.perPage },
+        { addQueryPrefix: true, indices: false, arrayFormat: 'repeat' },
+      )}`,
+    );
+
     const response: PullsListResponseItem[] = await this.paginate(url, owner, repo);
 
-    const items = response.map((val) => ({
-      user: {
-        id: val.user.id.toString(),
-        login: val.user.login,
-        url: val.user.url,
-      },
-      url: val.url,
-      body: val.body,
-      createdAt: val.created_at,
-      updatedAt: val.updated_at,
-      closedAt: val.closed_at,
-      mergedAt: val.merged_at,
-      state: val.state,
-      id: val.id,
-      base: {
-        repo: {
-          url: val.base.repo.url,
-          name: val.base.repo.name,
-          id: val.base.repo.id.toString(),
-          owner: { url: val.base.repo.owner.url, id: val.base.repo.owner.id.toString(), login: val.base.repo.owner.login },
-        },
-      },
-    }));
+    const items = await Promise.all(
+      response.map(async (val) => {
+        const pullRequest = {
+          user: {
+            id: val.user.id.toString(),
+            login: val.user.login,
+            url: val.user.url,
+          },
+          url: val.url,
+          body: val.body,
+          createdAt: val.created_at,
+          updatedAt: val.updated_at,
+          closedAt: val.closed_at,
+          mergedAt: val.merged_at,
+          state: val.state,
+          id: val.id,
+          base: {
+            repo: {
+              url: val.base.repo.url,
+              name: val.base.repo.name,
+              id: val.base.repo.id.toString(),
+              owner: { url: val.base.repo.owner.url, id: val.base.repo.owner.id.toString(), login: val.base.repo.owner.login },
+            },
+          },
+        };
+        // Get number of changes, additions and deletions in PullRequest if the withDiffStat is true
+        if (options?.withDiffStat) {
+          const lines = await this.getPullsDiffStat(owner, repo, `${val.id}`);
+          return { ...pullRequest, lines };
+        }
+        return pullRequest;
+      }),
+    );
     const pagination = this.getPagination(response.length);
 
     return { items, ...pagination };
@@ -110,10 +128,10 @@ export class GitHubService implements ICVSService {
   /**
    * Get a single pull request.
    */
-  async getPullRequest(owner: string, repo: string, prNumber: number): Promise<PullRequest> {
+  async getPullRequest(owner: string, repo: string, prNumber: number, withDiffStat?: boolean): Promise<PullRequest> {
     // eslint-disable-next-line @typescript-eslint/camelcase
     const response = await this.unwrap(this.client.pulls.get({ owner, repo, pull_number: prNumber }));
-    return {
+    const pullRequest = {
       user: {
         id: response.data.user.id.toString(),
         login: response.data.user.login,
@@ -140,6 +158,12 @@ export class GitHubService implements ICVSService {
         },
       },
     };
+    // Get number of changes, additions and deletions in PullRequest if the withDiffStat is true
+    if (withDiffStat) {
+      const lines = await this.getPullsDiffStat(owner, repo, `${prNumber}`);
+      return { ...pullRequest, lines };
+    }
+    return pullRequest;
   }
 
   /**
@@ -174,9 +198,36 @@ export class GitHubService implements ICVSService {
    *
    * The response will include a verification object that describes the result of verifying the commit's signature.
    * To see the included fields in the verification object see https://octokit.github.io/rest.js/#pagination.
+   *
+   * Sha can be SHA or branch name.
    */
-  async getRepoCommits(owner: string, repo: string) {
-    return this.unwrap(this.client.repos.listCommits({ owner, repo }));
+  async getRepoCommits(owner: string, repo: string, sha?: string): Promise<Paginated<Commit>> {
+    let url = 'GET /repos/:owner/:repo/commits';
+    if (sha !== undefined) {
+      const stateForUri = qs.stringify({ state: sha }, { addQueryPrefix: true });
+      url = `${url}${stateForUri}`;
+    }
+
+    const response = await this.paginate(url, owner, repo);
+
+    const items = response.map((val) => ({
+      sha: val.sha,
+      url: val.url,
+      message: val.commit.message,
+      author: {
+        name: val.commit.author.name,
+        email: val.commit.author.email,
+        date: val.commit.author.date,
+      },
+      tree: {
+        sha: val.commit.tree.sha,
+        url: val.commit.tree.url,
+      },
+      verified: val.commit.verification.verified,
+    }));
+    const pagination = this.getPagination(response.length);
+
+    return { items, ...pagination };
   }
 
   /**
@@ -439,6 +490,20 @@ export class GitHubService implements ICVSService {
 
     const pagination = this.getPagination(response.length);
     return { items, ...pagination };
+  }
+
+  /**
+   * Add additions, deletions and changes of pull request when the getPullRequests() is called with withDiffStat = true
+   */
+  async getPullsDiffStat(owner: string, repo: string, prNumber: string) {
+    // eslint-disable-next-line @typescript-eslint/camelcase
+    const response = await this.unwrap(this.client.pulls.get({ owner, repo, pull_number: <number>(<unknown>prNumber) }));
+
+    return {
+      additions: response.data.additions,
+      deletions: response.data.deletions,
+      changes: response.data.additions + response.data.deletions,
+    };
   }
 
   /**

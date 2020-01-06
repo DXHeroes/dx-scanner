@@ -1,3 +1,238 @@
+# [1.27.0](https://github.com/dxheroes/dx-scanner/compare/v1.26.4...v1.27.0) (2019-12-17)
+
+
+### Bug Fixes
+
+* Add comments ([2c33c17](https://github.com/dxheroes/dx-scanner/commit/2c33c17))
+* add linesAdded and linesRemoved to own interface of Commit. Implement it in BitbucketService and rewrite tests. ([0648ce9](https://github.com/dxheroes/dx-scanner/commit/0648ce9))
+* add pagination to getPullrequests() in Bitbucket ([47e57ad](https://github.com/dxheroes/dx-scanner/commit/47e57ad))
+* adding values ([35f27d5](https://github.com/dxheroes/dx-scanner/commit/35f27d5))
+* concating url ([b0eaaf0](https://github.com/dxheroes/dx-scanner/commit/b0eaaf0))
+* remove unnecessary code ([5dcf879](https://github.com/dxheroes/dx-scanner/commit/5dcf879))
+* remove unnecessary Promise.all(); remove request for getting diffStat ([07e88e5](https://github.com/dxheroes/dx-scanner/commit/07e88e5))
+* rename value ([adcec08](https://github.com/dxheroes/dx-scanner/commit/adcec08))
+* tests after refactoring ([a6f465c](https://github.com/dxheroes/dx-scanner/commit/a6f465c))
+* use method to get an email and fix test after that ([f11ac89](https://github.com/dxheroes/dx-scanner/commit/f11ac89))
+* use pagination if it's provided ([fad8e78](https://github.com/dxheroes/dx-scanner/commit/fad8e78))
+* use withDiffStat value separately, not within ListGetterOptions ([281ab83](https://github.com/dxheroes/dx-scanner/commit/281ab83))
+* value name ([eacdd7b](https://github.com/dxheroes/dx-scanner/commit/eacdd7b))
+
+
+### Features
+
+*  allow to get one specific pull request with diffStat in GithubService and BitbucketService ([837e8a0](https://github.com/dxheroes/dx-scanner/commit/837e8a0))
+* add getPullsDiffStat() in CollaborationInspector; allow to get one specific pull request with diffStat ([81cb265](https://github.com/dxheroes/dx-scanner/commit/81cb265))
+* add Lines interface ([d1232ed](https://github.com/dxheroes/dx-scanner/commit/d1232ed))
+* get pullrequests with diffStat if `withDiffStat` value is true ([dcba226](https://github.com/dxheroes/dx-scanner/commit/dcba226))
+* implement getPullsDiffStat() in BitbucketService and add test for that ([3c78fe3](https://github.com/dxheroes/dx-scanner/commit/3c78fe3))
+
+## [1.26.4](https://github.com/dxheroes/dx-scanner/compare/v1.26.3...v1.26.4) (2019-12-16)
+
+
+### Bug Fixes
+
+* **deps:** update dependency semver to v7 ([76de07d](https://github.com/dxheroes/dx-scanner/commit/76de07d))
+
+## [1.26.3](https://github.com/dxheroes/dx-scanner/compare/v1.26.2...v1.26.3) (2019-12-16)
+
+
+### Bug Fixes
+
+* **deps:** update dependency update-notifier to v4 ([373ce00](https://github.com/dxheroes/dx-scanner/commit/373ce00))
+
+## [1.26.2](https://github.com/dxheroes/dx-scanner/compare/v1.26.1...v1.26.2) (2019-12-16)
+
+
+### Bug Fixes
+
+* **deps:** update all non-major dependencies ([96f59c9](https://github.com/dxheroes/dx-scanner/commit/96f59c9))
+
+## [1.26.1](https://github.com/dxheroes/dx-scanner/compare/v1.26.0...v1.26.1) (2019-12-16)
+
+
+### Bug Fixes
+
+* **deps:** pin dependencies ([57d767a](https://github.com/dxheroes/dx-scanner/commit/57d767a))
+
+# [1.26.0](https://github.com/dxheroes/dx-scanner/compare/v1.25.0...v1.26.0) (2019-12-11)
+
+
+### Features
+
+* **CLIReporter:** add rich suggestion text to the report ([2db8559](https://github.com/dxheroes/dx-scanner/commit/2db8559))
+* **CLIReporter:** show detailed info (collected data) from practices ([30458ce](https://github.com/dxheroes/dx-scanner/commit/30458ce))
+* collect data from practices ([4fa1b85](https://github.com/dxheroes/dx-scanner/commit/4fa1b85))
+
+# [1.25.0](https://github.com/dxheroes/dx-scanner/compare/v1.24.0...v1.25.0) (2019-12-10)
+
+
+### Bug Fixes
+
+* add a comment ([26ea99f](https://github.com/dxheroes/dx-scanner/commit/26ea99f))
+* add a comment about logic to try catch ([9c8bba4](https://github.com/dxheroes/dx-scanner/commit/9c8bba4))
+* add possibility return no pullrequests by not passing state ([633caea](https://github.com/dxheroes/dx-scanner/commit/633caea))
+* as the bitbucket fails if the account is a team account add possibility to ownerId be a null ([37bc6f2](https://github.com/dxheroes/dx-scanner/commit/37bc6f2))
+* change updatedAt only if it's provided ([ec2f240](https://github.com/dxheroes/dx-scanner/commit/ec2f240))
+* get the ownerId via repo info with one request ([2b83d63](https://github.com/dxheroes/dx-scanner/commit/2b83d63))
+* getting ownerId if it's team account ([bd86a78](https://github.com/dxheroes/dx-scanner/commit/bd86a78))
+* implement getOwnerId() in bitbucketNock ([81daee8](https://github.com/dxheroes/dx-scanner/commit/81daee8))
+* invalid letter case ([c1aa97d](https://github.com/dxheroes/dx-scanner/commit/c1aa97d))
+* path ([af50b8d](https://github.com/dxheroes/dx-scanner/commit/af50b8d))
+* rebind IContentRepositoryBrowser in practice instead of binding in inversify.config.ts ([1141cad](https://github.com/dxheroes/dx-scanner/commit/1141cad))
+* reflect used service ([48b3429](https://github.com/dxheroes/dx-scanner/commit/48b3429))
+* remove unnecessary code ([4118637](https://github.com/dxheroes/dx-scanner/commit/4118637))
+* remove unnecessary condition ([0fe3e8b](https://github.com/dxheroes/dx-scanner/commit/0fe3e8b))
+* remove unnecessary line of code ([269f384](https://github.com/dxheroes/dx-scanner/commit/269f384))
+* remove unnecessary test ([cd746f4](https://github.com/dxheroes/dx-scanner/commit/cd746f4))
+* rename practice and files. Add name and suggestion text. ([9e18b76](https://github.com/dxheroes/dx-scanner/commit/9e18b76))
+* tests ([e9f9943](https://github.com/dxheroes/dx-scanner/commit/e9f9943))
+* tests as it is possible to get team account id ([c9f7d91](https://github.com/dxheroes/dx-scanner/commit/c9f7d91))
+* use arguments provider uri to detect if bind GithubService or BitbucketService ([ba705b4](https://github.com/dxheroes/dx-scanner/commit/ba705b4))
+* value of owner id ([c56e67f](https://github.com/dxheroes/dx-scanner/commit/c56e67f))
+* wrong letter case ([f8bd6a5](https://github.com/dxheroes/dx-scanner/commit/f8bd6a5))
+
+
+### Features
+
+* add TimeToSolvePractice ([a667a78](https://github.com/dxheroes/dx-scanner/commit/a667a78))
+
+# [1.24.0](https://github.com/dxheroes/dx-scanner/compare/v1.23.2...v1.24.0) (2019-12-06)
+
+
+### Bug Fixes
+
+* add BitbucketService to the type ([7a71226](https://github.com/dxheroes/dx-scanner/commit/7a71226))
+* add condition so it doesn't fail if there are no PRs ([4839367](https://github.com/dxheroes/dx-scanner/commit/4839367))
+* add getRepoCommits() into interface, ([8b544ef](https://github.com/dxheroes/dx-scanner/commit/8b544ef))
+* add getRepoCommits() into interface, ([648f066](https://github.com/dxheroes/dx-scanner/commit/648f066))
+* add moment to package.json ([20fec03](https://github.com/dxheroes/dx-scanner/commit/20fec03))
+* Add parse-commit-message ([d5c6a08](https://github.com/dxheroes/dx-scanner/commit/d5c6a08))
+* add queryState to new GitHubNock() ([46a7a31](https://github.com/dxheroes/dx-scanner/commit/46a7a31))
+* add yarnrc to ignore engines ([71421c1](https://github.com/dxheroes/dx-scanner/commit/71421c1))
+* bind CollaborationInspector and IssueTrackingInspector, ([b23c983](https://github.com/dxheroes/dx-scanner/commit/b23c983))
+* change date of PR so it can for testing practicing Does PR practice ([69932c3](https://github.com/dxheroes/dx-scanner/commit/69932c3))
+* change dates ([8f9d5c1](https://github.com/dxheroes/dx-scanner/commit/8f9d5c1))
+* condition, ([4213929](https://github.com/dxheroes/dx-scanner/commit/4213929))
+* disable camel case in whole file instead of each line ([caef75b](https://github.com/dxheroes/dx-scanner/commit/caef75b))
+* get all pullRequests ([7bbca3b](https://github.com/dxheroes/dx-scanner/commit/7bbca3b))
+* getRepoCommits() test ([7ff57d6](https://github.com/dxheroes/dx-scanner/commit/7ff57d6))
+* if the PR is updated, count with that date, not with the createdAt date ([bb374f0](https://github.com/dxheroes/dx-scanner/commit/bb374f0))
+* increase coverage by adding some tests ([3801a6d](https://github.com/dxheroes/dx-scanner/commit/3801a6d))
+* move getPathOrRepoUrl from ReporterUtils to GitServiceUtils ([2198384](https://github.com/dxheroes/dx-scanner/commit/2198384))
+* move inspectors to language component context instead of overall container ([a19410f](https://github.com/dxheroes/dx-scanner/commit/a19410f))
+* name of tests ([9f025d2](https://github.com/dxheroes/dx-scanner/commit/9f025d2))
+* name of value ([a42909e](https://github.com/dxheroes/dx-scanner/commit/a42909e))
+* optional created_at and updated_at ([a7773a5](https://github.com/dxheroes/dx-scanner/commit/a7773a5))
+* refactor code ([2bd8bd9](https://github.com/dxheroes/dx-scanner/commit/2bd8bd9))
+* remove ambiguous binding ([005b88b](https://github.com/dxheroes/dx-scanner/commit/005b88b))
+* remove comma ([cf555bf](https://github.com/dxheroes/dx-scanner/commit/cf555bf))
+* remove console.log() ([ae095e3](https://github.com/dxheroes/dx-scanner/commit/ae095e3))
+* remove merge conflict ([dd8216d](https://github.com/dxheroes/dx-scanner/commit/dd8216d))
+* remove unnecessary condition ([e0a43f5](https://github.com/dxheroes/dx-scanner/commit/e0a43f5))
+* remove unnecessary name of branch ([9473353](https://github.com/dxheroes/dx-scanner/commit/9473353))
+* remove unused imports ([535e1c7](https://github.com/dxheroes/dx-scanner/commit/535e1c7))
+* rename files ([3769e64](https://github.com/dxheroes/dx-scanner/commit/3769e64))
+* rename practice ([c96061d](https://github.com/dxheroes/dx-scanner/commit/c96061d))
+* return CollaborationInspector and IssueTrackingInspector (not undefined), ([d461ad7](https://github.com/dxheroes/dx-scanner/commit/d461ad7))
+* return repoCommits in own interface ([dca5707](https://github.com/dxheroes/dx-scanner/commit/dca5707))
+* return repoCommits in own interface ([63fe746](https://github.com/dxheroes/dx-scanner/commit/63fe746))
+* revert change ([741e491](https://github.com/dxheroes/dx-scanner/commit/741e491))
+* revert change ([e8ae9ac](https://github.com/dxheroes/dx-scanner/commit/e8ae9ac))
+* revert changes ([89765c2](https://github.com/dxheroes/dx-scanner/commit/89765c2))
+* revert changes ([43d3f16](https://github.com/dxheroes/dx-scanner/commit/43d3f16))
+* revert changes ([43c8eaf](https://github.com/dxheroes/dx-scanner/commit/43c8eaf))
+* revert changes and fix tests ([98b444c](https://github.com/dxheroes/dx-scanner/commit/98b444c))
+* revert changes and fix tets ([0437471](https://github.com/dxheroes/dx-scanner/commit/0437471))
+* tests ([1c660ef](https://github.com/dxheroes/dx-scanner/commit/1c660ef))
+* unify name ([c5bde88](https://github.com/dxheroes/dx-scanner/commit/c5bde88))
+* url ([6710a7f](https://github.com/dxheroes/dx-scanner/commit/6710a7f))
+* use different date as default ([a589a04](https://github.com/dxheroes/dx-scanner/commit/a589a04))
+* use method to change the message of the repo commits ([bbf2136](https://github.com/dxheroes/dx-scanner/commit/bbf2136))
+* use moment.js to convert days to milliseconds ([99585fe](https://github.com/dxheroes/dx-scanner/commit/99585fe))
+* use parser-commit-message instead of manual parsing ([cf4b5cb](https://github.com/dxheroes/dx-scanner/commit/cf4b5cb))
+* use qs ([e324c1f](https://github.com/dxheroes/dx-scanner/commit/e324c1f))
+* version of parse-commit-message ([b804092](https://github.com/dxheroes/dx-scanner/commit/b804092))
+
+
+### Features
+
+* add getRepoCommits into CollaborationInspector ([fba7af9](https://github.com/dxheroes/dx-scanner/commit/fba7af9))
+* add getRepoCommits into CollaborationInspector ([dccf3eb](https://github.com/dxheroes/dx-scanner/commit/dccf3eb))
+* add new practice ([70e796a](https://github.com/dxheroes/dx-scanner/commit/70e796a))
+* Detect parcticing/notPracticing based on date of commit and date of PR minus 30 days ([1948193](https://github.com/dxheroes/dx-scanner/commit/1948193))
+* install parse-commit-message and add typings for that library ([2e04ac9](https://github.com/dxheroes/dx-scanner/commit/2e04ac9))
+
+## [1.23.2](https://github.com/dxheroes/dx-scanner/compare/v1.23.1...v1.23.2) (2019-12-06)
+
+
+### Bug Fixes
+
+* type ([71733fd](https://github.com/dxheroes/dx-scanner/commit/71733fd))
+
+## [1.23.1](https://github.com/dxheroes/dx-scanner/compare/v1.23.0...v1.23.1) (2019-12-06)
+
+
+### Bug Fixes
+
+*  add BitbucketIssueState enum ([563a7eb](https://github.com/dxheroes/dx-scanner/commit/563a7eb))
+* add BitbucketPRState ([e05ca58](https://github.com/dxheroes/dx-scanner/commit/e05ca58))
+* add value closedAt and mergedAt dynamically ([cf4bf51](https://github.com/dxheroes/dx-scanner/commit/cf4bf51))
+* define tests better ([422f962](https://github.com/dxheroes/dx-scanner/commit/422f962))
+* mergedAt and closedAt values, also fix tests for that ([e2e6dc6](https://github.com/dxheroes/dx-scanner/commit/e2e6dc6))
+
+# [1.23.0](https://github.com/dxheroes/dx-scanner/compare/v1.22.1...v1.23.0) (2019-12-06)
+
+
+### Bug Fixes
+
+* add BitbucketPullRequestState because of CollaborationInspector to the options ([74fe662](https://github.com/dxheroes/dx-scanner/commit/74fe662))
+* add filtering to the getPullRequests() ([90b995b](https://github.com/dxheroes/dx-scanner/commit/90b995b))
+* add qs ([6022e9e](https://github.com/dxheroes/dx-scanner/commit/6022e9e))
+* auth is possibly undefined ([1f35259](https://github.com/dxheroes/dx-scanner/commit/1f35259))
+* data of owner ([fa0d129](https://github.com/dxheroes/dx-scanner/commit/fa0d129))
+* delete unnecessary mock file ([952bb79](https://github.com/dxheroes/dx-scanner/commit/952bb79))
+* fix tests and use mockBitbucketPullRequestResponse() ([1b6be4a](https://github.com/dxheroes/dx-scanner/commit/1b6be4a))
+* get the info about user only once as it is always the same ([f54425d](https://github.com/dxheroes/dx-scanner/commit/f54425d))
+* rename CVS to VCS ([c8c2f09](https://github.com/dxheroes/dx-scanner/commit/c8c2f09))
+* rename files ([4a2d83d](https://github.com/dxheroes/dx-scanner/commit/4a2d83d))
+* rename interfaces - add mock to the end of the name ([0ff0093](https://github.com/dxheroes/dx-scanner/commit/0ff0093))
+* return array of states ([7f19213](https://github.com/dxheroes/dx-scanner/commit/7f19213))
+* retype return type from getPRState() ([1769b52](https://github.com/dxheroes/dx-scanner/commit/1769b52))
+* stringify undefined value ([2ddd585](https://github.com/dxheroes/dx-scanner/commit/2ddd585))
+* typo ([0815844](https://github.com/dxheroes/dx-scanner/commit/0815844))
+* use axios because bitbucket client can't allow to get all pullrequests. Write tests for that. ([03eafcf](https://github.com/dxheroes/dx-scanner/commit/03eafcf))
+* use different interfaces for GitHub PR and Bitbucket PR ([7d2ecb5](https://github.com/dxheroes/dx-scanner/commit/7d2ecb5))
+* use own definition of PR -> implement getPRState() to get the state specific for services ([2b67091](https://github.com/dxheroes/dx-scanner/commit/2b67091))
+* use qs library ([42a10e5](https://github.com/dxheroes/dx-scanner/commit/42a10e5))
+* values of owner ([c3c5ab2](https://github.com/dxheroes/dx-scanner/commit/c3c5ab2))
+
+
+### Features
+
+* add mockBitbucketPullRequestResponse() ([905fd11](https://github.com/dxheroes/dx-scanner/commit/905fd11))
+* add options for filtering in CollaborationInspector ([572371b](https://github.com/dxheroes/dx-scanner/commit/572371b))
+
+## [1.22.1](https://github.com/dxheroes/dx-scanner/compare/v1.22.0...v1.22.1) (2019-12-06)
+
+
+### Bug Fixes
+
+* **deps:** update dependency memfs to v3 ([6c8c259](https://github.com/dxheroes/dx-scanner/commit/6c8c259))
+
+# [1.22.0](https://github.com/dxheroes/dx-scanner/compare/v1.21.1...v1.22.0) (2019-12-02)
+
+
+### Bug Fixes
+
+* **cli:** added an action start and stop to --init ([88edb72](https://github.com/dxheroes/dx-scanner/commit/88edb72))
+* **cli:** added more conditions to check for existing files for --init ([5e98e0f](https://github.com/dxheroes/dx-scanner/commit/5e98e0f))
+* **cli:** using sync method to write files & practices are sorted alphabetically ([fb46b95](https://github.com/dxheroes/dx-scanner/commit/fb46b95))
+
+
+### Features
+
+* **cli:** --init command creates a yaml config file ([29f0cbc](https://github.com/dxheroes/dx-scanner/commit/29f0cbc))
+
 ## [1.21.1](https://github.com/dxheroes/dx-scanner/compare/v1.21.0...v1.21.1) (2019-11-28)
 
 

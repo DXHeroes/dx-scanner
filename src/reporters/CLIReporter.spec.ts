@@ -1,5 +1,5 @@
 import { CLIReporter } from './CLIReporter';
-import { practiceWithContextFactory } from '../../test/factories/PracticeWithContextFactory';
+import { practiceWithContextFactory } from '../test/factories/PracticeWithContextFactory';
 import { PracticeEvaluationResult, PracticeImpact } from '../model';
 
 describe('CLIReporter', () => {

@@ -53,6 +53,11 @@ class DXScannerCommand extends Command {
     const container = createRootContainer({ uri: scanPath, auth: authorization, json, fail, recursive: flags.recursive });
     const scanner = container.get(Scanner);
 
+    if (flags.init) {
+      await scanner.init();
+      process.exit(0);
+    }
+
     let scanResult: ScanResult;
     scanResult = await scanner.scan();
     if (scanResult.needsAuth) {

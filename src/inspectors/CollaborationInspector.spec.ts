@@ -1,14 +1,16 @@
 import { CollaborationInspector } from './CollaborationInspector';
-import { getPullsServiceResponse } from '../services/git/__MOCKS__/gitHubServiceMockFolder/getPullsServiceResponse.mock';
-import { getPullServiceResponse } from '../services/git/__MOCKS__/gitHubServiceMockFolder/getPullServiceResponse.mock';
-import { getPullsFilesResponse } from '../services/git/__MOCKS__/gitHubServiceMockFolder/getPullsFiles.mock';
-import { getPullsFilesServiceResponse } from '../services/git/__MOCKS__/gitHubServiceMockFolder/getPullFilesServiceResponse.mock';
-import { getPullCommitsResponse } from '../services/git/__MOCKS__/gitHubServiceMockFolder/getPullsCommitsResponse.mock';
-import { getPullCommitsServiceResponse } from '../services/git/__MOCKS__/gitHubServiceMockFolder/getPullCommitsServiceResponse.mock';
 import nock from 'nock';
 import { TestContainerContext } from '../inversify.config';
 import { createTestContainer } from '../inversify.config';
-import { GitHubNock } from '../../test/helpers/gitHubNock';
+import { GitHubNock } from '../test/helpers/gitHubNock';
+import {
+  getPullsServiceResponse,
+  getPullServiceResponse,
+  getPullsFilesResponse,
+  getPullsFilesServiceResponse,
+  getPullCommitsResponse,
+  getPullCommitsServiceResponse,
+} from '../services/git/__MOCKS__/gitHubServiceMockFolder';
 
 describe('Collaboration Inspector', () => {
   let inspector: CollaborationInspector;
@@ -24,9 +26,11 @@ describe('Collaboration Inspector', () => {
   });
 
   it('returns paginated pull requests', async () => {
-    new GitHubNock('1', 'octocat', 1296269, 'Hello-World').getPulls([
-      { number: 1347, state: 'open', title: 'new-feature', body: 'Please pull these awesome changes', head: 'new-topic', base: 'master' },
-    ]);
+    new GitHubNock('1', 'octocat', 1296269, 'Hello-World').getPulls({
+      pulls: [
+        { number: 1347, state: 'open', title: 'new-feature', body: 'Please pull these awesome changes', head: 'new-topic', base: 'master' },
+      ],
+    });
 
     const response = await inspector.getPullRequests('octocat', 'Hello-World');
     expect(response).toMatchObject(getPullsServiceResponse);

@@ -1,4 +1,4 @@
-import { UserItem } from '../../../../../test/helpers/gitHubNock';
+import { UserItem } from '../../../../test/helpers/gitHubNock';
 
 /* eslint-disable @typescript-eslint/camelcase */
 export const getIssueCommentsResponse = [
