@@ -1,24 +1,31 @@
+import moment from 'moment';
+import nock from 'nock';
+import { CollaborationInspector } from '../../inspectors';
 import { createTestContainer, TestContainerContext } from '../../inversify.config';
 import { PracticeEvaluationResult } from '../../model';
-import { DoesPullRequestsPractice } from './DoesPullRequests';
-import nock from 'nock';
-import { GitHubNock } from '../../test/helpers/gitHubNock';
-import { getRepoCommitsResponse } from '../../services/git/__MOCKS__/gitHubServiceMockFolder/getRepoCommitsResponse.mock';
-import { PullRequestState } from '../../inspectors/ICollaborationInspector';
+import { BitbucketPullRequestState, BitbucketService } from '../../services';
+import { BitbucketNock } from '../../test/helpers/bitbucketNock';
+import { Types } from '../../types';
 import { FatPullRequestsPractice } from './FatPullRequestsPractice';
 
 describe('FatPullRequestsPractice', () => {
   let practice: FatPullRequestsPractice;
   let containerCtx: TestContainerContext;
+  let bitbucketNock: BitbucketNock;
+  const MockedCollaborationInspector = <jest.Mock<CollaborationInspector>>(<unknown>CollaborationInspector);
+  let mockCollaborationInspector: CollaborationInspector;
 
   beforeEach(async () => {
     nock.cleanAll();
+    bitbucketNock = new BitbucketNock('pypy', 'pypy');
   });
 
   beforeAll(() => {
     containerCtx = createTestContainer();
     containerCtx.container.bind('FatPullRequestsPractice').to(FatPullRequestsPractice);
+    containerCtx.container.rebind(Types.IContentRepositoryBrowser).to(BitbucketService);
     practice = containerCtx.container.get('FatPullRequestsPractice');
+    mockCollaborationInspector = new MockedCollaborationInspector();
   });
 
   afterEach(async () => {
@@ -26,63 +33,57 @@ describe('FatPullRequestsPractice', () => {
     containerCtx.practiceContext.fileInspector!.purgeCache();
   });
 
-  it('return practicing if there is not fat PR which is not older than 30 days than the newest PR', async () => {
-    containerCtx.practiceContext.projectComponent.repositoryPath = 'https://github.com/octocat/Hello-World';
-    const params = {
-      number: 1347,
-      state: 'open',
-      title: 'new-feature',
-      body: 'Please pull these awesome changes',
-      head: 'new-topic',
-      base: 'master',
-      lines: { additions: 1, deletions: 1 },
+  it('return practicing if there is not a fat PR no older than 30 days than the newest PR', async () => {
+    bitbucketNock.getOwnerId();
+    bitbucketNock.getApiResponse({
+      resource: 'pullrequests',
+      state: BitbucketPullRequestState.open,
+    });
+    const args = {
+      states: BitbucketPullRequestState.open,
+      updatedAt: Date.now() - moment.duration(10, 'days').asMilliseconds(),
+      withDiffStat: true,
+      lines: {
+        additions: 1,
+        deletions: 1,
+      },
     };
 
-    new GitHubNock('1', 'octocat', 1296269, 'Hello-World').getPulls({ pulls: [params], queryState: PullRequestState.all });
-    new GitHubNock('1', 'octocat', 1296269, 'Hello-World').getPull(
-      1,
-      params.state,
-      params.title,
-      params.body,
-      params.head,
-      params.base,
-      undefined,
-      undefined,
-      undefined,
-      params.lines,
-    );
+    mockCollaborationInspector.getPullRequests = async () => {
+      return bitbucketNock.mockBitbucketPullRequestsResponse(args);
+    };
 
-    const evaluated = await practice.evaluate(containerCtx.practiceContext);
+    const evaluated = await practice.evaluate({
+      ...containerCtx.practiceContext,
+      collaborationInspector: mockCollaborationInspector,
+    });
     expect(evaluated).toEqual(PracticeEvaluationResult.practicing);
   });
 
-  it('return not practicing if there is at least one fat PR which is not older than 30 days than the newest PR', async () => {
-    containerCtx.practiceContext.projectComponent.repositoryPath = 'https://github.com/octocat/Hello-World';
-    const params = {
-      number: 1347,
-      state: 'open',
-      title: 'new-feature',
-      body: 'Please pull these awesome changes',
-      head: 'new-topic',
-      base: 'master',
-      lines: { additions: 1000, deletions: 500 },
+  it('return notPracticing if there is a fat PR no older than 30 days than the newest PR', async () => {
+    bitbucketNock.getOwnerId();
+    bitbucketNock.getApiResponse({
+      resource: 'pullrequests',
+      state: BitbucketPullRequestState.open,
+    });
+    const args = {
+      states: BitbucketPullRequestState.open,
+      updatedAt: Date.now() - moment.duration(10, 'days').asMilliseconds(),
+      withDiffStat: true,
+      lines: {
+        additions: 1000,
+        deletions: 500,
+      },
     };
 
-    new GitHubNock('1', 'octocat', 1296269, 'Hello-World').getPulls({ pulls: [params], queryState: PullRequestState.all });
-    new GitHubNock('1', 'octocat', 1296269, 'Hello-World').getPull(
-      1,
-      params.state,
-      params.title,
-      params.body,
-      params.head,
-      params.base,
-      undefined,
-      undefined,
-      undefined,
-      params.lines,
-    );
+    mockCollaborationInspector.getPullRequests = async () => {
+      return bitbucketNock.mockBitbucketPullRequestsResponse(args);
+    };
 
-    const evaluated = await practice.evaluate(containerCtx.practiceContext);
+    const evaluated = await practice.evaluate({
+      ...containerCtx.practiceContext,
+      collaborationInspector: mockCollaborationInspector,
+    });
     expect(evaluated).toEqual(PracticeEvaluationResult.notPracticing);
   });
 
