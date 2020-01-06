@@ -146,6 +146,10 @@ export class BitbucketNock {
     states?: BitbucketPullRequestState | BitbucketPullRequestState[];
     updatedAt?: number;
     withDiffStat?: boolean;
+    lines?: {
+      additions: number;
+      deletions: number;
+    };
   }): Paginated<PullRequest> {
     const pullRequests: PullRequest[] = [];
     if (!args.states) {
@@ -167,11 +171,19 @@ export class BitbucketNock {
       perPage: typeof args.states === 'string' ? 1 : args.states.length,
       totalCount: typeof args.states === 'string' ? 1 : args.states.length,
     };
-    const lines = {
+
+    let lines = {
       additions: 2,
       deletions: 1,
       changes: 3,
     };
+    if (args.lines) {
+      lines = {
+        additions: args.lines.additions,
+        deletions: args.lines.deletions,
+        changes: args.lines.additions + args.lines.deletions,
+      };
+    }
 
     if (typeof args.states !== 'string') {
       args.states.forEach((state) => {
