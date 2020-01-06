@@ -9,17 +9,18 @@ import {
   getRepoCommit,
   getRepoCommits,
 } from '../../services/git/__MOCKS__/bitbucketServiceMockFolder';
-import { BitbucketNock } from '../../test/helpers/bitbucketNock';
-import { BitbucketPullRequestState, VCSService } from '../git/IVCSService';
+import { BitbucketPullRequestState, VCSServiceType } from '../git/IVCSService';
 import { VCSServicesUtils } from '../git/VCSServicesUtils';
-import { BitbucketService } from './BitbucketService';
+import { argumentsProviderFactory } from '../../test/factories/ArgumentsProviderFactory';
+import { BitbucketService } from '.';
+import { BitbucketNock } from '../../test/helpers/bitbucketNock';
 
 describe('Bitbucket Service', () => {
   let service: BitbucketService;
   let bitbucketNock: BitbucketNock;
 
   beforeEach(async () => {
-    service = new BitbucketService({ uri: '.' });
+    service = new BitbucketService(argumentsProviderFactory({ uri: '.' }));
     nock.cleanAll();
     bitbucketNock = new BitbucketNock('pypy', 'pypy');
   });
@@ -57,7 +58,7 @@ describe('Bitbucket Service', () => {
   });
 
   it('returns all pull requests in own interface', async () => {
-    const state = <BitbucketPullRequestState>VCSServicesUtils.getPRState(PullRequestState.all, VCSService.bitbucket);
+    const state = <BitbucketPullRequestState>VCSServicesUtils.getPRState(PullRequestState.all, VCSServiceType.bitbucket);
     bitbucketNock.getOwnerId();
     bitbucketNock.getApiResponse({ resource: 'pullrequests', state: state });
 

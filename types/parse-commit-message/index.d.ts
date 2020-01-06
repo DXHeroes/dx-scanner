@@ -2,27 +2,27 @@ declare module 'parse-commit-message' {
   let parser: {
     validate(commits: string[] | string, ret: boolean): boolean;
     validateCommit(commit: object, ret: boolean): boolean;
-    parseCommit(commit: string): Commit;
+    parseCommit(commit: string): ParseCommitMessageCommit;
   };
   export = parser;
 }
 
-type Header = {
+type ParseCommitMessageHeader = {
   type: string;
   scope?: string | null;
   subject: string;
 };
 
-type Commit = {
-  header: Header;
+type ParseCommitMessageCommit = {
+  header: ParseCommitMessageHeader;
   body?: string | null;
   footer?: string | null;
   increment?: string | boolean;
   isBreaking?: boolean;
-  mentions?: Array<Mention>;
+  mentions?: Array<ParseCommitMessageMention>;
 };
 
-type Mention = {
+type ParseCommitMessageMention = {
   handle: string;
   mention: string;
   index: number;

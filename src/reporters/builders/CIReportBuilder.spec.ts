@@ -1,26 +1,44 @@
-import { CLIReporter } from './CLIReporter';
-import { practiceWithContextFactory } from '../test/factories/PracticeWithContextFactory';
-import { PracticeEvaluationResult, PracticeImpact } from '../model';
+import { practiceWithContextFactory } from '../../test/factories/PracticeWithContextFactory';
+import { PracticeEvaluationResult, PracticeImpact } from '../../model';
+import { CIReportBuilder } from './CIReportBuilder';
 
-describe('CLIReporter', () => {
+describe('CIReportBuilder', () => {
   const practicingHighImpactPracticeWithCtx = practiceWithContextFactory();
   const notPracticingHighImpactPracticeWithCtx = practiceWithContextFactory({ evaluation: PracticeEvaluationResult.notPracticing });
 
-  describe('#report', () => {
-    it('one practicing practice', () => {
-      const result = new CLIReporter().buildReport([practicingHighImpactPracticeWithCtx]);
+  describe('#build', () => {
+    it('one practicing practice contains all necessary data', () => {
+      const result = new CIReportBuilder([practicingHighImpactPracticeWithCtx]).build();
 
-      expect(result).toContain('DX Score: 100% | 1/1');
+      const mustContainElements = [CIReportBuilder.ciReportIndicator];
+
+      mustContainElements.forEach((e) => {
+        expect(result).toContain(e);
+      });
     });
 
     it('one practicing practice and one not practicing', () => {
-      const result = new CLIReporter().buildReport([practicingHighImpactPracticeWithCtx, notPracticingHighImpactPracticeWithCtx]);
+      const result = new CIReportBuilder([practicingHighImpactPracticeWithCtx, notPracticingHighImpactPracticeWithCtx]).build();
 
-      expect(result).toContain('DX Score: 50% | 1/2');
+      const mustContainElements = [
+        CIReportBuilder.ciReportIndicator,
+        notPracticingHighImpactPracticeWithCtx.practice.name,
+        notPracticingHighImpactPracticeWithCtx.practice.url,
+      ];
+
+      const mustNotContainElements = [practicingHighImpactPracticeWithCtx.practice.name, practicingHighImpactPracticeWithCtx.practice.url];
+
+      mustContainElements.forEach((e) => {
+        expect(result).toContain(e);
+      });
+
+      mustNotContainElements.forEach((e) => {
+        expect(result).not.toContain(e);
+      });
     });
 
     it('all impacted practices', () => {
-      const result = new CLIReporter().buildReport([
+      const result = new CIReportBuilder([
         practicingHighImpactPracticeWithCtx,
         notPracticingHighImpactPracticeWithCtx,
         practiceWithContextFactory({
@@ -41,7 +59,7 @@ describe('CLIReporter', () => {
           isOn: false,
         }),
         practiceWithContextFactory({ overridenImpact: PracticeImpact.high, evaluation: PracticeEvaluationResult.unknown }),
-      ]);
+      ]).build();
 
       expect(result).toContain('Improvements with highest impact');
       expect(result).toContain('Improvements with medium impact');

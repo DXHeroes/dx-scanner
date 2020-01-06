@@ -2,7 +2,7 @@ import { injectable, inject } from 'inversify';
 import { Types, PracticeContextFactory } from '../../types';
 import { ProgrammingLanguage, ProjectComponent } from '../../model';
 import { PracticeContext } from '../practice/PracticeContext';
-import { ConfigProvider } from '../ConfigProvider';
+import { ConfigProvider } from '../../scanner/ConfigProvider';
 
 @injectable()
 export class ProjectComponentContext {
