@@ -20,6 +20,9 @@
     "project": "./tsconfig.json"
   },
   "rules": {
+    "quotes": [
+      "off"
+    ],
     "eqeqeq": [
       "warn", "always"
     ],
@@ -28,6 +31,9 @@
     ],
     "no-var": [
       "warn"
+    ],
+    "sort-imports": [
+      "off"
     ],
     "func-style": [
       "error",
@@ -46,6 +52,12 @@
     "@typescript-eslint/await-thenable": [
       "warn"
     ],
+    "@typescript-eslint/no-use-before-define": [
+      "off"
+    ],
+    "@typescript-eslint/no-angle-bracket-type-assertion": [
+      "off"
+    ],
     "@typescript-eslint/no-require-imports": [
       "warn"
     ],
@@ -54,6 +66,9 @@
     ],
     "@typescript-eslint/prefer-string-starts-ends-with": [
       "warn"
+    ],
+    "@typescript-eslint/interface-name-prefix": [
+      "off"
     ],
     "@typescript-eslint/prefer-interface": ["off"],
     "@typescript-eslint/explicit-member-accessibility": [
@@ -86,7 +101,7 @@
   },
   "overrides": [
     {
-      "files": ["*.spec.ts"],
+      "files": ["*.spec.ts", "src/**/*.ts", "types/**/*.ts"],
       "excludedFiles": ["lib/*"],
       "rules": {
         "@typescript-eslint/explicit-function-return-type": "off"
