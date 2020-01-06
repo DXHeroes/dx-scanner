@@ -61,9 +61,9 @@ export class Scanner {
     this.allDetectedComponents = undefined;
   }
 
-  async scan(): Promise<ScanResult> {
+  async scan({ determineRemote } = { determineRemote: true }): Promise<ScanResult> {
     let scanStrategy = await this.scanStrategyDetector.detect();
-    if (scanStrategy.accessType === AccessType.unknown) {
+    if (determineRemote && scanStrategy.accessType === AccessType.unknown) {
       return { shouldExitOnEnd: this.shouldExitOnEnd, needsAuth: true, serviceType: scanStrategy.serviceType };
     }
     this.scanDebug(`Scan strategy: ${inspect(scanStrategy)}`);

@@ -75,7 +75,7 @@ class DXScannerCommand extends Command {
       const container = createRootContainer({ uri: scanPath, auth: authorization, json, fail, recursive: flags.recursive });
       const scanner = container.get(Scanner);
 
-      scanResult = await scanner.scan();
+      scanResult = await scanner.scan({ determineRemote: false });
     }
     cli.action.stop();
     notifier.notify({ isGlobal: true });
