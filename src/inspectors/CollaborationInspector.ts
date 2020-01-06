@@ -57,11 +57,14 @@ export class CollaborationInspector implements ICollaborationInspector {
     let i = 1;
 
     while (hasNextPage) {
-      const pullRequests = await this.service.getPullRequests(owner, repo, { ...options, ...{ pagination: { page: i } } });
+      const pullRequests = await this.service.getPullRequests(owner, repo, {
+        ...options,
+        ...{ pagination: { page: i, perPage: options.pagination?.perPage } },
+      });
       //Add pull requstes to the existing array of PRs from another page
       items = _.merge(items, pullRequests.items);
 
-      if (items.length >= <number>options?.maxNumberOfPullRequests) {
+      if (<number>options?.maxNumberOfPullRequests >= items.length) {
         //Get maximum n newest pull requests
         items = _.take(items, options.maxNumberOfPullRequests);
         break;
