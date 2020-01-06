@@ -53,3 +53,12 @@ export interface IReportBuilder {
    */
   renderDetail(detail: PracticeDetail): string;
 }
+
+export enum BadgeColor {
+  brightgreen = 'brightgreen',
+  green = 'green',
+  yellowgreen = 'yellowgreen',
+  yellow = 'yellow',
+  orange = 'orange',
+  red = 'red',
+}

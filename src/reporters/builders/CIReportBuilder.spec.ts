@@ -3,8 +3,11 @@ import { PracticeEvaluationResult, PracticeImpact } from '../../model';
 import { CIReportBuilder } from './CIReportBuilder';
 
 describe('CIReportBuilder', () => {
-  const practicingHighImpactPracticeWithCtx = practiceWithContextFactory();
-  const notPracticingHighImpactPracticeWithCtx = practiceWithContextFactory({ evaluation: PracticeEvaluationResult.notPracticing });
+  const practicingHighImpactPracticeWithCtx = practiceWithContextFactory({ practice: { name: 'practicing1', url: "./practicing" } });
+  const notPracticingHighImpactPracticeWithCtx = practiceWithContextFactory({
+    practice: { name: 'notPracticing1', url: "./notPracticing" },
+    evaluation: PracticeEvaluationResult.notPracticing,
+  });
 
   describe('#build', () => {
     it('one practicing practice contains all necessary data', () => {

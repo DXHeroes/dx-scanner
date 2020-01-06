@@ -4,7 +4,7 @@ import { PracticeImpact, PracticeEvaluationResult } from '../../model';
 import { PracticeDetail } from '../../practices/IPractice';
 import { ReportDetailType, ReporterData } from '../ReporterData';
 import { assertNever } from '../../lib/assertNever';
-import { IReportBuilder } from './IReportBuilder';
+import { IReportBuilder, BadgeColor } from './IReportBuilder';
 import { DXScoreOverallResult, DXScoreResult } from '../model';
 
 export class CIReportBuilder implements IReportBuilder {
@@ -214,8 +214,29 @@ export class CIReportBuilder implements IReportBuilder {
   };
 
   private renderBadge(score: DXScoreResult) {
-    return `<img src="https://img.shields.io/badge/DX%20Score-${encodeURI(
-      score.value,
-    )}-brightgreen?logo=data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0Ij4KICA8cGF0aCBmaWxsPSIjMzlEMkRBIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiIGQ9Ik0xMiwxOS4xNzE0Mjg2IEwxNS40Mjg1NzE0LDE1LjczNzE0MjkgTDE3LjE0Mjg1NzEsMTcuNDU0Mjg1NyBMMTIsMjIuNjA1NzE0MyBMNi44NTcxNDI4NiwxNy40NTQyODU3IEw4LjU3MTQyODU3LDE1LjczNzE0MjkgTDEyLDE5LjE3MTQyODYgWiBNMTIsNS40MzQyODU3MSBMMTUuNDI4NTcxNCwyIEwxNy4xNDI4NTcxLDMuNzE3MTQyODYgTDEyLDguODY4NTcxNDMgTDYuODU3MTQyODYsMy43MTcxNDI4NiBMOC41NzE0Mjg1NywyIEwxMiw1LjQzNDI4NTcxIFogTTEyLDEyLjMwNjY3NjcgTDE1LjQyODU3MTQsOC44NzIzOTEwMSBMMTcuMTQyODU3MSwxMC41ODk1MzM5IEwxMiwxNS43NDA5NjI0IEw2Ljg1NzE0Mjg2LDEwLjU4OTUzMzkgTDguNTcxNDI4NTcsOC44NzIzOTEwMSBMMTIsMTIuMzA2Njc2NyBaIE0yMC41NzE0Mjg2LDEwLjU4NTcxNDMgTDE3LjE0Mjg1NzEsNy4xNTE0Mjg1NyBMMTguODU3MTQyOSw1LjQzNDI4NTcxIEwyNCwxMC41ODU3MTQzIEwxOC44NTcxNDI5LDE1LjczNzE0MjkgTDE3LjE0Mjg1NzEsMTQuMDIgTDIwLjU3MTQyODYsMTAuNTg1NzE0MyBaIE0zLjQyODU3MTQzLDEwLjU4NTcxNDMgTDYuODU3MTQyODYsMTQuMDIgTDUuMTQyODU3MTQsMTUuNzM3MTQyOSBMMCwxMC41ODU3MTQzIEw1LjE0Mjg1NzE0LDUuNDM0Mjg1NzEgTDYuODU3MTQyODYsNy4xNTE0Mjg1NyBMMy40Mjg1NzE0MywxMC41ODU3MTQzIFoiLz4KPC9zdmc+Cg=="/>`;
+    return `<img src="https://img.shields.io/badge/DX%20Score-${encodeURI(score.value)}-${this.badgeColor(
+      score,
+    )}?logo=data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0Ij4KICA8cGF0aCBmaWxsPSIjMzlEMkRBIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiIGQ9Ik0xMiwxOS4xNzE0Mjg2IEwxNS40Mjg1NzE0LDE1LjczNzE0MjkgTDE3LjE0Mjg1NzEsMTcuNDU0Mjg1NyBMMTIsMjIuNjA1NzE0MyBMNi44NTcxNDI4NiwxNy40NTQyODU3IEw4LjU3MTQyODU3LDE1LjczNzE0MjkgTDEyLDE5LjE3MTQyODYgWiBNMTIsNS40MzQyODU3MSBMMTUuNDI4NTcxNCwyIEwxNy4xNDI4NTcxLDMuNzE3MTQyODYgTDEyLDguODY4NTcxNDMgTDYuODU3MTQyODYsMy43MTcxNDI4NiBMOC41NzE0Mjg1NywyIEwxMiw1LjQzNDI4NTcxIFogTTEyLDEyLjMwNjY3NjcgTDE1LjQyODU3MTQsOC44NzIzOTEwMSBMMTcuMTQyODU3MSwxMC41ODk1MzM5IEwxMiwxNS43NDA5NjI0IEw2Ljg1NzE0Mjg2LDEwLjU4OTUzMzkgTDguNTcxNDI4NTcsOC44NzIzOTEwMSBMMTIsMTIuMzA2Njc2NyBaIE0yMC41NzE0Mjg2LDEwLjU4NTcxNDMgTDE3LjE0Mjg1NzEsNy4xNTE0Mjg1NyBMMTguODU3MTQyOSw1LjQzNDI4NTcxIEwyNCwxMC41ODU3MTQzIEwxOC44NTcxNDI5LDE1LjczNzE0MjkgTDE3LjE0Mjg1NzEsMTQuMDIgTDIwLjU3MTQyODYsMTAuNTg1NzE0MyBaIE0zLjQyODU3MTQzLDEwLjU4NTcxNDMgTDYuODU3MTQyODYsMTQuMDIgTDUuMTQyODU3MTQsMTUuNzM3MTQyOSBMMCwxMC41ODU3MTQzIEw1LjE0Mjg1NzE0LDUuNDM0Mjg1NzEgTDYuODU3MTQyODYsNy4xNTE0Mjg1NyBMMy40Mjg1NzE0MywxMC41ODU3MTQzIFoiLz4KPC9zdmc+Cg=="/>`;
+  }
+
+  private badgeColor(score: DXScoreResult) {
+    const pctg = score.points.percentage;
+    let color: BadgeColor;
+
+    if (pctg > 90) {
+      color = BadgeColor.brightgreen;
+    } else if (pctg > 80) {
+      color = BadgeColor.green;
+    } else if (pctg > 70) {
+      color = BadgeColor.yellowgreen;
+    } else if (pctg > 60) {
+      color = BadgeColor.yellow;
+    } else if (pctg > 40) {
+      color = BadgeColor.orange;
+    } else {
+      color = BadgeColor.red;
+    }
+
+    return color;
   }
 }
