@@ -7,14 +7,15 @@ import { IPractice } from '../IPractice';
 import { PullRequestState } from '../../inspectors/ICollaborationInspector';
 
 @DxPractice({
-  id: 'LanguageIndependent.FatPullRequestsPractice',
-  name: '',
+  id: 'LanguageIndependent.ThinPullRequestsPractice',
+  name: 'Break down large pull requests into smaller ones',
   impact: PracticeImpact.medium,
-  suggestion: '',
+  suggestion:
+    'Large pull request are hard to code review and it reduces the probability of finding bugs. Split your PRs into logical units. Do not have PR with more than 500 changes.',
   reportOnlyOnce: true,
-  url: '',
+  url: 'https://medium.com/@hugooodias/the-anatomy-of-a-perfect-pull-request-567382bb6067',
 })
-export class FatPullRequestsPractice implements IPractice {
+export class ThinPullRequestsPractice implements IPractice {
   async isApplicable(): Promise<boolean> {
     return true;
   }
@@ -45,7 +46,7 @@ export class FatPullRequestsPractice implements IPractice {
       return date > newestPrDate - daysInMilliseconds;
     });
 
-    const fatPullRequests = validPullRequests.filter((pullRequest) => <number>pullRequest.lines?.changes > 1000);
+    const fatPullRequests = validPullRequests.filter((pullRequest) => <number>pullRequest.lines?.changes > 500);
     if (fatPullRequests.length > 0) {
       return PracticeEvaluationResult.notPracticing;
     }

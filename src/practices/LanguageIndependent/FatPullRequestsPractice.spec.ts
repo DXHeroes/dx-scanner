@@ -6,10 +6,10 @@ import { PracticeEvaluationResult } from '../../model';
 import { BitbucketPullRequestState, BitbucketService } from '../../services';
 import { BitbucketNock } from '../../test/helpers/bitbucketNock';
 import { Types } from '../../types';
-import { FatPullRequestsPractice } from './FatPullRequestsPractice';
+import { ThinPullRequestsPractice } from './FatPullRequestsPractice';
 
-describe('FatPullRequestsPractice', () => {
-  let practice: FatPullRequestsPractice;
+describe('ThinPullRequestsPractice', () => {
+  let practice: ThinPullRequestsPractice;
   let containerCtx: TestContainerContext;
   let bitbucketNock: BitbucketNock;
   const MockedCollaborationInspector = <jest.Mock<CollaborationInspector>>(<unknown>CollaborationInspector);
@@ -22,9 +22,9 @@ describe('FatPullRequestsPractice', () => {
 
   beforeAll(() => {
     containerCtx = createTestContainer();
-    containerCtx.container.bind('FatPullRequestsPractice').to(FatPullRequestsPractice);
+    containerCtx.container.bind('ThinPullRequestsPractice').to(ThinPullRequestsPractice);
     containerCtx.container.rebind(Types.IContentRepositoryBrowser).to(BitbucketService);
-    practice = containerCtx.container.get('FatPullRequestsPractice');
+    practice = containerCtx.container.get('ThinPullRequestsPractice');
     mockCollaborationInspector = new MockedCollaborationInspector();
   });
 
