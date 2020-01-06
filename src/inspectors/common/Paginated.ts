@@ -27,7 +27,7 @@ export type PaginationParams = {
  */
 export const paginate = <T>(items: T[], params?: PaginationParams): Paginated<T> => {
   const page = params?.page || 0;
-  const perPage = params?.perPage ? params?.perPage : items.length;
+  const perPage = params?.perPage || items.length;
 
   const totalCount = items.length;
   const start = page * perPage;
