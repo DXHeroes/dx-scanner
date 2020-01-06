@@ -11,6 +11,10 @@ import {
   getPullCommitsResponse,
   getPullCommitsServiceResponse,
 } from '../services/git/__MOCKS__/gitHubServiceMockFolder';
+import { Types } from '../types';
+import { BitbucketService } from '../services';
+import { PullRequestState } from './ICollaborationInspector';
+import { TIMEOUT } from 'dns';
 
 describe('Collaboration Inspector', () => {
   let inspector: CollaborationInspector;
@@ -19,9 +23,12 @@ describe('Collaboration Inspector', () => {
   beforeAll(async () => {
     containerCtx = createTestContainer();
     inspector = <CollaborationInspector>containerCtx.practiceContext.collaborationInspector;
+    // containerCtx.container.rebind(Types.IContentRepositoryBrowser).to(BitbucketService);
+
   });
 
   beforeEach(() => {
+    inspector = <CollaborationInspector>containerCtx.practiceContext.collaborationInspector;
     nock.cleanAll();
   });
 
@@ -56,4 +63,23 @@ describe('Collaboration Inspector', () => {
     const response = await inspector.getPullCommits('octocat', 'Hello-World', 1);
     expect(response).toMatchObject(getPullCommitsServiceResponse);
   });
+
+  it.only('returns max number of pull requests', async () => {
+    //const response = await inspector.getAllPullRequests('octocat', 'Hello-World');
+    containerCtx.container.rebind(Types.IContentRepositoryBrowser).to(BitbucketService);
+    const collaborationInspector = containerCtx.container.get<CollaborationInspector>(Types.ICollaborationInspector);
+
+    const response = await collaborationInspector.getPullRequests('pypy', 'pypy', {
+     maxNumberOfPullRequests: 1,
+      
+      // filter: { state: PullRequestState.open },
+    });
+
+    console.log(response);
+    expect(response).toEqual('');
+
+
+
+
+  }, 20000);
 });
