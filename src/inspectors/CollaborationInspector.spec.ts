@@ -75,16 +75,14 @@ describe('Collaboration Inspector', () => {
     });
 
     const response = await collaborationInspector.getPullRequests('pypy', 'pypy', {
-      maxNumberOfPullRequests: 1,
       filter: { state: PullRequestState.closed },
       pagination: { page: 1, perPage: 5 },
     });
 
-    const getMaxOneClosedPullRequestsResponse = bitbucketNock.mockBitbucketPullRequestsResponse({
+    const closedPRResponse = bitbucketNock.mockBitbucketPullRequestsResponse({
       states: BitbucketPullRequestState.closed,
     });
-    getMaxOneClosedPullRequestsResponse.hasNextPage = false;
 
-    expect(response).toEqual(getMaxOneClosedPullRequestsResponse);
+    expect(response).toEqual(closedPRResponse);
   });
 });

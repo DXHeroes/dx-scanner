@@ -39,6 +39,12 @@ export class ThinPullRequestsPractice implements IPractice {
     const descSortedPullRequests = pullRequests.sort(
       (a, b) => new Date(b.updatedAt || b.createdAt).getTime() - new Date(a.updatedAt || a.createdAt).getTime(),
     );
+
+    if (descSortedPullRequests.length === 0) {
+      // not enough data
+      return PracticeEvaluationResult.unknown;
+    }
+
     const daysInMilliseconds = moment.duration(30, 'days').asMilliseconds();
     const newestPrDate = new Date(descSortedPullRequests[0].updatedAt || descSortedPullRequests[0].createdAt).getTime();
 
@@ -66,7 +72,9 @@ export class ThinPullRequestsPractice implements IPractice {
         pagination: { page },
         filter: { state: PullRequestState.all },
       });
+
       items = _.merge(items, response.items); // merge all results
+      hasNextPage = response.hasNextPage;
     }
 
     return _.take(items, this.measurePullRequestCount);
