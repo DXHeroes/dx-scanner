@@ -22,9 +22,9 @@ describe('TimeToSolvePullRequestsPractice', () => {
 
   beforeAll(() => {
     containerCtx = createTestContainer();
-    containerCtx.container.bind('TimeToSolvePractice').to(TimeToSolvePullRequestsPractice);
+    containerCtx.container.bind('TimeToSolvePullRequestsPractice').to(TimeToSolvePullRequestsPractice);
     containerCtx.container.rebind(Types.IContentRepositoryBrowser).to(BitbucketService);
-    practice = containerCtx.container.get('TimeToSolvePractice');
+    practice = containerCtx.container.get('TimeToSolvePullRequestsPractice');
     mockCollaborationInspector = new MockedCollaborationInspector();
   });
 
