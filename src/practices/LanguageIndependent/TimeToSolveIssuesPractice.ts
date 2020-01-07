@@ -11,8 +11,7 @@ import { IPractice } from '../IPractice';
   impact: PracticeImpact.medium,
   suggestion: 'Do not have an open Issues more than 60 days. Solve Issues continuously.',
   reportOnlyOnce: true,
-  url: '',
-  //dependsOn: { practicing: ['LanguageIndependent.DoesPullRequests'] },
+  url: 'https://guides.github.com/features/issues/\nhttps://confluence.atlassian.com/bitbucket/issue-trackers-221449750.html',
 })
 export class TimeToSolveIssuesPractice implements IPractice {
   async isApplicable(): Promise<boolean> {
