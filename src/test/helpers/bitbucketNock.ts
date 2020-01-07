@@ -4,7 +4,7 @@ import { BitbucketCommit } from '../../services/bitbucket/BitbucketService';
 import { BitbucketPullRequestState } from '../../services/git/IVCSService';
 import qs from 'qs';
 import { Paginated, PaginationParams } from '../../inspectors';
-import { PullRequest } from '../../services/git/model';
+import { PullRequest, Issue } from '../../services/git/model';
 import { getPullRequestResponse } from '../../services/git/__MOCKS__/bitbucketServiceMockFolder';
 import _ from 'lodash';
 import moment from 'moment';
@@ -142,11 +142,11 @@ export class BitbucketNock {
     return interceptor;
   }
 
-  mockBitbucketPullRequestsResponse(args: {
+  mockBitbucketIssuesOrPullRequestsResponse(args: {
     states?: BitbucketPullRequestState | BitbucketPullRequestState[];
     updatedAt?: number;
     withDiffStat?: boolean;
-  }): Paginated<PullRequest> {
+  }): Paginated<PullRequest | Issue> {
     const pullRequests: PullRequest[] = [];
     if (!args.states) {
       return {

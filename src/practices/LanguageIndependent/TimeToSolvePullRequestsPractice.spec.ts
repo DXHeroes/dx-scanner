@@ -1,12 +1,13 @@
 import moment from 'moment';
 import nock from 'nock';
-import { CollaborationInspector } from '../../inspectors';
+import { CollaborationInspector, Paginated } from '../../inspectors';
 import { createTestContainer, TestContainerContext } from '../../inversify.config';
 import { PracticeEvaluationResult } from '../../model';
 import { BitbucketPullRequestState, BitbucketService } from '../../services';
 import { BitbucketNock } from '../../test/helpers/bitbucketNock';
 import { TimeToSolvePullRequestsPractice } from './TimeToSolvePullRequestsPractice';
 import { Types } from '../../types';
+import { PullRequest } from '../../services/git/model';
 
 describe('TimeToSolvePullRequestsPractice', () => {
   let practice: TimeToSolvePullRequestsPractice;
@@ -22,9 +23,9 @@ describe('TimeToSolvePullRequestsPractice', () => {
 
   beforeAll(() => {
     containerCtx = createTestContainer();
-    containerCtx.container.bind('TimeToSolvePullRequestsPractice').to(TimeToSolvePullRequestsPractice);
+    containerCtx.container.bind('TimeToSolvePractice').to(TimeToSolvePullRequestsPractice);
     containerCtx.container.rebind(Types.IContentRepositoryBrowser).to(BitbucketService);
-    practice = containerCtx.container.get('TimeToSolvePullRequestsPractice');
+    practice = containerCtx.container.get('TimeToSolvePractice');
     mockCollaborationInspector = new MockedCollaborationInspector();
   });
 
@@ -38,7 +39,7 @@ describe('TimeToSolvePullRequestsPractice', () => {
     bitbucketNock.getApiResponse({ resource: 'pullrequests', state: BitbucketPullRequestState.open });
     const args = { states: BitbucketPullRequestState.open, updatedAt: Date.now() - moment.duration(10, 'days').asMilliseconds() };
     mockCollaborationInspector.getPullRequests = async () => {
-      return bitbucketNock.mockBitbucketPullRequestsResponse(args);
+      return <Paginated<PullRequest>>bitbucketNock.mockBitbucketIssuesOrPullRequestsResponse(args);
     };
 
     const evaluated = await practice.evaluate({
@@ -54,7 +55,7 @@ describe('TimeToSolvePullRequestsPractice', () => {
     bitbucketNock.getApiResponse({ resource: 'pullrequests', state: BitbucketPullRequestState.open });
     const args = { states: BitbucketPullRequestState.open, updatedAt: Date.now() - moment.duration(100, 'days').asMilliseconds() };
     mockCollaborationInspector.getPullRequests = async () => {
-      return bitbucketNock.mockBitbucketPullRequestsResponse(args);
+      return <Paginated<PullRequest>>bitbucketNock.mockBitbucketIssuesOrPullRequestsResponse(args);
     };
 
     const evaluated = await practice.evaluate({
