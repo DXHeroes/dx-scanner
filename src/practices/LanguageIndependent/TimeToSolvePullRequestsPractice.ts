@@ -4,6 +4,7 @@ import { PracticeEvaluationResult, PracticeImpact } from '../../model';
 import { GitServiceUtils } from '../../services/git/GitServiceUtils';
 import { DxPractice } from '../DxPracticeDecorator';
 import { IPractice } from '../IPractice';
+import { PullRequest } from '../../services/git/model';
 
 @DxPractice({
   id: 'LanguageIndependent.TimeToSolvePullRequests',
@@ -20,7 +21,7 @@ export class TimeToSolvePullRequestsPractice implements IPractice {
   }
 
   async evaluate(ctx: PracticeContext): Promise<PracticeEvaluationResult> {
-    if (ctx.fileInspector === undefined || ctx.collaborationInspector === undefined) {
+    if (!ctx.fileInspector || !ctx.collaborationInspector) {
       return PracticeEvaluationResult.unknown;
     }
 
@@ -30,17 +31,10 @@ export class TimeToSolvePullRequestsPractice implements IPractice {
     //Both GitHub API and Bitbucket API returns open pullrequests defaultly
     const pullRequests = await ctx.collaborationInspector.getPullRequests(ownerAndRepoName.owner, ownerAndRepoName.repoName);
 
-    const latestPRsUpdate = pullRequests.items.map((item) => new Date(item.updatedAt || item.createdAt).getTime());
+    const latestPRsUpdate = pullRequests.items.map((item) => moment(item.updatedAt || item.createdAt));
 
-    const daysInMilliseconds = moment.duration(30, 'days').asMilliseconds();
-    const now = Date.now();
-    const openPullRequestsTooLong = [];
-
-    latestPRsUpdate.forEach((prDate) => {
-      if (now - prDate > daysInMilliseconds) {
-        openPullRequestsTooLong.push(prDate);
-      }
-    });
+    const dateInPast = moment().subtract(30, 'd');
+    const openPullRequestsTooLong = latestPRsUpdate.filter((d) => d.isSameOrBefore(dateInPast));
 
     if (openPullRequestsTooLong.length === 0) {
       return PracticeEvaluationResult.practicing;

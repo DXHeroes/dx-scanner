@@ -17,6 +17,7 @@ import { Paginated } from '../../inspectors';
     'Large pull request are hard to code review and it reduces the probability of finding bugs. Split your PRs into logical units. Do not have PR with more than 500 changes.',
   reportOnlyOnce: true,
   url: 'https://medium.com/@hugooodias/the-anatomy-of-a-perfect-pull-request-567382bb6067',
+  dependsOn: { practicing: ['LanguageIndependent.DoesPullRequests'] },
 })
 export class ThinPullRequestsPractice implements IPractice {
   private readonly measurePullRequestCount = 500; // update suggestion text when changed
@@ -65,8 +66,10 @@ export class ThinPullRequestsPractice implements IPractice {
   private async loadPullRequests(ctx: PracticeContext, owner: string, repo: string) {
     let response: Paginated<PullRequest>;
     let items: PullRequest[] = [];
+    let page = 1;
+    let hasNextPage = true;
 
-    for (let page = 1, hasNextPage; items.length < this.measurePullRequestCount && hasNextPage; page++) {
+    while (hasNextPage && items.length <= this.measurePullRequestCount) {
       response = await ctx.collaborationInspector!.getPullRequests(owner, repo, {
         withDiffStat: true,
         pagination: { page },
@@ -75,6 +78,7 @@ export class ThinPullRequestsPractice implements IPractice {
 
       items = _.merge(items, response.items); // merge all results
       hasNextPage = response.hasNextPage;
+      page++;
     }
 
     return _.take(items, this.measurePullRequestCount);

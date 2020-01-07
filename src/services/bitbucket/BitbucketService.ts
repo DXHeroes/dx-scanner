@@ -85,13 +85,13 @@ export class BitbucketService implements IVCSService {
     options?: { withDiffStat?: boolean } & ListGetterOptions<{ state?: PullRequestState }>,
   ): Promise<Paginated<PullRequest>> {
     const apiUrl = `https://api.bitbucket.org/2.0/repositories/${owner}/${repo}/pullrequests`;
+    const ownerUrl = `www.bitbucket.org/${owner}`;
+
     const state = VCSServicesUtils.getPRState(options?.filter?.state, VCSService.bitbucket);
 
-    const ownerUrl = `www.bitbucket.org/${owner}`;
     const ownerId = `${(await this.client.repositories.get({ repo_slug: repo, username: owner })).data.owner?.uuid}`;
-
     const response: DeepRequired<Bitbucket.Response<Bitbucket.Schema.PaginatedPullrequests>> = await axios.get(apiUrl, {
-      params: { state: state, page: options?.pagination?.page, pagelen: options?.pagination?.perPage },
+      params: { state, page: options?.pagination?.page, pagelen: options?.pagination?.perPage },
       paramsSerializer: (params) => {
         return qs.stringify(params);
       },

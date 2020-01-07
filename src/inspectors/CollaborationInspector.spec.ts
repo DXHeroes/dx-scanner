@@ -15,6 +15,7 @@ import { Types } from '../types';
 import { BitbucketService, BitbucketPullRequestState } from '../services';
 import { BitbucketNock } from '../test/helpers/bitbucketNock';
 import { PullRequestState } from '.';
+import { bitbucketPullRequestResponseFactory } from '../test/factories/responses/bitbucket/prResponseFactory';
 
 describe('Collaboration Inspector', () => {
   let inspector: CollaborationInspector;
@@ -66,23 +67,22 @@ describe('Collaboration Inspector', () => {
     bitbucketNock = new BitbucketNock('pypy', 'pypy');
     containerCtx.container.rebind(Types.IContentRepositoryBrowser).to(BitbucketService);
     const collaborationInspector = containerCtx.container.get<CollaborationInspector>(Types.ICollaborationInspector);
+    const mockPr = bitbucketPullRequestResponseFactory({
+      state: BitbucketPullRequestState.closed,
+    });
 
     bitbucketNock.getOwnerId();
-    bitbucketNock.getApiResponse({
-      resource: 'pullrequests',
-      state: BitbucketPullRequestState.closed,
+    bitbucketNock.listPullRequestsResponse([mockPr], {
       pagination: { page: 1, perPage: 5 },
+      filter: { state: BitbucketPullRequestState.closed },
     });
 
     const response = await collaborationInspector.getPullRequests('pypy', 'pypy', {
-      filter: { state: PullRequestState.closed },
       pagination: { page: 1, perPage: 5 },
+      filter: { state: PullRequestState.closed },
     });
 
-    const closedPRResponse = bitbucketNock.mockBitbucketPullRequestsResponse({
-      states: BitbucketPullRequestState.closed,
-    });
-
-    expect(response).toEqual(closedPRResponse);
+    expect(response.items).toHaveLength(1);
+    expect(response.items[0].state).toEqual(BitbucketPullRequestState.closed);
   });
 });
