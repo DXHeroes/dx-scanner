@@ -12,19 +12,20 @@ import {
   getPullCommitsServiceResponse,
 } from '../services/git/__MOCKS__/gitHubServiceMockFolder';
 import { Types } from '../types';
-import { BitbucketService } from '../services';
+import { BitbucketService, BitbucketPullRequestState } from '../services';
+import { BitbucketNock } from '../test/helpers/bitbucketNock';
+import { PullRequestState } from '.';
 
 describe('Collaboration Inspector', () => {
   let inspector: CollaborationInspector;
   let containerCtx: TestContainerContext;
+  let bitbucketNock: BitbucketNock;
 
   beforeAll(async () => {
     containerCtx = createTestContainer();
-    inspector = <CollaborationInspector>containerCtx.practiceContext.collaborationInspector;
-    containerCtx.container.rebind(Types.IContentRepositoryBrowser).to(BitbucketService);
   });
 
-  beforeEach(() => {
+  beforeEach(async () => {
     inspector = <CollaborationInspector>containerCtx.practiceContext.collaborationInspector;
     nock.cleanAll();
   });
@@ -61,18 +62,29 @@ describe('Collaboration Inspector', () => {
     expect(response).toMatchObject(getPullCommitsServiceResponse);
   });
 
-  // it.only('returns max number of pull requests', async () => {
-  //   //const response = await inspector.getAllPullRequests('octocat', 'Hello-World');
-  //   containerCtx.container.rebind(Types.IContentRepositoryBrowser).to(BitbucketService);
-  //   const collaborationInspector = containerCtx.container.get<CollaborationInspector>(Types.ICollaborationInspector);
+  it('returns max number of pull requests', async () => {
+    bitbucketNock = new BitbucketNock('pypy', 'pypy');
+    containerCtx.container.rebind(Types.IContentRepositoryBrowser).to(BitbucketService);
+    const collaborationInspector = containerCtx.container.get<CollaborationInspector>(Types.ICollaborationInspector);
 
-  //   const response = await collaborationInspector.getPullRequests('pypy', 'pypy', {
-  //     maxNumberOfPullRequests: 1,
+    bitbucketNock.getOwnerId();
+    bitbucketNock.getApiResponse({
+      resource: 'pullrequests',
+      state: BitbucketPullRequestState.closed,
+      pagination: { page: 1, perPage: 5 },
+    });
 
-  //     // filter: { state: PullRequestState.open },
-  //   });
+    const response = await collaborationInspector.getPullRequests('pypy', 'pypy', {
+      maxNumberOfPullRequests: 1,
+      filter: { state: PullRequestState.closed },
+      pagination: { page: 1, perPage: 5 },
+    });
 
-  //   console.log(response);
-  //   expect(response).toEqual('');
-  // }, 20000);
+    const getMaxOneClosedPullRequestsResponse = bitbucketNock.mockBitbucketPullRequestsResponse({
+      states: BitbucketPullRequestState.closed,
+    });
+    getMaxOneClosedPullRequestsResponse.hasNextPage = false;
+
+    expect(response).toEqual(getMaxOneClosedPullRequestsResponse);
+  });
 });

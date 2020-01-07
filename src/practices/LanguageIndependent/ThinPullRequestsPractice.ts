@@ -10,14 +10,17 @@ import { PullRequest } from '../../services/git/model';
 import { Paginated } from '../../inspectors';
 
 @DxPractice({
-  id: 'LanguageIndependent.FatPullRequestsPractice',
-  name: '',
+  id: 'LanguageIndependent.ThinPullRequestsPractice',
+  name: 'Break down large pull requests into smaller ones',
   impact: PracticeImpact.medium,
-  suggestion: '',
+  suggestion:
+    'Large pull request are hard to code review and it reduces the probability of finding bugs. Split your PRs into logical units. Do not have PR with more than 500 changes.',
   reportOnlyOnce: true,
-  url: '',
+  url: 'https://medium.com/@hugooodias/the-anatomy-of-a-perfect-pull-request-567382bb6067',
 })
-export class FatPullRequestsPractice implements IPractice {
+export class ThinPullRequestsPractice implements IPractice {
+  private readonly measurePullRequestCount = 500; // update suggestion text when changed
+
   async isApplicable(): Promise<boolean> {
     return true;
   }
@@ -45,7 +48,7 @@ export class FatPullRequestsPractice implements IPractice {
       return date > newestPrDate - daysInMilliseconds;
     });
 
-    const fatPullRequests = validPullRequests.filter((pullRequest) => <number>pullRequest.lines?.changes > 1000);
+    const fatPullRequests = validPullRequests.filter((pullRequest) => <number>pullRequest.lines?.changes > this.measurePullRequestCount);
     if (fatPullRequests.length > 0) {
       return PracticeEvaluationResult.notPracticing;
     }
@@ -57,7 +60,7 @@ export class FatPullRequestsPractice implements IPractice {
     let response: Paginated<PullRequest>;
     let items: PullRequest[] = [];
 
-    for (let page = 1, hasNextPage; items.length < 500 && hasNextPage; page++) {
+    for (let page = 1, hasNextPage; items.length < this.measurePullRequestCount && hasNextPage; page++) {
       response = await ctx.collaborationInspector!.getPullRequests(owner, repo, {
         withDiffStat: true,
         pagination: { page },
@@ -66,6 +69,6 @@ export class FatPullRequestsPractice implements IPractice {
       items = _.merge(items, response.items); // merge all results
     }
 
-    return _.take(items, 500);
+    return _.take(items, this.measurePullRequestCount);
   }
 }
