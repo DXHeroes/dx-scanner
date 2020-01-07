@@ -8,6 +8,7 @@ import updateNotifier from 'update-notifier';
 import { ScanningStrategyDetectorUtils } from './detectors/utils/ScanningStrategyDetectorUtils';
 import { PracticeImpact } from './model';
 import { ServiceType } from './detectors/ScanningStrategyDetector';
+import isTravis from 'is-travis';
 
 class DXScannerCommand extends Command {
   static description = 'Scan your project for possible DX recommendations.';
@@ -60,7 +61,7 @@ class DXScannerCommand extends Command {
 
     let scanResult: ScanResult;
     scanResult = await scanner.scan();
-    if (scanResult.needsAuth) {
+    if (scanResult.needsAuth && !isTravis) {
       if (ScanningStrategyDetectorUtils.isGitHubPath(scanPath) || scanResult.serviceType === ServiceType.github) {
         authorization = await cli.prompt('Insert your GitHub personal access token. https://github.com/settings/tokens\n', {
           type: 'hide',
