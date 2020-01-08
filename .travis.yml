@@ -54,3 +54,12 @@ jobs:
       skip_cleanup: true
       script:
         - npx semantic-release
+  - stage: publish gh action in docker container
+    if: branch = master AND type = push
+    node_js: lts/*
+    env:
+      - CONTAINER_NAME=docker.pkg.github.com/dxheroes/dx-scanner/release
+    script:
+      - docker build -t $CONTAINER_NAME .
+      - docker login -u dxheroes -p $DOCKER_GITHUB_PASSWORD docker.pkg.github.com
+      - docker push $CONTAINER_NAME

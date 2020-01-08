@@ -1,3 +1,25 @@
+## [1.29.1](https://github.com/dxheroes/dx-scanner/compare/v1.29.0...v1.29.1) (2020-01-08)
+
+
+### Bug Fixes
+
+* do not require engines strictly ([dff5212](https://github.com/dxheroes/dx-scanner/commit/dff5212))
+
+# [1.29.0](https://github.com/dxheroes/dx-scanner/compare/v1.28.2...v1.29.0) (2020-01-08)
+
+
+### Features
+
+* **CIReportBuilder:** add PR msg builder and change a structure ([3c332b3](https://github.com/dxheroes/dx-scanner/commit/3c332b3))
+* **GHActions:** publish GH Marketplace Docker image with DX Scanner ([71db6c0](https://github.com/dxheroes/dx-scanner/commit/71db6c0))
+
+## [1.28.2](https://github.com/dxheroes/dx-scanner/compare/v1.28.1...v1.28.2) (2020-01-08)
+
+
+### Bug Fixes
+
+* **deps:** update dependency npm-check-updates to v4 ([cd93413](https://github.com/dxheroes/dx-scanner/commit/cd93413))
+
 ## [1.28.1](https://github.com/dxheroes/dx-scanner/compare/v1.28.0...v1.28.1) (2020-01-08)
 
 

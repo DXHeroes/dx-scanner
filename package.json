@@ -1,7 +1,7 @@
 {
   "name": "dx-scanner",
   "description": "Scan your project for possible DX recommendations.",
-  "version": "1.28.1",
+  "version": "1.29.1",
   "author": "DX Heroes LTD <info@dxheroes.io> (https://dxheroes.io)",
   "homepage": "https://github.com/dxheroes/dx-scanner",
   "repository": "ssh://git@github.com/dxheroes/dx-scanner.git",
@@ -93,7 +93,6 @@
     "semantic-release-slack-bot": "1.4.0",
     "ts-jest": "24.3.0"
   },
-  "engineStrict": true,
   "engines": {
     "node": "^12",
     "yarn": "^1"
