@@ -7,8 +7,24 @@ import { ServiceError, ErrorCode } from './lib/errors';
 import updateNotifier from 'update-notifier';
 import { ScanningStrategyDetectorUtils } from './detectors/utils/ScanningStrategyDetectorUtils';
 import { PracticeImpact } from './model';
+import { practices } from './practices';
+import { DxPractice, IPracticeWithMetadata } from './practices/DxPracticeDecorator';
+import { multiInject } from 'inversify';
+import { Types } from './types';
 
 class DXScannerCommand extends Command {
+  private readonly practices: IPracticeWithMetadata[];
+  constructor(
+    argv: any,
+    config: any,
+    // inject all practices registered under Types.Practice in inversify config
+    @multiInject(Types.Practice) practices: IPracticeWithMetadata[],
+  ) {
+    super(() => {
+      return this.argv;
+    });
+    this.practices = practices;
+  }
   static description = 'Scan your project for possible DX recommendations.';
   static usage = ['[PATH] [OPTIONS]'];
 
@@ -29,6 +45,10 @@ class DXScannerCommand extends Command {
       options: ['high', 'medium', 'small', 'off', 'all'],
       description: 'Run scanner in failure mode. Exits process with code 1 for any non-practicing condition of given level.',
     }),
+    practices: flags.boolean({
+      char: 'p',
+      description: 'List all practices DX Scanner checks if they are applicable for your code.',
+    }),
   };
 
   static args = [{ name: 'path', default: process.cwd() }];
@@ -39,6 +59,12 @@ class DXScannerCommand extends Command {
   async run() {
     const { args, flags } = this.parse(DXScannerCommand);
     const scanPath = args.path;
+    if (flags.practices) {
+      this.practices.forEach((practice) => {
+        this.log(practice.getMetadata().name);
+      });
+      process.exit(0);
+    }
 
     let authorization = flags.authorization ? flags.authorization : this.loadAuthTokenFromEnvs();
     const json = flags.json ? flags.json : undefined;
@@ -49,7 +75,14 @@ class DXScannerCommand extends Command {
 
     cli.action.start(`Scanning URI: ${scanPath}`);
 
-    const container = createRootContainer({ uri: scanPath, auth: authorization, json, fail, recursive: flags.recursive });
+    const container = createRootContainer({
+      uri: scanPath,
+      auth: authorization,
+      json,
+      fail,
+      recursive: flags.recursive,
+      listPractices: flags.practices,
+    });
     const scanner = container.get(Scanner);
 
     if (flags.init) {
