@@ -37,22 +37,17 @@ export class ThinPullRequestsPractice implements IPractice {
     // load all necessary PRs
     const pullRequests = await this.loadPullRequests(ctx, ownerAndRepoName.owner, ownerAndRepoName.repoName);
 
-    const descSortedPullRequests = pullRequests.sort(
-      (a, b) => new Date(b.updatedAt || b.createdAt).getTime() - new Date(a.updatedAt || a.createdAt).getTime(),
-    );
+    const descSortedPullRequests = pullRequests.sort((a, b) => moment(b.updatedAt || b.createdAt).diff(moment(a.updatedAt || a.createdAt)));
 
     if (descSortedPullRequests.length === 0) {
       // not enough data
       return PracticeEvaluationResult.unknown;
     }
 
-    const daysInMilliseconds = moment.duration(30, 'days').asMilliseconds();
-    const newestPrDate = new Date(descSortedPullRequests[0].updatedAt || descSortedPullRequests[0].createdAt).getTime();
-
     //get PRs which are no more than 30 days older than the newest PR
-    const validPullRequests = descSortedPullRequests.filter((val) => {
-      const date = new Date(val.updatedAt || val.createdAt).getTime();
-      return date > newestPrDate - daysInMilliseconds;
+    const newestPrDate = moment(descSortedPullRequests[0].updatedAt || descSortedPullRequests[0].createdAt).subtract(30, 'days');
+    const validPullRequests = descSortedPullRequests.filter((d) => {
+      return newestPrDate.isBefore(moment(d.updatedAt || d.createdAt));
     });
 
     const fatPullRequests = validPullRequests.filter((pullRequest) => <number>pullRequest.lines?.changes > this.measurePullRequestCount);

@@ -133,60 +133,6 @@ export class BitbucketNock {
 
     return BitbucketNock.get(baseUrl).reply(200, pullRequest);
   }
-
-  // mockBitbucketPullRequestsResponse(
-  //   pullRequests: PullRequestMock[]
-  // }): Paginated<PullRequest> {
-
-  //   const paginatedPullrequests: Paginated<PullRequest> = {
-  //     items: [getPullRequestResponse],
-  //     hasNextPage: false,
-  //     hasPreviousPage: false,
-  //     page: 1,
-  //     perPage: 1,
-  //     totalCount: 1,
-  //   };
-
-  // if (typeof args.states !== 'string') {
-  //   args.states.forEach((state) => {
-  //     const pullrequest = _.cloneDeep(getPullRequestResponse);
-
-  //     pullrequest.state = state;
-  //     if (args.updatedAt) {
-  //       pullrequest.updatedAt = moment(args.updatedAt).format('YYYY-MM-DDTHH:mm:ss.SSSSSSZ');
-  //     }
-  //     pullrequest.closedAt =
-  //       pullrequest.state === BitbucketPullRequestState.closed || pullrequest.state === BitbucketPullRequestState.declined
-  //         ? pullrequest.updatedAt
-  //         : null;
-  //     pullrequest.mergedAt = pullrequest.state === BitbucketPullRequestState.closed ? pullrequest.updatedAt : null;
-  //     if (args.withDiffStat) {
-  //       pullRequests.push({ ...pullrequest, lines });
-  //     } else {
-  //       pullRequests.push(pullrequest);
-  //     }
-  //   });
-
-  //   paginatedPullrequests.items = pullRequests;
-  // } else {
-  //   getPullRequestResponse.state = args.states;
-  //   if (args.updatedAt) {
-  //     getPullRequestResponse.updatedAt = moment(args.updatedAt).format('YYYY-MM-DDTHH:mm:ss.SSSSSSZ');
-  //   }
-  //   getPullRequestResponse.closedAt =
-  //     args.states === BitbucketPullRequestState.closed || args.states === BitbucketPullRequestState.declined
-  //       ? getPullRequestResponse.updatedAt
-  //       : null;
-  //   getPullRequestResponse.mergedAt = args.states === BitbucketPullRequestState.closed ? getPullRequestResponse.updatedAt : null;
-  //   if (args.withDiffStat) {
-  //     paginatedPullrequests.items = [{ ...getPullRequestResponse, lines }];
-  //   } else {
-  //     paginatedPullrequests.items = [getPullRequestResponse];
-  //   }
-  // }
-
-  //     return paginatedPullrequests;
-  //   }
 }
 
 export class IssuesMock {
