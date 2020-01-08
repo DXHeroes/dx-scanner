@@ -6,9 +6,10 @@ import { VCSServiceType, GitHubService, IVCSService, BitbucketService } from '..
 import { CIReporterUtils, CIReporterConfig } from './CIReporterUtils';
 import { assertNever } from '../lib/assertNever';
 import { debug } from 'debug';
-import { CreatedUpdatedPullRequestComment } from '../services/git/model';
+import { CreatedUpdatedPullRequestComment, PullRequestComment } from '../services/git/model';
 import { CIReportBuilder } from './builders/CIReportBuilder';
 import { ScanningStrategyDetectorUtils } from '../detectors/utils/ScanningStrategyDetectorUtils';
+import _ from 'lodash';
 
 @injectable()
 export class CIReporter implements IReporter {
@@ -63,14 +64,21 @@ export class CIReporter implements IReporter {
     }
 
     // try to find last report comment
-    const prComments = await client.getPullRequestComments(
-      this.config!.repository.owner,
-      this.config!.repository.name,
-      this.config!.pullRequestId!,
-    );
+    let prComments: PullRequestComment[] = [];
+
+    let hasNextPage = true;
+    while (hasNextPage) {
+      const res = await client.getPullRequestComments(
+        this.config!.repository.owner,
+        this.config!.repository.name,
+        this.config!.pullRequestId!,
+      );
+      prComments = _.concat(prComments, res.items);
+      hasNextPage = res.hasNextPage;
+    }
     this.d(prComments);
 
-    const ciReporterComments = prComments.items.filter((c) => c.body?.includes(CIReportBuilder.ciReportIndicator));
+    const ciReporterComments = prComments.filter((c) => c.body?.includes(CIReportBuilder.ciReportIndicator));
 
     let comment: CreatedUpdatedPullRequestComment | undefined;
     if (ciReporterComments.length > 0) {
