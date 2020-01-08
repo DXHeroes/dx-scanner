@@ -1,23 +1,22 @@
-import moment from 'moment';
 import nock from 'nock';
 import { CollaborationInspector } from '../../inspectors';
 import { createTestContainer, TestContainerContext } from '../../inversify.config';
 import { PracticeEvaluationResult } from '../../model';
-import { BitbucketPullRequestState, BitbucketService } from '../../services';
-import { BitbucketNock } from '../../test/helpers/bitbucketNock';
+import { BitbucketService } from '../../services';
 import { Types } from '../../types';
 import { ThinPullRequestsPractice } from './ThinPullRequestsPractice';
+import { getPullRequestsResponse } from '../../services/git/__MOCKS__/bitbucketServiceMockFolder/getPullRequestsResponse';
+import moment from 'moment';
+import { getPullRequestResponse } from '../../services/git/__MOCKS__/bitbucketServiceMockFolder';
 
 describe('ThinPullRequestsPractice', () => {
   let practice: ThinPullRequestsPractice;
   let containerCtx: TestContainerContext;
-  let bitbucketNock: BitbucketNock;
   const MockedCollaborationInspector = <jest.Mock<CollaborationInspector>>(<unknown>CollaborationInspector);
   let mockCollaborationInspector: CollaborationInspector;
 
   beforeEach(async () => {
     nock.cleanAll();
-    bitbucketNock = new BitbucketNock('pypy', 'pypy');
   });
 
   beforeAll(() => {
@@ -34,23 +33,8 @@ describe('ThinPullRequestsPractice', () => {
   });
 
   it('return practicing if there is not a fat PR no older than 30 days than the newest PR', async () => {
-    bitbucketNock.getOwnerId();
-    bitbucketNock.getApiResponse({
-      resource: 'pullrequests',
-      state: BitbucketPullRequestState.open,
-    });
-    const args = {
-      states: BitbucketPullRequestState.open,
-      updatedAt: Date.now() - moment.duration(10, 'days').asMilliseconds(),
-      withDiffStat: true,
-      lines: {
-        additions: 1,
-        deletions: 1,
-      },
-    };
-
     mockCollaborationInspector.getPullRequests = async () => {
-      return bitbucketNock.mockBitbucketPullRequestsResponse(args);
+      return getPullRequestsResponse();
     };
 
     const evaluated = await practice.evaluate({
@@ -60,24 +44,20 @@ describe('ThinPullRequestsPractice', () => {
     expect(evaluated).toEqual(PracticeEvaluationResult.practicing);
   });
 
-  it('return notPracticing if there is a fat PR no older than 30 days than the newest PR', async () => {
-    bitbucketNock.getOwnerId();
-    bitbucketNock.getApiResponse({
-      resource: 'pullrequests',
-      state: BitbucketPullRequestState.open,
-    });
-    const args = {
-      states: BitbucketPullRequestState.open,
-      updatedAt: Date.now() - moment.duration(10, 'days').asMilliseconds(),
-      withDiffStat: true,
-      lines: {
-        additions: 1000,
-        deletions: 500,
-      },
-    };
-
+  it('return notPracticing if there is a fat PR no older than 7 days than the newest PR', async () => {
     mockCollaborationInspector.getPullRequests = async () => {
-      return bitbucketNock.mockBitbucketPullRequestsResponse(args);
+      return getPullRequestsResponse([
+        getPullRequestResponse({
+          updatedAt: moment()
+            .subtract(7, 'd')
+            .format('YYYY-MM-DDTHH:mm:ss.SSSSSSZ'),
+          lines: {
+            additions: 1000,
+            deletions: 500,
+            changes: 1500,
+          },
+        }),
+      ]);
     };
 
     const evaluated = await practice.evaluate({
