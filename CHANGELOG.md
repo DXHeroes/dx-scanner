@@ -1,3 +1,10 @@
+## [1.29.1](https://github.com/dxheroes/dx-scanner/compare/v1.29.0...v1.29.1) (2020-01-08)
+
+
+### Bug Fixes
+
+* do not require engines strictly ([dff5212](https://github.com/dxheroes/dx-scanner/commit/dff5212))
+
 # [1.29.0](https://github.com/dxheroes/dx-scanner/compare/v1.28.2...v1.29.0) (2020-01-08)
 
 
