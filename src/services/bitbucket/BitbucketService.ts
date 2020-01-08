@@ -267,7 +267,7 @@ export class BitbucketService implements IVCSService {
       updatedAt: val.updated_on,
       closedAt: val.state === BitbucketIssueState.resolved || val.state === BitbucketIssueState.closed ? val.updated_on : null,
       state: val.state,
-      id: val.repository.uuid,
+      id: val.id,
     }));
     const pagination = this.getPagination(response.data);
 
@@ -285,7 +285,7 @@ export class BitbucketService implements IVCSService {
     const response = <DeepRequired<Bitbucket.Response<Bitbucket.Schema.Issue>>>await this.client.issue_tracker.get(params);
 
     return {
-      id: response.data.repository.uuid,
+      id: response.data.id,
       user: {
         login: response.data.reporter.nickname,
         id: response.data.reporter.uuid,
