@@ -25,6 +25,8 @@
     "access": "public"
   },
   "dependencies": {
+    "@commitlint/config-conventional": "^8.3.4",
+    "@commitlint/lint": "^8.3.4",
     "@oclif/command": "1.5.19",
     "@oclif/config": "1.13.3",
     "@oclif/plugin-help": "2.2.3",
@@ -52,7 +54,6 @@
     "node-filter-async": "1.1.4",
     "npm-check-updates": "4.0.1",
     "oclif": "1.15.2",
-    "parse-commit-message": "3.2.3",
     "qs": "6.9.1",
     "reflect-metadata": "0.1.13",
     "semver": "7.1.1",

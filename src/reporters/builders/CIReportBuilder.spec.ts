@@ -3,9 +3,9 @@ import { PracticeEvaluationResult, PracticeImpact } from '../../model';
 import { CIReportBuilder } from './CIReportBuilder';
 
 describe('CIReportBuilder', () => {
-  const practicingHighImpactPracticeWithCtx = practiceWithContextFactory({ practice: { name: 'practicing1', url: "./practicing" } });
+  const practicingHighImpactPracticeWithCtx = practiceWithContextFactory({ practice: { name: 'practicing1', url: './practicing' } });
   const notPracticingHighImpactPracticeWithCtx = practiceWithContextFactory({
-    practice: { name: 'notPracticing1', url: "./notPracticing" },
+    practice: { name: 'notPracticing1', url: './notPracticing' },
     evaluation: PracticeEvaluationResult.notPracticing,
   });
 

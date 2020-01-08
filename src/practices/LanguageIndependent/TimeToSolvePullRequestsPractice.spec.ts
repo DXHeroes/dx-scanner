@@ -4,7 +4,6 @@ import { CollaborationInspector } from '../../inspectors';
 import { createTestContainer, TestContainerContext } from '../../inversify.config';
 import { PracticeEvaluationResult } from '../../model';
 import { BitbucketPullRequestState, BitbucketService } from '../../services';
-import { BitbucketNock } from '../../test/helpers/bitbucketNock';
 import { TimeToSolvePullRequestsPractice } from './TimeToSolvePullRequestsPractice';
 import { Types } from '../../types';
 import { getPullRequestsResponse } from '../../services/git/__MOCKS__/bitbucketServiceMockFolder/getPullRequestsResponse';
@@ -13,13 +12,11 @@ import { getPullRequestResponse } from '../../services/git/__MOCKS__/bitbucketSe
 describe('TimeToSolvePullRequestsPractice', () => {
   let practice: TimeToSolvePullRequestsPractice;
   let containerCtx: TestContainerContext;
-  let bitbucketNock: BitbucketNock;
   const MockedCollaborationInspector = <jest.Mock<CollaborationInspector>>(<unknown>CollaborationInspector);
   let mockCollaborationInspector: CollaborationInspector;
 
   beforeEach(async () => {
     nock.cleanAll();
-    bitbucketNock = new BitbucketNock('pypy', 'pypy');
   });
 
   beforeAll(() => {
