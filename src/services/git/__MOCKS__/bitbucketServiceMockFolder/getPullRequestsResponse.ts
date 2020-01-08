@@ -1,6 +1,5 @@
 import { Paginated } from '../../../../inspectors/common/Paginated';
 import { PullRequest } from '../../model';
-import _ from 'lodash';
 
 export const getPullRequestsResponse = (items?: PullRequest[]): Paginated<PullRequest> => {
   const defaultItems = [

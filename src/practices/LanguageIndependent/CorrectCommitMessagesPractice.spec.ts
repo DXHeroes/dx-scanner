@@ -30,7 +30,7 @@ describe('CorrectCommitMessagesPractice', () => {
     containerCtx.practiceContext.fileInspector!.purgeCache();
   });
 
-  it('returns practicing if the commit messages are correct', async () => {
+  it('commit message without scope', async () => {
     mockCollaborationInspector.getRepoCommits = async () => {
       return changeRepoCommitsMessages('fix: correct commit message');
     };
@@ -42,9 +42,21 @@ describe('CorrectCommitMessagesPractice', () => {
     expect(evaluated).toEqual(PracticeEvaluationResult.practicing);
   });
 
+  it('commit message with scope', async () => {
+    mockCollaborationInspector.getRepoCommits = async () => {
+      return changeRepoCommitsMessages('fix(something): correct commit message');
+    };
+
+    const evaluated = await practice.evaluate({
+      ...containerCtx.practiceContext,
+      collaborationInspector: mockCollaborationInspector,
+    });
+    expect(evaluated).toEqual(PracticeEvaluationResult.practicing);
+  });
+
   it('returns not practicing if the commit messages are incorrect', async () => {
     mockCollaborationInspector.getRepoCommits = async () => {
-      return changeRepoCommitsMessages('Incorrect commit message');
+      return changeRepoCommitsMessages('foo: some message');
     };
 
     const evaluated = await practice.evaluate({

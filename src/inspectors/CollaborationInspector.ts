@@ -3,7 +3,6 @@ import { Types } from '../types';
 import { ListGetterOptions } from './common/ListGetterOptions';
 import { ICollaborationInspector, PullRequestState } from './ICollaborationInspector';
 import { VCSService } from '../model';
-import _ from 'lodash';
 
 @injectable()
 export class CollaborationInspector implements ICollaborationInspector {

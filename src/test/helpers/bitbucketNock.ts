@@ -2,14 +2,7 @@
 import nock from 'nock';
 import { BitbucketCommit } from '../../services/bitbucket/BitbucketService';
 import { BitbucketPullRequestState } from '../../services/git/IVCSService';
-import qs from 'qs';
-import { Paginated, PaginationParams, ListGetterOptions } from '../../inspectors';
-import { PullRequest } from '../../services/git/model';
-import { getPullRequestResponse } from '../../services/git/__MOCKS__/bitbucketServiceMockFolder';
-import _ from 'lodash';
-import moment from 'moment';
-import { DeepPartial } from '../../lib/deepPartial';
-import { DeepRequired } from '../../lib/deepRequired';
+import { PaginationParams, ListGetterOptions } from '../../inspectors';
 import { bitbucketListPRsResponseFactory } from '../factories/responses/bitbucket/listPrsResponseFactory';
 
 export class BitbucketNock {
