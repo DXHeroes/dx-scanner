@@ -1,17 +1,16 @@
-import moment from 'moment';
 import nock from 'nock';
-import { CollaborationInspector, Paginated } from '../../inspectors';
+import { CollaborationInspector } from '../../inspectors';
 import { createTestContainer, TestContainerContext } from '../../inversify.config';
 import { PracticeEvaluationResult } from '../../model';
-import { BitbucketPullRequestState, BitbucketService } from '../../services';
-import { BitbucketNock } from '../../test/helpers/bitbucketNock';
-import { TimeToSolvePullRequestsPractice } from './TimeToSolvePullRequestsPractice';
+import { BitbucketService } from '../../services';
 import { Types } from '../../types';
+import { ThinPullRequestsPractice } from './ThinPullRequestsPractice';
 import { getPullRequestsResponse } from '../../services/git/__MOCKS__/bitbucketServiceMockFolder/getPullRequestsResponse';
+import moment from 'moment';
 import { getPullRequestResponse } from '../../services/git/__MOCKS__/bitbucketServiceMockFolder';
 
-describe('TimeToSolvePullRequestsPractice', () => {
-  let practice: TimeToSolvePullRequestsPractice;
+describe('ThinPullRequestsPractice', () => {
+  let practice: ThinPullRequestsPractice;
   let containerCtx: TestContainerContext;
   const MockedCollaborationInspector = <jest.Mock<CollaborationInspector>>(<unknown>CollaborationInspector);
   let mockCollaborationInspector: CollaborationInspector;
@@ -22,9 +21,9 @@ describe('TimeToSolvePullRequestsPractice', () => {
 
   beforeAll(() => {
     containerCtx = createTestContainer();
-    containerCtx.container.bind('TimeToSolvePractice').to(TimeToSolvePullRequestsPractice);
+    containerCtx.container.bind('ThinPullRequestsPractice').to(ThinPullRequestsPractice);
     containerCtx.container.rebind(Types.IContentRepositoryBrowser).to(BitbucketService);
-    practice = containerCtx.container.get('TimeToSolvePractice');
+    practice = containerCtx.container.get('ThinPullRequestsPractice');
     mockCollaborationInspector = new MockedCollaborationInspector();
   });
 
@@ -33,34 +32,30 @@ describe('TimeToSolvePullRequestsPractice', () => {
     containerCtx.practiceContext.fileInspector!.purgeCache();
   });
 
-  it('returns practicing if there are open pullrequests updated or created less than 10 days from now', async () => {
+  it('return practicing if there is not a fat PR no older than 30 days than the newest PR', async () => {
     mockCollaborationInspector.getPullRequests = async () => {
-      return getPullRequestsResponse([
-        getPullRequestResponse({
-          state: BitbucketPullRequestState.open,
-          updatedAt: moment()
-            .subtract(7, 'd')
-            .format('YYYY-MM-DDTHH:mm:ss.SSSSSSZ'),
-        }),
-      ]);
+      return getPullRequestsResponse();
     };
 
     const evaluated = await practice.evaluate({
       ...containerCtx.practiceContext,
       collaborationInspector: mockCollaborationInspector,
     });
-
     expect(evaluated).toEqual(PracticeEvaluationResult.practicing);
   });
 
-  it('returns practicing if there are open pullrequests updated or created more than 100 days from now', async () => {
+  it('return notPracticing if there is a fat PR no older than 7 days than the newest PR', async () => {
     mockCollaborationInspector.getPullRequests = async () => {
       return getPullRequestsResponse([
         getPullRequestResponse({
-          state: BitbucketPullRequestState.open,
           updatedAt: moment()
-            .subtract(100, 'd')
+            .subtract(7, 'd')
             .format('YYYY-MM-DDTHH:mm:ss.SSSSSSZ'),
+          lines: {
+            additions: 1000,
+            deletions: 500,
+            changes: 1500,
+          },
         }),
       ]);
     };
@@ -69,17 +64,18 @@ describe('TimeToSolvePullRequestsPractice', () => {
       ...containerCtx.practiceContext,
       collaborationInspector: mockCollaborationInspector,
     });
-
     expect(evaluated).toEqual(PracticeEvaluationResult.notPracticing);
   });
 
-  it('returns always true, as it is always applicable', async () => {
-    const response = await practice.isApplicable();
-    expect(response).toBe(true);
+  it('return true as it is always applicable', async () => {
+    const applicable = await practice.isApplicable();
+    expect(applicable).toEqual(true);
   });
 
-  it('returns unknown if there is no collaborationInspector', async () => {
-    const evaluated = await practice.evaluate({ ...containerCtx.practiceContext, collaborationInspector: undefined });
+  it('return unknown if there is no collaborationInspector', async () => {
+    containerCtx.practiceContext.collaborationInspector = undefined;
+
+    const evaluated = await practice.evaluate(containerCtx.practiceContext);
     expect(evaluated).toEqual(PracticeEvaluationResult.unknown);
   });
 });

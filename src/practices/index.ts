@@ -25,6 +25,7 @@ import { DependenciesVersionMinorPatchLevelPractice } from './JavaScript/Depende
 import { CorrectCommitMessagesPractice } from './LanguageIndependent/CorrectCommitMessagesPractice';
 import { TimeToSolvePullRequestsPractice } from './LanguageIndependent/TimeToSolvePullRequestsPractice';
 import { TimeToSolveIssuesPractice } from './LanguageIndependent/TimeToSolveIssuesPractice';
+import { ThinPullRequestsPractice } from './LanguageIndependent/ThinPullRequestsPractice';
 
 // register practices here
 export const practices = [
@@ -55,4 +56,5 @@ export const practices = [
   CorrectCommitMessagesPractice,
   TimeToSolvePullRequestsPractice,
   TimeToSolveIssuesPractice,
+  ThinPullRequestsPractice,
 ];

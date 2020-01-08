@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/camelcase */
 import Octokit, {
   IssuesListForRepoResponseItem,
   PullsListResponseItem,
@@ -510,17 +511,15 @@ export class GitHubService implements IVCSService {
    * Get all results across all pages.
    */
   private async paginate(uri: string, owner: string, repo: string, prNumber?: number, issueNumber?: number) {
-    const object = {
-      owner: owner,
-      repo: repo,
+    let object: { owner: string; repo: string; pull_number?: number; issue_number?: number } = {
+      owner,
+      repo,
     };
     if (prNumber) {
-      // eslint-disable-next-line @typescript-eslint/camelcase
-      Object.assign(object, { pull_number: prNumber });
+      object = { ...object, pull_number: prNumber };
     }
     if (issueNumber) {
-      // eslint-disable-next-line @typescript-eslint/camelcase
-      Object.assign(object, { issue_number: issueNumber });
+      object = { ...object, issue_number: issueNumber };
     }
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
