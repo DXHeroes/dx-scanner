@@ -1,3 +1,31 @@
+# [1.28.0](https://github.com/dxheroes/dx-scanner/compare/v1.27.0...v1.28.0) (2020-01-08)
+
+
+### Bug Fixes
+
+* **CIReporter:** load all comments instead of just a first page ([42ef331](https://github.com/dxheroes/dx-scanner/commit/42ef331))
+* add suggestion, name and url ([ac0a1d7](https://github.com/dxheroes/dx-scanner/commit/ac0a1d7))
+* allow to customize addition and deletions ([eeda833](https://github.com/dxheroes/dx-scanner/commit/eeda833))
+* allow to insert just page or just perPage value ([35b0103](https://github.com/dxheroes/dx-scanner/commit/35b0103))
+* bad letter case ([17ef395](https://github.com/dxheroes/dx-scanner/commit/17ef395))
+* condition ([770ad50](https://github.com/dxheroes/dx-scanner/commit/770ad50))
+* merge params state and pagination if both are provided ([2844629](https://github.com/dxheroes/dx-scanner/commit/2844629))
+* pass state and pagination as params to axios ([a4b5e19](https://github.com/dxheroes/dx-scanner/commit/a4b5e19))
+* rename practice ([3938c12](https://github.com/dxheroes/dx-scanner/commit/3938c12))
+* **CIReporter:** await all reporters ([2fbe97b](https://github.com/dxheroes/dx-scanner/commit/2fbe97b))
+* use customized diffStat ([405dfae](https://github.com/dxheroes/dx-scanner/commit/405dfae))
+* **core:** enable reporters ([7d02505](https://github.com/dxheroes/dx-scanner/commit/7d02505))
+
+
+### Features
+
+* add Fat PullRequests Practice ([88e7c9e](https://github.com/dxheroes/dx-scanner/commit/88e7c9e))
+* implement getMacNumberOfPullRequests() ([fa21f3f](https://github.com/dxheroes/dx-scanner/commit/fa21f3f))
+* maxNumberOfPrs ([b5c1958](https://github.com/dxheroes/dx-scanner/commit/b5c1958))
+* move list all PRs to a practice ([6d374cf](https://github.com/dxheroes/dx-scanner/commit/6d374cf))
+* **CIReportBuilder:** add PR msg builder and change a structure ([116f925](https://github.com/dxheroes/dx-scanner/commit/116f925))
+* **CIReporter:** add CI reporter ([cb15cd3](https://github.com/dxheroes/dx-scanner/commit/cb15cd3))
+
 # [1.27.0](https://github.com/dxheroes/dx-scanner/compare/v1.26.4...v1.27.0) (2019-12-17)
 
 
