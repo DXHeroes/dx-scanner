@@ -8,6 +8,38 @@ export class ReporterData {
     tableData.unshift(headers);
     return tableLib(tableData, { ...{ border: getBorderCharacters('norc'), singleLine: true }, ...userConfig });
   };
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  static markdownTable = (headers: string[], data: Record<string, any>[], userConfig?: TableUserConfig | undefined): string => {
+    const tableBorders = {
+      topBody: '',
+      topJoin: '',
+      topLeft: '',
+      topRight: '',
+
+      bottomBody: '',
+      bottomJoin: '',
+      bottomLeft: '',
+      bottomRight: '',
+
+      bodyLeft: '',
+      bodyRight: '',
+      bodyJoin: '|',
+
+      joinBody: `-`,
+      joinLeft: '',
+      joinRight: '',
+      joinJoin: ` | `,
+    };
+    return ReporterData.table(headers, data, {
+      ...{
+        border: tableBorders,
+        singleLine: false,
+        drawHorizontalLine: (i) => i === 1,
+      },
+      ...userConfig,
+    });
+  };
 }
 
 export type ReportTable = {

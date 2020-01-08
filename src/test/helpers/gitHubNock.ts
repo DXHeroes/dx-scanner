@@ -36,6 +36,10 @@ export class GitHubNock {
       base: string;
       created_at?: string;
       updated_at?: string;
+      lines?: {
+        additions: number;
+        deletions: number;
+      };
     }[];
     queryState?: string;
     pagination?: { page: number; perPage: number };
@@ -44,11 +48,10 @@ export class GitHubNock {
     if (!options.persist) {
       options.persist = true;
     }
-    const responseBody = options.pulls.map(({ number, state, title, body, head, base, created_at, updated_at }) => {
+    const responseBody = options.pulls.map(({ number, state, title, body, head, base, created_at, updated_at, lines }) => {
       if (!created_at) {
         created_at = '2011-01-26T19:01:12Z';
       }
-
       if (!updated_at) {
         updated_at = created_at;
       }
@@ -61,6 +64,8 @@ export class GitHubNock {
         new BranchItem(base, this.repository),
         created_at,
         updated_at,
+        lines?.additions,
+        lines?.deletions,
       );
     });
 
@@ -82,6 +87,10 @@ export class GitHubNock {
     persist = true,
     created_at?: string,
     updated_at?: string,
+    lines?: {
+      additions: number;
+      deletions: number;
+    },
   ): PullRequest {
     if (!created_at) {
       created_at = '2011-01-26T19:01:12Z';
@@ -90,6 +99,7 @@ export class GitHubNock {
     if (!updated_at) {
       updated_at = created_at;
     }
+
     const responseBody = new PullRequest(
       number,
       state,
@@ -99,6 +109,8 @@ export class GitHubNock {
       new BranchItem(base, this.repository),
       created_at,
       updated_at,
+      lines?.additions,
+      lines?.deletions,
     );
 
     return this.getPullsInternal({ number: number, pulls: responseBody, persist: persist });
@@ -492,6 +504,8 @@ export class PullRequestItem {
     statuses: { href: string };
   };
   author_association = 'OWNER';
+  additions: number | undefined;
+  deletions: number | undefined;
 
   constructor(
     number: number,
@@ -502,7 +516,11 @@ export class PullRequestItem {
     base: BranchItem,
     createdAt: string,
     updatedAt: string,
+    additions: number | undefined,
+    deletions: number | undefined,
   ) {
+    this.additions = additions;
+    this.deletions = deletions;
     this.number = number;
     this.base = base;
     this.head = head;
@@ -545,7 +563,5 @@ export class PullRequest extends PullRequestItem {
   review_comments = 0;
   maintainer_can_modify = true;
   commits = 1;
-  additions = 1;
-  deletions = 0;
   changed_files = 1;
 }

@@ -17,6 +17,7 @@ import { PracticeWithContextForReporter } from '../reporters/IReporter';
 import { ScannerUtils } from './ScannerUtils';
 import { FirstTestPractice, InvalidTestPractice, SecondTestPractice } from './__MOCKS__';
 import { practiceWithContextFactory } from '../test/factories/PracticeWithContextFactory';
+import { argumentsProviderFactory } from '../test/factories/ArgumentsProviderFactory';
 
 describe('ScannerUtils', () => {
   const notPracticingHighImpactPracticeWithCtx: PracticeWithContextForReporter[] = [];
@@ -117,13 +118,13 @@ describe('ScannerUtils', () => {
     });
 
     it('Filter correctly if practice impact is high and fail=high', () => {
-      const argumentsProvider = { uri: '.', fail: PracticeImpact.high };
+      const argumentsProvider = argumentsProviderFactory({ uri: '.', fail: PracticeImpact.high });
       const result = ScannerUtils.filterNotPracticingPracticesToFail(notPracticingHighImpactPracticeWithCtx, argumentsProvider);
       expect(result).toHaveLength(1);
     });
 
     it('Filter correctly if practice impact is high and fail=off', () => {
-      const argumentsProvider = { uri: '.', fail: PracticeImpact.off };
+      const argumentsProvider = argumentsProviderFactory({ uri: '.', fail: PracticeImpact.off });
       const result = ScannerUtils.filterNotPracticingPracticesToFail(notPracticingHighImpactPracticeWithCtx, argumentsProvider);
       expect(result).toHaveLength(0);
     });
