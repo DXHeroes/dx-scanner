@@ -50,7 +50,7 @@
     "memfs": "3.0.3",
     "moment": "2.24.0",
     "node-filter-async": "1.1.4",
-    "npm-check-updates": "3.2.2",
+    "npm-check-updates": "4.0.1",
     "oclif": "1.15.2",
     "parse-commit-message": "3.2.3",
     "qs": "6.9.1",
