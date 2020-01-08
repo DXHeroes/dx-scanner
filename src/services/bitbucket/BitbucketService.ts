@@ -92,25 +92,21 @@ export class BitbucketService implements IVCSService {
     options?: { withDiffStat?: boolean } & ListGetterOptions<{ state?: PullRequestState }>,
   ): Promise<Paginated<PullRequest>> {
     this.authenticate();
-
-    let apiUrl = `https://api.bitbucket.org/2.0/repositories/${owner}/${repo}/pullrequests`;
+    const apiUrl = `https://api.bitbucket.org/2.0/repositories/${owner}/${repo}/pullrequests`;
+    const ownerUrl = `www.bitbucket.org/${owner}`;
 
     let state;
     if (options?.filter?.state) {
       state = VCSServicesUtils.getPRState(options.filter.state, VCSServiceType.bitbucket);
     }
 
-    apiUrl = apiUrl.concat(
-      `${qs.stringify(
-        { state: state, page: options?.pagination?.page, pagelen: options?.pagination?.perPage },
-        { addQueryPrefix: true, indices: false, arrayFormat: 'repeat' },
-      )}`,
-    );
-
-    const ownerUrl = `www.bitbucket.org/${owner}`;
     const ownerId = `${(await this.client.repositories.get({ repo_slug: repo, username: owner })).data.owner?.uuid}`;
-
-    const response: DeepRequired<Bitbucket.Response<Bitbucket.Schema.PaginatedPullrequests>> = await axios.get(apiUrl);
+    const response: DeepRequired<Bitbucket.Response<Bitbucket.Schema.PaginatedPullrequests>> = await axios.get(apiUrl, {
+      params: { state, page: options?.pagination?.page, pagelen: options?.pagination?.perPage },
+      paramsSerializer: (params) => {
+        return qs.stringify(params);
+      },
+    });
 
     const items = await Promise.all(
       response.data.values.map(async (val) => {

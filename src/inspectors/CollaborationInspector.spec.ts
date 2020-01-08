@@ -11,17 +11,23 @@ import {
   getPullCommitsResponse,
   getPullCommitsServiceResponse,
 } from '../services/git/__MOCKS__/gitHubServiceMockFolder';
+import { Types } from '../types';
+import { BitbucketService, BitbucketPullRequestState } from '../services';
+import { BitbucketNock } from '../test/helpers/bitbucketNock';
+import { PullRequestState } from '.';
+import { bitbucketPullRequestResponseFactory } from '../test/factories/responses/bitbucket/prResponseFactory';
 
 describe('Collaboration Inspector', () => {
   let inspector: CollaborationInspector;
   let containerCtx: TestContainerContext;
+  let bitbucketNock: BitbucketNock;
 
   beforeAll(async () => {
     containerCtx = createTestContainer();
-    inspector = <CollaborationInspector>containerCtx.practiceContext.collaborationInspector;
   });
 
-  beforeEach(() => {
+  beforeEach(async () => {
+    inspector = <CollaborationInspector>containerCtx.practiceContext.collaborationInspector;
     nock.cleanAll();
   });
 
@@ -55,5 +61,28 @@ describe('Collaboration Inspector', () => {
 
     const response = await inspector.getPullCommits('octocat', 'Hello-World', 1);
     expect(response).toMatchObject(getPullCommitsServiceResponse);
+  });
+
+  it('returns max number of pull requests', async () => {
+    bitbucketNock = new BitbucketNock('pypy', 'pypy');
+    containerCtx.container.rebind(Types.IContentRepositoryBrowser).to(BitbucketService);
+    const collaborationInspector = containerCtx.container.get<CollaborationInspector>(Types.ICollaborationInspector);
+    const mockPr = bitbucketPullRequestResponseFactory({
+      state: BitbucketPullRequestState.closed,
+    });
+
+    bitbucketNock.getOwnerId();
+    bitbucketNock.listPullRequestsResponse([mockPr], {
+      pagination: { page: 1, perPage: 5 },
+      filter: { state: BitbucketPullRequestState.closed },
+    });
+
+    const response = await collaborationInspector.getPullRequests('pypy', 'pypy', {
+      pagination: { page: 1, perPage: 5 },
+      filter: { state: PullRequestState.closed },
+    });
+
+    expect(response.items).toHaveLength(1);
+    expect(response.items[0].state).toEqual(BitbucketPullRequestState.closed);
   });
 });
