@@ -92,6 +92,7 @@ export class BitbucketService implements IVCSService {
     options?: { withDiffStat?: boolean } & ListGetterOptions<{ state?: PullRequestState }>,
   ): Promise<Paginated<PullRequest>> {
     this.authenticate();
+
     const apiUrl = `https://api.bitbucket.org/2.0/repositories/${owner}/${repo}/pullrequests`;
     const ownerUrl = `www.bitbucket.org/${owner}`;
 
@@ -103,9 +104,7 @@ export class BitbucketService implements IVCSService {
     const ownerId = `${(await this.client.repositories.get({ repo_slug: repo, username: owner })).data.owner?.uuid}`;
     const response: DeepRequired<Bitbucket.Response<Bitbucket.Schema.PaginatedPullrequests>> = await axios.get(apiUrl, {
       params: { state, page: options?.pagination?.page, pagelen: options?.pagination?.perPage },
-      paramsSerializer: (params) => {
-        return qs.stringify(params);
-      },
+      paramsSerializer: qs.stringify,
     });
 
     const items = await Promise.all(
@@ -138,11 +137,13 @@ export class BitbucketService implements IVCSService {
             },
           },
         };
+
         // Get number of changes, additions and deletions in PullRequest if the withDiffStat is true
         if (options?.withDiffStat) {
           const lines = await this.getPullsDiffStat(owner, repo, `${val.id}`);
           return { ...pullRequest, lines };
         }
+
         return pullRequest;
       }),
     );
@@ -397,10 +398,22 @@ export class BitbucketService implements IVCSService {
   /**
    * List Comments for a Pull Request
    */
-  async getPullRequestComments(owner: string, repo: string, prNumber: number): Promise<Paginated<PullRequestComment>> {
+  async getPullRequestComments(
+    owner: string,
+    repo: string,
+    prNumber: number,
+    options?: ListGetterOptions,
+  ): Promise<Paginated<PullRequestComment>> {
     this.authenticate();
+
     const response = <DeepRequired<Bitbucket.Response<Bitbucket.Schema.PaginatedPullrequestComments>>>(
-      await this.client.pullrequests.listComments({ pull_request_id: prNumber, repo_slug: repo, username: owner })
+      await this.client.pullrequests.listComments({
+        pull_request_id: prNumber,
+        repo_slug: repo,
+        username: owner,
+        page: `${options?.pagination?.page}`,
+        pagelen: options?.pagination?.perPage,
+      })
     );
 
     const items = response.data.values.map((comment) => ({
