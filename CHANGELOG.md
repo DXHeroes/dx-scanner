@@ -1,3 +1,10 @@
+## [1.28.2](https://github.com/dxheroes/dx-scanner/compare/v1.28.1...v1.28.2) (2020-01-08)
+
+
+### Bug Fixes
+
+* **deps:** update dependency npm-check-updates to v4 ([cd93413](https://github.com/dxheroes/dx-scanner/commit/cd93413))
+
 ## [1.28.1](https://github.com/dxheroes/dx-scanner/compare/v1.28.0...v1.28.1) (2020-01-08)
 
 
