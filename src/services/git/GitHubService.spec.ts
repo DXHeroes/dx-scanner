@@ -26,13 +26,14 @@ import {
 import { PullRequestState } from '../../inspectors';
 import { File } from './model';
 import { getRepoCommitsServiceResponse } from './__MOCKS__/gitHubServiceMockFolder/getRepoCommitsServiceResponse.mock';
+import { argumentsProviderFactory } from '../../test/factories/ArgumentsProviderFactory';
 import _ from 'lodash';
 
 describe('GitHub Service', () => {
   let service: GitHubService;
 
   beforeEach(async () => {
-    service = new GitHubService({ uri: '.' });
+    service = new GitHubService(argumentsProviderFactory({ uri: '.' }));
     nock.cleanAll();
   });
 

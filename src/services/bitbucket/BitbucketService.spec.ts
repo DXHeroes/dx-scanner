@@ -9,18 +9,19 @@ import {
   getRepoCommit,
   getRepoCommits,
 } from '../../services/git/__MOCKS__/bitbucketServiceMockFolder';
+import { BitbucketPullRequestState, VCSServiceType } from '../git/IVCSService';
+import { VCSServicesUtils } from '../git/VCSServicesUtils';
+import { argumentsProviderFactory } from '../../test/factories/ArgumentsProviderFactory';
+import { BitbucketService } from './BitbucketService';
 import { bitbucketPullRequestResponseFactory } from '../../test/factories/responses/bitbucket/prResponseFactory';
 import { BitbucketNock } from '../../test/helpers/bitbucketNock';
-import { BitbucketPullRequestState, VCSService } from '../git/IVCSService';
-import { VCSServicesUtils } from '../git/VCSServicesUtils';
-import { BitbucketService } from './BitbucketService';
 
 describe('Bitbucket Service', () => {
   let service: BitbucketService;
   let bitbucketNock: BitbucketNock;
 
   beforeEach(async () => {
-    service = new BitbucketService({ uri: '.' });
+    service = new BitbucketService(argumentsProviderFactory({ uri: '.' }));
     nock.cleanAll();
     bitbucketNock = new BitbucketNock('pypy', 'pypy');
   });
@@ -79,7 +80,7 @@ describe('Bitbucket Service', () => {
   });
 
   it('returns all pull requests in own interface', async () => {
-    const allStates = <BitbucketPullRequestState[]>VCSServicesUtils.getPRState(PullRequestState.all, VCSService.bitbucket);
+    const allStates = <BitbucketPullRequestState[]>VCSServicesUtils.getPRState(PullRequestState.all, VCSServiceType.bitbucket);
 
     const prs = allStates.map((state) => bitbucketPullRequestResponseFactory({ state }));
 
