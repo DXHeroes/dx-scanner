@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/camelcase */
 import Octokit, {
   IssuesListForRepoResponseItem,
   PullsListResponseItem,
@@ -11,13 +12,12 @@ import { inspect, isArray } from 'util';
 import { ListGetterOptions } from '../../inspectors/common/ListGetterOptions';
 import { Paginated } from '../../inspectors/common/Paginated';
 import { PullRequestState } from '../../inspectors/ICollaborationInspector';
-import { ArgumentsProvider } from '../../inversify.config';
 import { delay } from '../../lib/delay';
 import { ErrorFactory } from '../../lib/errors';
 import { ICache } from '../../scanner/cache/ICache';
 import { InMemoryCache } from '../../scanner/cache/InMemoryCache';
 import { Types } from '../../types';
-import { IVCSService, VCSService } from './IVCSService';
+import { IVCSService, VCSServiceType } from './IVCSService';
 import {
   Commit,
   Contributor,
@@ -32,9 +32,12 @@ import {
   PullRequestReview,
   RepoContentType,
   Symlink,
+  PullRequestComment,
+  CreatedUpdatedPullRequestComment,
 } from './model';
 import { VCSServicesUtils } from './VCSServicesUtils';
 import qs from 'qs';
+import { ArgumentsProvider } from '../../scanner';
 const debug = Debug('cli:services:git:github-service');
 
 @injectable()
@@ -75,7 +78,7 @@ export class GitHubService implements IVCSService {
   ): Promise<Paginated<PullRequest>> {
     let url = 'GET /repos/:owner/:repo/pulls';
 
-    const state = VCSServicesUtils.getPRState(options?.filter?.state, VCSService.github);
+    const state = VCSServicesUtils.getPRState(options?.filter?.state, VCSServiceType.github);
 
     url = url.concat(
       `${qs.stringify(
@@ -423,6 +426,9 @@ export class GitHubService implements IVCSService {
     };
   }
 
+  /**
+   * Get All Comments for an Issue
+   */
   async getIssueComments(owner: string, repo: string, issueNumber: number): Promise<Paginated<IssueComment>> {
     const response = await this.paginate('GET /repos/:owner/:repo/issues/:issue_number/comments', owner, repo, undefined, issueNumber);
 
@@ -493,11 +499,81 @@ export class GitHubService implements IVCSService {
   }
 
   /**
+   * List Comments for a Pull Request
+   */
+  async getPullRequestComments(owner: string, repo: string, prNumber: number): Promise<Paginated<PullRequestComment>> {
+    const response: Octokit.IssuesListCommentsResponse = await this.paginate(
+      'GET /repos/:owner/:repo/issues/:issue_number/comments',
+      owner,
+      repo,
+      prNumber,
+      prNumber,
+    );
+
+    const items = response.map((comment) => ({
+      user: { id: `${comment.user.id}`, login: comment.user.login, url: comment.user.url },
+      id: comment.id,
+      url: comment.url,
+      body: comment.body,
+      createdAt: comment.created_at,
+      updatedAt: comment.updated_at,
+      authorAssociation: comment.user.login,
+    }));
+
+    const pagination = this.getPagination(response.length);
+    return { items, ...pagination };
+  }
+
+  /**
+   * Add Comment to a Pull Request
+   */
+  async createPullRequestComment(owner: string, repo: string, prNumber: number, body: string): Promise<CreatedUpdatedPullRequestComment> {
+    const response: Octokit.Response<Octokit.IssuesCreateCommentResponse> = await this.client.issues.createComment({
+      owner,
+      repo,
+      issue_number: prNumber,
+      body,
+    });
+
+    const comment = response.data;
+    return {
+      user: { id: `${comment.user.id}`, login: comment.user.login, url: comment.user.url },
+      id: comment.id,
+      url: comment.url,
+      body: comment.body,
+      createdAt: comment.created_at,
+      updatedAt: comment.updated_at,
+    };
+  }
+
+  /**
+   * Update Comment on a Pull Request
+   */
+  async updatePullRequestComment(owner: string, repo: string, commentId: number, body: string): Promise<CreatedUpdatedPullRequestComment> {
+    const response: Octokit.Response<Octokit.IssuesUpdateCommentResponse> = await this.client.issues.updateComment({
+      owner,
+      repo,
+      comment_id: commentId,
+      body,
+    });
+
+    const comment = response.data;
+    return {
+      user: { id: `${comment.user.id}`, login: comment.user.login, url: comment.user.url },
+      id: comment.id,
+      url: comment.url,
+      body: comment.body,
+      createdAt: comment.created_at,
+      updatedAt: comment.updated_at,
+    };
+  }
+
+  /**
    * Add additions, deletions and changes of pull request when the getPullRequests() is called with withDiffStat = true
    */
   async getPullsDiffStat(owner: string, repo: string, prNumber: string) {
     // eslint-disable-next-line @typescript-eslint/camelcase
-    const response = await this.unwrap(this.client.pulls.get({ owner, repo, pull_number: <number>(<unknown>prNumber) }));
+    const response = await this.unwrap(this.client.pulls.get({ owner, repo, pull_number: Number(prNumber) }));
 
     return {
       additions: response.data.additions,
@@ -510,17 +586,15 @@ export class GitHubService implements IVCSService {
    * Get all results across all pages.
    */
   private async paginate(uri: string, owner: string, repo: string, prNumber?: number, issueNumber?: number) {
-    const object = {
-      owner: owner,
-      repo: repo,
+    let object: { owner: string; repo: string; pull_number?: number; issue_number?: number } = {
+      owner,
+      repo,
     };
     if (prNumber) {
-      // eslint-disable-next-line @typescript-eslint/camelcase
-      Object.assign(object, { pull_number: prNumber });
+      object = { ...object, pull_number: prNumber };
     }
     if (issueNumber) {
-      // eslint-disable-next-line @typescript-eslint/camelcase
-      Object.assign(object, { issue_number: issueNumber });
+      object = { ...object, issue_number: issueNumber };
     }
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any

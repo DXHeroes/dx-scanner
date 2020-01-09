@@ -8,7 +8,7 @@ import { IPracticeWithMetadata } from '../practices/DxPracticeDecorator';
 import { IPractice } from '../practices/IPractice';
 import { PracticeWithContext } from './Scanner';
 import { PracticeWithContextForReporter } from '../reporters/IReporter';
-import { ArgumentsProvider } from '../inversify.config';
+import { ArgumentsProvider } from '.';
 
 /**
  * Scanner helpers & utilities

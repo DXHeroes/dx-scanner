@@ -26,13 +26,14 @@ import {
 import { PullRequestState } from '../../inspectors';
 import { File } from './model';
 import { getRepoCommitsServiceResponse } from './__MOCKS__/gitHubServiceMockFolder/getRepoCommitsServiceResponse.mock';
+import { argumentsProviderFactory } from '../../test/factories/ArgumentsProviderFactory';
 import _ from 'lodash';
 
 describe('GitHub Service', () => {
   let service: GitHubService;
 
   beforeEach(async () => {
-    service = new GitHubService({ uri: '.' });
+    service = new GitHubService(argumentsProviderFactory({ uri: '.' }));
     nock.cleanAll();
   });
 
@@ -74,10 +75,25 @@ describe('GitHub Service', () => {
         body: 'Please pull these awesome changes',
         head: 'new-topic',
         base: 'master',
+        lines: {
+          additions: 1,
+          deletions: 0,
+        },
       };
 
       new GitHubNock('1', 'octocat', 1296269, 'Hello-World').getPulls({ pulls: [params] });
-      new GitHubNock('1', 'octocat', 1296269, 'Hello-World').getPull(1, params.state, params.title, params.body, params.head, params.base);
+      new GitHubNock('1', 'octocat', 1296269, 'Hello-World').getPull(
+        1,
+        params.state,
+        params.title,
+        params.body,
+        params.head,
+        params.base,
+        undefined,
+        undefined,
+        undefined,
+        params.lines,
+      );
 
       const response = await service.getPullRequests('octocat', 'Hello-World', { withDiffStat: true });
 

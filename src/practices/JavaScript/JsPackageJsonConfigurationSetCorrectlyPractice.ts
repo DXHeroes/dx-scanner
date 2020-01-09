@@ -56,7 +56,10 @@ export class JsPackageJsonConfigurationSetCorrectlyPractice extends PracticeBase
 
   private setData() {
     this.data.details = [
-      { type: ReportDetailType.text, text: "The package.json doesn't have configured scripts correctly. The most common scripts are build, start, test and lint." }
+      {
+        type: ReportDetailType.text,
+        text: "The package.json doesn't have configured scripts correctly. The most common scripts are build, start, test and lint.",
+      },
     ];
   }
 }
