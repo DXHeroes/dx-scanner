@@ -68,12 +68,10 @@ class DXScannerCommand extends Command {
     debug('cli args')(args);
     debug('cli flags')(flags);
     const scanPath = args.path;
-    if (flags.practices) {
-      this.practices.forEach((practice) => {
-        this.log(practice.getMetadata().name);
-      });
-      process.exit(0);
-    }
+    // if (flags.practices) {
+    // scanner.listPractices()
+    //   process.exit(0);
+    // }
 
     let authorization = flags.authorization ? flags.authorization : this.loadAuthTokenFromEnvs();
     const json = flags.json;
@@ -84,14 +82,6 @@ class DXScannerCommand extends Command {
 
     cli.action.start(`Scanning URI: ${scanPath}`);
 
-    // const container = createRootContainer({
-    //   uri: scanPath,
-    //   auth: authorization,
-    //   json,
-    //   fail,
-    //   recursive: flags.recursive,
-    //   listPractices: flags.practices,
-    // });
     const container = createRootContainer({ uri: scanPath, auth: authorization, json, fail, recursive: flags.recursive, ci: flags.ci });
     const scanner = container.get(Scanner);
 
