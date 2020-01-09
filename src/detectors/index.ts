@@ -7,5 +7,4 @@ export * from './JavaScript/JavaScriptLanguageDetector';
 export * from './PHP/PHPLanguageDetector';
 export * from './Python/PythonLanguageDetector';
 export * from './Ruby/RubyLanguageDetector';
-export * from './utils/ScanningStrategyDetectorUtils';
 export * from './ScanningStrategyDetector';

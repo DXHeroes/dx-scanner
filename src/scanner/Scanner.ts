@@ -5,8 +5,7 @@ import os from 'os';
 import path from 'path';
 import git from 'simple-git/promise';
 import url from 'url';
-import util, { inspect } from 'util';
-import { ArgumentsProvider } from '../inversify.config';
+import { inspect } from 'util';
 import {
   LanguageAtPath,
   PracticeEvaluationResult,
@@ -29,24 +28,25 @@ import { sharedSubpath } from '../detectors/utils';
 import { LanguageContext } from '../contexts/language/LanguageContext';
 import { ProjectComponentContext } from '../contexts/projectComponent/ProjectComponentContext';
 import { PracticeContext } from '../contexts/practice/PracticeContext';
-import { ErrorFactory } from '../lib/errors/ErrorFactory';
+import { ArgumentsProvider } from '.';
+import { ErrorFactory } from '../lib/errors';
 
 @injectable()
 export class Scanner {
   private readonly scanStrategyDetector: ScanningStrategyDetector;
   private readonly scannerContextFactory: ScannerContextFactory;
-  private readonly reporter: IReporter;
+  private readonly reporters: IReporter[];
   private readonly fileSystemService: FileSystemService;
   private readonly practices: IPracticeWithMetadata[];
   private readonly argumentsProvider: ArgumentsProvider;
-  private readonly scanDebug: debug.Debugger;
+  private readonly d: debug.Debugger;
   private shouldExitOnEnd = false;
   private allDetectedComponents: ProjectComponentAndLangContext[] | undefined;
 
   constructor(
     @inject(ScanningStrategyDetector) scanStrategyDetector: ScanningStrategyDetector,
     @inject(Types.ScannerContextFactory) scannerContextFactory: ScannerContextFactory,
-    @inject(Types.IReporter) reporter: IReporter,
+    @multiInject(Types.IReporter) reporters: IReporter[],
     @inject(FileSystemService) fileSystemService: FileSystemService,
     // inject all practices registered under Types.Practice in inversify config
     @multiInject(Types.Practice) practices: IPracticeWithMetadata[],
@@ -54,28 +54,28 @@ export class Scanner {
   ) {
     this.scanStrategyDetector = scanStrategyDetector;
     this.scannerContextFactory = scannerContextFactory;
-    this.reporter = reporter;
+    this.reporters = reporters;
     this.fileSystemService = fileSystemService;
     this.practices = practices;
     this.argumentsProvider = argumentsProvider;
-    this.scanDebug = debug('scanner');
+    this.d = debug('scanner');
     this.allDetectedComponents = undefined;
   }
 
   async scan(): Promise<ScanResult> {
     let scanStrategy = await this.scanStrategyDetector.detect();
-    this.scanDebug(`Scan strategy: ${inspect(scanStrategy)}`);
+    this.d(`Scan strategy: ${inspect(scanStrategy)}`);
     scanStrategy = await this.preprocessData(scanStrategy);
-    this.scanDebug(`Scan strategy (after preprocessing): ${inspect(scanStrategy)}`);
+    this.d(`Scan strategy (after preprocessing): ${inspect(scanStrategy)}`);
     const scannerContext = this.scannerContextFactory(scanStrategy);
     const languagesAtPaths = await this.detectLanguagesAtPaths(scannerContext);
-    this.scanDebug(`LanguagesAtPaths (${languagesAtPaths.length}):`, inspect(languagesAtPaths));
+    this.d(`LanguagesAtPaths (${languagesAtPaths.length}):`, inspect(languagesAtPaths));
     const projectComponents = await this.detectProjectComponents(languagesAtPaths, scannerContext, scanStrategy);
-    this.scanDebug(`Components (${projectComponents.length}):`, inspect(projectComponents));
+    this.d(`Components (${projectComponents.length}):`, inspect(projectComponents));
     const practicesWithContext = await this.detectPractices(projectComponents);
-    this.scanDebug(`Practices (${practicesWithContext.length}):`, inspect(practicesWithContext));
+    this.d(`Practices (${practicesWithContext.length}):`, inspect(practicesWithContext));
     await this.report(practicesWithContext);
-    this.scanDebug(
+    this.d(
       `Overall scan stats. LanguagesAtPaths: ${inspect(languagesAtPaths.length)}; Components: ${inspect(
         this.allDetectedComponents!.length,
       )}; Practices: ${inspect(practicesWithContext.length)}.`,
@@ -186,11 +186,13 @@ export class Scanner {
    * Detect applicable practices for each component
    */
   private async detectPractices(componentsWithContext: ProjectComponentAndLangContext[]): Promise<PracticeWithContext[]> {
-    const practicesWithComponentContext = await Promise.all(componentsWithContext.map((cwctx) => this.detectPracticesForComponent(cwctx)));
+    const practicesWithComponentContext = await Promise.all(
+      componentsWithContext.map(async (cwctx) => await this.detectPracticesForComponent(cwctx)),
+    );
     const practicesWithContext = _.flatten(practicesWithComponentContext);
 
-    this.scanDebug('Applicable practices:');
-    this.scanDebug(practicesWithContext.map((p) => p.practice.getMetadata().name));
+    this.d('Applicable practices:');
+    this.d(practicesWithContext.map((p) => p.practice.getMetadata().name));
 
     return practicesWithContext;
   }
@@ -211,11 +213,9 @@ export class Scanner {
         isOn: p.isOn,
       };
     });
-    const reportString = this.reporter.report(relevantPractices);
 
-    typeof reportString === 'string'
-      ? console.log(reportString)
-      : console.log(util.inspect(reportString, { showHidden: false, depth: null }));
+    this.d(`Reporters length: ${this.reporters.length}`);
+    await Promise.all(this.reporters.map(async (r) => await r.report(relevantPractices)));
 
     if (this.allDetectedComponents!.length > 1 && !this.argumentsProvider.recursive) {
       cli.info(

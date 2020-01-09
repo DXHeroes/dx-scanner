@@ -1,8 +1,6 @@
 import gitUrlParse from 'git-url-parse';
 import { GitService } from './model';
 import { assertNever } from '../../lib/assertNever';
-import { ReporterUtils } from '../../reporters/ReporterUtils';
-import { sharedSubpath } from '../../detectors/utils';
 
 export class GitServiceUtils {
   static getUrlToRepo = (url: string, path?: string | undefined, branch = 'master') => {

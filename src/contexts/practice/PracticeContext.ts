@@ -4,7 +4,7 @@ import { IGitInspector } from '../../inspectors/IGitInspector';
 import { IIssueTrackingInspector } from '../../inspectors/IIssueTrackingInspector';
 import { IPackageInspector } from '../../inspectors/IPackageInspector';
 import { PracticeImpact, ProjectComponent } from '../../model';
-import { PracticeConfig } from '../IConfigProvider';
+import { PracticeConfig } from '../../scanner/IConfigProvider';
 
 export interface PracticeContext {
   /**
