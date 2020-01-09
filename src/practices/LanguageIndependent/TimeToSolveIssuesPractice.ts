@@ -11,7 +11,7 @@ import { IPractice } from '../IPractice';
   impact: PracticeImpact.medium,
   suggestion: 'Do not have an open Issues more than 60 days. Solve Issues continuously.',
   reportOnlyOnce: true,
-  url: 'https://guides.github.com/features/issues/\nhttps://confluence.atlassian.com/bitbucket/issue-trackers-221449750.html',
+  url: 'https://hackernoon.com/45-github-issues-dos-and-donts-dfec9ab4b612',
 })
 export class TimeToSolveIssuesPractice implements IPractice {
   async isApplicable(): Promise<boolean> {
@@ -28,19 +28,12 @@ export class TimeToSolveIssuesPractice implements IPractice {
 
     //Both GitHub API and Bitbucket API returns open issues by default
     const issues = await ctx.issueTrackingInspector.getIssues(ownerAndRepoName.owner, ownerAndRepoName.repoName);
-    const latestIssueUpdate = issues.items.map((item) => new Date(item.updatedAt || item.createdAt).getTime());
+    const latestIssueUpdate = issues.items.map((item) => moment(item.updatedAt || item.createdAt));
 
-    const daysInMilliseconds = moment.duration(60, 'days').asMilliseconds();
-    const now = Date.now();
-    const openPullRequestsTooLong = [];
+    const dateInPast = moment().subtract(30, 'd');
+    const openIssuesTooLong = latestIssueUpdate.filter((d) => d.isSameOrBefore(dateInPast));
 
-    latestIssueUpdate.forEach((issueDate) => {
-      if (now - issueDate > daysInMilliseconds) {
-        openPullRequestsTooLong.push(issueDate);
-      }
-    });
-
-    if (openPullRequestsTooLong.length === 0) {
+    if (openIssuesTooLong.length === 0) {
       return PracticeEvaluationResult.practicing;
     }
 
