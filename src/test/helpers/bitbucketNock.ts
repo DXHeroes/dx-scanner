@@ -3,11 +3,9 @@ import nock from 'nock';
 import { ListGetterOptions, PaginationParams } from '../../inspectors';
 import { BitbucketCommit } from '../../services/bitbucket/BitbucketService';
 import { BitbucketPullRequestState } from '../../services/git/IVCSService';
-import { bitbucketListPRsResponseFactory } from '../factories/responses/bitbucket/listPrsResponseFactory';
-import { bitbucketListIssuesResponseFactory } from '../factories/responses/bitbucket/listIssuesResponseFactory';
 import { bitbucketListIssueCommentsResponseFactory } from '../factories/responses/bitbucket/listIssueCommentsResponseFactory';
-import { DeepRequired } from '../../lib/deepRequired';
-import { getPullCommitsResponse } from '../../services/git/__MOCKS__/bitbucketServiceMockFolder';
+import { bitbucketListIssuesResponseFactory } from '../factories/responses/bitbucket/listIssuesResponseFactory';
+import { bitbucketListPRsResponseFactory } from '../factories/responses/bitbucket/listPrsResponseFactory';
 import { bitbucketListPullCommitsResponseFactory } from '../factories/responses/bitbucket/listPullCommitsResponseFactory';
 import { bitbucketListCommitResponseFactory } from '../factories/responses/bitbucket/listRepoCommitsResponseFactory';
 

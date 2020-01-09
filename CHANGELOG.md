@@ -1,3 +1,10 @@
+## [1.29.2](https://github.com/dxheroes/dx-scanner/compare/v1.29.1...v1.29.2) (2020-01-08)
+
+
+### Bug Fixes
+
+* **conventionalcommmits practice:** change used library ([8b71fce](https://github.com/dxheroes/dx-scanner/commit/8b71fce))
+
 ## [1.29.1](https://github.com/dxheroes/dx-scanner/compare/v1.29.0...v1.29.1) (2020-01-08)
 
 
