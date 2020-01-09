@@ -9,7 +9,6 @@ import updateNotifier from 'update-notifier';
 import { ScanningStrategyDetectorUtils } from './detectors/utils/ScanningStrategyDetectorUtils';
 import { PracticeImpact } from './model';
 import { ServiceType } from './detectors/ScanningStrategyDetector';
-import isTravis from 'is-travis';
 import debug from 'debug';
 
 class DXScannerCommand extends Command {
@@ -70,7 +69,7 @@ class DXScannerCommand extends Command {
 
     let scanResult = await scanner.scan();
 
-    if (scanResult.needsAuth && !isTravis) {
+    if (scanResult.needsAuth && !flags.ci) {
       if (ScanningStrategyDetectorUtils.isGitHubPath(scanPath) || scanResult.serviceType === ServiceType.github) {
         authorization = await cli.prompt('Insert your GitHub personal access token. https://github.com/settings/tokens\n', {
           type: 'hide',
