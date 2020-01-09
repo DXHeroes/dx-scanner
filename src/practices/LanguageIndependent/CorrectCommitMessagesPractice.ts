@@ -7,6 +7,7 @@ import { DxPractice } from '../DxPracticeDecorator';
 import { IPractice } from '../IPractice';
 import { PracticeBase } from '../PracticeBase';
 import { ReportDetailType } from '../../reporters/ReporterData';
+import _ from 'lodash';
 
 @DxPractice({
   id: 'LanguageIndependent.CorrectCommitMessages',
@@ -42,11 +43,8 @@ export class CorrectCommitMessagesPractice extends PracticeBase implements IPrac
         headers: ['Commit Message', 'Problems'],
         data: invalidMessages.map((im) => {
           return {
-            msg: im.input,
-            problems: im.warnings
-              .map((w) => w.message)
-              .concat(im.errors)
-              .join('\n'),
+            msg: `\`\`\`\n${_.truncate(im.input, { length: 200 })}\`\`\`\n`,
+            problems: _.compact(im.warnings.map((w) => w.message).concat(im.errors.map((e) => e.message))).join('\n'),
           };
         }),
       },
