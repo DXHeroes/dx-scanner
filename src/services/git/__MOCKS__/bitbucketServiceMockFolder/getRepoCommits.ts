@@ -31,6 +31,6 @@ export const getRepoCommits = (items?: Commit[]): Paginated<Commit> => {
     hasNextPage: true,
     hasPreviousPage: true,
     page: 1,
-    perPage: 1,
+    perPage: items?.length || 1,
   };
 };
