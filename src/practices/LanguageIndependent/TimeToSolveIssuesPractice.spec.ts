@@ -52,11 +52,11 @@ describe('TimeToSolveIssuesPractice', () => {
     expect(evaluated).toEqual(PracticeEvaluationResult.practicing);
   });
 
-  it('returns practicing if there are open pullrequests updated or created more than 60 days from now', async () => {
+  it('returns practicing if there are open issues updated or created more than 60 days from now', async () => {
     mockIssueTrackingInspector.getIssues = async () => {
       return getIssuesResponse([
         getIssueResponse({
-          state: BitbucketPullRequestState.open,
+          state: 'new',
           updatedAt: moment()
             .subtract(61, 'd')
             .format('YYYY-MM-DDTHH:mm:ss.SSSSSSZ'),
