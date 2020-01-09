@@ -92,7 +92,7 @@ export class BitbucketNock {
     return BitbucketNock.get(baseUrl).reply(200, issue);
   }
 
-  listIssueCommentsResponse(issueComment: Bitbucket.Schema.IssueComment[], issueId: number) {
+  listIssueCommentsResponse(issueComments: Bitbucket.Schema.IssueComment[], issueId: number) {
     const baseUrl = `${this.url}/repositories/${this.user}/${this.repoName}/issues/${issueId}/comments`;
 
     const response = bitbucketListIssueCommentsResponseFactory(issueComment);
