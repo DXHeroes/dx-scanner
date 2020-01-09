@@ -6,7 +6,10 @@ import { VCSServiceType, GitHubService, IVCSService, BitbucketService } from '..
 import { CIReporterUtils, CIReporterConfig } from './CIReporterUtils';
 import { assertNever } from '../lib/assertNever';
 import { debug } from 'debug';
-import { CreateUpdatePullRequestComment } from '../services/git/model';
+import { CreatedUpdatedPullRequestComment, PullRequestComment } from '../services/git/model';
+import { CIReportBuilder } from './builders/CIReportBuilder';
+import { ScanningStrategyDetectorUtils } from '../detectors/utils/ScanningStrategyDetectorUtils';
+import _ from 'lodash';
 
 @injectable()
 export class CIReporter implements IReporter {
@@ -21,34 +24,32 @@ export class CIReporter implements IReporter {
     this.d(this.config);
   }
 
-  async report(practicesAndComponents: PracticeWithContextForReporter[]): Promise<CreateUpdatePullRequestComment | undefined> {
+  async report(practicesAndComponents: PracticeWithContextForReporter[]): Promise<CreatedUpdatedPullRequestComment | undefined> {
     if (!this.config) {
       const msg = 'Your CI provider is not supported yet. Please add a feature request on https://github.com/DXHeroes/dx-scanner/issues';
       this.d(msg);
-      console.error(msg);
       return;
     } else if (!this.config.pullRequestId) {
       const msg = "This isn't a pull request.";
       this.d(msg);
-      console.info(msg);
+      return;
+    } else if (!ScanningStrategyDetectorUtils.isLocalPath(this.argumentsProvider.uri)) {
+      const msg = 'CIReporter works only for local path';
+      this.d(msg);
       return;
     }
 
     const reportString = this.buildReport(practicesAndComponents);
-    console.log("ReportString gere", reportString);
     this.d(reportString);
-    const response = await this.postMessage(reportString);
-    console.log("CIReporter response", response);
-    return response;
+    return this.postMessage(reportString);
   }
 
   buildReport(practicesAndComponents: PracticeWithContextForReporter[]): string {
-    //TODO: build a comment message
-    return 'Hello world!';
+    const builder = new CIReportBuilder(practicesAndComponents);
+    return builder.build();
   }
 
-  private async postMessage(message: string): Promise<CreateUpdatePullRequestComment> {
-    //TODO: post to specific service
+  private async postMessage(message: string): Promise<CreatedUpdatedPullRequestComment> {
     let client: IVCSService | undefined;
 
     switch (this.config!.service) {
@@ -59,23 +60,47 @@ export class CIReporter implements IReporter {
         client = new BitbucketService(this.argumentsProvider);
         break;
       default:
-        assertNever(this.config!.service);
+        return assertNever(this.config!.service);
     }
 
-    //TODO: override old comment
-    // const prComments = await client!.getPullRequestComments(
-    //   this.config.repository.owner,
-    //   this.config.repository.name,
-    //   this.config.pullRequestId!,
-    // );
+    // try to find last report comment
+    let prComments: PullRequestComment[] = [];
 
-    // post a comment
-    return await client!.createPullRequestComment(
-      this.config!.repository.owner,
-      this.config!.repository.name,
-      this.config!.pullRequestId!,
-      message,
-    );
+    let hasNextPage = true;
+    while (hasNextPage) {
+      const res = await client.getPullRequestComments(
+        this.config!.repository.owner,
+        this.config!.repository.name,
+        this.config!.pullRequestId!,
+      );
+      prComments = _.concat(prComments, res.items);
+      hasNextPage = res.hasNextPage;
+    }
+    this.d(prComments);
+
+    const ciReporterComments = prComments.filter((c) => c.body?.includes(CIReportBuilder.ciReportIndicator));
+
+    let comment: CreatedUpdatedPullRequestComment | undefined;
+    if (ciReporterComments.length > 0) {
+      // update comment if already exists
+      comment = await client.updatePullRequestComment(
+        this.config!.repository.owner,
+        this.config!.repository.name,
+        ciReporterComments[ciReporterComments.length - 1].id,
+        message,
+      );
+    } else {
+      // post a comment
+      comment = await client.createPullRequestComment(
+        this.config!.repository.owner,
+        this.config!.repository.name,
+        this.config!.pullRequestId!,
+        message,
+      );
+    }
+
+    this.d(comment);
+    return comment;
   }
 
   private detectConfiguration(): CIReporterConfig | undefined {

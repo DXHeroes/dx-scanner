@@ -1,8 +1,8 @@
 import { Paginated } from '../../../../inspectors/common/Paginated';
 import { PullRequest } from '../../model';
 
-export const getPullRequestsResponse: Paginated<PullRequest> = {
-  items: [
+export const getPullRequestsResponse = (items?: PullRequest[]): Paginated<PullRequest> => {
+  const defaultItems = [
     {
       user: {
         id: '{9d65d517-4898-47ac-9d2f-fd902d25d9f6}',
@@ -26,10 +26,14 @@ export const getPullRequestsResponse: Paginated<PullRequest> = {
         },
       },
     },
-  ],
-  totalCount: 1,
-  hasNextPage: true,
-  hasPreviousPage: false,
-  page: 1,
-  perPage: 1,
+  ];
+
+  return {
+    items: items || defaultItems,
+    totalCount: items?.length || 1,
+    hasNextPage: false,
+    hasPreviousPage: false,
+    page: 1,
+    perPage: items?.length || 1,
+  };
 };

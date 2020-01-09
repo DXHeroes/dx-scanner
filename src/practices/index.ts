@@ -26,6 +26,7 @@ import { CorrectCommitMessagesPractice } from './LanguageIndependent/CorrectComm
 import { JavaDependenciesVersionMajorLevel } from './Java/JavaDependenciesVersionMajorLevel';
 import { JavaDependenciesVersionMinorPatchLevel } from './Java/JavaDependenciesVersionMinorPatchLevel';
 import { TimeToSolvePullRequestsPractice } from './LanguageIndependent/TimeToSolvePullRequestsPractice';
+import { ThinPullRequestsPractice } from './LanguageIndependent/ThinPullRequestsPractice';
 
 // register practices here
 export const practices = [
@@ -57,4 +58,5 @@ export const practices = [
   DoesPullRequestsPractice,
   CorrectCommitMessagesPractice,
   TimeToSolvePullRequestsPractice,
+  ThinPullRequestsPractice,
 ];

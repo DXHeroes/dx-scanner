@@ -13,8 +13,8 @@ describe('JSONReporter', () => {
 
       expect(result).toHaveProperty('components');
       expect(result).toHaveProperty('uri');
-      // expect(result.components).toHaveLength(1);
-      // expect(result.components[0].practices).toHaveLength(1);
+      expect(result.components).toHaveLength(1);
+      expect(result.components[0].practices).toHaveLength(1);
     });
 
     it('one practicing practice and one not practicing', () => {
@@ -25,8 +25,8 @@ describe('JSONReporter', () => {
 
       expect(result).toHaveProperty('components');
       expect(result).toHaveProperty('uri');
-      // expect(result.components).toHaveLength(1);
-      // expect(result.components[0].practices).toHaveLength(2);
+      expect(result.components).toHaveLength(1);
+      expect(result.components[0].practices).toHaveLength(2);
     });
   });
 });

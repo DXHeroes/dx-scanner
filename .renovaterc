@@ -8,6 +8,7 @@
   "automergeType": "branch",
   "automerge": true,
   "major": {
-    "automerge": false
+    "automerge": false,
+    "ignoreDeps": ["@types/node"]
   }
 }

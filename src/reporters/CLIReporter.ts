@@ -121,7 +121,7 @@ export class CLIReporter implements IReporter {
       }
     }
 
-    lines.push(bold(''));
+    lines.push('');
     return lines.join('\n');
   }
 
