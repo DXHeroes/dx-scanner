@@ -92,10 +92,10 @@ export class BitbucketNock {
     return BitbucketNock.get(baseUrl).reply(200, issue);
   }
 
-  listIssueCommentsResponse(issueComment: Bitbucket.Schema.IssueComment[], issueId: number) {
+  listIssueCommentsResponse(issueComments: Bitbucket.Schema.IssueComment[], issueId: number) {
     const baseUrl = `${this.url}/repositories/${this.user}/${this.repoName}/issues/${issueId}/comments`;
 
-    const response = bitbucketListIssueCommentsResponseFactory(issueComment);
+    const response = bitbucketListIssueCommentsResponseFactory(issueComments);
     return BitbucketNock.get(baseUrl).reply(200, response);
   }
 
@@ -106,10 +106,10 @@ export class BitbucketNock {
     return BitbucketNock.get(baseUrl).reply(200, response);
   }
 
-  listCommitResponse(commit: Bitbucket.Schema.Commit[]) {
+  listCommitsResponse(commits: Bitbucket.Schema.Commit[]) {
     const baseUrl = `${this.url}/repositories/${this.user}/${this.repoName}/commits`;
 
-    const response = bitbucketListCommitResponseFactory(commit);
+    const response = bitbucketListCommitResponseFactory(commits);
     return BitbucketNock.get(baseUrl).reply(200, response);
   }
 
