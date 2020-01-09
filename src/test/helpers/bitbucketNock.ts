@@ -109,7 +109,7 @@ export class BitbucketNock {
   listCommitResponse(commit: Bitbucket.Schema.Commit[]) {
     const baseUrl = `${this.url}/repositories/${this.user}/${this.repoName}/commits`;
 
-    const response = bitbucketListCommitResponseFactory(commit);
+    const response = bitbucketListCommitResponseFactory(commits);
     return BitbucketNock.get(baseUrl).reply(200, response);
   }
 
