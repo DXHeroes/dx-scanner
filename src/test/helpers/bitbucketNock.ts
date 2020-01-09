@@ -4,6 +4,12 @@ import { ListGetterOptions, PaginationParams } from '../../inspectors';
 import { BitbucketCommit } from '../../services/bitbucket/BitbucketService';
 import { BitbucketPullRequestState } from '../../services/git/IVCSService';
 import { bitbucketListPRsResponseFactory } from '../factories/responses/bitbucket/listPrsResponseFactory';
+import { bitbucketListIssuesResponseFactory } from '../factories/responses/bitbucket/listIssuesResponseFactory';
+import { bitbucketListIssueCommentsResponseFactory } from '../factories/responses/bitbucket/listIssueCommentsResponseFactory';
+import { DeepRequired } from '../../lib/deepRequired';
+import { getPullCommitsResponse } from '../../services/git/__MOCKS__/bitbucketServiceMockFolder';
+import { bitbucketListPullCommitsResponseFactory } from '../factories/responses/bitbucket/listPullCommitsResponseFactory';
+import { bitbucketListCommitResponseFactory } from '../factories/responses/bitbucket/listRepoCommitsResponseFactory';
 
 export class BitbucketNock {
   user: string;
@@ -42,22 +48,14 @@ export class BitbucketNock {
           response = new IssueCommentsMock().issueComments;
           break;
         case 'commits':
-          url = url.concat(`/${options.id}/${options.value}`);
-          response = new CommitsMock().commits;
-          break;
+          throw 'Deprecated switch case used! Use `.listPullCommits instead`';
       }
     } else {
       switch (options.resource) {
         case 'pullrequests':
           throw 'Deprecated switch case used! Use `.getPullRequests instead`';
         case 'issues':
-          if (options.id !== undefined) {
-            url = url.concat(`/${options.id}`);
-            response = new IssueMock().issue;
-          } else {
-            response = new IssuesMock().issues;
-          }
-          break;
+          throw 'Deprecated switch case used! Use `.getIssues instead`';
         case 'commits':
           response = new RepoCommitsMock().repoCommits;
           break;
@@ -81,13 +79,11 @@ export class BitbucketNock {
     return BitbucketNock.get(url, params, persist).reply(200, response);
   }
 
-  getAdditionsAndDeletions(prNumber: number) {
-    const url = `${this.url}/repositories/${this.user}/${this.repoName}/pullrequests/${prNumber}/diffstat`;
+  getPRsAdditionsAndDeletions(prNumber: number) {
+    const baseUrl = `${this.url}/repositories/${this.user}/${this.repoName}/pullrequests/${prNumber}/diffstat`;
 
-    const params = {};
-    const persist = true;
     const response = { values: [{ lines_removed: 1, lines_added: 2 }] };
-    return BitbucketNock.get(url, params, persist).reply(200, response);
+    return BitbucketNock.get(baseUrl).reply(200, response);
   }
 
   private static get(url: string, params: nock.DataMatcherMap = {}, persist = true): nock.Interceptor {
@@ -126,285 +122,55 @@ export class BitbucketNock {
 
     return BitbucketNock.get(baseUrl).reply(200, pullRequest);
   }
-}
 
-export class IssuesMock {
-  issues: Bitbucket.Schema.PaginatedIssues;
-  constructor() {
-    this.issues = {
-      pagelen: 20,
-      size: 3070,
-      page: 1,
-      next: 'https://api.bitbucket.org/2.0/repositories/pypy/pypy/issues?page=2',
-      values: [new IssueMock().issue],
-    };
+  listIssuesResponse(
+    issues: Bitbucket.Schema.Issue[],
+    options?: ListGetterOptions<{ state?: BitbucketPullRequestState | BitbucketPullRequestState[] }>,
+  ) {
+    const baseUrl = `${this.url}/repositories/${this.user}/${this.repoName}/issues`;
+
+    const queryParams: { state?: BitbucketPullRequestState | BitbucketPullRequestState[]; page?: number; pagelen?: number } = {};
+    if (options?.filter?.state) queryParams.state = options?.filter?.state;
+    if (options?.pagination?.page) queryParams.page = options?.pagination?.page;
+    if (options?.pagination?.perPage) queryParams.pagelen = options?.pagination?.perPage;
+
+    const response = bitbucketListIssuesResponseFactory(issues);
+
+    return BitbucketNock.get(baseUrl, queryParams).reply(200, response);
   }
-}
 
-export class IssueMock {
-  issue: Bitbucket.Schema.Issue;
-  constructor() {
-    this.issue = {
-      priority: 'major',
-      kind: 'bug',
-      repository: {
-        links: {
-          self: {
-            href: 'https://api.bitbucket.org/2.0/repositories/pypy/pypy',
-          },
-          html: {
-            href: 'https://bitbucket.org/pypy/pypy',
-          },
-          avatar: {
-            href: 'https://bytebucket.org/ravatar/%7B54220cd1-b139-4188-9455-1e13e663f1ac%7D?ts=105930',
-          },
-        },
-        type: 'repository',
-        name: 'pypy',
-        full_name: 'pypy/pypy',
-        uuid: '{54220cd1-b139-4188-9455-1e13e663f1ac}',
-      },
-      links: {
-        attachments: {
-          href: 'https://api.bitbucket.org/2.0/repositories/pypy/pypy/issues/3086/attachments',
-        },
-        self: {
-          href: 'https://api.bitbucket.org/2.0/repositories/pypy/pypy/issues/3086',
-        },
-        watch: {
-          href: 'https://api.bitbucket.org/2.0/repositories/pypy/pypy/issues/3086/watch',
-        },
-        comments: {
-          href: 'https://api.bitbucket.org/2.0/repositories/pypy/pypy/issues/3086/comments',
-        },
-        html: {
-          href: 'https://bitbucket.org/pypy/pypy/issues/3086/arm64-jit-lots-of-crashes',
-        },
-        vote: {
-          href: 'https://api.bitbucket.org/2.0/repositories/pypy/pypy/issues/3086/vote',
-        },
-      },
-      reporter: {
-        display_name: 'Stefano Rivera',
-        uuid: '{dfa073eb-c602-4740-83ef-a8fe8ee03dfd}',
-        links: {
-          self: {
-            href: 'https://api.bitbucket.org/2.0/users/%7Bdfa073eb-c602-4740-83ef-a8fe8ee03dfd%7D',
-          },
-          html: {
-            href: 'https://bitbucket.org/%7Bdfa073eb-c602-4740-83ef-a8fe8ee03dfd%7D/',
-          },
-          avatar: {
-            href:
-              'https://secure.gravatar.com/avatar/0b25ad2bcea703792d5a7bfc521a47ca?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FSR-5.png',
-          },
-        },
-        nickname: 'stefanor',
-        type: 'user',
-        account_id: '557058:efb9f360-846e-4950-afaa-c6a5da7e77b2',
-      },
-      title: 'arm64 JIT: Lots of crashes',
-      votes: 0,
-      watches: 2,
-      content: {
-        raw:
-          'As mentioned on IRC over the last few days.\r\n\r\nWhen I translate a JIT pypy2.7 from the 7.2 release branch \\(or hg HEAD\\) under cPython on arm64, I get an interpreter with an unstable JIT. It constantly crashes, with some variant of:\r\n\r\n```\r\n$ pypy/goal/pypy-c lib_pypy/_sqlite3_build.py\r\nRPython traceback:\r\n  File "rpython_jit_metainterp_10.c", line 25430, in send_loop_to_backend\r\n  File "rpython_jit_backend_aarch64.c", line 1690, in AssemblerARM64_assemble_loop\r\n  File "rpython_jit_backend_aarch64.c", line 4551, in AssemblerARM64__assemble\r\n  File "rpython_jit_backend_aarch64.c", line 13381, in AssemblerARM64__walk_operations\r\n  File "rpython_jit_backend_aarch64.c", line 52643, in ResOpAssembler_emit_op_zero_array\r\nFatal RPython error: AssertionError\r\n```\r\n\r\n`--jit off` works as usual.\r\n\r\nI can’t reproduce this with the pre-built [pypy2.7-v7.2.0rc0-aarch64.tar.bz2](https://bitbucket.org/pypy/pypy/downloads/pypy2.7-v7.2.0rc0-aarch64.tar.bz2), and it can translate pypy2.7 to produce a working JIT. OS is Debian sid. Haven’t tried pypy3.6, yet.\r\n\r\nFull build log attached. No toolchain details in there, but it will be almost identical to [this build, without JIT](https://buildd.debian.org/status/fetch.php?pkg=pypy3&arch=arm64&ver=7.2.0%7Erc1%2Bdfsg-1&stamp=1570132096&raw=0).\r\n\r\nHardware: kvm guest on an APM [X-Gene 1](https://www.gigabyte.com/Server-Motherboard/MP30-AR1-rev-11#ov) \\(a Mustang, something like that\\)',
-        markup: 'markdown',
-        html:
-          '<p>As mentioned on IRC over the last few days.</p>\n<p>When I translate a JIT pypy2.7 from the 7.2 release branch (or hg HEAD) under cPython on arm64, I get an interpreter with an unstable JIT. It constantly crashes, with some variant of:</p>\n<div class="codehilite"><pre><span></span>$ pypy/goal/pypy-c lib_pypy/_sqlite3_build.py\nRPython traceback:\n  File <span class="s2">&quot;rpython_jit_metainterp_10.c&quot;</span>, line <span class="m">25430</span>, in send_loop_to_backend\n  File <span class="s2">&quot;rpython_jit_backend_aarch64.c&quot;</span>, line <span class="m">1690</span>, in AssemblerARM64_assemble_loop\n  File <span class="s2">&quot;rpython_jit_backend_aarch64.c&quot;</span>, line <span class="m">4551</span>, in AssemblerARM64__assemble\n  File <span class="s2">&quot;rpython_jit_backend_aarch64.c&quot;</span>, line <span class="m">13381</span>, in AssemblerARM64__walk_operations\n  File <span class="s2">&quot;rpython_jit_backend_aarch64.c&quot;</span>, line <span class="m">52643</span>, in ResOpAssembler_emit_op_zero_array\nFatal RPython error: AssertionError\n</pre></div>\n\n\n<p><code>--jit off</code> works as usual.</p>\n<p>I can’t reproduce this with the pre-built <a data-is-external-link="true" href="https://bitbucket.org/pypy/pypy/downloads/pypy2.7-v7.2.0rc0-aarch64.tar.bz2" rel="nofollow">pypy2.7-v7.2.0rc0-aarch64.tar.bz2</a>, and it can translate pypy2.7 to produce a working JIT. OS is Debian sid. Haven’t tried pypy3.6, yet.</p>\n<p>Full build log attached. No toolchain details in there, but it will be almost identical to <a data-is-external-link="true" href="https://buildd.debian.org/status/fetch.php?pkg=pypy3&amp;arch=arm64&amp;ver=7.2.0%7Erc1%2Bdfsg-1&amp;stamp=1570132096&amp;raw=0" rel="nofollow">this build, without JIT</a>.</p>\n<p>Hardware: kvm guest on an APM <a data-is-external-link="true" href="https://www.gigabyte.com/Server-Motherboard/MP30-AR1-rev-11#ov" rel="nofollow">X-Gene 1</a> (a Mustang, something like that)</p>',
-      },
-      assignee: {
-        display_name: 'Maciej Fijalkowski',
-        uuid: '{99b67766-d1ba-42c6-a80e-543f7318428b}',
-        links: {
-          self: {
-            href: 'https://api.bitbucket.org/2.0/users/%7B99b67766-d1ba-42c6-a80e-543f7318428b%7D',
-          },
-          html: {
-            href: 'https://bitbucket.org/%7B99b67766-d1ba-42c6-a80e-543f7318428b%7D/',
-          },
-          avatar: {
-            href:
-              'https://secure.gravatar.com/avatar/bfc96d2a02d9113edb992eb96c205c5a?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FMF-0.png',
-          },
-        },
-        nickname: 'fijal',
-        type: 'user',
-        account_id: '557058:4805a215-8388-4152-9c83-043e10a4435a',
-      },
-      state: 'new',
-      created_on: '2019-10-06T19:52:53.940697+00:00',
-      updated_on: '2019-10-15T15:47:34.904758+00:00',
-      type: 'issue',
-      id: 3086,
-    };
+  getIssueResponse(issue: Bitbucket.Schema.Issue) {
+    const baseUrl = `${this.url}/repositories/${this.user}/${this.repoName}/issues/${issue.id}`;
+
+    return BitbucketNock.get(baseUrl).reply(200, issue);
   }
-}
 
-export class PullRequestsMock {
-  pullrequests: Bitbucket.Schema.PaginatedPullrequests;
+  listIssueCommentsResponse(issueComment: Bitbucket.Schema.IssueComment[], issueId: number) {
+    const baseUrl = `${this.url}/repositories/${this.user}/${this.repoName}/issues/${issueId}/comments`;
 
-  constructor(pullRequests: (Bitbucket.Schema.Pullrequest & Bitbucket.Schema.Object)[]) {
-    this.pullrequests = {
-      page: 1,
-      next: 'https://api.bitbucket.org/2.0/repositories/pypy/pypy/pullrequests?page=2',
-      pagelen: 10,
-      size: 20,
-      values: pullRequests,
-    };
+    const response = bitbucketListIssueCommentsResponseFactory(issueComment);
+
+    return BitbucketNock.get(baseUrl).reply(200, response);
   }
-}
 
-export class CommitsMock {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  commits: any;
-  constructor() {
-    this.commits = {
-      pagelen: 10,
-      values: [
-        {
-          hash: 'f799951483319e5397d41019de50f8e07b01b04f',
-          repository: {
-            links: {
-              self: {
-                href: 'https://api.bitbucket.org/2.0/repositories/ashwinahuja/pypy',
-              },
-              html: {
-                href: 'https://bitbucket.org/ashwinahuja/pypy',
-              },
-              avatar: {
-                href: 'https://bytebucket.org/ravatar/%7Bed2b5d25-be07-4808-b0dd-c5d4633e4a57%7D?ts=python',
-              },
-            },
-            type: 'repository',
-            name: 'pypy',
-            full_name: 'ashwinahuja/pypy',
-            uuid: '{ed2b5d25-be07-4808-b0dd-c5d4633e4a57}',
-          },
-          links: {
-            self: {
-              href: 'https://api.bitbucket.org/2.0/repositories/ashwinahuja/pypy/commit/f799951483319e5397d41019de50f8e07b01b04f',
-            },
-            comments: {
-              href: 'https://api.bitbucket.org/2.0/repositories/ashwinahuja/pypy/commit/f799951483319e5397d41019de50f8e07b01b04f/comments',
-            },
-            patch: {
-              href: 'https://api.bitbucket.org/2.0/repositories/ashwinahuja/pypy/patch/f799951483319e5397d41019de50f8e07b01b04f',
-            },
-            html: {
-              href: 'https://bitbucket.org/ashwinahuja/pypy/commits/f799951483319e5397d41019de50f8e07b01b04f',
-            },
-            diff: {
-              href: 'https://api.bitbucket.org/2.0/repositories/ashwinahuja/pypy/diff/f799951483319e5397d41019de50f8e07b01b04f',
-            },
-            approve: {
-              href: 'https://api.bitbucket.org/2.0/repositories/ashwinahuja/pypy/commit/f799951483319e5397d41019de50f8e07b01b04f/approve',
-            },
-            statuses: {
-              href: 'https://api.bitbucket.org/2.0/repositories/ashwinahuja/pypy/commit/f799951483319e5397d41019de50f8e07b01b04f/statuses',
-            },
-          },
-          author: {
-            raw: 'ashwinahuja',
-            type: 'author',
-          },
-          summary: {
-            raw: 'Remove the duplicated (unnecessary items)',
-            markup: 'markdown',
-            html: '<p>Remove the duplicated (unnecessary items)</p>',
-            type: 'rendered',
-          },
-          parents: [
-            {
-              hash: '0e3d572c47c60df4760e541da6a05e5e305d6175',
-              type: 'commit',
-              links: {
-                self: {
-                  href: 'https://api.bitbucket.org/2.0/repositories/ashwinahuja/pypy/commit/0e3d572c47c60df4760e541da6a05e5e305d6175',
-                },
-                html: {
-                  href: 'https://bitbucket.org/ashwinahuja/pypy/commits/0e3d572c47c60df4760e541da6a05e5e305d6175',
-                },
-              },
-            },
-          ],
-          date: '2018-09-13T16:19:32+00:00',
-          message: 'Remove the duplicated (unnecessary items)',
-          type: 'commit',
-        },
-        {
-          hash: '0e3d572c47c60df4760e541da6a05e5e305d6175',
-          repository: {
-            links: {
-              self: {
-                href: 'https://api.bitbucket.org/2.0/repositories/ashwinahuja/pypy',
-              },
-              html: {
-                href: 'https://bitbucket.org/ashwinahuja/pypy',
-              },
-              avatar: {
-                href: 'https://bytebucket.org/ravatar/%7Bed2b5d25-be07-4808-b0dd-c5d4633e4a57%7D?ts=python',
-              },
-            },
-            type: 'repository',
-            name: 'pypy',
-            full_name: 'ashwinahuja/pypy',
-            uuid: '{ed2b5d25-be07-4808-b0dd-c5d4633e4a57}',
-          },
-          links: {
-            self: {
-              href: 'https://api.bitbucket.org/2.0/repositories/ashwinahuja/pypy/commit/0e3d572c47c60df4760e541da6a05e5e305d6175',
-            },
-            comments: {
-              href: 'https://api.bitbucket.org/2.0/repositories/ashwinahuja/pypy/commit/0e3d572c47c60df4760e541da6a05e5e305d6175/comments',
-            },
-            patch: {
-              href: 'https://api.bitbucket.org/2.0/repositories/ashwinahuja/pypy/patch/0e3d572c47c60df4760e541da6a05e5e305d6175',
-            },
-            html: {
-              href: 'https://bitbucket.org/ashwinahuja/pypy/commits/0e3d572c47c60df4760e541da6a05e5e305d6175',
-            },
-            diff: {
-              href: 'https://api.bitbucket.org/2.0/repositories/ashwinahuja/pypy/diff/0e3d572c47c60df4760e541da6a05e5e305d6175',
-            },
-            approve: {
-              href: 'https://api.bitbucket.org/2.0/repositories/ashwinahuja/pypy/commit/0e3d572c47c60df4760e541da6a05e5e305d6175/approve',
-            },
-            statuses: {
-              href: 'https://api.bitbucket.org/2.0/repositories/ashwinahuja/pypy/commit/0e3d572c47c60df4760e541da6a05e5e305d6175/statuses',
-            },
-          },
-          author: {
-            raw: 'ashwinahuja',
-            type: 'author',
-          },
-          summary: {
-            raw: 'Making datetime objects more compatible with old C extensions written for CPython',
-            markup: 'markdown',
-            html: '<p>Making datetime objects more compatible with old C extensions written for CPython</p>',
-            type: 'rendered',
-          },
-          parents: [
-            {
-              hash: '4cbeaa8bf545332c36ae277019772aa432693e4c',
-              type: 'commit',
-              links: {
-                self: {
-                  href: 'https://api.bitbucket.org/2.0/repositories/ashwinahuja/pypy/commit/4cbeaa8bf545332c36ae277019772aa432693e4c',
-                },
-                html: {
-                  href: 'https://bitbucket.org/ashwinahuja/pypy/commits/4cbeaa8bf545332c36ae277019772aa432693e4c',
-                },
-              },
-            },
-          ],
-          date: '2018-09-13T16:14:59+00:00',
-          message: 'Making datetime objects more compatible with old C extensions written for CPython',
-          type: 'commit',
-        },
-      ],
-      page: 1,
-    };
+  listPullCommits(pullCommits: Bitbucket.Schema.Commit[], prNumber: number) {
+    const baseUrl = `${this.url}/repositories/${this.user}/${this.repoName}/pullrequests/${prNumber}/commits`;
+    const response = bitbucketListPullCommitsResponseFactory(pullCommits);
+
+    return BitbucketNock.get(baseUrl).reply(200, response);
+  }
+
+  getCommitResponse(commit: Bitbucket.Schema.Commit, commitSha: string) {
+    const baseUrl = `${this.url}/repositories/${this.user}/${this.repoName}/commit/${commitSha}`;
+
+    return BitbucketNock.get(baseUrl).reply(200, commit);
+  }
+
+  listCommitResponse(commit: Bitbucket.Schema.Commit[]) {
+    const baseUrl = `${this.url}/repositories/${this.user}/${this.repoName}/commits`;
+    const response = bitbucketListCommitResponseFactory(commit);
+
+    return BitbucketNock.get(baseUrl).reply(200, response);
   }
 }
 
