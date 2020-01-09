@@ -19,7 +19,7 @@ export const getPullCommitsResponse = (items?: PullCommits[]): Paginated<PullCom
   ];
   return {
     items: items || defaultItems,
-    totalCount: items?.legth || 1,
+    totalCount: items?.length || 1,
     hasNextPage: true,
     hasPreviousPage: true,
     page: 1,

@@ -1,25 +1,22 @@
 import nock from 'nock';
 import { PullRequestState } from '../../inspectors';
 import {
-  getIssueCommentsResponse,
   getIssueResponse,
-  getIssuesResponse,
   getPullCommitsResponse,
   getPullRequestResponse,
   getRepoCommit,
   getRepoCommits,
 } from '../../services/git/__MOCKS__/bitbucketServiceMockFolder';
+import { argumentsProviderFactory } from '../../test/factories/ArgumentsProviderFactory';
+import { bitbucketIssueCommentResponseFactory } from '../../test/factories/responses/bitbucket/issueCommentResponseFactory';
+import { bitbucketIssueResponseFactory } from '../../test/factories/responses/bitbucket/issueResponseFactory';
+import { bitbucketPullRequestResponseFactory } from '../../test/factories/responses/bitbucket/prResponseFactory';
+import { bitbucketPullCommitsResponseFactory } from '../../test/factories/responses/bitbucket/pullCommitsFactory';
+import { bitbucketRepoCommitsResponseFactory } from '../../test/factories/responses/bitbucket/repoCommitsResponseFactory';
+import { BitbucketNock } from '../../test/helpers/bitbucketNock';
 import { BitbucketPullRequestState, VCSServiceType } from '../git/IVCSService';
 import { VCSServicesUtils } from '../git/VCSServicesUtils';
-import { argumentsProviderFactory } from '../../test/factories/ArgumentsProviderFactory';
 import { BitbucketService } from './BitbucketService';
-import { bitbucketPullRequestResponseFactory } from '../../test/factories/responses/bitbucket/prResponseFactory';
-import { BitbucketNock } from '../../test/helpers/bitbucketNock';
-import { bitbucketIssueResponseFactory } from '../../test/factories/responses/bitbucket/issueResponseFactory';
-import { bitbucketIssueCommentResponseFactory } from '../../test/factories/responses/bitbucket/issueCommentResponseFactory';
-import { bitbucketPullCommitsResponseFactory } from '../../test/factories/responses/bitbucket/pullCommitsFactory';
-import { bitbucketListCommitResponseFactory } from '../../test/factories/responses/bitbucket/listRepoCommitsResponseFactory';
-import { bitbucketRepoCommitsResponseFactory } from '../../test/factories/responses/bitbucket/repoCommitsResponseFactory';
 
 describe('Bitbucket Service', () => {
   let service: BitbucketService;
@@ -174,7 +171,7 @@ describe('Bitbucket Service', () => {
 
   it('returns repo commits in own interface', async () => {
     const mockRepoCommit = bitbucketRepoCommitsResponseFactory();
-    bitbucketNock.listCommitResponse([mockRepoCommit]);
+    bitbucketNock.listCommitsResponse([mockRepoCommit]);
 
     const response = await service.getRepoCommits('pypy', 'pypy');
     expect(response).toMatchObject(getRepoCommits());
