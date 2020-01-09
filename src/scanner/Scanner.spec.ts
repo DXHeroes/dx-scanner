@@ -1,6 +1,7 @@
 import { createRootContainer, createTestContainer, TestContainerContext } from '../inversify.config';
 import { Scanner } from './Scanner';
 import { FileSystemService } from '../services/FileSystemService';
+import { argumentsProviderFactory } from '../test/factories/ArgumentsProviderFactory';
 
 describe('Scanner', () => {
   let containerCtx: TestContainerContext;
@@ -15,7 +16,7 @@ describe('Scanner', () => {
   });
 
   it('Can be instantiated from container', () => {
-    const rootContainer = createRootContainer({ uri: '.' });
+    const rootContainer = createRootContainer(argumentsProviderFactory({ uri: '.' }));
     const scanner = rootContainer.get(Scanner);
     expect(scanner).toBeDefined();
   });

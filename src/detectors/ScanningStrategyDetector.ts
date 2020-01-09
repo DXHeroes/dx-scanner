@@ -1,15 +1,13 @@
 import gitUrlParse from 'git-url-parse';
 import { inject, injectable } from 'inversify';
 import git from 'simple-git/promise';
-import { ArgumentsProvider } from '../inversify.config';
-import { ErrorFactory } from '../lib/errors';
-import { BitbucketService } from '../services/bitbucket/BitbucketService';
-import { GitHubService } from '../services/git/GitHubService';
-import { Types } from '../types';
-import { IDetector } from './IDetector';
-import { ScanningStrategyDetectorUtils } from './utils/ScanningStrategyDetectorUtils';
-import { GitServiceUtils } from '../services/git/GitServiceUtils';
 import debug from 'debug';
+import { IDetector } from './IDetector';
+import { GitHubService, BitbucketService, GitServiceUtils } from '../services';
+import { Types } from '../types';
+import { ErrorFactory } from '../lib/errors';
+import { ArgumentsProvider } from '../scanner';
+import { ScanningStrategyDetectorUtils } from './utils/ScanningStrategyDetectorUtils';
 
 @injectable()
 export class ScanningStrategyDetector implements IDetector<string, ScanningStrategy> {

@@ -2,7 +2,7 @@ import { Container } from 'inversify';
 import { IGitInspector } from '../../inspectors/IGitInspector';
 import { ProjectComponent } from '../../model';
 import { PracticeContextFactory, ProjectComponentContextFactory, Types } from '../../types';
-import { ConfigProvider } from '../ConfigProvider';
+import { ConfigProvider } from '../../scanner/ConfigProvider';
 import { PracticeContext } from '../practice/PracticeContext';
 import { ProjectComponentContext } from './ProjectComponentContext';
 
