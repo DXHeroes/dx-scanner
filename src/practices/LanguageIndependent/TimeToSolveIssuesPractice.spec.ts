@@ -1,24 +1,21 @@
 import moment from 'moment';
 import nock from 'nock';
-import { IssueTrackingInspector, Paginated } from '../../inspectors';
+import { IssueTrackingInspector } from '../../inspectors';
 import { createTestContainer, TestContainerContext } from '../../inversify.config';
 import { PracticeEvaluationResult } from '../../model';
 import { BitbucketPullRequestState, BitbucketService } from '../../services';
-import { Issue } from '../../services/git/model';
-import { BitbucketNock } from '../../test/helpers/bitbucketNock';
+import { getIssueResponse, getIssuesResponse } from '../../services/git/__MOCKS__/bitbucketServiceMockFolder/getIssuesResponse';
 import { Types } from '../../types';
 import { TimeToSolveIssuesPractice } from './TimeToSolveIssuesPractice';
 
 describe('TimeToSolveIssuesPractice', () => {
   let practice: TimeToSolveIssuesPractice;
   let containerCtx: TestContainerContext;
-  let bitbucketNock: BitbucketNock;
   const MockedIssueTrackingInspector = <jest.Mock<IssueTrackingInspector>>(<unknown>IssueTrackingInspector);
   let mockIssueTrackingInspector: IssueTrackingInspector;
 
   beforeEach(async () => {
     nock.cleanAll();
-    bitbucketNock = new BitbucketNock('pypy', 'pypy');
   });
 
   beforeAll(() => {
@@ -35,12 +32,15 @@ describe('TimeToSolveIssuesPractice', () => {
   });
 
   it('returns practicing if there are open issues updated or created less than 60 days from now', async () => {
-    bitbucketNock.getOwnerId();
-    bitbucketNock.getApiResponse({ resource: 'pullrequests', state: BitbucketPullRequestState.open });
-    const args = { states: BitbucketPullRequestState.open, updatedAt: Date.now() - moment.duration(10, 'days').asMilliseconds() };
-
     mockIssueTrackingInspector.getIssues = async () => {
-      return <Paginated<Issue>>bitbucketNock.mockBitbucketIssuesOrPullRequestsResponse(args);
+      return getIssuesResponse([
+        getIssueResponse({
+          state: BitbucketPullRequestState.open,
+          updatedAt: moment()
+            .subtract(7, 'd')
+            .format('YYYY-MM-DDTHH:mm:ss.SSSSSSZ'),
+        }),
+      ]);
     };
 
     const evaluated = await practice.evaluate({
@@ -52,11 +52,15 @@ describe('TimeToSolveIssuesPractice', () => {
   });
 
   it('returns practicing if there are open pullrequests updated or created more than 60 days from now', async () => {
-    bitbucketNock.getOwnerId();
-    bitbucketNock.getApiResponse({ resource: 'pullrequests', state: BitbucketPullRequestState.open });
-    const args = { states: BitbucketPullRequestState.open, updatedAt: Date.now() - moment.duration(100, 'days').asMilliseconds() };
     mockIssueTrackingInspector.getIssues = async () => {
-      return <Paginated<Issue>>bitbucketNock.mockBitbucketIssuesOrPullRequestsResponse(args);
+      return getIssuesResponse([
+        getIssueResponse({
+          state: BitbucketPullRequestState.open,
+          updatedAt: moment()
+            .subtract(61, 'd')
+            .format('YYYY-MM-DDTHH:mm:ss.SSSSSSZ'),
+        }),
+      ]);
     };
 
     const evaluated = await practice.evaluate({

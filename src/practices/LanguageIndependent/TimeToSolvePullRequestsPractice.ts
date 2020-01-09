@@ -4,7 +4,6 @@ import { PracticeEvaluationResult, PracticeImpact } from '../../model';
 import { GitServiceUtils } from '../../services/git/GitServiceUtils';
 import { DxPractice } from '../DxPracticeDecorator';
 import { IPractice } from '../IPractice';
-import { PullRequest } from '../../services/git/model';
 
 @DxPractice({
   id: 'LanguageIndependent.TimeToSolvePullRequests',
