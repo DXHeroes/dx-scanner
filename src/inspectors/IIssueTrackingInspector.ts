@@ -1,5 +1,6 @@
 import { Paginated } from './common/Paginated';
 import { Issue, IssueComment } from '../services/git/model';
+import { ListGetterOptions } from '.';
 
 export enum IssueState {
   open = 'open',
@@ -7,16 +8,12 @@ export enum IssueState {
   all = 'all',
 }
 
-export enum BitbucketIssueState {
-  new = 'new',
-  closed = 'closed',
-  duplicate = 'duplicate',
-  resolved = 'resolved',
-  invalid = 'invalid',
-}
-
 export interface IIssueTrackingInspector {
-  getIssues(owner: string, repo: string): Promise<Paginated<Issue>>;
+  getIssues(
+    owner: string,
+    repo: string,
+    options?: { withDiffStat?: boolean } & ListGetterOptions<{ state?: IssueState }>,
+  ): Promise<Paginated<Issue>>;
   getIssue(owner: string, repo: string, id: number): Promise<Issue>;
   listIssueComments(owner: string, repo: string, id: number): Promise<Paginated<IssueComment>>;
 }

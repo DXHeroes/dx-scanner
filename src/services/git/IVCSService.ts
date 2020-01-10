@@ -44,21 +44,3 @@ export enum VCSServiceType {
   github = 'GitHub',
   bitbucket = 'Bitbucket',
 }
-
-export enum BitbucketPullRequestState {
-  open = 'OPEN',
-  closed = 'MERGED',
-  declined = 'DECLINED',
-  superseded = 'SUPERSEDED',
-}
-
-export enum BitbucketIssueState {
-  new = 'new',
-  open = 'open',
-  resolved = 'resolved',
-  onHold = 'on hold',
-  invalid = 'invalid',
-  duplicate = 'duplicate',
-  wontfiw = 'wontfix',
-  closed = 'closed',
-}
