@@ -1,3 +1,14 @@
+# [1.30.0](https://github.com/dxheroes/dx-scanner/compare/v1.29.2...v1.30.0) (2020-01-10)
+
+
+### Features
+
+* add gitignore practice lockfile tests ([1571047](https://github.com/dxheroes/dx-scanner/commit/1571047))
+* change gitignore practices to allow only one lockfile ([1661f47](https://github.com/dxheroes/dx-scanner/commit/1661f47))
+* update lockfile rule to allow only exactly one lockfile ([68f0c21](https://github.com/dxheroes/dx-scanner/commit/68f0c21))
+* **js:** remove lock check from gitignore practice ([996b8e7](https://github.com/dxheroes/dx-scanner/commit/996b8e7))
+* **ts:** remove lock check from gitignore practice ([ddb6506](https://github.com/dxheroes/dx-scanner/commit/ddb6506))
+
 ## [1.29.2](https://github.com/dxheroes/dx-scanner/compare/v1.29.1...v1.29.2) (2020-01-08)
 
 
