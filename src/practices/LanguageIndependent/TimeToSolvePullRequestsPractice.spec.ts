@@ -4,10 +4,10 @@ import { CollaborationInspector } from '../../inspectors';
 import { createTestContainer, TestContainerContext } from '../../inversify.config';
 import { PracticeEvaluationResult } from '../../model';
 import { BitbucketPullRequestState, BitbucketService } from '../../services';
-import { TimeToSolvePullRequestsPractice } from './TimeToSolvePullRequestsPractice';
-import { Types } from '../../types';
-import { getPullRequestsResponse } from '../../services/git/__MOCKS__/bitbucketServiceMockFolder/getPullRequestsResponse';
 import { getPullRequestResponse } from '../../services/git/__MOCKS__/bitbucketServiceMockFolder';
+import { getPullRequestsResponse } from '../../services/git/__MOCKS__/bitbucketServiceMockFolder/getPullRequestsResponse';
+import { Types } from '../../types';
+import { TimeToSolvePullRequestsPractice } from './TimeToSolvePullRequestsPractice';
 
 describe('TimeToSolvePullRequestsPractice', () => {
   let practice: TimeToSolvePullRequestsPractice;

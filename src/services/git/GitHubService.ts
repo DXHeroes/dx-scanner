@@ -395,7 +395,7 @@ export class GitHubService implements IVCSService {
       updatedAt: val.updated_at,
       closedAt: val.closed_at,
       state: val.state,
-      id: val.id.toString(),
+      id: val.id,
       pullRequestUrl: val.pull_request && val.pull_request.url,
     }));
     const pagination = this.getPagination(response.length);
@@ -411,7 +411,7 @@ export class GitHubService implements IVCSService {
     const response = await this.unwrap(this.client.issues.get({ owner, repo, issue_number: issueNumber }));
 
     return {
-      id: response.data.id.toString(),
+      id: response.data.id,
       user: {
         login: response.data.user.login,
         id: response.data.user.id.toString(),

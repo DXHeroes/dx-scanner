@@ -1,3 +1,61 @@
+# [1.32.0](https://github.com/dxheroes/dx-scanner/compare/v1.31.0...v1.32.0) (2020-01-10)
+
+
+### Bug Fixes
+
+* add url and remove commented code ([c4a8dc6](https://github.com/dxheroes/dx-scanner/commit/c4a8dc6))
+* delete deprecated code ([a24de11](https://github.com/dxheroes/dx-scanner/commit/a24de11))
+* eslint settings ([e66f88b](https://github.com/dxheroes/dx-scanner/commit/e66f88b))
+* fix problems caused by the bitbucketNock refactoring ([8bdb8a9](https://github.com/dxheroes/dx-scanner/commit/8bdb8a9))
+* getting issue id ([dc36f7d](https://github.com/dxheroes/dx-scanner/commit/dc36f7d))
+* name of practice in binding ([5d196f5](https://github.com/dxheroes/dx-scanner/commit/5d196f5))
+* refactor code using moment library ([174e887](https://github.com/dxheroes/dx-scanner/commit/174e887))
+* remove unnecessary code ([bf939e8](https://github.com/dxheroes/dx-scanner/commit/bf939e8))
+* test ([4babc20](https://github.com/dxheroes/dx-scanner/commit/4babc20))
+* typo ([5404cf1](https://github.com/dxheroes/dx-scanner/commit/5404cf1))
+* typo ([1ca2571](https://github.com/dxheroes/dx-scanner/commit/1ca2571))
+* typo ([06b53ce](https://github.com/dxheroes/dx-scanner/commit/06b53ce))
+* typo ([adaab7f](https://github.com/dxheroes/dx-scanner/commit/adaab7f))
+* typos ([3733e6a](https://github.com/dxheroes/dx-scanner/commit/3733e6a))
+* use mocking pull request fn also for issues ([cfea49b](https://github.com/dxheroes/dx-scanner/commit/cfea49b))
+* value of perPage ([b0942af](https://github.com/dxheroes/dx-scanner/commit/b0942af))
+* value of totalCount ([766393f](https://github.com/dxheroes/dx-scanner/commit/766393f))
+
+
+### Features
+
+* implement TimeToSolveIssues practice ([bea4853](https://github.com/dxheroes/dx-scanner/commit/bea4853))
+
+# [1.31.0](https://github.com/dxheroes/dx-scanner/compare/v1.30.0...v1.31.0) (2020-01-10)
+
+
+### Bug Fixes
+
+* 2nd run of unauthenticated scan ([b0ef8fd](https://github.com/dxheroes/dx-scanner/commit/b0ef8fd))
+* don't prompt auth on travis ([60ba483](https://github.com/dxheroes/dx-scanner/commit/60ba483))
+* scanner imports ([a6b3c52](https://github.com/dxheroes/dx-scanner/commit/a6b3c52))
+* scanningDetector tests ([d3cd41b](https://github.com/dxheroes/dx-scanner/commit/d3cd41b))
+
+
+### Features
+
+* add auth check to CIReporter ([47cb520](https://github.com/dxheroes/dx-scanner/commit/47cb520))
+* add local path's repo detect test ([11e22ab](https://github.com/dxheroes/dx-scanner/commit/11e22ab))
+* require auth token when scanning local path's repo ([7d26e3c](https://github.com/dxheroes/dx-scanner/commit/7d26e3c))
+* use ci flag instead of is-travis ([c1ef2ec](https://github.com/dxheroes/dx-scanner/commit/c1ef2ec))
+* use flag for authentication prompt ([8b93653](https://github.com/dxheroes/dx-scanner/commit/8b93653))
+
+# [1.30.0](https://github.com/dxheroes/dx-scanner/compare/v1.29.2...v1.30.0) (2020-01-10)
+
+
+### Features
+
+* add gitignore practice lockfile tests ([1571047](https://github.com/dxheroes/dx-scanner/commit/1571047))
+* change gitignore practices to allow only one lockfile ([1661f47](https://github.com/dxheroes/dx-scanner/commit/1661f47))
+* update lockfile rule to allow only exactly one lockfile ([68f0c21](https://github.com/dxheroes/dx-scanner/commit/68f0c21))
+* **js:** remove lock check from gitignore practice ([996b8e7](https://github.com/dxheroes/dx-scanner/commit/996b8e7))
+* **ts:** remove lock check from gitignore practice ([ddb6506](https://github.com/dxheroes/dx-scanner/commit/ddb6506))
+
 ## [1.29.2](https://github.com/dxheroes/dx-scanner/compare/v1.29.1...v1.29.2) (2020-01-08)
 
 
