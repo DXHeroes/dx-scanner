@@ -206,12 +206,16 @@ export class GitHubService implements IVCSService {
    */
   async getRepoCommits(owner: string, repo: string, sha?: string, options?: ListGetterOptions): Promise<Paginated<Commit>> {
     let url = 'GET /repos/:owner/:repo/commits';
-    if (sha) {
-      const stateForUri = qs.stringify({ state: sha }, { addQueryPrefix: true });
-      url = `${url}${stateForUri}`;
-    }
 
-    const response = await this.paginate(url, owner, repo);
+    url = url.concat(
+      `${qs.stringify(
+        // eslint-disable-next-line @typescript-eslint/camelcase
+        { sha, page: options?.pagination?.page, per_page: options?.pagination?.perPage },
+        { addQueryPrefix: true, indices: false, arrayFormat: 'repeat' },
+      )}`,
+    );
+
+    const response: Octokit.ReposListCommitsResponse = await this.paginate(url, owner, repo);
 
     const items = response.map((val) => ({
       sha: val.sha,

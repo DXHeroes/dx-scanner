@@ -32,8 +32,8 @@ export class CollaborationInspector implements ICollaborationInspector {
     return this.service.getPullCommits(owner, repo, prNumber);
   }
 
-  async getRepoCommits(owner: string, repo: string, sha?: string) {
-    return this.service.getRepoCommits(owner, repo, sha);
+  async getRepoCommits(owner: string, repo: string, sha?: string, options?: ListGetterOptions) {
+    return this.service.getRepoCommits(owner, repo, sha, options);
   }
 
   async getPullsDiffStat(owner: string, repo: string, prNumber: string) {

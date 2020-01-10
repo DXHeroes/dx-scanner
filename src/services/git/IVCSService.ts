@@ -30,7 +30,7 @@ export interface IVCSService {
   ): Promise<CreatedUpdatedPullRequestComment>;
   getPullRequestReviews(owner: string, repo: string, prNumber: number): Promise<Paginated<PullRequestReview>>;
   getPullRequestFiles(owner: string, repo: string, prNumber: number): Promise<Paginated<PullFiles>>;
-  getRepoCommits(owner: string, repo: string, sha?: string): Promise<Paginated<Commit>>;
+  getRepoCommits(owner: string, repo: string, sha?: string, options?: ListGetterOptions): Promise<Paginated<Commit>>;
   getCommit(owner: string, repo: string, commitSha: string): Promise<Commit>;
   getContributors(owner: string, repo: string): Promise<Paginated<Contributor>>;
   getContributorsStats(owner: string, repo: string): Promise<Paginated<ContributorStats>>;

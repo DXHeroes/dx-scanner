@@ -7,7 +7,6 @@ import { DxPractice } from '../DxPracticeDecorator';
 import { IPractice } from '../IPractice';
 import { PracticeBase } from '../PracticeBase';
 import { ReportDetailType } from '../../reporters/ReporterData';
-import _ from 'lodash';
 
 @DxPractice({
   id: 'LanguageIndependent.CorrectCommitMessages',
@@ -18,7 +17,7 @@ import _ from 'lodash';
   url: 'https://www.conventionalcommits.org/',
 })
 export class CorrectCommitMessagesPractice extends PracticeBase implements IPractice {
-  private readonly relevantCommitCount = 100;
+  private readonly relevantCommitCount = 30;
 
   async isApplicable(): Promise<boolean> {
     return true;
@@ -32,7 +31,9 @@ export class CorrectCommitMessagesPractice extends PracticeBase implements IPrac
     const repoName = GitServiceUtils.getRepoName(ctx.projectComponent.repositoryPath, ctx.projectComponent.path);
     const ownerAndRepoName = GitServiceUtils.getOwnerAndRepoName(repoName);
 
-    const repoCommits = await ctx.collaborationInspector.getRepoCommits(ownerAndRepoName.owner, ownerAndRepoName.repoName);
+    const repoCommits = await ctx.collaborationInspector.getRepoCommits(ownerAndRepoName.owner, ownerAndRepoName.repoName, undefined, {
+      pagination: { perPage: this.relevantCommitCount },
+    });
     const messages = repoCommits.items.map((val) => val.message);
 
     let invalidMessages = await Promise.all(messages.map(async (m) => await lint(m, lintRules.rules)));
@@ -45,8 +46,11 @@ export class CorrectCommitMessagesPractice extends PracticeBase implements IPrac
         headers: ['Commit Message', 'Problems'],
         data: invalidMessages.map((im) => {
           return {
-            msg: `\`\`\`\n${_.truncate(im.input, { length: 200 })}\`\`\`\n`,
-            problems: _.compact(im.warnings.map((w) => w.message).concat(im.errors.map((e) => e.message))).join('\n'),
+            msg: im.input,
+            problems: im.warnings
+              .map((w) => w.message)
+              .concat(im.errors.map((e) => e.message))
+              .join('; '),
           };
         }),
       },

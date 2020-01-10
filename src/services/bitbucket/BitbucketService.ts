@@ -337,11 +337,13 @@ export class BitbucketService implements IVCSService {
     throw new Error('Method not implemented yet.');
   }
 
-  async getRepoCommits(owner: string, repo: string): Promise<Paginated<Commit>> {
+  async getRepoCommits(owner: string, repo: string, sha?: string, options?: ListGetterOptions): Promise<Paginated<Commit>> {
     this.authenticate();
     const params: Bitbucket.Params.RepositoriesListCommits = {
       repo_slug: repo,
       username: owner,
+      page: options?.pagination?.page?.toString(),
+      pagelen: options?.pagination?.perPage,
     };
     const response = <DeepRequired<Bitbucket.Response<BitbucketCommit>>>await this.client.repositories.listCommits(params);
     const items = response.data.values.map((val) => {
