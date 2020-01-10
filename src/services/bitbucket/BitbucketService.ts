@@ -7,12 +7,12 @@ import { inject, injectable } from 'inversify';
 import { inspect } from 'util';
 import axios from 'axios';
 import qs from 'qs';
-import { IVCSService, VCSServiceType, BitbucketPullRequestState } from '..';
+import { IVCSService, VCSServiceType } from '..';
 import { ArgumentsProvider } from '../../scanner';
 import { ICache } from '../../scanner/cache/ICache';
 import { Types } from '../../types';
 import { ListGetterOptions, PullRequestState, Paginated } from '../../inspectors';
-import { BitbucketIssueState } from '../../inspectors/IIssueTrackingInspector';
+import { IssueState } from '../../inspectors/IIssueTrackingInspector';
 import {
   PullRequest,
   PullFiles,
@@ -32,6 +32,7 @@ import {
 import { VCSServicesUtils } from '../git/VCSServicesUtils';
 import { DeepRequired } from '../../lib/deepRequired';
 import { InMemoryCache } from '../../scanner/cache';
+import { BitbucketPullRequestState, BitbucketIssueState } from './IBitbucketService';
 
 const debug = Debug('cli:services:git:bitbucket-service');
 
@@ -246,13 +247,36 @@ export class BitbucketService implements IVCSService {
     return { items, ...pagination };
   }
 
-  async getIssues(owner: string, repo: string): Promise<Paginated<Issue>> {
+  async getIssues(
+    owner: string,
+    repo: string,
+    options?: { withDiffStat?: boolean } & ListGetterOptions<{ state?: IssueState }>,
+  ): Promise<Paginated<Issue>> {
     this.authenticate();
 
-    const params: Bitbucket.Params.IssueTrackerList = {
+    let params: Bitbucket.Params.IssueTrackerList = {
       repo_slug: repo,
       username: owner,
     };
+
+    if (options?.filter?.state) {
+      const state = VCSServicesUtils.getIssueState(options.filter.state, VCSServiceType.bitbucket);
+      const stringifiedState = qs.stringify(
+        { state: state },
+        { addQueryPrefix: false, indices: false, encode: false, arrayFormat: 'repeat' },
+      );
+      params = { ...params, q: stringifiedState };
+    }
+
+    if (options?.pagination) {
+      if (options.pagination.page) {
+        params = { ...params, page: `${options.pagination.page}` };
+      }
+      if (options.pagination.perPage) {
+        params = { ...params, pagelen: options.pagination.perPage };
+      }
+    }
+
     const response = <DeepRequired<Bitbucket.Response<Bitbucket.Schema.PaginatedIssues>>>await this.client.issue_tracker.list(params);
 
     const items = response.data.values.map((val) => ({

@@ -1,10 +1,11 @@
 /* eslint-disable @typescript-eslint/camelcase */
 import { injectable, inject } from 'inversify';
-import { IIssueTrackingInspector } from './IIssueTrackingInspector';
+import { IIssueTrackingInspector, IssueState } from './IIssueTrackingInspector';
 import { Paginated } from './common/Paginated';
 import { Issue, IssueComment } from '../services/git/model';
 import { Types } from '../types';
 import { VCSService } from '../model';
+import { ListGetterOptions } from '.';
 
 @injectable()
 export class IssueTrackingInspector implements IIssueTrackingInspector {
@@ -14,8 +15,12 @@ export class IssueTrackingInspector implements IIssueTrackingInspector {
     this.service = service;
   }
 
-  async getIssues(owner: string, repo: string): Promise<Paginated<Issue>> {
-    return this.service.getIssues(owner, repo);
+  async getIssues(
+    owner: string,
+    repo: string,
+    options?: { withDiffStat?: boolean } & ListGetterOptions<{ state?: IssueState }>,
+  ): Promise<Paginated<Issue>> {
+    return this.service.getIssues(owner, repo, options);
   }
 
   async getIssue(owner: string, repo: string, issueId: number): Promise<Issue> {
