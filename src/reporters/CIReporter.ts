@@ -41,7 +41,13 @@ export class CIReporter implements IReporter {
 
     const reportString = this.buildReport(practicesAndComponents);
     this.d(reportString);
-    return this.postMessage(reportString);
+    return this.postMessage(reportString).catch((error) => {
+      this.d(error.message);
+      if (error.code === 401 || error.code === 404 || error.code === 403) {
+        return undefined;
+      }
+      throw error;
+    });
   }
 
   buildReport(practicesAndComponents: PracticeWithContextForReporter[]): string {
