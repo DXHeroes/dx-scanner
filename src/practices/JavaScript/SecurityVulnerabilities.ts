@@ -4,6 +4,7 @@ import { PracticeContext } from '../../contexts/practice/PracticeContext';
 import { IPractice } from '../IPractice';
 import shell from 'shelljs';
 import debug from 'debug';
+import { sync as commandExistsSync } from 'command-exists';
 
 enum PackageManagerType {
   unknown = 'unknown',
@@ -39,10 +40,29 @@ export class SecurityVulnerabilitiesPractice implements IPractice {
       return PackageManagerType.unknown;
     };
 
-    const packageManager = await getPackageManager();
+    const pmInstalled = (packageManager: PackageManagerType) => {
+      const hasNpm = commandExistsSync('npm');
+      const hasYarn = commandExistsSync('yarn');
+
+      if (packageManager === PackageManagerType.yarn) {
+        if (hasYarn) return packageManager;
+        else {
+          packageManager = PackageManagerType.npm; // fallback from yarn to npm
+        }
+      }
+
+      if (packageManager === PackageManagerType.npm && hasNpm) return packageManager;
+
+      return PackageManagerType.unknown;
+    };
+
+    let packageManager = await getPackageManager();
+    packageManager = pmInstalled(packageManager);
     if (packageManager === PackageManagerType.unknown) {
       const securityVulnerabilitiesPracticeDebug = debug('SecurityVulnerabilitiesPractice');
-      securityVulnerabilitiesPracticeDebug('Cannot establish package-manager type, missing package-lock.json and yarn.lock.');
+      securityVulnerabilitiesPracticeDebug(
+        'Cannot establish package-manager type, missing package-lock.json and yarn.lock or npm command not installed.',
+      );
       return PracticeEvaluationResult.unknown;
     }
     const currentDir = shell.pwd();
