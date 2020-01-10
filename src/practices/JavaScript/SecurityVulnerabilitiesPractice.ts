@@ -6,6 +6,7 @@ import debug from 'debug';
 import { sync as commandExistsSync } from 'command-exists';
 import { PracticeBase } from '../PracticeBase';
 import { ReportDetailType } from '../../reporters/ReporterData';
+import { map } from 'lodash';
 
 enum PackageManagerType {
   unknown = 'unknown',
@@ -30,7 +31,7 @@ export class SecurityVulnerabilitiesPractice extends PracticeBase {
 
   async evaluate(ctx: PracticeContext): Promise<PracticeEvaluationResult> {
     const npmCmd = 'npm audit --audit-level=high --json';
-    const yarnCmd = 'yarn audit --summary';
+    const yarnCmd = 'yarn audit --summary --json';
     const getPackageManager = async () => {
       const packageLockExists = await ctx.fileInspector?.exists('./package-lock.json');
       if (packageLockExists) return PackageManagerType.npm;
@@ -72,23 +73,33 @@ export class SecurityVulnerabilitiesPractice extends PracticeBase {
     shell.cd(currentDir);
     this.setData(result, packageManager);
     if (packageManager === PackageManagerType.npm && result.code > 0) return PracticeEvaluationResult.notPracticing;
-    if (result.code > 7) return PracticeEvaluationResult.notPracticing; // only other option is Yarn
+    if (result.code > 15) return PracticeEvaluationResult.notPracticing; // only other option is Yarn
     return PracticeEvaluationResult.practicing;
   }
 
   setData(result: string, packageManager: PackageManagerType): void {
-    if (packageManager !== PackageManagerType.npm) return; // TODO: yarn produces JSON-lines so skip it for now
-    const data = JSON.parse(result);
-    this.data.details = [
-      {
-        type: ReportDetailType.table,
-        headers: ['Action', 'Module', 'Version'],
-        data: data.actions.map((action: { action: string; module: string; target?: string }) => ({
-          action: action.action,
-          module: action.module,
-          version: action.target,
-        })),
-      },
-    ];
+    if (packageManager === PackageManagerType.npm) {
+      const data = JSON.parse(result);
+      this.data.details = [
+        {
+          type: ReportDetailType.table,
+          headers: ['Action', 'Module', 'Version'],
+          data: data.actions.map((action: { action: string; module: string; target?: string }) => ({
+            action: action.action,
+            module: action.module,
+            version: action.target,
+          })),
+        },
+      ];
+    } else if (packageManager === PackageManagerType.yarn) {
+      const data = JSON.parse(result);
+      this.data.details = [
+        {
+          type: ReportDetailType.table,
+          headers: ['Severity', 'Vulnerabilities'],
+          data: map(data.data.vulnerabilities, (value: number, key: string) => ({ key, value })),
+        },
+      ];
+    }
   }
 }

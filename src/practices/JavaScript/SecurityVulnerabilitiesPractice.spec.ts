@@ -22,7 +22,7 @@ describe('SecurityVulnerabilitiesPractice', () => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const setupMocks = (mockOverrides: { f: any; impl: (...args: any) => any }[] = []) => {
     (shelljs.exec as jest.Mock).mockImplementation(() => {
-      const result = new String('{"actions":[]}');
+      const result = new String('{"actions":[], "data":{ "vulnerabilities": {}}}'); // minimal data for both npm and yarn
       (result as any).code = 0;
       return result;
     });
@@ -137,8 +137,8 @@ describe('SecurityVulnerabilitiesPractice', () => {
       {
         f: shelljs.exec,
         impl: () => {
-          const result = new String('{"actions":[]}');
-          (result as any).code = 8;
+          const result = new String('{"data":{"vulnerabilities":{}}}');
+          (result as any).code = 16;
           return result;
         },
       },
@@ -157,7 +157,7 @@ describe('SecurityVulnerabilitiesPractice', () => {
       {
         f: shelljs.exec,
         impl: () => {
-          const result = new String('{"actions":[]}');
+          const result = new String('{"data":{"vulnerabilities":{}}}');
           (result as any).code = 6;
           return result;
         },
