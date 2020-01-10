@@ -51,3 +51,14 @@ export enum BitbucketPullRequestState {
   declined = 'DECLINED',
   superseded = 'SUPERSEDED',
 }
+
+export enum BitbucketIssueState {
+  new = 'new',
+  open = 'open',
+  resolved = 'resolved',
+  onHold = 'on hold',
+  invalid = 'invalid',
+  duplicate = 'duplicate',
+  wontfiw = 'wontfix',
+  closed = 'closed',
+}
