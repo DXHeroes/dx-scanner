@@ -18,6 +18,8 @@ import _ from 'lodash';
   url: 'https://www.conventionalcommits.org/',
 })
 export class CorrectCommitMessagesPractice extends PracticeBase implements IPractice {
+  private readonly relevantCommitCount = 100;
+
   async isApplicable(): Promise<boolean> {
     return true;
   }

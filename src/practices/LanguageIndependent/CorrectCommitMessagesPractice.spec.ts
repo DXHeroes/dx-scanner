@@ -54,6 +54,20 @@ describe('CorrectCommitMessagesPractice', () => {
     expect(evaluated).toEqual(PracticeEvaluationResult.practicing);
   });
 
+  it.only('commit message with scope, body either the footer and signiture', async () => {
+    const cMsg = `Update src/inspectors/common/Paginated.ts\n\nCo-Authored-By: Prokop Simek <prokopsimek@users.noreply.github.com>`;
+
+    mockCollaborationInspector.getRepoCommits = async () => {
+      return changeRepoCommitsMessages(cMsg);
+    };
+
+    const evaluated = await practice.evaluate({
+      ...containerCtx.practiceContext,
+      collaborationInspector: mockCollaborationInspector,
+    });
+    expect(evaluated).toEqual(PracticeEvaluationResult.practicing);
+  });
+
   it('returns not practicing if the commit messages are incorrect', async () => {
     mockCollaborationInspector.getRepoCommits = async () => {
       return changeRepoCommitsMessages('foo: some message');

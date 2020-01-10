@@ -204,9 +204,9 @@ export class GitHubService implements IVCSService {
    *
    * Sha can be SHA or branch name.
    */
-  async getRepoCommits(owner: string, repo: string, sha?: string): Promise<Paginated<Commit>> {
+  async getRepoCommits(owner: string, repo: string, sha?: string, options?: ListGetterOptions): Promise<Paginated<Commit>> {
     let url = 'GET /repos/:owner/:repo/commits';
-    if (sha !== undefined) {
+    if (sha) {
       const stateForUri = qs.stringify({ state: sha }, { addQueryPrefix: true });
       url = `${url}${stateForUri}`;
     }
