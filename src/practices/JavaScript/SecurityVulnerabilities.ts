@@ -5,6 +5,8 @@ import { IPractice } from '../IPractice';
 import shell from 'shelljs';
 import debug from 'debug';
 import { sync as commandExistsSync } from 'command-exists';
+import { PracticeBase } from '../PracticeBase';
+import { ReportDetailType } from '../../reporters/ReporterData';
 
 enum PackageManagerType {
   unknown = 'unknown',
@@ -20,7 +22,7 @@ enum PackageManagerType {
   reportOnlyOnce: true,
   url: 'https://snyk.io/',
 })
-export class SecurityVulnerabilitiesPractice implements IPractice {
+export class SecurityVulnerabilitiesPractice extends PracticeBase {
   async isApplicable(ctx: PracticeContext): Promise<boolean> {
     return (
       ctx.projectComponent.language === ProgrammingLanguage.JavaScript || ctx.projectComponent.language === ProgrammingLanguage.TypeScript
@@ -28,7 +30,7 @@ export class SecurityVulnerabilitiesPractice implements IPractice {
   }
 
   async evaluate(ctx: PracticeContext): Promise<PracticeEvaluationResult> {
-    const npmCmd = 'npm audit --audit-level=high';
+    const npmCmd = 'npm audit --audit-level=high --json';
     const yarnCmd = 'yarn audit --summary';
     const getPackageManager = async () => {
       const packageLockExists = await ctx.fileInspector?.exists('package-lock.json');
@@ -69,8 +71,25 @@ export class SecurityVulnerabilitiesPractice implements IPractice {
     shell.cd(ctx.fileInspector?.basePath);
     const result = shell.exec(packageManager === PackageManagerType.npm ? npmCmd : yarnCmd, { silent: true });
     shell.cd(currentDir);
+    this.setData(result);
     if (packageManager === PackageManagerType.npm && result.code > 0) return PracticeEvaluationResult.notPracticing;
     if (result.code > 7) return PracticeEvaluationResult.notPracticing; // only other option is Yarn
     return PracticeEvaluationResult.practicing;
+  }
+
+  setData(result: string, packageManager = PackageManagerType.npm): void {
+    if (packageManager !== PackageManagerType.npm) return; // TODO: yarn produces JSON-lines so skip it for now
+    const data = JSON.parse(result);
+    this.data.details = [
+      {
+        type: ReportDetailType.table,
+        headers: ['Action', 'Module', 'Version'],
+        data: data.actions.map((action: { action: string; module: string; target?: string }) => ({
+          action: action.action,
+          module: action.module,
+          version: action.target,
+        })),
+      },
+    ];
   }
 }
