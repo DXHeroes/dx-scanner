@@ -1,7 +1,6 @@
 import { PracticeEvaluationResult, PracticeImpact, ProgrammingLanguage } from '../../model';
 import { DxPractice } from '../DxPracticeDecorator';
 import { PracticeContext } from '../../contexts/practice/PracticeContext';
-import { IPractice } from '../IPractice';
 import shell from 'shelljs';
 import debug from 'debug';
 import { sync as commandExistsSync } from 'command-exists';
@@ -33,7 +32,7 @@ export class SecurityVulnerabilitiesPractice extends PracticeBase {
     const npmCmd = 'npm audit --audit-level=high --json';
     const yarnCmd = 'yarn audit --summary';
     const getPackageManager = async () => {
-      const packageLockExists = await ctx.fileInspector?.exists('package-lock.json');
+      const packageLockExists = await ctx.fileInspector?.exists('./package-lock.json');
       if (packageLockExists) return PackageManagerType.npm;
       const shrinkwrapExists = await ctx.fileInspector?.exists('./npm-shrinkwrap.json');
       if (shrinkwrapExists) return PackageManagerType.npm;
