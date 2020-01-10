@@ -1,12 +1,12 @@
 /* eslint-disable @typescript-eslint/camelcase */
 import nock from 'nock';
 import { ListGetterOptions } from '../../inspectors';
-import { BitbucketPullRequestState } from '../../services/git/IVCSService';
 import { bitbucketListIssueCommentsResponseFactory } from '../factories/responses/bitbucket/listIssueCommentsResponseFactory';
 import { bitbucketListIssuesResponseFactory } from '../factories/responses/bitbucket/listIssuesResponseFactory';
 import { bitbucketListPRsResponseFactory } from '../factories/responses/bitbucket/listPrsResponseFactory';
 import { bitbucketListPullCommitsResponseFactory } from '../factories/responses/bitbucket/listPullCommitsResponseFactory';
 import { bitbucketListCommitResponseFactory } from '../factories/responses/bitbucket/listRepoCommitsResponseFactory';
+import { BitbucketPullRequestState, BitbucketIssueState } from '../../services/bitbucket/IBitbucketService';
 
 export class BitbucketNock {
   user: string;
@@ -72,12 +72,12 @@ export class BitbucketNock {
 
   listIssuesResponse(
     issues: Bitbucket.Schema.Issue[],
-    options?: ListGetterOptions<{ state?: BitbucketPullRequestState | BitbucketPullRequestState[] }>,
+    options?: ListGetterOptions<{ state?: BitbucketIssueState | BitbucketIssueState[] }>,
   ) {
     const baseUrl = `${this.url}/repositories/${this.user}/${this.repoName}/issues`;
 
-    const queryParams: { state?: BitbucketPullRequestState | BitbucketPullRequestState[]; page?: number; pagelen?: number } = {};
-    if (options?.filter?.state) queryParams.state = options?.filter?.state;
+    const queryParams: { q?: string; page?: number; pagelen?: number } = {};
+    if (options?.filter?.state) queryParams.q = `state="${options?.filter?.state}"`;
     if (options?.pagination?.page) queryParams.page = options?.pagination?.page;
     if (options?.pagination?.perPage) queryParams.pagelen = options?.pagination?.perPage;
 
