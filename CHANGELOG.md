@@ -1,3 +1,22 @@
+# [1.31.0](https://github.com/dxheroes/dx-scanner/compare/v1.30.0...v1.31.0) (2020-01-10)
+
+
+### Bug Fixes
+
+* 2nd run of unauthenticated scan ([b0ef8fd](https://github.com/dxheroes/dx-scanner/commit/b0ef8fd))
+* don't prompt auth on travis ([60ba483](https://github.com/dxheroes/dx-scanner/commit/60ba483))
+* scanner imports ([a6b3c52](https://github.com/dxheroes/dx-scanner/commit/a6b3c52))
+* scanningDetector tests ([d3cd41b](https://github.com/dxheroes/dx-scanner/commit/d3cd41b))
+
+
+### Features
+
+* add auth check to CIReporter ([47cb520](https://github.com/dxheroes/dx-scanner/commit/47cb520))
+* add local path's repo detect test ([11e22ab](https://github.com/dxheroes/dx-scanner/commit/11e22ab))
+* require auth token when scanning local path's repo ([7d26e3c](https://github.com/dxheroes/dx-scanner/commit/7d26e3c))
+* use ci flag instead of is-travis ([c1ef2ec](https://github.com/dxheroes/dx-scanner/commit/c1ef2ec))
+* use flag for authentication prompt ([8b93653](https://github.com/dxheroes/dx-scanner/commit/8b93653))
+
 # [1.30.0](https://github.com/dxheroes/dx-scanner/compare/v1.29.2...v1.30.0) (2020-01-10)
 
 
