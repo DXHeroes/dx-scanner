@@ -1,8 +1,9 @@
 import { Issue } from '../../model';
 import { Paginated } from '../../../../inspectors/common/Paginated';
+import _ from 'lodash';
 
-export const getIssuesResponse: Paginated<Issue> = {
-  items: [
+export const getIssuesResponse = (items?: Issue[]): Paginated<Issue> => {
+  const defaultItems = [
     {
       user: {
         id: '{dfa073eb-c602-4740-83ef-a8fe8ee03dfd}',
@@ -16,12 +17,16 @@ export const getIssuesResponse: Paginated<Issue> = {
       updatedAt: '2019-10-15T15:47:34.904758+00:00',
       closedAt: null,
       state: 'new',
-      id: '{54220cd1-b139-4188-9455-1e13e663f1ac}',
+      id: 3086,
     },
-  ],
-  totalCount: 1,
-  hasNextPage: true,
-  hasPreviousPage: false,
-  page: 1,
-  perPage: 1,
+  ];
+
+  return {
+    items: items || defaultItems,
+    totalCount: items?.length || 1,
+    hasNextPage: false,
+    hasPreviousPage: false,
+    page: 1,
+    perPage: items?.length || 1,
+  };
 };

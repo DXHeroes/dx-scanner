@@ -6,36 +6,34 @@ import { DxPractice } from '../DxPracticeDecorator';
 import { IPractice } from '../IPractice';
 
 @DxPractice({
-  id: 'LanguageIndependent.TimeToSolvePullRequests',
-  name: 'Solve Pull Requests Continuously',
+  id: 'LanguageIndependent.TimeToSolveIssues',
+  name: 'Solve Issues Continuously',
   impact: PracticeImpact.medium,
-  suggestion: 'Do not have an open Pull Request more than 30 days. Review PRs continuously.',
+  suggestion: 'Do not have an open Issues more than 60 days. Solve Issues continuously.',
   reportOnlyOnce: true,
-  url: 'https://dxkb.io/p/pull-requests',
-  dependsOn: { practicing: ['LanguageIndependent.DoesPullRequests'] },
+  url: 'https://hackernoon.com/45-github-issues-dos-and-donts-dfec9ab4b612',
 })
-export class TimeToSolvePullRequestsPractice implements IPractice {
+export class TimeToSolveIssuesPractice implements IPractice {
   async isApplicable(): Promise<boolean> {
     return true;
   }
 
   async evaluate(ctx: PracticeContext): Promise<PracticeEvaluationResult> {
-    if (!ctx.fileInspector || !ctx.collaborationInspector) {
+    if (ctx.fileInspector === undefined || ctx.issueTrackingInspector === undefined) {
       return PracticeEvaluationResult.unknown;
     }
 
     const repoName = GitServiceUtils.getRepoName(ctx.projectComponent.repositoryPath, ctx.projectComponent.path);
     const ownerAndRepoName = GitServiceUtils.getOwnerAndRepoName(repoName);
 
-    //Both GitHub API and Bitbucket API returns open pullrequests by default
-    const pullRequests = await ctx.collaborationInspector.getPullRequests(ownerAndRepoName.owner, ownerAndRepoName.repoName);
-
-    const latestPRsUpdate = pullRequests.items.map((item) => moment(item.updatedAt || item.createdAt));
+    //Both GitHub API and Bitbucket API returns open issues by default
+    const issues = await ctx.issueTrackingInspector.getIssues(ownerAndRepoName.owner, ownerAndRepoName.repoName);
+    const latestIssueUpdate = issues.items.map((item) => moment(item.updatedAt || item.createdAt));
 
     const dateInPast = moment().subtract(30, 'd');
-    const openPullRequestsTooLong = latestPRsUpdate.filter((d) => d.isSameOrBefore(dateInPast));
+    const openIssuesTooLong = latestIssueUpdate.filter((d) => d.isSameOrBefore(dateInPast));
 
-    if (openPullRequestsTooLong.length === 0) {
+    if (openIssuesTooLong.length === 0) {
       return PracticeEvaluationResult.practicing;
     }
 
