@@ -41,7 +41,9 @@ export class JsGitignoreCorrectlySetPractice extends PracticeBase {
     const coverageRegex = parsedGitignore.find((value: string) => /coverage/.test(value));
     const errorLogRegex = parsedGitignore.find((value: string) => /\.log/.test(value));
 
-    if ((packageJsonRegex || yarnLockRegex) && nodeModulesRegex && errorLogRegex && coverageRegex) {
+    const exactlyOneLockfile = (packageJsonRegex && !yarnLockRegex) || (!packageJsonRegex && yarnLockRegex);
+
+    if (exactlyOneLockfile && nodeModulesRegex && errorLogRegex && coverageRegex) {
       return PracticeEvaluationResult.practicing;
     }
 
