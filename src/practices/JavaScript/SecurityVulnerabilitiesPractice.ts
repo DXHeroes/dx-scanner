@@ -71,13 +71,13 @@ export class SecurityVulnerabilitiesPractice extends PracticeBase {
     shell.cd(ctx.fileInspector?.basePath);
     const result = shell.exec(packageManager === PackageManagerType.npm ? npmCmd : yarnCmd, { silent: true });
     shell.cd(currentDir);
-    this.setData(result);
+    this.setData(result, packageManager);
     if (packageManager === PackageManagerType.npm && result.code > 0) return PracticeEvaluationResult.notPracticing;
     if (result.code > 7) return PracticeEvaluationResult.notPracticing; // only other option is Yarn
     return PracticeEvaluationResult.practicing;
   }
 
-  setData(result: string, packageManager = PackageManagerType.npm): void {
+  setData(result: string, packageManager: PackageManagerType): void {
     if (packageManager !== PackageManagerType.npm) return; // TODO: yarn produces JSON-lines so skip it for now
     const data = JSON.parse(result);
     this.data.details = [

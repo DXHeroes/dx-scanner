@@ -26,7 +26,7 @@ import { CorrectCommitMessagesPractice } from './LanguageIndependent/CorrectComm
 import { TimeToSolvePullRequestsPractice } from './LanguageIndependent/TimeToSolvePullRequestsPractice';
 import { TimeToSolveIssuesPractice } from './LanguageIndependent/TimeToSolveIssuesPractice';
 import { ThinPullRequestsPractice } from './LanguageIndependent/ThinPullRequestsPractice';
-import { SecurityVulnerabilitiesPractice } from './JavaScript/SecurityVulnerabilities';
+import { SecurityVulnerabilitiesPractice } from './JavaScript/SecurityVulnerabilitiesPractice';
 
 // register practices here
 export const practices = [
