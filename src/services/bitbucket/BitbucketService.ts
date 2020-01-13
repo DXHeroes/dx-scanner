@@ -258,6 +258,8 @@ export class BitbucketService implements IVCSService {
     let params: Bitbucket.Params.IssueTrackerList = {
       repo_slug: repo,
       username: owner,
+      page: options?.pagination?.page ? `${options?.pagination?.page}` : undefined,
+      pagelen: options?.pagination?.perPage,
     };
 
     if (options?.filter?.state) {
@@ -282,15 +284,6 @@ export class BitbucketService implements IVCSService {
         },
       );
       params = { ...params, q: stringifiedState };
-    }
-
-    if (options?.pagination) {
-      if (options.pagination.page) {
-        params = { ...params, page: `${options.pagination.page}` };
-      }
-      if (options.pagination.perPage) {
-        params = { ...params, pagelen: options.pagination.perPage };
-      }
     }
 
     const response = <DeepRequired<Bitbucket.Response<Bitbucket.Schema.PaginatedIssues>>>await this.client.issue_tracker.list(params);
