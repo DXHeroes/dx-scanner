@@ -1,3 +1,10 @@
+## [1.32.1](https://github.com/dxheroes/dx-scanner/compare/v1.32.0...v1.32.1) (2020-01-13)
+
+
+### Bug Fixes
+
+* **deps:** pin dependencies ([caedb1e](https://github.com/dxheroes/dx-scanner/commit/caedb1e))
+
 # [1.32.0](https://github.com/dxheroes/dx-scanner/compare/v1.31.0...v1.32.0) (2020-01-10)
 
 
