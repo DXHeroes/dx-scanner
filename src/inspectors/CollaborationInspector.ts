@@ -24,18 +24,22 @@ export class CollaborationInspector implements ICollaborationInspector {
     return this.service.getPullRequest(owner, repo, prNumber, withDiffStat);
   }
 
+  //TODO add options
   async getPullRequestFiles(owner: string, repo: string, prNumber: number) {
     return this.service.getPullRequestFiles(owner, repo, prNumber);
   }
 
+  //TODO add options
   async getPullCommits(owner: string, repo: string, prNumber: number) {
     return this.service.getPullCommits(owner, repo, prNumber);
   }
 
+  //TODO add options
   async getRepoCommits(owner: string, repo: string, sha?: string) {
     return this.service.getRepoCommits(owner, repo, sha);
   }
 
+  //TODO add options
   async getPullsDiffStat(owner: string, repo: string, prNumber: string) {
     return this.service.getPullsDiffStat(owner, repo, prNumber);
   }

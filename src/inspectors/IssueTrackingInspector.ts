@@ -27,6 +27,7 @@ export class IssueTrackingInspector implements IIssueTrackingInspector {
     return this.service.getIssue(owner, repo, issueId);
   }
 
+  //TODO add options
   async listIssueComments(owner: string, repo: string, issueId: number): Promise<Paginated<IssueComment>> {
     return this.service.getIssueComments(owner, repo, issueId);
   }
