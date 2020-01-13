@@ -50,11 +50,11 @@ export class VCSServicesUtils {
     if (service === VCSServiceType.bitbucket) {
       switch (state) {
         case IssueState.open:
-          return `"${BitbucketIssueState.new}"`;
+          return BitbucketIssueState.new;
         case IssueState.closed:
-          return `"${BitbucketIssueState.resolved}"`;
+          return BitbucketIssueState.resolved;
         case IssueState.all:
-          return [`"${BitbucketIssueState.new}"`, `"${BitbucketIssueState.resolved}"`, `"${BitbucketIssueState.closed}"`];
+          return [BitbucketIssueState.new, BitbucketIssueState.resolved, BitbucketIssueState.closed];
         default:
           return undefined;
       }

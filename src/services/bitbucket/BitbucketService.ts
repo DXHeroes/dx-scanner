@@ -33,6 +33,7 @@ import { VCSServicesUtils } from '../git/VCSServicesUtils';
 import { DeepRequired } from '../../lib/deepRequired';
 import { InMemoryCache } from '../../scanner/cache';
 import { BitbucketPullRequestState, BitbucketIssueState } from './IBitbucketService';
+import _ from 'lodash';
 
 const debug = Debug('cli:services:git:bitbucket-service');
 
@@ -261,9 +262,24 @@ export class BitbucketService implements IVCSService {
 
     if (options?.filter?.state) {
       const state = VCSServicesUtils.getIssueState(options.filter.state, VCSServiceType.bitbucket);
+
+      // put state in quotation marks because of Bitbucket API https://developer.atlassian.com/bitbucket/api/2/reference/meta/filtering#query-issues
+      let quotedState: string | string[] = `"${state}"`;
+      if (_.isArray(state)) {
+        quotedState = state.map((state) => {
+          return `"${state}"`;
+        });
+      }
+
       const stringifiedState = qs.stringify(
-        { state: state },
-        { addQueryPrefix: false, indices: false, encode: false, arrayFormat: 'repeat' },
+        { state: quotedState },
+        {
+          addQueryPrefix: false,
+          indices: true,
+          encode: false,
+          arrayFormat: 'repeat',
+          delimiter: '+OR+',
+        },
       );
       params = { ...params, q: stringifiedState };
     }
