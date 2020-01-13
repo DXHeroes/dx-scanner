@@ -130,12 +130,32 @@ describe('Bitbucket Service', () => {
     expect(response).toMatchObject(getPullCommitsResponse());
   });
 
-  it('returns issues in own interface', async () => {
+  it('returns open issues in own interface', async () => {
     const mockIssue = bitbucketIssueResponseFactory({ state: BitbucketIssueState.new });
     bitbucketNock.getOwnerId();
     bitbucketNock.listIssuesResponse([mockIssue], { filter: { state: BitbucketIssueState.new } });
 
     const response = await service.getIssues('pypy', 'pypy', { filter: { state: IssueState.open } });
+    expect(response.items).toHaveLength(1);
+    //expect(response.items[0].id).toEqual(mockIssue.id);
+
+    expect(response.hasNextPage).toEqual(true);
+    expect(response.hasPreviousPage).toEqual(true);
+    expect(response.page).toEqual(1);
+    expect(response.perPage).toEqual(1);
+    expect(response.totalCount).toEqual(1);
+  });
+
+  it.only('returns all issues in own interface', async () => {
+    // const mockNewIssue = bitbucketIssueResponseFactory({ state: BitbucketIssueState.new });
+    // const mockClosedIssue = bitbucketIssueResponseFactory({ state: BitbucketIssueState.closed });
+
+    // bitbucketNock.getOwnerId();
+    // bitbucketNock.listIssuesResponse([mockNewIssue, mockClosedIssue], {
+    //   filter: { state: [BitbucketIssueState.new, BitbucketIssueState.closed] },
+    // });
+
+    const response = await service.getIssues('pypy', 'pypy', { filter: { state: IssueState.all } });
     expect(response.items).toHaveLength(1);
     //expect(response.items[0].id).toEqual(mockIssue.id);
 
