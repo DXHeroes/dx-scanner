@@ -257,7 +257,7 @@ export class GitHubService implements IVCSService {
       id: val.id,
       login: val.login,
       url: val.url,
-      followersUrl: val.subscriptions_url,
+      followersUrl: val.followers_url,
       contributions: val.contributions,
     }));
     const pagination = this.getPagination(data.length);
