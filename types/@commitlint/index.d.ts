@@ -1,15 +1,16 @@
 declare module '@commitlint/lint' {
+  interface WarnAndErr {
+    level: number;
+    valid: boolean;
+    name: string;
+    message: string;
+  }
   interface CommitLintFn {
     (message: string, rules: Record<string, (number | string | string[])[]>): Promise<{
       input: string;
       valid: boolean;
-      errors: string[];
-      warnings: {
-        level: number;
-        valid: boolean;
-        name: string;
-        message: string;
-      }[];
+      errors: WarnAndErr[];
+      warnings: WarnAndErr[];
     }>;
   }
 
