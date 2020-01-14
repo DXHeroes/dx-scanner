@@ -32,7 +32,29 @@ describe('ScanningStrategyDetector', () => {
       });
     });
 
-    it('local path with remote public GitHub', async () => {
+    it('local path with remote public GitHub and auth', async () => {
+      const repoPath = 'git@github.com:DXHeroes/dx-scanner.git';
+      new GitHubNock('1', 'DXHeroes', 1, 'dx-scanner').getRepo('').reply(200);
+
+      mockedGit.mockImplementation(() => {
+        return {
+          checkIsRepo: () => true,
+          getRemotes: () => [{ name: 'origin', refs: { fetch: repoPath, push: repoPath } }],
+        };
+      });
+      const container = createTestContainer({ uri: '/local/path', auth: 'fake_token' });
+
+      const result = await container.scanningStrategyDetector.detect();
+
+      expect(result).toEqual({
+        accessType: AccessType.public,
+        localPath: '/local/path',
+        remoteUrl: repoPath,
+        serviceType: ServiceType.github,
+      });
+    });
+
+    it('local path with remote public GitHub and no auth', async () => {
       const repoPath = 'git@github.com:DXHeroes/dx-scanner.git';
       new GitHubNock('1', 'DXHeroes', 1, 'dx-scanner').getRepo('').reply(200);
 
@@ -47,7 +69,7 @@ describe('ScanningStrategyDetector', () => {
       const result = await container.scanningStrategyDetector.detect();
 
       expect(result).toEqual({
-        accessType: AccessType.public,
+        accessType: 'public',
         localPath: '/local/path',
         remoteUrl: repoPath,
         serviceType: ServiceType.github,
@@ -66,8 +88,14 @@ describe('ScanningStrategyDetector', () => {
       });
 
       const container = createTestContainer({ uri: '/local/path', auth: 'bad AT' });
+      const result = await container.scanningStrategyDetector.detect();
 
-      await expect(container.scanningStrategyDetector.detect()).rejects.toThrow('bad credentials');
+      expect(result).toEqual({
+        accessType: AccessType.unknown,
+        localPath: '/local/path',
+        remoteUrl: repoPath,
+        serviceType: ServiceType.github,
+      });
     });
 
     it('remote public GitHub', async () => {
@@ -89,8 +117,14 @@ describe('ScanningStrategyDetector', () => {
       const repoPath = 'https://github.com/DXHeroes/dx-scanner-private.git';
       new GitHubNock('1', 'DXHeroes', 1, 'dx-scanner-private').getRepo('').reply(404);
       const container = createTestContainer({ uri: repoPath, auth: 'bad AT' });
+      const result = await container.scanningStrategyDetector.detect();
 
-      await expect(container.scanningStrategyDetector.detect()).rejects.toThrow('bad credentials');
+      expect(result).toEqual({
+        accessType: AccessType.unknown,
+        localPath: undefined,
+        remoteUrl: repoPath,
+        serviceType: ServiceType.github,
+      });
     });
 
     it('remote public GitHub without protocol in the URL', async () => {

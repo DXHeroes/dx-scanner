@@ -8,6 +8,7 @@ import { ServiceError, ErrorCode } from './lib/errors';
 import updateNotifier from 'update-notifier';
 import { ScanningStrategyDetectorUtils } from './detectors/utils/ScanningStrategyDetectorUtils';
 import { PracticeImpact } from './model';
+import { ServiceType } from './detectors/ScanningStrategyDetector';
 import debug from 'debug';
 
 class DXScannerCommand extends Command {
@@ -66,29 +67,24 @@ class DXScannerCommand extends Command {
       process.exit(0);
     }
 
-    let scanResult: ScanResult;
-    try {
-      scanResult = await scanner.scan();
-    } catch (error) {
-      if (error instanceof ServiceError && error.code === ErrorCode.AUTHORIZATION_ERROR) {
-        if (ScanningStrategyDetectorUtils.isGitHubPath(scanPath)) {
-          authorization = await cli.prompt('Insert your GitHub personal access token. https://github.com/settings/tokens\n', {
-            type: 'hide',
-          });
-        } else if (ScanningStrategyDetectorUtils.isBitbucketPath(scanPath)) {
-          authorization = await cli.prompt(
-            'Insert your Bitbucket credentials (in format "appPassword" or "username:appPasword"). https://confluence.atlassian.com/bitbucket/app-passwords-828781300.html\n',
-            { type: 'hide' },
-          );
-        }
+    let scanResult = await scanner.scan();
 
-        const container = createRootContainer({ uri: scanPath, auth: authorization, json, fail, recursive: flags.recursive, ci: flags.ci });
-        const scanner = container.get(Scanner);
-
-        scanResult = await scanner.scan();
-      } else {
-        throw error;
+    if (scanResult.needsAuth && !flags.ci) {
+      if (ScanningStrategyDetectorUtils.isGitHubPath(scanPath) || scanResult.serviceType === ServiceType.github) {
+        authorization = await cli.prompt('Insert your GitHub personal access token. https://github.com/settings/tokens\n', {
+          type: 'hide',
+        });
+      } else if (ScanningStrategyDetectorUtils.isBitbucketPath(scanPath) || scanResult.serviceType === ServiceType.bitbucket) {
+        authorization = await cli.prompt(
+          'Insert your Bitbucket credentials (in format "appPassword" or "username:appPasword"). https://confluence.atlassian.com/bitbucket/app-passwords-828781300.html\n',
+          { type: 'hide' },
+        );
       }
+
+      const container = createRootContainer({ uri: scanPath, auth: authorization, json, fail, recursive: flags.recursive, ci: flags.ci });
+      const scanner = container.get(Scanner);
+
+      scanResult = await scanner.scan({ determineRemote: false });
     }
     cli.action.stop();
     notifier.notify({ isGlobal: true });

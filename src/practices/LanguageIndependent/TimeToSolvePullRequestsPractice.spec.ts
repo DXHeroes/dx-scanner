@@ -4,10 +4,10 @@ import { CollaborationInspector } from '../../inspectors';
 import { createTestContainer, TestContainerContext } from '../../inversify.config';
 import { PracticeEvaluationResult } from '../../model';
 import { BitbucketPullRequestState, BitbucketService } from '../../services';
-import { TimeToSolvePullRequestsPractice } from './TimeToSolvePullRequestsPractice';
-import { Types } from '../../types';
-import { getPullRequestsResponse } from '../../services/git/__MOCKS__/bitbucketServiceMockFolder/getPullRequestsResponse';
 import { getPullRequestResponse } from '../../services/git/__MOCKS__/bitbucketServiceMockFolder';
+import { getPullRequestsResponse } from '../../services/git/__MOCKS__/bitbucketServiceMockFolder/getPullRequestsResponse';
+import { Types } from '../../types';
+import { TimeToSolvePullRequestsPractice } from './TimeToSolvePullRequestsPractice';
 
 describe('TimeToSolvePullRequestsPractice', () => {
   let practice: TimeToSolvePullRequestsPractice;
@@ -33,7 +33,7 @@ describe('TimeToSolvePullRequestsPractice', () => {
   });
 
   it('returns practicing if there are open pullrequests updated or created less than 10 days from now', async () => {
-    mockCollaborationInspector.getPullRequests = async () => {
+    mockCollaborationInspector.listPullRequests = async () => {
       return getPullRequestsResponse([
         getPullRequestResponse({
           state: BitbucketPullRequestState.open,
@@ -53,7 +53,7 @@ describe('TimeToSolvePullRequestsPractice', () => {
   });
 
   it('returns practicing if there are open pullrequests updated or created more than 100 days from now', async () => {
-    mockCollaborationInspector.getPullRequests = async () => {
+    mockCollaborationInspector.listPullRequests = async () => {
       return getPullRequestsResponse([
         getPullRequestResponse({
           state: BitbucketPullRequestState.open,

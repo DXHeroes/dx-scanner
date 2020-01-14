@@ -45,13 +45,9 @@ export class TsGitignoreCorrectlySetPractice extends PracticeBase {
     const coverageRegex = parsedGitignore.find((value: string) => /coverage/.test(value));
     const errorLogRegex = parsedGitignore.find((value: string) => /\.log/.test(value));
 
-    if (
-      (buildRegex || libRegex || distRegex) &&
-      (packageJsonRegex || yarnLockRegex) &&
-      nodeModulesRegex &&
-      errorLogRegex &&
-      coverageRegex
-    ) {
+    const exactlyOneLockfile = (packageJsonRegex && !yarnLockRegex) || (!packageJsonRegex && yarnLockRegex);
+
+    if ((buildRegex || libRegex || distRegex) && exactlyOneLockfile && nodeModulesRegex && errorLogRegex && coverageRegex) {
       return PracticeEvaluationResult.practicing;
     }
 

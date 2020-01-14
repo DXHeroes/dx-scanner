@@ -1,20 +1,22 @@
 import nock from 'nock';
 import { PullRequestState } from '../../inspectors';
 import {
-  getIssueCommentsResponse,
   getIssueResponse,
-  getIssuesResponse,
-  getPullCommits,
+  getPullCommitsResponse,
   getPullRequestResponse,
   getRepoCommit,
   getRepoCommits,
 } from '../../services/git/__MOCKS__/bitbucketServiceMockFolder';
+import { argumentsProviderFactory } from '../../test/factories/ArgumentsProviderFactory';
+import { bitbucketIssueCommentResponseFactory } from '../../test/factories/responses/bitbucket/issueCommentResponseFactory';
+import { bitbucketIssueResponseFactory } from '../../test/factories/responses/bitbucket/issueResponseFactory';
+import { bitbucketPullRequestResponseFactory } from '../../test/factories/responses/bitbucket/prResponseFactory';
+import { bitbucketPullCommitsResponseFactory } from '../../test/factories/responses/bitbucket/pullCommitsFactory';
+import { bitbucketRepoCommitsResponseFactory } from '../../test/factories/responses/bitbucket/repoCommitsResponseFactory';
+import { BitbucketNock } from '../../test/helpers/bitbucketNock';
 import { BitbucketPullRequestState, VCSServiceType } from '../git/IVCSService';
 import { VCSServicesUtils } from '../git/VCSServicesUtils';
-import { argumentsProviderFactory } from '../../test/factories/ArgumentsProviderFactory';
 import { BitbucketService } from './BitbucketService';
-import { bitbucketPullRequestResponseFactory } from '../../test/factories/responses/bitbucket/prResponseFactory';
-import { BitbucketNock } from '../../test/helpers/bitbucketNock';
 
 describe('Bitbucket Service', () => {
   let service: BitbucketService;
@@ -31,7 +33,7 @@ describe('Bitbucket Service', () => {
     bitbucketNock.getOwnerId();
     bitbucketNock.listPullRequestsResponse([mockPr]);
 
-    const response = await service.getPullRequests('pypy', 'pypy');
+    const response = await service.listPullRequests('pypy', 'pypy');
 
     expect(response.items).toHaveLength(1);
     expect(response.items[0].id).toEqual(mockPr.id);
@@ -48,7 +50,7 @@ describe('Bitbucket Service', () => {
     bitbucketNock.getOwnerId();
     bitbucketNock.listPullRequestsResponse([mockPr], { pagination: { page: 1, perPage: 1 } });
 
-    const response = await service.getPullRequests('pypy', 'pypy', { pagination: { page: 1, perPage: 1 } });
+    const response = await service.listPullRequests('pypy', 'pypy', { pagination: { page: 1, perPage: 1 } });
 
     expect(response.items).toHaveLength(1);
     expect(response.items[0].id).toEqual(mockPr.id);
@@ -64,9 +66,9 @@ describe('Bitbucket Service', () => {
     const mockPr = bitbucketPullRequestResponseFactory({ state: BitbucketPullRequestState.open });
     bitbucketNock.getOwnerId();
     bitbucketNock.listPullRequestsResponse([mockPr]);
-    bitbucketNock.getAdditionsAndDeletions(mockPr.id!);
+    bitbucketNock.getPRsAdditionsAndDeletions(mockPr.id!);
 
-    const response = await service.getPullRequests('pypy', 'pypy', { withDiffStat: true });
+    const response = await service.listPullRequests('pypy', 'pypy', { withDiffStat: true });
 
     expect(response.items).toHaveLength(1);
     expect(response.items[0].id).toEqual(mockPr.id);
@@ -80,14 +82,14 @@ describe('Bitbucket Service', () => {
   });
 
   it('returns all pull requests in own interface', async () => {
-    const allStates = <BitbucketPullRequestState[]>VCSServicesUtils.getPRState(PullRequestState.all, VCSServiceType.bitbucket);
+    const allStates = <BitbucketPullRequestState[]>VCSServicesUtils.getBitbucketPRState(PullRequestState.all);
 
     const prs = allStates.map((state) => bitbucketPullRequestResponseFactory({ state }));
 
     bitbucketNock.getOwnerId();
     bitbucketNock.listPullRequestsResponse(prs, { filter: { state: allStates } });
 
-    const response = await service.getPullRequests('pypy', 'pypy', { filter: { state: PullRequestState.all } });
+    const response = await service.listPullRequests('pypy', 'pypy', { filter: { state: PullRequestState.all } });
 
     expect(response.items).toHaveLength(prs.length);
 
@@ -112,66 +114,81 @@ describe('Bitbucket Service', () => {
     bitbucketNock.getOwnerId();
     bitbucketNock.listPullRequestsResponse([mockPr], { filter: { state: BitbucketPullRequestState.closed } });
 
-    const response = await service.getPullRequests('pypy', 'pypy', { filter: { state: PullRequestState.closed } });
+    const response = await service.listPullRequests('pypy', 'pypy', { filter: { state: PullRequestState.closed } });
 
     expect(response.items).toHaveLength(1);
     expect(response.items[0].id).toEqual(mockPr.id);
     expect(response.items[0].state).toEqual(BitbucketPullRequestState.closed);
   });
 
-  // TODO: refactor
   it('returns pullrequest commits in own interface', async () => {
-    bitbucketNock.getApiResponse({ resource: 'pullrequests', id: 622, value: 'commits' });
+    const mockPullCommits = bitbucketPullCommitsResponseFactory();
+    bitbucketNock.listPullCommits([mockPullCommits], 622);
 
     const response = await service.getPullCommits('pypy', 'pypy', 622);
-    expect(response).toMatchObject(getPullCommits);
+    expect(response).toMatchObject(getPullCommitsResponse());
   });
 
-  // TODO: refactor
   it('returns issues in own interface', async () => {
-    bitbucketNock.getApiResponse({ resource: 'issues' });
+    const mockIssue = bitbucketIssueResponseFactory({ state: 'new' });
+    bitbucketNock.getOwnerId();
+    bitbucketNock.listIssuesResponse([mockIssue]);
 
-    const response = await service.getIssues('pypy', 'pypy');
-    expect(response).toMatchObject(getIssuesResponse);
+    const response = await service.listIssues('pypy', 'pypy');
+    expect(response.items).toHaveLength(1);
+    expect(response.items[0].id).toEqual(mockIssue.id);
+
+    expect(response.hasNextPage).toEqual(true);
+    expect(response.hasPreviousPage).toEqual(true);
+    expect(response.page).toEqual(1);
+    expect(response.perPage).toEqual(1);
+    expect(response.totalCount).toEqual(1);
   });
 
-  // TODO: refactor
   it('returns issue in own interface', async () => {
-    bitbucketNock.getApiResponse({ resource: 'issues', id: 3086 });
+    const mockIssue = bitbucketIssueResponseFactory({ state: 'new' });
+    bitbucketNock.getIssueResponse(mockIssue);
 
     const response = await service.getIssue('pypy', 'pypy', 3086);
-    expect(response).toMatchObject(getIssueResponse);
+    expect(response).toMatchObject(getIssueResponse());
   });
 
-  // TODO: refactor
   it('returns issue comments in own interface', async () => {
-    bitbucketNock.getApiResponse({ resource: 'issues', id: 3086, value: 'comments' });
+    const mockIssueComment = bitbucketIssueCommentResponseFactory();
 
-    const response = await service.getIssueComments('pypy', 'pypy', 3086);
-    expect(response).toMatchObject(getIssueCommentsResponse);
+    bitbucketNock.listIssueCommentsResponse([mockIssueComment], 3086);
+
+    const response = await service.listIssueComments('pypy', 'pypy', 3086);
+    expect(response.items).toHaveLength(1);
+    expect(response.items[0].id).toEqual(mockIssueComment.id);
+
+    expect(response.hasNextPage).toEqual(true);
+    expect(response.hasPreviousPage).toEqual(true);
+    expect(response.page).toEqual(1);
+    expect(response.perPage).toEqual(1);
+    expect(response.totalCount).toEqual(1);
   });
 
-  // TODO: refactor
   it('returns repo commits in own interface', async () => {
-    bitbucketNock.getApiResponse({ resource: 'commits' });
+    const mockRepoCommit = bitbucketRepoCommitsResponseFactory();
+    bitbucketNock.listCommitsResponse([mockRepoCommit]);
 
-    const response = await service.getRepoCommits('pypy', 'pypy');
-    expect(response).toMatchObject(getRepoCommits);
+    const response = await service.listRepoCommits('pypy', 'pypy');
+    expect(response).toMatchObject(getRepoCommits());
   });
 
-  // TODO: refactor
   it('returns one commit in own interface', async () => {
-    bitbucketNock.getApiResponse({ resource: 'commit', id: '961b3a27' });
+    const mockRepoCommit = bitbucketRepoCommitsResponseFactory();
+    bitbucketNock.getCommitResponse(mockRepoCommit, '961b3a27');
 
     const response = await service.getCommit('pypy', 'pypy', '961b3a27');
-    expect(response).toMatchObject(getRepoCommit);
+    expect(response).toMatchObject(getRepoCommit());
   });
 
-  // TODO: refactor
   it('returns pulls diff stat in own interface', async () => {
-    bitbucketNock.getAdditionsAndDeletions(622);
+    bitbucketNock.getPRsAdditionsAndDeletions(622);
 
-    const response = await service.getPullsDiffStat('pypy', 'pypy', '622');
+    const response = await service.getPullsDiffStat('pypy', 'pypy', 622);
     expect(response).toMatchObject({ additions: 2, deletions: 1, changes: 3 });
   });
 });

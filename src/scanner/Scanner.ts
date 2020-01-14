@@ -20,7 +20,7 @@ import { ScannerContextFactory, Types } from '../types';
 import { ScannerUtils } from '../scanner/ScannerUtils';
 import _ from 'lodash';
 import { cli } from 'cli-ux';
-import { ScanningStrategyDetector, ScanningStrategy, ServiceType } from '../detectors';
+import { ScanningStrategyDetector, ScanningStrategy, ServiceType, AccessType } from '../detectors';
 import { IReporter } from '../reporters';
 import { FileSystemService } from '../services';
 import { ScannerContext } from '../contexts/scanner/ScannerContext';
@@ -62,8 +62,11 @@ export class Scanner {
     this.allDetectedComponents = undefined;
   }
 
-  async scan(): Promise<ScanResult> {
+  async scan({ determineRemote } = { determineRemote: true }): Promise<ScanResult> {
     let scanStrategy = await this.scanStrategyDetector.detect();
+    if (determineRemote && scanStrategy.accessType === AccessType.unknown) {
+      return { shouldExitOnEnd: this.shouldExitOnEnd, needsAuth: true, serviceType: scanStrategy.serviceType };
+    }
     this.d(`Scan strategy: ${inspect(scanStrategy)}`);
     scanStrategy = await this.preprocessData(scanStrategy);
     this.d(`Scan strategy (after preprocessing): ${inspect(scanStrategy)}`);
@@ -340,4 +343,6 @@ export interface PracticeWithContext {
 
 export type ScanResult = {
   shouldExitOnEnd: boolean;
+  needsAuth?: boolean;
+  serviceType?: ServiceType;
 };

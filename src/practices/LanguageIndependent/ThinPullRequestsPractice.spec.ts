@@ -33,7 +33,7 @@ describe('ThinPullRequestsPractice', () => {
   });
 
   it('return practicing if there is not a fat PR no older than 30 days than the newest PR', async () => {
-    mockCollaborationInspector.getPullRequests = async () => {
+    mockCollaborationInspector.listPullRequests = async () => {
       return getPullRequestsResponse();
     };
 
@@ -45,7 +45,7 @@ describe('ThinPullRequestsPractice', () => {
   });
 
   it('return notPracticing if there is a fat PR no older than 7 days than the newest PR', async () => {
-    mockCollaborationInspector.getPullRequests = async () => {
+    mockCollaborationInspector.listPullRequests = async () => {
       return getPullRequestsResponse([
         getPullRequestResponse({
           updatedAt: moment()
