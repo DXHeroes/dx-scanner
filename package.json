@@ -71,7 +71,7 @@
   },
   "devDependencies": {
     "@semantic-release/changelog": "3.0.6",
-    "@semantic-release/git": "7.0.18",
+    "@semantic-release/git": "8.0.0",
     "@types/command-exists": "^1.2.0",
     "@types/debug": "4.1.5",
     "@types/git-url-parse": "9.0.0",
@@ -94,7 +94,7 @@
     "nock": "11.7.2",
     "prettier": "1.19.1",
     "rimraf": "3.0.0",
-    "semantic-release": "15.14.0",
+    "semantic-release": "16.0.1",
     "semantic-release-slack-bot": "1.4.1",
     "ts-jest": "24.3.0"
   },
