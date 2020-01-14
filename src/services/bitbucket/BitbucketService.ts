@@ -210,6 +210,11 @@ export class BitbucketService implements IVCSService {
     throw new Error('Method not implemented yet.');
   }
 
+  async listPullCommits(owner: string, repo: string, prNumber: number, options?: ListGetterOptions): Promise<Paginated<PullCommits>> {
+    this.authenticate();
+    throw new Error('Method not implemented yet.');
+  }
+
   async getPullCommits(owner: string, repo: string, prNumber: number): Promise<Paginated<PullCommits>> {
     this.authenticate();
     const params: Bitbucket.Params.PullrequestsListCommits = {
@@ -485,7 +490,7 @@ export class BitbucketService implements IVCSService {
     };
   }
 
-  async getContributors(owner: string, repo: string): Promise<Paginated<Contributor>> {
+  async listContributors(owner: string, repo: string): Promise<Paginated<Contributor>> {
     this.authenticate();
     throw new Error('Method not implemented yet.');
   }

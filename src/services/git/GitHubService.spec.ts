@@ -203,7 +203,7 @@ describe('GitHub Service', () => {
       { id: '583231', login: 'octocat' },
     ]);
 
-    const response = await service.getContributors('octocat', 'Hello-World');
+    const response = await service.listContributors('octocat', 'Hello-World');
     expect(response).toMatchObject(getContributorsServiceResponse);
   });
 
@@ -277,7 +277,7 @@ describe('GitHub Service', () => {
   it('returns pull commits in own interface', async () => {
     new GitHubNock('1', 'octocat', 1, 'Hello-World').getRepo('/pulls/1/commits').reply(200, getPullCommitsResponse);
 
-    const response = await service.getPullCommits('octocat', 'Hello-World', 1);
+    const response = await service.listPullCommits('octocat', 'Hello-World', 1);
     expect(response).toMatchObject(getPullCommitsServiceResponse);
   });
 });

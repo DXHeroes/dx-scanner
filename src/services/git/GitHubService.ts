@@ -245,7 +245,7 @@ export class GitHubService implements IVCSService {
   /**
    * Lists contributors to the specified repository and sorts them by the number of commits per contributor in descending order.
    */
-  async getContributors(owner: string, repo: string): Promise<Paginated<Contributor>> {
+  async listContributors(owner: string, repo: string): Promise<Paginated<Contributor>> {
     const { data } = await this.unwrap(this.client.repos.listContributors({ owner, repo }));
 
     const items = data.map((val) => ({
@@ -362,8 +362,12 @@ export class GitHubService implements IVCSService {
   /**
    * List all issues in the repo.
    */
-  async listIssues(owner: string, repo: string): Promise<Paginated<Issue>> {
-    const { data } = await this.unwrap(this.client.issues.listForRepo({ owner, repo }));
+  async listIssues(owner: string, repo: string, options?: ListGetterOptions): Promise<Paginated<Issue>> {
+    const params: Octokit.IssuesListForRepoParams = { owner, repo };
+    if (options?.pagination?.page) params.page = options.pagination.page;
+    if (options?.pagination?.perPage) params.per_page = options.pagination.perPage;
+
+    const { data } = await this.unwrap(this.client.issues.listForRepo(params));
 
     const items = data.map((val) => ({
       user: {
@@ -411,8 +415,12 @@ export class GitHubService implements IVCSService {
   /**
    * Get All Comments for an Issue
    */
-  async listIssueComments(owner: string, repo: string, issueNumber: number): Promise<Paginated<IssueComment>> {
-    const { data } = await this.unwrap(this.client.issues.listComments({ owner, repo, issue_number: issueNumber }));
+  async listIssueComments(owner: string, repo: string, issueNumber: number, options?: ListGetterOptions): Promise<Paginated<IssueComment>> {
+    const params: Octokit.IssuesListCommentsParams = { owner, repo, issue_number: issueNumber };
+    if (options?.pagination?.page) params.page = options.pagination.page;
+    if (options?.pagination?.perPage) params.per_page = options.pagination.perPage;
+
+    const { data } = await this.unwrap(this.client.issues.listComments(params));
 
     const items = data.map((val) => ({
       user: {
@@ -455,8 +463,12 @@ export class GitHubService implements IVCSService {
   /**
    * Lists commits on a pull request.
    */
-  async getPullCommits(owner: string, repo: string, prNumber: number): Promise<Paginated<PullCommits>> {
-    const { data } = await this.unwrap(this.client.pulls.listCommits({ owner, repo, pull_number: prNumber }));
+  async listPullCommits(owner: string, repo: string, prNumber: number, options?: ListGetterOptions): Promise<Paginated<PullCommits>> {
+    const params: Octokit.PullsListCommitsParams = { owner, repo, pull_number: prNumber };
+    if (options?.pagination?.page) params.page = options.pagination.page;
+    if (options?.pagination?.perPage) params.per_page = options.pagination.perPage;
+
+    const { data } = await this.unwrap(this.client.pulls.listCommits(params));
 
     const items = data.map((val) => ({
       sha: val.sha,
@@ -483,8 +495,17 @@ export class GitHubService implements IVCSService {
   /**
    * List Comments for a Pull Request
    */
-  async listPullRequestComments(owner: string, repo: string, prNumber: number): Promise<Paginated<PullRequestComment>> {
-    const { data } = await this.unwrap(this.client.pulls.listComments({ owner, repo, pull_number: prNumber }));
+  async listPullRequestComments(
+    owner: string,
+    repo: string,
+    prNumber: number,
+    options?: ListGetterOptions,
+  ): Promise<Paginated<PullRequestComment>> {
+    const params: Octokit.PullsListCommentsParams = { owner, repo, pull_number: prNumber };
+    if (options?.pagination?.page) params.page = options.pagination.page;
+    if (options?.pagination?.perPage) params.per_page = options.pagination.perPage;
+
+    const { data } = await this.unwrap(this.client.pulls.listComments(params));
 
     const items = data.map((comment) => ({
       user: { id: comment.user.id.toString(), login: comment.user.login, url: comment.user.url },

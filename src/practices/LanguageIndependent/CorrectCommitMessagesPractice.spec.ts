@@ -31,7 +31,7 @@ describe('CorrectCommitMessagesPractice', () => {
   });
 
   it('commit message without scope', async () => {
-    mockCollaborationInspector.getRepoCommits = async () => {
+    mockCollaborationInspector.listRepoCommits = async () => {
       return changeRepoCommitsMessages('fix: correct commit message');
     };
 
@@ -43,7 +43,7 @@ describe('CorrectCommitMessagesPractice', () => {
   });
 
   it('commit message with scope', async () => {
-    mockCollaborationInspector.getRepoCommits = async () => {
+    mockCollaborationInspector.listRepoCommits = async () => {
       return changeRepoCommitsMessages('fix(something): correct commit message');
     };
 
@@ -57,7 +57,7 @@ describe('CorrectCommitMessagesPractice', () => {
   it('commit message with scope, body and signiture', async () => {
     const cMsg = `fix(something): correct commit message\n\nCo-Authored-By: Prokop Simek <prokopsimek@users.noreply.github.com>`;
 
-    mockCollaborationInspector.getRepoCommits = async () => {
+    mockCollaborationInspector.listRepoCommits = async () => {
       return changeRepoCommitsMessages(cMsg);
     };
 
@@ -69,7 +69,7 @@ describe('CorrectCommitMessagesPractice', () => {
   });
 
   it('returns not practicing if the commit messages are incorrect', async () => {
-    mockCollaborationInspector.getRepoCommits = async () => {
+    mockCollaborationInspector.listRepoCommits = async () => {
       return changeRepoCommitsMessages('foo: some message');
     };
 
@@ -81,7 +81,7 @@ describe('CorrectCommitMessagesPractice', () => {
   });
 
   it('the commit messages has wrong type and is too long', async () => {
-    mockCollaborationInspector.getRepoCommits = async () => {
+    mockCollaborationInspector.listRepoCommits = async () => {
       return changeRepoCommitsMessages('foo: some message some message some message some message some message some message');
     };
 

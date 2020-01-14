@@ -110,7 +110,7 @@ export class Git implements IProjectFilesBrowserService {
 
   async getContributorCount(): Promise<number> {
     const params = GitServiceUtils.getOwnerAndRepoName(this.repository.url);
-    return this.service.getContributors(params.owner, params.repoName).then((r) => r.totalCount);
+    return this.service.listContributors(params.owner, params.repoName).then((r) => r.totalCount);
   }
 
   async getPullRequestCount(): Promise<number> {
