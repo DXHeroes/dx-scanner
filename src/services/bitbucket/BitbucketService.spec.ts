@@ -188,7 +188,7 @@ describe('Bitbucket Service', () => {
   it('returns pulls diff stat in own interface', async () => {
     bitbucketNock.getPRsAdditionsAndDeletions(622);
 
-    const response = await service.getPullsDiffStat('pypy', 'pypy', '622');
+    const response = await service.getPullsDiffStat('pypy', 'pypy', 622);
     expect(response).toMatchObject({ additions: 2, deletions: 1, changes: 3 });
   });
 });

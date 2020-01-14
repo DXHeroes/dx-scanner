@@ -12,7 +12,7 @@ export interface ICollaborationInspector {
   getPullCommits(owner: string, repo: string, prNumber: number): Promise<Paginated<PullCommits>>;
   getPullRequestFiles(owner: string, repo: string, prNumber: number): Promise<Paginated<PullFiles>>;
   getRepoCommits(owner: string, repo: string, sha?: string, options?: ListGetterOptions): Promise<Paginated<Commit>>;
-  getPullsDiffStat(owner: string, repo: string, prNumber: string): Promise<Lines>;
+  getPullsDiffStat(owner: string, repo: string, prNumber: number): Promise<Lines>;
 }
 
 export enum PullRequestState {
