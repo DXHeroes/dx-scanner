@@ -74,7 +74,7 @@ export class CIReporter implements IReporter {
 
     let hasNextPage = true;
     while (hasNextPage) {
-      const res = await client.getPullRequestComments(
+      const res = await client.listPullRequestComments(
         this.config!.repository.owner,
         this.config!.repository.name,
         this.config!.pullRequestId!,
