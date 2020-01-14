@@ -205,19 +205,16 @@ export class GitHubService implements IVCSService {
    * Sha can be SHA or branch name.
    */
   async getRepoCommits(owner: string, repo: string, sha?: string, options?: ListGetterOptions): Promise<Paginated<Commit>> {
-    let url = 'GET /repos/:owner/:repo/commits';
-
-    url = url.concat(
-      `${qs.stringify(
-        // eslint-disable-next-line @typescript-eslint/camelcase
-        { sha, page: options?.pagination?.page, per_page: options?.pagination?.perPage },
-        { addQueryPrefix: true, indices: false, arrayFormat: 'repeat' },
-      )}`,
+    const { data } = await this.unwrap(
+      this.client.repos.listCommits({
+        owner,
+        repo,
+        page: options?.pagination?.page,
+        per_page: options?.pagination?.perPage,
+      }),
     );
 
-    const response: Octokit.ReposListCommitsResponse = await this.paginate(url, owner, repo);
-
-    const items = response.map((val) => ({
+    const items = data.map((val) => ({
       sha: val.sha,
       url: val.url,
       message: val.commit.message,
@@ -232,7 +229,7 @@ export class GitHubService implements IVCSService {
       },
       verified: val.commit.verification.verified,
     }));
-    const pagination = this.getPagination(response.length);
+    const pagination = this.getPagination(data.length);
 
     return { items, ...pagination };
   }
@@ -590,9 +587,10 @@ export class GitHubService implements IVCSService {
    * Get all results across all pages.
    */
   private async paginate(uri: string, owner: string, repo: string, prNumber?: number, issueNumber?: number) {
-    let object: { owner: string; repo: string; pull_number?: number; issue_number?: number } = {
+    let object: { owner: string; repo: string; pull_number?: number; issue_number?: number; page: number } = {
       owner,
       repo,
+      page: 1,
     };
     if (prNumber) {
       object = { ...object, pull_number: prNumber };
