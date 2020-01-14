@@ -98,7 +98,7 @@ export class BitbucketService implements IVCSService {
 
     let state;
     if (options?.filter?.state) {
-      state = VCSServicesUtils.getPRState(options.filter.state, VCSServiceType.bitbucket);
+      state = VCSServicesUtils.getBitbucketPRState(options.filter.state);
     }
 
     const ownerId = `${(await this.client.repositories.get({ repo_slug: repo, username: owner })).data.owner?.uuid}`;

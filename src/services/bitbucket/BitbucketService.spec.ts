@@ -82,7 +82,7 @@ describe('Bitbucket Service', () => {
   });
 
   it('returns all pull requests in own interface', async () => {
-    const allStates = <BitbucketPullRequestState[]>VCSServicesUtils.getPRState(PullRequestState.all, VCSServiceType.bitbucket);
+    const allStates = <BitbucketPullRequestState[]>VCSServicesUtils.getBitbucketPRState(PullRequestState.all);
 
     const prs = allStates.map((state) => bitbucketPullRequestResponseFactory({ state }));
 

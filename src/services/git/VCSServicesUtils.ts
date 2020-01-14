@@ -3,16 +3,6 @@ import { BitbucketPullRequestState, VCSServiceType } from './IVCSService';
 import { GitHubPullRequestState } from './IGitHubService';
 
 export class VCSServicesUtils {
-  static getPRState = (state: PullRequestState | undefined, service: VCSServiceType) => {
-    if (service === VCSServiceType.github) {
-      return VCSServicesUtils.getGithubPRState(state);
-    }
-
-    if (service === VCSServiceType.bitbucket) {
-      return VCSServicesUtils.getBitucketPRState(state);
-    }
-  };
-
   static getGithubPRState = (state: PullRequestState | undefined) => {
     switch (state) {
       case PullRequestState.open:
@@ -26,7 +16,7 @@ export class VCSServicesUtils {
     }
   };
 
-  static getBitucketPRState = (state: PullRequestState | undefined) => {
+  static getBitbucketPRState = (state: PullRequestState | undefined) => {
     switch (state) {
       case PullRequestState.open:
         return BitbucketPullRequestState.open;
