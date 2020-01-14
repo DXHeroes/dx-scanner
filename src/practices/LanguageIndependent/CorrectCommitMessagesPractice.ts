@@ -50,7 +50,7 @@ export class CorrectCommitMessagesPractice extends PracticeBase implements IPrac
             problems: im.warnings
               .map((w) => w.message)
               .concat(im.errors.map((e) => e.message))
-              .join('\n'),
+              .join('; '),
           };
         }),
       },
