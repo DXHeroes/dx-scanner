@@ -1,3 +1,17 @@
+# [1.33.0](https://github.com/dxheroes/dx-scanner/compare/v1.32.1...v1.33.0) (2020-01-14)
+
+
+### Bug Fixes
+
+* rename vulnerabilities practice ([dad49cf](https://github.com/dxheroes/dx-scanner/commit/dad49cf))
+
+
+### Features
+
+* add audit fallback to npm ([39e8998](https://github.com/dxheroes/dx-scanner/commit/39e8998))
+* add table detail to vulnerabilities practice ([b1fc789](https://github.com/dxheroes/dx-scanner/commit/b1fc789))
+* add yarn audit vulnerabilities report, increase yarn fail level ([cfd79cc](https://github.com/dxheroes/dx-scanner/commit/cfd79cc))
+
 ## [1.32.1](https://github.com/dxheroes/dx-scanner/compare/v1.32.0...v1.32.1) (2020-01-13)
 
 
