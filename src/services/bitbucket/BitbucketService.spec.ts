@@ -33,7 +33,7 @@ describe('Bitbucket Service', () => {
     bitbucketNock.getOwnerId();
     bitbucketNock.listPullRequestsResponse([mockPr]);
 
-    const response = await service.getPullRequests('pypy', 'pypy');
+    const response = await service.listPullRequests('pypy', 'pypy');
 
     expect(response.items).toHaveLength(1);
     expect(response.items[0].id).toEqual(mockPr.id);
@@ -50,7 +50,7 @@ describe('Bitbucket Service', () => {
     bitbucketNock.getOwnerId();
     bitbucketNock.listPullRequestsResponse([mockPr], { pagination: { page: 1, perPage: 1 } });
 
-    const response = await service.getPullRequests('pypy', 'pypy', { pagination: { page: 1, perPage: 1 } });
+    const response = await service.listPullRequests('pypy', 'pypy', { pagination: { page: 1, perPage: 1 } });
 
     expect(response.items).toHaveLength(1);
     expect(response.items[0].id).toEqual(mockPr.id);
@@ -68,7 +68,7 @@ describe('Bitbucket Service', () => {
     bitbucketNock.listPullRequestsResponse([mockPr]);
     bitbucketNock.getPRsAdditionsAndDeletions(mockPr.id!);
 
-    const response = await service.getPullRequests('pypy', 'pypy', { withDiffStat: true });
+    const response = await service.listPullRequests('pypy', 'pypy', { withDiffStat: true });
 
     expect(response.items).toHaveLength(1);
     expect(response.items[0].id).toEqual(mockPr.id);
@@ -89,7 +89,7 @@ describe('Bitbucket Service', () => {
     bitbucketNock.getOwnerId();
     bitbucketNock.listPullRequestsResponse(prs, { filter: { state: allStates } });
 
-    const response = await service.getPullRequests('pypy', 'pypy', { filter: { state: PullRequestState.all } });
+    const response = await service.listPullRequests('pypy', 'pypy', { filter: { state: PullRequestState.all } });
 
     expect(response.items).toHaveLength(prs.length);
 
@@ -114,7 +114,7 @@ describe('Bitbucket Service', () => {
     bitbucketNock.getOwnerId();
     bitbucketNock.listPullRequestsResponse([mockPr], { filter: { state: BitbucketPullRequestState.closed } });
 
-    const response = await service.getPullRequests('pypy', 'pypy', { filter: { state: PullRequestState.closed } });
+    const response = await service.listPullRequests('pypy', 'pypy', { filter: { state: PullRequestState.closed } });
 
     expect(response.items).toHaveLength(1);
     expect(response.items[0].id).toEqual(mockPr.id);
@@ -134,7 +134,7 @@ describe('Bitbucket Service', () => {
     bitbucketNock.getOwnerId();
     bitbucketNock.listIssuesResponse([mockIssue]);
 
-    const response = await service.getIssues('pypy', 'pypy');
+    const response = await service.listIssues('pypy', 'pypy');
     expect(response.items).toHaveLength(1);
     expect(response.items[0].id).toEqual(mockIssue.id);
 
@@ -158,7 +158,7 @@ describe('Bitbucket Service', () => {
 
     bitbucketNock.listIssueCommentsResponse([mockIssueComment], 3086);
 
-    const response = await service.getIssueComments('pypy', 'pypy', 3086);
+    const response = await service.listIssueComments('pypy', 'pypy', 3086);
     expect(response.items).toHaveLength(1);
     expect(response.items[0].id).toEqual(mockIssueComment.id);
 
@@ -173,7 +173,7 @@ describe('Bitbucket Service', () => {
     const mockRepoCommit = bitbucketRepoCommitsResponseFactory();
     bitbucketNock.listCommitsResponse([mockRepoCommit]);
 
-    const response = await service.getRepoCommits('pypy', 'pypy');
+    const response = await service.listRepoCommits('pypy', 'pypy');
     expect(response).toMatchObject(getRepoCommits());
   });
 

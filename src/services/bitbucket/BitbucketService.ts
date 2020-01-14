@@ -86,7 +86,7 @@ export class BitbucketService implements IVCSService {
     return this.unwrap(this.client.repositories.get(params));
   }
 
-  async getPullRequests(
+  async listPullRequests(
     owner: string,
     repo: string,
     options?: { withDiffStat?: boolean } & ListGetterOptions<{ state?: PullRequestState }>,
@@ -205,7 +205,7 @@ export class BitbucketService implements IVCSService {
     return pullRequest;
   }
 
-  async getPullRequestFiles(owner: string, repo: string, prNumber: number): Promise<Paginated<PullFiles>> {
+  async listPullRequestFiles(owner: string, repo: string, prNumber: number): Promise<Paginated<PullFiles>> {
     this.authenticate();
     throw new Error('Method not implemented yet.');
   }
@@ -246,7 +246,7 @@ export class BitbucketService implements IVCSService {
     return { items, ...pagination };
   }
 
-  async getIssues(owner: string, repo: string): Promise<Paginated<Issue>> {
+  async listIssues(owner: string, repo: string): Promise<Paginated<Issue>> {
     this.authenticate();
 
     const params: Bitbucket.Params.IssueTrackerList = {
@@ -303,7 +303,7 @@ export class BitbucketService implements IVCSService {
     };
   }
 
-  async getIssueComments(owner: string, repo: string, issueNumber: number): Promise<Paginated<IssueComment>> {
+  async listIssueComments(owner: string, repo: string, issueNumber: number): Promise<Paginated<IssueComment>> {
     this.authenticate();
     const params: Bitbucket.Params.IssueTrackerListComments = {
       issue_id: issueNumber.toString(),
@@ -332,12 +332,12 @@ export class BitbucketService implements IVCSService {
     return { items, ...pagination };
   }
 
-  async getPullRequestReviews(owner: string, repo: string, prNumber: number): Promise<Paginated<PullRequestReview>> {
+  async listPullRequestReviews(owner: string, repo: string, prNumber: number): Promise<Paginated<PullRequestReview>> {
     this.authenticate();
     throw new Error('Method not implemented yet.');
   }
 
-  async getRepoCommits(owner: string, repo: string, sha?: string, options?: ListGetterOptions): Promise<Paginated<Commit>> {
+  async listRepoCommits(owner: string, repo: string, sha?: string, options?: ListGetterOptions): Promise<Paginated<Commit>> {
     this.authenticate();
     const params: Bitbucket.Params.RepositoriesListCommits = {
       repo_slug: repo,
@@ -400,7 +400,7 @@ export class BitbucketService implements IVCSService {
   /**
    * List Comments for a Pull Request
    */
-  async getPullRequestComments(
+  async listPullRequestComments(
     owner: string,
     repo: string,
     prNumber: number,

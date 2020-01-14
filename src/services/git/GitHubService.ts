@@ -64,16 +64,19 @@ export class GitHubService implements IVCSService {
   /**
    * Lists all pull requests in the repo.
    */
-  async getPullRequests(
+  async listPullRequests(
     owner: string,
     repo: string,
     options?: { withDiffStat?: boolean } & ListGetterOptions<{ state?: PullRequestState }>,
   ): Promise<Paginated<PullRequest>> {
     const state = VCSServicesUtils.getGithubPRState(options?.filter?.state);
 
-    const { data } = await this.unwrap(
-      this.client.pulls.list({ owner, repo, state, page: options?.pagination?.page, per_page: options?.pagination?.perPage }),
-    );
+    const params: Octokit.PullsListParams = { owner, repo };
+    if (state) params.state = state;
+    if (options?.pagination?.page) params.page = options.pagination.page;
+    if (options?.pagination?.perPage) params.per_page = options.pagination.perPage;
+
+    const { data } = await this.unwrap(this.client.pulls.list(params));
 
     const items = await Promise.all(
       data.map(async (val) => {
@@ -159,7 +162,7 @@ export class GitHubService implements IVCSService {
   /**
    * Lists all reviews on pull request in the repo.
    */
-  async getPullRequestReviews(owner: string, repo: string, prNumber: number): Promise<Paginated<PullRequestReview>> {
+  async listPullRequestReviews(owner: string, repo: string, prNumber: number): Promise<Paginated<PullRequestReview>> {
     const { data } = await this.unwrap(this.client.pulls.listReviews({ owner, repo, pull_number: prNumber }));
 
     const items = data.map((val) => ({
@@ -186,13 +189,12 @@ export class GitHubService implements IVCSService {
    *
    * Sha can be SHA or branch name.
    */
-  async getRepoCommits(owner: string, repo: string, sha?: string, options?: ListGetterOptions): Promise<Paginated<Commit>> {
+  async listRepoCommits(owner: string, repo: string, sha?: string, options?: ListGetterOptions): Promise<Paginated<Commit>> {
     const { data } = await this.unwrap(
       this.client.repos.listCommits({
         owner,
         repo,
-        page: options?.pagination?.page,
-        per_page: options?.pagination?.perPage,
+        ...options?.pagination,
       }),
     );
 
@@ -360,7 +362,7 @@ export class GitHubService implements IVCSService {
   /**
    * List all issues in the repo.
    */
-  async getIssues(owner: string, repo: string): Promise<Paginated<Issue>> {
+  async listIssues(owner: string, repo: string): Promise<Paginated<Issue>> {
     const { data } = await this.unwrap(this.client.issues.listForRepo({ owner, repo }));
 
     const items = data.map((val) => ({
@@ -409,7 +411,7 @@ export class GitHubService implements IVCSService {
   /**
    * Get All Comments for an Issue
    */
-  async getIssueComments(owner: string, repo: string, issueNumber: number): Promise<Paginated<IssueComment>> {
+  async listIssueComments(owner: string, repo: string, issueNumber: number): Promise<Paginated<IssueComment>> {
     const { data } = await this.unwrap(this.client.issues.listComments({ owner, repo, issue_number: issueNumber }));
 
     const items = data.map((val) => ({
@@ -433,7 +435,7 @@ export class GitHubService implements IVCSService {
   /**
    * Lists all pull request files.
    */
-  async getPullRequestFiles(owner: string, repo: string, prNumber: number): Promise<Paginated<PullFiles>> {
+  async listPullRequestFiles(owner: string, repo: string, prNumber: number): Promise<Paginated<PullFiles>> {
     const { data } = await this.unwrap(this.client.pulls.listFiles({ owner, repo, pull_number: prNumber }));
 
     const items = data.map((val) => ({
@@ -481,7 +483,7 @@ export class GitHubService implements IVCSService {
   /**
    * List Comments for a Pull Request
    */
-  async getPullRequestComments(owner: string, repo: string, prNumber: number): Promise<Paginated<PullRequestComment>> {
+  async listPullRequestComments(owner: string, repo: string, prNumber: number): Promise<Paginated<PullRequestComment>> {
     const { data } = await this.unwrap(this.client.pulls.listComments({ owner, repo, pull_number: prNumber }));
 
     const items = data.map((comment) => ({

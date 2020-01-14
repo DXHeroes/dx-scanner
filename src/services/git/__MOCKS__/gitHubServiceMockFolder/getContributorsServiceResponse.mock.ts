@@ -7,12 +7,12 @@ export const getContributorsServiceResponse: Paginated<Contributor> = {
   items: [
     {
       contributions: 1,
-      followersUrl: undefined,
+      followersUrl: 'https://api.github.com/users/Spaceghost/subscriptions',
       user: { id: '251370', login: 'Spaceghost', url: 'https://api.github.com/users/Spaceghost' },
     },
     {
       contributions: 1,
-      followersUrl: undefined,
+      followersUrl: 'https://api.github.com/users/octocat/subscriptions',
       user: { id: '583231', login: 'octocat', url: 'https://api.github.com/users/octocat' },
     },
   ],
