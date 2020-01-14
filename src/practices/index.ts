@@ -27,6 +27,7 @@ import { TimeToSolvePullRequestsPractice } from './LanguageIndependent/TimeToSol
 import { TimeToSolveIssuesPractice } from './LanguageIndependent/TimeToSolveIssuesPractice';
 import { ThinPullRequestsPractice } from './LanguageIndependent/ThinPullRequestsPractice';
 import { SecurityVulnerabilitiesPractice } from './JavaScript/SecurityVulnerabilitiesPractice';
+import { FirstTestPractice } from '../scanner';
 
 // register practices here
 export const practices = [
@@ -59,4 +60,6 @@ export const practices = [
   TimeToSolveIssuesPractice,
   ThinPullRequestsPractice,
   SecurityVulnerabilitiesPractice,
+  // Practices for testing purpose only
+  FirstTestPractice,
 ];

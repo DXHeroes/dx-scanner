@@ -92,7 +92,7 @@ describe('Collaboration Inspector', () => {
     const collaborationInspector = containerCtx.container.get<CollaborationInspector>(Types.ICollaborationInspector);
     bitbucketNock.getPRsAdditionsAndDeletions(622);
 
-    const response = await collaborationInspector.getPullsDiffStat('pypy', 'pypy', '622');
+    const response = await collaborationInspector.getPullsDiffStat('pypy', 'pypy', 622);
     expect(response).toMatchObject({ additions: 2, deletions: 1, changes: 3 });
   });
 });
