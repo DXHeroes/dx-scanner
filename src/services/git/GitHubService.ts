@@ -501,11 +501,12 @@ export class GitHubService implements IVCSService {
     prNumber: number,
     options?: ListGetterOptions,
   ): Promise<Paginated<PullRequestComment>> {
-    const params: Octokit.PullsListCommentsParams = { owner, repo, pull_number: prNumber };
+    const params: Octokit.IssuesListCommentsParams = { owner, repo, issue_number: prNumber };
     if (options?.pagination?.page) params.page = options.pagination.page;
     if (options?.pagination?.perPage) params.per_page = options.pagination.perPage;
 
-    const { data } = await this.unwrap(this.client.pulls.listComments(params));
+    // use issues.listComments to list comments for a pull request
+    const { data } = await this.unwrap(this.client.issues.listComments(params));
 
     const items = data.map((comment) => ({
       user: { id: comment.user.id.toString(), login: comment.user.login, url: comment.user.url },
