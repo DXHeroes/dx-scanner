@@ -17,6 +17,8 @@ import { ReportDetailType } from '../../reporters/ReporterData';
   url: 'https://www.conventionalcommits.org/',
 })
 export class CorrectCommitMessagesPractice extends PracticeBase implements IPractice {
+  private readonly relevantCommitCount = 30;
+
   async isApplicable(): Promise<boolean> {
     return true;
   }
@@ -29,7 +31,9 @@ export class CorrectCommitMessagesPractice extends PracticeBase implements IPrac
     const repoName = GitServiceUtils.getRepoName(ctx.projectComponent.repositoryPath, ctx.projectComponent.path);
     const ownerAndRepoName = GitServiceUtils.getOwnerAndRepoName(repoName);
 
-    const repoCommits = await ctx.collaborationInspector.getRepoCommits(ownerAndRepoName.owner, ownerAndRepoName.repoName);
+    const repoCommits = await ctx.collaborationInspector.listRepoCommits(ownerAndRepoName.owner, ownerAndRepoName.repoName, undefined, {
+      pagination: { perPage: this.relevantCommitCount },
+    });
     const messages = repoCommits.items.map((val) => val.message);
 
     let invalidMessages = await Promise.all(messages.map(async (m) => await lint(m, lintRules.rules)));
@@ -45,8 +49,8 @@ export class CorrectCommitMessagesPractice extends PracticeBase implements IPrac
             msg: im.input,
             problems: im.warnings
               .map((w) => w.message)
-              .concat(im.errors)
-              .join('\n'),
+              .concat(im.errors.map((e) => e.message))
+              .join('; '),
           };
         }),
       },

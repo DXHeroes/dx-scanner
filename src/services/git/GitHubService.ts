@@ -1,11 +1,5 @@
 /* eslint-disable @typescript-eslint/camelcase */
-import Octokit, {
-  IssuesListForRepoResponseItem,
-  PullsListResponseItem,
-  PullsListReviewsResponseItem,
-  ReposGetContributorsStatsResponseItem,
-} from '@octokit/rest';
-import { grey } from 'colors';
+import Octokit from '@octokit/rest';
 import Debug from 'debug';
 import { inject, injectable } from 'inversify';
 import { inspect, isArray } from 'util';
@@ -17,7 +11,7 @@ import { ErrorFactory } from '../../lib/errors';
 import { ICache } from '../../scanner/cache/ICache';
 import { InMemoryCache } from '../../scanner/cache/InMemoryCache';
 import { Types } from '../../types';
-import { IVCSService, VCSServiceType } from './IVCSService';
+import { IVCSService } from './IVCSService';
 import {
   Commit,
   Contributor,
@@ -36,7 +30,6 @@ import {
   CreatedUpdatedPullRequestComment,
 } from './model';
 import { VCSServicesUtils } from './VCSServicesUtils';
-import qs from 'qs';
 import { ArgumentsProvider } from '../../scanner';
 const debug = Debug('cli:services:git:github-service');
 
@@ -71,27 +64,22 @@ export class GitHubService implements IVCSService {
   /**
    * Lists all pull requests in the repo.
    */
-  async getPullRequests(
+  async listPullRequests(
     owner: string,
     repo: string,
     options?: { withDiffStat?: boolean } & ListGetterOptions<{ state?: PullRequestState }>,
   ): Promise<Paginated<PullRequest>> {
-    let url = 'GET /repos/:owner/:repo/pulls';
+    const state = VCSServicesUtils.getGithubPRState(options?.filter?.state);
 
-    const state = VCSServicesUtils.getPRState(options?.filter?.state, VCSServiceType.github);
+    const params: Octokit.PullsListParams = { owner, repo };
+    if (state) params.state = state;
+    if (options?.pagination?.page) params.page = options.pagination.page;
+    if (options?.pagination?.perPage) params.per_page = options.pagination.perPage;
 
-    url = url.concat(
-      `${qs.stringify(
-        // eslint-disable-next-line @typescript-eslint/camelcase
-        { state: state, page: options?.pagination?.page, per_page: options?.pagination?.perPage },
-        { addQueryPrefix: true, indices: false, arrayFormat: 'repeat' },
-      )}`,
-    );
-
-    const response: PullsListResponseItem[] = await this.paginate(url, owner, repo);
+    const { data } = await this.unwrap(this.client.pulls.list(params));
 
     const items = await Promise.all(
-      response.map(async (val) => {
+      data.map(async (val) => {
         const pullRequest = {
           user: {
             id: val.user.id.toString(),
@@ -117,13 +105,14 @@ export class GitHubService implements IVCSService {
         };
         // Get number of changes, additions and deletions in PullRequest if the withDiffStat is true
         if (options?.withDiffStat) {
-          const lines = await this.getPullsDiffStat(owner, repo, `${val.id}`);
+          const lines = await this.getPullsDiffStat(owner, repo, val.id);
           return { ...pullRequest, lines };
         }
         return pullRequest;
       }),
     );
-    const pagination = this.getPagination(response.length);
+
+    const pagination = this.getPagination(data.length);
 
     return { items, ...pagination };
   }
@@ -163,24 +152,20 @@ export class GitHubService implements IVCSService {
     };
     // Get number of changes, additions and deletions in PullRequest if the withDiffStat is true
     if (withDiffStat) {
-      const lines = await this.getPullsDiffStat(owner, repo, `${prNumber}`);
+      const lines = await this.getPullsDiffStat(owner, repo, prNumber);
       return { ...pullRequest, lines };
     }
+
     return pullRequest;
   }
 
   /**
    * Lists all reviews on pull request in the repo.
    */
-  async getPullRequestReviews(owner: string, repo: string, prNumber: number): Promise<Paginated<PullRequestReview>> {
-    const response: PullsListReviewsResponseItem[] = await this.paginate(
-      'GET /repos/:owner/:repo/pulls/:pull_number/reviews',
-      owner,
-      repo,
-      prNumber,
-    );
+  async listPullRequestReviews(owner: string, repo: string, prNumber: number): Promise<Paginated<PullRequestReview>> {
+    const { data } = await this.unwrap(this.client.pulls.listReviews({ owner, repo, pull_number: prNumber }));
 
-    const items = response.map((val) => ({
+    const items = data.map((val) => ({
       user: {
         id: val.user.id.toString(),
         login: val.user.login,
@@ -191,7 +176,7 @@ export class GitHubService implements IVCSService {
       state: val.state,
       url: val.pull_request_url,
     }));
-    const pagination = this.getPagination(response.length);
+    const pagination = this.getPagination(data.length);
 
     return { items, ...pagination };
   }
@@ -204,16 +189,16 @@ export class GitHubService implements IVCSService {
    *
    * Sha can be SHA or branch name.
    */
-  async getRepoCommits(owner: string, repo: string, sha?: string): Promise<Paginated<Commit>> {
-    let url = 'GET /repos/:owner/:repo/commits';
-    if (sha !== undefined) {
-      const stateForUri = qs.stringify({ state: sha }, { addQueryPrefix: true });
-      url = `${url}${stateForUri}`;
-    }
+  async listRepoCommits(owner: string, repo: string, sha?: string, options?: ListGetterOptions): Promise<Paginated<Commit>> {
+    const { data } = await this.unwrap(
+      this.client.repos.listCommits({
+        owner,
+        repo,
+        ...options?.pagination,
+      }),
+    );
 
-    const response = await this.paginate(url, owner, repo);
-
-    const items = response.map((val) => ({
+    const items = data.map((val) => ({
       sha: val.sha,
       url: val.url,
       message: val.commit.message,
@@ -228,7 +213,7 @@ export class GitHubService implements IVCSService {
       },
       verified: val.commit.verification.verified,
     }));
-    const pagination = this.getPagination(response.length);
+    const pagination = this.getPagination(data.length);
 
     return { items, ...pagination };
   }
@@ -260,21 +245,22 @@ export class GitHubService implements IVCSService {
   /**
    * Lists contributors to the specified repository and sorts them by the number of commits per contributor in descending order.
    */
-  async getContributors(owner: string, repo: string): Promise<Paginated<Contributor>> {
-    const response = await this.paginate('GET /repos/:owner/:repo/contributors', owner, repo);
-    const items = response.map((val) => ({
+  async listContributors(owner: string, repo: string): Promise<Paginated<Contributor>> {
+    const { data } = await this.unwrap(this.client.repos.listContributors({ owner, repo }));
+
+    const items = data.map((val) => ({
       user: {
-        id: val.id,
+        id: val.id.toString(),
         login: val.login,
         url: val.url,
       },
       id: val.id,
       login: val.login,
       url: val.url,
-      followersUrl: val.followersUrl,
+      followersUrl: val.followers_url,
       contributions: val.contributions,
     }));
-    const pagination = this.getPagination(response.length);
+    const pagination = this.getPagination(data.length);
 
     return { items, ...pagination };
   }
@@ -301,13 +287,9 @@ export class GitHubService implements IVCSService {
       }),
     );
 
-    const response: ReposGetContributorsStatsResponseItem[] = await this.paginate(
-      'GET /repos/:owner/:repo/stats/contributors',
-      owner,
-      repo,
-    );
+    const { data } = await this.unwrap(this.client.repos.getContributorsStats({ owner, repo }));
 
-    const items = response.map((val) => ({
+    const items = data.map((val) => ({
       author: {
         id: val.author.id.toString(),
         login: val.author.login,
@@ -321,7 +303,7 @@ export class GitHubService implements IVCSService {
         commits: val.c,
       })),
     }));
-    const pagination = this.getPagination(response.length);
+    const pagination = this.getPagination(data.length);
 
     return { items, ...pagination };
   }
@@ -380,10 +362,14 @@ export class GitHubService implements IVCSService {
   /**
    * List all issues in the repo.
    */
-  async getIssues(owner: string, repo: string): Promise<Paginated<Issue>> {
-    const response: IssuesListForRepoResponseItem[] = await this.paginate('GET /repos/:owner/:repo/issues', owner, repo);
+  async listIssues(owner: string, repo: string, options?: ListGetterOptions): Promise<Paginated<Issue>> {
+    const params: Octokit.IssuesListForRepoParams = { owner, repo };
+    if (options?.pagination?.page) params.page = options.pagination.page;
+    if (options?.pagination?.perPage) params.per_page = options.pagination.perPage;
 
-    const items = response.map((val) => ({
+    const { data } = await this.unwrap(this.client.issues.listForRepo(params));
+
+    const items = data.map((val) => ({
       user: {
         id: val.user.id.toString(),
         login: val.user.login,
@@ -398,7 +384,7 @@ export class GitHubService implements IVCSService {
       id: val.id,
       pullRequestUrl: val.pull_request && val.pull_request.url,
     }));
-    const pagination = this.getPagination(response.length);
+    const pagination = this.getPagination(data.length);
 
     return { items, ...pagination };
   }
@@ -429,10 +415,14 @@ export class GitHubService implements IVCSService {
   /**
    * Get All Comments for an Issue
    */
-  async getIssueComments(owner: string, repo: string, issueNumber: number): Promise<Paginated<IssueComment>> {
-    const response = await this.paginate('GET /repos/:owner/:repo/issues/:issue_number/comments', owner, repo, undefined, issueNumber);
+  async listIssueComments(owner: string, repo: string, issueNumber: number, options?: ListGetterOptions): Promise<Paginated<IssueComment>> {
+    const params: Octokit.IssuesListCommentsParams = { owner, repo, issue_number: issueNumber };
+    if (options?.pagination?.page) params.page = options.pagination.page;
+    if (options?.pagination?.perPage) params.per_page = options.pagination.perPage;
 
-    const items = response.map((val) => ({
+    const { data } = await this.unwrap(this.client.issues.listComments(params));
+
+    const items = data.map((val) => ({
       user: {
         id: val.user.id.toString(),
         login: val.user.login,
@@ -442,10 +432,10 @@ export class GitHubService implements IVCSService {
       body: val.body,
       createdAt: val.created_at,
       updatedAt: val.updated_at,
-      authorAssociation: val.author_association,
+      authorAssociation: val.user.login,
       id: val.id,
     }));
-    const pagination = this.getPagination(response.length);
+    const pagination = this.getPagination(data.length);
 
     return { items, ...pagination };
   }
@@ -453,30 +443,34 @@ export class GitHubService implements IVCSService {
   /**
    * Lists all pull request files.
    */
-  async getPullRequestFiles(owner: string, repo: string, prNumber: number): Promise<Paginated<PullFiles>> {
-    const response = await this.paginate('GET /repos/:owner/:repo/pulls/:pull_number/files', owner, repo, prNumber);
+  async listPullRequestFiles(owner: string, repo: string, prNumber: number): Promise<Paginated<PullFiles>> {
+    const { data } = await this.unwrap(this.client.pulls.listFiles({ owner, repo, pull_number: prNumber }));
 
-    const items = response.map((val) => ({
+    const items = data.map((val) => ({
       sha: val.sha,
-      fileName: val.fileName,
+      fileName: val.filename,
       status: val.status,
       additions: val.additions,
       deletions: val.deletions,
       changes: val.changes,
-      contentsUrl: val.contentsUrl,
+      contentsUrl: val.contents_url,
     }));
 
-    const pagination = this.getPagination(response.length);
+    const pagination = this.getPagination(data.length);
     return { items, ...pagination };
   }
 
   /**
    * Lists commits on a pull request.
    */
-  async getPullCommits(owner: string, repo: string, prNumber: number): Promise<Paginated<PullCommits>> {
-    const response = await this.paginate('GET /repos/:owner/:repo/pulls/:pull_number/commits', owner, repo, prNumber);
+  async listPullCommits(owner: string, repo: string, prNumber: number, options?: ListGetterOptions): Promise<Paginated<PullCommits>> {
+    const params: Octokit.PullsListCommitsParams = { owner, repo, pull_number: prNumber };
+    if (options?.pagination?.page) params.page = options.pagination.page;
+    if (options?.pagination?.perPage) params.per_page = options.pagination.perPage;
 
-    const items = response.map((val) => ({
+    const { data } = await this.unwrap(this.client.pulls.listCommits(params));
+
+    const items = data.map((val) => ({
       sha: val.sha,
       commit: {
         url: val.commit.url,
@@ -494,24 +488,28 @@ export class GitHubService implements IVCSService {
       },
     }));
 
-    const pagination = this.getPagination(response.length);
+    const pagination = this.getPagination(data.length);
     return { items, ...pagination };
   }
 
   /**
    * List Comments for a Pull Request
    */
-  async getPullRequestComments(owner: string, repo: string, prNumber: number): Promise<Paginated<PullRequestComment>> {
-    const response: Octokit.IssuesListCommentsResponse = await this.paginate(
-      'GET /repos/:owner/:repo/issues/:issue_number/comments',
-      owner,
-      repo,
-      prNumber,
-      prNumber,
-    );
+  async listPullRequestComments(
+    owner: string,
+    repo: string,
+    prNumber: number,
+    options?: ListGetterOptions,
+  ): Promise<Paginated<PullRequestComment>> {
+    const params: Octokit.IssuesListCommentsParams = { owner, repo, issue_number: prNumber };
+    if (options?.pagination?.page) params.page = options.pagination.page;
+    if (options?.pagination?.perPage) params.per_page = options.pagination.perPage;
 
-    const items = response.map((comment) => ({
-      user: { id: `${comment.user.id}`, login: comment.user.login, url: comment.user.url },
+    // use issues.listComments to list comments for a pull request
+    const { data } = await this.unwrap(this.client.issues.listComments(params));
+
+    const items = data.map((comment) => ({
+      user: { id: comment.user.id.toString(), login: comment.user.login, url: comment.user.url },
       id: comment.id,
       url: comment.url,
       body: comment.body,
@@ -520,7 +518,7 @@ export class GitHubService implements IVCSService {
       authorAssociation: comment.user.login,
     }));
 
-    const pagination = this.getPagination(response.length);
+    const pagination = this.getPagination(data.length);
     return { items, ...pagination };
   }
 
@@ -537,7 +535,7 @@ export class GitHubService implements IVCSService {
 
     const comment = response.data;
     return {
-      user: { id: `${comment.user.id}`, login: comment.user.login, url: comment.user.url },
+      user: { id: comment.user.id.toString(), login: comment.user.login, url: comment.user.url },
       id: comment.id,
       url: comment.url,
       body: comment.body,
@@ -559,7 +557,7 @@ export class GitHubService implements IVCSService {
 
     const comment = response.data;
     return {
-      user: { id: `${comment.user.id}`, login: comment.user.login, url: comment.user.url },
+      user: { id: comment.user.id.toString(), login: comment.user.login, url: comment.user.url },
       id: comment.id,
       url: comment.url,
       body: comment.body,
@@ -571,37 +569,15 @@ export class GitHubService implements IVCSService {
   /**
    * Add additions, deletions and changes of pull request when the getPullRequests() is called with withDiffStat = true
    */
-  async getPullsDiffStat(owner: string, repo: string, prNumber: string) {
+  async getPullsDiffStat(owner: string, repo: string, prNumber: number) {
     // eslint-disable-next-line @typescript-eslint/camelcase
-    const response = await this.unwrap(this.client.pulls.get({ owner, repo, pull_number: Number(prNumber) }));
+    const response = await this.unwrap(this.client.pulls.get({ owner, repo, pull_number: prNumber }));
 
     return {
       additions: response.data.additions,
       deletions: response.data.deletions,
       changes: response.data.additions + response.data.deletions,
     };
-  }
-
-  /**
-   * Get all results across all pages.
-   */
-  private async paginate(uri: string, owner: string, repo: string, prNumber?: number, issueNumber?: number) {
-    let object: { owner: string; repo: string; pull_number?: number; issue_number?: number } = {
-      owner,
-      repo,
-    };
-    if (prNumber) {
-      object = { ...object, pull_number: prNumber };
-    }
-    if (issueNumber) {
-      object = { ...object, issue_number: issueNumber };
-    }
-
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    return this.client.paginate(uri, object, (response: Octokit.Response<any>) => {
-      this.debugGitHubResponse(response);
-      return response.data;
-    });
   }
 
   getPagination(totalCount: number) {
@@ -638,8 +614,6 @@ export class GitHubService implements IVCSService {
    */
   private debugGitHubResponse = <T>(response: Octokit.Response<T>) => {
     this.callCount++;
-    debug(
-      grey(`GitHub API Hit: ${this.callCount}. Remaining ${response.headers['x-ratelimit-remaining']} hits. (${response.headers.link})`),
-    );
+    debug(`GitHub API Hit: ${this.callCount}. Remaining ${response.headers['x-ratelimit-remaining']} hits. (${response.headers.link})`);
   };
 }

@@ -31,7 +31,7 @@ describe('CorrectCommitMessagesPractice', () => {
   });
 
   it('commit message without scope', async () => {
-    mockCollaborationInspector.getRepoCommits = async () => {
+    mockCollaborationInspector.listRepoCommits = async () => {
       return changeRepoCommitsMessages('fix: correct commit message');
     };
 
@@ -43,7 +43,7 @@ describe('CorrectCommitMessagesPractice', () => {
   });
 
   it('commit message with scope', async () => {
-    mockCollaborationInspector.getRepoCommits = async () => {
+    mockCollaborationInspector.listRepoCommits = async () => {
       return changeRepoCommitsMessages('fix(something): correct commit message');
     };
 
@@ -54,9 +54,35 @@ describe('CorrectCommitMessagesPractice', () => {
     expect(evaluated).toEqual(PracticeEvaluationResult.practicing);
   });
 
+  it('commit message with scope, body and signature', async () => {
+    const cMsg = `fix(something): correct commit message\n\nCo-Authored-By: Prokop Simek <prokopsimek@users.noreply.github.com>`;
+
+    mockCollaborationInspector.listRepoCommits = async () => {
+      return changeRepoCommitsMessages(cMsg);
+    };
+
+    const evaluated = await practice.evaluate({
+      ...containerCtx.practiceContext,
+      collaborationInspector: mockCollaborationInspector,
+    });
+    expect(evaluated).toEqual(PracticeEvaluationResult.practicing);
+  });
+
   it('returns not practicing if the commit messages are incorrect', async () => {
-    mockCollaborationInspector.getRepoCommits = async () => {
+    mockCollaborationInspector.listRepoCommits = async () => {
       return changeRepoCommitsMessages('foo: some message');
+    };
+
+    const evaluated = await practice.evaluate({
+      ...containerCtx.practiceContext,
+      collaborationInspector: mockCollaborationInspector,
+    });
+    expect(evaluated).toEqual(PracticeEvaluationResult.notPracticing);
+  });
+
+  it('the commit message has wrong type and is too long', async () => {
+    mockCollaborationInspector.listRepoCommits = async () => {
+      return changeRepoCommitsMessages('foo: some message some message some message some message some message some message');
     };
 
     const evaluated = await practice.evaluate({
