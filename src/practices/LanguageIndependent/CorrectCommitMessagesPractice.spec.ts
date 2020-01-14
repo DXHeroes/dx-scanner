@@ -54,7 +54,7 @@ describe('CorrectCommitMessagesPractice', () => {
     expect(evaluated).toEqual(PracticeEvaluationResult.practicing);
   });
 
-  it('commit message with scope, body and signiture', async () => {
+  it('commit message with scope, body and signature', async () => {
     const cMsg = `fix(something): correct commit message\n\nCo-Authored-By: Prokop Simek <prokopsimek@users.noreply.github.com>`;
 
     mockCollaborationInspector.listRepoCommits = async () => {
