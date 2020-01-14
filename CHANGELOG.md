@@ -1,3 +1,52 @@
+# [1.33.0](https://github.com/dxheroes/dx-scanner/compare/v1.32.1...v1.33.0) (2020-01-14)
+
+
+### Bug Fixes
+
+* rename vulnerabilities practice ([dad49cf](https://github.com/dxheroes/dx-scanner/commit/dad49cf))
+
+
+### Features
+
+* add audit fallback to npm ([39e8998](https://github.com/dxheroes/dx-scanner/commit/39e8998))
+* add table detail to vulnerabilities practice ([b1fc789](https://github.com/dxheroes/dx-scanner/commit/b1fc789))
+* add yarn audit vulnerabilities report, increase yarn fail level ([cfd79cc](https://github.com/dxheroes/dx-scanner/commit/cfd79cc))
+
+## [1.32.1](https://github.com/dxheroes/dx-scanner/compare/v1.32.0...v1.32.1) (2020-01-13)
+
+
+### Bug Fixes
+
+* **deps:** pin dependencies ([caedb1e](https://github.com/dxheroes/dx-scanner/commit/caedb1e))
+
+# [1.32.0](https://github.com/dxheroes/dx-scanner/compare/v1.31.0...v1.32.0) (2020-01-10)
+
+
+### Bug Fixes
+
+* add url and remove commented code ([c4a8dc6](https://github.com/dxheroes/dx-scanner/commit/c4a8dc6))
+* delete deprecated code ([a24de11](https://github.com/dxheroes/dx-scanner/commit/a24de11))
+* eslint settings ([e66f88b](https://github.com/dxheroes/dx-scanner/commit/e66f88b))
+* fix problems caused by the bitbucketNock refactoring ([8bdb8a9](https://github.com/dxheroes/dx-scanner/commit/8bdb8a9))
+* getting issue id ([dc36f7d](https://github.com/dxheroes/dx-scanner/commit/dc36f7d))
+* name of practice in binding ([5d196f5](https://github.com/dxheroes/dx-scanner/commit/5d196f5))
+* refactor code using moment library ([174e887](https://github.com/dxheroes/dx-scanner/commit/174e887))
+* remove unnecessary code ([bf939e8](https://github.com/dxheroes/dx-scanner/commit/bf939e8))
+* test ([4babc20](https://github.com/dxheroes/dx-scanner/commit/4babc20))
+* typo ([5404cf1](https://github.com/dxheroes/dx-scanner/commit/5404cf1))
+* typo ([1ca2571](https://github.com/dxheroes/dx-scanner/commit/1ca2571))
+* typo ([06b53ce](https://github.com/dxheroes/dx-scanner/commit/06b53ce))
+* typo ([adaab7f](https://github.com/dxheroes/dx-scanner/commit/adaab7f))
+* typos ([3733e6a](https://github.com/dxheroes/dx-scanner/commit/3733e6a))
+* use mocking pull request fn also for issues ([cfea49b](https://github.com/dxheroes/dx-scanner/commit/cfea49b))
+* value of perPage ([b0942af](https://github.com/dxheroes/dx-scanner/commit/b0942af))
+* value of totalCount ([766393f](https://github.com/dxheroes/dx-scanner/commit/766393f))
+
+
+### Features
+
+* implement TimeToSolveIssues practice ([bea4853](https://github.com/dxheroes/dx-scanner/commit/bea4853))
+
 # [1.31.0](https://github.com/dxheroes/dx-scanner/compare/v1.30.0...v1.31.0) (2020-01-10)
 
 
