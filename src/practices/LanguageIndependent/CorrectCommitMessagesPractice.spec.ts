@@ -80,7 +80,7 @@ describe('CorrectCommitMessagesPractice', () => {
     expect(evaluated).toEqual(PracticeEvaluationResult.notPracticing);
   });
 
-  it('the commit messages has wrong type and is too long', async () => {
+  it('the commit message has wrong type and is too long', async () => {
     mockCollaborationInspector.listRepoCommits = async () => {
       return changeRepoCommitsMessages('foo: some message some message some message some message some message some message');
     };
