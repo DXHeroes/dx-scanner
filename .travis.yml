@@ -69,7 +69,7 @@ jobs:
       script:
         - npx semantic-release
   - stage: publish gh action in docker container
-    if: branch = master AND type = push AND tag IS present
+    if: branch = master AND type = push
     node_js: lts/*
     env:
       - CONTAINER_NAME=docker.pkg.github.com/dxheroes/dx-scanner/release
