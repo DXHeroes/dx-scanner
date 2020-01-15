@@ -8,6 +8,7 @@ import { ThinPullRequestsPractice } from './ThinPullRequestsPractice';
 import { getPullRequestsResponse } from '../../services/git/__MOCKS__/bitbucketServiceMockFolder/getPullRequestsResponse';
 import moment from 'moment';
 import { getPullRequestResponse } from '../../services/git/__MOCKS__/bitbucketServiceMockFolder';
+import _ from 'lodash';
 
 describe('ThinPullRequestsPractice', () => {
   let practice: ThinPullRequestsPractice;
@@ -65,6 +66,20 @@ describe('ThinPullRequestsPractice', () => {
       collaborationInspector: mockCollaborationInspector,
     });
     expect(evaluated).toEqual(PracticeEvaluationResult.notPracticing);
+  });
+
+  it('return unknown if there is no PR', async () => {
+    mockCollaborationInspector.listPullRequests = async () => {
+      const pr = _.cloneDeep(getPullRequestsResponse());
+      pr.items = [];
+      return pr;
+    };
+
+    const evaluated = await practice.evaluate({
+      ...containerCtx.practiceContext,
+      collaborationInspector: mockCollaborationInspector,
+    });
+    expect(evaluated).toEqual(PracticeEvaluationResult.unknown);
   });
 
   it('return true as it is always applicable', async () => {

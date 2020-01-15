@@ -45,5 +45,26 @@ describe('DetectorUtils', () => {
       const result = hasOneOfPackages(pkg, pkgManag);
       expect(result).toEqual(true);
     });
+
+    it('returns false if there is no package management', () => {
+      const pkg = ['@types/node'];
+      const result = hasOneOfPackages(pkg);
+      expect(result).toEqual(false);
+    });
+
+    it('returns false if the package from packages is not in packaga management packages', () => {
+      const pkg = ['@types/node'];
+      const pkgManag: PackageManagement = {
+        framework: PackageManagementFramework.NPM,
+        hasLockfile: true,
+        packages: {
+          '@no/package': {
+            name: '',
+          },
+        },
+      };
+      const result = hasOneOfPackages(pkg, pkgManag);
+      expect(result).toEqual(false);
+    });
   });
 });
