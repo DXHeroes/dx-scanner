@@ -1,11 +1,12 @@
 import ncu from 'npm-check-updates';
 import { PracticeContext } from '../../contexts/practice/PracticeContext';
 import { Package } from '../../inspectors/IPackageInspector';
-import { PackageInspectorBase, SemverLevel } from '../../inspectors/package/PackageInspectorBase';
+import { SemverLevel } from '../../inspectors/package/PackageInspectorBase';
 import { PracticeEvaluationResult, PracticeImpact, ProgrammingLanguage } from '../../model';
 import { DxPractice } from '../DxPracticeDecorator';
 import { PracticeBase } from '../PracticeBase';
 import { ReportDetailType } from '../../reporters/ReporterData';
+import { DependenciesVersionEvaluationUtils, PkgToUpdate } from '../utils/DependenciesVersionEvaluationUtils';
 
 @DxPractice({
   id: 'JavaScript.DependenciesVersionMajorLevel',
@@ -29,7 +30,7 @@ export class DependenciesVersionMajorLevelPractice extends PracticeBase {
     const pkgs = ctx.packageInspector.packages;
 
     const result = await this.runNcu(pkgs);
-    const pkgsToUpdate = this.packagesToBeUpdated(result, SemverLevel.major, pkgs);
+    const pkgsToUpdate = DependenciesVersionEvaluationUtils.packagesToBeUpdated(result, SemverLevel.major, pkgs);
     this.setData(pkgsToUpdate);
 
     if (pkgsToUpdate.length > 0) return PracticeEvaluationResult.notPracticing;
@@ -51,29 +52,7 @@ export class DependenciesVersionMajorLevelPractice extends PracticeBase {
     return pkgsToBeUpdated;
   }
 
-  packagesToBeUpdated(pkgsWithNewVersion: { [key: string]: string }, semverLevel: SemverLevel, pkgs: Package[]) {
-    // packages with Major level to be updated
-    const pkgsToUpdate: PkgToUpdate[] = [];
-
-    for (const packageName in pkgsWithNewVersion) {
-      const parsedVersion = PackageInspectorBase.semverToPackageVersion(pkgsWithNewVersion[packageName]);
-      if (parsedVersion) {
-        for (const pkg of pkgs) {
-          if (pkg.name === packageName) {
-            if (parsedVersion[semverLevel] > pkg.lockfileVersion[semverLevel]) {
-              pkgsToUpdate.push({ name: pkg.name, newVersion: parsedVersion.value, currentVersion: pkg.lockfileVersion.value });
-            }
-          }
-        }
-      }
-    }
-
-    return pkgsToUpdate;
-  }
-
   setData(pkgsToUpdate: PkgToUpdate[]): void {
     this.data.details = [{ type: ReportDetailType.table, headers: ['Name', 'New', 'Current'], data: pkgsToUpdate }];
   }
 }
-
-export type PkgToUpdate = { name: string; newVersion: string; currentVersion: string };
