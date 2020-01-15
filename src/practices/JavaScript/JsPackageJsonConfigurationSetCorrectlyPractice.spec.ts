@@ -35,6 +35,18 @@ describe('JsPackageJsonConfigurationSetCorrectlyPractice', () => {
     expect(practice.data.details).not.toBeUndefined();
   });
 
+  it('Returns unknown if package.json has bad syntax', async () => {
+    containerCtx.virtualFileSystemService.setFileSystem({
+      '/package.json': `{ scripts: {
+              bad: syntax
+            }
+        }`,
+    });
+
+    const evaluated = await practice.evaluate(containerCtx.practiceContext);
+    expect(evaluated).toEqual(PracticeEvaluationResult.unknown);
+  });
+
   it('Returns unknown if there are no file inspector', async () => {
     const evaluated = await practice.evaluate({ ...containerCtx.practiceContext, fileInspector: undefined });
     expect(evaluated).toEqual(PracticeEvaluationResult.unknown);

@@ -1,5 +1,5 @@
 import { SecurityVulnerabilitiesPractice } from './SecurityVulnerabilitiesPractice';
-import { PracticeEvaluationResult } from '../../model';
+import { PracticeEvaluationResult, ProgrammingLanguage } from '../../model';
 import { TestContainerContext, createTestContainer } from '../../inversify.config';
 import shelljs from 'shelljs';
 import { sync as commandExists } from 'command-exists';
@@ -170,5 +170,17 @@ describe('SecurityVulnerabilitiesPractice', () => {
     const result = await practice.evaluate(containerCtx.practiceContext);
 
     expect(result).toBe(PracticeEvaluationResult.practicing);
+  });
+
+  it('Returns true if lang is a JavaScript or TypeScript', async () => {
+    const result = await practice.isApplicable(containerCtx.practiceContext);
+    expect(result).toEqual(true);
+  });
+
+  it('Returns false if lang is NOT a JavaScript or TypeScript', async () => {
+    containerCtx.practiceContext.projectComponent.language = ProgrammingLanguage.UNKNOWN;
+
+    const result = await practice.isApplicable(containerCtx.practiceContext);
+    expect(result).toEqual(false);
   });
 });
