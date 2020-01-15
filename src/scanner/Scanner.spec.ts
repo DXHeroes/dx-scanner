@@ -35,7 +35,7 @@ describe('Scanner', () => {
       let exists = await containerCtx.virtualFileSystemService.exists('/.dxscannerrc.yaml');
       expect(exists).toEqual(false);
 
-      await scanner.init();
+      await scanner.init('/');
 
       exists = await containerCtx.virtualFileSystemService.exists('/.dxscannerrc.yaml');
       expect(exists).toEqual(true);
@@ -55,7 +55,7 @@ describe('Scanner', () => {
       exists = await containerCtx.virtualFileSystemService.exists('/.dxscannerrc.yaml');
       expect(exists).toEqual(false);
 
-      await scanner.init();
+      await scanner.init('/');
 
       exists = await containerCtx.virtualFileSystemService.exists('/.dxscannerrc.yaml');
       expect(exists).toEqual(false);

@@ -63,7 +63,7 @@ class DXScannerCommand extends Command {
     const scanner = container.get(Scanner);
 
     if (flags.init) {
-      await scanner.init();
+      await scanner.init(scanPath);
       process.exit(0);
     }
 
