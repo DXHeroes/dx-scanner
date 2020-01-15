@@ -3,6 +3,7 @@ import { Types, LanguageContextFactory } from '../../types';
 import { ILanguageDetector } from '../../detectors/ILanguageDetector';
 import { LanguageAtPath } from '../../model';
 import { ContextBase } from '../ContextBase';
+import { ErrorFactory } from '../../lib/errors';
 
 @injectable()
 export class ScannerContext extends ContextBase {
@@ -19,7 +20,7 @@ export class ScannerContext extends ContextBase {
   }
 
   async init(): Promise<void> {
-    throw new Error('Method not implemented.');
+    throw ErrorFactory.newNotImplementedError();
   }
 
   getLanguageContext(languageAtPath: LanguageAtPath) {
