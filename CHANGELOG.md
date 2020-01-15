@@ -1,3 +1,10 @@
+# [1.35.0](https://github.com/dxheroes/dx-scanner/compare/v1.34.0...v1.35.0) (2020-01-15)
+
+
+### Features
+
+* **ghaction:** configuration added ([1a4f0e3](https://github.com/dxheroes/dx-scanner/commit/1a4f0e39a84014b45a2aecb363ac975107fd559b))
+
 # [1.34.0](https://github.com/dxheroes/dx-scanner/compare/v1.33.1...v1.34.0) (2020-01-15)
 
 
