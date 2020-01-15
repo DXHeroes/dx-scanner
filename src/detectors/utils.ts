@@ -39,14 +39,6 @@ export const sharedSubpath = (paths: string[]): string => {
   return `${isRelative ? `.${sep}` : sep}${firstPathSplit.slice(0, i).join(sep)}`;
 };
 
-export const indexBy = <T>(array: T[], keyFn: (item: T) => string): { [index: string]: T } => {
-  const map: { [index: string]: T } = {};
-  array.forEach((item) => {
-    map[keyFn(item)] = item;
-  });
-  return map;
-};
-
 export const hasOneOfPackages = (packages: string[], packageManagement?: PackageManagement): boolean => {
   if (!packageManagement) {
     return false;
