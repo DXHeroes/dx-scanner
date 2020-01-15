@@ -3,7 +3,7 @@
 # DX Scanner
 
 [![Version](https://img.shields.io/npm/v/dx-scanner.svg)](https://npmjs.org/package/dx-scanner)
-[![Travis (.org)](https://img.shields.io/travis/DXHeroes/dx-scanner)](https://travis-ci.org/DXHeroes/dx-scanner)
+[![Travis (.org)](https://img.shields.io/travis/DXHeroes/dx-scanner/master)](https://travis-ci.org/DXHeroes/dx-scanner)
 ![Codecov](https://img.shields.io/codecov/c/github/DXHeroes/dx-scanner)
 ![last commit](https://img.shields.io/github/last-commit/DXHeroes/dx-scanner)
 ![GitHub commit activity](https://img.shields.io/github/commit-activity/w/DXHeroes/dx-scanner)
@@ -57,7 +57,8 @@ OPTIONS
   -j, --json                         Print report in JSON
   -r, --recursive                    Scan all components recursively in all sub folders
   -v, --version                      Output the version number
-  --fail=high|medium|small|off|all   Run scanner in failure mode. Exits process with code 1 for any non-practicing condition of given level.
+  --ci                               CI mode
+  --fail=high|medium|small|off|all   [default: high] Run scanner in failure mode. Exits process with code 1 for any non-practicing condition of given level.
 
 ALIASES
   $ dx-scanner dxs
@@ -97,6 +98,28 @@ Example :
     }
 }
 ```
+
+### Github CI Action
+
+**Basic example**: run DX Scanner on each push to the repo
+
+Create `.github/workflows/main.yml`.
+
+```yml
+name: DX Scanner
+on: push
+jobs:
+  dx-scanner:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+      - name: Runs DX Scanner on the code
+        uses: DXHeroes/dx-scanner@master
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+```
+
+[Generate your Github personal token](https://github.com/settings/tokens/new) and [set it as an encrypted secret](https://help.github.com/en/actions/automating-your-workflow-with-github-actions/creating-and-using-encrypted-secrets) named `GITHUB_TOKEN`.
 
 ## Score Computation 💯
 Impact of each practice is represented by a specific value. DX Scanner uses the values to count the overall DX Score.
