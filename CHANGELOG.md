@@ -1,3 +1,12 @@
+## [1.33.1](https://github.com/dxheroes/dx-scanner/compare/v1.33.0...v1.33.1) (2020-01-14)
+
+
+### Bug Fixes
+
+* **practices:** correct commit msg use only X relevant commits ([343619a](https://github.com/dxheroes/dx-scanner/commit/343619a))
+* **practices:** correct commit msg use only X relevant commits ([e8c1d60](https://github.com/dxheroes/dx-scanner/commit/e8c1d60))
+* **practices:** display properly correct commit messages practice detailed data ([8b4e489](https://github.com/dxheroes/dx-scanner/commit/8b4e489))
+
 # [1.33.0](https://github.com/dxheroes/dx-scanner/compare/v1.32.1...v1.33.0) (2020-01-14)
 
 
