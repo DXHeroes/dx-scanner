@@ -67,5 +67,4 @@ export const practices = [
   // Practices for testing purpose only
   FirstTestPractice,
   SecondTestPractice,
-  InvalidTestPractice,
 ];
