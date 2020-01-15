@@ -1,5 +1,7 @@
 name: 'DX Scanner Action'
-description: 'Measure Developer Experience directly based on your source code. DX Scanner recommends practices that can help you with improving your product development.'
+description: 'Measure Developer Experience directly based on your source code'
+icon: user-check
+color: green
 inputs:
   github_token:
     description: 'Github API token (https://github.com/settings/tokens/new)'
