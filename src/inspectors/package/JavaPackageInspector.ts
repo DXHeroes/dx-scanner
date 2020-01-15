@@ -73,7 +73,8 @@ export class JavaPackageInspector extends PackageInspectorBase {
       for (const xmlDependency of xmlDependencies) {
         const dependencyAttributes = xmlDependency.dependency.values();
         for (const attribute of dependencyAttributes) {
-          this.parsedDependencies.push({ packageName: String(attribute.artifactId.pop()), version: String(attribute.version.pop()) });
+          const packageName = `${attribute.groupId.pop()}:${attribute.artifactId.pop()}`;
+          this.parsedDependencies.push({ packageName, version: String(attribute.version.pop()) });
         }
       }
     });

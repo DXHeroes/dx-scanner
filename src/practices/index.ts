@@ -23,6 +23,8 @@ import { TsGitignoreCorrectlySetPractice } from './TypeScript/TsGitignoreCorrect
 import { DoesPullRequestsPractice } from './LanguageIndependent/DoesPullRequests';
 import { DependenciesVersionMinorPatchLevelPractice } from './JavaScript/DependenciesVersionMinorPatchLevel';
 import { CorrectCommitMessagesPractice } from './LanguageIndependent/CorrectCommitMessagesPractice';
+import { JavaDependenciesVersionMajorLevel } from './Java/JavaDependenciesVersionMajorLevel';
+import { JavaDependenciesVersionMinorPatchLevel } from './Java/JavaDependenciesVersionMinorPatchLevel';
 import { TimeToSolvePullRequestsPractice } from './LanguageIndependent/TimeToSolvePullRequestsPractice';
 import { TimeToSolveIssuesPractice } from './LanguageIndependent/TimeToSolveIssuesPractice';
 import { ThinPullRequestsPractice } from './LanguageIndependent/ThinPullRequestsPractice';
@@ -50,6 +52,8 @@ export const practices = [
   EditorConfigIsPresentPractice,
   DependenciesVersionMajorLevelPractice,
   DependenciesVersionMinorPatchLevelPractice,
+  JavaDependenciesVersionMajorLevel,
+  JavaDependenciesVersionMinorPatchLevel,
   GitignoreIsPresentPractice,
   JsGitignoreCorrectlySetPractice,
   JavaGitignoreCorrectlySetPractice,
