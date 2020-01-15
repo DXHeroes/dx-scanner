@@ -64,7 +64,4 @@ export const practices = [
   TimeToSolveIssuesPractice,
   ThinPullRequestsPractice,
   SecurityVulnerabilitiesPractice,
-  // Practices for testing purpose only
-  FirstTestPractice,
-  SecondTestPractice,
 ];
