@@ -70,9 +70,7 @@ describe('ThinPullRequestsPractice', () => {
 
   it('return unknown if there is no PR', async () => {
     mockCollaborationInspector.listPullRequests = async () => {
-      const pr = _.cloneDeep(getPullRequestsResponse());
-      pr.items = [];
-      return pr;
+      return getPullRequestsResponse([]);
     };
 
     const evaluated = await practice.evaluate({
