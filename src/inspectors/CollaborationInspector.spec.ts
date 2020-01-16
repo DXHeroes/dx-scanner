@@ -86,4 +86,14 @@ describe('Collaboration Inspector', () => {
     expect(response.items).toHaveLength(1);
     expect(response.items[0].state).toEqual(BitbucketPullRequestState.closed);
   });
+
+  it('returns pulls diff stat in own interface', async () => {
+    bitbucketNock = new BitbucketNock('pypy', 'pypy');
+    containerCtx.container.rebind(Types.IContentRepositoryBrowser).to(BitbucketService);
+    const collaborationInspector = containerCtx.container.get<CollaborationInspector>(Types.ICollaborationInspector);
+    bitbucketNock.getPRsAdditionsAndDeletions(622);
+
+    const response = await collaborationInspector.getPullsDiffStat('pypy', 'pypy', 622);
+    expect(response).toMatchObject({ additions: 2, deletions: 1, changes: 3 });
+  });
 });

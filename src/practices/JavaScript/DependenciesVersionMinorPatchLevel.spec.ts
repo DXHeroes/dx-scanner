@@ -2,7 +2,7 @@ import ncu from 'npm-check-updates';
 import { mockPackage } from '../../test/helpers/mockPackage';
 import { JavaScriptPackageInspector } from '../../inspectors/package/JavaScriptPackageInspector';
 import { createTestContainer, TestContainerContext } from '../../inversify.config';
-import { PracticeEvaluationResult } from '../../model';
+import { PracticeEvaluationResult, ProgrammingLanguage } from '../../model';
 import { DependenciesVersionMinorPatchLevelPractice } from './DependenciesVersionMinorPatchLevel';
 jest.mock('npm-check-updates');
 
@@ -46,5 +46,22 @@ describe('DependenciesVersionPractice of Minor and Patch Level', () => {
 
     const evaluated = await practice.evaluate(containerCtx.practiceContext);
     expect(evaluated).toEqual(PracticeEvaluationResult.practicing);
+  });
+
+  it('Returns true if language is a JavaScript', async () => {
+    containerCtx.practiceContext.projectComponent.language = ProgrammingLanguage.JavaScript;
+    const isApplicable = await practice.isApplicable(containerCtx.practiceContext);
+    expect(isApplicable).toBe(true);
+  });
+
+  it('Returns false if language is not a JavaScript', async () => {
+    containerCtx.practiceContext.projectComponent.language = ProgrammingLanguage.UNKNOWN;
+    const isApplicable = await practice.isApplicable(containerCtx.practiceContext);
+    expect(isApplicable).toBe(false);
+  });
+
+  it('Returns unknown if there is no packageInspector', async () => {
+    const evaluated = await practice.evaluate({ ...containerCtx.practiceContext, packageInspector: undefined });
+    expect(evaluated).toEqual(PracticeEvaluationResult.unknown);
   });
 });

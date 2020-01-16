@@ -42,4 +42,20 @@ describe('JsFEBuildtoolUsedPractice', () => {
     const result = await practice.isApplicable(containerCtx.practiceContext);
     expect(result).toEqual(false);
   });
+
+  it('Is applicable if it is JavaScript', async () => {
+    containerCtx.practiceContext.projectComponent.language = ProgrammingLanguage.JavaScript;
+    containerCtx.practiceContext.projectComponent.platform = ProjectComponentPlatform.FrontEnd;
+
+    const result = await practice.isApplicable(containerCtx.practiceContext);
+    expect(result).toEqual(true);
+  });
+
+  it('Is applicable if it is TypeScript', async () => {
+    containerCtx.practiceContext.projectComponent.language = ProgrammingLanguage.TypeScript;
+    containerCtx.practiceContext.projectComponent.platform = ProjectComponentPlatform.FrontEnd;
+
+    const result = await practice.isApplicable(containerCtx.practiceContext);
+    expect(result).toEqual(true);
+  });
 });

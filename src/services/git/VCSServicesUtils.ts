@@ -1,8 +1,9 @@
 import { PullRequestState } from '../../inspectors/ICollaborationInspector';
 import { VCSServiceType } from './IVCSService';
-import { GitHubPullRequestState, GitHubIssueState } from './IGitHubService';
+import { GitHubIssueState } from './IGitHubService';
 import { IssueState } from '../../inspectors';
-import { BitbucketPullRequestState, BitbucketIssueState } from '../bitbucket/IBitbucketService';
+import { BitbucketIssueState, BitbucketPullRequestState } from '../bitbucket/IBitbucketService';
+import { GitHubPullRequestState } from './IGitHubService';
 
 export class VCSServicesUtils {
   static getGithubPRState = (state: PullRequestState | undefined) => {

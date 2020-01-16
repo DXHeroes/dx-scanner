@@ -30,7 +30,6 @@ export class JavaScriptLanguageDetector implements ILanguageDetector {
       if (jsOrTsFiles.length === 0) {
         return result;
       }
-      // if (jsOrTsFiles.length === 0) return result;
       const dirsWithProjects = uniq(jsOrTsFiles.map((f) => nodePath.dirname(f.path)));
       // Get the shared subpath
       const commonPath = sharedSubpath(dirsWithProjects);

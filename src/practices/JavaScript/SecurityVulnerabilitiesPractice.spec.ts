@@ -1,5 +1,5 @@
 import { SecurityVulnerabilitiesPractice } from './SecurityVulnerabilitiesPractice';
-import { PracticeEvaluationResult } from '../../model';
+import { PracticeEvaluationResult, ProgrammingLanguage } from '../../model';
 import { TestContainerContext, createTestContainer } from '../../inversify.config';
 import shelljs from 'shelljs';
 import { sync as commandExists } from 'command-exists';
@@ -23,6 +23,7 @@ describe('SecurityVulnerabilitiesPractice', () => {
   const setupMocks = (mockOverrides: { f: any; impl: (...args: any) => any }[] = []) => {
     (shelljs.exec as jest.Mock).mockImplementation(() => {
       const result = new String('{"actions":[], "data":{ "vulnerabilities": {}}}'); // minimal data for both npm and yarn
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       (result as any).code = 0;
       return result;
     });
@@ -118,6 +119,7 @@ describe('SecurityVulnerabilitiesPractice', () => {
         f: shelljs.exec,
         impl: () => {
           const result = new String('{"actions":[]}');
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           (result as any).code = 1;
           return result;
         },
@@ -138,6 +140,7 @@ describe('SecurityVulnerabilitiesPractice', () => {
         f: shelljs.exec,
         impl: () => {
           const result = new String('{"data":{"vulnerabilities":{}}}');
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           (result as any).code = 16;
           return result;
         },
@@ -158,6 +161,7 @@ describe('SecurityVulnerabilitiesPractice', () => {
         f: shelljs.exec,
         impl: () => {
           const result = new String('{"data":{"vulnerabilities":{}}}');
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           (result as any).code = 6;
           return result;
         },
@@ -170,5 +174,17 @@ describe('SecurityVulnerabilitiesPractice', () => {
     const result = await practice.evaluate(containerCtx.practiceContext);
 
     expect(result).toBe(PracticeEvaluationResult.practicing);
+  });
+
+  it('Returns true if lang is a JavaScript or TypeScript', async () => {
+    const result = await practice.isApplicable(containerCtx.practiceContext);
+    expect(result).toEqual(true);
+  });
+
+  it('Returns false if lang is NOT a JavaScript or TypeScript', async () => {
+    containerCtx.practiceContext.projectComponent.language = ProgrammingLanguage.UNKNOWN;
+
+    const result = await practice.isApplicable(containerCtx.practiceContext);
+    expect(result).toEqual(false);
   });
 });
