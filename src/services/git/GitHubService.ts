@@ -136,7 +136,7 @@ export class GitHubService implements IVCSService {
       closedAt: response.data.closed_at,
       mergedAt: response.data.merged_at,
       state: response.data.state,
-      id: response.data.id,
+      id: response.data.number,
       base: {
         repo: {
           url: response.data.base.repo.url,
