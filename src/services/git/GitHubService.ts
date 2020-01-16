@@ -93,7 +93,7 @@ export class GitHubService implements IVCSService {
           closedAt: val.closed_at,
           mergedAt: val.merged_at,
           state: val.state,
-          id: val.id,
+          id: val.number,
           base: {
             repo: {
               url: val.base.repo.url,
@@ -105,7 +105,7 @@ export class GitHubService implements IVCSService {
         };
         // Get number of changes, additions and deletions in PullRequest if the withDiffStat is true
         if (options?.withDiffStat) {
-          const lines = await this.getPullsDiffStat(owner, repo, val.id);
+          const lines = await this.getPullsDiffStat(owner, repo, val.number);
           return { ...pullRequest, lines };
         }
         return pullRequest;
