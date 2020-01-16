@@ -123,10 +123,35 @@ describe('ScannerUtils', () => {
       expect(result).toHaveLength(1);
     });
 
+    it('Filter correctly if practice impact is high and fail=all', () => {
+      const argumentsProvider = argumentsProviderFactory({ uri: '.', fail: 'all' });
+
+      const notPracticingMediumImpactPracticeWithCtx: PracticeWithContextForReporter[] = [];
+      notPracticingMediumImpactPracticeWithCtx.push(practiceWithContextFactory({ evaluation: PracticeEvaluationResult.notPracticing }));
+
+      const result = ScannerUtils.filterNotPracticingPracticesToFail(notPracticingHighImpactPracticeWithCtx, argumentsProvider);
+      expect(result).toHaveLength(1);
+    });
+
     it('Filter correctly if practice impact is high and fail=off', () => {
       const argumentsProvider = argumentsProviderFactory({ uri: '.', fail: PracticeImpact.off });
       const result = ScannerUtils.filterNotPracticingPracticesToFail(notPracticingHighImpactPracticeWithCtx, argumentsProvider);
       expect(result).toHaveLength(0);
+    });
+
+    it('Returns practiceImpcat high and medium if the medium is passed', () => {
+      const result = ScannerUtils.getImpactFailureLevels(PracticeImpact.medium);
+      expect(result).toEqual([PracticeImpact.high, PracticeImpact.medium]);
+    });
+
+    it('Returns practiceImpcat high, medium and small if the small is passed', () => {
+      const result = ScannerUtils.getImpactFailureLevels(PracticeImpact.small);
+      expect(result).toEqual([PracticeImpact.high, PracticeImpact.medium, PracticeImpact.small]);
+    });
+
+    it('Returns practiceImpcat high, medium, small and hint if the hint is passed', () => {
+      const result = ScannerUtils.getImpactFailureLevels(PracticeImpact.hint);
+      expect(result).toEqual([PracticeImpact.high, PracticeImpact.medium, PracticeImpact.small, PracticeImpact.hint]);
     });
   });
 });

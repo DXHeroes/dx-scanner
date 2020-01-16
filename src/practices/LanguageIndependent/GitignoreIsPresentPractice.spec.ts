@@ -39,4 +39,9 @@ describe('GitignoreIsPresentPractice', () => {
     const evaluated = await practice.evaluate({ ...containerCtx.practiceContext, fileInspector: undefined });
     expect(evaluated).toEqual(PracticeEvaluationResult.unknown);
   });
+
+  it('Is always applicable', async () => {
+    const result = await practice.isApplicable();
+    expect(result).toEqual(true);
+  });
 });

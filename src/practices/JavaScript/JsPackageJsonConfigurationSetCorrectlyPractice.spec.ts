@@ -1,5 +1,5 @@
 import { JsPackageJsonConfigurationSetCorrectlyPractice } from './JsPackageJsonConfigurationSetCorrectlyPractice';
-import { PracticeEvaluationResult } from '../../model';
+import { PracticeEvaluationResult, ProgrammingLanguage } from '../../model';
 import { TestContainerContext, createTestContainer } from '../../inversify.config';
 
 describe('JsPackageJsonConfigurationSetCorrectlyPractice', () => {
@@ -35,8 +35,41 @@ describe('JsPackageJsonConfigurationSetCorrectlyPractice', () => {
     expect(practice.data.details).not.toBeUndefined();
   });
 
+  it('Returns unknown if package.json has bad syntax', async () => {
+    containerCtx.virtualFileSystemService.setFileSystem({
+      '/package.json': `{ scripts: {
+              bad: syntax
+            }
+        }`,
+    });
+
+    const evaluated = await practice.evaluate(containerCtx.practiceContext);
+    expect(evaluated).toEqual(PracticeEvaluationResult.unknown);
+  });
+
   it('Returns unknown if there are no file inspector', async () => {
     const evaluated = await practice.evaluate({ ...containerCtx.practiceContext, fileInspector: undefined });
     expect(evaluated).toEqual(PracticeEvaluationResult.unknown);
+  });
+
+  it('Is applicable if it is JavaScript', async () => {
+    containerCtx.practiceContext.projectComponent.language = ProgrammingLanguage.JavaScript;
+
+    const result = await practice.isApplicable(containerCtx.practiceContext);
+    expect(result).toEqual(true);
+  });
+
+  it('Is applicable if it is TypeScript', async () => {
+    containerCtx.practiceContext.projectComponent.language = ProgrammingLanguage.TypeScript;
+
+    const result = await practice.isApplicable(containerCtx.practiceContext);
+    expect(result).toEqual(true);
+  });
+
+  it('Is applicable if it is not TypeScript nor JavaScript', async () => {
+    containerCtx.practiceContext.projectComponent.language = ProgrammingLanguage.UNKNOWN;
+
+    const result = await practice.isApplicable(containerCtx.practiceContext);
+    expect(result).toEqual(false);
   });
 });

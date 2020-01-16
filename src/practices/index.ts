@@ -29,6 +29,7 @@ import { TimeToSolvePullRequestsPractice } from './LanguageIndependent/TimeToSol
 import { TimeToSolveIssuesPractice } from './LanguageIndependent/TimeToSolveIssuesPractice';
 import { ThinPullRequestsPractice } from './LanguageIndependent/ThinPullRequestsPractice';
 import { SecurityVulnerabilitiesPractice } from './JavaScript/SecurityVulnerabilitiesPractice';
+import { FirstTestPractice, SecondTestPractice, InvalidTestPractice } from '../scanner';
 
 // register practices here
 export const practices = [

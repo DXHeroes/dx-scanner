@@ -1,15 +1,14 @@
 /* eslint-disable no-process-env */
-import 'reflect-metadata';
-import { createRootContainer } from './inversify.config';
-import { Scanner, ScanResult } from './scanner/Scanner';
 import { Command, flags } from '@oclif/command';
 import cli from 'cli-ux';
-import { ServiceError, ErrorCode } from './lib/errors';
-import updateNotifier from 'update-notifier';
-import { ScanningStrategyDetectorUtils } from './detectors/utils/ScanningStrategyDetectorUtils';
-import { PracticeImpact } from './model';
-import { ServiceType } from './detectors/ScanningStrategyDetector';
 import debug from 'debug';
+import 'reflect-metadata';
+import updateNotifier from 'update-notifier';
+import { ServiceType } from './detectors/ScanningStrategyDetector';
+import { ScanningStrategyDetectorUtils } from './detectors/utils/ScanningStrategyDetectorUtils';
+import { createRootContainer } from './inversify.config';
+import { PracticeImpact } from './model';
+import { Scanner } from './scanner/Scanner';
 
 class DXScannerCommand extends Command {
   static description = 'Scan your project for possible DX recommendations.';

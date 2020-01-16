@@ -1,6 +1,6 @@
 import { mockPackage } from '../../test/helpers/mockPackage';
 import { createTestContainer, TestContainerContext } from '../../inversify.config';
-import { PracticeEvaluationResult } from '../../model';
+import { PracticeEvaluationResult, ProgrammingLanguage } from '../../model';
 import { JavaDependenciesVersionMinorPatchLevel } from './JavaDependenciesVersionMinorPatchLevel';
 import { JavaPackageInspector } from '../../inspectors';
 import * as axios from 'axios';
@@ -43,5 +43,24 @@ describe('JavaDependenciesVersionPractice of Minor and Patch Level', () => {
 
     const evaluated = await practice.evaluate(containerCtx.practiceContext);
     expect(evaluated).toEqual(PracticeEvaluationResult.practicing);
+  });
+
+  it('returns unknown if there is no fileInspector', async () => {
+    const evaluated = await practice.evaluate({ ...containerCtx.practiceContext, fileInspector: undefined });
+    expect(evaluated).toEqual(PracticeEvaluationResult.unknown);
+  });
+
+  it('Is applicable if it is Java', async () => {
+    containerCtx.practiceContext.projectComponent.language = ProgrammingLanguage.Java;
+
+    const result = await practice.isApplicable(containerCtx.practiceContext);
+    expect(result).toEqual(true);
+  });
+
+  it('Is applicable if it is not Java', async () => {
+    containerCtx.practiceContext.projectComponent.language = ProgrammingLanguage.UNKNOWN;
+
+    const result = await practice.isApplicable(containerCtx.practiceContext);
+    expect(result).toEqual(false);
   });
 });
