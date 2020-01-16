@@ -20,7 +20,7 @@ import { Paginated } from '../../inspectors';
   dependsOn: { practicing: ['LanguageIndependent.DoesPullRequests'] },
 })
 export class ThinPullRequestsPractice implements IPractice {
-  private readonly measurePullRequestCount = 500; // update suggestion text when changed
+  private readonly measurePullRequestCount = 1000; // update suggestion text when changed
 
   async isApplicable(): Promise<boolean> {
     return true;
