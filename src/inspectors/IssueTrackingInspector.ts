@@ -15,12 +15,12 @@ export class IssueTrackingInspector implements IIssueTrackingInspector {
     this.service = service;
   }
 
-  async getIssues(
+  async listIssues(
     owner: string,
     repo: string,
     options?: { withDiffStat?: boolean } & ListGetterOptions<{ state?: IssueState }>,
   ): Promise<Paginated<Issue>> {
-    return this.service.getIssues(owner, repo, options);
+    return this.service.listIssues(owner, repo, options);
   }
 
   async getIssue(owner: string, repo: string, issueId: number): Promise<Issue> {
@@ -29,6 +29,6 @@ export class IssueTrackingInspector implements IIssueTrackingInspector {
 
   //TODO add options
   async listIssueComments(owner: string, repo: string, issueId: number): Promise<Paginated<IssueComment>> {
-    return this.service.getIssueComments(owner, repo, issueId);
+    return this.service.listIssueComments(owner, repo, issueId);
   }
 }

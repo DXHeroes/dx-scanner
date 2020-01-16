@@ -9,7 +9,7 @@ export enum IssueState {
 }
 
 export interface IIssueTrackingInspector {
-  getIssues(
+  listIssues(
     owner: string,
     repo: string,
     options?: { withDiffStat?: boolean } & ListGetterOptions<{ state?: IssueState }>,

@@ -26,7 +26,7 @@ describe('Issue Tracking Inspector', () => {
 
   it('returns paginated issues', async () => {
     new GitHubNock('1', 'octocat', 1, 'Hello-World').getIssues().reply(200, getIssuesResponse);
-    const response = await inspector.getIssues('octocat', 'Hello-World');
+    const response = await inspector.listIssues('octocat', 'Hello-World');
     expect(response).toMatchObject(getIssuesServiceResponse);
   });
 

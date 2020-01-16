@@ -6,9 +6,9 @@ export const getPullsFilesServiceResponse = {
     {
       additions: 6,
       changes: 7,
-      contentsUrl: undefined,
+      contentsUrl: 'https://api.github.com/repos/octocat/Hello-World/contents/README?ref=7044a8a032e85b6ab611033b2ac8af7ce85805b2',
       deletions: 1,
-      fileName: undefined,
+      fileName: 'README',
       sha: '719be62e9382eaed6b25ec98d8190e141ce329eb',
       status: 'modified',
     },

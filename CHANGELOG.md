@@ -1,3 +1,59 @@
+# [1.35.0](https://github.com/dxheroes/dx-scanner/compare/v1.34.0...v1.35.0) (2020-01-15)
+
+
+### Features
+
+* **ghaction:** configuration added ([1a4f0e3](https://github.com/dxheroes/dx-scanner/commit/1a4f0e39a84014b45a2aecb363ac975107fd559b))
+
+# [1.34.0](https://github.com/dxheroes/dx-scanner/compare/v1.33.1...v1.34.0) (2020-01-15)
+
+
+### Bug Fixes
+
+* **dependnecies:** lock versions & recreate lockfile ([236a7d2](https://github.com/dxheroes/dx-scanner/commit/236a7d27efc7945a53e78b6f5d5e7f9810265c7e))
+* --init command with specific file path ([eaacb8b](https://github.com/dxheroes/dx-scanner/commit/eaacb8b244c022f26424fbd82ea6052109eb5960))
+* fixing a test and writeFile ([f19827a](https://github.com/dxheroes/dx-scanner/commit/f19827a5edb97033e13eff36b17aabd3c52539d4))
+* Kotlin recognition fixed & improved detector ([c5aaa4c](https://github.com/dxheroes/dx-scanner/commit/c5aaa4c66349752f0ea21e568925a0dd2dfb29f6))
+* replacing a string templator with query stringify ([b3145c1](https://github.com/dxheroes/dx-scanner/commit/b3145c1c85464b9002d16394d0ee10d7c820907a))
+* streamlined practice business logic & introduced new utils ([b278dae](https://github.com/dxheroes/dx-scanner/commit/b278dae9ba92daec39bb72b83e1d5612bd6a9c71))
+* **java:** improved PackageInspector for Maven to include groupId ([3cb77c6](https://github.com/dxheroes/dx-scanner/commit/3cb77c68133ce797977341e825894fa37e00e4db))
+
+
+### Features
+
+* **java:** Added Major Version Dependency check practice for Java ([258c44e](https://github.com/dxheroes/dx-scanner/commit/258c44e40262d3169a4cd379377d293ead1fccc4))
+* **Kotlin:** added Kotlin recognition to Language Detector ([d62e6a8](https://github.com/dxheroes/dx-scanner/commit/d62e6a81b49dbf87506b9b8bbaed17c87fccf8e2))
+
+## [1.33.1](https://github.com/dxheroes/dx-scanner/compare/v1.33.0...v1.33.1) (2020-01-14)
+
+
+### Bug Fixes
+
+* **practices:** correct commit msg use only X relevant commits ([343619a](https://github.com/dxheroes/dx-scanner/commit/343619a))
+* **practices:** correct commit msg use only X relevant commits ([e8c1d60](https://github.com/dxheroes/dx-scanner/commit/e8c1d60))
+* **practices:** display properly correct commit messages practice detailed data ([8b4e489](https://github.com/dxheroes/dx-scanner/commit/8b4e489))
+
+# [1.33.0](https://github.com/dxheroes/dx-scanner/compare/v1.32.1...v1.33.0) (2020-01-14)
+
+
+### Bug Fixes
+
+* rename vulnerabilities practice ([dad49cf](https://github.com/dxheroes/dx-scanner/commit/dad49cf))
+
+
+### Features
+
+* add audit fallback to npm ([39e8998](https://github.com/dxheroes/dx-scanner/commit/39e8998))
+* add table detail to vulnerabilities practice ([b1fc789](https://github.com/dxheroes/dx-scanner/commit/b1fc789))
+* add yarn audit vulnerabilities report, increase yarn fail level ([cfd79cc](https://github.com/dxheroes/dx-scanner/commit/cfd79cc))
+
+## [1.32.1](https://github.com/dxheroes/dx-scanner/compare/v1.32.0...v1.32.1) (2020-01-13)
+
+
+### Bug Fixes
+
+* **deps:** pin dependencies ([caedb1e](https://github.com/dxheroes/dx-scanner/commit/caedb1e))
+
 # [1.32.0](https://github.com/dxheroes/dx-scanner/compare/v1.31.0...v1.32.0) (2020-01-10)
 
 

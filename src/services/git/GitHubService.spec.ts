@@ -63,7 +63,7 @@ describe('GitHub Service', () => {
         ],
       });
 
-      const response = await service.getPullRequests('octocat', 'Hello-World');
+      const response = await service.listPullRequests('octocat', 'Hello-World');
       expect(response).toMatchObject(getPullsServiceResponse);
     });
 
@@ -95,7 +95,7 @@ describe('GitHub Service', () => {
         params.lines,
       );
 
-      const response = await service.getPullRequests('octocat', 'Hello-World', { withDiffStat: true });
+      const response = await service.listPullRequests('octocat', 'Hello-World', { withDiffStat: true });
 
       const lines = { additions: 1, deletions: 0, changes: 1 };
       const getPullsServiceResponseWithDiffStat = _.cloneDeep(getPullsServiceResponse);
@@ -116,9 +116,9 @@ describe('GitHub Service', () => {
             base: 'master',
           },
         ],
-        pagination: pagination,
+        pagination,
       });
-      const response = await service.getPullRequests('octocat', 'Hello-World', { pagination });
+      const response = await service.listPullRequests('octocat', 'Hello-World', { pagination });
       expect(response).toMatchObject(getPullsServiceResponse);
     });
 
@@ -136,7 +136,7 @@ describe('GitHub Service', () => {
         ],
       });
 
-      const response = await service.getPullRequests('octocat', 'Hello-World');
+      const response = await service.listPullRequests('octocat', 'Hello-World');
       expect(response.items.map((item) => item.state)).toMatchObject(['open']);
     });
 
@@ -146,7 +146,7 @@ describe('GitHub Service', () => {
         queryState: 'open',
       });
 
-      const response = await service.getPullRequests('octocat', 'Hello-World', { filter: { state: PullRequestState.open } });
+      const response = await service.listPullRequests('octocat', 'Hello-World', { filter: { state: PullRequestState.open } });
       expect(response.items.map((item) => item.state)).toMatchObject(['open']);
     });
 
@@ -156,7 +156,7 @@ describe('GitHub Service', () => {
         queryState: 'closed',
       });
 
-      const response = await service.getPullRequests('octocat', 'Hello-World', { filter: { state: PullRequestState.closed } });
+      const response = await service.listPullRequests('octocat', 'Hello-World', { filter: { state: PullRequestState.closed } });
       expect(response.items.map((item) => item.state)).toMatchObject(['closed']);
     });
 
@@ -169,7 +169,7 @@ describe('GitHub Service', () => {
         queryState: 'all',
       });
 
-      const response = await service.getPullRequests('octocat', 'Hello-World', { filter: { state: PullRequestState.all } });
+      const response = await service.listPullRequests('octocat', 'Hello-World', { filter: { state: PullRequestState.all } });
       expect(response.items.map((item) => item.state)).toMatchObject(['open', 'closed']);
     });
   });
@@ -177,13 +177,13 @@ describe('GitHub Service', () => {
   it('returns pull request reviews in own interface', async () => {
     new GitHubNock('1', 'octocat', 1, 'Hello-World').getRepo('/pulls/1/reviews').reply(200, getPullRequestsReviewsResponse);
 
-    const response = await service.getPullRequestReviews('octocat', 'Hello-World', 1);
+    const response = await service.listPullRequestReviews('octocat', 'Hello-World', 1);
     expect(response).toMatchObject(getPullsReviewsServiceResponse);
   });
 
   it('returns commits in own interface', async () => {
     new GitHubNock('1', 'octocat', 1, 'Hello-World').getCommits().reply(200, getRepoCommitsResponse);
-    const response = await service.getRepoCommits('octocat', 'Hello-World');
+    const response = await service.listRepoCommits('octocat', 'Hello-World');
 
     expect(response).toMatchObject(getRepoCommitsServiceResponse);
   });
@@ -203,7 +203,7 @@ describe('GitHub Service', () => {
       { id: '583231', login: 'octocat' },
     ]);
 
-    const response = await service.getContributors('octocat', 'Hello-World');
+    const response = await service.listContributors('octocat', 'Hello-World');
     expect(response).toMatchObject(getContributorsServiceResponse);
   });
 
@@ -249,35 +249,35 @@ describe('GitHub Service', () => {
   it('returns issues in own interface', async () => {
     new GitHubNock('1', 'octocat', 1, 'Hello-World').getIssues().reply(200, getIssuesResponse);
 
-    const response = await service.getIssues('octocat', 'Hello-World');
+    const response = await service.listIssues('octocat', 'Hello-World');
     expect(response).toMatchObject(getIssuesServiceResponse);
   });
 
   it('returns comments in own interface', async () => {
     new GitHubNock('1', 'octocat', 1, 'Hello-World').getRepo('/issues/1/comments').reply(200, getIssueCommentsResponse);
 
-    const response = await service.getIssueComments('octocat', 'Hello-World', 1);
+    const response = await service.listIssueComments('octocat', 'Hello-World', 1);
     expect(response).toMatchObject(getIssueCommentsServiceResponse);
   });
 
   it('returns commits in own interfa', async () => {
     new GitHubNock('1', 'octocat', 1, 'Hello-World').getRepo('/issues/1/comments').reply(200, getIssueCommentsResponse);
 
-    const response = await service.getIssueComments('octocat', 'Hello-World', 1);
+    const response = await service.listIssueComments('octocat', 'Hello-World', 1);
     expect(response).toMatchObject(getIssueCommentsServiceResponse);
   });
 
   it('returns pull files in own interface', async () => {
     new GitHubNock('1', 'octocat', 1, 'Hello-World').getRepo('/pulls/1/files').reply(200, getPullsFilesResponse);
 
-    const response = await service.getPullRequestFiles('octocat', 'Hello-World', 1);
+    const response = await service.listPullRequestFiles('octocat', 'Hello-World', 1);
     expect(response).toMatchObject(getPullsFilesServiceResponse);
   });
 
   it('returns pull commits in own interface', async () => {
     new GitHubNock('1', 'octocat', 1, 'Hello-World').getRepo('/pulls/1/commits').reply(200, getPullCommitsResponse);
 
-    const response = await service.getPullCommits('octocat', 'Hello-World', 1);
+    const response = await service.listPullCommits('octocat', 'Hello-World', 1);
     expect(response).toMatchObject(getPullCommitsServiceResponse);
   });
 });

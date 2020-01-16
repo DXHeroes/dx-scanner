@@ -88,7 +88,7 @@ export class BitbucketService implements IVCSService {
     return this.unwrap(this.client.repositories.get(params));
   }
 
-  async getPullRequests(
+  async listPullRequests(
     owner: string,
     repo: string,
     options?: { withDiffStat?: boolean } & ListGetterOptions<{ state?: PullRequestState }>,
@@ -100,7 +100,7 @@ export class BitbucketService implements IVCSService {
 
     let state;
     if (options?.filter?.state) {
-      state = VCSServicesUtils.getPRState(options.filter.state, VCSServiceType.bitbucket);
+      state = VCSServicesUtils.getBitbucketPRState(options.filter.state);
     }
 
     const ownerId = `${(await this.client.repositories.get({ repo_slug: repo, username: owner })).data.owner?.uuid}`;
@@ -142,7 +142,7 @@ export class BitbucketService implements IVCSService {
 
         // Get number of changes, additions and deletions in PullRequest if the withDiffStat is true
         if (options?.withDiffStat) {
-          const lines = await this.getPullsDiffStat(owner, repo, `${val.id}`);
+          const lines = await this.getPullsDiffStat(owner, repo, val.id);
           return { ...pullRequest, lines };
         }
 
@@ -201,13 +201,18 @@ export class BitbucketService implements IVCSService {
     };
     // Get number of changes, additions and deletions in PullRequest if the withDiffStat is true
     if (withDiffStat) {
-      const lines = await this.getPullsDiffStat(owner, repo, `${prNumber}`);
+      const lines = await this.getPullsDiffStat(owner, repo, prNumber);
       return { ...pullRequest, lines };
     }
     return pullRequest;
   }
 
-  async getPullRequestFiles(owner: string, repo: string, prNumber: number): Promise<Paginated<PullFiles>> {
+  async listPullRequestFiles(owner: string, repo: string, prNumber: number): Promise<Paginated<PullFiles>> {
+    this.authenticate();
+    throw new Error('Method not implemented yet.');
+  }
+
+  async listPullCommits(owner: string, repo: string, prNumber: number, options?: ListGetterOptions): Promise<Paginated<PullCommits>> {
     this.authenticate();
     throw new Error('Method not implemented yet.');
   }
@@ -248,7 +253,7 @@ export class BitbucketService implements IVCSService {
     return { items, ...pagination };
   }
 
-  async getIssues(
+  async listIssues(
     owner: string,
     repo: string,
     options?: { withDiffStat?: boolean } & ListGetterOptions<{ state?: IssueState }>,
@@ -336,7 +341,7 @@ export class BitbucketService implements IVCSService {
     };
   }
 
-  async getIssueComments(owner: string, repo: string, issueNumber: number): Promise<Paginated<IssueComment>> {
+  async listIssueComments(owner: string, repo: string, issueNumber: number): Promise<Paginated<IssueComment>> {
     this.authenticate();
     const params: Bitbucket.Params.IssueTrackerListComments = {
       issue_id: issueNumber.toString(),
@@ -365,16 +370,18 @@ export class BitbucketService implements IVCSService {
     return { items, ...pagination };
   }
 
-  async getPullRequestReviews(owner: string, repo: string, prNumber: number): Promise<Paginated<PullRequestReview>> {
+  async listPullRequestReviews(owner: string, repo: string, prNumber: number): Promise<Paginated<PullRequestReview>> {
     this.authenticate();
     throw new Error('Method not implemented yet.');
   }
 
-  async getRepoCommits(owner: string, repo: string): Promise<Paginated<Commit>> {
+  async listRepoCommits(owner: string, repo: string, sha?: string, options?: ListGetterOptions): Promise<Paginated<Commit>> {
     this.authenticate();
     const params: Bitbucket.Params.RepositoriesListCommits = {
       repo_slug: repo,
       username: owner,
+      page: options?.pagination?.page?.toString(),
+      pagelen: options?.pagination?.perPage,
     };
     const response = <DeepRequired<Bitbucket.Response<BitbucketCommit>>>await this.client.repositories.listCommits(params);
     const items = response.data.values.map((val) => {
@@ -431,7 +438,7 @@ export class BitbucketService implements IVCSService {
   /**
    * List Comments for a Pull Request
    */
-  async getPullRequestComments(
+  async listPullRequestComments(
     owner: string,
     repo: string,
     prNumber: number,
@@ -516,7 +523,7 @@ export class BitbucketService implements IVCSService {
     };
   }
 
-  async getContributors(owner: string, repo: string): Promise<Paginated<Contributor>> {
+  async listContributors(owner: string, repo: string): Promise<Paginated<Contributor>> {
     this.authenticate();
     throw new Error('Method not implemented yet.');
   }
@@ -534,8 +541,10 @@ export class BitbucketService implements IVCSService {
   /**
    * Add additions, deletions and changes of pull request when the getPullRequests() is called with withDiffStat = true
    */
-  async getPullsDiffStat(owner: string, repo: string, prNumber: string) {
-    const diffStatData = (await this.client.pullrequests.getDiffStat({ repo_slug: repo, username: owner, pull_request_id: prNumber })).data;
+  async getPullsDiffStat(owner: string, repo: string, prNumber: number) {
+    const diffStatData = (
+      await this.client.pullrequests.getDiffStat({ repo_slug: repo, username: owner, pull_request_id: prNumber.toString() })
+    ).data;
 
     let linesRemoved = 0,
       linesAdded = 0;

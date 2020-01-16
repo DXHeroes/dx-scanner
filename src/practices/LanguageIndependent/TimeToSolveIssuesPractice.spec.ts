@@ -34,7 +34,7 @@ describe('TimeToSolveIssuesPractice', () => {
   });
 
   it('returns practicing if there are open issues updated or created less than 60 days from now', async () => {
-    mockIssueTrackingInspector.getIssues = async () => {
+    mockIssueTrackingInspector.listIssues = async () => {
       return getIssuesResponse([
         getIssueResponse({
           state: BitbucketPullRequestState.open,
@@ -54,7 +54,7 @@ describe('TimeToSolveIssuesPractice', () => {
   });
 
   it('returns practicing if there are open issues updated or created more than 60 days from now', async () => {
-    mockIssueTrackingInspector.getIssues = async () => {
+    mockIssueTrackingInspector.listIssues = async () => {
       return getIssuesResponse([
         getIssueResponse({
           state: 'new',

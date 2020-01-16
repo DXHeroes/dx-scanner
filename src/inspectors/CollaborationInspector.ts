@@ -12,12 +12,12 @@ export class CollaborationInspector implements ICollaborationInspector {
     this.service = service;
   }
 
-  async getPullRequests(
+  async listPullRequests(
     owner: string,
     repo: string,
     options?: { withDiffStat?: boolean } & ListGetterOptions<{ state?: PullRequestState }>,
   ) {
-    return this.service.getPullRequests(owner, repo, options);
+    return this.service.listPullRequests(owner, repo, options);
   }
 
   async getPullRequest(owner: string, repo: string, prNumber: number, withDiffStat?: boolean) {
@@ -25,22 +25,19 @@ export class CollaborationInspector implements ICollaborationInspector {
   }
 
   //TODO add options
-  async getPullRequestFiles(owner: string, repo: string, prNumber: number) {
-    return this.service.getPullRequestFiles(owner, repo, prNumber);
+  async listPullRequestFiles(owner: string, repo: string, prNumber: number) {
+    return this.service.listPullRequestFiles(owner, repo, prNumber);
   }
 
-  //TODO add options
-  async getPullCommits(owner: string, repo: string, prNumber: number) {
-    return this.service.getPullCommits(owner, repo, prNumber);
+  async listPullCommits(owner: string, repo: string, prNumber: number, options?: ListGetterOptions) {
+    return this.service.listPullCommits(owner, repo, prNumber, options);
   }
 
-  //TODO add options
-  async getRepoCommits(owner: string, repo: string, sha?: string) {
-    return this.service.getRepoCommits(owner, repo, sha);
+  async listRepoCommits(owner: string, repo: string, sha?: string, options?: ListGetterOptions) {
+    return this.service.listRepoCommits(owner, repo, sha, options);
   }
 
-  //TODO add options
-  async getPullsDiffStat(owner: string, repo: string, prNumber: string) {
+  async getPullsDiffStat(owner: string, repo: string, prNumber: number) {
     return this.service.getPullsDiffStat(owner, repo, prNumber);
   }
 }

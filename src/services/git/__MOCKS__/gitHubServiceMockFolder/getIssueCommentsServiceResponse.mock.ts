@@ -4,7 +4,7 @@ export const getIssueCommentsServiceResponse = {
   hasPreviousPage: false,
   items: [
     {
-      authorAssociation: 'NONE',
+      authorAssociation: 'masonzou',
       body: 'test\n',
       createdAt: '2011-06-10T07:30:27Z',
       id: 1340258,
@@ -13,7 +13,7 @@ export const getIssueCommentsServiceResponse = {
       user: { id: '841296', login: 'masonzou', url: 'https://api.github.com/users/masonzou' },
     },
     {
-      authorAssociation: 'NONE',
+      authorAssociation: '198103292005021004',
       body: 'affirmative\n',
       createdAt: '2013-02-18T15:09:23Z',
       id: 13725928,
