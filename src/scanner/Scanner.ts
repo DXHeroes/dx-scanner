@@ -77,11 +77,13 @@ export class Scanner {
     this.d(`Components (${projectComponents.length}):`, inspect(projectComponents));
     const practicesWithContext = await this.detectPractices(projectComponents);
     this.d(`Practices (${practicesWithContext.length}):`, inspect(practicesWithContext));
-    await Promise.all(
-      practicesWithContext
-        .filter((p) => p.evaluation === PracticeEvaluationResult.notPracticing && p.practice.fix)
-        .map((p) => p.practice.fix!(p.practiceContext)),
-    );
+    if (this.argumentsProvider.fix) {
+      await Promise.all(
+        practicesWithContext
+          .filter((p) => p.evaluation === PracticeEvaluationResult.notPracticing && p.practice.fix)
+          .map((p) => p.practice.fix!(p.practiceContext)),
+      );
+    }
     await this.report(practicesWithContext);
     this.d(
       `Overall scan stats. LanguagesAtPaths: ${inspect(languagesAtPaths.length)}; Components: ${inspect(
