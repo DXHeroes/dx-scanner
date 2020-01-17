@@ -36,6 +36,7 @@ class DXScannerCommand extends Command {
       description: 'Run scanner in failure mode. Exits process with code 1 for any non-practicing condition of given level.',
       default: PracticeImpact.high,
     }),
+    fix: flags.boolean({ char: 'f', description: 'Tries to fix problems automatically', default: false }),
   };
 
   static args = [{ name: 'path', default: process.cwd() }];
@@ -58,7 +59,15 @@ class DXScannerCommand extends Command {
 
     cli.action.start(`Scanning URI: ${scanPath}`);
 
-    const container = createRootContainer({ uri: scanPath, auth: authorization, json, fail, recursive: flags.recursive, ci: flags.ci });
+    const container = createRootContainer({
+      uri: scanPath,
+      auth: authorization,
+      json,
+      fail,
+      recursive: flags.recursive,
+      ci: flags.ci,
+      fix: flags.fix,
+    });
     const scanner = container.get(Scanner);
 
     if (flags.init) {
@@ -80,7 +89,15 @@ class DXScannerCommand extends Command {
         );
       }
 
-      const container = createRootContainer({ uri: scanPath, auth: authorization, json, fail, recursive: flags.recursive, ci: flags.ci });
+      const container = createRootContainer({
+        uri: scanPath,
+        auth: authorization,
+        json,
+        fail,
+        recursive: flags.recursive,
+        ci: flags.ci,
+        fix: flags.fix,
+      });
       const scanner = container.get(Scanner);
 
       scanResult = await scanner.scan({ determineRemote: false });
