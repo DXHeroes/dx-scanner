@@ -10,6 +10,7 @@ import { JavaComponentDetector } from '../../detectors/Java/JavaComponentDetecto
 import { LanguageContext } from './LanguageContext';
 import { CollaborationInspector } from '../../inspectors/CollaborationInspector';
 import { IssueTrackingInspector } from '../../inspectors/IssueTrackingInspector';
+import { PythonComponentDetector } from '../../detectors/Python/PythonComponentDetector';
 
 export const bindLanguageContext = (container: Container) => {
   container.bind(Types.LanguageContextFactory).toFactory(
@@ -87,6 +88,10 @@ const bindComponentDetectors = (container: Container) => {
     .bind(Types.IProjectComponentDetector)
     .to(JavaComponentDetector)
     .whenTargetTagged(DETECT_LANGUAGE_TAG, ProgrammingLanguage.Java);
+  container
+    .bind(Types.IProjectComponentDetector)
+    .to(PythonComponentDetector)
+    .whenTargetTagged(DETECT_LANGUAGE_TAG, ProgrammingLanguage.Python);
 
   container.bind(Types.ProjectComponentDetectorFactory).toFactory((ctx) => {
     return getProjectComponentDetectorFactory(ctx.container as Container);
