@@ -30,12 +30,12 @@ describe('JavaPackageInspector Maven', () => {
 
   it('Parses the packages correctly', async () => {
     await inspector.init();
-    const pkg = inspector.findPackage('spring-boot-starter-actuator');
+    const pkg = inspector.findPackage('org.springframework.boot:spring-boot-starter-actuator');
 
     if (!pkg) {
       fail();
     } else {
-      expect(pkg.name).toEqual('spring-boot-starter-actuator');
+      expect(pkg.name).toEqual('org.springframework.boot:spring-boot-starter-actuator');
       expect(pkg.requestedVersion.value).toEqual('2.1.8');
       expect(pkg.requestedVersion.major).toEqual('2');
       expect(pkg.requestedVersion.minor).toEqual('1');
@@ -50,11 +50,11 @@ describe('JavaPackageInspector Maven', () => {
       });
 
       it('Returns true package if it exists', () => {
-        expect(inspector.hasPackage('mysql-connector-java')).toBe(true);
+        expect(inspector.hasPackage('mysql:mysql-connector-java')).toBe(true);
       });
 
       it('Returns undefined if the package does not exist', async () => {
-        const pkg = inspector.findPackage('spring-boot-autoconfigure');
+        const pkg = inspector.findPackage('org.springframework.boot:spring-boot-autoconfigure');
         expect(pkg).toBeUndefined();
       });
     });

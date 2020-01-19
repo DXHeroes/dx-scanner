@@ -41,7 +41,13 @@ export class CIReporter implements IReporter {
 
     const reportString = this.buildReport(practicesAndComponents);
     this.d(reportString);
-    return this.postMessage(reportString);
+    return this.postMessage(reportString).catch((error) => {
+      this.d(error.message);
+      if (error.code === 401 || error.code === 404 || error.code === 403) {
+        return undefined;
+      }
+      throw error;
+    });
   }
 
   buildReport(practicesAndComponents: PracticeWithContextForReporter[]): string {
@@ -67,14 +73,17 @@ export class CIReporter implements IReporter {
     let prComments: PullRequestComment[] = [];
 
     let hasNextPage = true;
+    let page = 1;
     while (hasNextPage) {
-      const res = await client.getPullRequestComments(
+      const res = await client.listPullRequestComments(
         this.config!.repository.owner,
         this.config!.repository.name,
         this.config!.pullRequestId!,
+        { pagination: { page, perPage: 50 } },
       );
       prComments = _.concat(prComments, res.items);
       hasNextPage = res.hasNextPage;
+      page++;
     }
     this.d(prComments);
 

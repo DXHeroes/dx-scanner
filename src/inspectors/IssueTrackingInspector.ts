@@ -15,7 +15,7 @@ export class IssueTrackingInspector implements IIssueTrackingInspector {
   }
 
   async getIssues(owner: string, repo: string): Promise<Paginated<Issue>> {
-    return this.service.getIssues(owner, repo);
+    return this.service.listIssues(owner, repo);
   }
 
   async getIssue(owner: string, repo: string, issueId: number): Promise<Issue> {
@@ -23,6 +23,6 @@ export class IssueTrackingInspector implements IIssueTrackingInspector {
   }
 
   async listIssueComments(owner: string, repo: string, issueId: number): Promise<Paginated<IssueComment>> {
-    return this.service.getIssueComments(owner, repo, issueId);
+    return this.service.listIssueComments(owner, repo, issueId);
   }
 }

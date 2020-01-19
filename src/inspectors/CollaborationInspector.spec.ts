@@ -38,7 +38,7 @@ describe('Collaboration Inspector', () => {
       ],
     });
 
-    const response = await inspector.getPullRequests('octocat', 'Hello-World');
+    const response = await inspector.listPullRequests('octocat', 'Hello-World');
     expect(response).toMatchObject(getPullsServiceResponse);
   });
 
@@ -52,14 +52,14 @@ describe('Collaboration Inspector', () => {
   it('returns pull request files', async () => {
     new GitHubNock('1', 'octocat', 1, 'Hello-World').getRepo('/pulls/1/files').reply(200, getPullsFilesResponse);
 
-    const response = await inspector.getPullRequestFiles('octocat', 'Hello-World', 1);
+    const response = await inspector.listPullRequestFiles('octocat', 'Hello-World', 1);
     expect(response).toMatchObject(getPullsFilesServiceResponse);
   });
 
   it('return pull request commits', async () => {
     new GitHubNock('1', 'octocat', 1, 'Hello-World').getRepo('/pulls/1/commits').reply(200, getPullCommitsResponse);
 
-    const response = await inspector.getPullCommits('octocat', 'Hello-World', 1);
+    const response = await inspector.listPullCommits('octocat', 'Hello-World', 1);
     expect(response).toMatchObject(getPullCommitsServiceResponse);
   });
 
@@ -77,12 +77,22 @@ describe('Collaboration Inspector', () => {
       filter: { state: BitbucketPullRequestState.closed },
     });
 
-    const response = await collaborationInspector.getPullRequests('pypy', 'pypy', {
+    const response = await collaborationInspector.listPullRequests('pypy', 'pypy', {
       pagination: { page: 1, perPage: 5 },
       filter: { state: PullRequestState.closed },
     });
 
     expect(response.items).toHaveLength(1);
     expect(response.items[0].state).toEqual(BitbucketPullRequestState.closed);
+  });
+
+  it('returns pulls diff stat in own interface', async () => {
+    bitbucketNock = new BitbucketNock('pypy', 'pypy');
+    containerCtx.container.rebind(Types.IContentRepositoryBrowser).to(BitbucketService);
+    const collaborationInspector = containerCtx.container.get<CollaborationInspector>(Types.ICollaborationInspector);
+    bitbucketNock.getPRsAdditionsAndDeletions(622);
+
+    const response = await collaborationInspector.getPullsDiffStat('pypy', 'pypy', 622);
+    expect(response).toMatchObject({ additions: 2, deletions: 1, changes: 3 });
   });
 });

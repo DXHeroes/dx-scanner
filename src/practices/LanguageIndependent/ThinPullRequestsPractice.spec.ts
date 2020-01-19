@@ -8,6 +8,7 @@ import { ThinPullRequestsPractice } from './ThinPullRequestsPractice';
 import { getPullRequestsResponse } from '../../services/git/__MOCKS__/bitbucketServiceMockFolder/getPullRequestsResponse';
 import moment from 'moment';
 import { getPullRequestResponse } from '../../services/git/__MOCKS__/bitbucketServiceMockFolder';
+import _ from 'lodash';
 
 describe('ThinPullRequestsPractice', () => {
   let practice: ThinPullRequestsPractice;
@@ -33,7 +34,7 @@ describe('ThinPullRequestsPractice', () => {
   });
 
   it('return practicing if there is not a fat PR no older than 30 days than the newest PR', async () => {
-    mockCollaborationInspector.getPullRequests = async () => {
+    mockCollaborationInspector.listPullRequests = async () => {
       return getPullRequestsResponse();
     };
 
@@ -45,7 +46,7 @@ describe('ThinPullRequestsPractice', () => {
   });
 
   it('return notPracticing if there is a fat PR no older than 7 days than the newest PR', async () => {
-    mockCollaborationInspector.getPullRequests = async () => {
+    mockCollaborationInspector.listPullRequests = async () => {
       return getPullRequestsResponse([
         getPullRequestResponse({
           updatedAt: moment()
@@ -65,6 +66,18 @@ describe('ThinPullRequestsPractice', () => {
       collaborationInspector: mockCollaborationInspector,
     });
     expect(evaluated).toEqual(PracticeEvaluationResult.notPracticing);
+  });
+
+  it('return unknown if there is no PR', async () => {
+    mockCollaborationInspector.listPullRequests = async () => {
+      return getPullRequestsResponse([]);
+    };
+
+    const evaluated = await practice.evaluate({
+      ...containerCtx.practiceContext,
+      collaborationInspector: mockCollaborationInspector,
+    });
+    expect(evaluated).toEqual(PracticeEvaluationResult.unknown);
   });
 
   it('return true as it is always applicable', async () => {

@@ -1,18 +1,18 @@
 /* eslint-disable no-process-env */
-import 'reflect-metadata';
-import { createRootContainer } from './inversify.config';
-import { Scanner, ScanResult } from './scanner/Scanner';
 import { Command, flags } from '@oclif/command';
 import cli from 'cli-ux';
-import { ServiceError, ErrorCode } from './lib/errors';
+import debug from 'debug';
+import 'reflect-metadata';
 import updateNotifier from 'update-notifier';
+import { ServiceType } from './detectors/ScanningStrategyDetector';
 import { ScanningStrategyDetectorUtils } from './detectors/utils/ScanningStrategyDetectorUtils';
+import { createRootContainer } from './inversify.config';
 import { PracticeImpact } from './model';
 import { practices } from './practices';
 import { DxPractice, IPracticeWithMetadata } from './practices/DxPracticeDecorator';
 import { multiInject } from 'inversify';
 import { Types } from './types';
-import debug from 'debug';
+import { Scanner } from './scanner/Scanner';
 
 class DXScannerCommand extends Command {
   // private readonly practices: IPracticeWithMetadata[];
@@ -86,33 +86,28 @@ class DXScannerCommand extends Command {
     const scanner = container.get(Scanner);
 
     if (flags.init) {
-      await scanner.init();
+      await scanner.init(scanPath);
       process.exit(0);
     }
 
-    let scanResult: ScanResult;
-    try {
-      scanResult = await scanner.scan();
-    } catch (error) {
-      if (error instanceof ServiceError && error.code === ErrorCode.AUTHORIZATION_ERROR) {
-        if (ScanningStrategyDetectorUtils.isGitHubPath(scanPath)) {
-          authorization = await cli.prompt('Insert your GitHub personal access token. https://github.com/settings/tokens\n', {
-            type: 'hide',
-          });
-        } else if (ScanningStrategyDetectorUtils.isBitbucketPath(scanPath)) {
-          authorization = await cli.prompt(
-            'Insert your Bitbucket credentials (in format "appPassword" or "username:appPasword"). https://confluence.atlassian.com/bitbucket/app-passwords-828781300.html\n',
-            { type: 'hide' },
-          );
-        }
+    let scanResult = await scanner.scan();
 
-        const container = createRootContainer({ uri: scanPath, auth: authorization, json, fail, recursive: flags.recursive, ci: flags.ci });
-        const scanner = container.get(Scanner);
-
-        scanResult = await scanner.scan();
-      } else {
-        throw error;
+    if (scanResult.needsAuth && !flags.ci) {
+      if (ScanningStrategyDetectorUtils.isGitHubPath(scanPath) || scanResult.serviceType === ServiceType.github) {
+        authorization = await cli.prompt('Insert your GitHub personal access token. https://github.com/settings/tokens\n', {
+          type: 'hide',
+        });
+      } else if (ScanningStrategyDetectorUtils.isBitbucketPath(scanPath) || scanResult.serviceType === ServiceType.bitbucket) {
+        authorization = await cli.prompt(
+          'Insert your Bitbucket credentials (in format "appPassword" or "username:appPasword"). https://confluence.atlassian.com/bitbucket/app-passwords-828781300.html\n',
+          { type: 'hide' },
+        );
       }
+
+      const container = createRootContainer({ uri: scanPath, auth: authorization, json, fail, recursive: flags.recursive, ci: flags.ci });
+      const scanner = container.get(Scanner);
+
+      scanResult = await scanner.scan({ determineRemote: false });
     }
     cli.action.stop();
     notifier.notify({ isGlobal: true });

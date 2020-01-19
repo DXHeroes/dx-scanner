@@ -110,12 +110,12 @@ export class Git implements IProjectFilesBrowserService {
 
   async getContributorCount(): Promise<number> {
     const params = GitServiceUtils.getOwnerAndRepoName(this.repository.url);
-    return this.service.getContributors(params.owner, params.repoName).then((r) => r.totalCount);
+    return this.service.listContributors(params.owner, params.repoName).then((r) => r.totalCount);
   }
 
   async getPullRequestCount(): Promise<number> {
     const params = GitServiceUtils.getOwnerAndRepoName(this.repository.url);
-    return this.service.getPullRequests(params.owner, params.repoName, { filter: { state: PullRequestState.all } }).then((r) => {
+    return this.service.listPullRequests(params.owner, params.repoName, { filter: { state: PullRequestState.all } }).then((r) => {
       if (!r) {
         throw ErrorFactory.newInternalError('Could not get pull requests');
       }

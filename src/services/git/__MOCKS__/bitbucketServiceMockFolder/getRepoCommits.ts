@@ -1,8 +1,8 @@
 import { Paginated } from '../../../../inspectors/common/Paginated';
-
 import { Commit } from '../../model';
-export const getRepoCommits: Paginated<Commit> = {
-  items: [
+
+export const getRepoCommits = (items?: Commit[]): Paginated<Commit> => {
+  const defaultItems: Commit[] = [
     {
       sha: 'f9c2cfcfaafa644dcc286ce2fc8b3386d46c11df',
       url: 'https://bitbucket.org/pypy/pypy/commits/f9c2cfcfaafa644dcc286ce2fc8b3386d46c11df',
@@ -24,10 +24,13 @@ export const getRepoCommits: Paginated<Commit> = {
 
       verified: false,
     },
-  ],
-  totalCount: 1,
-  hasNextPage: false,
-  hasPreviousPage: false,
-  page: 1,
-  perPage: 1,
+  ];
+  return {
+    items: items || defaultItems,
+    totalCount: items?.length || 1,
+    hasNextPage: true,
+    hasPreviousPage: true,
+    page: 1,
+    perPage: items?.length || 1,
+  };
 };

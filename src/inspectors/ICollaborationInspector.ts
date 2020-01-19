@@ -3,16 +3,16 @@ import { PullCommits, PullFiles, PullRequest, Commit, Lines } from '../services/
 import { ListGetterOptions } from './common/ListGetterOptions';
 
 export interface ICollaborationInspector {
-  getPullRequests(
+  listPullRequests(
     owner: string,
     repo: string,
     options?: { withDiffStat?: boolean } & ListGetterOptions<{ state?: PullRequestState }>,
   ): Promise<Paginated<PullRequest>>;
   getPullRequest(owner: string, repo: string, prNumber: number, withDiffStat?: boolean): Promise<PullRequest>;
-  getPullCommits(owner: string, repo: string, prNumber: number): Promise<Paginated<PullCommits>>;
-  getPullRequestFiles(owner: string, repo: string, prNumber: number): Promise<Paginated<PullFiles>>;
-  getRepoCommits(owner: string, repo: string, sha?: string): Promise<Paginated<Commit>>;
-  getPullsDiffStat(owner: string, repo: string, prNumber: string): Promise<Lines>;
+  listPullCommits(owner: string, repo: string, prNumber: number): Promise<Paginated<PullCommits>>;
+  listPullRequestFiles(owner: string, repo: string, prNumber: number): Promise<Paginated<PullFiles>>;
+  listRepoCommits(owner: string, repo: string, sha?: string, options?: ListGetterOptions): Promise<Paginated<Commit>>;
+  getPullsDiffStat(owner: string, repo: string, prNumber: number): Promise<Lines>;
 }
 
 export enum PullRequestState {

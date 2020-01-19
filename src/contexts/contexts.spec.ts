@@ -49,6 +49,14 @@ describe('Contexts (And bindings)', () => {
       const langCtx = createScannerCtx().getLanguageContext(languageAtPathMock);
       expect(langCtx).toBeDefined();
     });
+    it('Throw error', async () => {
+      try {
+        await createScannerCtx().init();
+        fail();
+      } catch (error) {
+        expect(error.message).toEqual('Not implemented');
+      }
+    });
   });
 
   describe('LanguageContext', () => {

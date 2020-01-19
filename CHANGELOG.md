@@ -1,3 +1,133 @@
+## [1.35.1](https://github.com/dxheroes/dx-scanner/compare/v1.35.0...v1.35.1) (2020-01-16)
+
+
+### Bug Fixes
+
+* name of test ([70dd87e](https://github.com/dxheroes/dx-scanner/commit/70dd87e6a25a327db85517960d1e481a43c8b877))
+* pass the no PR right into getPullRequests() ([1122795](https://github.com/dxheroes/dx-scanner/commit/1122795736657271da02c47126765a4df8b0e022))
+* passing number in getPullsDiffStat() instead of string ([785dfe8](https://github.com/dxheroes/dx-scanner/commit/785dfe82a15c98b070d8a4c10cd7d1efe60b5223))
+* remove comments ([b0402b4](https://github.com/dxheroes/dx-scanner/commit/b0402b43732c93d6d90f41881304540102982600))
+* remove non existing file path ([9720107](https://github.com/dxheroes/dx-scanner/commit/9720107fb561305c2d70f54b8c2f0bd4cb25c95b))
+* remove tests for InvalidPractice as it causes CI fail ([98d59e2](https://github.com/dxheroes/dx-scanner/commit/98d59e2d44fbb1da0302783f1c6409221d72d897))
+* remove tests for mocking practices as it causes CI fail ([3facd70](https://github.com/dxheroes/dx-scanner/commit/3facd70f0dc42748ac0a3e27ae9a10e3fd7a4cf7))
+* remove unused code ([1e957ab](https://github.com/dxheroes/dx-scanner/commit/1e957ab4fefc5fc88dfcaf28aad55def9ddedf3a))
+* remove unused method ([8a0b493](https://github.com/dxheroes/dx-scanner/commit/8a0b493c9f8073c6b26b5e24d151ae19850707e4))
+* use ErrorFactory for customized error ([74f9db4](https://github.com/dxheroes/dx-scanner/commit/74f9db46fbb3a9180551cd87e8700347021a2089))
+
+# [1.35.0](https://github.com/dxheroes/dx-scanner/compare/v1.34.0...v1.35.0) (2020-01-15)
+
+
+### Features
+
+* **ghaction:** configuration added ([1a4f0e3](https://github.com/dxheroes/dx-scanner/commit/1a4f0e39a84014b45a2aecb363ac975107fd559b))
+
+# [1.34.0](https://github.com/dxheroes/dx-scanner/compare/v1.33.1...v1.34.0) (2020-01-15)
+
+
+### Bug Fixes
+
+* **dependnecies:** lock versions & recreate lockfile ([236a7d2](https://github.com/dxheroes/dx-scanner/commit/236a7d27efc7945a53e78b6f5d5e7f9810265c7e))
+* --init command with specific file path ([eaacb8b](https://github.com/dxheroes/dx-scanner/commit/eaacb8b244c022f26424fbd82ea6052109eb5960))
+* fixing a test and writeFile ([f19827a](https://github.com/dxheroes/dx-scanner/commit/f19827a5edb97033e13eff36b17aabd3c52539d4))
+* Kotlin recognition fixed & improved detector ([c5aaa4c](https://github.com/dxheroes/dx-scanner/commit/c5aaa4c66349752f0ea21e568925a0dd2dfb29f6))
+* replacing a string templator with query stringify ([b3145c1](https://github.com/dxheroes/dx-scanner/commit/b3145c1c85464b9002d16394d0ee10d7c820907a))
+* streamlined practice business logic & introduced new utils ([b278dae](https://github.com/dxheroes/dx-scanner/commit/b278dae9ba92daec39bb72b83e1d5612bd6a9c71))
+* **java:** improved PackageInspector for Maven to include groupId ([3cb77c6](https://github.com/dxheroes/dx-scanner/commit/3cb77c68133ce797977341e825894fa37e00e4db))
+
+
+### Features
+
+* **java:** Added Major Version Dependency check practice for Java ([258c44e](https://github.com/dxheroes/dx-scanner/commit/258c44e40262d3169a4cd379377d293ead1fccc4))
+* **Kotlin:** added Kotlin recognition to Language Detector ([d62e6a8](https://github.com/dxheroes/dx-scanner/commit/d62e6a81b49dbf87506b9b8bbaed17c87fccf8e2))
+
+## [1.33.1](https://github.com/dxheroes/dx-scanner/compare/v1.33.0...v1.33.1) (2020-01-14)
+
+
+### Bug Fixes
+
+* **practices:** correct commit msg use only X relevant commits ([343619a](https://github.com/dxheroes/dx-scanner/commit/343619a))
+* **practices:** correct commit msg use only X relevant commits ([e8c1d60](https://github.com/dxheroes/dx-scanner/commit/e8c1d60))
+* **practices:** display properly correct commit messages practice detailed data ([8b4e489](https://github.com/dxheroes/dx-scanner/commit/8b4e489))
+
+# [1.33.0](https://github.com/dxheroes/dx-scanner/compare/v1.32.1...v1.33.0) (2020-01-14)
+
+
+### Bug Fixes
+
+* rename vulnerabilities practice ([dad49cf](https://github.com/dxheroes/dx-scanner/commit/dad49cf))
+
+
+### Features
+
+* add audit fallback to npm ([39e8998](https://github.com/dxheroes/dx-scanner/commit/39e8998))
+* add table detail to vulnerabilities practice ([b1fc789](https://github.com/dxheroes/dx-scanner/commit/b1fc789))
+* add yarn audit vulnerabilities report, increase yarn fail level ([cfd79cc](https://github.com/dxheroes/dx-scanner/commit/cfd79cc))
+
+## [1.32.1](https://github.com/dxheroes/dx-scanner/compare/v1.32.0...v1.32.1) (2020-01-13)
+
+
+### Bug Fixes
+
+* **deps:** pin dependencies ([caedb1e](https://github.com/dxheroes/dx-scanner/commit/caedb1e))
+
+# [1.32.0](https://github.com/dxheroes/dx-scanner/compare/v1.31.0...v1.32.0) (2020-01-10)
+
+
+### Bug Fixes
+
+* add url and remove commented code ([c4a8dc6](https://github.com/dxheroes/dx-scanner/commit/c4a8dc6))
+* delete deprecated code ([a24de11](https://github.com/dxheroes/dx-scanner/commit/a24de11))
+* eslint settings ([e66f88b](https://github.com/dxheroes/dx-scanner/commit/e66f88b))
+* fix problems caused by the bitbucketNock refactoring ([8bdb8a9](https://github.com/dxheroes/dx-scanner/commit/8bdb8a9))
+* getting issue id ([dc36f7d](https://github.com/dxheroes/dx-scanner/commit/dc36f7d))
+* name of practice in binding ([5d196f5](https://github.com/dxheroes/dx-scanner/commit/5d196f5))
+* refactor code using moment library ([174e887](https://github.com/dxheroes/dx-scanner/commit/174e887))
+* remove unnecessary code ([bf939e8](https://github.com/dxheroes/dx-scanner/commit/bf939e8))
+* test ([4babc20](https://github.com/dxheroes/dx-scanner/commit/4babc20))
+* typo ([5404cf1](https://github.com/dxheroes/dx-scanner/commit/5404cf1))
+* typo ([1ca2571](https://github.com/dxheroes/dx-scanner/commit/1ca2571))
+* typo ([06b53ce](https://github.com/dxheroes/dx-scanner/commit/06b53ce))
+* typo ([adaab7f](https://github.com/dxheroes/dx-scanner/commit/adaab7f))
+* typos ([3733e6a](https://github.com/dxheroes/dx-scanner/commit/3733e6a))
+* use mocking pull request fn also for issues ([cfea49b](https://github.com/dxheroes/dx-scanner/commit/cfea49b))
+* value of perPage ([b0942af](https://github.com/dxheroes/dx-scanner/commit/b0942af))
+* value of totalCount ([766393f](https://github.com/dxheroes/dx-scanner/commit/766393f))
+
+
+### Features
+
+* implement TimeToSolveIssues practice ([bea4853](https://github.com/dxheroes/dx-scanner/commit/bea4853))
+
+# [1.31.0](https://github.com/dxheroes/dx-scanner/compare/v1.30.0...v1.31.0) (2020-01-10)
+
+
+### Bug Fixes
+
+* 2nd run of unauthenticated scan ([b0ef8fd](https://github.com/dxheroes/dx-scanner/commit/b0ef8fd))
+* don't prompt auth on travis ([60ba483](https://github.com/dxheroes/dx-scanner/commit/60ba483))
+* scanner imports ([a6b3c52](https://github.com/dxheroes/dx-scanner/commit/a6b3c52))
+* scanningDetector tests ([d3cd41b](https://github.com/dxheroes/dx-scanner/commit/d3cd41b))
+
+
+### Features
+
+* add auth check to CIReporter ([47cb520](https://github.com/dxheroes/dx-scanner/commit/47cb520))
+* add local path's repo detect test ([11e22ab](https://github.com/dxheroes/dx-scanner/commit/11e22ab))
+* require auth token when scanning local path's repo ([7d26e3c](https://github.com/dxheroes/dx-scanner/commit/7d26e3c))
+* use ci flag instead of is-travis ([c1ef2ec](https://github.com/dxheroes/dx-scanner/commit/c1ef2ec))
+* use flag for authentication prompt ([8b93653](https://github.com/dxheroes/dx-scanner/commit/8b93653))
+
+# [1.30.0](https://github.com/dxheroes/dx-scanner/compare/v1.29.2...v1.30.0) (2020-01-10)
+
+
+### Features
+
+* add gitignore practice lockfile tests ([1571047](https://github.com/dxheroes/dx-scanner/commit/1571047))
+* change gitignore practices to allow only one lockfile ([1661f47](https://github.com/dxheroes/dx-scanner/commit/1661f47))
+* update lockfile rule to allow only exactly one lockfile ([68f0c21](https://github.com/dxheroes/dx-scanner/commit/68f0c21))
+* **js:** remove lock check from gitignore practice ([996b8e7](https://github.com/dxheroes/dx-scanner/commit/996b8e7))
+* **ts:** remove lock check from gitignore practice ([ddb6506](https://github.com/dxheroes/dx-scanner/commit/ddb6506))
+
 ## [1.29.2](https://github.com/dxheroes/dx-scanner/compare/v1.29.1...v1.29.2) (2020-01-08)
 
 

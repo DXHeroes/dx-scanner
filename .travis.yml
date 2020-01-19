@@ -21,6 +21,20 @@ matrix:
   allow_failures:
     - os: windows
 
+notifications:
+  slack:
+    if: branch = master
+    secure: AKt6cnaKZ8Fox3dIHVPzmQP5ROMG3zI0DzOsb3ShLfp8qJwMVJquqKnUG6j7CZKoK0UI4XkMd7PebLmEmExW7A4MjnWZ5VPy4VzpysQP2oV0JI7qEhSUzzwh1C7J+SH5EmNr7JrZW7H5LEiFpCJ00Of2C7kHmOaok/iBM3Nvz9OCiusT+BwmNSVxrkQjiqSmYKTolZhThYPnKwgNcqfIrpXv55Oei3rCFMRzyNnqUQk2mrdW5iitHWjxYLByThDfaf7iZ3SqdDMnx1OYsvuim0Nkr3HQ4KINiOQ6+6cYfuA6b2qGl7UVM/7lP6WfDU/Owe4yYfWK/xS4Po5WeDEi+z4V/V8FTtEtSnK1gez+NnOClKaui89FMavRqe+BKqDFNeDOoDNGCIs8MhsNLt+tTFCa7JfKIukgiYoHlPT5LfS8HIruTglMF7gsp1KTn0o9nuyaGblGblcCldz1QIo16lFnw+0JZIZR1Odn5nit96fLMoXxH6WUX7TShXgcp+RwbjyTEOWJnKtIRQO8BJ2Hjo9GH+J6u5OQ0+v8KlIgJ3E0IkTJTxMM225gfwJ95sv5rMYQByCw40yKa4+K48BEBFB49vwOOq6vDdsfyaowGIFJ0Hl9h3mQb9bOmq5iXt/5ByCP+XHiAkThuIdQCUQftzVj5WRD5rntrRwM5GUjyIk=
+    on_success: change
+    on_failure: change
+  email:
+    if: branch = master
+    recipients:
+      - prokop@dxheroes.io
+      - adela@dxheroes.io
+    on_success: never
+    on_failure: always
+
 script:
   - yarn build
   - yarn test --coverage
@@ -55,7 +69,7 @@ jobs:
       script:
         - npx semantic-release
   - stage: publish gh action in docker container
-    if: branch = master AND type = push AND tag IS present
+    if: branch = master AND type = push
     node_js: lts/*
     env:
       - CONTAINER_NAME=docker.pkg.github.com/dxheroes/dx-scanner/release

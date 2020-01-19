@@ -70,4 +70,18 @@ describe('JavaScriptLanguageDetector', () => {
     expect(langAtPath[0].language).toEqual(ProgrammingLanguage.JavaScript);
     expect(langAtPath[0].path).toEqual(nodePath.sep);
   });
+
+  it('detects typescript correctly via ts file, also package.json is present', async () => {
+    const structure: DirectoryJSON = {
+      '/package.json': '...',
+      '/index.ts': '...',
+    };
+
+    virtualFileSystemService.setFileSystem(structure);
+
+    const langAtPath = await detector.detectLanguage();
+    expect(langAtPath.length).toEqual(1);
+    expect(langAtPath[0].language).toEqual(ProgrammingLanguage.TypeScript);
+    expect(langAtPath[0].path).toEqual(nodePath.sep);
+  });
 });
