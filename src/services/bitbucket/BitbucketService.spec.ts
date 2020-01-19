@@ -136,7 +136,7 @@ describe('Bitbucket Service', () => {
 
     const response = await service.listIssues('pypy', 'pypy', { filter: { state: IssueState.open } });
     expect(response.items).toHaveLength(1);
-    //expect(response.items[0].id).toEqual(mockIssue.id);
+    expect(response.items[0].id).toEqual(mockIssue.id);
 
     expect(response.hasNextPage).toEqual(true);
     expect(response.hasPreviousPage).toEqual(true);
@@ -145,24 +145,23 @@ describe('Bitbucket Service', () => {
     expect(response.totalCount).toEqual(1);
   });
 
-  it.only('returns all issues in own interface', async () => {
-    // const mockNewIssue = bitbucketIssueResponseFactory({ state: BitbucketIssueState.new });
-    // const mockClosedIssue = bitbucketIssueResponseFactory({ state: BitbucketIssueState.closed });
+  it('returns all issues in own interface', async () => {
+    const mockNewIssue = bitbucketIssueResponseFactory({ state: BitbucketIssueState.new });
+    const mockResolvedIssue = bitbucketIssueResponseFactory({ state: BitbucketIssueState.resolved });
+    const mockClosedIssue = bitbucketIssueResponseFactory({ state: BitbucketIssueState.closed });
 
-    // bitbucketNock.getOwnerId();
-    // bitbucketNock.listIssuesResponse([mockNewIssue, mockClosedIssue], {
-    //   filter: { state: [BitbucketIssueState.new, BitbucketIssueState.closed] },
-    // });
+    bitbucketNock.listIssuesResponse([mockNewIssue, mockResolvedIssue, mockClosedIssue], {
+      filter: { state: [BitbucketIssueState.new, BitbucketIssueState.resolved, BitbucketIssueState.closed] },
+    });
 
     const response = await service.listIssues('pypy', 'pypy', { filter: { state: IssueState.all } });
-    expect(response.items).toHaveLength(1);
-    //expect(response.items[0].id).toEqual(mockIssue.id);
+    expect(response.items).toHaveLength(3);
 
     expect(response.hasNextPage).toEqual(true);
     expect(response.hasPreviousPage).toEqual(true);
     expect(response.page).toEqual(1);
-    expect(response.perPage).toEqual(1);
-    expect(response.totalCount).toEqual(1);
+    expect(response.perPage).toEqual(3);
+    expect(response.totalCount).toEqual(3);
   });
 
   it('returns issue in own interface', async () => {

@@ -7,6 +7,8 @@ import { bitbucketListPRsResponseFactory } from '../factories/responses/bitbucke
 import { bitbucketListPullCommitsResponseFactory } from '../factories/responses/bitbucket/listPullCommitsResponseFactory';
 import { bitbucketListCommitResponseFactory } from '../factories/responses/bitbucket/listRepoCommitsResponseFactory';
 import { BitbucketPullRequestState, BitbucketIssueState } from '../../services/bitbucket/IBitbucketService';
+import _ from 'lodash';
+import qs from 'qs';
 
 export class BitbucketNock {
   user: string;
@@ -30,6 +32,7 @@ export class BitbucketNock {
     if (Object.keys(params)) {
       interceptor.query(params);
     }
+
     return interceptor;
   }
 
@@ -76,8 +79,27 @@ export class BitbucketNock {
   ) {
     const baseUrl = `${this.url}/repositories/${this.user}/${this.repoName}/issues`;
 
+    // put state in quotation marks because of Bitbucket API https://developer.atlassian.com/bitbucket/api/2/reference/meta/filtering#query-issues
+    let quotedState: string | string[] | undefined = `"${options?.filter?.state}"`;
+    if (_.isArray(options?.filter?.state)) {
+      quotedState = options?.filter?.state.map((state) => {
+        return `"${state}"`;
+      });
+    }
+
+    // get q parameter
+    const stringifiedState = qs.stringify(
+      { state: quotedState },
+      {
+        addQueryPrefix: false,
+        encode: false,
+        arrayFormat: 'repeat',
+        delimiter: '+OR+',
+      },
+    );
+
     const queryParams: { q?: string; page?: number; pagelen?: number } = {};
-    if (options?.filter?.state) queryParams.q = `state="${options?.filter?.state}"`;
+    if (options?.filter?.state) queryParams.q = stringifiedState;
     if (options?.pagination?.page) queryParams.page = options?.pagination?.page;
     if (options?.pagination?.perPage) queryParams.pagelen = options?.pagination?.perPage;
 
