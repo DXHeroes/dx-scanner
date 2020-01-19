@@ -259,39 +259,38 @@ export class BitbucketService implements IVCSService {
     options?: { withDiffStat?: boolean } & ListGetterOptions<{ state?: IssueState }>,
   ): Promise<Paginated<Issue>> {
     this.authenticate();
+    const apiUrl = `https://api.bitbucket.org/2.0/repositories/${owner}/${repo}/issues`;
 
-    let params: Bitbucket.Params.IssueTrackerList = {
-      repo_slug: repo,
-      username: owner,
-      page: options?.pagination?.page ? `${options?.pagination?.page}` : undefined,
+    const state = VCSServicesUtils.getIssueState(options?.filter?.state, VCSServiceType.bitbucket);
+    // put state in quotation marks because of Bitbucket API https://developer.atlassian.com/bitbucket/api/2/reference/meta/filtering#query-issues
+    let quotedState: string | string[] = `"${state}"`;
+    if (_.isArray(state)) {
+      quotedState = state.map((state) => {
+        return `"${state}"`;
+      });
+    }
+
+    // get q parameter
+    const stringifiedState = qs.stringify(
+      { state: quotedState },
+      {
+        addQueryPrefix: false,
+        encode: false,
+        arrayFormat: 'repeat',
+        delimiter: '+OR+',
+      },
+    );
+
+    const params = {
+      q: stringifiedState,
+      page: options?.pagination?.page,
       pagelen: options?.pagination?.perPage,
     };
 
-    if (options?.filter?.state) {
-      const state = VCSServicesUtils.getIssueState(options.filter.state, VCSServiceType.bitbucket);
-
-      // put state in quotation marks because of Bitbucket API https://developer.atlassian.com/bitbucket/api/2/reference/meta/filtering#query-issues
-      let quotedState: string | string[] = `"${state}"`;
-      if (_.isArray(state)) {
-        quotedState = state.map((state) => {
-          return `"${state}"`;
-        });
-      }
-
-      const stringifiedState = qs.stringify(
-        { state: quotedState },
-        {
-          addQueryPrefix: false,
-          indices: true,
-          encode: false,
-          arrayFormat: 'repeat',
-          delimiter: '+OR+',
-        },
-      );
-      params = { ...params, q: stringifiedState };
-    }
-
-    const response = <DeepRequired<Bitbucket.Response<Bitbucket.Schema.PaginatedIssues>>>await this.client.issue_tracker.list(params);
+    const response: DeepRequired<Bitbucket.Response<Bitbucket.Schema.PaginatedIssues>> = await axios.get(apiUrl, {
+      params,
+      paramsSerializer: qs.stringify,
+    });
 
     const items = response.data.values.map((val) => ({
       user: {
