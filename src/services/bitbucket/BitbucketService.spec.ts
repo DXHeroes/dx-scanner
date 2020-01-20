@@ -14,7 +14,7 @@ import { bitbucketPullRequestResponseFactory } from '../../test/factories/respon
 import { bitbucketPullCommitsResponseFactory } from '../../test/factories/responses/bitbucket/pullCommitsFactory';
 import { bitbucketRepoCommitsResponseFactory } from '../../test/factories/responses/bitbucket/repoCommitsResponseFactory';
 import { BitbucketNock } from '../../test/helpers/bitbucketNock';
-import { BitbucketPullRequestState, VCSServiceType } from '../git/IVCSService';
+import { BitbucketPullRequestState } from '../git/IVCSService';
 import { VCSServicesUtils } from '../git/VCSServicesUtils';
 import { BitbucketService } from './BitbucketService';
 

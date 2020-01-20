@@ -48,4 +48,9 @@ describe('CIUsedPractice', () => {
     const evaluated = await practice.evaluate({ ...containerCtx.practiceContext, ...{ root: { fileInspector: undefined } } });
     expect(evaluated).toEqual(PracticeEvaluationResult.unknown);
   });
+
+  it('Is always applicable', async () => {
+    const result = await practice.isApplicable();
+    expect(result).toEqual(true);
+  });
 });

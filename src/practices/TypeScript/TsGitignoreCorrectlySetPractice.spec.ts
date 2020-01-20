@@ -1,6 +1,6 @@
 import { TsGitignoreCorrectlySetPractice } from './TsGitignoreCorrectlySetPractice';
 import { gitignoreContent } from '../../detectors/__MOCKS__/JavaScript/gitignoreContent.mock';
-import { PracticeEvaluationResult } from '../../model';
+import { PracticeEvaluationResult, ProgrammingLanguage } from '../../model';
 import { TestContainerContext, createTestContainer } from '../../inversify.config';
 
 const basicGitignore = `
@@ -74,5 +74,17 @@ describe('TsGitignoreCorrectlySetPractice', () => {
 
     const evaluated = await practice.evaluate(containerCtx.practiceContext);
     expect(evaluated).toEqual(PracticeEvaluationResult.notPracticing);
+  });
+
+  it('Is applicable if programming language is TypeScript ', async () => {
+    containerCtx.practiceContext.projectComponent.language = ProgrammingLanguage.TypeScript;
+    const result = await practice.isApplicable(containerCtx.practiceContext);
+    expect(result).toEqual(true);
+  });
+
+  it('Is not applicable if programming language is not TypeScript ', async () => {
+    containerCtx.practiceContext.projectComponent.language = ProgrammingLanguage.UNKNOWN;
+    const result = await practice.isApplicable(containerCtx.practiceContext);
+    expect(result).toEqual(false);
   });
 });

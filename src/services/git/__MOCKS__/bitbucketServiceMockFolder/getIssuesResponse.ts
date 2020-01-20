@@ -1,6 +1,5 @@
-import { Issue } from '../../model';
 import { Paginated } from '../../../../inspectors/common/Paginated';
-import _ from 'lodash';
+import { Issue } from '../../model';
 
 export const getIssuesResponse = (items?: Issue[]): Paginated<Issue> => {
   const defaultItems = [

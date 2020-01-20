@@ -46,6 +46,19 @@ describe('JavaLanguageDetector', () => {
     expect(langAtPath[0].path).toEqual(nodePath.sep);
   });
 
+  it('detects java correctly via java extension', async () => {
+    const structure: DirectoryJSON = {
+      '/*.java': '...',
+    };
+
+    virtualFileSystemService.setFileSystem(structure);
+
+    const langAtPath = await detector.detectLanguage();
+    expect(langAtPath.length).toEqual(1);
+    expect(langAtPath[0].language).toEqual(ProgrammingLanguage.Java);
+    expect(langAtPath[0].path).toEqual(nodePath.sep);
+  });
+
   it("detects it's not a java", async () => {
     const structure: DirectoryJSON = {
       '/src/index.none': '...',

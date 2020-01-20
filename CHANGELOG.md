@@ -1,3 +1,26 @@
+## [1.35.2](https://github.com/dxheroes/dx-scanner/compare/v1.35.1...v1.35.2) (2020-01-20)
+
+
+### Bug Fixes
+
+* **deps:** update all non-major dependencies ([8cf77f4](https://github.com/dxheroes/dx-scanner/commit/8cf77f4299b0c78e7d229758438aead98fcdd5f9))
+
+## [1.35.1](https://github.com/dxheroes/dx-scanner/compare/v1.35.0...v1.35.1) (2020-01-16)
+
+
+### Bug Fixes
+
+* name of test ([70dd87e](https://github.com/dxheroes/dx-scanner/commit/70dd87e6a25a327db85517960d1e481a43c8b877))
+* pass the no PR right into getPullRequests() ([1122795](https://github.com/dxheroes/dx-scanner/commit/1122795736657271da02c47126765a4df8b0e022))
+* passing number in getPullsDiffStat() instead of string ([785dfe8](https://github.com/dxheroes/dx-scanner/commit/785dfe82a15c98b070d8a4c10cd7d1efe60b5223))
+* remove comments ([b0402b4](https://github.com/dxheroes/dx-scanner/commit/b0402b43732c93d6d90f41881304540102982600))
+* remove non existing file path ([9720107](https://github.com/dxheroes/dx-scanner/commit/9720107fb561305c2d70f54b8c2f0bd4cb25c95b))
+* remove tests for InvalidPractice as it causes CI fail ([98d59e2](https://github.com/dxheroes/dx-scanner/commit/98d59e2d44fbb1da0302783f1c6409221d72d897))
+* remove tests for mocking practices as it causes CI fail ([3facd70](https://github.com/dxheroes/dx-scanner/commit/3facd70f0dc42748ac0a3e27ae9a10e3fd7a4cf7))
+* remove unused code ([1e957ab](https://github.com/dxheroes/dx-scanner/commit/1e957ab4fefc5fc88dfcaf28aad55def9ddedf3a))
+* remove unused method ([8a0b493](https://github.com/dxheroes/dx-scanner/commit/8a0b493c9f8073c6b26b5e24d151ae19850707e4))
+* use ErrorFactory for customized error ([74f9db4](https://github.com/dxheroes/dx-scanner/commit/74f9db46fbb3a9180551cd87e8700347021a2089))
+
 # [1.35.0](https://github.com/dxheroes/dx-scanner/compare/v1.34.0...v1.35.0) (2020-01-15)
 
 
