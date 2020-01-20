@@ -363,28 +363,12 @@ export class GitHubService implements IVCSService {
   /**
    * List all issues in the repo.
    */
-  // async getIssues(
-  //   owner: string,
-  //   repo: string,
-  //   options?: { withDiffStat?: boolean } & ListGetterOptions<{ state?: IssueState }>,
-  // ): Promise<Paginated<Issue>> {
-  //   let url = 'GET /repos/:owner/:repo/issues';
-
-  //   const state = VCSServicesUtils.getIssueState(options?.filter?.state, VCSServiceType.github);
-
-  //   url = url.concat(
-  //     `${qs.stringify(
-  //       // eslint-disable-next-line @typescript-eslint/camelcase
-  //       { state: state, page: options?.pagination?.page, per_page: options?.pagination?.perPage },
-  //       { addQueryPrefix: true, indices: false, arrayFormat: 'repeat' },
-  //     )}`,
-  //   );
-
-  //   const response: IssuesListForRepoResponseItem[] = await this.paginate(url, owner, repo);
-  async listIssues(owner: string, repo: string, options?: ListGetterOptions): Promise<Paginated<Issue>> {
+  async listIssues(owner: string, repo: string, options?: ListGetterOptions<{ state?: IssueState }>): Promise<Paginated<Issue>> {
     const params: Octokit.IssuesListForRepoParams = { owner, repo };
+    const state = VCSServicesUtils.getGithubIssueState(options?.filter?.state);
     if (options?.pagination?.page) params.page = options.pagination.page;
     if (options?.pagination?.perPage) params.per_page = options.pagination.perPage;
+    if (state) params.state = state;
 
     const { data } = await this.unwrap(this.client.issues.listForRepo(params));
 
