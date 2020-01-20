@@ -14,7 +14,7 @@
 [![oclif](https://img.shields.io/badge/cli-oclif-brightgreen.svg)](https://oclif.io)
 ![TypeScript](https://img.shields.io/badge/%3C%2F%3E-Typescript-blue)
 
-DX Scanner is an open source CLI tool that allows you to “measure” Developer Experience directly based on your source code. DX Scanner recommends practices that can help you with improving your product development.
+DX Scanner is an open source CLI tool that allows you to "measure" Developer Experience directly based on your source code. DX Scanner recommends practices that can help you with improving your product development.
 
 ![DX Scanner Demo](./demo.svg)
 
