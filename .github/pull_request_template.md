@@ -1,7 +1,4 @@
----
-name: Pull Request
-about: Default template for pull requests
----
+<!--- Tip: You don't have to remove these comments -->
 
 ## Description
 <!--- Describe your changes in detail -->
