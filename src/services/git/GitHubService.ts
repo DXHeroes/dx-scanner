@@ -93,7 +93,7 @@ export class GitHubService implements IVCSService {
           closedAt: val.closed_at,
           mergedAt: val.merged_at,
           state: val.state,
-          id: val.number,
+          id: val.number, // Lists details of a pull request by providing its number. - https://developer.github.com/v3/pulls/
           base: {
             repo: {
               url: val.base.repo.url,
@@ -136,7 +136,7 @@ export class GitHubService implements IVCSService {
       closedAt: response.data.closed_at,
       mergedAt: response.data.merged_at,
       state: response.data.state,
-      id: response.data.number,
+      id: response.data.number, // Lists details of a pull request by providing its number. - https://developer.github.com/v3/pulls/
       base: {
         repo: {
           url: response.data.base.repo.url,
