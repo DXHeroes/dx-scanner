@@ -61,6 +61,9 @@ export class VCSServicesUtils {
   };
 
   static getBitbucketStateQueryParam = (state: BitbucketIssueState | BitbucketIssueState[] | undefined) => {
+    if (!state) {
+      return;
+    }
     // put state in quotation marks because of Bitbucket API https://developer.atlassian.com/bitbucket/api/2/reference/meta/filtering#query-issues
     let quotedState: string | string[] = `"${state}"`;
     if (_.isArray(state)) {
