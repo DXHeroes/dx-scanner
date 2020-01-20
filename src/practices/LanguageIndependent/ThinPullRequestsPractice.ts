@@ -14,7 +14,7 @@ import { Paginated } from '../../inspectors';
   name: 'Break down large pull requests into smaller ones',
   impact: PracticeImpact.medium,
   suggestion:
-    'Large pull request are hard to code review and it reduces the probability of finding bugs. Split your PRs into logical units. Do not have PR with more than 500 changes.',
+    'Large pull request are hard to code review and it reduces the probability of finding bugs. Split your PRs into logical units. Do not have PR with more than 1000 changes.',
   reportOnlyOnce: true,
   url: 'https://medium.com/@hugooodias/the-anatomy-of-a-perfect-pull-request-567382bb6067',
   dependsOn: { practicing: ['LanguageIndependent.DoesPullRequests'] },
