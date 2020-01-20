@@ -32,31 +32,29 @@ export class VCSServicesUtils {
     }
   };
 
-  static getIssueState = (state: IssueState | undefined, service: VCSServiceType) => {
-    if (service === VCSServiceType.github) {
-      switch (state) {
-        case IssueState.open:
-          return GitHubIssueState.open;
-        case IssueState.closed:
-          return GitHubIssueState.closed;
-        case IssueState.all:
-          return GitHubIssueState.all;
-        default:
-          return undefined;
-      }
+  static getGithubIssueState = (state: IssueState | undefined) => {
+    switch (state) {
+      case IssueState.open:
+        return GitHubIssueState.open;
+      case IssueState.closed:
+        return GitHubIssueState.closed;
+      case IssueState.all:
+        return GitHubIssueState.all;
+      default:
+        return undefined;
     }
+  };
 
-    if (service === VCSServiceType.bitbucket) {
-      switch (state) {
-        case IssueState.open:
-          return BitbucketIssueState.new;
-        case IssueState.closed:
-          return BitbucketIssueState.resolved;
-        case IssueState.all:
-          return [BitbucketIssueState.new, BitbucketIssueState.resolved, BitbucketIssueState.closed];
-        default:
-          return undefined;
-      }
+  static getBitbucketIssueState = (state: IssueState | undefined) => {
+    switch (state) {
+      case IssueState.open:
+        return BitbucketIssueState.new;
+      case IssueState.closed:
+        return BitbucketIssueState.resolved;
+      case IssueState.all:
+        return [BitbucketIssueState.new, BitbucketIssueState.resolved, BitbucketIssueState.closed];
+      default:
+        return undefined;
     }
   };
 }
