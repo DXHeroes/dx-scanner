@@ -7,7 +7,7 @@ import { inject, injectable } from 'inversify';
 import { inspect } from 'util';
 import axios from 'axios';
 import qs from 'qs';
-import { IVCSService, VCSServiceType } from '..';
+import { IVCSService } from '..';
 import { ArgumentsProvider } from '../../scanner';
 import { ICache } from '../../scanner/cache/ICache';
 import { Types } from '../../types';
@@ -261,7 +261,7 @@ export class BitbucketService implements IVCSService {
     this.authenticate();
     const apiUrl = `https://api.bitbucket.org/2.0/repositories/${owner}/${repo}/issues`;
 
-    const state = VCSServicesUtils.getIssueState(options?.filter?.state, VCSServiceType.bitbucket);
+    const state = VCSServicesUtils.getBitbucketIssueState(options?.filter?.state);
     // put state in quotation marks because of Bitbucket API https://developer.atlassian.com/bitbucket/api/2/reference/meta/filtering#query-issues
     let quotedState: string | string[] = `"${state}"`;
     if (_.isArray(state)) {
