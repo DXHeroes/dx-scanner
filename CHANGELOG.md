@@ -1,3 +1,10 @@
+## [1.35.2](https://github.com/dxheroes/dx-scanner/compare/v1.35.1...v1.35.2) (2020-01-20)
+
+
+### Bug Fixes
+
+* **deps:** update all non-major dependencies ([8cf77f4](https://github.com/dxheroes/dx-scanner/commit/8cf77f4299b0c78e7d229758438aead98fcdd5f9))
+
 ## [1.35.1](https://github.com/dxheroes/dx-scanner/compare/v1.35.0...v1.35.1) (2020-01-16)
 
 
