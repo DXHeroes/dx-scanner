@@ -1,3 +1,10 @@
+## [1.35.3-debug-semver-release-config2.1](https://github.com/dxheroes/dx-scanner/compare/v1.35.2...v1.35.3-debug-semver-release-config2.1) (2020-01-20)
+
+
+### Bug Fixes
+
+* test ([7e4d664](https://github.com/dxheroes/dx-scanner/commit/7e4d66488c23b074b67b62b872b52bc4b0cfb056))
+
 ## [1.35.2](https://github.com/dxheroes/dx-scanner/compare/v1.35.1...v1.35.2) (2020-01-20)
 
 
