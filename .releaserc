@@ -20,8 +20,8 @@
     "next",
     { "name": "beta", "prerelease": "beta" },
     { "name": "alpha", "prerelease": "alpha" },
-    { "name": "feature/*", "prerelease": "${name.replace(/^feature|^feat\//g, 'feature')}" },
-    { "name": "hotfix/*", "prerelease": "${name.replace(/^hotfix|^fix\//g, 'hotfix')}" },
-    { "name": "debug/*", "prerelease": "${name.replace(/^debug\//g, '')}" }
+    { "name": "feature/*", "prerelease": '${name.replace(/\//, "-")}' },
+    { "name": "hotfix/*", "prerelease": '${name.replace(/\//, "-")}' },
+    { "name": "debug/*", "prerelease": '${name.replace(/\//, "-")}' }
   ]
 }
