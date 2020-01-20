@@ -4,6 +4,8 @@ import { GitHubIssueState } from './IGitHubService';
 import { IssueState } from '../../inspectors';
 import { BitbucketIssueState, BitbucketPullRequestState } from '../bitbucket/IBitbucketService';
 import { GitHubPullRequestState } from './IGitHubService';
+import qs from 'qs';
+import _ from 'lodash';
 
 export class VCSServicesUtils {
   static getGithubPRState = (state: PullRequestState | undefined) => {
@@ -56,5 +58,26 @@ export class VCSServicesUtils {
       default:
         return undefined;
     }
+  };
+
+  static getBitbucketStateQueryParam = (state: BitbucketIssueState | BitbucketIssueState[] | undefined) => {
+    // put state in quotation marks because of Bitbucket API https://developer.atlassian.com/bitbucket/api/2/reference/meta/filtering#query-issues
+    let quotedState: string | string[] = `"${state}"`;
+    if (_.isArray(state)) {
+      quotedState = state.map((state) => {
+        return `"${state}"`;
+      });
+    }
+
+    // get q parameter
+    return qs.stringify(
+      { state: quotedState },
+      {
+        addQueryPrefix: false,
+        encode: false,
+        arrayFormat: 'repeat',
+        delimiter: '+OR+',
+      },
+    );
   };
 }

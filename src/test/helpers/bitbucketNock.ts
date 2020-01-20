@@ -9,6 +9,7 @@ import { bitbucketListCommitResponseFactory } from '../factories/responses/bitbu
 import { BitbucketPullRequestState, BitbucketIssueState } from '../../services/bitbucket/IBitbucketService';
 import _ from 'lodash';
 import qs from 'qs';
+import { VCSServicesUtils } from '../../services/git/VCSServicesUtils';
 
 export class BitbucketNock {
   user: string;
@@ -79,24 +80,8 @@ export class BitbucketNock {
   ) {
     const baseUrl = `${this.url}/repositories/${this.user}/${this.repoName}/issues`;
 
-    // put state in quotation marks because of Bitbucket API https://developer.atlassian.com/bitbucket/api/2/reference/meta/filtering#query-issues
-    let quotedState: string | string[] | undefined = `"${options?.filter?.state}"`;
-    if (_.isArray(options?.filter?.state)) {
-      quotedState = options?.filter?.state.map((state) => {
-        return `"${state}"`;
-      });
-    }
-
-    // get q parameter
-    const stringifiedState = qs.stringify(
-      { state: quotedState },
-      {
-        addQueryPrefix: false,
-        encode: false,
-        arrayFormat: 'repeat',
-        delimiter: '+OR+',
-      },
-    );
+    // get state for q parameter
+    const stringifiedState = VCSServicesUtils.getBitbucketStateQueryParam(options?.filter?.state);
 
     const queryParams: { q?: string; page?: number; pagelen?: number } = {};
     if (options?.filter?.state) queryParams.q = stringifiedState;

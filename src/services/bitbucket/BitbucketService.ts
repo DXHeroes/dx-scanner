@@ -262,24 +262,8 @@ export class BitbucketService implements IVCSService {
     const apiUrl = `https://api.bitbucket.org/2.0/repositories/${owner}/${repo}/issues`;
 
     const state = VCSServicesUtils.getBitbucketIssueState(options?.filter?.state);
-    // put state in quotation marks because of Bitbucket API https://developer.atlassian.com/bitbucket/api/2/reference/meta/filtering#query-issues
-    let quotedState: string | string[] = `"${state}"`;
-    if (_.isArray(state)) {
-      quotedState = state.map((state) => {
-        return `"${state}"`;
-      });
-    }
-
-    // get q parameter
-    const stringifiedState = qs.stringify(
-      { state: quotedState },
-      {
-        addQueryPrefix: false,
-        encode: false,
-        arrayFormat: 'repeat',
-        delimiter: '+OR+',
-      },
-    );
+    // get state for q parameter
+    const stringifiedState = VCSServicesUtils.getBitbucketStateQueryParam(state);
 
     const params = {
       q: stringifiedState,
