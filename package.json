@@ -105,16 +105,17 @@
   },
   "main": "lib/index.js",
   "bin": {
-    "dx-scanner": "./bin/run",
-    "dxscanner": "./bin/run",
-    "dxs": "./bin/run"
+    "dx-scanner": "./bin/run dx-scanner.ts",
+    "dxscanner": "./bin/run dx-scanner.ts",
+    "dxs": "./bin/run dx-scanner.ts"
   },
   "files": [
     "/bin",
     "/lib"
   ],
   "oclif": {
-    "bin": "dx-scanner"
+    "bin": "dx-scanner",
+    "commands": "./src/commands"
   },
   "keywords": [
     "oclif",
