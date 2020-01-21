@@ -4,7 +4,7 @@ import { Scanner } from '../scanner';
 import { PracticeImpact } from '../model';
 
 export default class Practices extends Command {
-  static description = 'List all practices id with name and impact';
+  static description = 'List all practices id with name and impact.';
 
   static examples = [`$ dx-scanner practices`];
 
