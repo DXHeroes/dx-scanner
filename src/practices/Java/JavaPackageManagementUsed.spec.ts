@@ -1,6 +1,8 @@
 import { JavaPackageManagementUsedPractice } from './JavaPackageManagementUsed';
 import { PracticeEvaluationResult } from '../../model';
 import { TestContainerContext, createTestContainer } from '../../inversify.config';
+import { pomXMLContents } from '../../detectors/__MOCKS__/Java/pomXMLContents.mock';
+import { buildGRADLEContents } from '../../detectors/__MOCKS__/Java/buildGRADLEContents.mock';
 
 describe('JavaPackageManagementUsedPractice', () => {
   let practice: JavaPackageManagementUsedPractice;
@@ -18,11 +20,22 @@ describe('JavaPackageManagementUsedPractice', () => {
   });
 
   it('Returns practicing if there is a pom.xml', async () => {
+    containerCtx.virtualFileSystemService.setFileSystem({
+      'pom.xml': pomXMLContents,
+    });
     const evaluated = await practice.evaluate(containerCtx.practiceContext);
     expect(evaluated).toEqual(PracticeEvaluationResult.practicing);
   });
 
-  it('Returns notPracticing if there is NO pom.xml', async () => {
+  it('Returns practicing if there is a build.gradle', async () => {
+    containerCtx.virtualFileSystemService.setFileSystem({
+      'build.gradle': buildGRADLEContents,
+    });
+    const evaluated = await practice.evaluate(containerCtx.practiceContext);
+    expect(evaluated).toEqual(PracticeEvaluationResult.practicing);
+  });
+
+  it('Returns notPracticing if there is NO pom.xml or build.gradle', async () => {
     containerCtx.virtualFileSystemService.setFileSystem({
       'not.exists': '...',
     });

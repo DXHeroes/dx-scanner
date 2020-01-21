@@ -17,23 +17,23 @@ export class JavaPackageManagementUsedPractice implements IPractice {
   }
 
   async evaluate(ctx: PracticeContext): Promise<PracticeEvaluationResult> {
-    if (ctx.fileInspector === undefined) {
+    if (!ctx.fileInspector) {
       return PracticeEvaluationResult.unknown;
     }
+    // for some reason the commented logic does not seem to regex correctly - debugger used
+    // const regex = new RegExp('/.(xml|gradle)$', 'i');
+    // const files = await ctx.fileInspector.scanFor(regex, '/', { shallow: true });
+    // files.forEach((file) => {
+    //   if (file.name.toLowerCase() === ('pom.xml' || 'build.gradle')) {
+    //     return PracticeEvaluationResult.practicing;
+    //   }
+    // });
 
-    const regex = new RegExp('*.(xml|gradle)$', 'i');
-
-    console.log(regex);
-
-    const files = await ctx.fileInspector.scanFor(regex, '/', { shallow: true });
-
-    console.log(files);
-
-    files.forEach((file) => {
-      if (file.name.toLowerCase() === ('pom.xml' || 'build.gradle')) {
-        return PracticeEvaluationResult.practicing;
-      }
-    });
+    if (await ctx.fileInspector.exists('pom.xml')) {
+      return PracticeEvaluationResult.practicing;
+    } else if (await ctx.fileInspector.exists('build.gradle')) {
+      return PracticeEvaluationResult.practicing;
+    }
 
     return PracticeEvaluationResult.notPracticing;
   }
