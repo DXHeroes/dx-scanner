@@ -326,6 +326,10 @@ export class Scanner {
       throw ErrorFactory.newInternalError(`Error during configuration file initialization: ${err.message}`);
     }
   }
+
+  async getPractices(): Promise<IPracticeWithMetadata[]> {
+    return this.practices;
+  }
 }
 
 interface ProjectComponentAndLangContext {
