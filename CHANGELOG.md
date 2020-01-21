@@ -1,3 +1,14 @@
+## [1.35.3](https://github.com/dxheroes/dx-scanner/compare/v1.35.2...v1.35.3) (2020-01-21)
+
+
+### Bug Fixes
+
+* change id to number ([5fccdf9](https://github.com/dxheroes/dx-scanner/commit/5fccdf9deab6f5816f6fc26535a2d1115b55337a))
+* increase default allowed number of changes ([c3e4ef4](https://github.com/dxheroes/dx-scanner/commit/c3e4ef45b0247c97fccb67db30635e0562fb248e))
+* save the right value to the id (prNumber) ([3533026](https://github.com/dxheroes/dx-scanner/commit/35330268664d395c50d3af57e6c44d1d21bc8167))
+* suggestion text ([8ad09e0](https://github.com/dxheroes/dx-scanner/commit/8ad09e03f289582a96eea8a38ef5c4e4cba3aed7))
+* tests according to change id value ([739354f](https://github.com/dxheroes/dx-scanner/commit/739354ffe4988ddcafdd8c680ac164f71046ae31))
+
 ## [1.35.2](https://github.com/dxheroes/dx-scanner/compare/v1.35.1...v1.35.2) (2020-01-20)
 
 
