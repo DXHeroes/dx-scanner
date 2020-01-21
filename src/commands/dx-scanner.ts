@@ -11,18 +11,6 @@ import { ScanningStrategyDetectorUtils } from '../detectors/utils/ScanningStrate
 import { ServiceType } from '../detectors';
 
 class DXScannerCommand extends Command {
-  // private readonly practices: IPracticeWithMetadata[];
-  // constructor(
-  //   argv: any,
-  //   config: any,
-  //   // inject all practices registered under Types.Practice in inversify config
-  //   @multiInject(Types.Practice) practices: IPracticeWithMetadata[],
-  // ) {
-  //   super(() => {
-  //     return this.argv;
-  //   });
-  //   this.practices = practices;
-  // }
   static description = 'Scan your project for possible DX recommendations.';
   static usage = ['[PATH] [OPTIONS]'];
 
@@ -56,7 +44,7 @@ class DXScannerCommand extends Command {
 
   static args = [{ name: 'path', default: process.cwd() }];
 
-  static aliases = ['dxs', 'dxscanner'];
+  static aliases = ['dxs', 'dxscanner', 'run'];
   static examples = ['dx-scanner', 'dx-scanner ./ --fail=high', 'dx-scanner github.com/DXHeroes/dx-scanner'];
 
   async run() {
@@ -64,10 +52,6 @@ class DXScannerCommand extends Command {
     debug('cli args')(args);
     debug('cli flags')(flags);
     const scanPath = args.path;
-    // if (flags.practices) {
-    // scanner.listPractices()
-    //   process.exit(0);
-    // }
 
     let authorization = flags.authorization ? flags.authorization : this.loadAuthTokenFromEnvs();
     const json = flags.json;
@@ -78,7 +62,14 @@ class DXScannerCommand extends Command {
 
     cli.action.start(`Scanning URI: ${scanPath}`);
 
-    const container = createRootContainer({ uri: scanPath, auth: authorization, json, fail, recursive: flags.recursive, ci: flags.ci });
+    const container = createRootContainer({
+      uri: scanPath,
+      auth: authorization,
+      json,
+      fail,
+      recursive: flags.recursive,
+      ci: flags.ci,
+    });
     const scanner = container.get(Scanner);
 
     if (flags.init) {
