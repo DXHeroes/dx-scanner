@@ -25,7 +25,7 @@ export const getPullsServiceResponse: Paginated<PullRequest> = {
       mergedAt: '2011-01-26T19:01:12Z',
       state: 'open',
       updatedAt: '2011-01-26T19:01:12Z',
-      url: 'https://api.github.com/repos/octocat/Hello-World/pulls/1347',
+      url: 'https://api.github.com/repos/octocat/Hello-World/pulls/1',
       user: { id: '1', login: 'octocat', url: 'https://api.github.com/users/octocat' },
     },
   ],
