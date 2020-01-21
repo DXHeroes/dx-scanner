@@ -24,6 +24,7 @@ export class CollaborationInspector implements ICollaborationInspector {
     return this.service.getPullRequest(owner, repo, prNumber, withDiffStat);
   }
 
+  //TODO add options
   async listPullRequestFiles(owner: string, repo: string, prNumber: number) {
     return this.service.listPullRequestFiles(owner, repo, prNumber);
   }

@@ -7,12 +7,12 @@ import { inject, injectable } from 'inversify';
 import { inspect } from 'util';
 import axios from 'axios';
 import qs from 'qs';
-import { IVCSService, VCSServiceType, BitbucketPullRequestState } from '..';
+import { IVCSService } from '..';
 import { ArgumentsProvider } from '../../scanner';
 import { ICache } from '../../scanner/cache/ICache';
 import { Types } from '../../types';
 import { ListGetterOptions, PullRequestState, Paginated } from '../../inspectors';
-import { BitbucketIssueState } from '../../inspectors/IIssueTrackingInspector';
+import { IssueState } from '../../inspectors/IIssueTrackingInspector';
 import {
   PullRequest,
   PullFiles,
@@ -32,6 +32,8 @@ import {
 import { VCSServicesUtils } from '../git/VCSServicesUtils';
 import { DeepRequired } from '../../lib/deepRequired';
 import { InMemoryCache } from '../../scanner/cache';
+import { BitbucketPullRequestState, BitbucketIssueState } from './IBitbucketService';
+import _ from 'lodash';
 
 const debug = Debug('cli:services:git:bitbucket-service');
 
@@ -251,14 +253,28 @@ export class BitbucketService implements IVCSService {
     return { items, ...pagination };
   }
 
-  async listIssues(owner: string, repo: string): Promise<Paginated<Issue>> {
+  async listIssues(
+    owner: string,
+    repo: string,
+    options?: { withDiffStat?: boolean } & ListGetterOptions<{ state?: IssueState }>,
+  ): Promise<Paginated<Issue>> {
     this.authenticate();
+    const apiUrl = `https://api.bitbucket.org/2.0/repositories/${owner}/${repo}/issues`;
 
-    const params: Bitbucket.Params.IssueTrackerList = {
-      repo_slug: repo,
-      username: owner,
+    const state = VCSServicesUtils.getBitbucketIssueState(options?.filter?.state);
+    // get state for q parameter
+    const stringifiedState = VCSServicesUtils.getBitbucketStateQueryParam(state);
+
+    const params = {
+      q: stringifiedState,
+      page: options?.pagination?.page,
+      pagelen: options?.pagination?.perPage,
     };
-    const response = <DeepRequired<Bitbucket.Response<Bitbucket.Schema.PaginatedIssues>>>await this.client.issue_tracker.list(params);
+
+    const response: DeepRequired<Bitbucket.Response<Bitbucket.Schema.PaginatedIssues>> = await axios.get(apiUrl, {
+      params,
+      paramsSerializer: qs.stringify,
+    });
 
     const items = response.data.values.map((val) => ({
       user: {

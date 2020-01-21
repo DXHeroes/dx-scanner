@@ -3,11 +3,12 @@ import nock from 'nock';
 import { CollaborationInspector } from '../../inspectors';
 import { createTestContainer, TestContainerContext } from '../../inversify.config';
 import { PracticeEvaluationResult } from '../../model';
-import { BitbucketPullRequestState, BitbucketService } from '../../services';
+import { BitbucketService } from '../../services';
 import { getPullRequestResponse } from '../../services/git/__MOCKS__/bitbucketServiceMockFolder';
 import { getPullRequestsResponse } from '../../services/git/__MOCKS__/bitbucketServiceMockFolder/getPullRequestsResponse';
 import { Types } from '../../types';
 import { TimeToSolvePullRequestsPractice } from './TimeToSolvePullRequestsPractice';
+import { BitbucketPullRequestState } from '../../services/bitbucket/IBitbucketService';
 
 describe('TimeToSolvePullRequestsPractice', () => {
   let practice: TimeToSolvePullRequestsPractice;

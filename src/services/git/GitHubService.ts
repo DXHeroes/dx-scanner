@@ -31,6 +31,7 @@ import {
 } from './model';
 import { VCSServicesUtils } from './VCSServicesUtils';
 import { ArgumentsProvider } from '../../scanner';
+import { IssueState } from '../../inspectors/IIssueTrackingInspector';
 const debug = Debug('cli:services:git:github-service');
 
 @injectable()
@@ -362,10 +363,12 @@ export class GitHubService implements IVCSService {
   /**
    * List all issues in the repo.
    */
-  async listIssues(owner: string, repo: string, options?: ListGetterOptions): Promise<Paginated<Issue>> {
+  async listIssues(owner: string, repo: string, options?: ListGetterOptions<{ state?: IssueState }>): Promise<Paginated<Issue>> {
     const params: Octokit.IssuesListForRepoParams = { owner, repo };
+    const state = VCSServicesUtils.getGithubIssueState(options?.filter?.state);
     if (options?.pagination?.page) params.page = options.pagination.page;
     if (options?.pagination?.perPage) params.per_page = options.pagination.perPage;
+    if (state) params.state = state;
 
     const { data } = await this.unwrap(this.client.issues.listForRepo(params));
 
