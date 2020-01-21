@@ -67,7 +67,9 @@ jobs:
       email: dev@dxheroes.io
       skip_cleanup: true
       script:
-        - npx semantic-release
+        - npx semantic-release --debug
+      on:
+        all_branches: true
   - stage: publish gh action in docker container
     if: branch = master AND type = push
     node_js: lts/*

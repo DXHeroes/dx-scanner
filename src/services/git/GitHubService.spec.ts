@@ -53,7 +53,7 @@ describe('GitHub Service', () => {
       new GitHubNock('1', 'octocat', 1296269, 'Hello-World').getPulls({
         pulls: [
           {
-            number: 1347,
+            number: 1,
             state: 'open',
             title: 'new-feature',
             body: 'Please pull these awesome changes',
@@ -69,7 +69,7 @@ describe('GitHub Service', () => {
 
     it('returns pulls in own interface with diffStat', async () => {
       const params = {
-        number: 1347,
+        number: 1,
         state: 'open',
         title: 'new-feature',
         body: 'Please pull these awesome changes',
@@ -108,7 +108,7 @@ describe('GitHub Service', () => {
       new GitHubNock('1', 'octocat', 1296269, 'Hello-World').getPulls({
         pulls: [
           {
-            number: 1347,
+            number: 1,
             state: 'open',
             title: 'new-feature',
             body: 'Please pull these awesome changes',
