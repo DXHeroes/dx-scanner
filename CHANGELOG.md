@@ -1,3 +1,25 @@
+# [1.36.0](https://github.com/dxheroes/dx-scanner/compare/v1.35.3...v1.36.0) (2020-01-21)
+
+
+### Bug Fixes
+
+* add filtering and pagination in getIssues() ([e4b1cf5](https://github.com/dxheroes/dx-scanner/commit/e4b1cf57b11cd53bf674d68dd2cda09fe8bf7508))
+* add state to params and delete commented code ([f9e1877](https://github.com/dxheroes/dx-scanner/commit/f9e1877e68ce3d8da9e9dd6bf045ef67ec3987c8))
+* allow user to pass more than one issue state ([5c06622](https://github.com/dxheroes/dx-scanner/commit/5c0662288ae543be40bb394e8258888671d574e5))
+* failing ESLintWithoutErrosPractie by gettting right path ([088fe62](https://github.com/dxheroes/dx-scanner/commit/088fe622505ad58cc0740d165f82414ce998bc4b))
+* import from right files ([295f196](https://github.com/dxheroes/dx-scanner/commit/295f19620892afda40d871e9978047c9b7b79c84))
+* return undefined if state is not defined ([dd321de](https://github.com/dxheroes/dx-scanner/commit/dd321de5fd0ff0246dcafde858fa34e2d8eb96bf))
+* split getIssueState to two methods according to used service ([fa61acc](https://github.com/dxheroes/dx-scanner/commit/fa61acc3da6c1d38e2a2fc40ff1bf360aef735d8))
+* use BitbucketIssueState instead of BitbucketPullRequestState; use q as queryParams according to Bitbucket API filtering ([d2a413f](https://github.com/dxheroes/dx-scanner/commit/d2a413f98a33e71e516f627cba542435326eea2f))
+* use new method for getting state ([a08d0e0](https://github.com/dxheroes/dx-scanner/commit/a08d0e0af64570c1c6d3ac19b42d265a9d453b4d))
+* wip get issue state without quotes, fix passing array of states ([165bb8c](https://github.com/dxheroes/dx-scanner/commit/165bb8cba9976d881da8c7779dcf94e36d4168dd))
+
+
+### Features
+
+* add BitbucketIssueState enum ([f46cfc1](https://github.com/dxheroes/dx-scanner/commit/f46cfc17cd5a246f2c28fee323353f861e171fbe))
+* implement getIssueState() ([98a677b](https://github.com/dxheroes/dx-scanner/commit/98a677b414c8a774e7a4dd039bdbc2839777b539))
+
 ## [1.35.3](https://github.com/dxheroes/dx-scanner/compare/v1.35.2...v1.35.3) (2020-01-21)
 
 
