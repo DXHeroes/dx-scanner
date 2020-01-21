@@ -105,9 +105,9 @@
   },
   "main": "lib/index.js",
   "bin": {
-    "dx-scanner": "./bin/run dx-scanner.ts",
-    "dxscanner": "./bin/run dx-scanner.ts",
-    "dxs": "./bin/run dx-scanner.ts"
+    "dx-scanner": "./bin/run",
+    "dxscanner": "./bin/run",
+    "dxs": "./bin/run"
   },
   "files": [
     "/bin",
