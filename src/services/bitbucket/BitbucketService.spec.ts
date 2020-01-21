@@ -1,5 +1,5 @@
 import nock from 'nock';
-import { PullRequestState } from '../../inspectors';
+import { PullRequestState, IssueState } from '../../inspectors';
 import {
   getIssueResponse,
   getPullCommitsResponse,
@@ -14,9 +14,9 @@ import { bitbucketPullRequestResponseFactory } from '../../test/factories/respon
 import { bitbucketPullCommitsResponseFactory } from '../../test/factories/responses/bitbucket/pullCommitsFactory';
 import { bitbucketRepoCommitsResponseFactory } from '../../test/factories/responses/bitbucket/repoCommitsResponseFactory';
 import { BitbucketNock } from '../../test/helpers/bitbucketNock';
-import { BitbucketPullRequestState } from '../git/IVCSService';
 import { VCSServicesUtils } from '../git/VCSServicesUtils';
 import { BitbucketService } from './BitbucketService';
+import { BitbucketIssueState, BitbucketPullRequestState } from './IBitbucketService';
 
 describe('Bitbucket Service', () => {
   let service: BitbucketService;
@@ -129,12 +129,12 @@ describe('Bitbucket Service', () => {
     expect(response).toMatchObject(getPullCommitsResponse());
   });
 
-  it('returns issues in own interface', async () => {
-    const mockIssue = bitbucketIssueResponseFactory({ state: 'new' });
+  it('returns open issues in own interface', async () => {
+    const mockIssue = bitbucketIssueResponseFactory({ state: BitbucketIssueState.new });
     bitbucketNock.getOwnerId();
-    bitbucketNock.listIssuesResponse([mockIssue]);
+    bitbucketNock.listIssuesResponse([mockIssue], { filter: { state: BitbucketIssueState.new } });
 
-    const response = await service.listIssues('pypy', 'pypy');
+    const response = await service.listIssues('pypy', 'pypy', { filter: { state: IssueState.open } });
     expect(response.items).toHaveLength(1);
     expect(response.items[0].id).toEqual(mockIssue.id);
 
@@ -145,8 +145,27 @@ describe('Bitbucket Service', () => {
     expect(response.totalCount).toEqual(1);
   });
 
+  it('returns all issues in own interface', async () => {
+    const mockNewIssue = bitbucketIssueResponseFactory({ state: BitbucketIssueState.new });
+    const mockResolvedIssue = bitbucketIssueResponseFactory({ state: BitbucketIssueState.resolved });
+    const mockClosedIssue = bitbucketIssueResponseFactory({ state: BitbucketIssueState.closed });
+
+    bitbucketNock.listIssuesResponse([mockNewIssue, mockResolvedIssue, mockClosedIssue], {
+      filter: { state: [BitbucketIssueState.new, BitbucketIssueState.resolved, BitbucketIssueState.closed] },
+    });
+
+    const response = await service.listIssues('pypy', 'pypy', { filter: { state: IssueState.all } });
+    expect(response.items).toHaveLength(3);
+
+    expect(response.hasNextPage).toEqual(true);
+    expect(response.hasPreviousPage).toEqual(true);
+    expect(response.page).toEqual(1);
+    expect(response.perPage).toEqual(3);
+    expect(response.totalCount).toEqual(3);
+  });
+
   it('returns issue in own interface', async () => {
-    const mockIssue = bitbucketIssueResponseFactory({ state: 'new' });
+    const mockIssue = bitbucketIssueResponseFactory({ state: BitbucketIssueState.new });
     bitbucketNock.getIssueResponse(mockIssue);
 
     const response = await service.getIssue('pypy', 'pypy', 3086);

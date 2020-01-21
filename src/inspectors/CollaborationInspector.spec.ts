@@ -12,10 +12,11 @@ import {
   getPullCommitsServiceResponse,
 } from '../services/git/__MOCKS__/gitHubServiceMockFolder';
 import { Types } from '../types';
-import { BitbucketService, BitbucketPullRequestState } from '../services';
+import { BitbucketService } from '../services';
 import { BitbucketNock } from '../test/helpers/bitbucketNock';
 import { PullRequestState } from '.';
 import { bitbucketPullRequestResponseFactory } from '../test/factories/responses/bitbucket/prResponseFactory';
+import { BitbucketPullRequestState } from '../services/bitbucket/IBitbucketService';
 
 describe('Collaboration Inspector', () => {
   let inspector: CollaborationInspector;
