@@ -1,5 +1,5 @@
 import { IPractice } from '../IPractice';
-import { PracticeEvaluationResult, PracticeImpact } from '../../model';
+import { PracticeEvaluationResult, PracticeImpact, ProgrammingLanguage } from '../../model';
 import { DxPractice } from '../DxPracticeDecorator';
 import { PracticeContext } from '../../contexts/practice/PracticeContext';
 
@@ -12,8 +12,8 @@ import { PracticeContext } from '../../contexts/practice/PracticeContext';
   url: 'https://maven.apache.org/',
 })
 export class JavaPackageManagementUsedPractice implements IPractice {
-  async isApplicable(): Promise<boolean> {
-    return true;
+  async isApplicable(ctx: PracticeContext): Promise<boolean> {
+    return ctx.projectComponent.language === ProgrammingLanguage.Java;
   }
 
   async evaluate(ctx: PracticeContext): Promise<PracticeEvaluationResult> {
