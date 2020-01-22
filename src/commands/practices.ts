@@ -13,19 +13,19 @@ export default class Practices extends Command {
     json: flags.boolean({ char: 'j', description: 'Print practices in JSON' }),
   };
 
-  static args = [{ name: 'path', default: process.cwd() }];
-
   async run() {
-    const { args, flags } = this.parse(Practices);
+    const { flags } = this.parse(Practices);
 
-    const scanPath = args.path;
+    const scanPath = process.cwd();
     const json = flags.json;
 
     const container = createRootContainer({
       uri: scanPath,
-      auth: undefined,
       json,
+      auth: undefined,
       ci: false,
+      recursive: false,
+      fail: 'all',
     });
     const scanner = container.get(Scanner);
 
