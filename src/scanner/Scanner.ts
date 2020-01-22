@@ -327,7 +327,7 @@ export class Scanner {
     }
   }
 
-  async getPractices(): Promise<IPracticeWithMetadata[]> {
+  async listPractices(): Promise<IPracticeWithMetadata[]> {
     return this.practices;
   }
 }

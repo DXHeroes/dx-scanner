@@ -29,7 +29,7 @@ export default class Practices extends Command {
     });
     const scanner = container.get(Scanner);
 
-    const practices = await scanner.getPractices();
+    const practices = await scanner.listPractices();
     const practicesToReport: PracticeToReport[] = [];
     practices.forEach((practice) => {
       const practiceId: string = practice.getMetadata().id;
