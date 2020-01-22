@@ -12,6 +12,7 @@ export default class Init extends Command {
   };
 
   async run() {
+    this.parse(Init);
     const scanPath = process.cwd();
 
     const container = createRootContainer({
