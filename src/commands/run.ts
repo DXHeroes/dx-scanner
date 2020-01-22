@@ -26,7 +26,6 @@ class DXScannerCommand extends Command {
     }),
     json: flags.boolean({ char: 'j', description: 'Print report in JSON' }),
     recursive: flags.boolean({ char: 'r', description: 'Scan all components recursively in all sub folders' }),
-    init: flags.boolean({ char: 'i', description: 'Initialize DX Scanner configuration' }),
     ci: flags.boolean({
       description: 'CI mode',
       default: () => process.env.CI === 'true',
@@ -66,11 +65,6 @@ class DXScannerCommand extends Command {
       ci: flags.ci,
     });
     const scanner = container.get(Scanner);
-
-    if (flags.init) {
-      await scanner.init(scanPath);
-      process.exit(0);
-    }
 
     let scanResult = await scanner.scan();
 
