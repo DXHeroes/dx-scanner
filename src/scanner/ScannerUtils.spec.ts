@@ -46,6 +46,25 @@ describe('ScannerUtils', () => {
       const practice = ScannerUtils.initPracticeWithMetadata(InvalidTestPractice);
       expect(() => ScannerUtils.sortPractices([practice])).toThrow(expectedErrMsg);
     });
+
+    it('sorts practices alphabetically', () => {
+      const practices = [FirstTestPractice, SecondTestPractice, DeprecatedTSLintPractice, ESLintUsedPractice, TypeScriptUsedPractice].map(
+        ScannerUtils.initPracticeWithMetadata,
+      );
+      const result = ScannerUtils.sortAlphabetically(practices);
+      const id = result.map((practice) => {
+        return practice.getMetadata().id;
+      });
+
+      expect(result).toHaveLength(5);
+      expect(id).toEqual([
+        'JavaScript.DeprecatedTSLint',
+        'JavaScript.ESLintUsed',
+        'JavaScript.TypeScriptUsed',
+        'Mock.FirstTestPractice',
+        'Mock.SecondTestPractice',
+      ]);
+    });
   });
 
   describe('#isFulfilled', () => {
