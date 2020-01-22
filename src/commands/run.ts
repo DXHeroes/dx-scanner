@@ -36,16 +36,11 @@ class DXScannerCommand extends Command {
       description: 'Run scanner in failure mode. Exits process with code 1 for any non-practicing condition of given level.',
       default: PracticeImpact.high,
     }),
-    practices: flags.boolean({
-      char: 'p',
-      description: 'List all practices DX Scanner checks if they are applicable for your code.',
-    }),
   };
 
   static args = [{ name: 'path', default: process.cwd() }];
 
-  static aliases = ['dxs', 'dxscanner', 'run'];
-  static examples = ['dx-scanner', 'dx-scanner ./ --fail=high', 'dx-scanner github.com/DXHeroes/dx-scanner'];
+  static examples = ['dx-scanner run', 'dx-scanner run ./ --fail=high', 'dx-scanner run github.com/DXHeroes/dx-scanner'];
 
   async run() {
     const { args, flags } = this.parse(DXScannerCommand);
