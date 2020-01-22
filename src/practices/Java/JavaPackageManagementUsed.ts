@@ -20,14 +20,6 @@ export class JavaPackageManagementUsedPractice implements IPractice {
     if (!ctx.fileInspector) {
       return PracticeEvaluationResult.unknown;
     }
-    // for some reason the commented logic does not seem to regex correctly - debugger used
-    // const regex = new RegExp('/.(xml|gradle)$', 'i');
-    // const files = await ctx.fileInspector.scanFor(regex, '/', { shallow: true });
-    // files.forEach((file) => {
-    //   if (file.name.toLowerCase() === ('pom.xml' || 'build.gradle')) {
-    //     return PracticeEvaluationResult.practicing;
-    //   }
-    // });
 
     if (await ctx.fileInspector.exists('pom.xml')) {
       return PracticeEvaluationResult.practicing;
