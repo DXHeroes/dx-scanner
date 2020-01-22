@@ -92,15 +92,17 @@ export class Scanner {
    */
   async init(scanPath: string): Promise<void> {
     const filePath = path.resolve(scanPath, '.dxscannerrc');
-    cli.action.start(`Initializing configuration: ${filePath}.yaml`);
-    // check if .dxscannerrc.yaml already exists
+    // check if .dxscannerrc* already exists
     const fileExists: boolean = await this.fileSystemService.exists(`${filePath}`);
     const yamlExists: boolean = await this.fileSystemService.exists(`${filePath}.yaml`);
     const ymlExists: boolean = await this.fileSystemService.exists(`${filePath}.yml`);
     const jsonExists: boolean = await this.fileSystemService.exists(`${filePath}.json`);
 
     if (!yamlExists && !fileExists && !ymlExists && !jsonExists) {
+      cli.action.start(`Initializing configuration: ${filePath}.yaml`);
       await this.createConfiguration(filePath);
+    } else {
+      console.log(`You already have a dx-scanner config.`);
     }
     cli.action.stop();
   }
