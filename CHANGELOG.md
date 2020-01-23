@@ -1,3 +1,19 @@
+# [1.37.0](https://github.com/dxheroes/dx-scanner/compare/v1.36.0...v1.37.0) (2020-01-23)
+
+
+### Bug Fixes
+
+* isApplicable tests for different languages ([6147ef5](https://github.com/dxheroes/dx-scanner/commit/6147ef52257b96ebc06670a8f4ce408a9b32e385))
+* return statement to apply only for JS & TS ([bf15e8d](https://github.com/dxheroes/dx-scanner/commit/bf15e8d33a2659b3ad5466e73e89522c0f00a2cf))
+* **java:** fixed logic package management used practice ([2255485](https://github.com/dxheroes/dx-scanner/commit/2255485bfa1c124c87a4ec3763f034297e0e5cb8))
+* **java:** restrict practice application to only Java & updated tests ([85b36b0](https://github.com/dxheroes/dx-scanner/commit/85b36b0204123b84c590c0863ab7a6e253d38a39))
+
+
+### Features
+
+* **java:** package management used practice ([e7063dc](https://github.com/dxheroes/dx-scanner/commit/e7063dcd9ca94fe675145c0e83c7b0865cca6e69))
+* **java:** package management used practice ([#213](https://github.com/dxheroes/dx-scanner/issues/213)) ([401d706](https://github.com/dxheroes/dx-scanner/commit/401d7065a756a1e2a5b0c8f7897d1aaa75ac5011))
+
 # [1.36.0](https://github.com/dxheroes/dx-scanner/compare/v1.35.3...v1.36.0) (2020-01-21)
 
 
