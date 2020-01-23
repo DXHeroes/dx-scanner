@@ -1,5 +1,5 @@
 import { JsPackageManagementUsedPractice } from './JsPackageManagementUsedPractice';
-import { PracticeEvaluationResult } from '../../model';
+import { PracticeEvaluationResult, ProgrammingLanguage } from '../../model';
 import { TestContainerContext, createTestContainer } from '../../inversify.config';
 
 describe('JsPackageManagementUsedPractice', () => {
@@ -36,8 +36,21 @@ describe('JsPackageManagementUsedPractice', () => {
     expect(evaluated).toEqual(PracticeEvaluationResult.unknown);
   });
 
-  it('Is always applicable', async () => {
-    const result = await practice.isApplicable();
+  it('Is applicable to JS', async () => {
+    containerCtx.practiceContext.projectComponent.language = ProgrammingLanguage.JavaScript;
+    const result = await practice.isApplicable(containerCtx.practiceContext);
     expect(result).toEqual(true);
+  });
+
+  it('Is applicable to TS', async () => {
+    containerCtx.practiceContext.projectComponent.language = ProgrammingLanguage.TypeScript;
+    const result = await practice.isApplicable(containerCtx.practiceContext);
+    expect(result).toEqual(true);
+  });
+
+  it('Is not applicable to other languages', async () => {
+    containerCtx.practiceContext.projectComponent.language = ProgrammingLanguage.Python;
+    const result = await practice.isApplicable(containerCtx.practiceContext);
+    expect(result).toEqual(false);
   });
 });
