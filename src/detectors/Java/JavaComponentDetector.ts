@@ -15,7 +15,6 @@ export class JavaComponentDetector implements IProjectComponentDetector {
   }
 
   async detectComponent(langAtPath: LanguageAtPath): Promise<ProjectComponent[]> {
-    // @todo: add framework recognition => need an XML or GRADLE reader to determine the framework
     return [
       {
         framework: ProjectComponentFramework.UNKNOWN,

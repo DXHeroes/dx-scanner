@@ -30,6 +30,7 @@ import { TimeToSolveIssuesPractice } from './LanguageIndependent/TimeToSolveIssu
 import { ThinPullRequestsPractice } from './LanguageIndependent/ThinPullRequestsPractice';
 import { SecurityVulnerabilitiesPractice } from './JavaScript/SecurityVulnerabilitiesPractice';
 import { FirstTestPractice, SecondTestPractice, InvalidTestPractice } from '../scanner';
+import { JavaPackageManagementUsedPractice } from './Java/JavaPackageManagementUsed';
 import { JavaMockingFrameworkUsedPractice } from './Java/JavaMockingFrameworkUsed';
 
 // register practices here
@@ -65,5 +66,6 @@ export const practices = [
   TimeToSolveIssuesPractice,
   ThinPullRequestsPractice,
   SecurityVulnerabilitiesPractice,
+  JavaPackageManagementUsedPractice,
   JavaMockingFrameworkUsedPractice,
 ];
