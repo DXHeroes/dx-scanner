@@ -2,6 +2,8 @@ import { createRootContainer, createTestContainer, TestContainerContext } from '
 import { Scanner } from './Scanner';
 import { FileSystemService } from '../services/FileSystemService';
 import { argumentsProviderFactory } from '../test/factories/ArgumentsProviderFactory';
+import { ESLintWithoutErrorsPractice } from '../practices/JavaScript/ESLintWithoutErrorsPractice';
+import { PracticeEvaluationResult } from '../model';
 
 describe('Scanner', () => {
   let containerCtx: TestContainerContext;
@@ -61,4 +63,19 @@ describe('Scanner', () => {
       expect(exists).toEqual(false);
     });
   });
+
+  it('runs fix when fix flag set to true', async () => {
+    jest.setTimeout(15000);
+    const fixMock = jest.fn();
+    containerCtx = createTestContainer({ fix: true });
+    ESLintWithoutErrorsPractice.prototype.fix = fixMock;
+    ESLintWithoutErrorsPractice.prototype.evaluate = () => Promise.resolve(PracticeEvaluationResult.notPracticing);
+    containerCtx.container.bind('ESLintWithoutErrorsPractice').to(ESLintWithoutErrorsPractice);
+    const scanner = containerCtx.container.get(Scanner);
+
+    await scanner.scan({ determineRemote: false });
+
+    expect(fixMock).toBeCalled();
+  });
+  it.todo('fixPattern flag works');
 });
