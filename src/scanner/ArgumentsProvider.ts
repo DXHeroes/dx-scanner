@@ -8,4 +8,5 @@ export type ArgumentsProvider = {
   recursive: boolean;
   ci: boolean;
   fix: boolean;
+  fixPattern: string | undefined;
 };

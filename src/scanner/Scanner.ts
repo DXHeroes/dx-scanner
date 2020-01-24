@@ -78,9 +78,11 @@ export class Scanner {
     const practicesWithContext = await this.detectPractices(projectComponents);
     this.d(`Practices (${practicesWithContext.length}):`, inspect(practicesWithContext));
     if (this.argumentsProvider.fix) {
+      const fixPatternMatcher = this.argumentsProvider.fixPattern ? new RegExp(this.argumentsProvider.fixPattern, 'i') : null;
       await Promise.all(
         practicesWithContext
           .filter((p) => p.evaluation === PracticeEvaluationResult.notPracticing && p.practice.fix)
+          .filter((p) => fixPatternMatcher && fixPatternMatcher.test(p.practice.getMetadata().id))
           .map((p) => p.practice.fix!(p.practiceContext)),
       );
     }

@@ -37,6 +37,7 @@ class DXScannerCommand extends Command {
       default: PracticeImpact.high,
     }),
     fix: flags.boolean({ char: 'f', description: 'Tries to fix problems automatically', default: false }),
+    fixPattern: flags.string({ description: 'Fix only rules with IDs matching the regex.' }),
   };
 
   static args = [{ name: 'path', default: process.cwd() }];
@@ -67,6 +68,7 @@ class DXScannerCommand extends Command {
       recursive: flags.recursive,
       ci: flags.ci,
       fix: flags.fix,
+      fixPattern: flags.fixPattern,
     });
     const scanner = container.get(Scanner);
 
@@ -97,6 +99,7 @@ class DXScannerCommand extends Command {
         recursive: flags.recursive,
         ci: flags.ci,
         fix: flags.fix,
+        fixPattern: flags.fixPattern,
       });
       const scanner = container.get(Scanner);
 
