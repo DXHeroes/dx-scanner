@@ -82,7 +82,7 @@ export class Scanner {
       await Promise.all(
         practicesWithContext
           .filter((p) => p.evaluation === PracticeEvaluationResult.notPracticing && p.practice.fix)
-          .filter((p) => fixPatternMatcher && fixPatternMatcher.test(p.practice.getMetadata().id))
+          .filter((p) => (fixPatternMatcher ? fixPatternMatcher.test(p.practice.getMetadata().id) : true))
           .map((p) => p.practice.fix!(p.practiceContext)),
       );
     }
