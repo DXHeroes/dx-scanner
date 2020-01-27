@@ -7,4 +7,6 @@ export type ArgumentsProvider = {
   fail: PracticeImpact | 'all';
   recursive: boolean;
   ci: boolean;
+  fix: boolean;
+  fixPattern: string | undefined;
 };

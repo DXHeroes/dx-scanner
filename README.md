@@ -52,6 +52,8 @@ USAGE
 
 OPTIONS
   -a, --authorization=authorization  Credentials to the repository. (in format "token" or "username:token"; can be set as ENV variable DX_GIT_SERVICE_TOKEN)
+  -f, --fix                          Automatically fix problems
+  --fixPattern                       Fix only practices with ID matching this regex pattern
   -h, --help                         Help
   -i, --init                         Initialize DX Scanner configuration
   -j, --json                         Print report in JSON

@@ -1,3 +1,11 @@
+## [1.37.1](https://github.com/dxheroes/dx-scanner/compare/v1.37.0...v1.37.1) (2020-01-27)
+
+
+### Bug Fixes
+
+* **deps:** update dependency cross-env to v7 ([5698c32](https://github.com/dxheroes/dx-scanner/commit/5698c324e0224e1d2c3287e6fc48f82b985cfdc2))
+* **deps:** update dependency cross-env to v7 ([#223](https://github.com/dxheroes/dx-scanner/issues/223)) ([449613c](https://github.com/dxheroes/dx-scanner/commit/449613c67275c43c316a53af4fb3b05868d512e7))
+
 # [1.37.0](https://github.com/dxheroes/dx-scanner/compare/v1.36.0...v1.37.0) (2020-01-23)
 
 
