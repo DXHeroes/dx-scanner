@@ -32,6 +32,7 @@ import { SecurityVulnerabilitiesPractice } from './JavaScript/SecurityVulnerabil
 import { FirstTestPractice, SecondTestPractice, InvalidTestPractice } from '../scanner';
 import { JavaPackageManagementUsedPractice } from './Java/JavaPackageManagementUsed';
 import { JavaTestingFrameworkUsedPractice } from './Java/JavaTestingFrameworkUsedPractice';
+import { JavaMockingFrameworkUsedPractice } from './Java/JavaMockingFrameworkUsed';
 
 // register practices here
 export const practices = [
@@ -68,4 +69,5 @@ export const practices = [
   SecurityVulnerabilitiesPractice,
   JavaPackageManagementUsedPractice,
   JavaTestingFrameworkUsedPractice,
+  JavaMockingFrameworkUsedPractice,
 ];
