@@ -1,3 +1,24 @@
+# [1.38.0](https://github.com/dxheroes/dx-scanner/compare/v1.37.1...v1.38.0) (2020-01-27)
+
+
+### Bug Fixes
+
+* added java testing practice to index ([cf4e762](https://github.com/dxheroes/dx-scanner/commit/cf4e762235d76e53e94efdf3ad19edcff0fd9d2c))
+* resolved merge conflicts ([94b7aeb](https://github.com/dxheroes/dx-scanner/commit/94b7aeb5173e01d32af338034b19ce200f87f5d7))
+
+
+### Features
+
+* add CLI fix flag ([7673350](https://github.com/dxheroes/dx-scanner/commit/7673350b56702fa47fb57ea85cba7eb414ae2a49))
+* add fix interface to Practice ([7340d8e](https://github.com/dxheroes/dx-scanner/commit/7340d8ede3850676de9bd7ced9dfad674254ad0d))
+* implement fix for EsLintWithoutErrors ([6b0d5c8](https://github.com/dxheroes/dx-scanner/commit/6b0d5c87ec87adacc71728f96c2c3d1ea4ac164f))
+* java logger used practice ([26a4754](https://github.com/dxheroes/dx-scanner/commit/26a47540031db72dbe0f970842544bb7eedb1fa7))
+* java practice for detecting test mock frameworks ([0453a03](https://github.com/dxheroes/dx-scanner/commit/0453a0394c8e45cc41828512ee059191256dfce1))
+* java practices that check testing frameworks ([0913ca1](https://github.com/dxheroes/dx-scanner/commit/0913ca1245eb013048bf1363a342c430435bbb9d))
+* run fix only when flag provided ([5fee2ae](https://github.com/dxheroes/dx-scanner/commit/5fee2ae5ee31bd13db1cf8bfb59289aa8c6c8017))
+* run fixes for all failed practices ([6c8d7a9](https://github.com/dxheroes/dx-scanner/commit/6c8d7a9d4181b921234b1fe5e5630b431ed017a7))
+* test for mocking frameworks practice ([ea6b972](https://github.com/dxheroes/dx-scanner/commit/ea6b972819ed5a7f618038bd8ccdb38826377c65))
+
 ## [1.37.1](https://github.com/dxheroes/dx-scanner/compare/v1.37.0...v1.37.1) (2020-01-27)
 
 
