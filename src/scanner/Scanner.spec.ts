@@ -65,7 +65,7 @@ describe('Scanner', () => {
   });
 
   it('runs fix when fix flag set to true', async () => {
-    jest.setTimeout(15000);
+    jest.setTimeout(20000);
     const fixMock = jest.fn();
     containerCtx = createTestContainer({ fix: true });
     ESLintWithoutErrorsPractice.prototype.fix = fixMock;
