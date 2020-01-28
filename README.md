@@ -52,22 +52,17 @@ USAGE
 
 OPTIONS
   -a, --authorization=authorization  Credentials to the repository. (in format "token" or "username:token"; can be set as ENV variable DX_GIT_SERVICE_TOKEN)
-  -h, --help                         Help
-  -i, --init                         Initialize DX Scanner configuration
+  -h, --help                         show CLI help
   -j, --json                         Print report in JSON
   -r, --recursive                    Scan all components recursively in all sub folders
   -v, --version                      Output the version number
   --ci                               CI mode
   --fail=high|medium|small|off|all   [default: high] Run scanner in failure mode. Exits process with code 1 for any non-practicing condition of given level.
 
-ALIASES
-  $ dx-scanner dxs
-  $ dx-scanner dxscanner
-
 EXAMPLES
-  dx-scanner
-  dx-scanner ./ --fail=high
-  dx-scanner github.com/DXHeroes/dx-scanner
+  dx-scanner run
+  dx-scanner run ./ --fail=high
+  dx-scanner run github.com/DXHeroes/dx-scanner
 ```
 
 <details open>

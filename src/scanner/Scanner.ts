@@ -317,7 +317,7 @@ export class Scanner {
   private async createConfiguration(filePath: string) {
     let yamlInitContent = `# practices:`;
 
-    for (const practice of ScannerUtils.sortAlphabetically(this.practices)) {
+    for (const practice of this.listPractices()) {
       const dataObject = practice.getMetadata();
       yamlInitContent += `\n#    ${dataObject.id}: ${dataObject.impact}`;
     }
@@ -328,7 +328,7 @@ export class Scanner {
     }
   }
 
-  async listPractices(): Promise<IPracticeWithMetadata[]> {
+  listPractices(): IPracticeWithMetadata[] {
     return ScannerUtils.sortAlphabetically(this.practices);
   }
 }
