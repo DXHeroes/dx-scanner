@@ -1,4 +1,4 @@
-import { JavaMockingFrameworkUsedPractice } from './JavaMockingFrameworkUsed';
+import { JavaMockingFrameworkUsedPractice } from './JavaMockingFrameworkUsedPractice';
 import { PracticeEvaluationResult, ProgrammingLanguage } from '../../model';
 import { TestContainerContext, createTestContainer } from '../../inversify.config';
 import { IPackageInspector } from '../../inspectors/IPackageInspector';

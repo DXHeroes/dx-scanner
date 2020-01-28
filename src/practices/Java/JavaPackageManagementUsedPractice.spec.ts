@@ -1,4 +1,4 @@
-import { JavaPackageManagementUsedPractice } from './JavaPackageManagementUsed';
+import { JavaPackageManagementUsedPractice } from './JavaPackageManagementUsedPractice';
 import { PracticeEvaluationResult, ProgrammingLanguage } from '../../model';
 import { TestContainerContext, createTestContainer } from '../../inversify.config';
 import { pomXMLContents } from '../../detectors/__MOCKS__/Java/pomXMLContents.mock';

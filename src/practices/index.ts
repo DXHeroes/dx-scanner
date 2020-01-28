@@ -30,10 +30,10 @@ import { TimeToSolveIssuesPractice } from './LanguageIndependent/TimeToSolveIssu
 import { ThinPullRequestsPractice } from './LanguageIndependent/ThinPullRequestsPractice';
 import { SecurityVulnerabilitiesPractice } from './JavaScript/SecurityVulnerabilitiesPractice';
 import { FirstTestPractice, SecondTestPractice, InvalidTestPractice } from '../scanner';
-import { JavaPackageManagementUsedPractice } from './Java/JavaPackageManagementUsed';
+import { JavaPackageManagementUsedPractice } from './Java/JavaPackageManagementUsedPractice';
 import { JavaLoggerUsedPractice } from './Java/JavaLoggerUsedPractice';
 import { JavaTestingFrameworkUsedPractice } from './Java/JavaTestingFrameworkUsedPractice';
-import { JavaMockingFrameworkUsedPractice } from './Java/JavaMockingFrameworkUsed';
+import { JavaMockingFrameworkUsedPractice } from './Java/JavaMockingFrameworkUsedPractice';
 import { JavaNamingConventionsPractice } from './Java/JavaNamingConventionsPractice';
 
 // register practices here
