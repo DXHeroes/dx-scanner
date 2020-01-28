@@ -1,5 +1,5 @@
 import { IPractice } from '../IPractice';
-import { PracticeEvaluationResult, PracticeImpact } from '../../model';
+import { PracticeEvaluationResult, PracticeImpact, ProgrammingLanguage } from '../../model';
 import { DxPractice } from '../DxPracticeDecorator';
 import { PracticeContext } from '../../contexts/practice/PracticeContext';
 
@@ -12,8 +12,10 @@ import { PracticeContext } from '../../contexts/practice/PracticeContext';
   url: 'https://docs.npmjs.com/files/package.json',
 })
 export class JsPackageManagementUsedPractice implements IPractice {
-  async isApplicable(): Promise<boolean> {
-    return true;
+  async isApplicable(ctx: PracticeContext): Promise<boolean> {
+    return (
+      ctx.projectComponent.language === ProgrammingLanguage.JavaScript || ctx.projectComponent.language === ProgrammingLanguage.TypeScript
+    );
   }
 
   async evaluate(ctx: PracticeContext): Promise<PracticeEvaluationResult> {

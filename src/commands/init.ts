@@ -20,10 +20,11 @@ export default class Init extends Command {
       ci: false,
       recursive: false,
       fail: PracticeImpact.off,
+      fix: false,
+      fixPattern: undefined,
     });
     const scanner = container.get(Scanner);
 
     await scanner.init(scanPath);
-    this.exit(0);
   }
 }

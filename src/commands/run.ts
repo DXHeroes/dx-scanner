@@ -11,7 +11,6 @@ import { ServiceType } from '../detectors';
 
 export class RunCommand extends Command {
   static description = 'Scan your project for possible DX recommendations.';
-  static usage = ['[PATH] [OPTIONS]'];
 
   static flags = {
     version: flags.version({ char: 'v', description: 'Output the version number' }),
@@ -32,10 +31,13 @@ export class RunCommand extends Command {
       description: 'Run scanner in failure mode. Exits process with code 1 for any non-practicing condition of given level.',
       default: PracticeImpact.high,
     }),
+    fix: flags.boolean({ char: 'f', description: 'Tries to fix problems automatically', default: false }),
+    fixPattern: flags.string({ description: 'Fix only rules with IDs matching the regex.' }),
   };
 
   static args = [{ name: 'path', default: process.cwd() }];
 
+  static aliases = ['dxs', 'dxscanner'];
   static examples = ['dx-scanner run', 'dx-scanner run ./ --fail=high', 'dx-scanner run github.com/DXHeroes/dx-scanner'];
 
   async run() {
@@ -60,6 +62,8 @@ export class RunCommand extends Command {
       fail,
       recursive: flags.recursive,
       ci: flags.ci,
+      fix: flags.fix,
+      fixPattern: flags.fixPattern,
     });
     const scanner = container.get(Scanner);
 
@@ -77,7 +81,16 @@ export class RunCommand extends Command {
         );
       }
 
-      const container = createRootContainer({ uri: scanPath, auth: authorization, json, fail, recursive: flags.recursive, ci: flags.ci });
+      const container = createRootContainer({
+        uri: scanPath,
+        auth: authorization,
+        json,
+        fail,
+        recursive: flags.recursive,
+        ci: flags.ci,
+        fix: flags.fix,
+        fixPattern: flags.fixPattern,
+      });
       const scanner = container.get(Scanner);
 
       scanResult = await scanner.scan({ determineRemote: false });

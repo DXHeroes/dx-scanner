@@ -1,15 +1,17 @@
-import { JsPackageManagementUsedPractice } from './JsPackageManagementUsedPractice';
+import { JavaPackageManagementUsedPractice } from './JavaPackageManagementUsed';
 import { PracticeEvaluationResult, ProgrammingLanguage } from '../../model';
 import { TestContainerContext, createTestContainer } from '../../inversify.config';
+import { pomXMLContents } from '../../detectors/__MOCKS__/Java/pomXMLContents.mock';
+import { buildGRADLEContents } from '../../detectors/__MOCKS__/Java/buildGRADLEContents.mock';
 
-describe('JsPackageManagementUsedPractice', () => {
-  let practice: JsPackageManagementUsedPractice;
+describe('JavaPackageManagementUsedPractice', () => {
+  let practice: JavaPackageManagementUsedPractice;
   let containerCtx: TestContainerContext;
 
   beforeAll(() => {
     containerCtx = createTestContainer();
-    containerCtx.container.bind('JsPackageManagementUsedPractice').to(JsPackageManagementUsedPractice);
-    practice = containerCtx.container.get('JsPackageManagementUsedPractice');
+    containerCtx.container.bind('JavaPackageManagementUsedPractice').to(JavaPackageManagementUsedPractice);
+    practice = containerCtx.container.get('JavaPackageManagementUsedPractice');
   });
 
   afterEach(async () => {
@@ -17,12 +19,23 @@ describe('JsPackageManagementUsedPractice', () => {
     containerCtx.practiceContext.fileInspector!.purgeCache();
   });
 
-  it('Returns practicing if there is a package.json', async () => {
+  it('Returns practicing if there is a pom.xml', async () => {
+    containerCtx.virtualFileSystemService.setFileSystem({
+      'pom.xml': pomXMLContents,
+    });
     const evaluated = await practice.evaluate(containerCtx.practiceContext);
     expect(evaluated).toEqual(PracticeEvaluationResult.practicing);
   });
 
-  it('Returns notPracticing if there is NO package.json', async () => {
+  it('Returns practicing if there is a build.gradle', async () => {
+    containerCtx.virtualFileSystemService.setFileSystem({
+      'build.gradle': buildGRADLEContents,
+    });
+    const evaluated = await practice.evaluate(containerCtx.practiceContext);
+    expect(evaluated).toEqual(PracticeEvaluationResult.practicing);
+  });
+
+  it('Returns notPracticing if there is NO pom.xml or build.gradle', async () => {
     containerCtx.virtualFileSystemService.setFileSystem({
       'not.exists': '...',
     });
@@ -36,14 +49,8 @@ describe('JsPackageManagementUsedPractice', () => {
     expect(evaluated).toEqual(PracticeEvaluationResult.unknown);
   });
 
-  it('Is applicable to JS', async () => {
-    containerCtx.practiceContext.projectComponent.language = ProgrammingLanguage.JavaScript;
-    const result = await practice.isApplicable(containerCtx.practiceContext);
-    expect(result).toEqual(true);
-  });
-
-  it('Is applicable to TS', async () => {
-    containerCtx.practiceContext.projectComponent.language = ProgrammingLanguage.TypeScript;
+  it('Is applicable to Java', async () => {
+    containerCtx.practiceContext.projectComponent.language = ProgrammingLanguage.Java;
     const result = await practice.isApplicable(containerCtx.practiceContext);
     expect(result).toEqual(true);
   });

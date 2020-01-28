@@ -7,4 +7,6 @@ export type ArgumentsProvider = {
   fail: PracticeImpact | 'all'; // optional as the AP is used also with command dxs practices
   recursive: boolean; // optional as the AP is used also with command dxs practices
   ci: boolean;
+  fix: boolean;
+  fixPattern: string | undefined;
 };

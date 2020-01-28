@@ -1,3 +1,48 @@
+# [1.38.0](https://github.com/dxheroes/dx-scanner/compare/v1.37.1...v1.38.0) (2020-01-27)
+
+
+### Bug Fixes
+
+* added java testing practice to index ([cf4e762](https://github.com/dxheroes/dx-scanner/commit/cf4e762235d76e53e94efdf3ad19edcff0fd9d2c))
+* resolved merge conflicts ([94b7aeb](https://github.com/dxheroes/dx-scanner/commit/94b7aeb5173e01d32af338034b19ce200f87f5d7))
+
+
+### Features
+
+* add CLI fix flag ([7673350](https://github.com/dxheroes/dx-scanner/commit/7673350b56702fa47fb57ea85cba7eb414ae2a49))
+* add fix interface to Practice ([7340d8e](https://github.com/dxheroes/dx-scanner/commit/7340d8ede3850676de9bd7ced9dfad674254ad0d))
+* implement fix for EsLintWithoutErrors ([6b0d5c8](https://github.com/dxheroes/dx-scanner/commit/6b0d5c87ec87adacc71728f96c2c3d1ea4ac164f))
+* java logger used practice ([26a4754](https://github.com/dxheroes/dx-scanner/commit/26a47540031db72dbe0f970842544bb7eedb1fa7))
+* java practice for detecting test mock frameworks ([0453a03](https://github.com/dxheroes/dx-scanner/commit/0453a0394c8e45cc41828512ee059191256dfce1))
+* java practices that check testing frameworks ([0913ca1](https://github.com/dxheroes/dx-scanner/commit/0913ca1245eb013048bf1363a342c430435bbb9d))
+* run fix only when flag provided ([5fee2ae](https://github.com/dxheroes/dx-scanner/commit/5fee2ae5ee31bd13db1cf8bfb59289aa8c6c8017))
+* run fixes for all failed practices ([6c8d7a9](https://github.com/dxheroes/dx-scanner/commit/6c8d7a9d4181b921234b1fe5e5630b431ed017a7))
+* test for mocking frameworks practice ([ea6b972](https://github.com/dxheroes/dx-scanner/commit/ea6b972819ed5a7f618038bd8ccdb38826377c65))
+
+## [1.37.1](https://github.com/dxheroes/dx-scanner/compare/v1.37.0...v1.37.1) (2020-01-27)
+
+
+### Bug Fixes
+
+* **deps:** update dependency cross-env to v7 ([5698c32](https://github.com/dxheroes/dx-scanner/commit/5698c324e0224e1d2c3287e6fc48f82b985cfdc2))
+* **deps:** update dependency cross-env to v7 ([#223](https://github.com/dxheroes/dx-scanner/issues/223)) ([449613c](https://github.com/dxheroes/dx-scanner/commit/449613c67275c43c316a53af4fb3b05868d512e7))
+
+# [1.37.0](https://github.com/dxheroes/dx-scanner/compare/v1.36.0...v1.37.0) (2020-01-23)
+
+
+### Bug Fixes
+
+* isApplicable tests for different languages ([6147ef5](https://github.com/dxheroes/dx-scanner/commit/6147ef52257b96ebc06670a8f4ce408a9b32e385))
+* return statement to apply only for JS & TS ([bf15e8d](https://github.com/dxheroes/dx-scanner/commit/bf15e8d33a2659b3ad5466e73e89522c0f00a2cf))
+* **java:** fixed logic package management used practice ([2255485](https://github.com/dxheroes/dx-scanner/commit/2255485bfa1c124c87a4ec3763f034297e0e5cb8))
+* **java:** restrict practice application to only Java & updated tests ([85b36b0](https://github.com/dxheroes/dx-scanner/commit/85b36b0204123b84c590c0863ab7a6e253d38a39))
+
+
+### Features
+
+* **java:** package management used practice ([e7063dc](https://github.com/dxheroes/dx-scanner/commit/e7063dcd9ca94fe675145c0e83c7b0865cca6e69))
+* **java:** package management used practice ([#213](https://github.com/dxheroes/dx-scanner/issues/213)) ([401d706](https://github.com/dxheroes/dx-scanner/commit/401d7065a756a1e2a5b0c8f7897d1aaa75ac5011))
+
 # [1.36.0](https://github.com/dxheroes/dx-scanner/compare/v1.35.3...v1.36.0) (2020-01-21)
 
 

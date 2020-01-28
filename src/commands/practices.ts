@@ -23,6 +23,8 @@ export default class PracticesCommand extends Command {
       ci: false,
       recursive: false,
       fail: PracticeImpact.off,
+      fix: false,
+      fixPattern: undefined,
     });
 
     const scanner = container.get(Scanner);
@@ -42,6 +44,5 @@ export default class PracticesCommand extends Command {
     } else {
       console.log(ReporterData.table(['PRACTICE ID', 'PRACTICE NAME', 'PRACTICE IMPACT'], practicesToReport));
     }
-    process.exit(0);
   }
 }
