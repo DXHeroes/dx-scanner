@@ -4,10 +4,8 @@ import { Scanner } from '../scanner';
 import { PracticeImpact } from '../model';
 import { ReporterData } from '../reporters/ReporterData';
 
-export default class Practices extends Command {
+export default class PracticesCommand extends Command {
   static description = 'List all practices id with name and impact.';
-
-  static examples = [`$ dx-scanner practices`];
 
   static flags = {
     help: flags.help({ char: 'h' }),
@@ -15,30 +13,29 @@ export default class Practices extends Command {
   };
 
   async run() {
-    const { flags } = this.parse(Practices);
-
+    const { flags } = this.parse(PracticesCommand);
     const scanPath = process.cwd();
-    const json = flags.json;
 
     const container = createRootContainer({
       uri: scanPath,
-      json,
+      json: flags.json,
       auth: undefined,
       ci: false,
       recursive: false,
-      fail: 'all',
+      fail: PracticeImpact.off,
     });
+
     const scanner = container.get(Scanner);
 
     const practices = await scanner.listPractices();
-    const practicesToReport: PracticeToReport[] = [];
-    practices.forEach((practice) => {
-      practicesToReport.push({
-        id: practice.getMetadata().id,
-        name: practice.getMetadata().name,
-        impact: practice.getMetadata().impact,
-      });
+    const practicesToReport = practices.map((p) => {
+      return {
+        id: p.getMetadata().id,
+        name: p.getMetadata().name,
+        impact: p.getMetadata().impact,
+      };
     });
+
     if (flags.json) {
       // print practices in JSON format
       console.log(JSON.stringify(practicesToReport, null, 2));
@@ -47,10 +44,4 @@ export default class Practices extends Command {
     }
     process.exit(0);
   }
-}
-
-interface PracticeToReport {
-  id: string;
-  name: string;
-  impact: PracticeImpact;
 }

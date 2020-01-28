@@ -2,7 +2,6 @@
 import { Command, flags } from '@oclif/command';
 import cli from 'cli-ux';
 import debug from 'debug';
-import 'reflect-metadata';
 import updateNotifier from 'update-notifier';
 import { PracticeImpact } from '../model';
 import { createRootContainer } from '../inversify.config';
@@ -10,15 +9,13 @@ import { Scanner } from '../scanner';
 import { ScanningStrategyDetectorUtils } from '../detectors/utils/ScanningStrategyDetectorUtils';
 import { ServiceType } from '../detectors';
 
-class DXScannerCommand extends Command {
+export class RunCommand extends Command {
   static description = 'Scan your project for possible DX recommendations.';
   static usage = ['[PATH] [OPTIONS]'];
 
   static flags = {
-    // add --version flag to show CLI version
     version: flags.version({ char: 'v', description: 'Output the version number' }),
-    help: flags.help({ char: 'h', description: 'Help' }),
-    // flag with a value (-n, --name=VALUE)
+    help: flags.help({ char: 'h' }),
     authorization: flags.string({
       char: 'a',
       description:
@@ -42,7 +39,7 @@ class DXScannerCommand extends Command {
   static examples = ['dx-scanner run', 'dx-scanner run ./ --fail=high', 'dx-scanner run github.com/DXHeroes/dx-scanner'];
 
   async run() {
-    const { args, flags } = this.parse(DXScannerCommand);
+    const { args, flags } = this.parse(RunCommand);
     debug('cli args')(args);
     debug('cli flags')(flags);
     const scanPath = args.path;
@@ -93,7 +90,7 @@ class DXScannerCommand extends Command {
     console.info('Scan duration %ds.', hrend[0]);
 
     if (scanResult.shouldExitOnEnd) {
-      process.exit(1);
+      this.exit(1);
     }
   }
 
@@ -106,5 +103,3 @@ class DXScannerCommand extends Command {
     return ev.DX_GIT_SERVICE_TOKEN || ev.GITHUB_TOKEN;
   };
 }
-
-export = DXScannerCommand;
