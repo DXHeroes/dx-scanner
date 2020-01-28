@@ -10,7 +10,7 @@ import { Scanner } from '../scanner';
 import { ScanningStrategyDetectorUtils } from '../detectors/utils/ScanningStrategyDetectorUtils';
 import { ServiceType } from '../detectors';
 
-export class RunCommand extends Command {
+export default class Run extends Command {
   static description = 'Scan your project for possible DX recommendations.';
 
   static flags = {
@@ -42,7 +42,7 @@ export class RunCommand extends Command {
   static examples = ['dx-scanner run', 'dx-scanner run ./ --fail=high', 'dx-scanner run github.com/DXHeroes/dx-scanner'];
 
   async run() {
-    const { args, flags } = this.parse(RunCommand);
+    const { args, flags } = this.parse(Run);
     debug('cli args')(args);
     debug('cli flags')(flags);
     const scanPath = args.path;

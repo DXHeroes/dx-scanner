@@ -115,7 +115,7 @@
   ],
   "oclif": {
     "bin": "dx-scanner",
-    "commands": "./src/commands"
+    "commands": "./lib/commands"
   },
   "keywords": [
     "oclif",

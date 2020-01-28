@@ -5,7 +5,7 @@ import { Scanner } from '../scanner';
 import { PracticeImpact } from '../model';
 import { ReporterData } from '../reporters/ReporterData';
 
-export default class PracticesCommand extends Command {
+export default class Practices extends Command {
   static description = 'List all practices id with name and impact.';
 
   static flags = {
@@ -14,7 +14,7 @@ export default class PracticesCommand extends Command {
   };
 
   async run() {
-    const { flags } = this.parse(PracticesCommand);
+    const { flags } = this.parse(Practices);
     const scanPath = process.cwd();
 
     const container = createRootContainer({
