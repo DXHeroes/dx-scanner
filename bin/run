@@ -8,10 +8,8 @@ const dev = fs.existsSync(project);
 
 if (dev) {
   require('ts-node').register({ project });
-  console.warn("WARNING: You're running DX Scanner in development mode.")
 }
 
 require(`../${dev ? 'src' : 'lib'}`)
   .run()
-  .then(require('@oclif/command/flush'))
   .catch(require('@oclif/errors/handle'));

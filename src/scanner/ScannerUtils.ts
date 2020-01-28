@@ -133,8 +133,4 @@ export class ScannerUtils {
         (_.includes(ScannerUtils.getImpactFailureLevels(argumentsProvider.fail), pctx.overridenImpact) || argumentsProvider.fail === 'all'),
     );
   };
-
-  static sortAlphabetically = (practices: IPracticeWithMetadata[]) => {
-    return practices.sort((a, b) => a.getMetadata().id.localeCompare(b.getMetadata().id));
-  };
 }

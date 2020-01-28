@@ -62,42 +62,15 @@ OPTIONS
   --ci                               CI mode
   --fail=high|medium|small|off|all   [default: high] Run scanner in failure mode. Exits process with code 1 for any non-practicing condition of given level.
 
+ALIASES
+  $ dx-scanner dxs
+  $ dx-scanner dxscanner
+
 EXAMPLES
-  dx-scanner run
-  dx-scanner run ./ --fail=high
-  dx-scanner run github.com/DXHeroes/dx-scanner
+  dx-scanner
+  dx-scanner ./ --fail=high
+  dx-scanner github.com/DXHeroes/dx-scanner
 ```
-
-<details open>
-<summary>List of All Practices 🔍</summary>
-
-Practice | Impact | Language Independent | JavaScript/TypeScript | Java
-------------- | ------------- | ------------- | ------------- | ------------- 
-Create a Readme File | <span style="color:red">high</span> | ✅ | ✅ | ✅
-Create a License File | <span style="color:yellow">medium</span> | ✅ | ✅ | ✅
-Create a Lockfile | <span style="color:red">high</span> | ✅ | ✅ | ✅
-Create a .gitignore | <span style="color:red">high</span> | ✅ | ✅ | ✅
-Write in Typescript | <span style="color:yellow">medium</span> | ❌ | ✅ | ❌
-Set .gitignore Correctly | <span style="color:red">high</span> | ❌ | ✅ | ✅
-Use Continuous Integration | <span style="color:red">high</span> | ✅ | ✅ | ✅
-Use Docker | <span style="color:green">small</span> | ✅ | ✅ | ✅
-Use .editorconfig | <span style="color:green">small</span> | ✅ | ✅ | ✅
-Format your code automatically | <span style="color:green">small</span> | ❌ | ✅ | ❌
-Use ESLint | <span style="color:yellow">medium</span> | ❌ | ✅ | ❌
-ESLint Without Errors | <span style="color:yellow">medium</span> | ❌ | ✅ | ❌
-Use a different linter | <span style="color:yellow">medium</span> | ❌ | ✅ | ❌
-Use JS Frontend Testing Framework | <span style="color:yellow">medium</span> | ❌ | ✅ | ❌
-Use JS Frontend Build Tools | <span style="color:yellow">medium</span> | ❌ | ✅ | ❌
-Use JS Backend Testing Frameworks | <span style="color:red">high</span> | ❌ | ✅ | ❌
-Use a JS Logging Library | <span style="color:green">small</span> | ❌ | ✅ | ❌
-Use JS Package Management | <span style="color:red">high</span> | ❌ | ✅ | ❌
-Configure Scripts in package.json | <span style="color:yellow">medium</span> | ❌ | ✅ | ❌
-Update Dependencies of Major Level | <span style="color:green">small</span> | ❌ | ✅ | ❌
-Update Dependencies of Minor and Patch Level | <span style="color:red">high</span> | ❌  | ✅ | ❌
-Do PullRequests | <span style="color:yellow">medium</span> | ✅ | ✅ | ✅
-Solve Pull Requests Continuously | <span style="color:yellow">medium</span> | ✅ | ✅ | ✅
-Write Commit Messages by Convention | <span style="color:green">small</span> | ✅ | ✅ | ✅
-</details>
 
 ## Configuration ⚙️
 Add ```dxscannerrc.*``` config file to change default configuration settings. It can be a ```.json```, ```.yml```, and even a dotfile!
@@ -196,9 +169,3 @@ Many thanks to these wonderful people ([emoji key](https://allcontributors.org/d
 <!-- ALL-CONTRIBUTORS-LIST:END -->
 
 This project follows the [all-contributors](https://github.com/all-contributors/all-contributors) specification. Any kind of contributions are welcome!
-
-
-
-
-
-

@@ -1,7 +1,7 @@
 {
   "name": "dx-scanner",
   "description": "Scan your project for possible DX recommendations.",
-  "version": "2.0.0",
+  "version": "1.38.0",
   "author": "DX Heroes LTD <info@dxheroes.io> (https://dxheroes.io)",
   "homepage": "https://github.com/dxheroes/dx-scanner",
   "repository": "ssh://git@github.com/dxheroes/dx-scanner.git",
@@ -114,8 +114,7 @@
     "/lib"
   ],
   "oclif": {
-    "bin": "dx-scanner",
-    "commands": "./src/commands"
+    "bin": "dx-scanner"
   },
   "keywords": [
     "oclif",
