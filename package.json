@@ -1,7 +1,7 @@
 {
   "name": "dx-scanner",
   "description": "Scan your project for possible DX recommendations.",
-  "version": "1.37.0",
+  "version": "2.0.0",
   "author": "DX Heroes LTD <info@dxheroes.io> (https://dxheroes.io)",
   "homepage": "https://github.com/dxheroes/dx-scanner",
   "repository": "ssh://git@github.com/dxheroes/dx-scanner.git",
@@ -40,7 +40,7 @@
     "bitbucket": "1.17.1",
     "colors": "1.4.0",
     "command-exists": "1.2.8",
-    "cross-env": "6.0.3",
+    "cross-env": "7.0.0",
     "debug": "4.1.1",
     "eslint": "6.8.0",
     "eslint-plugin-eslint-plugin": "2.2.1",
@@ -90,13 +90,13 @@
     "codecov": "3.6.1",
     "eslint-config-prettier": "6.9.0",
     "eslint-plugin-prettier": "3.1.2",
-    "jest": "24.9.0",
+    "jest": "25.1.0",
     "nock": "11.7.2",
     "prettier": "1.19.1",
     "rimraf": "3.0.0",
     "semantic-release": "16.0.2",
     "semantic-release-slack-bot": "1.4.2",
-    "ts-jest": "24.3.0"
+    "ts-jest": "25.0.0"
   },
   "engineStrict": true,
   "engines": {
@@ -114,7 +114,8 @@
     "/lib"
   ],
   "oclif": {
-    "bin": "dx-scanner"
+    "bin": "dx-scanner",
+    "commands": "./src/commands"
   },
   "keywords": [
     "oclif",

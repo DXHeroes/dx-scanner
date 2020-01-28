@@ -1,3 +1,98 @@
+# [2.0.0](https://github.com/dxheroes/dx-scanner/compare/v1.38.0...v2.0.0) (2020-01-28)
+
+
+### Bug Fixes
+
+* allow fail and recursive to be optional ([457eb72](https://github.com/dxheroes/dx-scanner/commit/457eb72426d4f4ccca135f43e599ea577c4f0077))
+* inform user if the config file already exists ([569725a](https://github.com/dxheroes/dx-scanner/commit/569725a0e30acb8d03523b70da9db981188d5023))
+* parse flags with init subcommand ([3ede8e0](https://github.com/dxheroes/dx-scanner/commit/3ede8e0fd3f02078d91ca85e58d2068bd0d9cf11))
+* remove comments a comment ideas ([e604238](https://github.com/dxheroes/dx-scanner/commit/e6042385ab862fac7ea888d155ed23189b5e61eb))
+* remove unnecessary code ([bb88dd4](https://github.com/dxheroes/dx-scanner/commit/bb88dd4bd3ab615cd5a9989f63f18c4dc69977ad))
+* remove unused commented code and import reflect-metadata ([5ad591a](https://github.com/dxheroes/dx-scanner/commit/5ad591a5d7ffafbc527643d202077c06085a7b6b))
+* remove unused flag, aliases and set new examples ([cccdf57](https://github.com/dxheroes/dx-scanner/commit/cccdf574f080db6039cd91f302774f6d6c4159ae))
+* rename method ([d8a88cf](https://github.com/dxheroes/dx-scanner/commit/d8a88cfbcabaffb0a8dd48e102e0e91d6c4c24f2))
+* rename subcommand ([e939b9e](https://github.com/dxheroes/dx-scanner/commit/e939b9e1f26b7bd14f6bc79ac34a9e67292a21bd))
+* revert change ([b4b6497](https://github.com/dxheroes/dx-scanner/commit/b4b6497f2909aa1bbfd45129883af5e4afadb8da))
+* set arguments back to be required ([dc8edd6](https://github.com/dxheroes/dx-scanner/commit/dc8edd602f81da53bb14d3891a4c1f73824338ac))
+* typo ([19e8bd1](https://github.com/dxheroes/dx-scanner/commit/19e8bd1ecbe785d1c6e47b2e91160742654e101c))
+
+
+### Features
+
+* **core:** CLI changed to multi-command ([cbf03b0](https://github.com/dxheroes/dx-scanner/commit/cbf03b016d6569c10638c9177a96cfaa962dcc77))
+* add two subcommands ([9661d6b](https://github.com/dxheroes/dx-scanner/commit/9661d6b40f348cc66cef7b64fa033e65e851c935))
+* convert init flag to subcommand ([9594d3a](https://github.com/dxheroes/dx-scanner/commit/9594d3ae7183d95eca7de2a68784bde27d4084bd))
+* implement method to get practices ([871f7f2](https://github.com/dxheroes/dx-scanner/commit/871f7f2bb3ca950c6313afc8b04baed3f2aa3301))
+* list practices in a table ([9d8a8f6](https://github.com/dxheroes/dx-scanner/commit/9d8a8f69b0f88f41052e46bd485a6d3c9abd97a1))
+* wip - add subcommand ([6c33fc4](https://github.com/dxheroes/dx-scanner/commit/6c33fc4f7fa4761cbbdd00a4a1f668f7aaabb572))
+
+
+### BREAKING CHANGES
+
+* **core:** now exists commands such as init, practices and run
+
+# [2.0.0-pre-list-practices.1](https://github.com/dxheroes/dx-scanner/compare/v1.38.0...v2.0.0-pre-list-practices.1) (2020-01-28)
+
+
+### Bug Fixes
+
+* allow fail and recursive to be optional ([457eb72](https://github.com/dxheroes/dx-scanner/commit/457eb72426d4f4ccca135f43e599ea577c4f0077))
+* inform user if the config file already exists ([569725a](https://github.com/dxheroes/dx-scanner/commit/569725a0e30acb8d03523b70da9db981188d5023))
+* parse flags with init subcommand ([3ede8e0](https://github.com/dxheroes/dx-scanner/commit/3ede8e0fd3f02078d91ca85e58d2068bd0d9cf11))
+* remove comments a comment ideas ([e604238](https://github.com/dxheroes/dx-scanner/commit/e6042385ab862fac7ea888d155ed23189b5e61eb))
+* remove unnecessary code ([bb88dd4](https://github.com/dxheroes/dx-scanner/commit/bb88dd4bd3ab615cd5a9989f63f18c4dc69977ad))
+* remove unused commented code and import reflect-metadata ([5ad591a](https://github.com/dxheroes/dx-scanner/commit/5ad591a5d7ffafbc527643d202077c06085a7b6b))
+* remove unused flag, aliases and set new examples ([cccdf57](https://github.com/dxheroes/dx-scanner/commit/cccdf574f080db6039cd91f302774f6d6c4159ae))
+* rename method ([d8a88cf](https://github.com/dxheroes/dx-scanner/commit/d8a88cfbcabaffb0a8dd48e102e0e91d6c4c24f2))
+* rename subcommand ([e939b9e](https://github.com/dxheroes/dx-scanner/commit/e939b9e1f26b7bd14f6bc79ac34a9e67292a21bd))
+* revert change ([b4b6497](https://github.com/dxheroes/dx-scanner/commit/b4b6497f2909aa1bbfd45129883af5e4afadb8da))
+* set arguments back to be required ([dc8edd6](https://github.com/dxheroes/dx-scanner/commit/dc8edd602f81da53bb14d3891a4c1f73824338ac))
+* typo ([19e8bd1](https://github.com/dxheroes/dx-scanner/commit/19e8bd1ecbe785d1c6e47b2e91160742654e101c))
+
+
+### Features
+
+* **core:** CLI changed to multi-command ([cbf03b0](https://github.com/dxheroes/dx-scanner/commit/cbf03b016d6569c10638c9177a96cfaa962dcc77))
+* add two subcommands ([9661d6b](https://github.com/dxheroes/dx-scanner/commit/9661d6b40f348cc66cef7b64fa033e65e851c935))
+* convert init flag to subcommand ([9594d3a](https://github.com/dxheroes/dx-scanner/commit/9594d3ae7183d95eca7de2a68784bde27d4084bd))
+* implement method to get practices ([871f7f2](https://github.com/dxheroes/dx-scanner/commit/871f7f2bb3ca950c6313afc8b04baed3f2aa3301))
+* list practices in a table ([9d8a8f6](https://github.com/dxheroes/dx-scanner/commit/9d8a8f69b0f88f41052e46bd485a6d3c9abd97a1))
+* wip - add subcommand ([6c33fc4](https://github.com/dxheroes/dx-scanner/commit/6c33fc4f7fa4761cbbdd00a4a1f668f7aaabb572))
+
+
+### BREAKING CHANGES
+
+* **core:** now exists commands such as init, practices and run
+
+# [1.38.0](https://github.com/dxheroes/dx-scanner/compare/v1.37.1...v1.38.0) (2020-01-27)
+
+
+### Bug Fixes
+
+* added java testing practice to index ([cf4e762](https://github.com/dxheroes/dx-scanner/commit/cf4e762235d76e53e94efdf3ad19edcff0fd9d2c))
+* resolved merge conflicts ([94b7aeb](https://github.com/dxheroes/dx-scanner/commit/94b7aeb5173e01d32af338034b19ce200f87f5d7))
+
+
+### Features
+
+* add CLI fix flag ([7673350](https://github.com/dxheroes/dx-scanner/commit/7673350b56702fa47fb57ea85cba7eb414ae2a49))
+* add fix interface to Practice ([7340d8e](https://github.com/dxheroes/dx-scanner/commit/7340d8ede3850676de9bd7ced9dfad674254ad0d))
+* implement fix for EsLintWithoutErrors ([6b0d5c8](https://github.com/dxheroes/dx-scanner/commit/6b0d5c87ec87adacc71728f96c2c3d1ea4ac164f))
+* java logger used practice ([26a4754](https://github.com/dxheroes/dx-scanner/commit/26a47540031db72dbe0f970842544bb7eedb1fa7))
+* java practice for detecting test mock frameworks ([0453a03](https://github.com/dxheroes/dx-scanner/commit/0453a0394c8e45cc41828512ee059191256dfce1))
+* java practices that check testing frameworks ([0913ca1](https://github.com/dxheroes/dx-scanner/commit/0913ca1245eb013048bf1363a342c430435bbb9d))
+* run fix only when flag provided ([5fee2ae](https://github.com/dxheroes/dx-scanner/commit/5fee2ae5ee31bd13db1cf8bfb59289aa8c6c8017))
+* run fixes for all failed practices ([6c8d7a9](https://github.com/dxheroes/dx-scanner/commit/6c8d7a9d4181b921234b1fe5e5630b431ed017a7))
+* test for mocking frameworks practice ([ea6b972](https://github.com/dxheroes/dx-scanner/commit/ea6b972819ed5a7f618038bd8ccdb38826377c65))
+
+## [1.37.1](https://github.com/dxheroes/dx-scanner/compare/v1.37.0...v1.37.1) (2020-01-27)
+
+
+### Bug Fixes
+
+* **deps:** update dependency cross-env to v7 ([5698c32](https://github.com/dxheroes/dx-scanner/commit/5698c324e0224e1d2c3287e6fc48f82b985cfdc2))
+* **deps:** update dependency cross-env to v7 ([#223](https://github.com/dxheroes/dx-scanner/issues/223)) ([449613c](https://github.com/dxheroes/dx-scanner/commit/449613c67275c43c316a53af4fb3b05868d512e7))
+
 # [1.37.0](https://github.com/dxheroes/dx-scanner/compare/v1.36.0...v1.37.0) (2020-01-23)
 
 

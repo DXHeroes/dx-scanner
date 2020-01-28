@@ -77,6 +77,16 @@ export class Scanner {
     this.d(`Components (${projectComponents.length}):`, inspect(projectComponents));
     const practicesWithContext = await this.detectPractices(projectComponents);
     this.d(`Practices (${practicesWithContext.length}):`, inspect(practicesWithContext));
+    if (this.argumentsProvider.fix) {
+      const fixablePractice = (p: PracticeWithContext) => p.practice.fix && p.evaluation === PracticeEvaluationResult.notPracticing;
+      const fixPatternMatcher = this.argumentsProvider.fixPattern ? new RegExp(this.argumentsProvider.fixPattern, 'i') : null;
+      await Promise.all(
+        practicesWithContext
+          .filter(fixablePractice)
+          .filter((p) => (fixPatternMatcher ? fixPatternMatcher.test(p.practice.getMetadata().id) : true))
+          .map((p) => p.practice.fix!(p.practiceContext)),
+      );
+    }
     await this.report(practicesWithContext);
     this.d(
       `Overall scan stats. LanguagesAtPaths: ${inspect(languagesAtPaths.length)}; Components: ${inspect(
@@ -92,15 +102,17 @@ export class Scanner {
    */
   async init(scanPath: string): Promise<void> {
     const filePath = path.resolve(scanPath, '.dxscannerrc');
-    cli.action.start(`Initializing configuration: ${filePath}.yaml`);
-    // check if .dxscannerrc.yaml already exists
+    // check if .dxscannerrc* already exists
     const fileExists: boolean = await this.fileSystemService.exists(`${filePath}`);
     const yamlExists: boolean = await this.fileSystemService.exists(`${filePath}.yaml`);
     const ymlExists: boolean = await this.fileSystemService.exists(`${filePath}.yml`);
     const jsonExists: boolean = await this.fileSystemService.exists(`${filePath}.json`);
 
     if (!yamlExists && !fileExists && !ymlExists && !jsonExists) {
+      cli.action.start(`Initializing configuration: ${filePath}.yaml`);
       await this.createConfiguration(filePath);
+    } else {
+      console.log(`You already have a dx-scanner config.`);
     }
     cli.action.stop();
   }
@@ -314,9 +326,8 @@ export class Scanner {
 
   private async createConfiguration(filePath: string) {
     let yamlInitContent = `# practices:`;
-    // get Metadata and sort it alphabetically using id
-    const sortedInitializedPractices = this.practices.sort((a, b) => a.getMetadata().id.localeCompare(b.getMetadata().id));
-    for (const practice of sortedInitializedPractices) {
+
+    for (const practice of this.listPractices()) {
       const dataObject = practice.getMetadata();
       yamlInitContent += `\n#    ${dataObject.id}: ${dataObject.impact}`;
     }
@@ -325,6 +336,10 @@ export class Scanner {
     } catch (err) {
       throw ErrorFactory.newInternalError(`Error during configuration file initialization: ${err.message}`);
     }
+  }
+
+  listPractices(): IPracticeWithMetadata[] {
+    return ScannerUtils.sortAlphabetically(this.practices);
   }
 }
 

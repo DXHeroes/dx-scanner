@@ -1,6 +1,7 @@
 import { PracticeEvaluationResult } from '../model';
 import { PracticeContext } from '../contexts/practice/PracticeContext';
 import { ReportTable, ReportText } from '../reporters/ReporterData';
+import { FixerContext } from '../contexts/fixer/FixerContext';
 
 export interface IPractice<T extends {} = {}> {
   data?: Partial<T> & PracticeData;
@@ -23,6 +24,12 @@ export interface IPractice<T extends {} = {}> {
    * @param ctx Context used for evaluation.
    */
   evaluate(ctx: PracticeContext): Promise<PracticeEvaluationResult>;
+
+  /**
+   * Tries to fix the problem being checked by this practice
+   * @param ctx Context used for fixing
+   */
+  fix?(ctx: FixerContext): Promise<void>;
 }
 
 export type PracticeData = {

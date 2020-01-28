@@ -23,13 +23,23 @@ export class JavaNamingConventionsPractice implements IPractice {
 
     const regexDotJava = new RegExp('.java', 'i');
     const javaFiles = await ctx.fileInspector.scanFor(regexDotJava, '/', { shallow: false });
+
+    if (javaFiles.length === 0) {
+      return PracticeEvaluationResult.unknown;
+    }
+
+    const incorrectFiles = [];
+
     javaFiles.forEach((file) => {
-      if (file.baseName !== file.baseName.replace(/^\w/, (firstChar) => firstChar.toUpperCase())) {
-        return PracticeEvaluationResult.notPracticing;
-      } else {
-        return PracticeEvaluationResult.practicing;
+      const correctPascalCase = file.baseName.replace(/^\w/, (firstChar) => firstChar.toUpperCase());
+      if (file.baseName !== correctPascalCase) {
+        incorrectFiles.push(file.baseName);
       }
     });
+
+    if (incorrectFiles.length === 0) {
+      return PracticeEvaluationResult.practicing;
+    }
 
     return PracticeEvaluationResult.notPracticing;
   }

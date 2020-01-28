@@ -31,6 +31,9 @@ import { ThinPullRequestsPractice } from './LanguageIndependent/ThinPullRequests
 import { SecurityVulnerabilitiesPractice } from './JavaScript/SecurityVulnerabilitiesPractice';
 import { FirstTestPractice, SecondTestPractice, InvalidTestPractice } from '../scanner';
 import { JavaPackageManagementUsedPractice } from './Java/JavaPackageManagementUsed';
+import { JavaLoggerUsedPractice } from './Java/JavaLoggerUsedPractice';
+import { JavaTestingFrameworkUsedPractice } from './Java/JavaTestingFrameworkUsedPractice';
+import { JavaMockingFrameworkUsedPractice } from './Java/JavaMockingFrameworkUsed';
 import { JavaNamingConventionsPractice } from './Java/JavaNamingConventionsPractice';
 
 // register practices here
@@ -67,5 +70,8 @@ export const practices = [
   ThinPullRequestsPractice,
   SecurityVulnerabilitiesPractice,
   JavaPackageManagementUsedPractice,
+  JavaLoggerUsedPractice,
+  JavaTestingFrameworkUsedPractice,
+  JavaMockingFrameworkUsedPractice,
   JavaNamingConventionsPractice,
 ];
