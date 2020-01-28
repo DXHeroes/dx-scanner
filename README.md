@@ -16,6 +16,16 @@
 
 DX Scanner is an open source CLI tool that allows you to “measure” Developer Experience directly based on your source code. DX Scanner recommends practices that can help you with improving your product development.
 
+<!-- toc -->
+* [Supported Languages](#What-language-is-supported)
+* [Getting Started](#Getting-Started)
+  * [Installation](#Installation)
+  * [Usage](#Usage)
+* [Configuration](#Configuration-⚙️)
+  * [Practices](#Practices)
+  * [GitHub CI Action](#GitHub-Ci-Action)
+<!-- tocstop -->
+
 ![DX Scanner Demo](./demo.svg)
 
 
@@ -31,6 +41,7 @@ C++ | 🚧
 C# | 🚧
 Ruby | 🚧
 
+
 ## Getting Started 🏁
 
 ### Installation
@@ -44,31 +55,101 @@ Ruby | 🚧
 
 ### Usage
 
+<!--
+Help for command dxs
+-->
 ```
 Scan your project for possible DX recommendations.
 
 USAGE
-  $ dx-scanner [PATH] [OPTIONS]
+  $ dx-scanner [COMMAND]
+
+COMMANDS
+  init       Initialize DX Scanner configuration.
+  practices  List all practices id with name and impact.
+  run        Scan your project for possible DX recommendations.
+```
+
+<!--
+Help for command dxs run
+-->
+<details>
+<summary>dxs run</summary>
+
+```
+Scan your project for possible DX recommendations.
+
+USAGE
+  $ dx-scanner run [PATH]
 
 OPTIONS
   -a, --authorization=authorization  Credentials to the repository. (in format "token" or "username:token"; can be set as ENV variable DX_GIT_SERVICE_TOKEN)
-  -f, --fix                          Automatically fix problems
-  --fixPattern                       Fix only practices with ID matching this regex pattern
-  -h, --help                         Help
-  -i, --init                         Initialize DX Scanner configuration
+  -f, --fix                          Tries to fix problems automatically
+  -h, --help                         show CLI help
   -j, --json                         Print report in JSON
   -r, --recursive                    Scan all components recursively in all sub folders
   -v, --version                      Output the version number
   --ci                               CI mode
   --fail=high|medium|small|off|all   [default: high] Run scanner in failure mode. Exits process with code 1 for any non-practicing condition of given level.
+  --fixPattern=fixPattern            Fix only rules with IDs matching the regex.
+
+ALIASES
+  $ dx-scanner dxs
+  $ dx-scanner dxscanner
 
 EXAMPLES
   dx-scanner run
   dx-scanner run ./ --fail=high
   dx-scanner run github.com/DXHeroes/dx-scanner
 ```
+</details>
 
-<details open>
+
+<!--
+Help for commnad dxs practices
+-->
+<details>
+<summary>dxs practices</summary>
+
+```
+List all practices id with name and impact.
+
+USAGE
+  $ dx-scanner practices
+
+OPTIONS
+  -h, --help  show CLI help
+  -j, --json  Print practices in JSON
+```
+</details>
+
+<!--
+Help for commnad dxs init
+-->
+<details>
+<summary>dxs init</summary>
+
+```
+Initialize DX Scanner configuration.
+
+USAGE
+  $ dx-scanner init
+
+OPTIONS
+  -h, --help  show CLI help
+```
+</details>
+
+
+## Configuration ⚙️
+Add ```dxscannerrc.*``` config file to change default configuration settings. It can be a ```.json```, ```.yml```, and even a dotfile!
+
+You can also run ```dxs init``` to initialize config automatically.
+
+### Practices ###   
+You can switch off practices you do not want to scan or change their impact. Use the id of the practice.
+
+<details>
 <summary>List of All Practices 🔍</summary>
 
 Practice | Impact | Language Independent | JavaScript/TypeScript | Java
@@ -90,20 +171,20 @@ Use JS Frontend Testing Framework | <span style="color:yellow">medium</span> | �
 Use JS Frontend Build Tools | <span style="color:yellow">medium</span> | ❌ | ✅ | ❌
 Use JS Backend Testing Frameworks | <span style="color:red">high</span> | ❌ | ✅ | ❌
 Use a JS Logging Library | <span style="color:green">small</span> | ❌ | ✅ | ❌
-Use JS Package Management | <span style="color:red">high</span> | ❌ | ✅ | ❌
+Use Package Management | <span style="color:red">high</span> | ❌ | ✅ | ✅
 Configure Scripts in package.json | <span style="color:yellow">medium</span> | ❌ | ✅ | ❌
-Update Dependencies of Major Level | <span style="color:green">small</span> | ❌ | ✅ | ❌
-Update Dependencies of Minor and Patch Level | <span style="color:red">high</span> | ❌  | ✅ | ❌
+Update Dependencies of Major Level | <span style="color:green">small</span> | ❌ | ✅ | ✅ 
+Update Dependencies of Minor and Patch Level | <span style="color:red">high</span> | ❌  | ✅ | ✅ 
 Do PullRequests | <span style="color:yellow">medium</span> | ✅ | ✅ | ✅
+Break down large pull requests into smaller ones | | <span style="color:yellow">medium</span> | ✅ | ✅ | ✅
 Solve Pull Requests Continuously | <span style="color:yellow">medium</span> | ✅ | ✅ | ✅
+Solve Issues Continuously | <span style="color:yellow">medium</span> | ✅ | ✅ | ✅
 Write Commit Messages by Convention | <span style="color:green">small</span> | ✅ | ✅ | ✅
+Use Mocking Frameworks for Tests  | <span style="color:green">small</span> | ✅ | ✅ | ✅
+Use Testing Frameworks | <span style="color:green">high</span> | ❌ | ❌ | ✅
+Use a Java Logging Dependency | <span style="color:green">small</span> | ❌ | ❌ | ✅
+Security vulnerabilities detected | <span style="color:green">high</span> | ❌ | ✅ | ❌
 </details>
-
-## Configuration ⚙️
-Add ```dxscannerrc.*``` config file to change default configuration settings. It can be a ```.json```, ```.yml```, and even a dotfile!
-
-**Practices**  
-You can switch off practices you do not want to scan or change their impact. Use the id of the practice.
 
 Possible impact:
 ```
@@ -119,11 +200,16 @@ off
 ```
 
 Example :
-```
+```json
+dxscannerrc.json
+
 {
     "practices": {
         "JavaScript.GitignoreCorrectlySet": "medium",
-        "JavaScript.LoggerUsed": "off"
+        "JavaScript.LoggerUsed": "off",
+        "LanguageIndependent.DoesPullRequests": {
+          "impact": "small"
+        }
     }
 }
 ```
