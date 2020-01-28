@@ -11,7 +11,6 @@ if (dev) {
   console.warn("WARNING: You're running DX Scanner in development mode.")
 }
 
-require(`../${dev ? 'src' : 'lib'}`)
-  .run()
+require('@oclif/command').run()
   .then(require('@oclif/command/flush'))
   .catch(require('@oclif/errors/handle'));

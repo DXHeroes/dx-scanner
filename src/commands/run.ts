@@ -1,4 +1,5 @@
 /* eslint-disable no-process-env */
+import 'reflect-metadata';
 import { Command, flags } from '@oclif/command';
 import cli from 'cli-ux';
 import debug from 'debug';
