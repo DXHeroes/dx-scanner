@@ -1,3 +1,10 @@
+## [2.0.1](https://github.com/dxheroes/dx-scanner/compare/v2.0.0...v2.0.1) (2020-01-28)
+
+
+### Bug Fixes
+
+* back to single-command CLI ([21c539b](https://github.com/dxheroes/dx-scanner/commit/21c539bff06922315a28ca2ac5185d2306d0bdfc))
+
 # [1.38.0](https://github.com/dxheroes/dx-scanner/compare/v1.37.1...v1.38.0) (2020-01-27)
 
 
