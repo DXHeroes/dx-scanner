@@ -6,7 +6,7 @@ import { PracticeContext } from '../../contexts/practice/PracticeContext';
 @DxPractice({
   id: 'Java.NamingConventions',
   name: 'Use Java Naming Conventions',
-  impact: PracticeImpact.high,
+  impact: PracticeImpact.small,
   suggestion: 'Java class names should begin capitalized as UpperCamelCase or PascalCase in a regular naming convention.',
   reportOnlyOnce: true,
   url: 'https://www.oracle.com/technetwork/java/codeconventions-135099.html',
