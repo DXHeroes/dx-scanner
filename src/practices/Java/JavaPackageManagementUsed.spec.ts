@@ -55,6 +55,13 @@ describe('JavaPackageManagementUsedPractice', () => {
     expect(result).toEqual(true);
   });
 
+  it('Is applicable if it is Kotlin', async () => {
+    containerCtx.practiceContext.projectComponent.language = ProgrammingLanguage.Kotlin;
+
+    const result = await practice.isApplicable(containerCtx.practiceContext);
+    expect(result).toEqual(true);
+  });
+
   it('Is not applicable to other languages', async () => {
     containerCtx.practiceContext.projectComponent.language = ProgrammingLanguage.Python;
     const result = await practice.isApplicable(containerCtx.practiceContext);
