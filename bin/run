@@ -1,6 +1,57 @@
 #!/usr/bin/env node
-/* eslint-disable @typescript-eslint/no-require-imports */
+/* eslint-disable @typescript-eslint/no-var-requires, @typescript-eslint/no-require-imports */
 
-require('@oclif/command').run()
-  .then(require('@oclif/command/flush'))
-  .catch(require('@oclif/errors/handle'));
+const fs = require('fs');
+const path = require('path');
+const project = path.join(__dirname, '../tsconfig.json');
+const dev = fs.existsSync(project);
+
+if (dev) {
+  require('ts-node').register({ project });
+  console.warn("WARNING: You're running DX Scanner in development mode.")
+}
+
+require(`../${dev ? 'src' : 'lib'}`)
+  .run()
+// //   .then(require('@oclif/command/flush'))
+// //   .catch(require('@oclif/errors/handle'));
+
+// const cmd = require(`../${dev ? 'src' : 'lib'}`)
+// // console.log(this.config)
+// // cmd.pjson.oclif.commands = `../${dev ? 'src' : 'lib'}`
+
+// cmd
+//   .run()
+//   // .run(process.argv.slice(2), { pjson: { oclif: { commands: "./src/commands" }}})
+//   .then(require('@oclif/command/flush'))
+//   .catch(require('@oclif/errors/handle'));
+
+
+// const commander = require('commander');
+// const program = new commander.Command();
+
+// const program2 = new commander.Command();
+// program.version(require("../package.json").version);
+// program.command("a").description("aa").action((source, destination) => {
+//     console.log('cmd A');
+//   });
+
+// program2.command("b").description("bb").action((source, destination) => {
+//     console.log('cmd B');
+//   });
+
+//   program.program2
+
+// //   // error on unknown commands
+// // program.on('command:*', function () {
+// //   console.error('Invalid command: %s\nSee --help for a list of available commands.', program.args.join(' '));
+// //   process.exit(1);
+// // });
+
+// program.parse(process.argv);
+
+// if (program.debug) console.log(program.opts());
+// console.log('pizza details:');
+// if (program.small) console.log('- small pizza size');
+// if (program.pizzaType) console.log(`- ${program.pizzaType}`);
+

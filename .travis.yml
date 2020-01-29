@@ -52,11 +52,12 @@ jobs:
   - stage: runtime test
     if: branch = master
     scripts:
-      - bin/run run
-      - bin/run run https://github.com/DXHeroes/dx-scanner
-      - bin/run run https://github.com/moment/luxon
-      - bin/run run https://github.com/intoli/remote-browser
-      - bin/run run
+      - npm -g i .
+      - dx-scanner run
+      - dx-scanner run https://github.com/DXHeroes/dx-scanner
+      - dx-scanner run https://github.com/moment/luxon
+      - dx-scanner run https://github.com/intoli/remote-browser
+      - dx-scanner run
     os: windows
   - os: linux
   - stage: release
@@ -67,7 +68,7 @@ jobs:
       email: dev@dxheroes.io
       skip_cleanup: true
       script:
-        - npx semantic-release --debug
+        - npx semantic-release
       on:
         all_branches: true
   - stage: publish gh action in docker container

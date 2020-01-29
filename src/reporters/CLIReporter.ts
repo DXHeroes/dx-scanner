@@ -1,5 +1,5 @@
 import { blue, bold, Color, green, grey, italic, red, reset, underline, yellow, cyan } from 'colors';
-import { injectable } from 'inversify';
+import { injectable, inject } from 'inversify';
 import { PracticeImpact, PracticeMetadata, PracticeEvaluationResult } from '../model';
 import { IReporter, PracticeWithContextForReporter } from './IReporter';
 import { ReporterUtils } from './ReporterUtils';
@@ -7,9 +7,17 @@ import { PracticeDetail } from '../practices/IPractice';
 import { GitServiceUtils } from '../services/git/GitServiceUtils';
 import { ReportDetailType, ReporterData } from './ReporterData';
 import { assertNever } from '../lib/assertNever';
+import { ArgumentsProvider } from '../scanner';
+import { Types } from '../types';
 
 @injectable()
 export class CLIReporter implements IReporter {
+  private readonly argumentsProvider: ArgumentsProvider;
+
+  constructor(@inject(Types.ArgumentsProvider) argumentsProvider: ArgumentsProvider) {
+    this.argumentsProvider = argumentsProvider;
+  }
+
   async report(practicesAndComponents: PracticeWithContextForReporter[]): Promise<void> {
     const reportString = this.buildReport(practicesAndComponents);
     console.log(reportString);
@@ -77,6 +85,7 @@ export class CLIReporter implements IReporter {
     lines.push(italic(blue('We can help you with both. :-)')));
     lines.push(italic(blue('- https://dxheroes.io')));
     lines.push(reset(' '));
+    lines.push(grey(`You can run the command with option ${italic('-d')} or ${italic('--details')} to show detailed informations.`));
     return lines.join('\n');
   }
 
@@ -111,7 +120,7 @@ export class CLIReporter implements IReporter {
     for (const practiceWithContext of practices) {
       lines.push(this.linesForPractice(practiceWithContext.practice, color));
 
-      if (practiceWithContext.practice.data?.details) {
+      if (this.argumentsProvider.details && practiceWithContext.practice.data?.details) {
         const linesWithDetail = practiceWithContext.practice.data.details.map((d) => this.renderDetail(d)).join(' ');
         lines.push(reset(grey(linesWithDetail)));
       }
