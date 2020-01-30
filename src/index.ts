@@ -6,16 +6,16 @@ import { PracticeImpact } from './model';
 import Init from './commands/init';
 import Practices from './commands/practices';
 import _ from 'lodash';
+import updateNotifier from 'update-notifier';
 // eslint-disable-next-line @typescript-eslint/no-require-imports, @typescript-eslint/no-var-requires
 const pjson = require('../package.json');
 
 class DXScannerCommand {
   static async run() {
     const cmder = new commander.Command();
-    cmder.version(pjson.version);
 
-    // cmd: init
-    cmder.name('dx-scanner');
+    // default cmd config
+    cmder.version(pjson.version).name('dx-scanner');
 
     // cmd: run
     cmder
@@ -41,6 +41,7 @@ class DXScannerCommand {
       .option('-j --json', 'print report in JSON', false)
       .option('-r --recursive', 'scan all components recursively in all sub folders', false)
       .action(Run.run)
+      .action(this.notifyUpdate)
       .on('--help', () => {
         console.log('');
         console.log('Aliases:');
@@ -57,14 +58,16 @@ class DXScannerCommand {
     cmder
       .command('init')
       .description('Initialize DX Scanner configuration')
-      .action(Init.run);
+      .action(Init.run)
+      .action(this.notifyUpdate);
 
     // cmd: practices
     cmder
       .command('practices')
-      .description('List all practices id with name and impact')
+      // .description('List all practices id with name and impact')
       .option('-j --json', 'print practices in JSON')
-      .action(Practices.run);
+      .action(Practices.run)
+      .action(this.notifyUpdate);
 
     if (!process.argv.slice(2).length) {
       cmder.help();
@@ -74,13 +77,6 @@ class DXScannerCommand {
     cmder.on('command:*', () => {
       console.error('Invalid command: %s\nSee --help for a list of available commands.', cmder.args.join(' '));
       process.exit(1);
-    });
-
-    // error on unknown commands
-    cmder.on('*', () => {
-      // const notifier = updateNotifier({ pkg: 'dx-scanner' });
-
-      console.log('ahojjjj');
     });
 
     await cmder.parseAsync(process.argv);
@@ -97,6 +93,10 @@ class DXScannerCommand {
       );
       process.exit(1);
     }
+  };
+
+  private static notifyUpdate = () => {
+    updateNotifier({ pkg: pjson, updateCheckInterval: 0, shouldNotifyInNpmScript: true }).notify();
   };
 }
 

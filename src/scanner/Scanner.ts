@@ -112,7 +112,7 @@ export class Scanner {
     if (!yamlExists && !fileExists && !ymlExists && !jsonExists) {
       await this.createConfiguration(filePath);
     } else {
-      console.log(`You already have a dx-scanner config.`);
+      cli.warn('You already have a dx-scanner config.');
     }
 
     cli.action.stop();
