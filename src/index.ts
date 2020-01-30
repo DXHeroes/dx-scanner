@@ -76,6 +76,13 @@ class DXScannerCommand {
       process.exit(1);
     });
 
+    // error on unknown commands
+    cmder.on('*', () => {
+      // const notifier = updateNotifier({ pkg: 'dx-scanner' });
+
+      console.log('ahojjjj');
+    });
+
     await cmder.parseAsync(process.argv);
   }
 
