@@ -64,7 +64,7 @@ class DXScannerCommand {
     // cmd: practices
     cmder
       .command('practices')
-      // .description('List all practices id with name and impact')
+      .description('List all practices id with name and impact')
       .option('-j --json', 'print practices in JSON')
       .action(Practices.run)
       .action(this.notifyUpdate);
