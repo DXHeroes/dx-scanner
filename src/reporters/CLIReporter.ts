@@ -85,7 +85,10 @@ export class CLIReporter implements IReporter {
     lines.push(italic(blue('We can help you with both. :-)')));
     lines.push(italic(blue('- https://dxheroes.io')));
     lines.push(reset(' '));
-    lines.push(grey(`You can run the command with option ${italic('-d')} or ${italic('--details')} to show detailed informations.`));
+
+    if (!this.argumentsProvider.details)
+      lines.push(grey(`You can run the command with option ${italic('-d')} or ${italic('--details')} to show detailed informations.`));
+
     return lines.join('\n');
   }
 
