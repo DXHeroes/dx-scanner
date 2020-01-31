@@ -2,6 +2,8 @@ import { IPractice } from '../IPractice';
 import { PracticeEvaluationResult, PracticeImpact, ProgrammingLanguage } from '../../model';
 import { DxPractice } from '../DxPracticeDecorator';
 import { PracticeContext } from '../../contexts/practice/PracticeContext';
+import camelCase from 'camelcase';
+import { Metadata } from '../../services/model';
 
 @DxPractice({
   id: 'Java.NamingConventions',
@@ -13,7 +15,7 @@ import { PracticeContext } from '../../contexts/practice/PracticeContext';
 })
 export class JavaNamingConventionsPractice implements IPractice {
   async isApplicable(ctx: PracticeContext): Promise<boolean> {
-    return ctx.projectComponent.language === ProgrammingLanguage.Java;
+    return ctx.projectComponent.language === ProgrammingLanguage.Java || ctx.projectComponent.language === ProgrammingLanguage.Kotlin;
   }
 
   async evaluate(ctx: PracticeContext): Promise<PracticeEvaluationResult> {
@@ -21,17 +23,23 @@ export class JavaNamingConventionsPractice implements IPractice {
       return PracticeEvaluationResult.unknown;
     }
 
-    const regexDotJava = new RegExp('.java', 'i');
-    const javaFiles = await ctx.fileInspector.scanFor(regexDotJava, '/', { shallow: false });
+    const scannedFiles: Metadata[] = [];
 
-    if (javaFiles.length === 0) {
+    const regex = new RegExp('.(java|kt|kts)', 'i');
+    await ctx.fileInspector.scanFor(regex, '/', { shallow: false }).then((files) => {
+      files.forEach((file) => {
+        scannedFiles.push(file);
+      });
+    });
+
+    if (scannedFiles.length === 0) {
       return PracticeEvaluationResult.unknown;
     }
 
     const incorrectFiles = [];
 
-    javaFiles.forEach((file) => {
-      const correctPascalCase = file.baseName.replace(/^\w/, (firstChar) => firstChar.toUpperCase());
+    scannedFiles.forEach((file) => {
+      const correctPascalCase = camelCase(file.baseName, { pascalCase: true });
       if (file.baseName !== correctPascalCase) {
         incorrectFiles.push(file.baseName);
       }

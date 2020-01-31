@@ -17,7 +17,7 @@ describe('JavaPackageManagementUsedPractice', () => {
     containerCtx.practiceContext.fileInspector!.purgeCache();
   });
 
-  it('Returns practicing Java class files are using correct naming conventions', async () => {
+  it('Returns practicing if Java class files are using correct naming conventions', async () => {
     containerCtx.virtualFileSystemService.setFileSystem({
       'CorrectNamingConvention.java': '',
     });
@@ -25,9 +25,42 @@ describe('JavaPackageManagementUsedPractice', () => {
     expect(evaluated).toEqual(PracticeEvaluationResult.practicing);
   });
 
-  it('Returns NOT practicing Java class files are using incorrect naming conventions', async () => {
+  it('Returns practicing if Kotlin class files are using correct naming conventions', async () => {
+    containerCtx.virtualFileSystemService.setFileSystem({
+      'CorrectNamingConvention.kt': '',
+      'CorrectNamingConventionTwo.kts': '',
+    });
+    const evaluated = await practice.evaluate(containerCtx.practiceContext);
+    expect(evaluated).toEqual(PracticeEvaluationResult.practicing);
+  });
+
+  it('Returns NOT practicing if Java class files are using incorrect naming conventions', async () => {
+    containerCtx.virtualFileSystemService.setFileSystem({
+      'incorrect_snake_case_naming_convention.java': '',
+    });
+    const evaluated = await practice.evaluate(containerCtx.practiceContext);
+    expect(evaluated).toEqual(PracticeEvaluationResult.notPracticing);
+  });
+
+  it('Returns NOT practicing if Kotlin class files are using incorrect naming conventions', async () => {
+    containerCtx.virtualFileSystemService.setFileSystem({
+      'incorrect_snake_case_naming_convention.kt': '',
+    });
+    const evaluated = await practice.evaluate(containerCtx.practiceContext);
+    expect(evaluated).toEqual(PracticeEvaluationResult.notPracticing);
+  });
+
+  it('Returns NOT practicing if Java class files are not capitalized', async () => {
     containerCtx.virtualFileSystemService.setFileSystem({
       'incorrectNamingConvention.java': '',
+    });
+    const evaluated = await practice.evaluate(containerCtx.practiceContext);
+    expect(evaluated).toEqual(PracticeEvaluationResult.notPracticing);
+  });
+
+  it('Returns NOT practicing if Kotlin class files are not capitalized', async () => {
+    containerCtx.virtualFileSystemService.setFileSystem({
+      'incorrectNamingConvention.kt': '',
     });
     const evaluated = await practice.evaluate(containerCtx.practiceContext);
     expect(evaluated).toEqual(PracticeEvaluationResult.notPracticing);
@@ -43,17 +76,27 @@ describe('JavaPackageManagementUsedPractice', () => {
     expect(evaluated).toEqual(PracticeEvaluationResult.practicing);
   });
 
+  it('Returns practicing on deep Kotlin class files are using correct naming conventions', async () => {
+    containerCtx.virtualFileSystemService.setFileSystem({
+      'CorrectNamingConvention.kt': '',
+      'src/main/java/org/vision/root/CronOperations/PreciselyCorrectNamingConvention.kt': '',
+      'src/main/java/org/vision/root/CronOperations/VeryCorrectNamingConvention.kt': '',
+    });
+    const evaluated = await practice.evaluate(containerCtx.practiceContext);
+    expect(evaluated).toEqual(PracticeEvaluationResult.practicing);
+  });
+
   it('Returns NOT practicing on deep Java class files are using incorrect naming conventions', async () => {
     containerCtx.virtualFileSystemService.setFileSystem({
-      'CorrectNamingConvention.java': '',
-      'src/main/java/org/vision/root/CronOperations/VeryCorrectNamingConvention.java': '',
-      'src/main/java/org/vision/root/CronOperations/incorrectNamingConvention.java': '',
+      'CorrectNamingConvention.kt': '',
+      'src/main/java/org/vision/root/CronOperations/VeryCorrectNamingConvention.kt': '',
+      'src/main/java/org/vision/root/CronOperations/incorrectNamingConvention.kt': '',
     });
     const evaluated = await practice.evaluate(containerCtx.practiceContext);
     expect(evaluated).toEqual(PracticeEvaluationResult.notPracticing);
   });
 
-  it('Returns unknown if there are no .java files', async () => {
+  it('Returns unknown if there are no .java or .kt files', async () => {
     containerCtx.virtualFileSystemService.setFileSystem({
       'pom.xml': '...',
       'build.gradle': '...',
@@ -70,6 +113,12 @@ describe('JavaPackageManagementUsedPractice', () => {
 
   it('Is applicable to Java', async () => {
     containerCtx.practiceContext.projectComponent.language = ProgrammingLanguage.Java;
+    const result = await practice.isApplicable(containerCtx.practiceContext);
+    expect(result).toEqual(true);
+  });
+
+  it('Is applicable to Kotlin', async () => {
+    containerCtx.practiceContext.projectComponent.language = ProgrammingLanguage.Kotlin;
     const result = await practice.isApplicable(containerCtx.practiceContext);
     expect(result).toEqual(true);
   });
