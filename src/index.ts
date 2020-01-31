@@ -41,7 +41,6 @@ class DXScannerCommand {
       .option('-j --json', 'print report in JSON', false)
       .option('-r --recursive', 'scan all components recursively in all sub folders', false)
       .action(Run.run)
-      .action(this.notifyUpdate)
       .on('--help', () => {
         console.log('');
         console.log('Aliases:');
@@ -58,16 +57,14 @@ class DXScannerCommand {
     cmder
       .command('init')
       .description('Initialize DX Scanner configuration')
-      .action(Init.run)
-      .action(this.notifyUpdate);
+      .action(Init.run);
 
     // cmd: practices
     cmder
       .command('practices')
       .description('List all practices id with name and impact')
       .option('-j --json', 'print practices in JSON')
-      .action(Practices.run)
-      .action(this.notifyUpdate);
+      .action(Practices.run);
 
     if (!process.argv.slice(2).length) {
       cmder.help();
@@ -78,6 +75,9 @@ class DXScannerCommand {
       console.error('Invalid command: %s\nSee --help for a list of available commands.', cmder.args.join(' '));
       process.exit(1);
     });
+
+    // notify about new version of CLI
+    cmder.on('close', () => this.notifyUpdate);
 
     await cmder.parseAsync(process.argv);
   }
