@@ -77,5 +77,25 @@ describe('Scanner', () => {
 
     expect(fixMock).toBeCalled();
   });
+  it('fix settings from config works', async () => {
+    jest.setTimeout(15000);
+    const fixMock = jest.fn();
+    // containerCtx.container.bind(FileSystemService).toConstantValue(containerCtx.virtualFileSystemService);
+    containerCtx = createTestContainer({ fix: true });
+    containerCtx.virtualFileSystemService.setFileSystem({
+      '.dxscannerrc.yaml': `practices:
+      JavaScript.ESLintWithoutErrorsPractice:
+        fix: false`,
+    });
+    ESLintWithoutErrorsPractice.prototype.fix = fixMock;
+    ESLintWithoutErrorsPractice.prototype.evaluate = () => Promise.resolve(PracticeEvaluationResult.notPracticing);
+    containerCtx.container.bind('ESLintWithoutErrorsPractice').to(ESLintWithoutErrorsPractice);
+    const scanner = containerCtx.container.get(Scanner);
+
+    await scanner.scan({ determineRemote: false });
+
+    expect(fixMock).not.toBeCalled();
+  });
+  it.todo('fixPattern flag has higher precedence than config');
   it.todo('fixPattern flag works');
 });
