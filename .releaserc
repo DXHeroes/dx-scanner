@@ -14,14 +14,5 @@
         "markdownReleaseNotes": true
       }
     ]
-  ],
-  "branches": [
-    "master",
-    "next",
-    { "name": "beta", "prerelease": "beta" },
-    { "name": "alpha", "prerelease": "alpha" },
-    { "name": "feature/*", "prerelease": '${name.replace(/feature\//, "pre-")}' },
-    { "name": "hotfix/*", "prerelease": '${name.replace(/hotfix\//, "pre-")}' },
-    { "name": "debug/*", "prerelease": '${name.replace(/debug\//, "pre-")}' }
   ]
 }

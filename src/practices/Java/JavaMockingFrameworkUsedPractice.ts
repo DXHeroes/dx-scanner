@@ -13,7 +13,7 @@ import { PracticeContext } from '../../contexts/practice/PracticeContext';
 })
 export class JavaMockingFrameworkUsedPractice implements IPractice {
   async isApplicable(ctx: PracticeContext): Promise<boolean> {
-    return ctx.projectComponent.language === ProgrammingLanguage.Java;
+    return ctx.projectComponent.language === ProgrammingLanguage.Java || ctx.projectComponent.language === ProgrammingLanguage.Kotlin;
   }
 
   async evaluate(ctx: PracticeContext): Promise<PracticeEvaluationResult> {

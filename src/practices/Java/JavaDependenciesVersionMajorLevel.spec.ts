@@ -1,4 +1,4 @@
-import { PracticeEvaluationResult } from '../../model';
+import { PracticeEvaluationResult, ProgrammingLanguage } from '../../model';
 import { JavaDependenciesVersionMajorLevel } from './JavaDependenciesVersionMajorLevel';
 import { createTestContainer, TestContainerContext } from '../../inversify.config';
 import { mockPackage } from '../../test/helpers/mockPackage';
@@ -42,5 +42,26 @@ describe('JavaDependenciesVersionPractice of Major Level', () => {
 
     const evaluated = await practice.evaluate(containerCtx.practiceContext);
     expect(evaluated).toEqual(PracticeEvaluationResult.practicing);
+  });
+
+  it('Is applicable if it is Java', async () => {
+    containerCtx.practiceContext.projectComponent.language = ProgrammingLanguage.Java;
+
+    const result = await practice.isApplicable(containerCtx.practiceContext);
+    expect(result).toEqual(true);
+  });
+
+  it('Is applicable if it is Kotlin', async () => {
+    containerCtx.practiceContext.projectComponent.language = ProgrammingLanguage.Kotlin;
+
+    const result = await practice.isApplicable(containerCtx.practiceContext);
+    expect(result).toEqual(true);
+  });
+
+  it('Is NOT applicable if it is not Java or Kotlin', async () => {
+    containerCtx.practiceContext.projectComponent.language = ProgrammingLanguage.Python;
+
+    const result = await practice.isApplicable(containerCtx.practiceContext);
+    expect(result).toEqual(false);
   });
 });

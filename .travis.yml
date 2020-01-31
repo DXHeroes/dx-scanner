@@ -38,9 +38,9 @@ notifications:
 script:
   - yarn build
   - yarn test --coverage
-  - bin/run
+  - bin/run -v
   - yarn test:codecov:upload
-  - bin/run run . --fail=high
+  - bin/run . --fail=high
 
 jobs:
   include:
@@ -52,11 +52,11 @@ jobs:
   - stage: runtime test
     if: branch = master
     scripts:
-      - bin/run run
-      - bin/run run https://github.com/DXHeroes/dx-scanner
-      - bin/run run https://github.com/moment/luxon
-      - bin/run run https://github.com/intoli/remote-browser
-      - bin/run run
+      - bin/run -v
+      - bin/run https://github.com/DXHeroes/dx-scanner
+      - bin/run https://github.com/moment/luxon
+      - bin/run https://github.com/intoli/remote-browser
+      - bin/run
     os: windows
   - os: linux
   - stage: release
