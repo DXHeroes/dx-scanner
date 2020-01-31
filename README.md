@@ -17,10 +17,10 @@
 DX Scanner is an open source CLI tool that allows you to “measure” Developer Experience directly based on your source code. DX Scanner recommends practices that can help you with improving your product development.
 
 <!-- toc -->
-* [Supported Languages](#What-language-is-supported)
 * [Getting Started](#Getting-Started)
   * [Installation](#Installation)
   * [Usage](#Usage)
+* [Supported Languages](#What-language-is-supported)
 * [Configuration](#Configuration-⚙️)
   * [Practices](#Practices)
   * [GitHub CI Action](#GitHub-Ci-Action)
@@ -62,12 +62,16 @@ Help for command dxs
 Scan your project for possible DX recommendations.
 
 USAGE
-  $ dx-scanner [COMMAND]
+  $ dx-scanner [COMMAND] [OPTIONS]
+
+OPTIONS
+  -V, --version           output the version number
+  -h, --help              output usage information
 
 COMMANDS
-  init       Initialize DX Scanner configuration.
-  practices  List all practices id with name and impact.
-  run        Scan your project for possible DX recommendations.
+  run [path] [options]    Scan your project for possible DX recommendations
+  init                    Initialize DX Scanner configuration
+  practices [options]     List all practices id with name and impact
 ```
 
 <!--
@@ -80,18 +84,18 @@ Help for command dxs run
 Scan your project for possible DX recommendations.
 
 USAGE
-  $ dx-scanner run [PATH]
+  $ dx-scanner run [PATH] [OPTIONS]
 
 OPTIONS
-  -a, --authorization=authorization  Credentials to the repository. (in format "token" or "username:token"; can be set as ENV variable DX_GIT_SERVICE_TOKEN)
-  -f, --fix                          Tries to fix problems automatically
-  -h, --help                         show CLI help
-  -j, --json                         Print report in JSON
-  -r, --recursive                    Scan all components recursively in all sub folders
-  -v, --version                      Output the version number
-  --ci                               CI mode
-  --fail=high|medium|small|off|all   [default: high] Run scanner in failure mode. Exits process with code 1 for any non-practicing condition of given level.
-  --fixPattern=fixPattern            Fix only rules with IDs matching the regex.
+  -a --authorization <authorization>  credentials to the repository (in format "token" or "username:token"; can be set as ENV variable DX_GIT_SERVICE_TOKEN)
+  --ci                                CI mode (default: false)
+  -d --details                        print details in reports
+  --fail <impact>                     exits process with code 1 for any non-practicing condition of given level (high|medium|small|hint|off|all) (default: "high")
+  --fix                               tries to fix problems automatically (default: false)
+  --fixPattern <pattern>              fix only rules with IDs matching the regex
+  -j --json                           print report in JSON (default: false)
+  -r --recursive                      scan all components recursively in all sub folders (default: false)
+  -h, --help                          output usage information
 
 ALIASES
   $ dx-scanner dxs
@@ -115,11 +119,11 @@ Help for commnad dxs practices
 List all practices id with name and impact.
 
 USAGE
-  $ dx-scanner practices
+  $ dx-scanner practices [OPTIONS]
 
 OPTIONS
-  -h, --help  show CLI help
-  -j, --json  Print practices in JSON
+  -h, --help            output usage information
+  -j, --json            print practices in JSON
 ```
 </details>
 
@@ -136,7 +140,7 @@ USAGE
   $ dx-scanner init
 
 OPTIONS
-  -h, --help  show CLI help
+  -h, --help            output usage information
 ```
 </details>
 
