@@ -14,11 +14,11 @@ class DXScannerCommand {
   static async run() {
     const cmder = new commander.Command();
 
-    //customize default help
-    cmder.name('dx-scanner').usage('[command] [options] ');
-
     // default cmd config
-    cmder.version(pjson.version).name('dx-scanner');
+    cmder
+      .version(pjson.version)
+      .name('dx-scanner')
+      .usage('[command] [options] ');
 
     // cmd: run
     cmder
