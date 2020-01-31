@@ -14,12 +14,17 @@ class DXScannerCommand {
   static async run() {
     const cmder = new commander.Command();
 
+    //customize default help
+    cmder.name('dx-scanner').usage('[command] [options] ');
+
     // default cmd config
     cmder.version(pjson.version).name('dx-scanner');
 
     // cmd: run
     cmder
       .command('run [path]')
+      //customize default help
+      .usage('[path] [options]')
       .description('Scan your project for possible DX recommendations')
       .option(
         '-a --authorization <authorization>',
