@@ -14,12 +14,13 @@
 [![oclif](https://img.shields.io/badge/cli-oclif-brightgreen.svg)](https://oclif.io)
 ![TypeScript](https://img.shields.io/badge/%3C%2F%3E-Typescript-blue)
 
-DX Scanner is an open source CLI tool that allows you to “measure” Developer Experience directly based on your source code. DX Scanner recommends practices that can help you with improving your product development.
+DX Scanner is an open source CLI tool that allows you to “measure” Developer Experience directly based on your source code. DX Scanner recommends practices that can help you with improving your product development. You can fix some problems automatically with just one command.
 
 <!-- toc -->
 * [Getting Started](#Getting-Started)
   * [Installation](#Installation)
   * [Usage](#Usage)
+  * [Fix](#Fix)
 * [Supported Languages](#What-language-is-supported)
 * [Configuration](#Configuration-⚙️)
   * [Practices](#Practices)
@@ -142,6 +143,17 @@ USAGE
 OPTIONS
   -h, --help            output usage information
 ```
+</details>
+
+### Fix  
+
+Fix problems DX Scanner detected with this command:
+```
+dx-scanner [PATH] --fix
+```
+<details>
+<summary>Fixable practices</summary>
+- Eslint Without Errors
 </details>
 
 
