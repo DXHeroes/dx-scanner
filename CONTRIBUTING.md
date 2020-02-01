@@ -30,7 +30,7 @@ Follow these steps:
    - Build with `yarn build`  
    - Run tests with `yarn test`  
    - Lint code with `yarn lint` or `yarn lint:fix` with autofixer  
-3. **Commit** changes to your own branch  
+3. **Commit** changes to your own branch by convention. See https://www.conventionalcommits.org/en/v1.0.0/
 4. **Push** your work back up to your fork  
 5. Submit a **Pull Request** so that we can review your changes
 
