@@ -20,7 +20,9 @@ DX Scanner is an open source CLI tool that allows you to “measure” Developer
 * [Getting Started](#Getting-Started)
   * [Installation](#Installation)
   * [Usage](#Usage)
-  * [Fix](#Fix)
+    * [Commands](#Commands)
+    * [Options for dx-scanner run`](#options-for-dx-scanner-run)
+    * [Auto-fixer](#Auto-fixer)
 * [Supported Languages](#What-language-is-supported)
 * [Configuration](#Configuration-⚙️)
   * [Practices](#Practices)
@@ -55,39 +57,47 @@ Ruby | 🚧
   ```yarn global add dx-scanner```
 
 ### Usage
+<!--
+Quick start
+-->
+```
+  dx-scanner run [path] [options]
+```
+
+Example:
+```
+  dx-scanner run https://github.com/DXHeroes/dx-scanner
+```
 
 <!--
 Help for command dxs
 -->
+#### Commands
 ```
-Scan your project for possible DX recommendations.
+Usage: dx-scanner [command] [options] 
 
-USAGE
-  $ dx-scanner [COMMAND] [OPTIONS]
+Options:
+  -V, --version         output the version number
+  -h, --help            output usage information
 
-OPTIONS
-  -V, --version           output the version number
-  -h, --help              output usage information
+Commands:
+  run [options] [path]  Scan your project for possible DX recommendations
+  init                  Initialize DX Scanner configuration
+  practices [options]   List all practices id with name and impact
 
-COMMANDS
-  run [path] [options]    Scan your project for possible DX recommendations
-  init                    Initialize DX Scanner configuration
-  practices [options]     List all practices id with name and impact
+Aliases:
+  dxs
+  dxscanner
 ```
 
-<!--
-Help for command dxs run
--->
-<details>
-<summary>dxs run</summary>
+#### Options for `dx-scanner run`
 
 ```
-Scan your project for possible DX recommendations.
+Usage: dx-scanner run [path] [options]
 
-USAGE
-  $ dx-scanner run [PATH] [OPTIONS]
+Scan your project for possible DX recommendations
 
-OPTIONS
+Options:
   -a --authorization <authorization>  credentials to the repository (in format "token" or "username:token"; can be set as ENV variable DX_GIT_SERVICE_TOKEN)
   --ci                                CI mode (default: false)
   -d --details                        print details in reports
@@ -98,71 +108,27 @@ OPTIONS
   -r --recursive                      scan all components recursively in all sub folders (default: false)
   -h, --help                          output usage information
 
-ALIASES
-  $ dx-scanner dxs
-  $ dx-scanner dxscanner
-
-EXAMPLES
+Examples:
   dx-scanner run
   dx-scanner run ./ --fail=high
   dx-scanner run github.com/DXHeroes/dx-scanner
 ```
 </details>
 
+#### Auto-fixer
 
-<!--
-Help for commnad dxs practices
--->
-<details>
-<summary>dxs practices</summary>
-
+Fix problems detected by DX Scanner automatically.
 ```
-List all practices id with name and impact.
-
-USAGE
-  $ dx-scanner practices [OPTIONS]
-
-OPTIONS
-  -h, --help            output usage information
-  -j, --json            print practices in JSON
+dx-scanner run [PATH] --fix
 ```
-</details>
-
-<!--
-Help for commnad dxs init
--->
-<details>
-<summary>dxs init</summary>
-
-```
-Initialize DX Scanner configuration.
-
-USAGE
-  $ dx-scanner init
-
-OPTIONS
-  -h, --help            output usage information
-```
-</details>
-
-### Fix  
-
-Fix problems DX Scanner detected with this command:
-```
-dx-scanner [PATH] --fix
-```
-<details>
-<summary>Fixable practices</summary>
-- Eslint Without Errors
-</details>
 
 
 ## Configuration ⚙️
 Add ```dxscannerrc.*``` config file to change default configuration settings. It can be a ```.json```, ```.yml```, or even a dotfile!
 
-You can also run ```dxs init``` to initialize config automatically.
+You can also run ```dx-scanner init``` to initialize config automatically.
 
-### Practices ###   
+### Practices   
 You can switch off practices that you do not want to scan or you can change their impact level. To do so, refer to the id of the practice.
 
 <details>

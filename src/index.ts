@@ -55,9 +55,9 @@ class DXScannerCommand {
       .on('--help', () => {
         console.log('');
         console.log('Examples:');
-        console.log('  dx-scanner');
-        console.log('  dx-scanner . --fail=high');
-        console.log('  dx-scanner github.com/DXHeroes/dx-scanner');
+        console.log('  dx-scanner run');
+        console.log('  dx-scanner run . --fail=high');
+        console.log('  dx-scanner run github.com/DXHeroes/dx-scanner');
       });
 
     // cmd: init
