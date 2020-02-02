@@ -60,7 +60,7 @@ const bindPackageInspectors = (languageAtPath: LanguageAtPath, container: Contai
     container.bind(Types.InitiableInspector).toDynamicValue((ctx) => {
       return ctx.container.get(Types.IPackageInspector);
     });
-  } else if (languageAtPath.language === ProgrammingLanguage.Java) {
+  } else if (languageAtPath.language === ProgrammingLanguage.Java || languageAtPath.language === ProgrammingLanguage.Kotlin) {
     container
       .bind(Types.IPackageInspector)
       .to(JavaPackageInspector)
@@ -87,6 +87,10 @@ const bindComponentDetectors = (container: Container) => {
     .bind(Types.IProjectComponentDetector)
     .to(JavaComponentDetector)
     .whenTargetTagged(DETECT_LANGUAGE_TAG, ProgrammingLanguage.Java);
+  container
+    .bind(Types.IProjectComponentDetector)
+    .to(JavaComponentDetector)
+    .whenTargetTagged(DETECT_LANGUAGE_TAG, ProgrammingLanguage.Kotlin);
 
   container.bind(Types.ProjectComponentDetectorFactory).toFactory((ctx) => {
     return getProjectComponentDetectorFactory(ctx.container as Container);

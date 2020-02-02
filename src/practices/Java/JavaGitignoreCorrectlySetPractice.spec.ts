@@ -90,13 +90,20 @@ describe('JavaGitignoreCorrectlySetPractice', () => {
     expect(evaluated).toEqual(PracticeEvaluationResult.unknown);
   });
 
-  it('Returns true if language is a Java', async () => {
+  it('Returns true if language is Java', async () => {
     containerCtx.practiceContext.projectComponent.language = ProgrammingLanguage.Java;
     const isApplicable = await practice.isApplicable(containerCtx.practiceContext);
     expect(isApplicable).toBe(true);
   });
 
-  it('Returns false if language is not a Java', async () => {
+  it('Returns true if language is Kotlin', async () => {
+    containerCtx.practiceContext.projectComponent.language = ProgrammingLanguage.Kotlin;
+
+    const result = await practice.isApplicable(containerCtx.practiceContext);
+    expect(result).toEqual(true);
+  });
+
+  it('Returns false if language is not Java', async () => {
     containerCtx.practiceContext.projectComponent.language = ProgrammingLanguage.UNKNOWN;
     const isApplicable = await practice.isApplicable(containerCtx.practiceContext);
     expect(isApplicable).toBe(false);

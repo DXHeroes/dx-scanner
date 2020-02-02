@@ -1,4 +1,4 @@
-import { JavaMockingFrameworkUsedPractice } from './JavaMockingFrameworkUsed';
+import { JavaMockingFrameworkUsedPractice } from './JavaMockingFrameworkUsedPractice';
 import { PracticeEvaluationResult, ProgrammingLanguage } from '../../model';
 import { TestContainerContext, createTestContainer } from '../../inversify.config';
 import { IPackageInspector } from '../../inspectors/IPackageInspector';
@@ -36,6 +36,13 @@ describe('JavaMockingFrameworkUsedPractice', () => {
 
   it('Is applicable if it is Java', async () => {
     containerCtx.practiceContext.projectComponent.language = ProgrammingLanguage.Java;
+
+    const result = await practice.isApplicable(containerCtx.practiceContext);
+    expect(result).toEqual(true);
+  });
+
+  it('Is applicable if it is Kotlin', async () => {
+    containerCtx.practiceContext.projectComponent.language = ProgrammingLanguage.Kotlin;
 
     const result = await practice.isApplicable(containerCtx.practiceContext);
     expect(result).toEqual(true);
