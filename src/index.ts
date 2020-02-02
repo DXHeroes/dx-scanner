@@ -18,7 +18,13 @@ class DXScannerCommand {
     cmder
       .version(pjson.version)
       .name('dx-scanner')
-      .usage('[command] [options] ');
+      .usage('[command] [options] ')
+      .on('--help', () => {
+        console.log('');
+        console.log('Aliases:');
+        console.log('  dxs');
+        console.log('  dxscanner');
+      });
 
     // cmd: run
     cmder
@@ -46,12 +52,7 @@ class DXScannerCommand {
       .option('-j --json', 'print report in JSON', false)
       .option('-r --recursive', 'scan all components recursively in all sub folders', false)
       .action(Run.run)
-      .action(this.notifyUpdate)
       .on('--help', () => {
-        console.log('');
-        console.log('Aliases:');
-        console.log('  dxs');
-        console.log('  dxscanner');
         console.log('');
         console.log('Examples:');
         console.log('  dx-scanner');
@@ -63,19 +64,17 @@ class DXScannerCommand {
     cmder
       .command('init')
       .description('Initialize DX Scanner configuration')
-      .action(Init.run)
-      .action(this.notifyUpdate);
+      .action(Init.run);
 
     // cmd: practices
     cmder
       .command('practices')
       .description('List all practices id with name and impact')
       .option('-j --json', 'print practices in JSON')
-      .action(Practices.run)
-      .action(this.notifyUpdate);
+      .action(Practices.run);
 
     if (!process.argv.slice(2).length) {
-      cmder.help();
+      cmder.outputHelp();
     }
 
     // error on unknown commands
@@ -85,6 +84,8 @@ class DXScannerCommand {
     });
 
     await cmder.parseAsync(process.argv);
+
+    this.notifyUpdate();
   }
 
   private static validateFailInput = (value: string | undefined) => {
