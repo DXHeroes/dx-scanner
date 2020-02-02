@@ -1,3 +1,12 @@
+## [2.0.2](https://github.com/dxheroes/dx-scanner/compare/v2.0.1...v2.0.2) (2020-02-02)
+
+
+### Bug Fixes
+
+* binding Kotlin to context ([5472b0c](https://github.com/dxheroes/dx-scanner/commit/5472b0c144d3b0e2b57a0c09d35eeb11aa12d00c))
+* improved JavaLanguageDetector tests for Kotlin support ([695716c](https://github.com/dxheroes/dx-scanner/commit/695716c87948039868828852cdd31400e3f89cd4))
+* Kotlin reintegration to Java practices & test fixes ([1efac9d](https://github.com/dxheroes/dx-scanner/commit/1efac9d80a9cfb079d1dce8055d030a872befbbb))
+
 ## [2.0.1](https://github.com/dxheroes/dx-scanner/compare/v2.0.0...v2.0.1) (2020-01-28)
 
 
