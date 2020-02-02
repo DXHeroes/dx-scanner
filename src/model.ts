@@ -62,6 +62,17 @@ export enum ProgrammingLanguage {
   UNKNOWN = 'UNKNOWN',
 }
 
+export type CLIArgs = {
+  authorization?: string;
+  json: boolean;
+  details: boolean;
+  recursive: boolean;
+  ci: boolean;
+  fail: PracticeImpact;
+  fix: boolean;
+  fixPattern: string;
+};
+
 // Old model starts here
 
 export interface ScannerConfig {

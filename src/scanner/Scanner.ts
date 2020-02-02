@@ -111,7 +111,10 @@ export class Scanner {
 
     if (!yamlExists && !fileExists && !ymlExists && !jsonExists) {
       await this.createConfiguration(filePath);
+    } else {
+      cli.warn('You already have a dx-scanner config.');
     }
+
     cli.action.stop();
   }
 
@@ -325,8 +328,7 @@ export class Scanner {
   private async createConfiguration(filePath: string) {
     let yamlInitContent = `# practices:`;
     // get Metadata and sort it alphabetically using id
-    const sortedInitializedPractices = this.practices.sort((a, b) => a.getMetadata().id.localeCompare(b.getMetadata().id));
-    for (const practice of sortedInitializedPractices) {
+    for (const practice of this.listPractices()) {
       const dataObject = practice.getMetadata();
       yamlInitContent += `\n#    ${dataObject.id}: ${dataObject.impact}`;
     }
@@ -335,6 +337,10 @@ export class Scanner {
     } catch (err) {
       throw ErrorFactory.newInternalError(`Error during configuration file initialization: ${err.message}`);
     }
+  }
+
+  listPractices(): IPracticeWithMetadata[] {
+    return ScannerUtils.sortAlphabetically(this.practices);
   }
 }
 
