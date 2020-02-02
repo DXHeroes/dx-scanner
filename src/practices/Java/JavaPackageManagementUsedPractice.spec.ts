@@ -1,4 +1,4 @@
-import { JavaPackageManagementUsedPractice } from './JavaPackageManagementUsed';
+import { JavaPackageManagementUsedPractice } from './JavaPackageManagementUsedPractice';
 import { PracticeEvaluationResult, ProgrammingLanguage } from '../../model';
 import { TestContainerContext, createTestContainer } from '../../inversify.config';
 import { pomXMLContents } from '../../detectors/__MOCKS__/Java/pomXMLContents.mock';
@@ -51,6 +51,13 @@ describe('JavaPackageManagementUsedPractice', () => {
 
   it('Is applicable to Java', async () => {
     containerCtx.practiceContext.projectComponent.language = ProgrammingLanguage.Java;
+    const result = await practice.isApplicable(containerCtx.practiceContext);
+    expect(result).toEqual(true);
+  });
+
+  it('Is applicable if it is Kotlin', async () => {
+    containerCtx.practiceContext.projectComponent.language = ProgrammingLanguage.Kotlin;
+
     const result = await practice.isApplicable(containerCtx.practiceContext);
     expect(result).toEqual(true);
   });

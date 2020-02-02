@@ -13,12 +13,22 @@ describe('JavaComponentDetector', () => {
   });
 
   describe('Backend', () => {
-    it('Detects BE', async () => {
+    it('Detects Java BE', async () => {
       detector = new JavaComponentDetector(mockJavaPackageInspector);
 
       const components = await detector.detectComponent({ language: ProgrammingLanguage.Java, path: './src' });
 
       expect(components[0].language).toEqual(ProgrammingLanguage.Java);
+      expect(components[0].path).toEqual('./src');
+      expect(components[0].platform).toEqual(ProjectComponentPlatform.BackEnd);
+    });
+
+    it('Detects Kotlin BE', async () => {
+      detector = new JavaComponentDetector(mockJavaPackageInspector);
+
+      const components = await detector.detectComponent({ language: ProgrammingLanguage.Kotlin, path: './src' });
+
+      expect(components[0].language).toEqual(ProgrammingLanguage.Kotlin);
       expect(components[0].path).toEqual('./src');
       expect(components[0].platform).toEqual(ProjectComponentPlatform.BackEnd);
     });

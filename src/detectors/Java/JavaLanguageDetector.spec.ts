@@ -59,7 +59,33 @@ describe('JavaLanguageDetector', () => {
     expect(langAtPath[0].path).toEqual(nodePath.sep);
   });
 
-  it("detects it's not a java", async () => {
+  it('detects kotlin correctly via kt extension', async () => {
+    const structure: DirectoryJSON = {
+      '/*.kt': '...',
+    };
+
+    virtualFileSystemService.setFileSystem(structure);
+
+    const langAtPath = await detector.detectLanguage();
+    expect(langAtPath.length).toEqual(1);
+    expect(langAtPath[0].language).toEqual(ProgrammingLanguage.Kotlin);
+    expect(langAtPath[0].path).toEqual(nodePath.sep);
+  });
+
+  it('detects kotlin correctly via kts extension', async () => {
+    const structure: DirectoryJSON = {
+      '/*.kts': '...',
+    };
+
+    virtualFileSystemService.setFileSystem(structure);
+
+    const langAtPath = await detector.detectLanguage();
+    expect(langAtPath.length).toEqual(1);
+    expect(langAtPath[0].language).toEqual(ProgrammingLanguage.Kotlin);
+    expect(langAtPath[0].path).toEqual(nodePath.sep);
+  });
+
+  it("detects it's not java or kotlin", async () => {
     const structure: DirectoryJSON = {
       '/src/index.none': '...',
     };

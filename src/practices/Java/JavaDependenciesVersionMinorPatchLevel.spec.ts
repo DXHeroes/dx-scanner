@@ -57,6 +57,13 @@ describe('JavaDependenciesVersionPractice of Minor and Patch Level', () => {
     expect(result).toEqual(true);
   });
 
+  it('Is applicable if it is Kotlin', async () => {
+    containerCtx.practiceContext.projectComponent.language = ProgrammingLanguage.Kotlin;
+
+    const result = await practice.isApplicable(containerCtx.practiceContext);
+    expect(result).toEqual(true);
+  });
+
   it('Is applicable if it is not Java', async () => {
     containerCtx.practiceContext.projectComponent.language = ProgrammingLanguage.UNKNOWN;
 
