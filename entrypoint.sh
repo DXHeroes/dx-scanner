@@ -2,4 +2,4 @@
 
 echo "Start DX Scanner Action"
 
-dx-scanner --ci -r -a $1
+dx-scanner run --ci -r -a $1
