@@ -70,8 +70,8 @@
     "yaml": "1.7.2"
   },
   "devDependencies": {
-    "@semantic-release/changelog": "3.0.6",
-    "@semantic-release/git": "8.0.0",
+    "@semantic-release/changelog": "5.0.0",
+    "@semantic-release/git": "9.0.0",
     "@types/command-exists": "1.2.0",
     "@types/debug": "4.1.5",
     "@types/git-url-parse": "9.0.0",
@@ -94,7 +94,7 @@
     "nock": "11.7.2",
     "prettier": "1.19.1",
     "rimraf": "3.0.0",
-    "semantic-release": "16.0.2",
+    "semantic-release": "17.0.2",
     "semantic-release-slack-bot": "1.4.2",
     "ts-jest": "25.0.0"
   },
