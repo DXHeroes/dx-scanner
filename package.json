@@ -80,7 +80,7 @@
     "@types/lodash": "4.14.149",
     "@types/node": "12.12.25",
     "@types/rimraf": "2.0.3",
-    "@types/semver": "6.2.0",
+    "@types/semver": "7.1.0",
     "@types/shelljs": "0.8.6",
     "@types/toposort": "2.0.3",
     "@types/update-notifier": "2.5.0",
