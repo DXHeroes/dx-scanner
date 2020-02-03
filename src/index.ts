@@ -1,129 +1,108 @@
 /* eslint-disable no-process-env */
-import { Command, flags } from '@oclif/command';
-import cli from 'cli-ux';
-import debug from 'debug';
 import 'reflect-metadata';
-import updateNotifier from 'update-notifier';
-import { ServiceType } from './detectors/ScanningStrategyDetector';
-import { ScanningStrategyDetectorUtils } from './detectors/utils/ScanningStrategyDetectorUtils';
-import { createRootContainer } from './inversify.config';
+import * as commander from 'commander';
+import Run from './commands/run';
 import { PracticeImpact } from './model';
-import { Scanner } from './scanner/Scanner';
+import Init from './commands/init';
+import Practices from './commands/practices';
+import _ from 'lodash';
+import updateNotifier from 'update-notifier';
+// eslint-disable-next-line @typescript-eslint/no-require-imports, @typescript-eslint/no-var-requires
+const pjson = require('../package.json');
 
-class DXScannerCommand extends Command {
-  static description = 'Scan your project for possible DX recommendations.';
-  static usage = ['[PATH] [OPTIONS]'];
+class DXScannerCommand {
+  static async run() {
+    const cmder = new commander.Command();
 
-  static flags = {
-    // add --version flag to show CLI version
-    version: flags.version({ char: 'v', description: 'Output the version number' }),
-    help: flags.help({ char: 'h', description: 'Help' }),
-    // flag with a value (-n, --name=VALUE)
-    authorization: flags.string({
-      char: 'a',
-      description:
-        'Credentials to the repository. (in format "token" or "username:token"; can be set as ENV variable DX_GIT_SERVICE_TOKEN)',
-    }),
-    json: flags.boolean({ char: 'j', description: 'Print report in JSON' }),
-    recursive: flags.boolean({ char: 'r', description: 'Scan all components recursively in all sub folders' }),
-    init: flags.boolean({ char: 'i', description: 'Initialize DX Scanner configuration' }),
-    ci: flags.boolean({
-      description: 'CI mode',
-      default: () => process.env.CI === 'true',
-    }),
-    fail: flags.string({
-      options: ['high', 'medium', 'small', 'off', 'all'],
-      description: 'Run scanner in failure mode. Exits process with code 1 for any non-practicing condition of given level.',
-      default: PracticeImpact.high,
-    }),
-    fix: flags.boolean({ char: 'f', description: 'Tries to fix problems automatically', default: false }),
-    fixPattern: flags.string({ description: 'Fix only rules with IDs matching the regex.' }),
-  };
-
-  static args = [{ name: 'path', default: process.cwd() }];
-
-  static aliases = ['dxs', 'dxscanner'];
-  static examples = ['dx-scanner', 'dx-scanner ./ --fail=high', 'dx-scanner github.com/DXHeroes/dx-scanner'];
-
-  async run() {
-    const { args, flags } = this.parse(DXScannerCommand);
-    debug('cli args')(args);
-    debug('cli flags')(flags);
-    const scanPath = args.path;
-
-    let authorization = flags.authorization ? flags.authorization : this.loadAuthTokenFromEnvs();
-    const json = flags.json;
-    const fail = <PracticeImpact | 'all'>flags.fail;
-
-    const notifier = updateNotifier({ pkg: this.config.pjson });
-    const hrstart = process.hrtime();
-
-    cli.action.start(`Scanning URI: ${scanPath}`);
-
-    const container = createRootContainer({
-      uri: scanPath,
-      auth: authorization,
-      json,
-      fail,
-      recursive: flags.recursive,
-      ci: flags.ci,
-      fix: flags.fix,
-      fixPattern: flags.fixPattern,
-    });
-    const scanner = container.get(Scanner);
-
-    if (flags.init) {
-      await scanner.init(scanPath);
-      process.exit(0);
-    }
-
-    let scanResult = await scanner.scan();
-
-    if (scanResult.needsAuth && !flags.ci) {
-      if (ScanningStrategyDetectorUtils.isGitHubPath(scanPath) || scanResult.serviceType === ServiceType.github) {
-        authorization = await cli.prompt('Insert your GitHub personal access token. https://github.com/settings/tokens\n', {
-          type: 'hide',
-        });
-      } else if (ScanningStrategyDetectorUtils.isBitbucketPath(scanPath) || scanResult.serviceType === ServiceType.bitbucket) {
-        authorization = await cli.prompt(
-          'Insert your Bitbucket credentials (in format "appPassword" or "username:appPasword"). https://confluence.atlassian.com/bitbucket/app-passwords-828781300.html\n',
-          { type: 'hide' },
-        );
-      }
-
-      const container = createRootContainer({
-        uri: scanPath,
-        auth: authorization,
-        json,
-        fail,
-        recursive: flags.recursive,
-        ci: flags.ci,
-        fix: flags.fix,
-        fixPattern: flags.fixPattern,
+    // default cmd config
+    cmder
+      .version(pjson.version)
+      .name('dx-scanner')
+      .usage('[command] [options] ')
+      .on('--help', () => {
+        console.log('');
+        console.log('Aliases:');
+        console.log('  dxs');
+        console.log('  dxscanner');
       });
-      const scanner = container.get(Scanner);
 
-      scanResult = await scanner.scan({ determineRemote: false });
+    // cmd: run
+    cmder
+      .command('run [path]')
+      //customize default help
+      .usage('[path] [options]')
+      .description('Scan your project for possible DX recommendations')
+      .option(
+        '-a --authorization <authorization>',
+        'credentials to the repository (in format "token" or "username:token"; can be set as ENV variable DX_GIT_SERVICE_TOKEN)',
+        process.env.DX_GIT_SERVICE_TOKEN || process.env.GITHUB_TOKEN,
+      )
+      .option('--ci', 'CI mode', process.env.CI === 'true')
+      .option('-d --details', 'print details in reports')
+      .option(
+        '--fail <impact>',
+        `exits process with code 1 for any non-practicing condition of given level (${Object.keys(PracticeImpact)
+          .concat('all')
+          .join('|')})`,
+        this.validateFailInput,
+        PracticeImpact.high,
+      )
+      .option('--fix', 'tries to fix problems automatically', false)
+      .option('--fixPattern <pattern>', 'fix only rules with IDs matching the regex')
+      .option('-j --json', 'print report in JSON', false)
+      .option('-r --recursive', 'scan all components recursively in all sub folders', false)
+      .action(Run.run)
+      .on('--help', () => {
+        console.log('');
+        console.log('Examples:');
+        console.log('  dx-scanner run');
+        console.log('  dx-scanner run . --fail=high');
+        console.log('  dx-scanner run github.com/DXHeroes/dx-scanner');
+      });
+
+    // cmd: init
+    cmder
+      .command('init')
+      .description('Initialize DX Scanner configuration')
+      .action(Init.run);
+
+    // cmd: practices
+    cmder
+      .command('practices')
+      .description('List all practices id with name and impact')
+      .option('-j --json', 'print practices in JSON')
+      .action(Practices.run);
+
+    if (!process.argv.slice(2).length) {
+      cmder.outputHelp();
     }
-    cli.action.stop();
-    notifier.notify({ isGlobal: true });
 
-    const hrend = process.hrtime(hrstart);
-
-    console.info('Scan duration %ds.', hrend[0]);
-
-    if (scanResult.shouldExitOnEnd) {
+    // error on unknown commands
+    cmder.on('command:*', () => {
+      console.error('Invalid command: %s\nSee --help for a list of available commands.', cmder.args.join(' '));
       process.exit(1);
-    }
+    });
+
+    await cmder.parseAsync(process.argv);
+
+    this.notifyUpdate();
   }
 
-  /**
-   * Loads API token from environment variables
-   */
-  private loadAuthTokenFromEnvs = (): string | undefined => {
-    // eslint-disable-next-line no-process-env
-    const ev = process.env;
-    return ev.DX_GIT_SERVICE_TOKEN || ev.GITHUB_TOKEN;
+  private static validateFailInput = (value: string | undefined) => {
+    if (value && !_.includes(PracticeImpact, value)) {
+      console.error(
+        'Invalid value for --fail: %s\nValid values are: %s\n',
+        value,
+        Object.keys(PracticeImpact)
+          .concat('all')
+          .join(', '),
+      );
+      process.exit(1);
+    }
+  };
+
+  private static notifyUpdate = () => {
+    updateNotifier({ pkg: pjson, updateCheckInterval: 0, shouldNotifyInNpmScript: true }).notify();
   };
 }
 
