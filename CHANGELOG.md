@@ -1,3 +1,20 @@
+## [2.0.4](https://github.com/dxheroes/dx-scanner/compare/v2.0.3...v2.0.4) (2020-02-03)
+
+
+### Bug Fixes
+
+* customize help ([1520daf](https://github.com/dxheroes/dx-scanner/commit/1520daf83d9f384a646da32a117e03f45b1c45c9))
+* increase timeout limit ([0ec88ec](https://github.com/dxheroes/dx-scanner/commit/0ec88ec46fcdab4ede00ad4e5b50905300dc595f))
+* **core:** load default Command from oclif ([afc3e4c](https://github.com/dxheroes/dx-scanner/commit/afc3e4c5bb9a898f826141ef8478535278053d69))
+
+
+### Reverts
+
+* add update-notifier back ([cec2fde](https://github.com/dxheroes/dx-scanner/commit/cec2fdedbee54b36512e3a34005c2c71516d8e45))
+* **changelog:** back to v2 ([d1b1f37](https://github.com/dxheroes/dx-scanner/commit/d1b1f370764158c7cf1515c6a7d953214eef40d3))
+* add changes for list of practices ([3993010](https://github.com/dxheroes/dx-scanner/commit/3993010a0e6e5a397c920ef0489a6fc43b37b486))
+* back the DXS config file ([726df9b](https://github.com/dxheroes/dx-scanner/commit/726df9b07b9b153417a93ecb7fc743e55322480e))
+
 ## [2.0.4-beta.1](https://github.com/dxheroes/dx-scanner/compare/v2.0.3...v2.0.4-beta.1) (2020-02-03)
 
 
