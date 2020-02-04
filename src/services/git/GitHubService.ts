@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/camelcase */
-import Octokit from '@octokit/rest';
+import { Octokit } from '@octokit/rest';
 import Debug from 'debug';
 import { inject, injectable } from 'inversify';
 import { inspect, isArray } from 'util';
