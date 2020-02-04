@@ -1,7 +1,7 @@
 import { FileInspector } from '.';
 import { createTestContainer, TestContainerContext } from '../inversify.config';
 
-describe('GitignoreIsPresentPractice', () => {
+describe('FileInspector', () => {
   let fileInspector: FileInspector;
   let containerCtx: TestContainerContext;
 
@@ -20,10 +20,10 @@ describe('GitignoreIsPresentPractice', () => {
     const path = './';
 
     try {
-      await fileInspector.scanFor('not.exist', path);
+      await fileInspector.scanFor('.gitignore', path);
       fail();
     } catch (error) {
-      expect(error.message).toEqual(`ENOENT: no such file or directory, readdir '${path}'`);
+      expect(error.message).toMatch(/ENOENT: no such file or directory, readdir/);
     }
   });
 });

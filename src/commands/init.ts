@@ -1,6 +1,7 @@
 import { createRootContainer } from '../inversify.config';
 import { Scanner } from '../scanner';
 import { PracticeImpact } from '../model';
+import path from 'path';
 
 export default class Init {
   static async run() {
@@ -19,6 +20,6 @@ export default class Init {
     });
     const scanner = container.get(Scanner);
 
-    await scanner.init(scanPath);
+    await scanner.init(path.normalize(scanPath + path.sep));
   }
 }
