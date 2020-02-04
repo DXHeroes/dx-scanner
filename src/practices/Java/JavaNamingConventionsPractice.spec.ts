@@ -86,7 +86,7 @@ describe('JavaPackageManagementUsedPractice', () => {
     expect(evaluated).toEqual(PracticeEvaluationResult.practicing);
   });
 
-  it('Returns NOT practicing on deep Java class files are using incorrect naming conventions', async () => {
+  it('Returns NOT practicing on deep Kotlin class files are using incorrect naming conventions', async () => {
     containerCtx.virtualFileSystemService.setFileSystem({
       'CorrectNamingConvention.kt': '',
       'src/main/java/org/vision/root/CronOperations/VeryCorrectNamingConvention.kt': '',

@@ -7,9 +7,9 @@ import { Metadata } from '../../services/model';
 
 @DxPractice({
   id: 'Java.NamingConventions',
-  name: 'Use Java Naming Conventions',
+  name: 'Use Java/Kotlin Naming Conventions',
   impact: PracticeImpact.small,
-  suggestion: 'Java class names should begin capitalized as UpperCamelCase or PascalCase in a regular naming convention.',
+  suggestion: 'Java/Kotlin class names should begin capitalized as UpperCamelCase or PascalCase in a regular naming convention.',
   reportOnlyOnce: true,
   url: 'https://www.oracle.com/technetwork/java/codeconventions-135099.html',
 })
@@ -26,10 +26,9 @@ export class JavaNamingConventionsPractice implements IPractice {
     const scannedFiles: Metadata[] = [];
 
     const regex = new RegExp('.(java|kt|kts)', 'i');
-    await ctx.fileInspector.scanFor(regex, '/', { shallow: false }).then((files) => {
-      files.forEach((file) => {
-        scannedFiles.push(file);
-      });
+    const resultFiles = await ctx.fileInspector.scanFor(regex, '/', { shallow: false });
+    resultFiles.forEach((file) => {
+      scannedFiles.push(file);
     });
 
     if (scannedFiles.length === 0) {
