@@ -1,3 +1,13 @@
+## [2.0.5](https://github.com/dxheroes/dx-scanner/compare/v2.0.4...v2.0.5) (2020-02-04)
+
+
+### Bug Fixes
+
+* **init:** Win architecture & tests ([2d1aea6](https://github.com/dxheroes/dx-scanner/commit/2d1aea61ba5f98e350f9152fc5627eaa5b5535a5))
+* **init:** Win architecture & tests ([#238](https://github.com/dxheroes/dx-scanner/issues/238)) ([0d3fbe1](https://github.com/dxheroes/dx-scanner/commit/0d3fbe18f02308b4fdbc8cf8d2ff556be0e1007f))
+* **services:** deprecation notice removed ([b494c01](https://github.com/dxheroes/dx-scanner/commit/b494c01965df8073f16816e48bc9cb52dfa16f9f))
+* **services:** deprecation notice removed ([#239](https://github.com/dxheroes/dx-scanner/issues/239)) ([d759beb](https://github.com/dxheroes/dx-scanner/commit/d759bebcdbcc8fa37c2cd999db86a2f0f3fdf175))
+
 ## [2.0.4](https://github.com/dxheroes/dx-scanner/compare/v2.0.3...v2.0.4) (2020-02-03)
 
 
