@@ -28,6 +28,7 @@ export interface PracticeWithContextForReporter {
   practice: PracticeMetadata & { data?: PracticeData };
   overridenImpact: PracticeImpact;
   evaluation: PracticeEvaluationResult;
+  evaluationError?: string;
   isOn: boolean;
 }
 

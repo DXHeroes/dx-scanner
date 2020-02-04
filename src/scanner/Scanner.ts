@@ -225,6 +225,7 @@ export class Scanner {
         component: p.componentContext.projectComponent,
         practice: { ...p.practice.getMetadata(), data: p.practice.data },
         evaluation: p.evaluation,
+        evaluationError: p.evaluationError,
         overridenImpact: <PracticeImpact>(overridenImpact ? overridenImpact : p.practice.getMetadata().impact),
         isOn: p.isOn,
       };
@@ -269,20 +270,23 @@ export class Scanner {
       const isFulfilled = ScannerUtils.isFulfilled(practice, practicesWithContext);
 
       if (!isFulfilled) continue;
-      let evaluation;
+
+      let evaluation = PracticeEvaluationResult.unknown;
+      let evaluationError: undefined | string;
       try {
         evaluation = await practice.evaluate({ ...practiceContext, config: practiceConfig });
       } catch (error) {
-        evaluation = PracticeEvaluationResult.unknown;
+        evaluationError = error.toString();
         const practiceDebug = debug('practices');
         practiceDebug(`The ${practice.getMetadata().name} practice failed with this error:\n${error}`);
       }
 
-      const practiceWithContext = {
+      const practiceWithContext: PracticeWithContext = {
         practice,
         componentContext,
         practiceContext,
         evaluation,
+        evaluationError,
         isOn: true,
       };
 
@@ -298,6 +302,7 @@ export class Scanner {
         componentContext,
         practiceContext,
         evaluation: PracticeEvaluationResult.unknown,
+        evaluationError: undefined,
         isOn: false,
       };
 
@@ -354,6 +359,7 @@ export interface PracticeWithContext {
   practiceContext: PracticeContext;
   practice: IPracticeWithMetadata;
   evaluation: PracticeEvaluationResult;
+  evaluationError: undefined | string;
   isOn: boolean;
 }
 
