@@ -1,3 +1,19 @@
+# [2.1.0](https://github.com/dxheroes/dx-scanner/compare/v2.0.5...v2.1.0) (2020-02-05)
+
+
+### Bug Fixes
+
+* impact level to small ([0d0c5fb](https://github.com/dxheroes/dx-scanner/commit/0d0c5fb233cf30a88167b84c0c13459a9944a00c))
+* merge conflicts & naming conventions test cases ([a1f2ef7](https://github.com/dxheroes/dx-scanner/commit/a1f2ef747dc4ebeedeb39dcad0ab5fca087b7ff2))
+* renamed tests & practice desciptions correctly to Kotlin ([ca70cbc](https://github.com/dxheroes/dx-scanner/commit/ca70cbcb18bd53456cca132d8fce4d09345219cd))
+* solved merge conflict ([287e5ba](https://github.com/dxheroes/dx-scanner/commit/287e5ba43446957b73cf3ad56ae76631e6b64bd4))
+* updated the practice for Kotlin & considered more edge cases ([c2cb6be](https://github.com/dxheroes/dx-scanner/commit/c2cb6beb6d2dc95a480370e9d2613e0c84124cbe))
+
+
+### Features
+
+* java practice for naming conventions ([b63c767](https://github.com/dxheroes/dx-scanner/commit/b63c76742c1337f4dbb8906049a9df756e4b9141))
+
 ## [2.0.5](https://github.com/dxheroes/dx-scanner/compare/v2.0.4...v2.0.5) (2020-02-04)
 
 
