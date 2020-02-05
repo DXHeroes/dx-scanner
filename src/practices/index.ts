@@ -34,6 +34,7 @@ import { JavaPackageManagementUsedPractice } from './Java/JavaPackageManagementU
 import { JavaLoggerUsedPractice } from './Java/JavaLoggerUsedPractice';
 import { JavaTestingFrameworkUsedPractice } from './Java/JavaTestingFrameworkUsedPractice';
 import { JavaMockingFrameworkUsedPractice } from './Java/JavaMockingFrameworkUsedPractice';
+import { JavaNamingConventionsPractice } from './Java/JavaNamingConventionsPractice';
 
 // register practices here
 export const practices = [
@@ -72,4 +73,5 @@ export const practices = [
   JavaLoggerUsedPractice,
   JavaTestingFrameworkUsedPractice,
   JavaMockingFrameworkUsedPractice,
+  JavaNamingConventionsPractice,
 ];
