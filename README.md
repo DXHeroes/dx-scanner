@@ -182,9 +182,9 @@ hint
 off
 ```
 
-Example :
+Example `dxscannerrc.json`:
+
 ```json
-dxscannerrc.json
 
 {
     "practices": {
