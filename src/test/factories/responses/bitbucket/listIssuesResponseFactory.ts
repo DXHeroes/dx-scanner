@@ -1,3 +1,5 @@
+import Bitbucket from 'bitbucket';
+
 export const bitbucketListIssuesResponseFactory = (items: Bitbucket.Schema.Issue[] = []): Bitbucket.Schema.PaginatedIssues => {
   return {
     values: items,

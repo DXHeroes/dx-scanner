@@ -1,3 +1,5 @@
+import Bitbucket from 'bitbucket';
+
 export const bitbucketListPRsResponseFactory = (items: Bitbucket.Schema.Pullrequest[] = []): Bitbucket.Schema.PaginatedPullrequests => {
   return {
     values: items,

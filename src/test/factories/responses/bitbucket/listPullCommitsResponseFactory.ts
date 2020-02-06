@@ -1,4 +1,5 @@
 import { BitbucketCommit } from '../../../../services';
+import Bitbucket from 'bitbucket';
 
 export const bitbucketListPullCommitsResponseFactory = (items: Bitbucket.Schema.Commit[] = []): BitbucketCommit => {
   return {

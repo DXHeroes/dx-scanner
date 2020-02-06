@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/camelcase */
 import _ from 'lodash';
 import { BitbucketPullRequestState } from '../../../../services/bitbucket/IBitbucketService';
+import Bitbucket from 'bitbucket';
 
 export const bitbucketPullRequestResponseFactory = (params?: Partial<Bitbucket.Schema.Pullrequest>): Bitbucket.Schema.Pullrequest => {
   return _.merge(
