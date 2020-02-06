@@ -1546,10 +1546,10 @@ binaryextensions@^2.1.2:
   resolved "https://registry.yarnpkg.com/binaryextensions/-/binaryextensions-2.2.0.tgz#e7c6ba82d4f5f5758c26078fe8eea28881233311"
   integrity sha512-bHhs98rj/7i/RZpCSJ3uk55pLXOItjIrh2sRQZSM6OoktScX+LxJzvlU+FELp9j3TdcddTmmYArLSGptCTwjuw==
 
-bitbucket@2.0.1:
-  version "2.0.1"
-  resolved "https://registry.yarnpkg.com/bitbucket/-/bitbucket-2.0.1.tgz#c172dcbae3e6601dffdde6651e8bc0a246516ef7"
-  integrity sha512-ZBdMSGa1dyrV9S1nZ7bD/EU15Afwt3bIgumOMXh/soRnRMhF8YZnUfi+Lyu0RtOoNkXgxj04yhqcyqe1JhJ/gA==
+bitbucket@2.0.2:
+  version "2.0.2"
+  resolved "https://registry.yarnpkg.com/bitbucket/-/bitbucket-2.0.2.tgz#76e1e7498a2641836879ab75e8e8621446cb9ef1"
+  integrity sha512-FHdaajBPOf6dL0SonaFTZpgTO9iyZF868ulSKXZ1vq1ng0268qng7LR78a2i4QIRVSEohAG2b+OGtFtkieF+cw==
   dependencies:
     before-after-hook "^2.1.0"
     btoa-lite "^1.0.0"
