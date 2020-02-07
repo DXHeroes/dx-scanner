@@ -80,13 +80,11 @@ export class Scanner {
     if (this.argumentsProvider.fix) {
       const fixablePractice = (p: PracticeWithContext) => p.practice.fix && p.evaluation === PracticeEvaluationResult.notPracticing;
       const fixPatternMatcher = this.argumentsProvider.fixPattern ? new RegExp(this.argumentsProvider.fixPattern, 'i') : null;
-      const fixPattern = this.argumentsProvider.fixPattern;
       const shouldFix = (p: PracticeWithContext) => {
-        const fixFromCli = fixPatternMatcher ? fixPatternMatcher.test(p.practice.getMetadata().id) : true;
+        const fixFromCli = fixPatternMatcher ? fixPatternMatcher.test(p.practice.getMetadata().id) : undefined;
         const practiceConfig = p.componentContext.configProvider.getOverriddenPractice(p.practice.getMetadata().id);
         const fixFromConfig = practiceConfig?.fix;
-        console.log({ fixFromCli, fixFromConfig, practiceConfig, fixPattern, fixPatternMatcher });
-        return fixFromConfig ? fixFromConfig : fixFromCli;
+        return fixFromCli !== undefined ? fixFromCli : fixFromConfig !== undefined ? fixFromConfig : true;
       };
       await Promise.all(
         practicesWithContext
