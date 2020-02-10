@@ -25,6 +25,8 @@ export class JavaPackageManagementUsedPractice implements IPractice {
       return PracticeEvaluationResult.practicing;
     } else if (await ctx.fileInspector.exists('build.gradle')) {
       return PracticeEvaluationResult.practicing;
+    } else if (await ctx.fileInspector.exists('build.gradle.kts')) {
+      return PracticeEvaluationResult.practicing;
     }
 
     return PracticeEvaluationResult.notPracticing;

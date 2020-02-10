@@ -26,10 +26,17 @@ export class JavaPackageInspector extends PackageInspectorBase {
         await this.resolveMavenFileString(mavenFileString);
       } else {
         const isGradle: boolean = await this.fileInspector.exists('build.gradle');
+        let isGradleKts = false;
         if (!isGradle) {
-          throw ErrorFactory.newInternalError('Unsupported Java project architecture');
+          if (await this.fileInspector.exists('build.gradle.kts')) {
+            isGradleKts = true;
+          } else {
+            throw ErrorFactory.newInternalError('Unsupported Java project architecture');
+          }
         }
-        const gradleFileString = await this.fileInspector.readFile('build.gradle');
+        const gradleFileString = isGradleKts
+          ? await this.fileInspector.readFile('build.gradle.kts')
+          : await this.fileInspector.readFile('build.gradle');
         await this.resolveGradleFileString(gradleFileString);
       }
       this.addPackages(this.parsedDependencies, DependencyType.Runtime);

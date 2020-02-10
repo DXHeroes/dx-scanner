@@ -38,9 +38,11 @@ export class JavaNamingConventionsPractice implements IPractice {
     const incorrectFiles = [];
 
     scannedFiles.forEach((file) => {
-      const correctPascalCase = camelCase(file.baseName, { pascalCase: true });
-      if (file.baseName !== correctPascalCase) {
-        incorrectFiles.push(file.baseName);
+      if (file.baseName !== 'build.gradle' && file.baseName !== 'settings.gradle') {
+        const correctPascalCase = camelCase(file.baseName, { pascalCase: true });
+        if (file.baseName !== correctPascalCase) {
+          incorrectFiles.push(file.baseName);
+        }
       }
     });
 
