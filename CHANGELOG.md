@@ -1,3 +1,17 @@
+# [2.2.0](https://github.com/dxheroes/dx-scanner/compare/v2.1.2...v2.2.0) (2020-02-11)
+
+
+### Bug Fixes
+
+* **deps:** update dependency bitbucket to v2 ([cd59447](https://github.com/dxheroes/dx-scanner/commit/cd5944735ff3309a40757dfa573d4fe913e80ec3))
+* **deps:** update dependency bitbucket to v2 ([fc863b7](https://github.com/dxheroes/dx-scanner/commit/fc863b7c5405b753ed485e703a931c203450dc8a))
+* **deps:** update dependency bitbucket to v2 ([ce7be48](https://github.com/dxheroes/dx-scanner/commit/ce7be486038fb69a22e10ca6d017e50bee52051a))
+
+
+### Features
+
+* **bitbucket:** update to v2 ([8d30e90](https://github.com/dxheroes/dx-scanner/commit/8d30e900a39d2ac54caf7518d1d2c5eda2bc6466))
+
 ## [2.1.2](https://github.com/dxheroes/dx-scanner/compare/v2.1.1...v2.1.2) (2020-02-11)
 
 
