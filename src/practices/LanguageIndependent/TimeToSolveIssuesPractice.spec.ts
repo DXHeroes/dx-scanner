@@ -1,5 +1,4 @@
 import moment from 'moment';
-import nock from 'nock';
 import { IssueTrackingInspector } from '../../inspectors';
 import { createTestContainer, TestContainerContext } from '../../inversify.config';
 import { PracticeEvaluationResult } from '../../model';
@@ -15,10 +14,6 @@ describe('TimeToSolveIssuesPractice', () => {
   let containerCtx: TestContainerContext;
   const MockedIssueTrackingInspector = <jest.Mock<IssueTrackingInspector>>(<unknown>IssueTrackingInspector);
   let mockIssueTrackingInspector: IssueTrackingInspector;
-
-  beforeEach(async () => {
-    nock.cleanAll();
-  });
 
   beforeAll(() => {
     containerCtx = createTestContainer();

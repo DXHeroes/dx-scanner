@@ -1,4 +1,3 @@
-import nock from 'nock';
 import { CollaborationInspector } from '../../inspectors';
 import { createTestContainer, TestContainerContext } from '../../inversify.config';
 import { PracticeEvaluationResult } from '../../model';
@@ -8,17 +7,12 @@ import { ThinPullRequestsPractice } from './ThinPullRequestsPractice';
 import { getPullRequestsResponse } from '../../services/git/__MOCKS__/bitbucketServiceMockFolder/getPullRequestsResponse';
 import moment from 'moment';
 import { getPullRequestResponse } from '../../services/git/__MOCKS__/bitbucketServiceMockFolder';
-import _ from 'lodash';
 
 describe('ThinPullRequestsPractice', () => {
   let practice: ThinPullRequestsPractice;
   let containerCtx: TestContainerContext;
   const MockedCollaborationInspector = <jest.Mock<CollaborationInspector>>(<unknown>CollaborationInspector);
   let mockCollaborationInspector: CollaborationInspector;
-
-  beforeEach(async () => {
-    nock.cleanAll();
-  });
 
   beforeAll(() => {
     containerCtx = createTestContainer();
