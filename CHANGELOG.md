@@ -1,3 +1,10 @@
+## [2.1.1](https://github.com/dxheroes/dx-scanner/compare/v2.1.0...v2.1.1) (2020-02-10)
+
+
+### Bug Fixes
+
+* **deps:** update all non-major dependencies ([5274c8b](https://github.com/dxheroes/dx-scanner/commit/5274c8bd7b458ea555007908607cc14070cff967))
+
 # [2.1.0](https://github.com/dxheroes/dx-scanner/compare/v2.0.5...v2.1.0) (2020-02-05)
 
 

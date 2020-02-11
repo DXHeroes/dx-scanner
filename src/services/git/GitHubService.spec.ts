@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/camelcase */
-import nock from 'nock';
 import { GitHubService } from './GitHubService';
 import { GitHubNock } from '../../test/helpers/gitHubNock';
 import {
@@ -34,7 +33,6 @@ describe('GitHub Service', () => {
 
   beforeEach(async () => {
     service = new GitHubService(argumentsProviderFactory({ uri: '.' }));
-    nock.cleanAll();
   });
 
   describe('#getPullRequests', () => {

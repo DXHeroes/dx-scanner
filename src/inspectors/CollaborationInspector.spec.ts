@@ -1,5 +1,4 @@
 import { CollaborationInspector } from './CollaborationInspector';
-import nock from 'nock';
 import { TestContainerContext } from '../inversify.config';
 import { createTestContainer } from '../inversify.config';
 import { GitHubNock } from '../test/helpers/gitHubNock';
@@ -29,7 +28,6 @@ describe('Collaboration Inspector', () => {
 
   beforeEach(async () => {
     inspector = <CollaborationInspector>containerCtx.practiceContext.collaborationInspector;
-    nock.cleanAll();
   });
 
   it('returns paginated pull requests', async () => {
