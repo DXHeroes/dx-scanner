@@ -1524,7 +1524,7 @@ binaryextensions@^2.1.2:
   resolved "https://registry.yarnpkg.com/binaryextensions/-/binaryextensions-2.2.0.tgz#e7c6ba82d4f5f5758c26078fe8eea28881233311"
   integrity sha512-bHhs98rj/7i/RZpCSJ3uk55pLXOItjIrh2sRQZSM6OoktScX+LxJzvlU+FELp9j3TdcddTmmYArLSGptCTwjuw==
 
-bitbucket@2.0.2:
+bitbucket@^2.0.2:
   version "2.0.2"
   resolved "https://registry.yarnpkg.com/bitbucket/-/bitbucket-2.0.2.tgz#76e1e7498a2641836879ab75e8e8621446cb9ef1"
   integrity sha512-FHdaajBPOf6dL0SonaFTZpgTO9iyZF868ulSKXZ1vq1ng0268qng7LR78a2i4QIRVSEohAG2b+OGtFtkieF+cw==
