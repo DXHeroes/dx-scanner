@@ -1,7 +1,6 @@
 import { createTestContainer, TestContainerContext } from '../../inversify.config';
 import { PracticeEvaluationResult } from '../../model';
 import { DoesPullRequestsPractice } from './DoesPullRequests';
-import nock from 'nock';
 import { GitHubNock } from '../../test/helpers/gitHubNock';
 import { getRepoCommitsResponse } from '../../services/git/__MOCKS__/gitHubServiceMockFolder/getRepoCommitsResponse.mock';
 import { PullRequestState } from '../../inspectors/ICollaborationInspector';
@@ -9,10 +8,6 @@ import { PullRequestState } from '../../inspectors/ICollaborationInspector';
 describe('DoesPullRequests', () => {
   let practice: DoesPullRequestsPractice;
   let containerCtx: TestContainerContext;
-
-  beforeEach(async () => {
-    nock.cleanAll();
-  });
 
   beforeAll(() => {
     containerCtx = createTestContainer();

@@ -7,8 +7,6 @@ import { bitbucketListPRsResponseFactory } from '../factories/responses/bitbucke
 import { bitbucketListPullCommitsResponseFactory } from '../factories/responses/bitbucket/listPullCommitsResponseFactory';
 import { bitbucketListCommitResponseFactory } from '../factories/responses/bitbucket/listRepoCommitsResponseFactory';
 import { BitbucketPullRequestState, BitbucketIssueState } from '../../services/bitbucket/IBitbucketService';
-import _ from 'lodash';
-import qs from 'qs';
 import { VCSServicesUtils } from '../../services/git/VCSServicesUtils';
 
 export class BitbucketNock {

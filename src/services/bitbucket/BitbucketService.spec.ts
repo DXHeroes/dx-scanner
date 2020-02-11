@@ -1,4 +1,3 @@
-import nock from 'nock';
 import { PullRequestState, IssueState } from '../../inspectors';
 import {
   getIssueResponse,
@@ -24,7 +23,7 @@ describe('Bitbucket Service', () => {
 
   beforeEach(async () => {
     service = new BitbucketService(argumentsProviderFactory({ uri: '.' }));
-    nock.cleanAll();
+
     bitbucketNock = new BitbucketNock('pypy', 'pypy');
   });
 
@@ -131,7 +130,6 @@ describe('Bitbucket Service', () => {
 
   it('returns open issues in own interface', async () => {
     const mockIssue = bitbucketIssueResponseFactory({ state: BitbucketIssueState.new });
-    bitbucketNock.getOwnerId();
     bitbucketNock.listIssuesResponse([mockIssue], { filter: { state: BitbucketIssueState.new } });
 
     const response = await service.listIssues('pypy', 'pypy', { filter: { state: IssueState.open } });

@@ -1,5 +1,4 @@
 import moment from 'moment';
-import nock from 'nock';
 import { CollaborationInspector } from '../../inspectors';
 import { createTestContainer, TestContainerContext } from '../../inversify.config';
 import { PracticeEvaluationResult } from '../../model';
@@ -15,10 +14,6 @@ describe('TimeToSolvePullRequestsPractice', () => {
   let containerCtx: TestContainerContext;
   const MockedCollaborationInspector = <jest.Mock<CollaborationInspector>>(<unknown>CollaborationInspector);
   let mockCollaborationInspector: CollaborationInspector;
-
-  beforeEach(async () => {
-    nock.cleanAll();
-  });
 
   beforeAll(() => {
     containerCtx = createTestContainer();

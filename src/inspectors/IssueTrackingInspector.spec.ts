@@ -1,5 +1,4 @@
 import { IssueTrackingInspector } from './IssueTrackingInspector';
-import nock from 'nock';
 import { TestContainerContext, createTestContainer } from '../inversify.config';
 import { GitHubNock } from '../test/helpers/gitHubNock';
 import {
@@ -18,10 +17,6 @@ describe('Issue Tracking Inspector', () => {
   beforeAll(async () => {
     containerCtx = createTestContainer();
     inspector = <IssueTrackingInspector>containerCtx.practiceContext.issueTrackingInspector;
-  });
-
-  beforeEach(() => {
-    nock.cleanAll();
   });
 
   it('returns paginated issues', async () => {
