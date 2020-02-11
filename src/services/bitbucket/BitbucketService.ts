@@ -51,7 +51,7 @@ export class BitbucketService implements IVCSService {
     this.cache = new InMemoryCache();
     this.argumentsProvider = argumentsProvider;
     this.client = Bitbucket({
-      hideNotice: true,
+      notice: false,
     });
   }
 
