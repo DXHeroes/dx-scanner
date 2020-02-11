@@ -1,3 +1,10 @@
+## [2.1.2](https://github.com/dxheroes/dx-scanner/compare/v2.1.1...v2.1.2) (2020-02-11)
+
+
+### Bug Fixes
+
+* **deps:** pin dependency camelcase to 5.3.1 ([c1f804a](https://github.com/dxheroes/dx-scanner/commit/c1f804aa32af7bac243f1f0e2294a03820a62457))
+
 ## [2.1.1](https://github.com/dxheroes/dx-scanner/compare/v2.1.0...v2.1.1) (2020-02-10)
 
 
