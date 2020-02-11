@@ -15,6 +15,7 @@ export class ScanningStrategyDetector implements IDetector<string, ScanningStrat
   private bitbucketService: BitbucketService;
   private readonly argumentsProvider: ArgumentsProvider;
   private readonly detectorDebug: debug.Debugger;
+  private isOnline = true;
 
   constructor(
     @inject(GitHubService) gitHubService: GitHubService,
@@ -56,6 +57,7 @@ export class ScanningStrategyDetector implements IDetector<string, ScanningStrat
       accessType,
       remoteUrl: remoteUrl,
       localPath: inputType === ServiceType.local ? path : undefined,
+      isOnline: this.isOnline,
     };
   }
 
@@ -92,6 +94,10 @@ export class ScanningStrategyDetector implements IDetector<string, ScanningStrat
         if (error.status === 401 || error.status === 404 || error.status === 403) {
           return AccessType.unknown;
         }
+        if (error.status === 500) {
+          this.isOnline = false;
+          return AccessType.unknown;
+        }
         throw error;
       }
 
@@ -113,6 +119,10 @@ export class ScanningStrategyDetector implements IDetector<string, ScanningStrat
       } catch (error) {
         this.detectorDebug(error.message);
         if (error.code === 401 || error.code === 404 || error.code === 403) {
+          return AccessType.unknown;
+        }
+        if (error.status === 500) {
+          this.isOnline = false;
           return AccessType.unknown;
         }
         throw error;
@@ -158,6 +168,7 @@ export interface ScanningStrategy {
   accessType: AccessType | undefined;
   remoteUrl: RemoteUrl;
   localPath: string | undefined;
+  isOnline: boolean;
 }
 
 export enum ServiceType {

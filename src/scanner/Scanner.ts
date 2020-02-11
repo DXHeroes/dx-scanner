@@ -65,7 +65,12 @@ export class Scanner {
   async scan({ determineRemote } = { determineRemote: true }): Promise<ScanResult> {
     let scanStrategy = await this.scanStrategyDetector.detect();
     if (determineRemote && scanStrategy.accessType === AccessType.unknown) {
-      return { shouldExitOnEnd: this.shouldExitOnEnd, needsAuth: true, serviceType: scanStrategy.serviceType };
+      return {
+        shouldExitOnEnd: this.shouldExitOnEnd,
+        needsAuth: true,
+        serviceType: scanStrategy.serviceType,
+        isOnline: scanStrategy.isOnline,
+      };
     }
     this.d(`Scan strategy: ${inspect(scanStrategy)}`);
     scanStrategy = await this.preprocessData(scanStrategy);
@@ -122,8 +127,12 @@ export class Scanner {
    * Clone a repository if the input is remote repository
    */
   private async preprocessData(scanningStrategy: ScanningStrategy) {
-    const { serviceType, accessType, remoteUrl } = scanningStrategy;
+    const { serviceType, accessType, remoteUrl, isOnline } = scanningStrategy;
     let localPath = scanningStrategy.localPath;
+
+    if (!isOnline) {
+      return { serviceType, accessType, remoteUrl, localPath, isOnline };
+    }
 
     if (localPath === undefined && remoteUrl !== undefined && serviceType !== ServiceType.local) {
       const cloneUrl = new url.URL(remoteUrl);
@@ -141,7 +150,7 @@ export class Scanner {
         .clone(cloneUrl.href, localPath);
     }
 
-    return { serviceType, accessType, remoteUrl, localPath };
+    return { serviceType, accessType, remoteUrl, localPath, isOnline };
   }
 
   /**
@@ -367,4 +376,5 @@ export type ScanResult = {
   shouldExitOnEnd: boolean;
   needsAuth?: boolean;
   serviceType?: ServiceType;
+  isOnline?: boolean;
 };
