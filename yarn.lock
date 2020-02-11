@@ -1502,12 +1502,7 @@ bcrypt-pbkdf@^1.0.0:
   dependencies:
     tweetnacl "^0.14.3"
 
-before-after-hook@^1.4.0:
-  version "1.4.0"
-  resolved "https://registry.yarnpkg.com/before-after-hook/-/before-after-hook-1.4.0.tgz#2b6bf23dca4f32e628fd2747c10a37c74a4b484d"
-  integrity sha512-l5r9ir56nda3qu14nAXIlyq1MmUSs0meCIaFAh8HwkFwP1F8eToOuS3ah2VAHHcY04jaYD7FpJC5JTXHYRbkzg==
-
-before-after-hook@^2.0.0:
+before-after-hook@^2.0.0, before-after-hook@^2.1.0:
   version "2.1.0"
   resolved "https://registry.yarnpkg.com/before-after-hook/-/before-after-hook-2.1.0.tgz#b6c03487f44e24200dd30ca5e6a1979c5d2fb635"
   integrity sha512-IWIbu7pMqyw3EAJHzzHbWa85b6oud/yfKYg5rqB5hNE8CeMi3nX+2C2sj0HswfblST86hpVEOAb9x34NZd6P7A==
@@ -1529,16 +1524,16 @@ binaryextensions@^2.1.2:
   resolved "https://registry.yarnpkg.com/binaryextensions/-/binaryextensions-2.2.0.tgz#e7c6ba82d4f5f5758c26078fe8eea28881233311"
   integrity sha512-bHhs98rj/7i/RZpCSJ3uk55pLXOItjIrh2sRQZSM6OoktScX+LxJzvlU+FELp9j3TdcddTmmYArLSGptCTwjuw==
 
-bitbucket@1.17.1:
-  version "1.17.1"
-  resolved "https://registry.yarnpkg.com/bitbucket/-/bitbucket-1.17.1.tgz#2bb3accfc0e224dab921bb2e07d93860521237cd"
-  integrity sha512-aeh/y5lXUzJTW6gImb6/ty239g4EqAd2NQF/biw3WUaLYQwKer+dVlwkme9gzT5fCAZZizDPajOZ9kFwiXxZIw==
+bitbucket@2.0.2:
+  version "2.0.2"
+  resolved "https://registry.yarnpkg.com/bitbucket/-/bitbucket-2.0.2.tgz#76e1e7498a2641836879ab75e8e8621446cb9ef1"
+  integrity sha512-FHdaajBPOf6dL0SonaFTZpgTO9iyZF868ulSKXZ1vq1ng0268qng7LR78a2i4QIRVSEohAG2b+OGtFtkieF+cw==
   dependencies:
-    before-after-hook "^1.4.0"
+    before-after-hook "^2.1.0"
     btoa-lite "^1.0.0"
-    debug "^3.1.0"
-    is-plain-object "^2.0.4"
-    node-fetch "^2.1.2"
+    deepmerge "^4.0.0"
+    is-plain-object "^3.0.0"
+    node-fetch "^2.6.0"
     url-template "^2.0.8"
 
 bluebird@^3.5.1, bluebird@^3.5.3, bluebird@^3.5.5:
@@ -2643,6 +2638,11 @@ deep-is@~0.1.3:
   version "0.1.3"
   resolved "https://registry.yarnpkg.com/deep-is/-/deep-is-0.1.3.tgz#b369d6fb5dbc13eecf524f91b070feedc357cf34"
   integrity sha1-s2nW+128E+7PUk+RsHD+7cNXzzQ=
+
+deepmerge@^4.0.0:
+  version "4.2.2"
+  resolved "https://registry.yarnpkg.com/deepmerge/-/deepmerge-4.2.2.tgz#44d2ea3679b8f4d4ffba33f03d865fc1e7bf4955"
+  integrity sha512-FJ3UgI4gIl+PHZm53knsuSFpE+nESMr7M4v9QcgB7S63Kj/6WqMiFQJpBBYz1Pt+66bZpP3Q7Lye0Oo9MPKEdg==
 
 defaults@^1.0.3:
   version "1.0.3"
@@ -6348,7 +6348,7 @@ node-fetch-npm@^2.0.2:
     json-parse-better-errors "^1.0.0"
     safe-buffer "^5.1.1"
 
-node-fetch@^2.1.2, node-fetch@^2.2.0, node-fetch@^2.3.0:
+node-fetch@^2.2.0, node-fetch@^2.3.0, node-fetch@^2.6.0:
   version "2.6.0"
   resolved "https://registry.yarnpkg.com/node-fetch/-/node-fetch-2.6.0.tgz#e633456386d4aa55863f676a7ab0daa8fdecb0fd"
   integrity sha512-8dG4H5ujfvFiqDmVu9fQ5bOHUC15JMjMY/Zumv26oOvvVJjM67KF8koCWIabKQ1GJIa9r2mMZscBq/TbdOcmNA==

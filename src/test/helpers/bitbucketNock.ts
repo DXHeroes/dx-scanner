@@ -8,6 +8,7 @@ import { bitbucketListPullCommitsResponseFactory } from '../factories/responses/
 import { bitbucketListCommitResponseFactory } from '../factories/responses/bitbucket/listRepoCommitsResponseFactory';
 import { BitbucketPullRequestState, BitbucketIssueState } from '../../services/bitbucket/IBitbucketService';
 import { VCSServicesUtils } from '../../services/git/VCSServicesUtils';
+import Bitbucket from 'bitbucket';
 
 export class BitbucketNock {
   user: string;
