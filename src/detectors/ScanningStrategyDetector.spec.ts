@@ -28,6 +28,7 @@ describe('ScanningStrategyDetector', () => {
         accessType: undefined,
         localPath: '/local/path',
         remoteUrl: undefined,
+        isOnline: false,
         serviceType: ServiceType.git,
       });
     });
@@ -50,6 +51,7 @@ describe('ScanningStrategyDetector', () => {
         accessType: AccessType.public,
         localPath: '/local/path',
         remoteUrl: repoPath,
+        isOnline: true,
         serviceType: ServiceType.github,
       });
     });
@@ -72,6 +74,7 @@ describe('ScanningStrategyDetector', () => {
         accessType: 'public',
         localPath: '/local/path',
         remoteUrl: repoPath,
+        isOnline: true,
         serviceType: ServiceType.github,
       });
     });
@@ -94,6 +97,7 @@ describe('ScanningStrategyDetector', () => {
         accessType: AccessType.unknown,
         localPath: '/local/path',
         remoteUrl: repoPath,
+        isOnline: true,
         serviceType: ServiceType.github,
       });
     });
@@ -109,6 +113,7 @@ describe('ScanningStrategyDetector', () => {
         accessType: AccessType.public,
         localPath: undefined,
         remoteUrl: repoPath,
+        isOnline: true,
         serviceType: ServiceType.github,
       });
     });
@@ -123,6 +128,7 @@ describe('ScanningStrategyDetector', () => {
         accessType: AccessType.unknown,
         localPath: undefined,
         remoteUrl: repoPath,
+        isOnline: true,
         serviceType: ServiceType.github,
       });
     });
@@ -138,6 +144,7 @@ describe('ScanningStrategyDetector', () => {
         accessType: AccessType.public,
         localPath: undefined,
         remoteUrl: `https://${repoPath}`,
+        isOnline: true,
         serviceType: ServiceType.github,
       });
     });

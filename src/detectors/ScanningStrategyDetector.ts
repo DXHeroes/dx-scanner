@@ -15,7 +15,7 @@ export class ScanningStrategyDetector implements IDetector<string, ScanningStrat
   private bitbucketService: BitbucketService;
   private readonly argumentsProvider: ArgumentsProvider;
   private readonly detectorDebug: debug.Debugger;
-  private isOnline = true;
+  private isOnline = false;
 
   constructor(
     @inject(GitHubService) gitHubService: GitHubService,
@@ -44,12 +44,14 @@ export class ScanningStrategyDetector implements IDetector<string, ScanningStrat
       remoteUrl = remoteService.remoteUrl;
 
       if (remoteService.remoteUrl) {
+        this.isOnline = true;
         accessType = await this.determineRemoteAccessType(remoteService);
       }
     } else {
       serviceType = inputType;
       remoteUrl = path;
       accessType = await this.determineRemoteAccessType({ remoteUrl: path, serviceType });
+      this.isOnline = true;
     }
 
     return {
