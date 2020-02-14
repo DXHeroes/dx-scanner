@@ -53,4 +53,5 @@ export interface IVCSService {
 export enum VCSServiceType {
   github = 'GitHub',
   bitbucket = 'Bitbucket',
+  gitlab = 'GitLab',
 }
