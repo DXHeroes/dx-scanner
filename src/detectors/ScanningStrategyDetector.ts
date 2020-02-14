@@ -76,10 +76,9 @@ export class ScanningStrategyDetector implements IDetector<string, ScanningStrat
       return ServiceType.bitbucket;
     }
 
-    // TODO
-    // if (ScanningStrategyDetectorUtils.isGitLabPath()) {
-    //   return ServiceType.gitlab;
-    // }
+    if (ScanningStrategyDetectorUtils.isGitLabPath(path)) {
+      return ServiceType.gitlab;
+    }
 
     throw ErrorFactory.newInternalError('Unable to detect scanning strategy');
   };
