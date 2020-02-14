@@ -89,7 +89,7 @@ export class ScanningStrategyDetector implements IDetector<string, ScanningStrat
       return undefined;
     }
 
-    // TODO implement function for this
+    // TODO refactor
     if (remoteService.serviceType === ServiceType.github) {
       const { owner, repoName } = GitServiceUtils.getOwnerAndRepoName(remoteService.remoteUrl);
 
@@ -127,8 +127,28 @@ export class ScanningStrategyDetector implements IDetector<string, ScanningStrat
         }
         throw error;
       }
+    } else if (remoteService.serviceType === ServiceType.gitlab) {
+      const { owner, repoName } = GitServiceUtils.parseGitlabUrl(remoteService.remoteUrl);
+
+      try {
+        const response = await this.gitLabService.getRepo(owner, repoName);
+        if (response.visibility === AccessType.private) {
+          return AccessType.private;
+        }
+        if (response.visibility === AccessType.public || (response && !response.visibility)) {
+          return AccessType.public;
+        }
+        if (!response) {
+          return AccessType.unknown;
+        }
+      } catch (error) {
+        this.detectorDebug(error.message);
+        if (error.code === 401 || error.code === 404 || error.code === 403) {
+          return AccessType.unknown;
+        }
+        throw error;
+      }
     }
-    // TODO gitlab service
 
     return undefined;
   };
