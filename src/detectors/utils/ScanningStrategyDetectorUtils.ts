@@ -11,6 +11,10 @@ export class ScanningStrategyDetectorUtils {
     return this.testPath(path, /bitbucket\.org/);
   }
 
+  static isGitLabPath(path: string): boolean {
+    return this.testPath(path, /gitlab\.com/) || this.testPath(path, /git\.*\./);
+  }
+
   static isRemoteServicePath(path: string): boolean {
     return this.isGitHubPath(path) || this.isBitbucketPath(path); // || ...
   }
