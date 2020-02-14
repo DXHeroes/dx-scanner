@@ -24,6 +24,7 @@ import { PracticeContext } from './contexts/practice/PracticeContext';
 import { packageJSONContents } from './detectors/__MOCKS__/JavaScript/packageJSONContents.mock';
 import { argumentsProviderFactory } from './test/factories/ArgumentsProviderFactory';
 import { ArgumentsProvider } from './scanner';
+import { GitLabService } from './services/gitlab/GitLabService';
 
 export const createRootContainer = (args: ArgumentsProvider): Container => {
   const container = new Container();
@@ -36,6 +37,7 @@ export const createRootContainer = (args: ArgumentsProvider): Container => {
   container.bind(FileSystemService).toSelf();
   container.bind(GitHubService).toSelf();
   container.bind(BitbucketService).toSelf();
+  container.bind(GitLabService).toSelf();
   // register practices
   practices.forEach((practice) => {
     container.bind<IPracticeWithMetadata>(Types.Practice).toConstantValue(ScannerUtils.initPracticeWithMetadata(practice));

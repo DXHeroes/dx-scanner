@@ -8,21 +8,25 @@ import { Types } from '../types';
 import { ErrorFactory } from '../lib/errors';
 import { ArgumentsProvider } from '../scanner';
 import { ScanningStrategyDetectorUtils } from './utils/ScanningStrategyDetectorUtils';
+import { GitLabService } from '../services/gitlab/GitLabService';
 
 @injectable()
 export class ScanningStrategyDetector implements IDetector<string, ScanningStrategy> {
   private gitHubService: GitHubService;
   private bitbucketService: BitbucketService;
+  private gitLabService: GitLabService;
   private readonly argumentsProvider: ArgumentsProvider;
   private readonly detectorDebug: debug.Debugger;
 
   constructor(
     @inject(GitHubService) gitHubService: GitHubService,
     @inject(BitbucketService) bitbucketService: BitbucketService,
+    @inject(GitLabService) gitLabService: GitLabService,
     @inject(Types.ArgumentsProvider) argumentsProvider: ArgumentsProvider,
   ) {
     this.gitHubService = gitHubService;
     this.bitbucketService = bitbucketService;
+    this.gitLabService = gitLabService;
     this.argumentsProvider = argumentsProvider;
     this.detectorDebug = debug('scanningStrategyDetector');
   }
@@ -72,6 +76,11 @@ export class ScanningStrategyDetector implements IDetector<string, ScanningStrat
       return ServiceType.bitbucket;
     }
 
+    // TODO
+    // if (ScanningStrategyDetectorUtils.isGitLabPath()) {
+    //   return ServiceType.gitlab;
+    // }
+
     throw ErrorFactory.newInternalError('Unable to detect scanning strategy');
   };
 
@@ -118,6 +127,7 @@ export class ScanningStrategyDetector implements IDetector<string, ScanningStrat
         throw error;
       }
     }
+    // TODO gitlab service
 
     return undefined;
   };
@@ -145,8 +155,10 @@ export class ScanningStrategyDetector implements IDetector<string, ScanningStrat
 
     if (ScanningStrategyDetectorUtils.isGitHubPath(remote.refs.fetch)) {
       remoteService = { serviceType: ServiceType.github, remoteUrl: remote.refs.fetch };
-    } else {
+    } else if (ScanningStrategyDetectorUtils.isBitbucketPath(remote.refs.fetch)) {
       remoteService = { serviceType: ServiceType.git, remoteUrl: remote.refs.fetch };
+    } else {
+      remoteService = { serviceType: ServiceType.gitlab, remoteUrl: remote.refs.fetch };
     }
 
     return remoteService;
@@ -163,6 +175,7 @@ export interface ScanningStrategy {
 export enum ServiceType {
   github = 'github',
   bitbucket = 'bitbucket',
+  gitlab = 'gitlab',
   git = 'git',
   local = 'local',
 }
