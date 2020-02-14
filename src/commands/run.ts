@@ -45,7 +45,7 @@ export default class Run {
           'Insert your Bitbucket credentials (in format "appPassword" or "username:appPasword"). https://confluence.atlassian.com/bitbucket/app-passwords-828781300.html\n',
           { type: 'hide' },
         );
-      }
+      } //TODO add gitlab - add function for that
 
       const container = createRootContainer({
         uri: scanPath,

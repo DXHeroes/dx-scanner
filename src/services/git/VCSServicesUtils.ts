@@ -33,6 +33,8 @@ export class VCSServicesUtils {
     }
   };
 
+  // TODO gitlab
+
   static getGithubIssueState = (state: IssueState | undefined) => {
     switch (state) {
       case IssueState.open:
