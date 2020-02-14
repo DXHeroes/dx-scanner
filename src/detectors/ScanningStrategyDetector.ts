@@ -89,13 +89,14 @@ export class ScanningStrategyDetector implements IDetector<string, ScanningStrat
       return undefined;
     }
 
+    // TODO implement function for this
     if (remoteService.serviceType === ServiceType.github) {
-      const parsedUrl = gitUrlParse(remoteService.remoteUrl);
+      const parsedUrl = GitServiceUtils.getOwnerAndRepoName(remoteService.remoteUrl);
 
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       let response: any;
       try {
-        response = await this.gitHubService.getRepo(parsedUrl.owner, parsedUrl.name);
+        response = await this.gitHubService.getRepo(parsedUrl.owner, parsedUrl.repoName);
       } catch (error) {
         this.detectorDebug(error.message);
         if (error.status === 401 || error.status === 404 || error.status === 403) {
