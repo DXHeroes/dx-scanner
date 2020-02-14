@@ -91,12 +91,12 @@ export class ScanningStrategyDetector implements IDetector<string, ScanningStrat
 
     // TODO implement function for this
     if (remoteService.serviceType === ServiceType.github) {
-      const parsedUrl = GitServiceUtils.getOwnerAndRepoName(remoteService.remoteUrl);
+      const { owner, repoName } = GitServiceUtils.getOwnerAndRepoName(remoteService.remoteUrl);
 
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       let response: any;
       try {
-        response = await this.gitHubService.getRepo(parsedUrl.owner, parsedUrl.repoName);
+        response = await this.gitHubService.getRepo(owner, repoName);
       } catch (error) {
         this.detectorDebug(error.message);
         if (error.status === 401 || error.status === 404 || error.status === 403) {
@@ -112,10 +112,10 @@ export class ScanningStrategyDetector implements IDetector<string, ScanningStrat
         return AccessType.public;
       }
     } else if (remoteService.serviceType === ServiceType.bitbucket) {
-      const parsedUrl = GitServiceUtils.getOwnerAndRepoName(remoteService.remoteUrl);
+      const { owner, repoName } = GitServiceUtils.getOwnerAndRepoName(remoteService.remoteUrl);
 
       try {
-        const response = await this.bitbucketService.getRepo(parsedUrl.owner, parsedUrl.repoName);
+        const response = await this.bitbucketService.getRepo(owner, repoName);
         if (response.data.is_private === true) {
           return AccessType.private;
         }
