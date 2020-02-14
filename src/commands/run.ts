@@ -35,6 +35,7 @@ export default class Run {
 
     let scanResult = await scanner.scan();
 
+    //TODO refactor - add function for that
     if (scanResult.needsAuth && !cmd.ci) {
       if (ScanningStrategyDetectorUtils.isGitHubPath(scanPath) || scanResult.serviceType === ServiceType.github) {
         authorization = await cli.prompt('Insert your GitHub personal access token. https://github.com/settings/tokens\n', {
@@ -45,7 +46,12 @@ export default class Run {
           'Insert your Bitbucket credentials (in format "appPassword" or "username:appPasword"). https://confluence.atlassian.com/bitbucket/app-passwords-828781300.html\n',
           { type: 'hide' },
         );
-      } //TODO add gitlab - add function for that
+      } else if (ScanningStrategyDetectorUtils.isGitLabPath(scanPath) || scanResult.serviceType === ServiceType.gitlab) {
+        authorization = await cli.prompt(
+          'Insert your GitLab credentials (in format "private_token"). https://gitlab.com/profile/personal_access_tokens\n',
+          { type: 'hide' },
+        );
+      }
 
       const container = createRootContainer({
         uri: scanPath,
