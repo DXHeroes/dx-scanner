@@ -56,6 +56,30 @@ describe('ScanningStrategyDetector', () => {
       });
     });
 
+    it('offline local path with remote public GitHub and auth', async () => {
+      const repoPath = 'git@github.com:DXHeroes/dx-scanner.git';
+      nock.disableNetConnect();
+      new GitHubNock('1', 'DXHeroes', 1, 'dx-scanner').getRepo('').reply(500);
+
+      mockedGit.mockImplementation(() => {
+        return {
+          checkIsRepo: () => true,
+          getRemotes: () => [{ name: 'origin', refs: { fetch: repoPath, push: repoPath } }],
+        };
+      });
+      const container = createTestContainer({ uri: '/local/path', auth: 'fake_token' });
+
+      const result = await container.scanningStrategyDetector.detect();
+
+      expect(result).toEqual({
+        accessType: AccessType.unknown,
+        localPath: '/local/path',
+        remoteUrl: repoPath,
+        isOnline: false,
+        serviceType: ServiceType.github,
+      });
+    });
+
     it('local path with remote public GitHub and no auth', async () => {
       const repoPath = 'git@github.com:DXHeroes/dx-scanner.git';
       new GitHubNock('1', 'DXHeroes', 1, 'dx-scanner').getRepo('').reply(200);
@@ -79,6 +103,30 @@ describe('ScanningStrategyDetector', () => {
       });
     });
 
+    it('offline local path with remote public GitHub and no auth', async () => {
+      const repoPath = 'git@github.com:DXHeroes/dx-scanner.git';
+      nock.disableNetConnect();
+      new GitHubNock('1', 'DXHeroes', 1, 'dx-scanner').getRepo('').reply(500);
+
+      mockedGit.mockImplementation(() => {
+        return {
+          checkIsRepo: () => true,
+          getRemotes: () => [{ name: 'origin', refs: { fetch: repoPath, push: repoPath } }],
+        };
+      });
+      const container = createTestContainer({ uri: '/local/path' });
+
+      const result = await container.scanningStrategyDetector.detect();
+
+      expect(result).toEqual({
+        accessType: AccessType.unknown,
+        localPath: '/local/path',
+        remoteUrl: repoPath,
+        isOnline: false,
+        serviceType: ServiceType.github,
+      });
+    });
+
     it('local path with remote private GitHub', async () => {
       const repoPath = 'git@github.com:DXHeroes/dx-scanner-private.git';
       new GitHubNock('1', 'DXHeroes', 1, 'dx-scanner-private').getRepo('').reply(404);
@@ -98,6 +146,30 @@ describe('ScanningStrategyDetector', () => {
         localPath: '/local/path',
         remoteUrl: repoPath,
         isOnline: true,
+        serviceType: ServiceType.github,
+      });
+    });
+
+    it('offline local path with remote private GitHub', async () => {
+      const repoPath = 'git@github.com:DXHeroes/dx-scanner-private.git';
+      nock.disableNetConnect();
+      new GitHubNock('1', 'DXHeroes', 1, 'dx-scanner-private').getRepo('').reply(500);
+
+      mockedGit.mockImplementation(() => {
+        return {
+          checkIsRepo: () => true,
+          getRemotes: () => [{ name: 'origin', refs: { fetch: repoPath, push: repoPath } }],
+        };
+      });
+
+      const container = createTestContainer({ uri: '/local/path', auth: 'bad AT' });
+      const result = await container.scanningStrategyDetector.detect();
+
+      expect(result).toEqual({
+        accessType: AccessType.unknown,
+        localPath: '/local/path',
+        remoteUrl: repoPath,
+        isOnline: false,
         serviceType: ServiceType.github,
       });
     });
