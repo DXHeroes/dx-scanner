@@ -35,6 +35,14 @@ describe('JavaPackageManagementUsedPractice', () => {
     expect(evaluated).toEqual(PracticeEvaluationResult.practicing);
   });
 
+  it('Returns practicing if there is a build.gradle.kts', async () => {
+    containerCtx.virtualFileSystemService.setFileSystem({
+      'build.gradle.kts': buildGRADLEContents,
+    });
+    const evaluated = await practice.evaluate(containerCtx.practiceContext);
+    expect(evaluated).toEqual(PracticeEvaluationResult.practicing);
+  });
+
   it('Returns notPracticing if there is NO pom.xml or build.gradle', async () => {
     containerCtx.virtualFileSystemService.setFileSystem({
       'not.exists': '...',
