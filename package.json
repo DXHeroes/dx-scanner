@@ -37,7 +37,7 @@
     "bitbucket": "1.17.1",
     "colors": "1.4.0",
     "command-exists": "1.2.8",
-    "commander": "^4.1.0",
+    "commander": "4.1.0",
     "cross-env": "7.0.0",
     "debug": "4.1.1",
     "eslint": "6.8.0",
