@@ -10,6 +10,9 @@ import { ICache } from '../../scanner/cache/ICache';
 import { Types } from '../../types';
 import { GitServiceUtils } from '../git/GitServiceUtils';
 import { Sudo } from 'gitlab/dist/types/core/infrastructure';
+import { ListGetterOptions, PullRequestState, Paginated } from '../../inspectors';
+import { PullRequest } from '../git/model';
+import { VCSServicesUtils } from '../git/VCSServicesUtils';
 
 const debug = Debug('cli:services:git:bitbucket-service');
 
@@ -37,6 +40,25 @@ export class GitLabService {
 
   getRepo(owner: string, repo: string) {
     return this.client.Projects.show(`${owner}/${repo}`);
+  }
+
+  async listPullRequests(
+    owner: string,
+    repo: string,
+    options?: { withDiffStat?: boolean } & ListGetterOptions<{ state?: PullRequestState }>,
+    //: Promise<Paginated<PullRequest>>
+  ) {
+    const state = VCSServicesUtils.getGitLabPRState(options?.filter?.state);
+
+    const response = await this.client.MergeRequests.all({
+      page: options?.pagination?.page,
+      per_page: options?.pagination?.perPage,
+      projectId: `${owner}/${repo}`,
+      state,
+    });
+
+    console.log(response);
+    return;
   }
 
   /**
