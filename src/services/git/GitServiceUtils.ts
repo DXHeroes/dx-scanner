@@ -69,11 +69,10 @@ export class GitServiceUtils {
       };
     }
 
-    const source = parsedUrl.source.split('.');
     return {
       owner: parsedUrl.owner,
       repoName: parsedUrl.name,
-      host: source[0],
+      host: parsedUrl.resource,
     };
   };
 }
