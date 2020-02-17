@@ -82,7 +82,7 @@ export class GitLabService {
           updatedAt: val.updated_at,
           closedAt: val.closed_at,
           state: val.state,
-          id: val.id, //iid?
+          id: val.iid, //id?
           base: {
             repo: {
               url: repoUrl,
@@ -109,6 +109,56 @@ export class GitLabService {
     const customPagination = this.getPagination(pagination);
 
     return { items, ...customPagination };
+  }
+
+  async getPullRequest(owner: string, repo: string, prNumber: number, withDiffStat?: boolean): Promise<PullRequest> {
+    //TODO - to function
+    const parsedUrl = GitServiceUtils.parseGitlabUrl(this.argumentsProvider.uri);
+
+    console.log(parsedUrl);
+    const repoUrl = `${parsedUrl.host}/${owner}/${repo}`;
+    let ownerInfo = (<any>await this.client.Users.all({ username: owner }))[0];
+    if (!ownerInfo) {
+      ownerInfo = <any>await this.client.Groups.show(owner);
+    }
+
+    const response = <any>await this.client.MergeRequests.show(`${owner}/${repo}`, prNumber);
+
+    const pullRequest = {
+      user: {
+        id: response.author.id,
+        login: response.author.username,
+        url: response.author.web_url,
+      },
+      url: response.web_url,
+      body: response.desciption,
+      createdAt: response.created_at,
+      updatedAt: response.updated_at,
+      closedAt: response.closed_at,
+      mergedAt: response.merged_at,
+      state: response.state,
+      id: response.iid,
+      base: {
+        repo: {
+          url: repoUrl,
+          name: repo,
+          id: response.project_id,
+          owner: {
+            url: `${parsedUrl.host}/${owner}`,
+            id: ownerInfo.id,
+            login: ownerInfo.username,
+          },
+        },
+      },
+    };
+
+    //TODO add withDiffStat()
+    // // Get number of changes, additions and deletions in PullRequest if the withDiffStat is true
+    // if (withDiffStat) {
+    //     const lines = await this.getPullsDiffStat(owner, repo, prNumber);
+    //     return { ...pullRequest, lines };
+    //   }
+    return pullRequest;
   }
 
   getPagination(pagination: any) {
