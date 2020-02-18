@@ -10,7 +10,7 @@ import { PracticeContext } from '../../contexts/practice/PracticeContext';
   suggestion:
     'Use tests to point out the defects and errors that were made during the development phases. The most widely used testing frameworks in the Java community are JUnit and TestNG.',
   reportOnlyOnce: true,
-  url: 'https://junit.org/junit5/',
+  url: 'https://dxkb.io/tags/testing',
 })
 export class JavaTestingFrameworkUsedPractice implements IPractice {
   async isApplicable(ctx: PracticeContext): Promise<boolean> {

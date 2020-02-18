@@ -10,7 +10,7 @@ import { PracticeContext } from '../../contexts/practice/PracticeContext';
   suggestion:
     'Use tests to point out defects and errors that were made during the development phases. Use, for example, Jest - it is the most widely used testing framework in the JavaScript community.',
   reportOnlyOnce: true,
-  url: 'https://dxkb.io/p/unit-testing',
+  url: 'https://dxkb.io/tags/testing',
 })
 export class JsFrontendTestingFrameworkUsedPractice implements IPractice {
   async isApplicable(ctx: PracticeContext): Promise<boolean> {

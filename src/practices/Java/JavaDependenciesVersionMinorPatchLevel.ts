@@ -13,7 +13,7 @@ import { flatten } from 'lodash';
   impact: PracticeImpact.high,
   suggestion: 'Keep the dependencies updated to have all possible features. Use, for example, versions-maven-plugin',
   reportOnlyOnce: true,
-  url: 'https://www.mojohaus.org/versions-maven-plugin/',
+  url: 'https://dxkb.io/p/updating-the-dependencies',
 })
 export class JavaDependenciesVersionMinorPatchLevel extends JavaDependenciesVersionMajorLevel implements IPractice {
   async isApplicable(ctx: PracticeContext): Promise<boolean> {

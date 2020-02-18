@@ -13,7 +13,7 @@ import { flatten } from 'lodash';
   impact: PracticeImpact.high,
   suggestion: 'Keep the dependencies updated to eliminate security concerns and compatibility issues. Use, for example, npm-check-updates.',
   reportOnlyOnce: true,
-  url: 'https://github.com/tjunnone/npm-check-updates',
+  url: 'https://dxkb.io/p/updating-the-dependencies',
 })
 export class DependenciesVersionMinorPatchLevelPractice extends DependenciesVersionMajorLevelPractice implements IPractice {
   async isApplicable(ctx: PracticeContext): Promise<boolean> {

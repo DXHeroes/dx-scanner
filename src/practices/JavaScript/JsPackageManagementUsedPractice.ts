@@ -9,7 +9,7 @@ import { PracticeContext } from '../../contexts/practice/PracticeContext';
   impact: PracticeImpact.high,
   suggestion: 'Use Package.json to keep track of packages that are being used in your application.',
   reportOnlyOnce: true,
-  url: 'https://docs.npmjs.com/files/package.json',
+  url: 'https://dxkb.io/p/package-management',
 })
 export class JsPackageManagementUsedPractice implements IPractice {
   async isApplicable(ctx: PracticeContext): Promise<boolean> {
