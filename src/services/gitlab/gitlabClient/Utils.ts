@@ -23,3 +23,17 @@ export const bundler = <T extends { [name: string]: Constructor }, P extends key
     });
   } as any) as Bundle<T, P>;
 };
+
+export const parseResponse = (response: AxiosResponse<any>) => {
+  const { headers } = response;
+  const { data } = response;
+  const pagination = {
+    total: parseInt(headers['x-total']),
+    next: parseInt(headers['x-next-page']) || null,
+    current: parseInt(headers['x-page']) || 1,
+    previous: parseInt(headers['x-prev-page']) || null,
+    perPage: parseInt(headers['x-per-page']),
+    totalPages: parseInt(headers['x-total-pages']),
+  };
+  return { headers, data, pagination };
+};
