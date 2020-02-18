@@ -1,3 +1,10 @@
+# [2.3.0](https://github.com/dxheroes/dx-scanner/compare/v2.2.0...v2.3.0) (2020-02-18)
+
+
+### Features
+
+* set practices url to dxkb.io + add urls to the list of practices ([0f7dec7](https://github.com/dxheroes/dx-scanner/commit/0f7dec7dad029b4826bbb702db9677103db8e476))
+
 # [2.2.0](https://github.com/dxheroes/dx-scanner/compare/v2.1.2...v2.2.0) (2020-02-11)
 
 
