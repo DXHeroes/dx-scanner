@@ -9,31 +9,42 @@ import { InMemoryCache } from '../../scanner/cache';
 import { ICache } from '../../scanner/cache/ICache';
 import { Types } from '../../types';
 import { GitServiceUtils } from '../git/GitServiceUtils';
-import { Sudo } from 'gitlab/dist/types/core/infrastructure';
 import { ListGetterOptions, PullRequestState, Paginated } from '../../inspectors';
-import { PullRequest } from '../git/model';
+import { PullRequest, PullCommits, PullFiles } from '../git/model';
 import { VCSServicesUtils } from '../git/VCSServicesUtils';
 import _ from 'lodash';
-
+import { GitLabClient } from './gitlabClient/GitLabClient';
+import { GitLabCustom } from '../gitlab/gitlabClient/resources/MergeRequests';
+import { ThinPullRequestsPractice } from '../../practices/LanguageIndependent/ThinPullRequestsPractice';
+import { parse } from 'path';
+import util from 'util';
 const debug = Debug('cli:services:git:bitbucket-service');
 
 @injectable()
 //implements IVCSService
 export class GitLabService {
+  private readonly customClient: GitLabCustom;
   private readonly client: Gitlab;
   private cache: ICache;
   private callCount = 0;
   private readonly argumentsProvider: ArgumentsProvider;
+  private readonly host: string;
 
   constructor(@inject(Types.ArgumentsProvider) argumentsProvider: ArgumentsProvider) {
     this.argumentsProvider = argumentsProvider;
     const parsedUrl = GitServiceUtils.parseGitlabUrl(argumentsProvider.uri);
+    this.host = parsedUrl.host || 'https://gitlab.com';
 
     this.cache = new InMemoryCache();
 
     this.client = new Gitlab({
       token: argumentsProvider.auth,
-      host: parsedUrl.host || 'https://gitlab.com',
+      host: this.host,
+    });
+
+    this.customClient = new GitLabCustom({
+      token: argumentsProvider.auth,
+      host: this.host,
     });
   }
 
@@ -45,6 +56,9 @@ export class GitLabService {
     return this.client.Projects.show(`${owner}/${repo}`);
   }
 
+  /**
+   * Lists all pull requests in the repo.
+   */
   async listPullRequests(
     owner: string,
     repo: string,
@@ -111,11 +125,13 @@ export class GitLabService {
     return { items, ...customPagination };
   }
 
+  /**
+   * Get a single pull request.
+   */
   async getPullRequest(owner: string, repo: string, prNumber: number, withDiffStat?: boolean): Promise<PullRequest> {
     //TODO - to function
     const parsedUrl = GitServiceUtils.parseGitlabUrl(this.argumentsProvider.uri);
 
-    console.log(parsedUrl);
     const repoUrl = `${parsedUrl.host}/${owner}/${repo}`;
     let ownerInfo = (<any>await this.client.Users.all({ username: owner }))[0];
     if (!ownerInfo) {
@@ -161,6 +177,44 @@ export class GitLabService {
     return pullRequest;
   }
 
+  async listPullRequestFiles(owner: string, repo: string, prNumber: number): Promise<Paginated<PullFiles>> {
+    throw new Error('Method not implemented yet.');
+  }
+
+  async listPullCommits(owner: string, repo: string, prNumber: number, options?: ListGetterOptions): Promise<Paginated<PullCommits>> {
+    const { data, pagination } = await this.customClient.MergeRequests.commits(`${owner}/${repo}`, prNumber, options);
+
+    const items = <PullCommits[]>await Promise.all(
+      data.map(async (val: any) => {
+        //TODO use custom client
+        const commitDetail = <any>await this.client.Commits.show(`${owner}/${repo}`, val.id);
+        const commit = {
+          sha: val.id,
+          commit: {
+            url: `${this.host}/${owner}/${repo}/merge_requests/${prNumber}/diffs?commit_id=${val.id}`,
+            message: val.message,
+            author: {
+              name: val.author_name, //get username?
+              email: val.author_email,
+              date: val.created_at,
+            },
+            tree: {
+              sha: commitDetail.parent_ids[0],
+              url: `${this.host}/${owner}/${repo}/merge_requests/${prNumber}/diffs?commit_id=${commitDetail.parent_ids[0]}`,
+            },
+            //TODO
+            verified: false,
+          },
+        };
+        return commit;
+      }),
+    );
+    const customPagination = this.getPagination(pagination);
+
+    return { items, ...customPagination };
+  }
+
+  //TODO interface for pagination
   getPagination(pagination: any) {
     const hasNextPage = pagination.next;
     const hasPreviousPage = pagination.previous;
