@@ -49,6 +49,25 @@ export class MergeRequests extends GitLabClient {
     const response = await this.api.get(endpoint, { params: queryParams });
     return parseResponse(response);
   }
+
+  /**
+   *
+   * @param projectId - The ID or URL path of the project, e.g. DXHeroes/dx-scanner
+   * @param mergeRequestIId
+   * @param options
+   *
+   * List all commits for merge request of given iid
+   */
+  async commits(projectId: string, mergeRequestIId: number, options?: ListGetterOptions) {
+    const endpoint = `projects/${encodeURIComponent(projectId)}/merge_requests/${mergeRequestIId}/commits`;
+    const queryParams = {
+      page: options?.pagination?.page,
+      // eslint-disable-next-line @typescript-eslint/camelcase
+      per_page: options?.pagination?.perPage,
+    };
+    const response = await this.api.get(endpoint, { params: queryParams });
+    return parseResponse(response);
+  }
 }
 
 //TODO move to another file
