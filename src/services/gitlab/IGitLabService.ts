@@ -4,3 +4,9 @@ export enum GitLabPullRequestState {
   merged = 'merged',
   all = 'all',
 }
+
+export enum GitLabIssueState {
+  open = 'active',
+  closed = 'closed',
+  all = 'all',
+}
