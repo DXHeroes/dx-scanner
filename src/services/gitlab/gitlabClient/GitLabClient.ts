@@ -1,8 +1,10 @@
 import axios from 'axios';
 import { injectable } from 'inversify';
+import { bundler } from 'gitlab/dist/types/core/infrastructure';
+import { MergeRequests } from '../gitlabClient/resources/MergeRequests';
 
 @injectable()
-export class GitLabClient {
+export class GitLabConstructor {
   private readonly headers: { [header: string]: string };
   protected host: string;
 
@@ -24,6 +26,10 @@ export class GitLabClient {
     });
   }
 }
+
+export const GitLabClient = bundler({ MergeRequests });
+
+export type GitLabClient = InstanceType<typeof GitLabClient>;
 
 export interface ClientOptions {
   token?: string;

@@ -13,8 +13,8 @@ import { ListGetterOptions, PullRequestState, Paginated } from '../../inspectors
 import { PullRequest, PullCommits, PullFiles } from '../git/model';
 import { VCSServicesUtils } from '../git/VCSServicesUtils';
 import _ from 'lodash';
-import { GitLabClient } from './gitlabClient/GitLabClient';
-import { GitLabCustom } from '../gitlab/gitlabClient/resources/MergeRequests';
+import { GitLabConstructor } from './gitlabClient/GitLabClient';
+import { GitLabClient } from '../gitlab/gitlabClient/GitLabClient';
 import { ThinPullRequestsPractice } from '../../practices/LanguageIndependent/ThinPullRequestsPractice';
 import { parse } from 'path';
 import util from 'util';
@@ -23,7 +23,7 @@ const debug = Debug('cli:services:git:bitbucket-service');
 @injectable()
 //implements IVCSService
 export class GitLabService {
-  private readonly customClient: GitLabCustom;
+  private readonly customClient: GitLabClient;
   private readonly client: Gitlab;
   private cache: ICache;
   private callCount = 0;
@@ -42,7 +42,7 @@ export class GitLabService {
       host: this.host,
     });
 
-    this.customClient = new GitLabCustom({
+    this.customClient = new GitLabClient({
       token: argumentsProvider.auth,
       host: this.host,
     });

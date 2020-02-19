@@ -1,10 +1,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { GitLabClient } from '../GitLabClient';
+import { GitLabConstructor } from '../GitLabClient';
 import { bundler, parseResponse } from '../Utils';
 import { ListGetterOptions } from '../../../../inspectors';
 import { GitLabPullRequestState } from '../../IGitLabService';
 
-export class MergeRequests extends GitLabClient {
+export class MergeRequests extends GitLabConstructor {
   api = this.createAxiosInstance();
 
   mergeRequests = 'merge_requests';
@@ -69,8 +69,3 @@ export class MergeRequests extends GitLabClient {
     return parseResponse(response);
   }
 }
-
-//TODO move to another file
-export const GitLabCustom = bundler({ MergeRequests });
-
-export type GitLabCustom = InstanceType<typeof GitLabCustom>;
