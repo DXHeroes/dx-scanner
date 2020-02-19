@@ -1,16 +1,17 @@
+/* eslint-disable @typescript-eslint/camelcase */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { GitLabConstructor } from '../GitLabClient';
-import { bundler, parseResponse } from '../Utils';
-import { ListGetterOptions } from '../../../../inspectors';
+import { parseResponse } from '../Utils';
+import { ListGetterOptions, PaginationParams } from '../../../../inspectors';
 import { GitLabPullRequestState } from '../../IGitLabService';
 
 export class MergeRequests extends GitLabConstructor {
   api = this.createAxiosInstance();
 
-  mergeRequests = 'merge_requests';
   /**
    *
    * @param projectId - The ID or URL path of the project, e.g. DXHeroes/dx-scanner
+   * @param options
    *
    * List all merge requests for project.
    */
@@ -19,7 +20,6 @@ export class MergeRequests extends GitLabConstructor {
 
     const queryParams = {
       page: options?.pagination?.page,
-      // eslint-disable-next-line @typescript-eslint/camelcase
       per_page: options?.pagination?.perPage,
       state: options?.filter?.state,
     };
@@ -36,17 +36,10 @@ export class MergeRequests extends GitLabConstructor {
    *
    * Get single pull request (merge request) of given merge_request_iid
    */
-  async get(projectId: string, mergeRequestIId: number, options?: ListGetterOptions<{ state?: GitLabPullRequestState }>) {
+  async get(projectId: string, mergeRequestIId: number) {
     const endpoint = `projects/${encodeURIComponent(projectId)}/merge_requests/${mergeRequestIId}`;
 
-    const queryParams = {
-      page: options?.pagination?.page,
-      // eslint-disable-next-line @typescript-eslint/camelcase
-      per_page: options?.pagination?.perPage,
-      state: options?.filter?.state,
-    };
-
-    const response = await this.api.get(endpoint, { params: queryParams });
+    const response = await this.api.get(endpoint);
     return parseResponse(response);
   }
 
@@ -58,13 +51,14 @@ export class MergeRequests extends GitLabConstructor {
    *
    * List all commits for merge request of given iid
    */
-  async commits(projectId: string, mergeRequestIId: number, options?: ListGetterOptions) {
+  async commits(projectId: string, mergeRequestIId: number, pagination?: PaginationParams) {
     const endpoint = `projects/${encodeURIComponent(projectId)}/merge_requests/${mergeRequestIId}/commits`;
+
     const queryParams = {
-      page: options?.pagination?.page,
-      // eslint-disable-next-line @typescript-eslint/camelcase
-      per_page: options?.pagination?.perPage,
+      page: pagination?.page,
+      per_page: pagination?.perPage,
     };
+
     const response = await this.api.get(endpoint, { params: queryParams });
     return parseResponse(response);
   }
