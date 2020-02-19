@@ -37,3 +37,12 @@ export const parseResponse = (response: AxiosResponse<any>) => {
   };
   return { headers, data, pagination };
 };
+
+export interface PaginationGitLabCustomResponse {
+  total: number;
+  next: number | null;
+  current: number;
+  previous: number | null;
+  perPage: number;
+  totalPages: number;
+}

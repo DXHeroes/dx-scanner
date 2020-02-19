@@ -18,13 +18,13 @@ export class MergeRequests extends GitLabConstructor {
   async list(projectId: string, options?: ListGetterOptions<{ state?: GitLabPullRequestState }>) {
     const endpoint = `projects/${encodeURIComponent(projectId)}/merge_requests`;
 
-    const queryParams = {
+    const params = {
       page: options?.pagination?.page,
       per_page: options?.pagination?.perPage,
       state: options?.filter?.state,
     };
 
-    const response = await this.api.get(endpoint, { params: queryParams });
+    const response = await this.api.get(endpoint, { params });
     return parseResponse(response);
   }
 
@@ -54,12 +54,12 @@ export class MergeRequests extends GitLabConstructor {
   async commits(projectId: string, mergeRequestIId: number, pagination?: PaginationParams) {
     const endpoint = `projects/${encodeURIComponent(projectId)}/merge_requests/${mergeRequestIId}/commits`;
 
-    const queryParams = {
+    const params = {
       page: pagination?.page,
       per_page: pagination?.perPage,
     };
 
-    const response = await this.api.get(endpoint, { params: queryParams });
+    const response = await this.api.get(endpoint, { params });
     return parseResponse(response);
   }
 }

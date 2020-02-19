@@ -18,6 +18,7 @@ import { GitLabClient } from '../gitlab/gitlabClient/GitLabClient';
 import { ThinPullRequestsPractice } from '../../practices/LanguageIndependent/ThinPullRequestsPractice';
 import { parse } from 'path';
 import util from 'util';
+import { PaginationGitLabCustomResponse } from './gitlabClient/Utils';
 const debug = Debug('cli:services:git:bitbucket-service');
 
 @injectable()
@@ -182,7 +183,7 @@ export class GitLabService {
   }
 
   async listPullCommits(owner: string, repo: string, prNumber: number, options?: ListGetterOptions): Promise<Paginated<PullCommits>> {
-    const { data, pagination } = await this.customClient.MergeRequests.commits(`${owner}/${repo}`, prNumber, options);
+    const { data, pagination } = await this.customClient.MergeRequests.commits(`${owner}/${repo}`, prNumber, options?.pagination);
 
     const items = <PullCommits[]>await Promise.all(
       data.map(async (val: any) => {
@@ -215,9 +216,9 @@ export class GitLabService {
   }
 
   //TODO interface for pagination
-  getPagination(pagination: any) {
-    const hasNextPage = pagination.next;
-    const hasPreviousPage = pagination.previous;
+  getPagination(pagination: PaginationGitLabCustomResponse) {
+    const hasNextPage = !!pagination.next;
+    const hasPreviousPage = !!pagination.previous;
     const page = pagination.current;
     const perPage = pagination.perPage;
 
