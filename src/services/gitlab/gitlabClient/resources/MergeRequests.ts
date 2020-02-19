@@ -56,7 +56,7 @@ export class MergeRequests extends GitLabConstructor {
    *
    * List all commits for merge request of given iid
    */
-  async commits(projectId: string, mergeRequestIId: number, pagination?: PaginationParams): Promise<CustomAxiosResponse<MergeCommit[]>> {
+  async commits(projectId: string, mergeRequestIId: number, pagination?: PaginationParams): Promise<CustomAxiosResponse<Commit[]>> {
     const endpoint = `projects/${encodeURIComponent(projectId)}/merge_requests/${mergeRequestIId}/commits`;
 
     const params = {
@@ -64,7 +64,7 @@ export class MergeRequests extends GitLabConstructor {
       per_page: pagination?.perPage,
     };
 
-    const response: AxiosResponse<MergeCommit[]> = await this.api.get(endpoint, { params });
+    const response: AxiosResponse<Commit[]> = await this.api.get(endpoint, { params });
     return parseResponse(response);
   }
 
@@ -169,7 +169,7 @@ export interface MergeRequest {
   blocking_discussions_resolved: boolean;
 }
 
-export interface MergeCommit {
+export interface Commit {
   id: string;
   short_id: string;
   created_at: Date;
