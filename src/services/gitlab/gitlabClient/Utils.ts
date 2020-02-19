@@ -3,6 +3,7 @@
 
 import { ClientOptions } from './GitLabClient';
 import { AxiosResponse } from 'axios';
+import { User } from './resources/UsersOrGroups';
 
 interface Constructor {
   new (...args: any): any;
@@ -24,7 +25,7 @@ export const bundler = <T extends { [name: string]: Constructor }, P extends key
   } as any) as Bundle<T, P>;
 };
 
-export const parseResponse = (response: AxiosResponse<any>) => {
+export const parseResponse = <T>(response: AxiosResponse<T>): CustomAxiosResponse<T> => {
   const { headers } = response;
   const { data } = response;
   const pagination = {
@@ -45,4 +46,10 @@ export interface PaginationGitLabCustomResponse {
   previous: number | null;
   perPage: number;
   totalPages: number;
+}
+
+export interface CustomAxiosResponse<T> {
+  headers: any;
+  data: T;
+  pagination: PaginationGitLabCustomResponse;
 }
