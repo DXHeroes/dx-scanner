@@ -3,7 +3,6 @@
 
 import { ClientOptions } from './GitLabClient';
 import { AxiosResponse } from 'axios';
-import { User } from './resources/UsersOrGroups';
 
 interface Constructor {
   new (...args: any): any;
