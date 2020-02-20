@@ -67,8 +67,8 @@ describe('Scanner', () => {
   });
 
   describe('fixer', () => {
+    jest.setTimeout(40000);
     it('runs fix when fix flag set to true', async () => {
-      jest.setTimeout(40000);
       const fixMock = jest.fn();
       containerCtx = createTestContainer({ uri: 'github.com/DXHeroes/dx-scanner', fix: true });
       ConfigProvider.prototype.getOverriddenPractice = () => ({
@@ -86,7 +86,6 @@ describe('Scanner', () => {
       expect(fixMock).toBeCalled();
     });
     it('fix settings from config works', async () => {
-      jest.setTimeout(15000);
       const fixMock = jest.fn();
       containerCtx = createTestContainer({ uri: '.', fix: true });
       ConfigProvider.prototype.getOverriddenPractice = () => ({
@@ -103,7 +102,6 @@ describe('Scanner', () => {
       expect(fixMock).not.toBeCalled();
     });
     it('fix settings from config works only when fix flag is set', async () => {
-      jest.setTimeout(15000);
       const fixMock = jest.fn();
       ConfigProvider.prototype.getOverriddenPractice = () => ({
         impact: PracticeImpact.high,
@@ -121,7 +119,6 @@ describe('Scanner', () => {
     it.todo('fixPattern flag works');
     it.todo('fixPattern works only when fix flag is set');
     it('fixPattern flag has higher priority than config', async () => {
-      jest.setTimeout(15000);
       const fixMock = jest.fn();
       containerCtx = createTestContainer({ fix: true, fixPattern: 'lint' });
       ConfigProvider.prototype.getOverriddenPractice = () => ({
