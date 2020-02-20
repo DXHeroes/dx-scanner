@@ -2,6 +2,10 @@ import axios from 'axios';
 import { injectable } from 'inversify';
 import { bundler } from 'gitlab/dist/types/core/infrastructure';
 import { MergeRequests } from '../gitlabClient/resources/MergeRequests';
+import { Issues } from '../gitlabClient/resources/Issues';
+import { Commits } from '../gitlabClient/resources/Commits';
+import { Projects } from '../gitlabClient/resources/Projects';
+import { Users } from '../gitlabClient/resources/UsersOrGroups';
 
 @injectable()
 export class GitLabConstructor {
@@ -27,7 +31,7 @@ export class GitLabConstructor {
   }
 }
 
-export const GitLabClient = bundler({ MergeRequests });
+export const GitLabClient = bundler({ MergeRequests, Issues, Commits, Projects, Users });
 
 export type GitLabClient = InstanceType<typeof GitLabClient>;
 
