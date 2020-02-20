@@ -5,7 +5,7 @@ import { BitbucketIssueState, BitbucketPullRequestState } from '../bitbucket/IBi
 import { GitHubPullRequestState } from './IGitHubService';
 import qs from 'qs';
 import _ from 'lodash';
-import { GitLabPullRequestState } from '../gitlab/IGitLabService';
+import { GitLabPullRequestState, GitLabIssueState } from '../gitlab/IGitLabService';
 
 export class VCSServicesUtils {
   static getGithubPRState = (state: PullRequestState | undefined) => {
@@ -42,6 +42,19 @@ export class VCSServicesUtils {
         return [GitLabPullRequestState.closed, GitLabPullRequestState.merged];
       case PullRequestState.all:
         return GitLabPullRequestState.all;
+      default:
+        return undefined;
+    }
+  };
+
+  static getGitLabIssueState = (state: IssueState | undefined) => {
+    switch (state) {
+      case IssueState.open:
+        return GitLabIssueState.open;
+      case IssueState.closed:
+        return GitLabIssueState.closed;
+      case IssueState.all:
+        return GitLabIssueState.all;
       default:
         return undefined;
     }
