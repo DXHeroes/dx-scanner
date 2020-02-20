@@ -252,11 +252,7 @@ export class BitbucketService implements IVCSService {
     return { items, ...pagination };
   }
 
-  async listIssues(
-    owner: string,
-    repo: string,
-    options?: { withDiffStat?: boolean } & ListGetterOptions<{ state?: IssueState }>,
-  ): Promise<Paginated<Issue>> {
+  async listIssues(owner: string, repo: string, options?: ListGetterOptions<{ state?: IssueState }>): Promise<Paginated<Issue>> {
     this.authenticate();
     const apiUrl = `https://api.bitbucket.org/2.0/repositories/${owner}/${repo}/issues`;
 
