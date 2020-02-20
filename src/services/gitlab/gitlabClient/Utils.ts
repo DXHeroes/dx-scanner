@@ -3,6 +3,7 @@
 
 import { ClientOptions } from './GitLabClient';
 import { AxiosResponse } from 'axios';
+import { PaginationParams } from '../../../inspectors';
 
 interface Constructor {
   new (...args: any): any;
@@ -51,4 +52,9 @@ export interface CustomAxiosResponse<T> {
   headers: any;
   data: T;
   pagination: PaginationGitLabCustomResponse;
+}
+
+export interface ListFilterOptions<Filter = {}> {
+  pagination?: PaginationParams;
+  filter?: Filter;
 }

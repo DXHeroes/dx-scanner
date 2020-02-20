@@ -2,14 +2,14 @@
 import { GitLabConstructor } from '../GitLabClient';
 import { ListGetterOptions, PaginationParams } from '../../../../inspectors';
 import { GitLabIssueState } from '../../IGitLabService';
-import { parseResponse, CustomAxiosResponse } from '../Utils';
+import { parseResponse, CustomAxiosResponse, ListFilterOptions } from '../Utils';
 import { User } from './UsersOrGroups';
 import { AxiosResponse } from 'axios';
 
 export class Issues extends GitLabConstructor {
   api = this.createAxiosInstance();
 
-  async list(projectId: string, options?: ListGetterOptions<{ state?: GitLabIssueState }>): Promise<CustomAxiosResponse<Issue[]>> {
+  async list(projectId: string, options?: ListFilterOptions<{ state?: GitLabIssueState }>): Promise<CustomAxiosResponse<Issue[]>> {
     const endpoint = `projects/${encodeURIComponent(projectId)}/issues`;
 
     const params = {
