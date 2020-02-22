@@ -10,6 +10,7 @@ describe('ScanningStrategyDetector', () => {
 
   beforeEach(() => {
     nock.cleanAll();
+    nock.enableNetConnect();
   });
 
   describe('#detect', () => {
