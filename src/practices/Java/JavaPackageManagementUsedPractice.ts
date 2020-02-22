@@ -9,7 +9,7 @@ import { PracticeContext } from '../../contexts/practice/PracticeContext';
   impact: PracticeImpact.high,
   suggestion: 'Use pom.xml or build.gradle to keep track of packages that are being used in your application.',
   reportOnlyOnce: true,
-  url: 'https://maven.apache.org/',
+  url: 'https://dxkb.io/p/package-management',
 })
 export class JavaPackageManagementUsedPractice implements IPractice {
   async isApplicable(ctx: PracticeContext): Promise<boolean> {

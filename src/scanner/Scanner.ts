@@ -106,7 +106,7 @@ export class Scanner {
    * Initialize Scanner configuration
    */
   async init(scanPath: string): Promise<void> {
-    const filePath = path.resolve(scanPath, '.dxscannerrc');
+    const filePath = scanPath + '.dxscannerrc';
     cli.action.start(`Initializing configuration: ${filePath}.yaml`);
     // check if .dxscannerrc.yaml already exists
     const fileExists: boolean = await this.fileSystemService.exists(`${filePath}`);
@@ -347,7 +347,7 @@ export class Scanner {
       yamlInitContent += `\n#    ${dataObject.id}: ${dataObject.impact}`;
     }
     try {
-      await this.fileSystemService.writeFile(`/${filePath}.yaml`, yamlInitContent);
+      await this.fileSystemService.writeFile(`${filePath}.yaml`, yamlInitContent);
     } catch (err) {
       throw ErrorFactory.newInternalError(`Error during configuration file initialization: ${err.message}`);
     }

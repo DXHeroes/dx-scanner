@@ -1,5 +1,4 @@
 import { PullRequestState } from '../../inspectors/ICollaborationInspector';
-import { VCSServiceType } from './IVCSService';
 import { GitHubIssueState } from './IGitHubService';
 import { IssueState } from '../../inspectors';
 import { BitbucketIssueState, BitbucketPullRequestState } from '../bitbucket/IBitbucketService';

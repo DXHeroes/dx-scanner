@@ -14,7 +14,7 @@ import { DependenciesVersionEvaluationUtils, PkgToUpdate } from '../utils/Depend
   impact: PracticeImpact.small,
   suggestion: 'Keep the dependencies updated to have all possible features. Use, for example, npm-check-updates.',
   reportOnlyOnce: true,
-  url: 'https://github.com/tjunnone/npm-check-updates',
+  url: 'https://dxkb.io/p/updating-the-dependencies',
 })
 export class DependenciesVersionMajorLevelPractice extends PracticeBase {
   async isApplicable(ctx: PracticeContext): Promise<boolean> {

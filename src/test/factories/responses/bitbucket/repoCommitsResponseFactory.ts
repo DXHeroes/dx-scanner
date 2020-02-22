@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/camelcase */
 import _ from 'lodash';
+import Bitbucket from 'bitbucket';
 
 export const bitbucketRepoCommitsResponseFactory = (params?: Partial<Bitbucket.Schema.Commit>): Bitbucket.Schema.Commit => {
   return _.merge(

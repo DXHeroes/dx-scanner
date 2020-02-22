@@ -1,3 +1,64 @@
+# [2.3.0](https://github.com/dxheroes/dx-scanner/compare/v2.2.0...v2.3.0) (2020-02-18)
+
+
+### Features
+
+* set practices url to dxkb.io + add urls to the list of practices ([0f7dec7](https://github.com/dxheroes/dx-scanner/commit/0f7dec7dad029b4826bbb702db9677103db8e476))
+
+# [2.2.0](https://github.com/dxheroes/dx-scanner/compare/v2.1.2...v2.2.0) (2020-02-11)
+
+
+### Bug Fixes
+
+* **deps:** update dependency bitbucket to v2 ([cd59447](https://github.com/dxheroes/dx-scanner/commit/cd5944735ff3309a40757dfa573d4fe913e80ec3))
+* **deps:** update dependency bitbucket to v2 ([fc863b7](https://github.com/dxheroes/dx-scanner/commit/fc863b7c5405b753ed485e703a931c203450dc8a))
+* **deps:** update dependency bitbucket to v2 ([ce7be48](https://github.com/dxheroes/dx-scanner/commit/ce7be486038fb69a22e10ca6d017e50bee52051a))
+
+
+### Features
+
+* **bitbucket:** update to v2 ([8d30e90](https://github.com/dxheroes/dx-scanner/commit/8d30e900a39d2ac54caf7518d1d2c5eda2bc6466))
+
+## [2.1.2](https://github.com/dxheroes/dx-scanner/compare/v2.1.1...v2.1.2) (2020-02-11)
+
+
+### Bug Fixes
+
+* **deps:** pin dependency camelcase to 5.3.1 ([c1f804a](https://github.com/dxheroes/dx-scanner/commit/c1f804aa32af7bac243f1f0e2294a03820a62457))
+
+## [2.1.1](https://github.com/dxheroes/dx-scanner/compare/v2.1.0...v2.1.1) (2020-02-10)
+
+
+### Bug Fixes
+
+* **deps:** update all non-major dependencies ([5274c8b](https://github.com/dxheroes/dx-scanner/commit/5274c8bd7b458ea555007908607cc14070cff967))
+
+# [2.1.0](https://github.com/dxheroes/dx-scanner/compare/v2.0.5...v2.1.0) (2020-02-05)
+
+
+### Bug Fixes
+
+* impact level to small ([0d0c5fb](https://github.com/dxheroes/dx-scanner/commit/0d0c5fb233cf30a88167b84c0c13459a9944a00c))
+* merge conflicts & naming conventions test cases ([a1f2ef7](https://github.com/dxheroes/dx-scanner/commit/a1f2ef747dc4ebeedeb39dcad0ab5fca087b7ff2))
+* renamed tests & practice desciptions correctly to Kotlin ([ca70cbc](https://github.com/dxheroes/dx-scanner/commit/ca70cbcb18bd53456cca132d8fce4d09345219cd))
+* solved merge conflict ([287e5ba](https://github.com/dxheroes/dx-scanner/commit/287e5ba43446957b73cf3ad56ae76631e6b64bd4))
+* updated the practice for Kotlin & considered more edge cases ([c2cb6be](https://github.com/dxheroes/dx-scanner/commit/c2cb6beb6d2dc95a480370e9d2613e0c84124cbe))
+
+
+### Features
+
+* java practice for naming conventions ([b63c767](https://github.com/dxheroes/dx-scanner/commit/b63c76742c1337f4dbb8906049a9df756e4b9141))
+
+## [2.0.5](https://github.com/dxheroes/dx-scanner/compare/v2.0.4...v2.0.5) (2020-02-04)
+
+
+### Bug Fixes
+
+* **init:** Win architecture & tests ([2d1aea6](https://github.com/dxheroes/dx-scanner/commit/2d1aea61ba5f98e350f9152fc5627eaa5b5535a5))
+* **init:** Win architecture & tests ([#238](https://github.com/dxheroes/dx-scanner/issues/238)) ([0d3fbe1](https://github.com/dxheroes/dx-scanner/commit/0d3fbe18f02308b4fdbc8cf8d2ff556be0e1007f))
+* **services:** deprecation notice removed ([b494c01](https://github.com/dxheroes/dx-scanner/commit/b494c01965df8073f16816e48bc9cb52dfa16f9f))
+* **services:** deprecation notice removed ([#239](https://github.com/dxheroes/dx-scanner/issues/239)) ([d759beb](https://github.com/dxheroes/dx-scanner/commit/d759bebcdbcc8fa37c2cd999db86a2f0f3fdf175))
+
 ## [2.0.4](https://github.com/dxheroes/dx-scanner/compare/v2.0.3...v2.0.4) (2020-02-03)
 
 

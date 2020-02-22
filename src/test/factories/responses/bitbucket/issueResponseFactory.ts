@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/camelcase */
 import _ from 'lodash';
+import Bitbucket from 'bitbucket';
 
 export const bitbucketIssueResponseFactory = (params: Partial<Bitbucket.Schema.Issue>): Bitbucket.Schema.Issue => {
   return _.merge(

@@ -1,5 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars, @typescript-eslint/camelcase */
-import Bitbucket from 'bitbucket';
+import { Bitbucket, APIClient, Schema, Params } from 'bitbucket';
+import { Response } from 'bitbucket/src/request/types';
+import { AuthBasic } from 'bitbucket/src/plugins/auth/types';
 import { grey } from 'colors';
 import Debug from 'debug';
 import GitUrlParse from 'git-url-parse';
@@ -39,7 +41,7 @@ const debug = Debug('cli:services:git:bitbucket-service');
 
 @injectable()
 export class BitbucketService implements IVCSService {
-  private readonly client: Bitbucket;
+  private readonly client: APIClient;
   private readonly argumentsProvider: ArgumentsProvider;
   private cache: ICache;
   private callCount = 0;
@@ -48,8 +50,8 @@ export class BitbucketService implements IVCSService {
   constructor(@inject(Types.ArgumentsProvider) argumentsProvider: ArgumentsProvider) {
     this.cache = new InMemoryCache();
     this.argumentsProvider = argumentsProvider;
-    this.client = new Bitbucket({
-      hideNotice: true,
+    this.client = Bitbucket({
+      notice: false,
     });
   }
 
@@ -70,9 +72,9 @@ export class BitbucketService implements IVCSService {
       password = this.argumentsProvider.auth;
     }
 
-    let auth: Bitbucket.Auth;
+    let auth: AuthBasic;
     if (this.argumentsProvider.auth) {
-      auth = { type: 'apppassword', username, password };
+      auth = { username, password };
       this.client.authenticate(auth);
       this.authenticated = true; // set authentication to instance
     }
@@ -80,9 +82,9 @@ export class BitbucketService implements IVCSService {
 
   getRepo(owner: string, repo: string) {
     this.authenticate();
-    const params: Bitbucket.Params.RepositoriesGet = {
+    const params: Params.RepositoriesGet = {
       repo_slug: repo,
-      username: owner,
+      workspace: owner,
     };
 
     return this.unwrap(this.client.repositories.get(params));
@@ -103,8 +105,8 @@ export class BitbucketService implements IVCSService {
       state = VCSServicesUtils.getBitbucketPRState(options.filter.state);
     }
 
-    const ownerId = `${(await this.client.repositories.get({ repo_slug: repo, username: owner })).data.owner?.uuid}`;
-    const response: DeepRequired<Bitbucket.Response<Bitbucket.Schema.PaginatedPullrequests>> = await axios.get(apiUrl, {
+    const ownerId = `${(await this.client.repositories.get({ repo_slug: repo, workspace: owner })).data.owner?.uuid}`;
+    const response: DeepRequired<Response<Schema.PaginatedPullrequests>> = await axios.get(apiUrl, {
       params: { state, page: options?.pagination?.page, pagelen: options?.pagination?.perPage },
       paramsSerializer: qs.stringify,
     });
@@ -161,13 +163,13 @@ export class BitbucketService implements IVCSService {
     const params = {
       pull_request_id: prNumber,
       repo_slug: repo,
-      username: owner,
+      workspace: owner,
     };
 
     const ownerUrl = `www.bitbucket.org/${owner}`;
-    const ownerId = `${(await this.client.repositories.get({ repo_slug: repo, username: owner })).data.owner?.uuid}`;
+    const ownerId = `${(await this.client.repositories.get({ repo_slug: repo, workspace: owner })).data.owner?.uuid}`;
 
-    const response = <DeepRequired<Bitbucket.Response<Bitbucket.Schema.Pullrequest>>>await this.client.pullrequests.get(params);
+    const response = <DeepRequired<Response<Schema.Pullrequest>>>await this.client.pullrequests.get(params);
 
     const pullRequest = {
       user: {
@@ -219,13 +221,13 @@ export class BitbucketService implements IVCSService {
 
   async getPullCommits(owner: string, repo: string, prNumber: number): Promise<Paginated<PullCommits>> {
     this.authenticate();
-    const params: Bitbucket.Params.PullrequestsListCommits = {
+    const params: Params.PullrequestsListCommits = {
       pull_request_id: prNumber.toString(),
       repo_slug: repo,
-      username: owner,
+      workspace: owner,
     };
 
-    const response = <DeepRequired<Bitbucket.Response<BitbucketCommit>>>await this.client.pullrequests.listCommits(params);
+    const response = <DeepRequired<Response<BitbucketCommit>>>await this.client.pullrequests.listCommits(params);
 
     const items = response.data.values.map((val) => {
       return {
@@ -271,7 +273,7 @@ export class BitbucketService implements IVCSService {
       pagelen: options?.pagination?.perPage,
     };
 
-    const response: DeepRequired<Bitbucket.Response<Bitbucket.Schema.PaginatedIssues>> = await axios.get(apiUrl, {
+    const response: DeepRequired<Response<Schema.PaginatedIssues>> = await axios.get(apiUrl, {
       params,
       paramsSerializer: qs.stringify,
     });
@@ -298,12 +300,12 @@ export class BitbucketService implements IVCSService {
   async getIssue(owner: string, repo: string, issueNumber: number): Promise<Issue> {
     this.authenticate();
 
-    const params: Bitbucket.Params.IssueTrackerGet = {
+    const params: Params.IssueTrackerGet = {
       issue_id: issueNumber.toString(),
       repo_slug: repo,
-      username: owner,
+      workspace: owner,
     };
-    const response = <DeepRequired<Bitbucket.Response<Bitbucket.Schema.Issue>>>await this.client.issue_tracker.get(params);
+    const response = <DeepRequired<Response<Schema.Issue>>>await this.client.issue_tracker.get(params);
 
     return {
       id: response.data.id,
@@ -326,14 +328,12 @@ export class BitbucketService implements IVCSService {
 
   async listIssueComments(owner: string, repo: string, issueNumber: number): Promise<Paginated<IssueComment>> {
     this.authenticate();
-    const params: Bitbucket.Params.IssueTrackerListComments = {
+    const params: Params.IssueTrackerListComments = {
       issue_id: issueNumber.toString(),
       repo_slug: repo,
-      username: owner,
+      workspace: owner,
     };
-    const response = <DeepRequired<Bitbucket.Response<Bitbucket.Schema.PaginatedIssueComments>>>(
-      await this.client.issue_tracker.listComments(params)
-    );
+    const response = <DeepRequired<Response<Schema.PaginatedIssueComments>>>await this.client.issue_tracker.listComments(params);
 
     const items = response.data.values.map((val) => ({
       user: {
@@ -360,13 +360,14 @@ export class BitbucketService implements IVCSService {
 
   async listRepoCommits(owner: string, repo: string, sha?: string, options?: ListGetterOptions): Promise<Paginated<Commit>> {
     this.authenticate();
-    const params: Bitbucket.Params.RepositoriesListCommits = {
+    const params: Params.RepositoriesListCommits = {
       repo_slug: repo,
-      username: owner,
-      page: options?.pagination?.page?.toString(),
-      pagelen: options?.pagination?.perPage,
+      workspace: owner,
     };
-    const response = <DeepRequired<Bitbucket.Response<BitbucketCommit>>>await this.client.repositories.listCommits(params);
+    if (options?.pagination?.page) params.page = options.pagination.page.toString();
+    if (options?.pagination?.perPage) params.pagelen = options.pagination.perPage;
+
+    const response = <DeepRequired<Response<BitbucketCommit>>>await this.client.repositories.listCommits(params);
     const items = response.data.values.map((val) => {
       return {
         sha: val.hash,
@@ -393,12 +394,12 @@ export class BitbucketService implements IVCSService {
 
   async getCommit(owner: string, repo: string, commitSha: string): Promise<Commit> {
     this.authenticate();
-    const params: Bitbucket.Params.CommitsGet = {
+    const params: Params.CommitsGet = {
       node: commitSha,
       repo_slug: repo,
-      username: owner,
+      workspace: owner,
     };
-    const response = <DeepRequired<Bitbucket.Response<Bitbucket.Schema.Commit>>>await this.client.commits.get(params);
+    const response = <DeepRequired<Response<Schema.Commit>>>await this.client.commits.get(params);
 
     return {
       sha: response.data.hash,
@@ -429,15 +430,13 @@ export class BitbucketService implements IVCSService {
   ): Promise<Paginated<PullRequestComment>> {
     this.authenticate();
 
-    const response = <DeepRequired<Bitbucket.Response<Bitbucket.Schema.PaginatedPullrequestComments>>>(
-      await this.client.pullrequests.listComments({
-        pull_request_id: prNumber,
-        repo_slug: repo,
-        username: owner,
-        page: `${options?.pagination?.page}`,
-        pagelen: options?.pagination?.perPage,
-      })
-    );
+    const response = <DeepRequired<Response<Schema.PaginatedPullrequestComments>>>await this.client.pullrequests.listComments({
+      pull_request_id: prNumber,
+      repo_slug: repo,
+      workspace: owner,
+      page: `${options?.pagination?.page}`,
+      pagelen: options?.pagination?.perPage,
+    });
 
     const items = response.data.values.map((comment) => ({
       user: { id: comment.user.uuid, login: comment.user.username, url: comment.user.website },
@@ -458,10 +457,10 @@ export class BitbucketService implements IVCSService {
    */
   async createPullRequestComment(owner: string, repo: string, prNumber: number, body: string): Promise<CreatedUpdatedPullRequestComment> {
     this.authenticate();
-    const response = <DeepRequired<Bitbucket.Response<Bitbucket.Schema.Comment>>>await this.client.pullrequests.createComment({
+    const response = <DeepRequired<Response<Schema.Comment>>>await this.client.pullrequests.createComment({
       pull_request_id: prNumber,
       repo_slug: repo,
-      username: owner,
+      workspace: owner,
       _body: { type: 'pullrequest_comment', content: { raw: body, markup: 'markdown' } },
     });
 
@@ -487,11 +486,11 @@ export class BitbucketService implements IVCSService {
     pullRequestId: number,
   ): Promise<CreatedUpdatedPullRequestComment> {
     this.authenticate();
-    const response = <DeepRequired<Bitbucket.Response<Bitbucket.Schema.Comment>>>await this.client.pullrequests.updateComment({
+    const response = <DeepRequired<Response<Schema.Comment>>>await this.client.pullrequests.updateComment({
       pull_request_id: `${pullRequestId}`,
       comment_id: `${commentId}`,
       repo_slug: repo,
-      username: owner,
+      workspace: owner,
       _body: { type: 'pullrequest_comment', content: { raw: body, markup: 'markdown' } },
     });
 
@@ -526,7 +525,7 @@ export class BitbucketService implements IVCSService {
    */
   async getPullsDiffStat(owner: string, repo: string, prNumber: number) {
     const diffStatData = (
-      await this.client.pullrequests.getDiffStat({ repo_slug: repo, username: owner, pull_request_id: prNumber.toString() })
+      await this.client.pullrequests.getDiffStat({ repo_slug: repo, workspace: owner, pull_request_id: prNumber.toString() })
     ).data;
 
     let linesRemoved = 0,
@@ -544,7 +543,7 @@ export class BitbucketService implements IVCSService {
     };
   }
 
-  private unwrap<T>(clientPromise: Promise<Bitbucket.Response<T>>) {
+  private unwrap<T>(clientPromise: Promise<Response<T>>) {
     return clientPromise
       .then((response) => {
         this.debugBitbucketResponse(response);
@@ -560,7 +559,7 @@ export class BitbucketService implements IVCSService {
       });
   }
 
-  private debugBitbucketResponse = <T>(response: Bitbucket.Response<T>) => {
+  private debugBitbucketResponse = <T>(response: Response<T>) => {
     this.callCount++;
     debug(
       grey(`Bitbucket API Hit: ${this.callCount}. Remaining ${response.headers['x-ratelimit-remaining']} hits. (${response.headers.link})`),
@@ -591,5 +590,5 @@ export interface BitbucketCommit {
   pagelen: number;
   previous: string;
   size: number;
-  values: Bitbucket.Schema.Commit[];
+  values: Schema.Commit[];
 }
