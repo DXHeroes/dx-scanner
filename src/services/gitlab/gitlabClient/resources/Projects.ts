@@ -1,6 +1,6 @@
-import { GitLabConstructor } from '../GitLabClient';
-import { parseResponse, CustomAxiosResponse } from '../Utils';
 import { AxiosResponse } from 'axios';
+import { GitLabConstructor } from '../GitLabClient';
+import { CustomAxiosResponse, parseResponse } from '../Utils';
 
 export class Projects extends GitLabConstructor {
   api = this.createAxiosInstance();

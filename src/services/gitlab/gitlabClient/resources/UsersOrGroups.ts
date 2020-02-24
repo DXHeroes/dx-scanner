@@ -1,6 +1,6 @@
-import { GitLabConstructor } from '../GitLabClient';
-import { parseResponse, CustomAxiosResponse } from '../Utils';
 import { AxiosResponse } from 'axios';
+import { GitLabConstructor } from '../GitLabClient';
+import { CustomAxiosResponse, parseResponse } from '../Utils';
 
 export class Users extends GitLabConstructor {
   api = this.createAxiosInstance();
@@ -13,7 +13,7 @@ export class Users extends GitLabConstructor {
   }
 
   async getGroup(groupName: string): Promise<AxiosResponse<Group>> {
-    const endpoint = `groups?=${groupName}`;
+    const endpoint = `groups/${groupName}`;
 
     return this.api.get(endpoint);
   }

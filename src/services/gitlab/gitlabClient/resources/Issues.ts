@@ -1,10 +1,10 @@
 /* eslint-disable @typescript-eslint/camelcase */
-import { GitLabConstructor } from '../GitLabClient';
-import { ListGetterOptions, PaginationParams } from '../../../../inspectors';
-import { GitLabIssueState } from '../../IGitLabService';
-import { parseResponse, CustomAxiosResponse, ListFilterOptions } from '../Utils';
-import { User } from './UsersOrGroups';
 import { AxiosResponse } from 'axios';
+import { PaginationParams } from '../../../../inspectors';
+import { GitLabIssueState } from '../../IGitLabService';
+import { GitLabConstructor } from '../GitLabClient';
+import { CustomAxiosResponse, ListFilterOptions, parseResponse } from '../Utils';
+import { User } from './UsersOrGroups';
 
 export class Issues extends GitLabConstructor {
   api = this.createAxiosInstance();

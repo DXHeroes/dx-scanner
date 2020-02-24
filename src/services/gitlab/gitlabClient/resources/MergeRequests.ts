@@ -1,10 +1,10 @@
 /* eslint-disable @typescript-eslint/camelcase */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { GitLabConstructor } from '../GitLabClient';
-import { parseResponse, CustomAxiosResponse } from '../Utils';
+import { AxiosResponse } from 'axios';
 import { ListGetterOptions, PaginationParams } from '../../../../inspectors';
 import { GitLabPullRequestState } from '../../IGitLabService';
-import { AxiosResponse } from 'axios';
+import { GitLabConstructor } from '../GitLabClient';
+import { CustomAxiosResponse, parseResponse } from '../Utils';
 import { User } from './UsersOrGroups';
 
 export class MergeRequests extends GitLabConstructor {

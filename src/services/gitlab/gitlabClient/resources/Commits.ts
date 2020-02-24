@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/camelcase */
-import { GitLabConstructor } from '../GitLabClient';
-import { PaginationParams } from '../../../../inspectors';
-import { parseResponse, CustomAxiosResponse } from '../Utils';
-import { Commit } from './MergeRequests';
 import { AxiosResponse } from 'axios';
+import { PaginationParams } from '../../../../inspectors';
+import { GitLabConstructor } from '../GitLabClient';
+import { CustomAxiosResponse, parseResponse } from '../Utils';
+import { Commit } from './MergeRequests';
 
 export class Commits extends GitLabConstructor {
   api = this.createAxiosInstance();
