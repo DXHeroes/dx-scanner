@@ -1,3 +1,12 @@
+## [2.3.2](https://github.com/dxheroes/dx-scanner/compare/v2.3.1...v2.3.2) (2020-02-24)
+
+
+### Bug Fixes
+
+* **deps:** remove octokit ([#248](https://github.com/dxheroes/dx-scanner/issues/248)) ([15f6bb9](https://github.com/dxheroes/dx-scanner/commit/15f6bb9e2ff5b2d65b637b80a782e4b64f3670b4))
+* remove octokit as it is no longer used ([d5772e4](https://github.com/dxheroes/dx-scanner/commit/d5772e4e4c025cad452a6232784a3b85f70e2ea0))
+* **deps:** update dependency @octokit/rest to v17 ([458402d](https://github.com/dxheroes/dx-scanner/commit/458402d870b74777185ff969cb3adecde301bfd6))
+
 ## [2.3.1](https://github.com/dxheroes/dx-scanner/compare/v2.3.0...v2.3.1) (2020-02-24)
 
 
