@@ -1,3 +1,11 @@
+## [2.3.1](https://github.com/dxheroes/dx-scanner/compare/v2.3.0...v2.3.1) (2020-02-24)
+
+
+### Bug Fixes
+
+* **deps:** update dependency node-filter-async to v2 ([e56a1dc](https://github.com/dxheroes/dx-scanner/commit/e56a1dc44bd1521430a0e089a71b3b6d7c52e6e0))
+* **deps:** update dependency node-filter-async to v2 ([#249](https://github.com/dxheroes/dx-scanner/issues/249)) ([1b64097](https://github.com/dxheroes/dx-scanner/commit/1b64097f025e847b4ad9c5ed4405fc60fcb03b73))
+
 # [2.3.0](https://github.com/dxheroes/dx-scanner/compare/v2.2.0...v2.3.0) (2020-02-18)
 
 
