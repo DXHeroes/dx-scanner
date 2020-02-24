@@ -51,7 +51,7 @@
     "lodash": "4.17.15",
     "memfs": "3.1.1",
     "moment": "2.24.0",
-    "node-filter-async": "1.1.4",
+    "node-filter-async": "2.0.0",
     "npm-check-updates": "4.0.1",
     "oclif": "1.15.2",
     "qs": "6.9.1",
