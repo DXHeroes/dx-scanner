@@ -18,7 +18,7 @@ export class GitLabConstructor {
     else if (token) this.headers['private-token'] = token;
   }
 
-  createAxiosInstance() {
+  protected createAxiosInstance() {
     return axios.create({
       baseURL: `${this.host}/api/v4`,
       timeout: this.timeout,
