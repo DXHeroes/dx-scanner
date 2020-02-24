@@ -4,6 +4,11 @@
 import { ClientOptions } from './GitLabClient';
 import { AxiosResponse } from 'axios';
 import { PaginationParams } from '../../../inspectors';
+import { MergeRequests } from '../gitlabClient/resources/MergeRequests';
+import { Issues } from '../gitlabClient/resources/Issues';
+import { Commits } from '../gitlabClient/resources/Commits';
+import { Projects } from '../gitlabClient/resources/Projects';
+import { Users } from '../gitlabClient/resources/UsersOrGroups';
 
 interface Constructor {
   new (...args: any): any;
@@ -24,6 +29,10 @@ export const bundler = <T extends { [name: string]: Constructor }, P extends key
     });
   } as any) as Bundle<T, P>;
 };
+
+// Initialize Gitlab Client
+export const GitLabClient = bundler({ MergeRequests, Issues, Commits, Projects, Users });
+export type GitLabClient = InstanceType<typeof GitLabClient>;
 
 export const parseResponse = <T>(response: AxiosResponse<T>): CustomAxiosResponse<T> => {
   const { headers } = response;

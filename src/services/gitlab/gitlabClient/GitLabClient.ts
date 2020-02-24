@@ -1,20 +1,16 @@
 import axios from 'axios';
 import { injectable } from 'inversify';
-import { bundler } from 'gitlab/dist/types/core/infrastructure';
-import { MergeRequests } from '../gitlabClient/resources/MergeRequests';
-import { Issues } from '../gitlabClient/resources/Issues';
-import { Commits } from '../gitlabClient/resources/Commits';
-import { Projects } from '../gitlabClient/resources/Projects';
-import { Users } from '../gitlabClient/resources/UsersOrGroups';
 
 @injectable()
 export class GitLabConstructor {
-  private readonly headers: { [header: string]: string };
+  protected headers: { [header: string]: string };
   protected host: string;
+  protected timeout: number;
 
-  constructor({ token, jobToken, oauthToken, host = 'https://gitlab.com' }: ClientOptions) {
+  constructor({ token, jobToken, oauthToken, host = 'https://gitlab.com', timeout = 20000 }: ClientOptions) {
     this.headers = {};
     this.host = host;
+    this.timeout = timeout;
 
     // Handle auth tokens
     if (oauthToken) this.headers.authorization = `Bearer ${oauthToken}`;
@@ -25,19 +21,16 @@ export class GitLabConstructor {
   createAxiosInstance() {
     return axios.create({
       baseURL: `${this.host}/api/v4`,
-      timeout: 1000,
+      timeout: this.timeout,
       headers: { ...this.headers },
     });
   }
 }
-
-export const GitLabClient = bundler({ MergeRequests, Issues, Commits, Projects, Users });
-
-export type GitLabClient = InstanceType<typeof GitLabClient>;
 
 export interface ClientOptions {
   token?: string;
   jobToken?: string;
   oauthToken?: string;
   host?: string;
+  timeout?: number;
 }
