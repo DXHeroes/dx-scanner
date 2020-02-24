@@ -97,10 +97,10 @@ export class MergeRequests extends GitLabConstructor {
    * Creates a new note for a single merge request.
    * If you create a note where the body only contains an Award Emoji, you’ll receive this object back.
    */
-  async createComment(projectId: string, mergeRequestIId: number, body: string): Promise<CustomAxiosResponse<MergeComment[]>> {
+  async createComment(projectId: string, mergeRequestIId: number, body: string): Promise<CustomAxiosResponse<MergeComment>> {
     const endpoint = `projects/${encodeURIComponent(projectId)}/merge_requests/${mergeRequestIId}/notes`;
 
-    const response: AxiosResponse<MergeComment[]> = await this.api.post(endpoint, { data: body });
+    const response: AxiosResponse<MergeComment> = await this.api.post(endpoint, { data: body });
     return parseResponse(response);
   }
 
@@ -118,10 +118,10 @@ export class MergeRequests extends GitLabConstructor {
     mergeRequestIId: number,
     body: string,
     commentId: number,
-  ): Promise<CustomAxiosResponse<MergeComment[]>> {
+  ): Promise<CustomAxiosResponse<MergeComment>> {
     const endpoint = `projects/${encodeURIComponent(projectId)}/merge_requests/${mergeRequestIId}/notes/${commentId}`;
 
-    const response: AxiosResponse<MergeComment[]> = await this.api.put(endpoint, { data: body });
+    const response: AxiosResponse<MergeComment> = await this.api.put(endpoint, { data: body });
     return parseResponse(response);
   }
 }
