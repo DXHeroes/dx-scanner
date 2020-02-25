@@ -6,6 +6,7 @@ import { GitLabPullRequestState } from '../../IGitLabService';
 import { GitLabConstructor } from '../GitLabClient';
 import { CustomAxiosResponse, parseResponse } from '../gitlabUtils';
 import { User } from './UsersOrGroups';
+import { TimeStats, TaskCompletionStatus } from './model';
 
 export class MergeRequests extends GitLabConstructor {
   api = this.createAxiosInstance();
@@ -56,7 +57,7 @@ export class MergeRequests extends GitLabConstructor {
    *
    * List all commits for merge request of given iid
    */
-  async commits(projectId: string, mergeRequestIId: number, pagination?: PaginationParams): Promise<CustomAxiosResponse<Commit[]>> {
+  async listCommits(projectId: string, mergeRequestIId: number, pagination?: PaginationParams): Promise<CustomAxiosResponse<Commit[]>> {
     const endpoint = `projects/${encodeURIComponent(projectId)}/merge_requests/${mergeRequestIId}/commits`;
 
     const params = {
@@ -76,7 +77,11 @@ export class MergeRequests extends GitLabConstructor {
    *
    * Gets a list of all notes for a single merge request.
    */
-  async comments(projectId: string, mergeRequestIId: number, pagination?: PaginationParams): Promise<CustomAxiosResponse<MergeComment[]>> {
+  async listComments(
+    projectId: string,
+    mergeRequestIId: number,
+    pagination?: PaginationParams,
+  ): Promise<CustomAxiosResponse<MergeComment[]>> {
     const endpoint = `projects/${encodeURIComponent(projectId)}/merge_requests/${mergeRequestIId}/notes`;
 
     const params = {
@@ -211,16 +216,4 @@ export interface Position {
   position_type: string;
   old_line?: any;
   new_line: number;
-}
-
-export interface TimeStats {
-  time_estimate: number;
-  total_time_spent: number;
-  human_time_estimate?: any;
-  human_total_time_spent?: any;
-}
-
-export interface TaskCompletionStatus {
-  count: number;
-  completed_count: number;
 }

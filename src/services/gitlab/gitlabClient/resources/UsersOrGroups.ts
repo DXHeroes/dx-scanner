@@ -1,6 +1,7 @@
 import { AxiosResponse } from 'axios';
 import { GitLabConstructor } from '../GitLabClient';
 import { CustomAxiosResponse, parseResponse } from '../gitlabUtils';
+import { Links } from './model';
 
 export class Users extends GitLabConstructor {
   api = this.createAxiosInstance();
@@ -57,16 +58,6 @@ export interface Group {
   shared_projects: SharedProject[];
   shared_runners_minutes_limit: number;
   extra_shared_runners_minutes_limit?: any;
-}
-
-export interface Links {
-  self: string;
-  issues: string;
-  merge_requests: string;
-  repo_branches: string;
-  labels: string;
-  events: string;
-  members: string;
 }
 
 export interface SharedWithGroup {
@@ -150,15 +141,6 @@ export interface Project {
   mirror_overwrites_diverged_branches?: boolean;
 }
 
-export interface Owner {
-  id: number;
-  name: string;
-  username: string;
-  state: string;
-  avatar_url: string;
-  web_url: string;
-}
-
 export interface SharedProject {
   id: number;
   description: string;
@@ -225,5 +207,5 @@ export interface SharedProject {
   service_desk_enabled?: boolean;
   service_desk_address: string;
   marked_for_deletion_at?: any;
-  owner: Owner;
+  owner: User;
 }

@@ -1,6 +1,7 @@
 import { AxiosResponse } from 'axios';
 import { GitLabConstructor } from '../GitLabClient';
 import { CustomAxiosResponse, parseResponse } from '../gitlabUtils';
+import { Links } from './model';
 
 export class Projects extends GitLabConstructor {
   api = this.createAxiosInstance();
@@ -82,16 +83,6 @@ export interface Namespace {
   parent_id?: any;
   avatar_url: string;
   web_url: string;
-}
-
-export interface Links {
-  self: string;
-  issues: string;
-  merge_requests: string;
-  repo_branches: string;
-  labels: string;
-  events: string;
-  members: string;
 }
 
 export interface ForkedFromProject {
