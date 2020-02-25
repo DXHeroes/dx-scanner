@@ -88,7 +88,6 @@ export class ScanningStrategyDetector implements IDetector<string, ScanningStrat
       return undefined;
     }
 
-    // TODO refactor
     if (remoteService.serviceType === ServiceType.github) {
       const { owner, repoName } = GitServiceUtils.getOwnerAndRepoName(remoteService.remoteUrl);
 

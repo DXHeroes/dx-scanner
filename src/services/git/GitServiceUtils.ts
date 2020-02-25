@@ -31,11 +31,8 @@ export class GitServiceUtils {
         return `/tree/${branch}${path}`;
       case GitService.bitbucket:
         return `/src/${branch}${path}`;
-      //TODO gitlab
       case GitService.gitlab:
         return `/tree/${branch}${path}`;
-      // return `/tree/${branch}${path}`
-      // GitService gitlab.com what about host?
 
       default:
         return assertNever(service);
