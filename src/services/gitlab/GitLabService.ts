@@ -29,8 +29,8 @@ import {
   UserInfo,
 } from '../git/model';
 import { VCSServicesUtils } from '../git/VCSServicesUtils';
-import { GitLabClient, PaginationGitLabCustomResponse } from './gitlabClient/Utils';
-const debug = Debug('cli:services:git:bitbucket-service');
+import { GitLabClient, PaginationGitLabCustomResponse } from './gitlabClient/gitlabUtils';
+const debug = Debug('cli:services:git:gitlab-service');
 
 @injectable()
 export class GitLabService implements IVCSService {

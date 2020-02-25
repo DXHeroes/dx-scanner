@@ -1,4 +1,3 @@
-import gitUrlParse from 'git-url-parse';
 import { inject, injectable } from 'inversify';
 import git from 'simple-git/promise';
 import debug from 'debug';
@@ -64,21 +63,10 @@ export class ScanningStrategyDetector implements IDetector<string, ScanningStrat
   }
 
   private determineInputType = (path: string): ServiceType => {
-    if (ScanningStrategyDetectorUtils.isGitHubPath(path)) {
-      return ServiceType.github;
-    }
-
-    if (ScanningStrategyDetectorUtils.isLocalPath(path)) {
-      return ServiceType.local;
-    }
-
-    if (ScanningStrategyDetectorUtils.isBitbucketPath(path)) {
-      return ServiceType.bitbucket;
-    }
-
-    if (ScanningStrategyDetectorUtils.isGitLabPath(path)) {
-      return ServiceType.gitlab;
-    }
+    if (ScanningStrategyDetectorUtils.isGitHubPath(path)) return ServiceType.github;
+    if (ScanningStrategyDetectorUtils.isLocalPath(path)) return ServiceType.local;
+    if (ScanningStrategyDetectorUtils.isBitbucketPath(path)) return ServiceType.bitbucket;
+    if (ScanningStrategyDetectorUtils.isGitLabPath(path)) return ServiceType.gitlab;
 
     throw ErrorFactory.newInternalError('Unable to detect scanning strategy');
   };

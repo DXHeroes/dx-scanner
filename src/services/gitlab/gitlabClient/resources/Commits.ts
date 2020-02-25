@@ -2,7 +2,7 @@
 import { AxiosResponse } from 'axios';
 import { PaginationParams } from '../../../../inspectors';
 import { GitLabConstructor } from '../GitLabClient';
-import { CustomAxiosResponse, parseResponse } from '../Utils';
+import { CustomAxiosResponse, parseResponse } from '../gitlabUtils';
 import { Commit } from './MergeRequests';
 
 export class Commits extends GitLabConstructor {

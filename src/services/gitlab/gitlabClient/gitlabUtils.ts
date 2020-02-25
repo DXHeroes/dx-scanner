@@ -4,11 +4,11 @@
 import { ClientOptions } from './GitLabClient';
 import { AxiosResponse } from 'axios';
 import { PaginationParams } from '../../../inspectors';
-import { MergeRequests } from '../gitlabClient/resources/MergeRequests';
-import { Issues } from '../gitlabClient/resources/Issues';
-import { Commits } from '../gitlabClient/resources/Commits';
-import { Projects } from '../gitlabClient/resources/Projects';
-import { Users } from '../gitlabClient/resources/UsersOrGroups';
+import { MergeRequests } from './resources/MergeRequests';
+import { Issues } from './resources/Issues';
+import { Commits } from './resources/Commits';
+import { Projects } from './resources/Projects';
+import { Users } from './resources/UsersOrGroups';
 
 interface Constructor {
   new (...args: any): any;

@@ -4,7 +4,7 @@ import { AxiosResponse } from 'axios';
 import { ListGetterOptions, PaginationParams } from '../../../../inspectors';
 import { GitLabPullRequestState } from '../../IGitLabService';
 import { GitLabConstructor } from '../GitLabClient';
-import { CustomAxiosResponse, parseResponse } from '../Utils';
+import { CustomAxiosResponse, parseResponse } from '../gitlabUtils';
 import { User } from './UsersOrGroups';
 
 export class MergeRequests extends GitLabConstructor {
