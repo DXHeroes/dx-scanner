@@ -1,6 +1,6 @@
 import path from 'path';
-import { FileSystemService } from './FileSystemService';
 import { createTestContainer } from '../inversify.config';
+import { FileSystemService } from './FileSystemService';
 
 describe('FileSystemService - VIRTUAL', () => {
   let service: FileSystemService;

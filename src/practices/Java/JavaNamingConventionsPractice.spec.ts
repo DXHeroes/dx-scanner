@@ -106,6 +106,17 @@ describe('JavaPackageManagementUsedPractice', () => {
     expect(evaluated).toEqual(PracticeEvaluationResult.unknown);
   });
 
+  it('Does not evaluate & skips build.gradle.kts file to check other class files', async () => {
+    containerCtx.virtualFileSystemService.setFileSystem({
+      'pom.xml': '...',
+      'build.gradle.kts': '...',
+      'src/main/java/org/vision/root/CronOperations/VeryCorrectNamingConvention.kt': '',
+    });
+
+    const evaluated = await practice.evaluate(containerCtx.practiceContext);
+    expect(evaluated).toEqual(PracticeEvaluationResult.practicing);
+  });
+
   it('Returns unknown if there is no fileInspector', async () => {
     const evaluated = await practice.evaluate({ ...containerCtx.practiceContext, fileInspector: undefined });
     expect(evaluated).toEqual(PracticeEvaluationResult.unknown);

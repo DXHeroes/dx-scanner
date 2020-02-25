@@ -27,6 +27,7 @@ export default class Practices {
         id: p.getMetadata().id,
         name: p.getMetadata().name,
         impact: p.getMetadata().impact,
+        url: p.getMetadata().url,
       };
     });
 
@@ -34,7 +35,7 @@ export default class Practices {
       // print practices in JSON format
       console.log(JSON.stringify(practicesToReport, null, 2));
     } else {
-      console.log(ReporterData.table(['Practice ID', 'Practice Name', 'Practice Impact'], practicesToReport));
+      console.log(ReporterData.table(['Practice ID', 'Practice Name', 'Practice Impact', 'URL'], practicesToReport));
     }
   }
 }

@@ -10,7 +10,7 @@ import { PracticeContext } from '../../contexts/practice/PracticeContext';
   suggestion:
     'Use a tool for automated code formatting. For example, Prettier saves your time and energy and makes your code style consistent.',
   reportOnlyOnce: true,
-  url: 'https://prettier.io/',
+  url: 'https://dxkb.io/p/linting',
 })
 export class PrettierUsedPractice implements IPractice {
   async isApplicable(ctx: PracticeContext): Promise<boolean> {

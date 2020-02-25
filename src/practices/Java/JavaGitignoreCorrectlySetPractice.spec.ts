@@ -40,6 +40,16 @@ describe('JavaGitignoreCorrectlySetPractice', () => {
     expect(evaluated).toEqual(PracticeEvaluationResult.practicing);
   });
 
+  it('Returns practicing if the .gitignore is set correctly for Kotlin/GRADLE', async () => {
+    containerCtx.virtualFileSystemService.setFileSystem({
+      '.gitignore': gitignoreContent,
+      'build.gradle.kts': buildGRADLEContents,
+    });
+
+    const evaluated = await practice.evaluate(containerCtx.practiceContext);
+    expect(evaluated).toEqual(PracticeEvaluationResult.practicing);
+  });
+
   it('Returns notPracticing if there the .gitignore is NOT set correctly', async () => {
     containerCtx.virtualFileSystemService.setFileSystem({
       '.gitignore': '...',
@@ -68,7 +78,21 @@ describe('JavaGitignoreCorrectlySetPractice', () => {
     expect(evaluated).toEqual(PracticeEvaluationResult.unknown);
   });
 
-  it('Returns unknown if there is *.class, *.log, *.jar, *.war in .gitignore but not correctly set for build.gradle', async () => {
+  it('Returns unknown if there is *.class, *.log, *.jar, *.war in .gitignore but not correctly set for build.gradle.kts', async () => {
+    containerCtx.virtualFileSystemService.setFileSystem({
+      '.gitignore': `
+      *.class
+      *.log
+      *.jar
+      *.war`,
+      'build.gradle.kts': buildGRADLEContents,
+    });
+
+    const evaluated = await practice.evaluate(containerCtx.practiceContext);
+    expect(evaluated).toEqual(PracticeEvaluationResult.unknown);
+  });
+
+  it('Returns unknown if there is *.class, *.log, *.jar, *.war in .gitignore but not correctly set for pom.xml', async () => {
     containerCtx.virtualFileSystemService.setFileSystem({
       '.gitignore': `
       *.class
@@ -82,7 +106,7 @@ describe('JavaGitignoreCorrectlySetPractice', () => {
     expect(evaluated).toEqual(PracticeEvaluationResult.unknown);
   });
 
-  it('Returns unknown if there is correctly set .gitignore, but no pom.xml and build.gradle ', async () => {
+  it('Returns unknown if there is correctly set .gitignore, but no pom.xml and build.gradle or build.gradle.kts', async () => {
     containerCtx.virtualFileSystemService.setFileSystem({
       '.gitignore': gitignoreContent,
     });

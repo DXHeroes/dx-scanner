@@ -1,3 +1,35 @@
+## [2.3.3](https://github.com/dxheroes/dx-scanner/compare/v2.3.2...v2.3.3) (2020-02-25)
+
+
+### Bug Fixes
+
+* adjusting practices & inspector for gradle/kotlin variation ([f57c097](https://github.com/dxheroes/dx-scanner/commit/f57c09796eafc5b7174bec4e66d51b055d4fb46b))
+* test suites readjusted for build.gradle.kts ([00acff1](https://github.com/dxheroes/dx-scanner/commit/00acff12549593c3a988abea227e74c062a481c6))
+
+## [2.3.2](https://github.com/dxheroes/dx-scanner/compare/v2.3.1...v2.3.2) (2020-02-24)
+
+
+### Bug Fixes
+
+* **deps:** remove octokit ([#248](https://github.com/dxheroes/dx-scanner/issues/248)) ([15f6bb9](https://github.com/dxheroes/dx-scanner/commit/15f6bb9e2ff5b2d65b637b80a782e4b64f3670b4))
+* remove octokit as it is no longer used ([d5772e4](https://github.com/dxheroes/dx-scanner/commit/d5772e4e4c025cad452a6232784a3b85f70e2ea0))
+* **deps:** update dependency @octokit/rest to v17 ([458402d](https://github.com/dxheroes/dx-scanner/commit/458402d870b74777185ff969cb3adecde301bfd6))
+
+## [2.3.1](https://github.com/dxheroes/dx-scanner/compare/v2.3.0...v2.3.1) (2020-02-24)
+
+
+### Bug Fixes
+
+* **deps:** update dependency node-filter-async to v2 ([e56a1dc](https://github.com/dxheroes/dx-scanner/commit/e56a1dc44bd1521430a0e089a71b3b6d7c52e6e0))
+* **deps:** update dependency node-filter-async to v2 ([#249](https://github.com/dxheroes/dx-scanner/issues/249)) ([1b64097](https://github.com/dxheroes/dx-scanner/commit/1b64097f025e847b4ad9c5ed4405fc60fcb03b73))
+
+# [2.3.0](https://github.com/dxheroes/dx-scanner/compare/v2.2.0...v2.3.0) (2020-02-18)
+
+
+### Features
+
+* set practices url to dxkb.io + add urls to the list of practices ([0f7dec7](https://github.com/dxheroes/dx-scanner/commit/0f7dec7dad029b4826bbb702db9677103db8e476))
+
 # [2.2.0](https://github.com/dxheroes/dx-scanner/compare/v2.1.2...v2.2.0) (2020-02-11)
 
 

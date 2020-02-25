@@ -15,7 +15,7 @@ import qs from 'qs';
   impact: PracticeImpact.small,
   suggestion: 'Keep the dependencies updated to have all possible features. Use, for example, versions-maven-plugin',
   reportOnlyOnce: true,
-  url: 'https://www.mojohaus.org/versions-maven-plugin/',
+  url: 'https://dxkb.io/p/updating-the-dependencies',
 })
 export class JavaDependenciesVersionMajorLevel extends PracticeBase {
   async isApplicable(ctx: PracticeContext): Promise<boolean> {

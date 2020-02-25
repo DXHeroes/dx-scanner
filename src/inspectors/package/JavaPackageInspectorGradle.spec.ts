@@ -64,6 +64,15 @@ describe('JavaPackageInspector Gradle', () => {
         await inspector.init();
         expect(inspector.hasPackageManagement()).toBe(true);
       });
+
+      it('returns true if build.gradle.kts is valid and present', async () => {
+        containerCtx.virtualFileSystemService.clearFileSystem();
+        containerCtx.virtualFileSystemService.setFileSystem({
+          'build.gradle.kts': buildGRADLEContents,
+        });
+        await inspector.init();
+        expect(inspector.hasPackageManagement()).toBe(true);
+      });
     });
 
     describe('#hasLockFile', () => {

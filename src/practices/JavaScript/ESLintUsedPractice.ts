@@ -9,7 +9,7 @@ import { IPractice } from '../IPractice';
   impact: PracticeImpact.medium,
   suggestion: 'Use Linter to catch dangerous code constructs. ESLint is the most widely used Linter in the JavaScript community.',
   reportOnlyOnce: true,
-  url: 'https://eslint.org/',
+  url: 'https://dxkb.io/p/linting',
 })
 export class ESLintUsedPractice implements IPractice {
   async isApplicable(ctx: PracticeContext): Promise<boolean> {
