@@ -194,7 +194,7 @@ export class GitLabService implements IVCSService {
   }
 
   async listPullCommits(owner: string, repo: string, prNumber: number, options?: ListGetterOptions): Promise<Paginated<PullCommits>> {
-    const { data, pagination } = await this.customClient.MergeRequests.commits(`${owner}/${repo}`, prNumber, options?.pagination);
+    const { data, pagination } = await this.customClient.MergeRequests.listCommits(`${owner}/${repo}`, prNumber, options?.pagination);
 
     const items = <PullCommits[]>await Promise.all(
       data.map(async (val) => {
@@ -271,7 +271,7 @@ export class GitLabService implements IVCSService {
   }
 
   async listIssueComments(owner: string, repo: string, issueNumber: number): Promise<Paginated<IssueComment>> {
-    const { data, pagination } = await this.customClient.Issues.comments(`${owner}/${repo}`, issueNumber);
+    const { data, pagination } = await this.customClient.Issues.listComments(`${owner}/${repo}`, issueNumber);
 
     const items = data.map((val) => ({
       user: {
@@ -353,7 +353,7 @@ export class GitLabService implements IVCSService {
     prNumber: number,
     options?: ListGetterOptions,
   ): Promise<Paginated<PullRequestComment>> {
-    const { data, pagination } = await this.customClient.MergeRequests.comments(`${owner}/${repo}`, prNumber, options?.pagination);
+    const { data, pagination } = await this.customClient.MergeRequests.listComments(`${owner}/${repo}`, prNumber, options?.pagination);
 
     const items = data.map((val) => ({
       user: { id: val.author.id.toString(), login: val.author.username, url: val.author.web_url },
