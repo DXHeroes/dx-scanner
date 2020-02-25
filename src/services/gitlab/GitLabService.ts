@@ -45,13 +45,13 @@ export class GitLabService implements IVCSService {
   constructor(@inject(Types.ArgumentsProvider) argumentsProvider: ArgumentsProvider) {
     this.argumentsProvider = argumentsProvider;
     const parsedUrl = GitServiceUtils.parseUrl(argumentsProvider.uri);
-    this.host = parsedUrl.host || 'https://gitlab.com';
+    this.host = parsedUrl.host;
 
     this.cache = new InMemoryCache();
 
     this.client = new Gitlab({
       token: argumentsProvider.auth,
-      host: this.host,
+      host: `${parsedUrl.protocol}://${this.host}`,
     });
 
     this.customClient = new GitLabClient({
