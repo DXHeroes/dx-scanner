@@ -45,7 +45,7 @@ export class JavaGitignoreCorrectlySetPractice implements IPractice {
       if (await this.resolveGitignorePractice(parsedGitignore, 'Maven')) {
         return PracticeEvaluationResult.practicing;
       }
-    } else if (await ctx.fileInspector.exists('build.gradle')) {
+    } else if ((await ctx.fileInspector.exists('build.gradle')) || (await ctx.fileInspector.exists('build.gradle.kts'))) {
       if (await this.resolveGitignorePractice(parsedGitignore, 'Gradle')) {
         return PracticeEvaluationResult.practicing;
       }

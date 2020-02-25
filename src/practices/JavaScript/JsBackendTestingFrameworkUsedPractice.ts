@@ -10,7 +10,7 @@ import { PracticeContext } from '../../contexts/practice/PracticeContext';
   suggestion:
     'Use tests to point out the defects and errors that were made during the development phases. The most widely used testing frameworks in the JavaScript community are Jest and Mocha.',
   reportOnlyOnce: true,
-  url: 'https://dxkb.io/p/unit-testing',
+  url: 'https://dxkb.io/tags/testing',
 })
 export class JsBackendTestingFrameworkUsedPractice implements IPractice {
   async isApplicable(ctx: PracticeContext): Promise<boolean> {

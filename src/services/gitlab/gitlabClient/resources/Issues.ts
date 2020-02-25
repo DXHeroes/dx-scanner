@@ -3,7 +3,7 @@ import { AxiosResponse } from 'axios';
 import { PaginationParams } from '../../../../inspectors';
 import { GitLabIssueState } from '../../IGitLabService';
 import { GitLabConstructor } from '../GitLabClient';
-import { CustomAxiosResponse, ListFilterOptions, parseResponse } from '../Utils';
+import { CustomAxiosResponse, ListFilterOptions, parseResponse } from '../gitlabUtils';
 import { User } from './UsersOrGroups';
 
 export class Issues extends GitLabConstructor {

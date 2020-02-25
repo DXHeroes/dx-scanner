@@ -1,3 +1,5 @@
+import axios from 'axios';
+
 export class ScanningStrategyDetectorUtils {
   static isLocalPath(path: string): boolean {
     return this.testPath(path, /^(?!http|ssh).*$/) && !this.isRemoteServicePath(path);
@@ -11,12 +13,16 @@ export class ScanningStrategyDetectorUtils {
     return this.testPath(path, /bitbucket\.org/);
   }
 
-  static isGitLabPath(path: string): boolean {
-    return this.testPath(path, /gitlab\.com/) || this.testPath(path, /git\.*\./);
+  static async isGitLabPath(path: string): Promise<boolean> {
+    if (this.testPath(path, /gitlab\.com/)) return true;
+
+    // axios get GL endpoint
+
+    await axios.get('/api/v4/version');
   }
 
   static isRemoteServicePath(path: string): boolean {
-    return this.isGitHubPath(path) || this.isBitbucketPath(path); // || ...
+    return this.isGitHubPath(path) || this.isBitbucketPath(path) || (await this.isGitLabPath(path)); // || ...
   }
 
   static testPath(path: string, regex: RegExp): boolean {

@@ -15,7 +15,7 @@ import { FixerContext } from '../../contexts/fixer/FixerContext';
   impact: PracticeImpact.medium,
   suggestion: 'Use the ESLint correctly. You have some errors.',
   reportOnlyOnce: true,
-  url: 'https://eslint.org/',
+  url: 'https://dxkb.io/p/linting',
   dependsOn: { practicing: ['JavaScript.ESLintUsed'] },
 })
 export class ESLintWithoutErrorsPractice implements IPractice {
