@@ -1,4 +1,4 @@
-import moment from 'moment';
+import { duration } from 'moment';
 import { PracticeContext } from '../../contexts/practice/PracticeContext';
 import { PracticeEvaluationResult, PracticeImpact } from '../../model';
 import { GitServiceUtils } from '../../services/git/GitServiceUtils';
@@ -45,7 +45,7 @@ export class DoesPullRequestsPractice implements IPractice {
 
     const prDate = descendingSortedPrDates[0];
     const commitDate = new Date(descendingSortedCommitDate[0].author.date).getTime();
-    const daysInMilliseconds = moment.duration(30, 'days').asMilliseconds();
+    const daysInMilliseconds = duration(30, 'days').asMilliseconds();
 
     if (prDate > commitDate - daysInMilliseconds) {
       return PracticeEvaluationResult.practicing;
