@@ -31,7 +31,7 @@ export class ScanningStrategyDetector implements IDetector<string, ScanningStrat
   }
 
   async detect() {
-    let serviceType: ServiceType;
+    let serviceType: ServiceType | undefined;
     let remoteService: RemoteService;
     let accessType: AccessType | undefined = undefined;
     let remoteUrl: RemoteUrl = undefined;
@@ -62,7 +62,7 @@ export class ScanningStrategyDetector implements IDetector<string, ScanningStrat
     };
   }
 
-  private determineInputType = async (path: string): Promise<ServiceType> => {
+  private determineInputType = async (path: string): Promise<ServiceType | undefined> => {
     if (ScanningStrategyDetectorUtils.isGitHubPath(path)) return ServiceType.github;
     if (await ScanningStrategyDetectorUtils.isLocalPath(path)) return ServiceType.local;
     if (ScanningStrategyDetectorUtils.isBitbucketPath(path)) return ServiceType.bitbucket;
@@ -70,7 +70,7 @@ export class ScanningStrategyDetector implements IDetector<string, ScanningStrat
 
     // return undefined if we don't know yet the service type
     //  (e.g. because of missing credentials for Gitlab)
-    if ((await ScanningStrategyDetectorUtils.isGitLabPath(path)) === undefined) return ServiceType.gitlab;
+    if ((await ScanningStrategyDetectorUtils.isGitLabPath(path)) === undefined) return undefined;
 
     throw ErrorFactory.newInternalError('Unable to detect scanning strategy');
   };
@@ -175,7 +175,7 @@ export class ScanningStrategyDetector implements IDetector<string, ScanningStrat
 }
 
 export interface ScanningStrategy {
-  serviceType: ServiceType;
+  serviceType: ServiceType | undefined;
   accessType: AccessType | undefined;
   remoteUrl: RemoteUrl;
   localPath: string | undefined;
@@ -196,7 +196,7 @@ export enum AccessType {
 }
 
 export interface RemoteService {
-  serviceType: ServiceType;
+  serviceType: ServiceType | undefined;
   remoteUrl: RemoteUrl;
 }
 
