@@ -27,6 +27,7 @@ import {
   PullRequestReview,
   Symlink,
   UserInfo,
+  Lines,
 } from '../git/model';
 import { VCSServicesUtils } from '../git/VCSServicesUtils';
 import { GitLabClient, PaginationGitLabCustomResponse } from './gitlabClient/Utils';
@@ -437,7 +438,7 @@ export class GitLabService implements IVCSService {
     throw new Error('Method not implemented yet.');
   }
 
-  async getPullsDiffStat(owner: string, repo: string, prNumber: number) {
+  async getPullsDiffStat(owner: string, repo: string, prNumber: number): Promise<Lines> {
     throw new Error('Method not implemented yet for GitLab.');
   }
 
