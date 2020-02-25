@@ -148,22 +148,24 @@ export class ScannerUtils {
    * Prompt user to insert credentials to get authorization
    */
   static async getAuthorization(scanPath: string, scanResult: ScanResult) {
-    let authorization;
+    let promptMsg;
+
     if (ScanningStrategyDetectorUtils.isGitHubPath(scanPath) || scanResult.serviceType === ServiceType.github) {
-      authorization = await cli.prompt('Insert your GitHub personal access token. https://github.com/settings/tokens\n', {
-        type: 'hide',
-      });
+      promptMsg = 'Insert your GitHub personal access token. https://github.com/settings/tokens\n';
     } else if (ScanningStrategyDetectorUtils.isBitbucketPath(scanPath) || scanResult.serviceType === ServiceType.bitbucket) {
-      authorization = await cli.prompt(
-        'Insert your Bitbucket credentials (in format "appPassword" or "username:appPasword"). https://confluence.atlassian.com/bitbucket/app-passwords-828781300.html\n',
-        { type: 'hide' },
-      );
-    } else if (ScanningStrategyDetectorUtils.isGitLabPath(scanPath) || scanResult.serviceType === ServiceType.gitlab) {
-      authorization = await cli.prompt(
-        'Insert your GitLab credentials (in format "private_token"). https://gitlab.com/profile/personal_access_tokens\n',
-        { type: 'hide' },
-      );
+      promptMsg =
+        'Insert your Bitbucket credentials (in format "appPassword" or "username:appPasword"). https://confluence.atlassian.com/bitbucket/app-passwords-828781300.html\n';
+    } else if ((await ScanningStrategyDetectorUtils.isGitLabPath(scanPath)) || scanResult.serviceType === ServiceType.gitlab) {
+      promptMsg = 'Insert your GitLab private token. https://gitlab.com/profile/personal_access_tokens\n';
+    } else {
+      // if we don't know the service yet
+      promptMsg = 'Insert your credentials';
     }
+
+    const authorization = await cli.prompt(promptMsg, {
+      type: 'hide',
+    });
+
     return authorization;
   }
 }

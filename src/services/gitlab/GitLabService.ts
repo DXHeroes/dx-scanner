@@ -44,7 +44,7 @@ export class GitLabService implements IVCSService {
 
   constructor(@inject(Types.ArgumentsProvider) argumentsProvider: ArgumentsProvider) {
     this.argumentsProvider = argumentsProvider;
-    const parsedUrl = GitServiceUtils.parseGitlabUrl(argumentsProvider.uri);
+    const parsedUrl = GitServiceUtils.parseUrl(argumentsProvider.uri);
     this.host = parsedUrl.host || 'https://gitlab.com';
 
     this.cache = new InMemoryCache();
@@ -87,7 +87,7 @@ export class GitLabService implements IVCSService {
       state,
     });
 
-    const parsedUrl = GitServiceUtils.parseGitlabUrl(this.argumentsProvider.uri);
+    const parsedUrl = GitServiceUtils.parseUrl(this.argumentsProvider.uri);
     const repoUrl = `${parsedUrl.host}/${owner}/${repo}`;
     let ownerInfo = (<any>await this.client.Users.all({ username: owner }))[0];
     if (!ownerInfo) {

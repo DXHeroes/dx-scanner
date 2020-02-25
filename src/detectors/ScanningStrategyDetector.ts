@@ -35,9 +35,9 @@ export class ScanningStrategyDetector implements IDetector<string, ScanningStrat
     let remoteService: RemoteService;
     let accessType: AccessType | undefined = undefined;
     let remoteUrl: RemoteUrl = undefined;
-    const path = ScanningStrategyDetectorUtils.normalizePath(this.argumentsProvider.uri);
+    const path = await ScanningStrategyDetectorUtils.normalizePath(this.argumentsProvider.uri);
 
-    const inputType = this.determineInputType(path);
+    const inputType = await this.determineInputType(path);
 
     // try to determine remote origin if input is local file system
     if (inputType === ServiceType.local) {
@@ -62,22 +62,24 @@ export class ScanningStrategyDetector implements IDetector<string, ScanningStrat
     };
   }
 
-  private determineInputType = (path: string): ServiceType => {
+  private determineInputType = async (path: string): Promise<ServiceType> => {
     if (ScanningStrategyDetectorUtils.isGitHubPath(path)) return ServiceType.github;
-    if (ScanningStrategyDetectorUtils.isLocalPath(path)) return ServiceType.local;
+    if (await ScanningStrategyDetectorUtils.isLocalPath(path)) return ServiceType.local;
     if (ScanningStrategyDetectorUtils.isBitbucketPath(path)) return ServiceType.bitbucket;
-    if (ScanningStrategyDetectorUtils.isGitLabPath(path)) return ServiceType.gitlab;
+    if (await ScanningStrategyDetectorUtils.isGitLabPath(path)) return ServiceType.gitlab;
+
+    // return undefined if we don't know yet the service type
+    //  (e.g. because of missing credentials for Gitlab)
+    if ((await ScanningStrategyDetectorUtils.isGitLabPath(path)) === undefined) return ServiceType.gitlab;
 
     throw ErrorFactory.newInternalError('Unable to detect scanning strategy');
   };
 
   private determineRemoteAccessType = async (remoteService: RemoteService): Promise<AccessType | undefined> => {
-    if (!remoteService.remoteUrl) {
-      return undefined;
-    }
+    if (!remoteService.remoteUrl) return undefined;
 
     if (remoteService.serviceType === ServiceType.github) {
-      const { owner, repoName } = GitServiceUtils.getOwnerAndRepoName(remoteService.remoteUrl);
+      const { owner, repoName } = GitServiceUtils.parseUrl(remoteService.remoteUrl);
 
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       let response: any;
@@ -98,7 +100,7 @@ export class ScanningStrategyDetector implements IDetector<string, ScanningStrat
         return AccessType.public;
       }
     } else if (remoteService.serviceType === ServiceType.bitbucket) {
-      const { owner, repoName } = GitServiceUtils.getOwnerAndRepoName(remoteService.remoteUrl);
+      const { owner, repoName } = GitServiceUtils.parseUrl(remoteService.remoteUrl);
 
       try {
         const response = await this.bitbucketService.getRepo(owner, repoName);
@@ -114,7 +116,7 @@ export class ScanningStrategyDetector implements IDetector<string, ScanningStrat
         throw error;
       }
     } else if (remoteService.serviceType === ServiceType.gitlab) {
-      const { owner, repoName } = GitServiceUtils.parseGitlabUrl(remoteService.remoteUrl);
+      const { owner, repoName } = GitServiceUtils.parseUrl(remoteService.remoteUrl);
 
       try {
         const response = await this.gitLabService.getRepo(owner, repoName);

@@ -16,12 +16,14 @@ export class GitServiceUtils {
     return completeUrl;
   };
 
-  static getOwnerAndRepoName = (url: string) => {
+  static parseUrl = (url: string) => {
     const parsedUrl = gitUrlParse(url);
 
     return {
       owner: parsedUrl.owner,
       repoName: parsedUrl.name,
+      host: parsedUrl.resource,
+      protocol: parsedUrl.protocol,
     };
   };
 
@@ -55,21 +57,5 @@ export class GitServiceUtils {
     }
 
     return GitServiceUtils.getUrlToRepo(url, path, branch);
-  };
-
-  static parseGitlabUrl = (url: string) => {
-    const parsedUrl = gitUrlParse(url);
-    if (parsedUrl.resource === 'gitlab.com') {
-      return {
-        owner: parsedUrl.owner,
-        repoName: parsedUrl.name,
-      };
-    }
-
-    return {
-      owner: parsedUrl.owner,
-      repoName: parsedUrl.name,
-      host: parsedUrl.resource,
-    };
   };
 }

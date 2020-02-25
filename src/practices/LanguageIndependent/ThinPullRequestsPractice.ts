@@ -32,7 +32,7 @@ export class ThinPullRequestsPractice implements IPractice {
     }
 
     const repoName = GitServiceUtils.getRepoName(ctx.projectComponent.repositoryPath, ctx.projectComponent.path);
-    const ownerAndRepoName = GitServiceUtils.getOwnerAndRepoName(repoName);
+    const ownerAndRepoName = GitServiceUtils.parseUrl(repoName);
 
     // load all necessary PRs
     const pullRequests = await this.loadPullRequests(ctx, ownerAndRepoName.owner, ownerAndRepoName.repoName);

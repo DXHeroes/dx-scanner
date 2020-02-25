@@ -4,8 +4,6 @@ import cli from 'cli-ux';
 import debug from 'debug';
 import { createRootContainer } from '../inversify.config';
 import { Scanner, ScannerUtils } from '../scanner';
-import { ScanningStrategyDetectorUtils } from '../detectors/utils/ScanningStrategyDetectorUtils';
-import { ServiceType } from '../detectors';
 import { CLIArgs } from '../model';
 
 export default class Run {
