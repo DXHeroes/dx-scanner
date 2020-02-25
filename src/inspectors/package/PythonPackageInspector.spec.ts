@@ -87,11 +87,11 @@ describe('PythonPackageInspector', () => {
         await inspector.init();
       });
 
-      it('Returns true package if it exists', () => {
+      it('Returns true if package exists', () => {
         expect(inspector.hasPackage('confluent-kafka')).toBe(true);
       });
 
-      it('Returns false package if it exists', () => {
+      it('Returns false if package does not exists', () => {
         expect(inspector.hasPackage('confluent-kavka')).toBe(false);
       });
     });
@@ -101,7 +101,7 @@ describe('PythonPackageInspector', () => {
         await inspector.init();
       });
 
-      it('Returns true if one of packages exists', () => {
+      it('Returns true if one of the packages exists', () => {
         expect(inspector.hasOneOfPackages(['confluent-kafka', 'confluent-kavka'])).toBe(true);
       });
 
