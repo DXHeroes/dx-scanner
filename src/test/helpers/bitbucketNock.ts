@@ -1,12 +1,14 @@
 /* eslint-disable @typescript-eslint/camelcase */
 import nock from 'nock';
 import { ListGetterOptions } from '../../inspectors';
-import { BitbucketPullRequestState } from '../../services/git/IVCSService';
 import { bitbucketListIssueCommentsResponseFactory } from '../factories/responses/bitbucket/listIssueCommentsResponseFactory';
 import { bitbucketListIssuesResponseFactory } from '../factories/responses/bitbucket/listIssuesResponseFactory';
 import { bitbucketListPRsResponseFactory } from '../factories/responses/bitbucket/listPrsResponseFactory';
 import { bitbucketListPullCommitsResponseFactory } from '../factories/responses/bitbucket/listPullCommitsResponseFactory';
 import { bitbucketListCommitResponseFactory } from '../factories/responses/bitbucket/listRepoCommitsResponseFactory';
+import { BitbucketPullRequestState, BitbucketIssueState } from '../../services/bitbucket/IBitbucketService';
+import { VCSServicesUtils } from '../../services/git/VCSServicesUtils';
+import Bitbucket from 'bitbucket';
 
 export class BitbucketNock {
   user: string;
@@ -30,6 +32,7 @@ export class BitbucketNock {
     if (Object.keys(params)) {
       interceptor.query(params);
     }
+
     return interceptor;
   }
 
@@ -72,12 +75,15 @@ export class BitbucketNock {
 
   listIssuesResponse(
     issues: Bitbucket.Schema.Issue[],
-    options?: ListGetterOptions<{ state?: BitbucketPullRequestState | BitbucketPullRequestState[] }>,
+    options?: ListGetterOptions<{ state?: BitbucketIssueState | BitbucketIssueState[] }>,
   ) {
     const baseUrl = `${this.url}/repositories/${this.user}/${this.repoName}/issues`;
 
-    const queryParams: { state?: BitbucketPullRequestState | BitbucketPullRequestState[]; page?: number; pagelen?: number } = {};
-    if (options?.filter?.state) queryParams.state = options?.filter?.state;
+    // get state for q parameter
+    const stringifiedState = VCSServicesUtils.getBitbucketStateQueryParam(options?.filter?.state);
+
+    const queryParams: { q?: string; page?: number; pagelen?: number } = {};
+    if (options?.filter?.state) queryParams.q = stringifiedState;
     if (options?.pagination?.page) queryParams.page = options?.pagination?.page;
     if (options?.pagination?.perPage) queryParams.pagelen = options?.pagination?.perPage;
 

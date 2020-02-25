@@ -1,4 +1,3 @@
-import nock from 'nock';
 import git from 'simple-git/promise';
 import { createTestContainer } from '../inversify.config';
 import { GitHubNock } from '../test/helpers/gitHubNock';
@@ -7,10 +6,6 @@ jest.mock('simple-git/promise');
 
 describe('ScanningStrategyDetector', () => {
   const mockedGit = <jest.Mock>git;
-
-  beforeEach(() => {
-    nock.cleanAll();
-  });
 
   describe('#detect', () => {
     it('local path without remote', async () => {

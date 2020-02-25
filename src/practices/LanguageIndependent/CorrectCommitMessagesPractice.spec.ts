@@ -1,4 +1,3 @@
-import nock from 'nock';
 import { CollaborationInspector } from '../../inspectors/CollaborationInspector';
 import { createTestContainer, TestContainerContext } from '../../inversify.config';
 import { PracticeEvaluationResult } from '../../model';
@@ -13,10 +12,6 @@ describe('CorrectCommitMessagesPractice', () => {
   let containerCtx: TestContainerContext;
   const MockedCollaborationInspector = <jest.Mock<CollaborationInspector>>(<unknown>CollaborationInspector);
   let mockCollaborationInspector: CollaborationInspector;
-
-  beforeEach(async () => {
-    nock.cleanAll();
-  });
 
   beforeAll(() => {
     containerCtx = createTestContainer();

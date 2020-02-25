@@ -9,7 +9,7 @@ import { PracticeContext } from '../../contexts/practice/PracticeContext';
   impact: PracticeImpact.medium,
   suggestion: 'Use build tools to automate all the menial and error prone tasks in web development.',
   reportOnlyOnce: true,
-  url: 'https://webpack.js.org/',
+  url: 'https://dxkb.io/p/javascript-front-end-build-tools',
 })
 export class JsFEBuildtoolUsedPractice implements IPractice {
   async isApplicable(ctx: PracticeContext): Promise<boolean> {

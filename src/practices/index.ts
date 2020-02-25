@@ -29,7 +29,11 @@ import { TimeToSolvePullRequestsPractice } from './LanguageIndependent/TimeToSol
 import { TimeToSolveIssuesPractice } from './LanguageIndependent/TimeToSolveIssuesPractice';
 import { ThinPullRequestsPractice } from './LanguageIndependent/ThinPullRequestsPractice';
 import { SecurityVulnerabilitiesPractice } from './JavaScript/SecurityVulnerabilitiesPractice';
-import { FirstTestPractice, SecondTestPractice, InvalidTestPractice } from '../scanner';
+import { JavaPackageManagementUsedPractice } from './Java/JavaPackageManagementUsedPractice';
+import { JavaLoggerUsedPractice } from './Java/JavaLoggerUsedPractice';
+import { JavaTestingFrameworkUsedPractice } from './Java/JavaTestingFrameworkUsedPractice';
+import { JavaMockingFrameworkUsedPractice } from './Java/JavaMockingFrameworkUsedPractice';
+import { JavaNamingConventionsPractice } from './Java/JavaNamingConventionsPractice';
 
 // register practices here
 export const practices = [
@@ -64,4 +68,9 @@ export const practices = [
   TimeToSolveIssuesPractice,
   ThinPullRequestsPractice,
   SecurityVulnerabilitiesPractice,
+  JavaPackageManagementUsedPractice,
+  JavaLoggerUsedPractice,
+  JavaTestingFrameworkUsedPractice,
+  JavaMockingFrameworkUsedPractice,
+  JavaNamingConventionsPractice,
 ];

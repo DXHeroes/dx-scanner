@@ -1,23 +1,19 @@
 import moment from 'moment';
-import nock from 'nock';
 import { IssueTrackingInspector } from '../../inspectors';
 import { createTestContainer, TestContainerContext } from '../../inversify.config';
 import { PracticeEvaluationResult } from '../../model';
-import { BitbucketPullRequestState, BitbucketService } from '../../services';
+import { BitbucketService } from '../../services';
 import { getIssuesResponse } from '../../services/git/__MOCKS__/bitbucketServiceMockFolder/getIssuesResponse';
 import { Types } from '../../types';
 import { TimeToSolveIssuesPractice } from './TimeToSolveIssuesPractice';
 import { getIssueResponse } from '../../services/git/__MOCKS__/bitbucketServiceMockFolder';
+import { BitbucketPullRequestState } from '../../services/bitbucket/IBitbucketService';
 
 describe('TimeToSolveIssuesPractice', () => {
   let practice: TimeToSolveIssuesPractice;
   let containerCtx: TestContainerContext;
   const MockedIssueTrackingInspector = <jest.Mock<IssueTrackingInspector>>(<unknown>IssueTrackingInspector);
   let mockIssueTrackingInspector: IssueTrackingInspector;
-
-  beforeEach(async () => {
-    nock.cleanAll();
-  });
 
   beforeAll(() => {
     containerCtx = createTestContainer();
@@ -33,7 +29,7 @@ describe('TimeToSolveIssuesPractice', () => {
   });
 
   it('returns practicing if there are open issues updated or created less than 60 days from now', async () => {
-    mockIssueTrackingInspector.getIssues = async () => {
+    mockIssueTrackingInspector.listIssues = async () => {
       return getIssuesResponse([
         getIssueResponse({
           state: BitbucketPullRequestState.open,
@@ -53,7 +49,7 @@ describe('TimeToSolveIssuesPractice', () => {
   });
 
   it('returns practicing if there are open issues updated or created more than 60 days from now', async () => {
-    mockIssueTrackingInspector.getIssues = async () => {
+    mockIssueTrackingInspector.listIssues = async () => {
       return getIssuesResponse([
         getIssueResponse({
           state: 'new',

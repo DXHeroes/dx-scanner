@@ -1,5 +1,4 @@
 import { IssueTrackingInspector } from './IssueTrackingInspector';
-import nock from 'nock';
 import { TestContainerContext, createTestContainer } from '../inversify.config';
 import { GitHubNock } from '../test/helpers/gitHubNock';
 import {
@@ -20,13 +19,9 @@ describe('Issue Tracking Inspector', () => {
     inspector = <IssueTrackingInspector>containerCtx.practiceContext.issueTrackingInspector;
   });
 
-  beforeEach(() => {
-    nock.cleanAll();
-  });
-
   it('returns paginated issues', async () => {
     new GitHubNock('1', 'octocat', 1, 'Hello-World').getIssues().reply(200, getIssuesResponse);
-    const response = await inspector.getIssues('octocat', 'Hello-World');
+    const response = await inspector.listIssues('octocat', 'Hello-World');
     expect(response).toMatchObject(getIssuesServiceResponse);
   });
 

@@ -1,6 +1,5 @@
 import { Git } from './Git';
 import { GitHubNock } from '../../test/helpers/gitHubNock';
-import nock from 'nock';
 import { GitHubService } from './GitHubService';
 import { argumentsProviderFactory } from '../../test/factories/ArgumentsProviderFactory';
 
@@ -15,7 +14,6 @@ describe('Git', () => {
 
   beforeEach(() => {
     service.purgeCache();
-    nock.cleanAll();
   });
 
   describe('#exists', () => {
@@ -240,8 +238,6 @@ describe('Git', () => {
     it('stops on false', async () => {
       gitHubNock.getDirectory('mockFolder', ['mockFile.ts'], ['mockSubFolder']);
       gitHubNock.getFile('mockFolder/mockFile.ts');
-      gitHubNock.getDirectory('mockFolder/mockSubFolder', ['mockSubFolderFile.txt'], []);
-      gitHubNock.getFile('mockFolder/mockSubFolder/mockSubFolderFile.txt');
 
       const files: string[] = [];
 

@@ -1,3 +1,286 @@
+# [2.4.0](https://github.com/dxheroes/dx-scanner/compare/v2.3.3...v2.4.0) (2020-02-25)
+
+
+### Features
+
+* upgrade TS dependencies ([cfa32ee](https://github.com/dxheroes/dx-scanner/commit/cfa32eeb770d9aea062b2789602ffd97d603bcc7))
+
+## [2.3.3](https://github.com/dxheroes/dx-scanner/compare/v2.3.2...v2.3.3) (2020-02-25)
+
+
+### Bug Fixes
+
+* adjusting practices & inspector for gradle/kotlin variation ([f57c097](https://github.com/dxheroes/dx-scanner/commit/f57c09796eafc5b7174bec4e66d51b055d4fb46b))
+* test suites readjusted for build.gradle.kts ([00acff1](https://github.com/dxheroes/dx-scanner/commit/00acff12549593c3a988abea227e74c062a481c6))
+
+## [2.3.2](https://github.com/dxheroes/dx-scanner/compare/v2.3.1...v2.3.2) (2020-02-24)
+
+
+### Bug Fixes
+
+* **deps:** remove octokit ([#248](https://github.com/dxheroes/dx-scanner/issues/248)) ([15f6bb9](https://github.com/dxheroes/dx-scanner/commit/15f6bb9e2ff5b2d65b637b80a782e4b64f3670b4))
+* remove octokit as it is no longer used ([d5772e4](https://github.com/dxheroes/dx-scanner/commit/d5772e4e4c025cad452a6232784a3b85f70e2ea0))
+* **deps:** update dependency @octokit/rest to v17 ([458402d](https://github.com/dxheroes/dx-scanner/commit/458402d870b74777185ff969cb3adecde301bfd6))
+
+## [2.3.1](https://github.com/dxheroes/dx-scanner/compare/v2.3.0...v2.3.1) (2020-02-24)
+
+
+### Bug Fixes
+
+* **deps:** update dependency node-filter-async to v2 ([e56a1dc](https://github.com/dxheroes/dx-scanner/commit/e56a1dc44bd1521430a0e089a71b3b6d7c52e6e0))
+* **deps:** update dependency node-filter-async to v2 ([#249](https://github.com/dxheroes/dx-scanner/issues/249)) ([1b64097](https://github.com/dxheroes/dx-scanner/commit/1b64097f025e847b4ad9c5ed4405fc60fcb03b73))
+
+# [2.3.0](https://github.com/dxheroes/dx-scanner/compare/v2.2.0...v2.3.0) (2020-02-18)
+
+
+### Features
+
+* set practices url to dxkb.io + add urls to the list of practices ([0f7dec7](https://github.com/dxheroes/dx-scanner/commit/0f7dec7dad029b4826bbb702db9677103db8e476))
+
+# [2.2.0](https://github.com/dxheroes/dx-scanner/compare/v2.1.2...v2.2.0) (2020-02-11)
+
+
+### Bug Fixes
+
+* **deps:** update dependency bitbucket to v2 ([cd59447](https://github.com/dxheroes/dx-scanner/commit/cd5944735ff3309a40757dfa573d4fe913e80ec3))
+* **deps:** update dependency bitbucket to v2 ([fc863b7](https://github.com/dxheroes/dx-scanner/commit/fc863b7c5405b753ed485e703a931c203450dc8a))
+* **deps:** update dependency bitbucket to v2 ([ce7be48](https://github.com/dxheroes/dx-scanner/commit/ce7be486038fb69a22e10ca6d017e50bee52051a))
+
+
+### Features
+
+* **bitbucket:** update to v2 ([8d30e90](https://github.com/dxheroes/dx-scanner/commit/8d30e900a39d2ac54caf7518d1d2c5eda2bc6466))
+
+## [2.1.2](https://github.com/dxheroes/dx-scanner/compare/v2.1.1...v2.1.2) (2020-02-11)
+
+
+### Bug Fixes
+
+* **deps:** pin dependency camelcase to 5.3.1 ([c1f804a](https://github.com/dxheroes/dx-scanner/commit/c1f804aa32af7bac243f1f0e2294a03820a62457))
+
+## [2.1.1](https://github.com/dxheroes/dx-scanner/compare/v2.1.0...v2.1.1) (2020-02-10)
+
+
+### Bug Fixes
+
+* **deps:** update all non-major dependencies ([5274c8b](https://github.com/dxheroes/dx-scanner/commit/5274c8bd7b458ea555007908607cc14070cff967))
+
+# [2.1.0](https://github.com/dxheroes/dx-scanner/compare/v2.0.5...v2.1.0) (2020-02-05)
+
+
+### Bug Fixes
+
+* impact level to small ([0d0c5fb](https://github.com/dxheroes/dx-scanner/commit/0d0c5fb233cf30a88167b84c0c13459a9944a00c))
+* merge conflicts & naming conventions test cases ([a1f2ef7](https://github.com/dxheroes/dx-scanner/commit/a1f2ef747dc4ebeedeb39dcad0ab5fca087b7ff2))
+* renamed tests & practice desciptions correctly to Kotlin ([ca70cbc](https://github.com/dxheroes/dx-scanner/commit/ca70cbcb18bd53456cca132d8fce4d09345219cd))
+* solved merge conflict ([287e5ba](https://github.com/dxheroes/dx-scanner/commit/287e5ba43446957b73cf3ad56ae76631e6b64bd4))
+* updated the practice for Kotlin & considered more edge cases ([c2cb6be](https://github.com/dxheroes/dx-scanner/commit/c2cb6beb6d2dc95a480370e9d2613e0c84124cbe))
+
+
+### Features
+
+* java practice for naming conventions ([b63c767](https://github.com/dxheroes/dx-scanner/commit/b63c76742c1337f4dbb8906049a9df756e4b9141))
+
+## [2.0.5](https://github.com/dxheroes/dx-scanner/compare/v2.0.4...v2.0.5) (2020-02-04)
+
+
+### Bug Fixes
+
+* **init:** Win architecture & tests ([2d1aea6](https://github.com/dxheroes/dx-scanner/commit/2d1aea61ba5f98e350f9152fc5627eaa5b5535a5))
+* **init:** Win architecture & tests ([#238](https://github.com/dxheroes/dx-scanner/issues/238)) ([0d3fbe1](https://github.com/dxheroes/dx-scanner/commit/0d3fbe18f02308b4fdbc8cf8d2ff556be0e1007f))
+* **services:** deprecation notice removed ([b494c01](https://github.com/dxheroes/dx-scanner/commit/b494c01965df8073f16816e48bc9cb52dfa16f9f))
+* **services:** deprecation notice removed ([#239](https://github.com/dxheroes/dx-scanner/issues/239)) ([d759beb](https://github.com/dxheroes/dx-scanner/commit/d759bebcdbcc8fa37c2cd999db86a2f0f3fdf175))
+
+## [2.0.4](https://github.com/dxheroes/dx-scanner/compare/v2.0.3...v2.0.4) (2020-02-03)
+
+
+### Bug Fixes
+
+* customize help ([1520daf](https://github.com/dxheroes/dx-scanner/commit/1520daf83d9f384a646da32a117e03f45b1c45c9))
+* increase timeout limit ([0ec88ec](https://github.com/dxheroes/dx-scanner/commit/0ec88ec46fcdab4ede00ad4e5b50905300dc595f))
+* **core:** load default Command from oclif ([afc3e4c](https://github.com/dxheroes/dx-scanner/commit/afc3e4c5bb9a898f826141ef8478535278053d69))
+
+
+### Reverts
+
+* add update-notifier back ([cec2fde](https://github.com/dxheroes/dx-scanner/commit/cec2fdedbee54b36512e3a34005c2c71516d8e45))
+* **changelog:** back to v2 ([d1b1f37](https://github.com/dxheroes/dx-scanner/commit/d1b1f370764158c7cf1515c6a7d953214eef40d3))
+* add changes for list of practices ([3993010](https://github.com/dxheroes/dx-scanner/commit/3993010a0e6e5a397c920ef0489a6fc43b37b486))
+* back the DXS config file ([726df9b](https://github.com/dxheroes/dx-scanner/commit/726df9b07b9b153417a93ecb7fc743e55322480e))
+
+## [2.0.4-beta.1](https://github.com/dxheroes/dx-scanner/compare/v2.0.3...v2.0.4-beta.1) (2020-02-03)
+
+
+### Bug Fixes
+
+* customize help ([1520daf](https://github.com/dxheroes/dx-scanner/commit/1520daf83d9f384a646da32a117e03f45b1c45c9))
+* increase timeout limit ([0ec88ec](https://github.com/dxheroes/dx-scanner/commit/0ec88ec46fcdab4ede00ad4e5b50905300dc595f))
+* **core:** load default Command from oclif ([afc3e4c](https://github.com/dxheroes/dx-scanner/commit/afc3e4c5bb9a898f826141ef8478535278053d69))
+
+
+### Reverts
+
+* add update-notifier back ([cec2fde](https://github.com/dxheroes/dx-scanner/commit/cec2fdedbee54b36512e3a34005c2c71516d8e45))
+* **changelog:** back to v2 ([d1b1f37](https://github.com/dxheroes/dx-scanner/commit/d1b1f370764158c7cf1515c6a7d953214eef40d3))
+* add changes for list of practices ([3993010](https://github.com/dxheroes/dx-scanner/commit/3993010a0e6e5a397c920ef0489a6fc43b37b486))
+* back the DXS config file ([726df9b](https://github.com/dxheroes/dx-scanner/commit/726df9b07b9b153417a93ecb7fc743e55322480e))
+
+## [2.0.3](https://github.com/dxheroes/dx-scanner/compare/v2.0.2...v2.0.3) (2020-02-03)
+
+### Bug Fixes
+
+* **deps:** update all non-major dependencies ([046576a](https://github.com/dxheroes/dx-scanner/commit/046576a4e9bc0d5540570de4d1ac432837940047))
+
+## [2.0.3-beta.1](https://github.com/dxheroes/dx-scanner/compare/v2.0.2...v2.0.3-beta.1) (2020-02-02)
+
+### Bug Fixes
+
+* customize help ([1520daf](https://github.com/dxheroes/dx-scanner/commit/1520daf83d9f384a646da32a117e03f45b1c45c9))
+* increase timeout limit ([0ec88ec](https://github.com/dxheroes/dx-scanner/commit/0ec88ec46fcdab4ede00ad4e5b50905300dc595f))
+* **core:** load default Command from oclif ([afc3e4c](https://github.com/dxheroes/dx-scanner/commit/afc3e4c5bb9a898f826141ef8478535278053d69))
+
+
+### Reverts
+
+* add update-notifier back ([cec2fde](https://github.com/dxheroes/dx-scanner/commit/cec2fdedbee54b36512e3a34005c2c71516d8e45))
+* **changelog:** back to v2 ([d1b1f37](https://github.com/dxheroes/dx-scanner/commit/d1b1f370764158c7cf1515c6a7d953214eef40d3))
+* add changes for list of practices ([3993010](https://github.com/dxheroes/dx-scanner/commit/3993010a0e6e5a397c920ef0489a6fc43b37b486))
+* back the DXS config file ([726df9b](https://github.com/dxheroes/dx-scanner/commit/726df9b07b9b153417a93ecb7fc743e55322480e))
+
+## [2.0.2](https://github.com/dxheroes/dx-scanner/compare/v2.0.1...v2.0.2) (2020-02-02)
+
+
+### Bug Fixes
+
+* binding Kotlin to context ([5472b0c](https://github.com/dxheroes/dx-scanner/commit/5472b0c144d3b0e2b57a0c09d35eeb11aa12d00c))
+* improved JavaLanguageDetector tests for Kotlin support ([695716c](https://github.com/dxheroes/dx-scanner/commit/695716c87948039868828852cdd31400e3f89cd4))
+* Kotlin reintegration to Java practices & test fixes ([1efac9d](https://github.com/dxheroes/dx-scanner/commit/1efac9d80a9cfb079d1dce8055d030a872befbbb))
+
+## [2.0.1](https://github.com/dxheroes/dx-scanner/compare/v2.0.0...v2.0.1) (2020-01-28)
+
+
+### Bug Fixes
+
+* back to single-command CLI ([21c539b](https://github.com/dxheroes/dx-scanner/commit/21c539bff06922315a28ca2ac5185d2306d0bdfc))
+
+# [2.0.0](https://github.com/dxheroes/dx-scanner/compare/v1.38.0...v2.0.0) (2020-01-28)
+
+
+### Bug Fixes
+
+* allow fail and recursive to be optional ([457eb72](https://github.com/dxheroes/dx-scanner/commit/457eb72426d4f4ccca135f43e599ea577c4f0077))
+* inform user if the config file already exists ([569725a](https://github.com/dxheroes/dx-scanner/commit/569725a0e30acb8d03523b70da9db981188d5023))
+* parse flags with init subcommand ([3ede8e0](https://github.com/dxheroes/dx-scanner/commit/3ede8e0fd3f02078d91ca85e58d2068bd0d9cf11))
+* remove comments a comment ideas ([e604238](https://github.com/dxheroes/dx-scanner/commit/e6042385ab862fac7ea888d155ed23189b5e61eb))
+* remove unnecessary code ([bb88dd4](https://github.com/dxheroes/dx-scanner/commit/bb88dd4bd3ab615cd5a9989f63f18c4dc69977ad))
+* remove unused commented code and import reflect-metadata ([5ad591a](https://github.com/dxheroes/dx-scanner/commit/5ad591a5d7ffafbc527643d202077c06085a7b6b))
+* remove unused flag, aliases and set new examples ([cccdf57](https://github.com/dxheroes/dx-scanner/commit/cccdf574f080db6039cd91f302774f6d6c4159ae))
+* rename method ([d8a88cf](https://github.com/dxheroes/dx-scanner/commit/d8a88cfbcabaffb0a8dd48e102e0e91d6c4c24f2))
+* rename subcommand ([e939b9e](https://github.com/dxheroes/dx-scanner/commit/e939b9e1f26b7bd14f6bc79ac34a9e67292a21bd))
+* revert change ([b4b6497](https://github.com/dxheroes/dx-scanner/commit/b4b6497f2909aa1bbfd45129883af5e4afadb8da))
+* set arguments back to be required ([dc8edd6](https://github.com/dxheroes/dx-scanner/commit/dc8edd602f81da53bb14d3891a4c1f73824338ac))
+* typo ([19e8bd1](https://github.com/dxheroes/dx-scanner/commit/19e8bd1ecbe785d1c6e47b2e91160742654e101c))
+
+
+### Features
+
+* **core:** CLI changed to multi-command ([cbf03b0](https://github.com/dxheroes/dx-scanner/commit/cbf03b016d6569c10638c9177a96cfaa962dcc77))
+* add two subcommands ([9661d6b](https://github.com/dxheroes/dx-scanner/commit/9661d6b40f348cc66cef7b64fa033e65e851c935))
+* convert init flag to subcommand ([9594d3a](https://github.com/dxheroes/dx-scanner/commit/9594d3ae7183d95eca7de2a68784bde27d4084bd))
+* implement method to get practices ([871f7f2](https://github.com/dxheroes/dx-scanner/commit/871f7f2bb3ca950c6313afc8b04baed3f2aa3301))
+* list practices in a table ([9d8a8f6](https://github.com/dxheroes/dx-scanner/commit/9d8a8f69b0f88f41052e46bd485a6d3c9abd97a1))
+* wip - add subcommand ([6c33fc4](https://github.com/dxheroes/dx-scanner/commit/6c33fc4f7fa4761cbbdd00a4a1f668f7aaabb572))
+
+
+### BREAKING CHANGES
+
+* **core:** now exists commands such as init, practices and run
+
+# [1.38.0](https://github.com/dxheroes/dx-scanner/compare/v1.37.1...v1.38.0) (2020-01-27)
+
+
+### Bug Fixes
+
+* added java testing practice to index ([cf4e762](https://github.com/dxheroes/dx-scanner/commit/cf4e762235d76e53e94efdf3ad19edcff0fd9d2c))
+* resolved merge conflicts ([94b7aeb](https://github.com/dxheroes/dx-scanner/commit/94b7aeb5173e01d32af338034b19ce200f87f5d7))
+
+
+### Features
+
+* add CLI fix flag ([7673350](https://github.com/dxheroes/dx-scanner/commit/7673350b56702fa47fb57ea85cba7eb414ae2a49))
+* add fix interface to Practice ([7340d8e](https://github.com/dxheroes/dx-scanner/commit/7340d8ede3850676de9bd7ced9dfad674254ad0d))
+* implement fix for EsLintWithoutErrors ([6b0d5c8](https://github.com/dxheroes/dx-scanner/commit/6b0d5c87ec87adacc71728f96c2c3d1ea4ac164f))
+* java logger used practice ([26a4754](https://github.com/dxheroes/dx-scanner/commit/26a47540031db72dbe0f970842544bb7eedb1fa7))
+* java practice for detecting test mock frameworks ([0453a03](https://github.com/dxheroes/dx-scanner/commit/0453a0394c8e45cc41828512ee059191256dfce1))
+* java practices that check testing frameworks ([0913ca1](https://github.com/dxheroes/dx-scanner/commit/0913ca1245eb013048bf1363a342c430435bbb9d))
+* run fix only when flag provided ([5fee2ae](https://github.com/dxheroes/dx-scanner/commit/5fee2ae5ee31bd13db1cf8bfb59289aa8c6c8017))
+* run fixes for all failed practices ([6c8d7a9](https://github.com/dxheroes/dx-scanner/commit/6c8d7a9d4181b921234b1fe5e5630b431ed017a7))
+* test for mocking frameworks practice ([ea6b972](https://github.com/dxheroes/dx-scanner/commit/ea6b972819ed5a7f618038bd8ccdb38826377c65))
+
+## [1.37.1](https://github.com/dxheroes/dx-scanner/compare/v1.37.0...v1.37.1) (2020-01-27)
+
+
+### Bug Fixes
+
+* **deps:** update dependency cross-env to v7 ([5698c32](https://github.com/dxheroes/dx-scanner/commit/5698c324e0224e1d2c3287e6fc48f82b985cfdc2))
+* **deps:** update dependency cross-env to v7 ([#223](https://github.com/dxheroes/dx-scanner/issues/223)) ([449613c](https://github.com/dxheroes/dx-scanner/commit/449613c67275c43c316a53af4fb3b05868d512e7))
+
+# [1.37.0](https://github.com/dxheroes/dx-scanner/compare/v1.36.0...v1.37.0) (2020-01-23)
+
+
+### Bug Fixes
+
+* isApplicable tests for different languages ([6147ef5](https://github.com/dxheroes/dx-scanner/commit/6147ef52257b96ebc06670a8f4ce408a9b32e385))
+* return statement to apply only for JS & TS ([bf15e8d](https://github.com/dxheroes/dx-scanner/commit/bf15e8d33a2659b3ad5466e73e89522c0f00a2cf))
+* **java:** fixed logic package management used practice ([2255485](https://github.com/dxheroes/dx-scanner/commit/2255485bfa1c124c87a4ec3763f034297e0e5cb8))
+* **java:** restrict practice application to only Java & updated tests ([85b36b0](https://github.com/dxheroes/dx-scanner/commit/85b36b0204123b84c590c0863ab7a6e253d38a39))
+
+
+### Features
+
+* **java:** package management used practice ([e7063dc](https://github.com/dxheroes/dx-scanner/commit/e7063dcd9ca94fe675145c0e83c7b0865cca6e69))
+* **java:** package management used practice ([#213](https://github.com/dxheroes/dx-scanner/issues/213)) ([401d706](https://github.com/dxheroes/dx-scanner/commit/401d7065a756a1e2a5b0c8f7897d1aaa75ac5011))
+
+# [1.36.0](https://github.com/dxheroes/dx-scanner/compare/v1.35.3...v1.36.0) (2020-01-21)
+
+
+### Bug Fixes
+
+* add filtering and pagination in getIssues() ([e4b1cf5](https://github.com/dxheroes/dx-scanner/commit/e4b1cf57b11cd53bf674d68dd2cda09fe8bf7508))
+* add state to params and delete commented code ([f9e1877](https://github.com/dxheroes/dx-scanner/commit/f9e1877e68ce3d8da9e9dd6bf045ef67ec3987c8))
+* allow user to pass more than one issue state ([5c06622](https://github.com/dxheroes/dx-scanner/commit/5c0662288ae543be40bb394e8258888671d574e5))
+* failing ESLintWithoutErrosPractie by gettting right path ([088fe62](https://github.com/dxheroes/dx-scanner/commit/088fe622505ad58cc0740d165f82414ce998bc4b))
+* import from right files ([295f196](https://github.com/dxheroes/dx-scanner/commit/295f19620892afda40d871e9978047c9b7b79c84))
+* return undefined if state is not defined ([dd321de](https://github.com/dxheroes/dx-scanner/commit/dd321de5fd0ff0246dcafde858fa34e2d8eb96bf))
+* split getIssueState to two methods according to used service ([fa61acc](https://github.com/dxheroes/dx-scanner/commit/fa61acc3da6c1d38e2a2fc40ff1bf360aef735d8))
+* use BitbucketIssueState instead of BitbucketPullRequestState; use q as queryParams according to Bitbucket API filtering ([d2a413f](https://github.com/dxheroes/dx-scanner/commit/d2a413f98a33e71e516f627cba542435326eea2f))
+* use new method for getting state ([a08d0e0](https://github.com/dxheroes/dx-scanner/commit/a08d0e0af64570c1c6d3ac19b42d265a9d453b4d))
+* wip get issue state without quotes, fix passing array of states ([165bb8c](https://github.com/dxheroes/dx-scanner/commit/165bb8cba9976d881da8c7779dcf94e36d4168dd))
+
+
+### Features
+
+* add BitbucketIssueState enum ([f46cfc1](https://github.com/dxheroes/dx-scanner/commit/f46cfc17cd5a246f2c28fee323353f861e171fbe))
+* implement getIssueState() ([98a677b](https://github.com/dxheroes/dx-scanner/commit/98a677b414c8a774e7a4dd039bdbc2839777b539))
+
+## [1.35.3](https://github.com/dxheroes/dx-scanner/compare/v1.35.2...v1.35.3) (2020-01-21)
+
+
+### Bug Fixes
+
+* change id to number ([5fccdf9](https://github.com/dxheroes/dx-scanner/commit/5fccdf9deab6f5816f6fc26535a2d1115b55337a))
+* increase default allowed number of changes ([c3e4ef4](https://github.com/dxheroes/dx-scanner/commit/c3e4ef45b0247c97fccb67db30635e0562fb248e))
+* save the right value to the id (prNumber) ([3533026](https://github.com/dxheroes/dx-scanner/commit/35330268664d395c50d3af57e6c44d1d21bc8167))
+* suggestion text ([8ad09e0](https://github.com/dxheroes/dx-scanner/commit/8ad09e03f289582a96eea8a38ef5c4e4cba3aed7))
+* tests according to change id value ([739354f](https://github.com/dxheroes/dx-scanner/commit/739354ffe4988ddcafdd8c680ac164f71046ae31))
+
+## [1.35.2](https://github.com/dxheroes/dx-scanner/compare/v1.35.1...v1.35.2) (2020-01-20)
+
+
+### Bug Fixes
+
+* **deps:** update all non-major dependencies ([8cf77f4](https://github.com/dxheroes/dx-scanner/commit/8cf77f4299b0c78e7d229758438aead98fcdd5f9))
+
 ## [1.35.1](https://github.com/dxheroes/dx-scanner/compare/v1.35.0...v1.35.1) (2020-01-16)
 
 

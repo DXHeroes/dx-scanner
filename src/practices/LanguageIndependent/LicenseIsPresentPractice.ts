@@ -9,7 +9,7 @@ import { PracticeContext } from '../../contexts/practice/PracticeContext';
   impact: PracticeImpact.medium,
   suggestion: 'Add a license to your repository to let others know what they can and can not do with your code.',
   reportOnlyOnce: true,
-  url: 'https://choosealicense.com/licenses/',
+  url: 'https://dxkb.io/p/license-in-repository',
 })
 export class LicenseIsPresentPractice implements IPractice {
   async isApplicable(): Promise<boolean> {

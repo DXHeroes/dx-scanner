@@ -6,7 +6,14 @@ export class ReporterData {
     const tableData = data.map(Object.values);
 
     tableData.unshift(headers);
-    return tableLib(tableData, { ...{ border: getBorderCharacters('norc'), singleLine: true }, ...userConfig });
+    return tableLib(tableData, {
+      ...{
+        border: getBorderCharacters('norc'),
+        singleLine: false,
+        drawHorizontalLine: (i) => i === 1 || i === 0 || i === tableData.length,
+      },
+      ...userConfig,
+    });
   };
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any

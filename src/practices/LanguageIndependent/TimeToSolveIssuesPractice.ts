@@ -27,7 +27,7 @@ export class TimeToSolveIssuesPractice implements IPractice {
     const ownerAndRepoName = GitServiceUtils.getOwnerAndRepoName(repoName);
 
     //Both GitHub API and Bitbucket API returns open issues by default
-    const issues = await ctx.issueTrackingInspector.getIssues(ownerAndRepoName.owner, ownerAndRepoName.repoName);
+    const issues = await ctx.issueTrackingInspector.listIssues(ownerAndRepoName.owner, ownerAndRepoName.repoName);
     const latestIssueUpdate = issues.items.map((item) => moment(item.updatedAt || item.createdAt));
 
     const dateInPast = moment().subtract(30, 'd');

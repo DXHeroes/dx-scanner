@@ -1,5 +1,4 @@
 import { CollaborationInspector } from './CollaborationInspector';
-import nock from 'nock';
 import { TestContainerContext } from '../inversify.config';
 import { createTestContainer } from '../inversify.config';
 import { GitHubNock } from '../test/helpers/gitHubNock';
@@ -12,10 +11,11 @@ import {
   getPullCommitsServiceResponse,
 } from '../services/git/__MOCKS__/gitHubServiceMockFolder';
 import { Types } from '../types';
-import { BitbucketService, BitbucketPullRequestState } from '../services';
+import { BitbucketService } from '../services';
 import { BitbucketNock } from '../test/helpers/bitbucketNock';
 import { PullRequestState } from '.';
 import { bitbucketPullRequestResponseFactory } from '../test/factories/responses/bitbucket/prResponseFactory';
+import { BitbucketPullRequestState } from '../services/bitbucket/IBitbucketService';
 
 describe('Collaboration Inspector', () => {
   let inspector: CollaborationInspector;
@@ -28,13 +28,12 @@ describe('Collaboration Inspector', () => {
 
   beforeEach(async () => {
     inspector = <CollaborationInspector>containerCtx.practiceContext.collaborationInspector;
-    nock.cleanAll();
   });
 
   it('returns paginated pull requests', async () => {
     new GitHubNock('1', 'octocat', 1296269, 'Hello-World').getPulls({
       pulls: [
-        { number: 1347, state: 'open', title: 'new-feature', body: 'Please pull these awesome changes', head: 'new-topic', base: 'master' },
+        { number: 1, state: 'open', title: 'new-feature', body: 'Please pull these awesome changes', head: 'new-topic', base: 'master' },
       ],
     });
 

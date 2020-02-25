@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/camelcase */
-import Octokit from '@octokit/rest';
+import { Octokit } from '@octokit/rest';
 import Debug from 'debug';
 import { inject, injectable } from 'inversify';
 import { inspect, isArray } from 'util';
@@ -31,6 +31,7 @@ import {
 } from './model';
 import { VCSServicesUtils } from './VCSServicesUtils';
 import { ArgumentsProvider } from '../../scanner';
+import { IssueState } from '../../inspectors/IIssueTrackingInspector';
 const debug = Debug('cli:services:git:github-service');
 
 @injectable()
@@ -93,7 +94,7 @@ export class GitHubService implements IVCSService {
           closedAt: val.closed_at,
           mergedAt: val.merged_at,
           state: val.state,
-          id: val.id,
+          id: val.number, // Lists details of a pull request by providing its number. - https://developer.github.com/v3/pulls/
           base: {
             repo: {
               url: val.base.repo.url,
@@ -105,7 +106,7 @@ export class GitHubService implements IVCSService {
         };
         // Get number of changes, additions and deletions in PullRequest if the withDiffStat is true
         if (options?.withDiffStat) {
-          const lines = await this.getPullsDiffStat(owner, repo, val.id);
+          const lines = await this.getPullsDiffStat(owner, repo, val.number);
           return { ...pullRequest, lines };
         }
         return pullRequest;
@@ -136,7 +137,7 @@ export class GitHubService implements IVCSService {
       closedAt: response.data.closed_at,
       mergedAt: response.data.merged_at,
       state: response.data.state,
-      id: response.data.id,
+      id: response.data.number, // Lists details of a pull request by providing its number. - https://developer.github.com/v3/pulls/
       base: {
         repo: {
           url: response.data.base.repo.url,
@@ -362,10 +363,12 @@ export class GitHubService implements IVCSService {
   /**
    * List all issues in the repo.
    */
-  async listIssues(owner: string, repo: string, options?: ListGetterOptions): Promise<Paginated<Issue>> {
+  async listIssues(owner: string, repo: string, options?: ListGetterOptions<{ state?: IssueState }>): Promise<Paginated<Issue>> {
     const params: Octokit.IssuesListForRepoParams = { owner, repo };
+    const state = VCSServicesUtils.getGithubIssueState(options?.filter?.state);
     if (options?.pagination?.page) params.page = options.pagination.page;
     if (options?.pagination?.perPage) params.per_page = options.pagination.perPage;
+    if (state) params.state = state;
 
     const { data } = await this.unwrap(this.client.issues.listForRepo(params));
 

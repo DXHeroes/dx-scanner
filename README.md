@@ -14,7 +14,20 @@
 [![oclif](https://img.shields.io/badge/cli-oclif-brightgreen.svg)](https://oclif.io)
 ![TypeScript](https://img.shields.io/badge/%3C%2F%3E-Typescript-blue)
 
-DX Scanner is an open source CLI tool that allows you to “measure” Developer Experience directly based on your source code. DX Scanner recommends practices that can help you with improving your product development.
+DX Scanner is an open source CLI tool that allows you to “measure” Developer Experience directly based on your source code. DX Scanner recommends practices that can help you with improving your product development. You can fix some problems automatically with just one command.
+
+<!-- toc -->
+* [Getting Started](#Getting-Started)
+  * [Installation](#Installation)
+  * [Usage](#Usage)
+    * [Commands](#Commands)
+    * [Options for dx-scanner run`](#options-for-dx-scanner-run)
+    * [Auto-fixer](#Auto-fixer)
+* [Supported Languages](#What-language-is-supported)
+* [Configuration](#Configuration-⚙️)
+  * [Practices](#Practices)
+  * [GitHub CI Action](#GitHub-Ci-Action)
+<!-- tocstop -->
 
 ![DX Scanner Demo](./demo.svg)
 
@@ -24,12 +37,13 @@ DX Scanner is an open source CLI tool that allows you to “measure” Developer
 Language | Supported
 ------------ | -------------
 JavaScript/TypeScript | ✅
-Java | ✅
+Java/Kotlin | ✅
 Python | 🚧
 PHP | 🚧
 C++ | 🚧
 C# | 🚧
 Ruby | 🚧
+
 
 ## Getting Started 🏁
 
@@ -43,38 +57,117 @@ Ruby | 🚧
   ```yarn global add dx-scanner```
 
 ### Usage
+<!--
+Quick start
+-->
+```
+  dx-scanner run [path] [options]
+```
+
+Example:
+```
+  dx-scanner run https://github.com/DXHeroes/dx-scanner
+```
+
+<!--
+Help for command dxs
+-->
+#### Commands
+```
+Usage: dx-scanner [command] [options] 
+
+Options:
+  -V, --version         output the version number
+  -h, --help            output usage information
+
+Commands:
+  run [options] [path]  Scan your project for possible DX recommendations
+  init                  Initialize DX Scanner configuration
+  practices [options]   List all practices id with name and impact
+
+Aliases:
+  dxs
+  dxscanner
+```
+
+#### Options for `dx-scanner run`
 
 ```
-Scan your project for possible DX recommendations.
+Usage: dx-scanner run [path] [options]
 
-USAGE
-  $ dx-scanner [PATH] [OPTIONS]
+Scan your project for possible DX recommendations
 
-OPTIONS
-  -a, --authorization=authorization  Credentials to the repository. (in format "token" or "username:token"; can be set as ENV variable DX_GIT_SERVICE_TOKEN)
-  -h, --help                         Help
-  -i, --init                         Initialize DX Scanner configuration
-  -j, --json                         Print report in JSON
-  -r, --recursive                    Scan all components recursively in all sub folders
-  -v, --version                      Output the version number
-  --ci                               CI mode
-  --fail=high|medium|small|off|all   [default: high] Run scanner in failure mode. Exits process with code 1 for any non-practicing condition of given level.
+Options:
+  -a --authorization <authorization>  credentials to the repository (in format "token" or "username:token"; can be set as ENV variable DX_GIT_SERVICE_TOKEN)
+  --ci                                CI mode (default: false)
+  -d --details                        print details in reports
+  --fail <impact>                     exits process with code 1 for any non-practicing condition of given level (high|medium|small|hint|off|all) (default: "high")
+  --fix                               tries to fix problems automatically (default: false)
+  --fixPattern <pattern>              fix only rules with IDs matching the regex
+  -j --json                           print report in JSON (default: false)
+  -r --recursive                      scan all components recursively in all sub folders (default: false)
+  -h, --help                          output usage information
 
-ALIASES
-  $ dx-scanner dxs
-  $ dx-scanner dxscanner
-
-EXAMPLES
-  dx-scanner
-  dx-scanner ./ --fail=high
-  dx-scanner github.com/DXHeroes/dx-scanner
+Examples:
+  dx-scanner run
+  dx-scanner run ./ --fail=high
+  dx-scanner run github.com/DXHeroes/dx-scanner
 ```
+</details>
+
+#### Auto-fixer
+
+Fix problems detected by DX Scanner automatically.
+```
+dx-scanner run [PATH] --fix
+```
+
 
 ## Configuration ⚙️
-Add ```dxscannerrc.*``` config file to change default configuration settings. It can be a ```.json```, ```.yml```, and even a dotfile!
+Add ```dxscannerrc.*``` config file to change default configuration settings. It can be a ```.json```, ```.yml```, or even a dotfile!
 
-**Practices**  
-You can switch off practices you do not want to scan or change their impact. Use the id of the practice.
+You can also run ```dx-scanner init``` to initialize config automatically.
+
+### Practices   
+You can switch off practices that you do not want to scan or you can change their impact level. To do so, refer to the id of the practice.
+
+<details>
+<summary>List of All Practices 🔍</summary>
+
+Practice | Impact | Language Independent | JavaScript/TypeScript | Java/Kotlin
+------------- | ------------- | ------------- | ------------- | ------------- 
+Create a Readme File | <span style="color:red">high</span> | ✅ | ✅ | ✅
+Create a License File | <span style="color:yellow">medium</span> | ✅ | ✅ | ✅
+Create a Lockfile | <span style="color:red">high</span> | ✅ | ✅ | ✅
+Create a .gitignore | <span style="color:red">high</span> | ✅ | ✅ | ✅
+Write in Typescript | <span style="color:yellow">medium</span> | ❌ | ✅ | ❌
+Set .gitignore Correctly | <span style="color:red">high</span> | ❌ | ✅ | ✅
+Use Continuous Integration | <span style="color:red">high</span> | ✅ | ✅ | ✅
+Use Docker | <span style="color:green">small</span> | ✅ | ✅ | ✅
+Use .editorconfig | <span style="color:green">small</span> | ✅ | ✅ | ✅
+Format your code automatically | <span style="color:green">small</span> | ❌ | ✅ | ❌
+Use ESLint | <span style="color:yellow">medium</span> | ❌ | ✅ | ❌
+ESLint Without Errors | <span style="color:yellow">medium</span> | ❌ | ✅ | ❌
+Use a different linter | <span style="color:yellow">medium</span> | ❌ | ✅ | ❌
+Use JS Frontend Testing Framework | <span style="color:yellow">medium</span> | ❌ | ✅ | ❌
+Use JS Frontend Build Tools | <span style="color:yellow">medium</span> | ❌ | ✅ | ❌
+Use JS Backend Testing Frameworks | <span style="color:red">high</span> | ❌ | ✅ | ❌
+Use a JS Logging Library | <span style="color:green">small</span> | ❌ | ✅ | ❌
+Use Package Management | <span style="color:red">high</span> | ❌ | ✅ | ✅
+Configure Scripts in package.json | <span style="color:yellow">medium</span> | ❌ | ✅ | ❌
+Update Dependencies of Major Level | <span style="color:green">small</span> | ❌ | ✅ | ✅ 
+Update Dependencies of Minor and Patch Level | <span style="color:red">high</span> | ❌  | ✅ | ✅ 
+Do PullRequests | <span style="color:yellow">medium</span> | ✅ | ✅ | ✅
+Break down large pull requests into smaller ones | <span style="color:yellow">medium</span> | ✅ | ✅ | ✅
+Solve Pull Requests Continuously | <span style="color:yellow">medium</span> | ✅ | ✅ | ✅
+Solve Issues Continuously | <span style="color:yellow">medium</span> | ✅ | ✅ | ✅
+Write Commit Messages by Convention | <span style="color:green">small</span> | ✅ | ✅ | ✅
+Use Mocking Frameworks for Tests  | <span style="color:green">small</span> | ✅ | ✅ | ✅
+Use Testing Frameworks | <span style="color:red">high</span> | ❌ | ❌ | ✅
+Use a Java Logging Dependency | <span style="color:green">small</span> | ❌ | ❌ | ✅
+Use Java Class Naming Convention | <span style="color:green">small</span> | ❌ | ❌ | ✅
+Security vulnerabilities detected | <span style="color:red">high</span> | ❌ | ✅ | ❌
+</details>
 
 Possible impact:
 ```
@@ -89,12 +182,17 @@ hint
 off
 ```
 
-Example :
-```
+Example `dxscannerrc.json`:
+
+```json
+
 {
     "practices": {
         "JavaScript.GitignoreCorrectlySet": "medium",
-        "JavaScript.LoggerUsed": "off"
+        "JavaScript.LoggerUsed": "off",
+        "LanguageIndependent.DoesPullRequests": {
+          "impact": "small"
+        }
     }
 }
 ```
@@ -122,7 +220,7 @@ jobs:
 [Generate your Github personal token](https://github.com/settings/tokens/new) and [set it as an encrypted secret](https://help.github.com/en/actions/automating-your-workflow-with-github-actions/creating-and-using-encrypted-secrets) named `GITHUB_TOKEN`.
 
 ## Score Computation 💯
-Impact of each practice is represented by a specific value. DX Scanner uses the values to count the overall DX Score.
+The impact of each practice is represented by a specific value. DX Scanner uses these values to calculate the overall DX Score.
 
 ```
 high = 100 points
@@ -152,11 +250,13 @@ Many thanks to these wonderful people ([emoji key](https://allcontributors.org/d
 <!-- markdownlint-disable -->
 <table>
   <tr>
-    <td align="center"><a href="https://github.com/prokopsimek"><img src="https://avatars2.githubusercontent.com/u/5487217?v=4" width="100px;" alt="Prokop Simek"/><br /><sub><b>Prokop Simek</b></sub></a><br /><a href="https://github.com/DXHeroes/dx-scanner/commits?author=prokopsimek" title="Code">💻</a> <a href="#maintenance-prokopsimek" title="Maintenance">🚧</a></td>
-    <td align="center"><a href="https://github.com/adelkahomolova"><img src="https://avatars2.githubusercontent.com/u/53510747?v=4" width="100px;" alt="adelkah"/><br /><sub><b>adelkah</b></sub></a><br /><a href="https://github.com/DXHeroes/dx-scanner/commits?author=adelkahomolova" title="Code">💻</a> <a href="#maintenance-adelkahomolova" title="Maintenance">🚧</a></td>
-    <td align="center"><a href="https://github.com/radektheloner"><img src="https://avatars3.githubusercontent.com/u/7268060?v=4" width="100px;" alt="Radek Holý"/><br /><sub><b>Radek Holý</b></sub></a><br /><a href="https://github.com/DXHeroes/dx-scanner/commits?author=radektheloner" title="Code">💻</a></td>
-    <td align="center"><a href="http://www.applifting.cz"><img src="https://avatars2.githubusercontent.com/u/346066?v=4" width="100px;" alt="Vratislav Kalenda"/><br /><sub><b>Vratislav Kalenda</b></sub></a><br /><a href="https://github.com/DXHeroes/dx-scanner/commits?author=Vratislav" title="Code">💻</a> <a href="#ideas-Vratislav" title="Ideas, Planning, & Feedback">🤔</a></td>
-    <td align="center"><a href="http://www.petrvnenk.com"><img src="https://avatars2.githubusercontent.com/u/1933654?v=4" width="100px;" alt="Petr Vnenk"/><br /><sub><b>Petr Vnenk</b></sub></a><br /><a href="https://github.com/DXHeroes/dx-scanner/commits?author=vnenkpet" title="Code">💻</a></td>
+    <td align="center"><a href="https://github.com/prokopsimek"><img src="https://avatars2.githubusercontent.com/u/5487217?v=4" width="100px;" alt=""/><br /><sub><b>Prokop Simek</b></sub></a><br /><a href="https://github.com/DXHeroes/dx-scanner/commits?author=prokopsimek" title="Code">💻</a> <a href="#maintenance-prokopsimek" title="Maintenance">🚧</a></td>
+    <td align="center"><a href="https://github.com/adelkahomolova"><img src="https://avatars2.githubusercontent.com/u/53510747?v=4" width="100px;" alt=""/><br /><sub><b>adelkah</b></sub></a><br /><a href="https://github.com/DXHeroes/dx-scanner/commits?author=adelkahomolova" title="Code">💻</a> <a href="#maintenance-adelkahomolova" title="Maintenance">🚧</a></td>
+    <td align="center"><a href="https://github.com/radektheloner"><img src="https://avatars3.githubusercontent.com/u/7268060?v=4" width="100px;" alt=""/><br /><sub><b>Radek Holý</b></sub></a><br /><a href="https://github.com/DXHeroes/dx-scanner/commits?author=radektheloner" title="Code">💻</a></td>
+    <td align="center"><a href="http://www.applifting.cz"><img src="https://avatars2.githubusercontent.com/u/346066?v=4" width="100px;" alt=""/><br /><sub><b>Vratislav Kalenda</b></sub></a><br /><a href="https://github.com/DXHeroes/dx-scanner/commits?author=Vratislav" title="Code">💻</a> <a href="#ideas-Vratislav" title="Ideas, Planning, & Feedback">🤔</a></td>
+    <td align="center"><a href="http://www.petrvnenk.com"><img src="https://avatars2.githubusercontent.com/u/1933654?v=4" width="100px;" alt=""/><br /><sub><b>Petr Vnenk</b></sub></a><br /><a href="https://github.com/DXHeroes/dx-scanner/commits?author=vnenkpet" title="Code">💻</a></td>
+    <td align="center"><a href="https://github.com/ryzzaki"><img src="https://avatars1.githubusercontent.com/u/31356058?v=4" width="100px;" alt=""/><br /><sub><b>Cuong Nguyen</b></sub></a><br /><a href="https://github.com/DXHeroes/dx-scanner/commits?author=ryzzaki" title="Code">💻</a></td>
+    <td align="center"><a href="https://github.com/vlasy"><img src="https://avatars3.githubusercontent.com/u/13099178?v=4" width="100px;" alt=""/><br /><sub><b>vlasy</b></sub></a><br /><a href="https://github.com/DXHeroes/dx-scanner/commits?author=vlasy" title="Code">💻</a></td>
   </tr>
 </table>
 
