@@ -10,6 +10,7 @@ import { ScannerContextFactory, Types } from '../../types';
 import { bindLanguageContext } from '../language/languageContextBinding';
 import { ScannerContext } from './ScannerContext';
 import { BitbucketService } from '../../services/bitbucket/BitbucketService';
+import { PythonLanguageDetector } from '../../detectors/Python/PythonLanguageDetector';
 
 export const bindScanningContext = (container: Container) => {
   container.bind(Types.ScannerContextFactory).toFactory(
@@ -56,5 +57,5 @@ const bindFileAccess = (scanningStrategy: ScanningStrategy, container: Container
 const bindLanguageDetectors = (container: Container) => {
   container.bind(Types.ILanguageDetector).to(JavaScriptLanguageDetector);
   container.bind(Types.ILanguageDetector).to(JavaLanguageDetector);
-  // container.bind(Types.ILanguageDetector).to(PythonLanguageDetector); // unbind until the Python is fully supported
+  container.bind(Types.ILanguageDetector).to(PythonLanguageDetector);
 };

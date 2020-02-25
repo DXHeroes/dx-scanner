@@ -11,6 +11,7 @@ import { LanguageContext } from './LanguageContext';
 import { CollaborationInspector } from '../../inspectors/CollaborationInspector';
 import { IssueTrackingInspector } from '../../inspectors/IssueTrackingInspector';
 import { PythonComponentDetector } from '../../detectors/Python/PythonComponentDetector';
+import { PythonPackageInspector } from '../../inspectors/package/PythonPackageInspector';
 
 export const bindLanguageContext = (container: Container) => {
   container.bind(Types.LanguageContextFactory).toFactory(
@@ -67,6 +68,17 @@ const bindPackageInspectors = (languageAtPath: LanguageAtPath, container: Contai
       .to(JavaPackageInspector)
       .inSingletonScope();
     container.bind(JavaPackageInspector).toDynamicValue((ctx) => {
+      return ctx.container.get(Types.IPackageInspector);
+    });
+    container.bind(Types.InitiableInspector).toDynamicValue((ctx) => {
+      return ctx.container.get(Types.IPackageInspector);
+    });
+  } else if (languageAtPath.language === ProgrammingLanguage.Python) {
+    container
+      .bind(Types.IPackageInspector)
+      .to(PythonPackageInspector)
+      .inSingletonScope();
+    container.bind(PythonPackageInspector).toDynamicValue((ctx) => {
       return ctx.container.get(Types.IPackageInspector);
     });
     container.bind(Types.InitiableInspector).toDynamicValue((ctx) => {
