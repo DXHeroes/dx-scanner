@@ -34,7 +34,7 @@ export default class Run {
     let scanResult = await scanner.scan();
 
     if (scanResult.needsAuth && !cmd.ci) {
-      authorization = await ScannerUtils.getAuthorization(scanPath, scanResult);
+      authorization = await ScannerUtils.promptAuthorization(scanPath, scanResult);
 
       const container = createRootContainer({
         uri: scanPath,

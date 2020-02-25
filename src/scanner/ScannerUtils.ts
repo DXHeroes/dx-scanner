@@ -147,7 +147,7 @@ export class ScannerUtils {
   /**
    * Prompt user to insert credentials to get authorization
    */
-  static async getAuthorization(scanPath: string, scanResult: ScanResult) {
+  static async promptAuthorization(scanPath: string, scanResult: ScanResult) {
     let promptMsg;
 
     if (ScanningStrategyDetectorUtils.isGitHubPath(scanPath) || scanResult.serviceType === ServiceType.github) {
