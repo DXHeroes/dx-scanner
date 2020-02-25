@@ -144,9 +144,7 @@ export class GitLabService implements IVCSService {
    */
   async getPullRequest(owner: string, repo: string, prNumber: number, withDiffStat?: boolean): Promise<PullRequest> {
     //TODO - to function
-    const parsedUrl = GitServiceUtils.parseGitlabUrl(this.argumentsProvider.uri);
 
-    const repoUrl = `${parsedUrl.host}/${owner}/${repo}`;
     let ownerInfo = (<any>await this.client.Users.all({ username: owner }))[0];
     if (!ownerInfo) {
       ownerInfo = <any>await this.client.Groups.show(owner);
@@ -170,11 +168,11 @@ export class GitLabService implements IVCSService {
       id: response.iid,
       base: {
         repo: {
-          url: repoUrl,
+          url: `${this.host}/${owner}/${repo}`,
           name: repo,
           id: response.project_id,
           owner: {
-            url: `${parsedUrl.host}/${owner}`,
+            url: `${this.host}/${owner}`,
             id: ownerInfo.id,
             login: ownerInfo.username,
           },
@@ -235,25 +233,8 @@ export class GitLabService implements IVCSService {
       pagination: options?.pagination,
       filter: { state },
     });
-    let userInfo, user: UserInfo;
 
-    // TODO to function
-    try {
-      userInfo = await this.customClient.Users.getUser(owner);
-
-      user = {
-        id: userInfo.data[0].id.toString(),
-        login: userInfo.data[0].username,
-        url: userInfo.data[0].web_url,
-      };
-    } catch (error) {
-      userInfo = await this.customClient.Users.getGroup(owner);
-      user = {
-        id: userInfo.data.id.toString(),
-        login: userInfo.data.name,
-        url: userInfo.data.web_url,
-      };
-    }
+    const user: UserInfo = await this.getUserInfo(owner);
 
     const items: Issue[] = data.map((val) => ({
       user: user,
@@ -442,8 +423,28 @@ export class GitLabService implements IVCSService {
     throw new Error('Method not implemented yet for GitLab.');
   }
 
+  private async getUserInfo(owner: string) {
+    let userInfo;
+    try {
+      userInfo = await this.customClient.Users.getUser(owner);
+
+      return {
+        id: userInfo.data[0].id.toString(),
+        login: userInfo.data[0].username,
+        url: userInfo.data[0].web_url,
+      };
+    } catch (error) {
+      userInfo = await this.customClient.Users.getGroup(owner);
+      return {
+        id: userInfo.data.id.toString(),
+        login: userInfo.data.name,
+        url: userInfo.data.web_url,
+      };
+    }
+  }
+
   //TODO interface for pagination
-  getPagination(pagination: PaginationGitLabCustomResponse) {
+  private getPagination(pagination: PaginationGitLabCustomResponse) {
     const hasNextPage = !!pagination.next;
     const hasPreviousPage = !!pagination.previous;
     const page = pagination.current;
