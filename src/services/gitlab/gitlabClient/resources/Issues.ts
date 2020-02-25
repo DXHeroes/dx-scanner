@@ -5,6 +5,7 @@ import { GitLabIssueState } from '../../IGitLabService';
 import { GitLabConstructor } from '../GitLabClient';
 import { CustomAxiosResponse, ListFilterOptions, parseResponse } from '../gitlabUtils';
 import { User } from './UsersOrGroups';
+import { TimeStats, TaskCompletionStatus } from './model';
 
 export class Issues extends GitLabConstructor {
   api = this.createAxiosInstance();
@@ -29,7 +30,7 @@ export class Issues extends GitLabConstructor {
     return parseResponse(response);
   }
 
-  async comments(projectId: string, issueIId: number, pagination?: PaginationParams): Promise<CustomAxiosResponse<IssueComment[]>> {
+  async listComments(projectId: string, issueIId: number, pagination?: PaginationParams): Promise<CustomAxiosResponse<IssueComment[]>> {
     const endpoint = `projects/${encodeURIComponent(projectId)}/issues/${issueIId}/notes`;
 
     const params = {
@@ -40,59 +41,6 @@ export class Issues extends GitLabConstructor {
     const response: AxiosResponse<IssueComment[]> = await this.api.get(endpoint, { params });
     return parseResponse(response);
   }
-}
-
-export interface IssueComment {
-  id: number;
-  body: string;
-  attachment?: any;
-  author: User;
-  created_at: Date;
-  updated_at: Date;
-  system: boolean;
-  noteable_id: number;
-  noteable_type: string;
-  noteable_iid: number;
-  resolvable: boolean;
-}
-
-export interface Milestone {
-  id: number;
-  iid: number;
-  group_id: number;
-  title: string;
-  description: string;
-  state: string;
-  created_at: Date;
-  updated_at: Date;
-  due_date: string;
-  start_date: string;
-  web_url: string;
-}
-
-export interface TimeStats {
-  time_estimate: number;
-  total_time_spent: number;
-  human_time_estimate?: any;
-  human_total_time_spent?: any;
-}
-
-export interface TaskCompletionStatus {
-  count: number;
-  completed_count: number;
-}
-
-export interface Links {
-  self: string;
-  notes: string;
-  award_emoji: string;
-  project: string;
-}
-
-export interface References {
-  short: string;
-  relative: string;
-  full: string;
 }
 
 export interface Issue {
@@ -129,4 +77,45 @@ export interface Issue {
   epic_iid?: any;
   epic?: any;
   task_status: string;
+}
+
+export interface IssueComment {
+  id: number;
+  body: string;
+  attachment?: any;
+  author: User;
+  created_at: Date;
+  updated_at: Date;
+  system: boolean;
+  noteable_id: number;
+  noteable_type: string;
+  noteable_iid: number;
+  resolvable: boolean;
+}
+
+export interface Milestone {
+  id: number;
+  iid: number;
+  group_id: number;
+  title: string;
+  description: string;
+  state: string;
+  created_at: Date;
+  updated_at: Date;
+  due_date: string;
+  start_date: string;
+  web_url: string;
+}
+
+export interface Links {
+  self: string;
+  notes: string;
+  award_emoji: string;
+  project: string;
+}
+
+export interface References {
+  short: string;
+  relative: string;
+  full: string;
 }
