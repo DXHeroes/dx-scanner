@@ -6,9 +6,12 @@ import { ErrorFactory } from '../lib/errors';
 import { PracticeImpact, PracticeEvaluationResult } from '../model';
 import { IPracticeWithMetadata } from '../practices/DxPracticeDecorator';
 import { IPractice } from '../practices/IPractice';
-import { PracticeWithContext } from './Scanner';
+import { PracticeWithContext, ScanResult } from './Scanner';
 import { PracticeWithContextForReporter } from '../reporters/IReporter';
 import { ArgumentsProvider } from '.';
+import { ScanningStrategyDetectorUtils } from '../detectors/utils/ScanningStrategyDetectorUtils';
+import { ServiceType } from '../detectors';
+import cli from 'cli-ux';
 
 /**
  * Scanner helpers & utilities
@@ -140,4 +143,27 @@ export class ScannerUtils {
   static sortAlphabetically = (practices: IPracticeWithMetadata[]) => {
     return practices.sort((a, b) => a.getMetadata().id.localeCompare(b.getMetadata().id));
   };
+
+  /**
+   * Prompt user to insert credentials to get authorization
+   */
+  static async getAuthorization(scanPath: string, scanResult: ScanResult) {
+    let authorization;
+    if (ScanningStrategyDetectorUtils.isGitHubPath(scanPath) || scanResult.serviceType === ServiceType.github) {
+      authorization = await cli.prompt('Insert your GitHub personal access token. https://github.com/settings/tokens\n', {
+        type: 'hide',
+      });
+    } else if (ScanningStrategyDetectorUtils.isBitbucketPath(scanPath) || scanResult.serviceType === ServiceType.bitbucket) {
+      authorization = await cli.prompt(
+        'Insert your Bitbucket credentials (in format "appPassword" or "username:appPasword"). https://confluence.atlassian.com/bitbucket/app-passwords-828781300.html\n',
+        { type: 'hide' },
+      );
+    } else if (ScanningStrategyDetectorUtils.isGitLabPath(scanPath) || scanResult.serviceType === ServiceType.gitlab) {
+      authorization = await cli.prompt(
+        'Insert your GitLab credentials (in format "private_token"). https://gitlab.com/profile/personal_access_tokens\n',
+        { type: 'hide' },
+      );
+    }
+    return authorization;
+  }
 }
