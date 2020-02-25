@@ -3,12 +3,12 @@
 import { AxiosResponse } from 'axios';
 import { ListGetterOptions, PaginationParams } from '../../../../inspectors';
 import { GitLabPullRequestState } from '../../IGitLabService';
-import { GitLabConstructor } from '../GitLabClient';
+import { GitLabClient } from '../GitLabClient';
 import { CustomAxiosResponse, parseResponse } from '../gitlabUtils';
 import { User } from './UsersOrGroups';
 import { TimeStats, TaskCompletionStatus } from './model';
 
-export class MergeRequests extends GitLabConstructor {
+export class MergeRequests extends GitLabClient {
   api = this.createAxiosInstance();
 
   /**

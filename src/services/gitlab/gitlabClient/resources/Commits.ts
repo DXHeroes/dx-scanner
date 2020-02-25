@@ -1,11 +1,11 @@
 /* eslint-disable @typescript-eslint/camelcase */
 import { AxiosResponse } from 'axios';
 import { PaginationParams } from '../../../../inspectors';
-import { GitLabConstructor } from '../GitLabClient';
+import { GitLabClient } from '../GitLabClient';
 import { CustomAxiosResponse, parseResponse } from '../gitlabUtils';
 import { Commit } from './MergeRequests';
 
-export class Commits extends GitLabConstructor {
+export class Commits extends GitLabClient {
   api = this.createAxiosInstance();
 
   async list(projectId: string, pagination?: PaginationParams): Promise<CustomAxiosResponse<Commit[]>> {

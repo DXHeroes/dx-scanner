@@ -1,9 +1,9 @@
 import { AxiosResponse } from 'axios';
-import { GitLabConstructor } from '../GitLabClient';
+import { GitLabClient } from '../GitLabClient';
 import { CustomAxiosResponse, parseResponse } from '../gitlabUtils';
 import { Links } from './model';
 
-export class Users extends GitLabConstructor {
+export class Users extends GitLabClient {
   api = this.createAxiosInstance();
 
   async getUser(userName: string): Promise<CustomAxiosResponse<User[]>> {

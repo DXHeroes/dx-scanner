@@ -2,12 +2,12 @@
 import { AxiosResponse } from 'axios';
 import { PaginationParams } from '../../../../inspectors';
 import { GitLabIssueState } from '../../IGitLabService';
-import { GitLabConstructor } from '../GitLabClient';
+import { GitLabClient } from '../GitLabClient';
 import { CustomAxiosResponse, ListFilterOptions, parseResponse } from '../gitlabUtils';
 import { User } from './UsersOrGroups';
 import { TimeStats, TaskCompletionStatus } from './model';
 
-export class Issues extends GitLabConstructor {
+export class Issues extends GitLabClient {
   api = this.createAxiosInstance();
 
   async list(projectId: string, options?: ListFilterOptions<{ state?: GitLabIssueState }>): Promise<CustomAxiosResponse<Issue[]>> {

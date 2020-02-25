@@ -2,7 +2,7 @@ import axios from 'axios';
 import { injectable } from 'inversify';
 
 @injectable()
-export class GitLabConstructor {
+export class GitLabClient {
   protected headers: { [header: string]: string };
   protected host: string;
   protected timeout: number;
