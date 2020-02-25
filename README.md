@@ -101,7 +101,7 @@ Usage: dx-scanner run [path] [options]
 Scan your project for possible DX recommendations
 
 Options:
-  -a --authorization <authorization>  credentials to the repository (in format "token" or "username:token"; can be set as ENV variable DX_GIT_SERVICE_TOKEN)
+  -a --authorization <authorization>  credentials to the repository (in format "token" or "username:token"; can be set as ENV variable DXSCANNER_GIT_SERVICE_TOKEN)
   --ci                                CI mode (default: false)
   -d --details                        print details in reports
   --fail <impact>                     exits process with code 1 for any non-practicing condition of given level (high|medium|small|hint|off|all) (default: "high")
