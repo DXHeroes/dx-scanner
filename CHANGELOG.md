@@ -1,3 +1,11 @@
+## [2.3.3](https://github.com/dxheroes/dx-scanner/compare/v2.3.2...v2.3.3) (2020-02-25)
+
+
+### Bug Fixes
+
+* adjusting practices & inspector for gradle/kotlin variation ([f57c097](https://github.com/dxheroes/dx-scanner/commit/f57c09796eafc5b7174bec4e66d51b055d4fb46b))
+* test suites readjusted for build.gradle.kts ([00acff1](https://github.com/dxheroes/dx-scanner/commit/00acff12549593c3a988abea227e74c062a481c6))
+
 ## [2.3.2](https://github.com/dxheroes/dx-scanner/compare/v2.3.1...v2.3.2) (2020-02-24)
 
 
