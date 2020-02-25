@@ -1,6 +1,8 @@
 import axios from 'axios';
 import { GitServiceUtils } from '../../services';
 import { has } from 'lodash';
+import debug from 'debug';
+const d = debug('ScanningStrategyDetectorUtils');
 
 export class ScanningStrategyDetectorUtils {
   static async isLocalPath(path: string): Promise<boolean> {
@@ -29,12 +31,13 @@ export class ScanningStrategyDetectorUtils {
       const response = await axios.create({ baseURL: `${parsedUrl.protocol}${parsedUrl.host}` }).get('/api/v4/version');
       return has(response.data, 'version') && has(response.data, 'revision');
     } catch (error) {
-      if (error.status === 401 || error.status === 404 || error.status === 403) {
+      if (error.status === 401 || error.status === 403) {
         // return undefined if we're not sure that the service is Gitlab
         //  - it prompts user for a credentials
         return undefined;
       }
-      throw error;
+      d(error.stack); //debug error
+      return false;
     }
   }
 

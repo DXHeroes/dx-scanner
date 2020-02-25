@@ -72,7 +72,9 @@ export class ScanningStrategyDetector implements IDetector<string, ScanningStrat
     //  (e.g. because of missing credentials for Gitlab)
     if ((await ScanningStrategyDetectorUtils.isGitLabPath(path)) === undefined) return undefined;
 
-    throw ErrorFactory.newInternalError('Unable to detect scanning strategy');
+    throw ErrorFactory.newInternalError(
+      `Unable to detect scanning strategy. It seems that the service is not implemented yet. (Input path: ${path})`,
+    );
   };
 
   private determineRemoteAccessType = async (remoteService: RemoteService): Promise<AccessType | undefined> => {
