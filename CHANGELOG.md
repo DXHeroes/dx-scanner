@@ -1,3 +1,10 @@
+# [2.4.0](https://github.com/dxheroes/dx-scanner/compare/v2.3.3...v2.4.0) (2020-02-25)
+
+
+### Features
+
+* upgrade TS dependencies ([cfa32ee](https://github.com/dxheroes/dx-scanner/commit/cfa32eeb770d9aea062b2789602ffd97d603bcc7))
+
 ## [2.3.3](https://github.com/dxheroes/dx-scanner/compare/v2.3.2...v2.3.3) (2020-02-25)
 
 
