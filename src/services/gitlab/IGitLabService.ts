@@ -1,5 +1,5 @@
 export enum GitLabPullRequestState {
-  open = 'active',
+  open = 'opened',
   closed = 'closed',
   merged = 'merged',
   all = 'all',
