@@ -31,6 +31,7 @@ import {
 } from '../git/model';
 import { VCSServicesUtils } from '../git/VCSServicesUtils';
 import { GitLabClient, PaginationGitLabCustomResponse } from './gitlabClient/gitlabUtils';
+import { GitLabPullRequestState } from './IGitLabService';
 const debug = Debug('cli:services:git:gitlab-service');
 
 @injectable()
@@ -78,61 +79,47 @@ export class GitLabService implements IVCSService {
   ): Promise<Paginated<PullRequest>> {
     const state = VCSServicesUtils.getGitLabPRState(options?.filter?.state);
 
-    const { data, pagination } = <any>await this.client.MergeRequests.all({
-      page: options?.pagination?.page,
-      per_page: options?.pagination?.perPage,
-      showPagination: true,
-
-      projectId: `${owner}/${repo}`,
-      state,
+    const { data, pagination } = await this.customClient.MergeRequests.list(`${owner}/${repo}`, {
+      pagination: options?.pagination,
+      filter: { state },
     });
 
-    const parsedUrl = GitServiceUtils.parseUrl(this.argumentsProvider.uri);
-    const repoUrl = `${parsedUrl.host}/${owner}/${repo}`;
-    let ownerInfo = (<any>await this.client.Users.all({ username: owner }))[0];
-    if (!ownerInfo) {
-      ownerInfo = <any>await this.client.Groups.show(owner);
-    }
+    const user = await this.getUserInfo(owner);
 
-    const items = await Promise.all(
-      <PullRequest[]>await Promise.all(
-        data.map(async (val: any) => {
-          const pullRequest = {
-            user: {
-              id: val.author.id,
-              login: val.author.username,
-              url: val.author.web_url,
+    const items: PullRequest[] = await Promise.all(
+      data.map(async (val) => {
+        const pullRequest = {
+          user: {
+            id: val.author.id.toString(),
+            login: val.author.username,
+            url: val.author.web_url,
+          },
+          url: val.web_url,
+          body: val.description,
+          createdAt: val.created_at.toString(),
+          updatedAt: val.updated_at.toString(),
+          closedAt: val.closed_at ? val.closed_at?.toString() : null,
+          mergedAt: val.merged_at ? val.merged_at?.toString() : null,
+          state: val.state,
+          id: val.iid, //id?
+          base: {
+            repo: {
+              url: `${this.host}/${owner}/${repo}`,
+              name: repo,
+              id: val.project_id.toString(),
+              owner: user,
             },
-            url: val.web_url,
-            body: val.desciption,
-            createdAt: val.created_at,
-            updatedAt: val.updated_at,
-            closedAt: val.closed_at,
-            state: val.state,
-            id: val.iid, //id?
-            base: {
-              repo: {
-                url: repoUrl,
-                name: repo,
-                id: val.project_id,
-                owner: {
-                  url: `${parsedUrl.host}/${owner}`,
-                  id: ownerInfo.id,
-                  login: ownerInfo.username,
-                },
-              },
-            },
-          };
-          // Get number of changes, additions and deletions in PullRequest if the withDiffStat is true
-          if (options?.withDiffStat) {
-            //TODO
-            // https://gitlab.com/gitlab-org/gitlab/issues/206904
-            const lines = await this.getPullsDiffStat(owner, repo, val.number);
-            return { ...pullRequest, lines };
-          }
-          return pullRequest;
-        }),
-      ),
+          },
+        };
+        // Get number of changes, additions and deletions in PullRequest if the withDiffStat is true
+        if (options?.withDiffStat) {
+          //TODO
+          // https://gitlab.com/gitlab-org/gitlab/issues/206904
+          const lines = await this.getPullsDiffStat(owner, repo, val.iid);
+          return { ...pullRequest, lines };
+        }
+        return pullRequest;
+      }),
     );
     const customPagination = this.getPagination(pagination);
 
