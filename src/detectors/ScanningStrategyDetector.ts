@@ -121,14 +121,14 @@ export class ScanningStrategyDetector implements IDetector<string, ScanningStrat
       const { owner, repoName } = GitServiceUtils.parseUrl(remoteService.remoteUrl);
 
       try {
-        const response = await this.gitLabService.getRepo(owner, repoName);
-        if (response.visibility === AccessType.private) {
+        const { data } = await this.gitLabService.getRepo(owner, repoName);
+        if (data.visibility === AccessType.private) {
           return AccessType.private;
         }
-        if (response.visibility === AccessType.public || (response && !response.visibility)) {
+        if (data.visibility === AccessType.public || (data && !data.visibility)) {
           return AccessType.public;
         }
-        if (!response) {
+        if (!data) {
           return AccessType.unknown;
         }
       } catch (error) {
