@@ -130,39 +130,29 @@ export class GitLabService implements IVCSService {
    * Get a single pull request.
    */
   async getPullRequest(owner: string, repo: string, prNumber: number, withDiffStat?: boolean): Promise<PullRequest> {
-    //TODO - to function
+    const { data } = await this.customClient.MergeRequests.get(`${owner}/${repo}`, prNumber);
+    const user = await this.getUserInfo(owner);
 
-    let ownerInfo = (<any>await this.client.Users.all({ username: owner }))[0];
-    if (!ownerInfo) {
-      ownerInfo = <any>await this.client.Groups.show(owner);
-    }
-
-    const response = <any>await this.client.MergeRequests.show(`${owner}/${repo}`, prNumber);
-
-    const pullRequest = {
+    const pullRequest: PullRequest = {
       user: {
-        id: response.author.id,
-        login: response.author.username,
-        url: response.author.web_url,
+        id: data.author.id.toString(),
+        login: data.author.username,
+        url: data.author.web_url,
       },
-      url: response.web_url,
-      body: response.desciption,
-      createdAt: response.created_at,
-      updatedAt: response.updated_at,
-      closedAt: response.closed_at,
-      mergedAt: response.merged_at,
-      state: response.state,
-      id: response.iid,
+      url: data.web_url,
+      body: data.description,
+      createdAt: data.created_at.toString(),
+      updatedAt: data.updated_at.toString(),
+      closedAt: data.closed_at ? data.closed_at?.toString() : null,
+      mergedAt: data.merged_at ? data.merged_at?.toString() : null,
+      state: data.state,
+      id: data.iid,
       base: {
         repo: {
           url: `${this.host}/${owner}/${repo}`,
           name: repo,
-          id: response.project_id,
-          owner: {
-            url: `${this.host}/${owner}`,
-            id: ownerInfo.id,
-            login: ownerInfo.username,
-          },
+          id: data.project_id.toString(),
+          owner: user,
         },
       },
     };
