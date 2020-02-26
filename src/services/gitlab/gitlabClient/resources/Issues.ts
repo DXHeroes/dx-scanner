@@ -6,6 +6,7 @@ import { GitLabClient } from '../GitLabClient';
 import { CustomAxiosResponse, ListFilterOptions, parseResponse } from '../gitlabUtils';
 import { User } from './UsersOrGroups';
 import { TimeStats, TaskCompletionStatus } from './model';
+import qs from 'qs';
 
 export class Issues extends GitLabClient {
   api = this.createAxiosInstance();
@@ -19,7 +20,12 @@ export class Issues extends GitLabClient {
       state: options?.filter?.state,
     };
 
-    const response: AxiosResponse<Issue[]> = await this.api.get(endpoint, { params });
+    const response: AxiosResponse<Issue[]> = await this.api.get(endpoint, {
+      params,
+      paramsSerializer: (params) => {
+        return qs.stringify(params, { arrayFormat: 'repeat', encode: false });
+      },
+    });
     return parseResponse(response);
   }
 

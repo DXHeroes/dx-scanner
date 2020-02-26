@@ -1,12 +1,13 @@
 /* eslint-disable @typescript-eslint/camelcase */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { AxiosResponse } from 'axios';
+import { AxiosResponse, AxiosRequestConfig } from 'axios';
 import { ListGetterOptions, PaginationParams } from '../../../../inspectors';
 import { GitLabPullRequestState } from '../../IGitLabService';
 import { GitLabClient } from '../GitLabClient';
 import { CustomAxiosResponse, parseResponse } from '../gitlabUtils';
 import { User } from './UsersOrGroups';
 import { TimeStats, TaskCompletionStatus } from './model';
+import qs from 'qs';
 
 export class MergeRequests extends GitLabClient {
   api = this.createAxiosInstance();
@@ -20,7 +21,7 @@ export class MergeRequests extends GitLabClient {
    */
   async list(
     projectId: string,
-    options?: ListGetterOptions<{ state?: GitLabPullRequestState }>,
+    options?: ListGetterOptions<{ state?: GitLabPullRequestState | GitLabPullRequestState[] }>,
   ): Promise<CustomAxiosResponse<MergeRequest[]>> {
     const endpoint = `projects/${encodeURIComponent(projectId)}/merge_requests`;
 
@@ -30,7 +31,12 @@ export class MergeRequests extends GitLabClient {
       state: options?.filter?.state,
     };
 
-    const response: AxiosResponse<MergeRequest[]> = await this.api.get(endpoint, { params });
+    const response: AxiosResponse<MergeRequest[]> = await this.api.get(endpoint, {
+      params,
+      paramsSerializer: (params) => {
+        return qs.stringify(params, { arrayFormat: 'repeat', encode: false });
+      },
+    });
     return parseResponse(response);
   }
 
