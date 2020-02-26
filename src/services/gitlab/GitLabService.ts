@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars, @typescript-eslint/camelcase */
 import { Response } from 'bitbucket/src/request/types';
 import Debug from 'debug';
-import { Gitlab } from 'gitlab';
 import { inject, injectable } from 'inversify';
 import { inspect } from 'util';
 import { IVCSService } from '..';
@@ -20,6 +19,7 @@ import {
   File,
   Issue,
   IssueComment,
+  Lines,
   PullCommits,
   PullFiles,
   PullRequest,
@@ -27,17 +27,14 @@ import {
   PullRequestReview,
   Symlink,
   UserInfo,
-  Lines,
 } from '../git/model';
 import { VCSServicesUtils } from '../git/VCSServicesUtils';
 import { GitLabClient, PaginationGitLabCustomResponse } from './gitlabClient/gitlabUtils';
-import { GitLabPullRequestState } from './IGitLabService';
 const debug = Debug('cli:services:git:gitlab-service');
 
 @injectable()
 export class GitLabService implements IVCSService {
-  private readonly customClient: GitLabClient;
-  private readonly client: Gitlab;
+  private readonly client: GitLabClient;
   private cache: ICache;
   private callCount = 0;
   private readonly argumentsProvider: ArgumentsProvider;
@@ -50,12 +47,7 @@ export class GitLabService implements IVCSService {
 
     this.cache = new InMemoryCache();
 
-    this.client = new Gitlab({
-      token: argumentsProvider.auth,
-      host: `${parsedUrl.protocol}://${this.host}`,
-    });
-
-    this.customClient = new GitLabClient({
+    this.client = new GitLabClient({
       token: argumentsProvider.auth,
       host: `${parsedUrl.protocol}://${this.host}`,
     });
@@ -66,7 +58,7 @@ export class GitLabService implements IVCSService {
   }
 
   getRepo(owner: string, repo: string) {
-    return this.customClient.Projects.get(`${owner}/${repo}`);
+    return this.client.Projects.get(`${owner}/${repo}`);
   }
 
   /**
@@ -79,7 +71,7 @@ export class GitLabService implements IVCSService {
   ): Promise<Paginated<PullRequest>> {
     const state = VCSServicesUtils.getGitLabPRState(options?.filter?.state);
 
-    const { data, pagination } = await this.customClient.MergeRequests.list(`${owner}/${repo}`, {
+    const { data, pagination } = await this.client.MergeRequests.list(`${owner}/${repo}`, {
       pagination: options?.pagination,
       filter: { state },
     });
@@ -130,7 +122,7 @@ export class GitLabService implements IVCSService {
    * Get a single pull request.
    */
   async getPullRequest(owner: string, repo: string, prNumber: number, withDiffStat?: boolean): Promise<PullRequest> {
-    const { data } = await this.customClient.MergeRequests.get(`${owner}/${repo}`, prNumber);
+    const { data } = await this.client.MergeRequests.get(`${owner}/${repo}`, prNumber);
     const user = await this.getUserInfo(owner);
 
     const pullRequest: PullRequest = {
@@ -171,12 +163,12 @@ export class GitLabService implements IVCSService {
   }
 
   async listPullCommits(owner: string, repo: string, prNumber: number, options?: ListGetterOptions): Promise<Paginated<PullCommits>> {
-    const { data, pagination } = await this.customClient.MergeRequests.listCommits(`${owner}/${repo}`, prNumber, options?.pagination);
+    const { data, pagination } = await this.client.MergeRequests.listCommits(`${owner}/${repo}`, prNumber, options?.pagination);
 
     const items = <PullCommits[]>await Promise.all(
       data.map(async (val) => {
-        //TODO use custom client
-        const commitDetail = <any>await this.client.Commits.show(`${owner}/${repo}`, val.id);
+        const commitDetail = await this.client.Commits.get(`${owner}/${repo}`, val.id);
+
         const commit = {
           sha: val.id,
           commit: {
@@ -188,8 +180,8 @@ export class GitLabService implements IVCSService {
               date: val.created_at.toString(),
             },
             tree: {
-              sha: commitDetail.parent_ids[0],
-              url: `${this.host}/${owner}/${repo}/merge_requests/${prNumber}/diffs?commit_id=${commitDetail.parent_ids[0]}`,
+              sha: commitDetail.data.parent_ids[0],
+              url: `${this.host}/${owner}/${repo}/merge_requests/${prNumber}/diffs?commit_id=${commitDetail.data.parent_ids[0]}`,
             },
             //TODO
             verified: false,
@@ -206,7 +198,7 @@ export class GitLabService implements IVCSService {
   async listIssues(owner: string, repo: string, options?: ListGetterOptions<{ state?: IssueState }>): Promise<Paginated<Issue>> {
     const state = VCSServicesUtils.getGitLabIssueState(options?.filter?.state);
 
-    const { data, pagination } = await this.customClient.Issues.list(`${owner}/${repo}`, {
+    const { data, pagination } = await this.client.Issues.list(`${owner}/${repo}`, {
       pagination: options?.pagination,
       filter: { state },
     });
@@ -229,7 +221,7 @@ export class GitLabService implements IVCSService {
   }
 
   async getIssue(owner: string, repo: string, issueNumber: number): Promise<Issue> {
-    const { data } = await this.customClient.Issues.get(`${owner}/${repo}`, issueNumber);
+    const { data } = await this.client.Issues.get(`${owner}/${repo}`, issueNumber);
 
     return {
       id: data.iid,
@@ -248,7 +240,7 @@ export class GitLabService implements IVCSService {
   }
 
   async listIssueComments(owner: string, repo: string, issueNumber: number): Promise<Paginated<IssueComment>> {
-    const { data, pagination } = await this.customClient.Issues.listComments(`${owner}/${repo}`, issueNumber);
+    const { data, pagination } = await this.client.Issues.listComments(`${owner}/${repo}`, issueNumber);
 
     const items = data.map((val) => ({
       user: {
@@ -274,7 +266,7 @@ export class GitLabService implements IVCSService {
   }
 
   async listRepoCommits(owner: string, repo: string, sha?: string, options?: ListGetterOptions): Promise<Paginated<Commit>> {
-    const { data, pagination } = await this.customClient.Commits.list(`${owner}/${repo}`);
+    const { data, pagination } = await this.client.Commits.list(`${owner}/${repo}`);
 
     const items = data.map((val) => {
       return {
@@ -301,7 +293,7 @@ export class GitLabService implements IVCSService {
   }
 
   async getCommit(owner: string, repo: string, commitSha: string): Promise<Commit> {
-    const { data } = await this.customClient.Commits.get(`${owner}/${repo}`, commitSha);
+    const { data } = await this.client.Commits.get(`${owner}/${repo}`, commitSha);
 
     return {
       sha: data.id,
@@ -330,7 +322,7 @@ export class GitLabService implements IVCSService {
     prNumber: number,
     options?: ListGetterOptions,
   ): Promise<Paginated<PullRequestComment>> {
-    const { data, pagination } = await this.customClient.MergeRequests.listComments(`${owner}/${repo}`, prNumber, options?.pagination);
+    const { data, pagination } = await this.client.MergeRequests.listComments(`${owner}/${repo}`, prNumber, options?.pagination);
 
     const items = data.map((val) => ({
       user: { id: val.author.id.toString(), login: val.author.username, url: val.author.web_url },
@@ -350,7 +342,7 @@ export class GitLabService implements IVCSService {
    * Add Comment to a Pull Request
    */
   async createPullRequestComment(owner: string, repo: string, prNumber: number, body: string): Promise<CreatedUpdatedPullRequestComment> {
-    const { data } = await this.customClient.MergeRequests.createComment(`${owner}/${repo}`, prNumber, body);
+    const { data } = await this.client.MergeRequests.createComment(`${owner}/${repo}`, prNumber, body);
 
     return {
       user: { id: `${data.author.id}`, login: data.author.username, url: data.author.web_url },
@@ -372,7 +364,7 @@ export class GitLabService implements IVCSService {
     body: string,
     pullRequestId: number,
   ): Promise<CreatedUpdatedPullRequestComment> {
-    const { data, pagination } = await this.customClient.MergeRequests.updateComment(`${owner}/${repo}`, pullRequestId, body, commentId);
+    const { data, pagination } = await this.client.MergeRequests.updateComment(`${owner}/${repo}`, pullRequestId, body, commentId);
 
     return {
       user: { id: `${data.author.id}`, login: data.author.username, url: data.author.web_url },
@@ -403,7 +395,7 @@ export class GitLabService implements IVCSService {
   private async getUserInfo(owner: string) {
     let userInfo;
     try {
-      userInfo = await this.customClient.Users.getUser(owner);
+      userInfo = await this.client.Users.getUser(owner);
 
       return {
         id: userInfo.data[0].id.toString(),
@@ -411,7 +403,7 @@ export class GitLabService implements IVCSService {
         url: userInfo.data[0].web_url,
       };
     } catch (error) {
-      userInfo = await this.customClient.Users.getGroup(owner);
+      userInfo = await this.client.Users.getGroup(owner);
       return {
         id: userInfo.data.id.toString(),
         login: userInfo.data.name,
