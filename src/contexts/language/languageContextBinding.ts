@@ -13,6 +13,7 @@ import { IssueTrackingInspector } from '../../inspectors/IssueTrackingInspector'
 import { PythonComponentDetector } from '../../detectors/Python/PythonComponentDetector';
 import { PythonPackageInspector } from '../../inspectors/package/PythonPackageInspector';
 import { PackageInspectorBase } from '../../inspectors/package/PackageInspectorBase';
+import { IProjectComponentDetector } from '../../detectors/IProjectComponentDetector';
 
 export const bindLanguageContext = (container: Container) => {
   container.bind(Types.LanguageContextFactory).toFactory(
@@ -61,26 +62,15 @@ const bindPackageInspectors = (languageAtPath: LanguageAtPath, container: Contai
 };
 
 const bindComponentDetectors = (container: Container) => {
-  container
-    .bind(Types.IProjectComponentDetector)
-    .to(JavaScriptComponentDetector)
-    .whenTargetTagged(DETECT_LANGUAGE_TAG, ProgrammingLanguage.JavaScript);
-  container
-    .bind(Types.IProjectComponentDetector)
-    .to(JavaScriptComponentDetector)
-    .whenTargetTagged(DETECT_LANGUAGE_TAG, ProgrammingLanguage.TypeScript);
-  container
-    .bind(Types.IProjectComponentDetector)
-    .to(JavaComponentDetector)
-    .whenTargetTagged(DETECT_LANGUAGE_TAG, ProgrammingLanguage.Java);
-  container
-    .bind(Types.IProjectComponentDetector)
-    .to(JavaComponentDetector)
-    .whenTargetTagged(DETECT_LANGUAGE_TAG, ProgrammingLanguage.Kotlin);
-  container
-    .bind(Types.IProjectComponentDetector)
-    .to(PythonComponentDetector)
-    .whenTargetTagged(DETECT_LANGUAGE_TAG, ProgrammingLanguage.Python);
+  const iterator = componentGenerator();
+  let current = iterator.next();
+  while (!current.done) {
+    container
+      .bind(Types.IProjectComponentDetector)
+      .to(current.value.componentDetector)
+      .whenTargetTagged(DETECT_LANGUAGE_TAG, current.value.detectedLanguage);
+    current = iterator.next();
+  }
 
   container.bind(Types.ProjectComponentDetectorFactory).toFactory((ctx) => {
     return getProjectComponentDetectorFactory(ctx.container as Container);
@@ -104,7 +94,6 @@ const resolveBindingPackageInspector = (packageInspector: { new (...args: any[])
     .bind(Types.IPackageInspector)
     .to(packageInspector)
     .inSingletonScope();
-
   // TODO: bind this as InitiableInspector instead of using next line binding
   container.bind(packageInspector).toDynamicValue((ctx) => {
     return ctx.container.get(Types.IPackageInspector);
@@ -112,6 +101,19 @@ const resolveBindingPackageInspector = (packageInspector: { new (...args: any[])
   container.bind(Types.InitiableInspector).toDynamicValue((ctx) => {
     return ctx.container.get(Types.IPackageInspector);
   });
+};
+
+const componentGenerator = function*(): Generator<{
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  componentDetector: { new (...args: any[]): IProjectComponentDetector };
+  detectedLanguage: ProgrammingLanguage;
+}> {
+  yield { componentDetector: JavaScriptComponentDetector, detectedLanguage: ProgrammingLanguage.JavaScript };
+  yield { componentDetector: JavaScriptComponentDetector, detectedLanguage: ProgrammingLanguage.TypeScript };
+  yield { componentDetector: JavaComponentDetector, detectedLanguage: ProgrammingLanguage.Java };
+  yield { componentDetector: JavaComponentDetector, detectedLanguage: ProgrammingLanguage.Kotlin };
+  yield { componentDetector: PythonComponentDetector, detectedLanguage: ProgrammingLanguage.Python };
+  return;
 };
 
 export const DETECT_LANGUAGE_TAG = 'language';
