@@ -56,7 +56,7 @@ export class GitLabService implements IVCSService {
 
     this.customClient = new GitLabClient({
       token: argumentsProvider.auth,
-      host: this.host,
+      host: `${parsedUrl.protocol}://${this.host}`,
     });
   }
 
@@ -65,7 +65,7 @@ export class GitLabService implements IVCSService {
   }
 
   getRepo(owner: string, repo: string) {
-    return this.client.Projects.show(`${owner}/${repo}`);
+    return this.customClient.Projects.get(`${owner}/${repo}`);
   }
 
   /**
