@@ -66,11 +66,11 @@ export class ScanningStrategyDetector implements IDetector<string, ScanningStrat
     if (ScanningStrategyDetectorUtils.isGitHubPath(path)) return ServiceType.github;
     if (await ScanningStrategyDetectorUtils.isLocalPath(path)) return ServiceType.local;
     if (ScanningStrategyDetectorUtils.isBitbucketPath(path)) return ServiceType.bitbucket;
-    if (await ScanningStrategyDetectorUtils.isGitLabPath(path)) return ServiceType.gitlab;
+    if (await ScanningStrategyDetectorUtils.isGitLabPath(path, this.argumentsProvider.auth)) return ServiceType.gitlab;
 
     // return undefined if we don't know yet the service type
     //  (e.g. because of missing credentials for Gitlab)
-    if ((await ScanningStrategyDetectorUtils.isGitLabPath(path)) === undefined) return undefined;
+    if ((await ScanningStrategyDetectorUtils.isGitLabPath(path, this.argumentsProvider.auth)) === undefined) return undefined;
 
     throw ErrorFactory.newInternalError(
       `Unable to detect scanning strategy. It seems that the service is not implemented yet. (Input path: ${path})`,

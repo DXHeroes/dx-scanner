@@ -134,6 +134,9 @@ export class Scanner {
         cloneUrl.password = this.argumentsProvider.auth.split(':')[1];
       } else if (this.argumentsProvider.auth) {
         cloneUrl.password = this.argumentsProvider.auth;
+        if (serviceType === ServiceType.gitlab) {
+          cloneUrl.username = 'private-token';
+        }
       }
 
       await git()

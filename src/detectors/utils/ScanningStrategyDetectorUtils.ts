@@ -2,6 +2,7 @@ import axios from 'axios';
 import { GitServiceUtils } from '../../services';
 import { has } from 'lodash';
 import debug from 'debug';
+import { ArgumentsProvider } from '../../scanner';
 const d = debug('ScanningStrategyDetectorUtils');
 
 export class ScanningStrategyDetectorUtils {
@@ -22,16 +23,25 @@ export class ScanningStrategyDetectorUtils {
    *  - if the url is not gitlab.com it tests the version endpoint of gitlab then
    *  - if the version endpoint returns unauthorized, the body of Scanner prompts user for credentials
    */
-  static async isGitLabPath(path: string): Promise<boolean | undefined> {
+  static async isGitLabPath(path: string, auth?: string): Promise<boolean | undefined> {
     if (this.testPath(path, /gitlab\.com/)) return true;
 
     // axios get GL endpoint
     const parsedUrl = GitServiceUtils.parseUrl(path);
+
+    // get private token for GitLab
+    // TODO another type of token?
+    const headers: { [header: string]: string } = {};
+    if (auth) headers['private-token'] = auth;
+
     try {
-      const response = await axios.create({ baseURL: `${parsedUrl.protocol}${parsedUrl.host}` }).get('/api/v4/version');
+      const response = await axios
+        .create({ baseURL: `${parsedUrl.protocol}://${parsedUrl.host}`, headers: { ...headers } })
+        .get('/api/v4/version');
+
       return has(response.data, 'version') && has(response.data, 'revision');
     } catch (error) {
-      if (error.status === 401 || error.status === 403) {
+      if (error.response?.status === 401 || error.response?.status === 403) {
         // return undefined if we're not sure that the service is Gitlab
         //  - it prompts user for a credentials
         return undefined;
