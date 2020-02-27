@@ -1,3 +1,20 @@
+# [2.6.0](https://github.com/dxheroes/dx-scanner/compare/v2.5.0...v2.6.0) (2020-02-27)
+
+
+### Bug Fixes
+
+* adding new tests for offline mode ([0ed69e9](https://github.com/dxheroes/dx-scanner/commit/0ed69e900befc59d93002a6bdd07cce1aeb8edbd))
+* considering offline mode of dxs ([aaef314](https://github.com/dxheroes/dx-scanner/commit/aaef3145c2071c45ba579ab0a7ac33c12c1bf070))
+* context test for isOnline ([2924ee7](https://github.com/dxheroes/dx-scanner/commit/2924ee79e76f1638e673877703bc5af0bf34b6e5))
+* merged master to feat branch & solved merge conflicts ([9f084be](https://github.com/dxheroes/dx-scanner/commit/9f084be7c02a9887044ab636862bcf4bf9de3c76))
+* re-enabling net connect after tests ([c8d1d04](https://github.com/dxheroes/dx-scanner/commit/c8d1d0408780f5b58ef3777e5e33109632d56a6a))
+* tests & isOnline logic to pass all tests ([a8f8783](https://github.com/dxheroes/dx-scanner/commit/a8f8783c4466707d53190fff0a5987d252fa4c25))
+
+
+### Features
+
+* **reporters:** show error message from failed practice in CLI log ([e0d46dc](https://github.com/dxheroes/dx-scanner/commit/e0d46dc5ea9acaf34c4ac6f4a301f1d0a5d659d7))
+
 # [2.5.0](https://github.com/dxheroes/dx-scanner/compare/v2.4.0...v2.5.0) (2020-02-27)
 
 
