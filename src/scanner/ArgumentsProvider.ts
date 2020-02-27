@@ -10,4 +10,5 @@ export type ArgumentsProvider = {
   ci: boolean;
   fix: boolean;
   fixPattern: string | undefined;
+  html: string | undefined;
 };

@@ -71,6 +71,7 @@ export type CLIArgs = {
   fail: PracticeImpact;
   fix: boolean;
   fixPattern: string;
+  html: string;
 };
 
 // Old model starts here

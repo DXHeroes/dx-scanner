@@ -30,6 +30,7 @@ export default class Run {
       ci: cmd.ci,
       fix: cmd.fix,
       fixPattern: cmd.fixPattern,
+      html: cmd.html,
     });
     const scanner = container.get(Scanner);
 
@@ -59,6 +60,7 @@ export default class Run {
         ci: cmd.ci,
         fix: cmd.fix,
         fixPattern: cmd.fixPattern,
+        html: cmd.html,
       });
       const scanner = container.get(Scanner);
 

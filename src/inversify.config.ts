@@ -4,7 +4,7 @@ import { ProgrammingLanguage, ProjectComponent, ProjectComponentFramework, Proje
 import { practices } from './practices';
 import { IPracticeWithMetadata } from './practices/DxPracticeDecorator';
 import { Types } from './types';
-import { IReporter, JSONReporter, CLIReporter, CIReporter } from './reporters';
+import { IReporter, JSONReporter, CLIReporter, CIReporter, HTMLReporter } from './reporters';
 import { ScanningStrategyDetector } from './detectors';
 import {
   FileInspector,
@@ -50,6 +50,8 @@ const bindScanningStrategyDetectors = (container: Container) => {
 const bindReporters = (container: Container, args: ArgumentsProvider) => {
   if (args.json) {
     container.bind<IReporter>(Types.IReporter).to(JSONReporter);
+  } else if (args.html) {
+    container.bind<IReporter>(Types.IReporter).to(HTMLReporter);
   } else {
     container.bind<IReporter>(Types.IReporter).to(CLIReporter);
   }
