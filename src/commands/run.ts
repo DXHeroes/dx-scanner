@@ -36,15 +36,17 @@ export default class Run {
     let scanResult = await scanner.scan();
 
     if (scanResult.needsAuth && !cmd.ci) {
-      if (ScanningStrategyDetectorUtils.isGitHubPath(scanPath) || scanResult.serviceType === ServiceType.github) {
-        authorization = await cli.prompt('Insert your GitHub personal access token. https://github.com/settings/tokens\n', {
-          type: 'hide',
-        });
-      } else if (ScanningStrategyDetectorUtils.isBitbucketPath(scanPath) || scanResult.serviceType === ServiceType.bitbucket) {
-        authorization = await cli.prompt(
-          'Insert your Bitbucket credentials (in format "appPassword" or "username:appPasword"). https://confluence.atlassian.com/bitbucket/app-passwords-828781300.html\n',
-          { type: 'hide' },
-        );
+      if (scanResult.isOnline) {
+        if (ScanningStrategyDetectorUtils.isGitHubPath(scanPath) || scanResult.serviceType === ServiceType.github) {
+          authorization = await cli.prompt('Insert your GitHub personal access token. https://github.com/settings/tokens\n', {
+            type: 'hide',
+          });
+        } else if (ScanningStrategyDetectorUtils.isBitbucketPath(scanPath) || scanResult.serviceType === ServiceType.bitbucket) {
+          authorization = await cli.prompt(
+            'Insert your Bitbucket credentials (in format "appPassword" or "username:appPasword"). https://confluence.atlassian.com/bitbucket/app-passwords-828781300.html\n',
+            { type: 'hide' },
+          );
+        }
       }
 
       const container = createRootContainer({
