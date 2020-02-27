@@ -21,7 +21,7 @@ import { ScannerUtils } from '../scanner/ScannerUtils';
 import _ from 'lodash';
 import { cli } from 'cli-ux';
 import { ScanningStrategyDetector, ScanningStrategy, ServiceType, AccessType } from '../detectors';
-import { IReporter } from '../reporters';
+import { IReporter, PracticeWithContextForReporter } from '../reporters';
 import { FileSystemService } from '../services';
 import { ScannerContext } from '../contexts/scanner/ScannerContext';
 import { sharedSubpath } from '../detectors/utils';
@@ -235,13 +235,13 @@ export class Scanner {
    * Report result with specific reporter
    */
   private async report(practicesWithContext: PracticeWithContext[]): Promise<void> {
-    const relevantPractices = practicesWithContext.map((p) => {
+    const relevantPractices: PracticeWithContextForReporter[] = practicesWithContext.map((p) => {
       const config = p.componentContext.configProvider.getOverriddenPractice(p.practice.getMetadata().id);
       const overridenImpact = config?.impact;
 
       return {
         component: p.componentContext.projectComponent,
-        practice: { ...p.practice.getMetadata(), data: p.practice.data },
+        practice: { ...p.practice.getMetadata(), data: p.practice.data, fix: Boolean(p.practice.fix) },
         evaluation: p.evaluation,
         evaluationError: p.evaluationError,
         overridenImpact: <PracticeImpact>(overridenImpact ? overridenImpact : p.practice.getMetadata().impact),

@@ -25,7 +25,7 @@ export interface ComponentReport extends ProjectComponent {
 
 export interface PracticeWithContextForReporter {
   component: ProjectComponent;
-  practice: PracticeMetadata & { data?: PracticeData };
+  practice: PracticeMetadata & { data?: PracticeData; fix: boolean };
   overridenImpact: PracticeImpact;
   evaluation: PracticeEvaluationResult;
   evaluationError?: string;
