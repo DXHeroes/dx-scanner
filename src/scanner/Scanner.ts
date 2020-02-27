@@ -62,6 +62,24 @@ export class Scanner {
     this.allDetectedComponents = undefined;
   }
 
+  async fix(practicesWithContext: PracticeWithContext[]) {
+    if (!this.argumentsProvider.fix) return;
+    const fixablePractice = (p: PracticeWithContext) => p.practice.fix && p.evaluation === PracticeEvaluationResult.notPracticing;
+    const fixPatternMatcher = this.argumentsProvider.fixPattern ? new RegExp(this.argumentsProvider.fixPattern, 'i') : null;
+    const shouldFix = (p: PracticeWithContext) => {
+      const fixFromCli = fixPatternMatcher ? fixPatternMatcher.test(p.practice.getMetadata().id) : undefined;
+      const practiceConfig = p.componentContext.configProvider.getOverriddenPractice(p.practice.getMetadata().id);
+      const fixFromConfig = practiceConfig?.fix;
+      return fixFromCli !== undefined ? fixFromCli : fixFromConfig !== undefined ? fixFromConfig : true;
+    };
+    await Promise.all(
+      practicesWithContext
+        .filter(fixablePractice)
+        .filter(shouldFix)
+        .map((p) => p.practice.fix!(p.practiceContext)),
+    );
+  }
+
   async scan({ determineRemote } = { determineRemote: true }): Promise<ScanResult> {
     let scanStrategy = await this.scanStrategyDetector.detect();
     if (determineRemote && scanStrategy.accessType === AccessType.unknown) {
@@ -77,16 +95,7 @@ export class Scanner {
     this.d(`Components (${projectComponents.length}):`, inspect(projectComponents));
     const practicesWithContext = await this.detectPractices(projectComponents);
     this.d(`Practices (${practicesWithContext.length}):`, inspect(practicesWithContext));
-    if (this.argumentsProvider.fix) {
-      const fixablePractice = (p: PracticeWithContext) => p.practice.fix && p.evaluation === PracticeEvaluationResult.notPracticing;
-      const fixPatternMatcher = this.argumentsProvider.fixPattern ? new RegExp(this.argumentsProvider.fixPattern, 'i') : null;
-      await Promise.all(
-        practicesWithContext
-          .filter(fixablePractice)
-          .filter((p) => (fixPatternMatcher ? fixPatternMatcher.test(p.practice.getMetadata().id) : true))
-          .map((p) => p.practice.fix!(p.practiceContext)),
-      );
-    }
+    await this.fix(practicesWithContext);
     await this.report(practicesWithContext);
     this.d(
       `Overall scan stats. LanguagesAtPaths: ${inspect(languagesAtPaths.length)}; Components: ${inspect(
