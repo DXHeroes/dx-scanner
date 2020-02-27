@@ -1,11 +1,9 @@
 import { createRootContainer, createTestContainer, TestContainerContext } from '../inversify.config';
-import { Scanner } from './Scanner';
+import { Scanner, PracticeWithContext } from './Scanner';
 import { FileSystemService } from '../services/FileSystemService';
 import { argumentsProviderFactory } from '../test/factories/ArgumentsProviderFactory';
-import { ESLintWithoutErrorsPractice } from '../practices/JavaScript/ESLintWithoutErrorsPractice';
 import { PracticeEvaluationResult, PracticeImpact } from '../model';
-import { ConfigProvider } from './ConfigProvider';
-import { GitHubService } from '../services';
+import { mockDeep } from 'jest-mock-extended';
 
 describe('Scanner', () => {
   let containerCtx: TestContainerContext;
@@ -67,72 +65,62 @@ describe('Scanner', () => {
   });
 
   describe('fixer', () => {
-    jest.setTimeout(40000);
-    it('runs fix when fix flag set to true', async () => {
+    const mockFixablePractice = ({ fixFromConfig }: { fixFromConfig?: boolean } = {}) => {
       const fixMock = jest.fn();
-      containerCtx = createTestContainer({ uri: 'github.com/DXHeroes/dx-scanner', fix: true });
-      ConfigProvider.prototype.getOverriddenPractice = () => ({
-        impact: PracticeImpact.high,
+      const fakePractice = mockDeep<PracticeWithContext>();
+      fakePractice.evaluation = PracticeEvaluationResult.notPracticing;
+      fakePractice.practice.fix = fixMock;
+      fakePractice.practice.getMetadata.mockReturnValue({
+        id: 'JavaScript.ESLintWithoutErrorsPractice',
+        name: 'ESLint Without Errors',
+        impact: PracticeImpact.medium,
+        suggestion: 'Use the ESLint correctly. You have some errors.',
+        reportOnlyOnce: true,
+        url: 'https://dxkb.io/p/linting',
+        dependsOn: { practicing: ['JavaScript.ESLintUsed'] },
       });
-
-      ESLintWithoutErrorsPractice.prototype.fix = fixMock;
-      ESLintWithoutErrorsPractice.prototype.evaluate = () => Promise.resolve(PracticeEvaluationResult.notPracticing);
-      containerCtx.container.bind('ESLintWithoutErrorsPractice').to(ESLintWithoutErrorsPractice);
+      fakePractice.componentContext.configProvider.getOverriddenPractice.mockReturnValue({
+        impact: PracticeImpact.high,
+        fix: fixFromConfig,
+      });
+      return fakePractice;
+    };
+    it('runs fix when fix flag set to true', async () => {
+      containerCtx = createTestContainer({ uri: 'github.com/DXHeroes/dx-scanner', fix: true });
       const scanner = containerCtx.container.get(Scanner);
+      const fixablePractice = mockFixablePractice();
 
-      containerCtx.container.get(GitHubService)?.purgeCache();
-      await scanner.scan({ determineRemote: false });
+      await scanner.fix([fixablePractice]);
 
-      expect(fixMock).toBeCalled();
+      expect(fixablePractice.practice.fix).toBeCalled();
     });
     it('fix settings from config works', async () => {
-      const fixMock = jest.fn();
       containerCtx = createTestContainer({ uri: '.', fix: true });
-      ConfigProvider.prototype.getOverriddenPractice = () => ({
-        impact: PracticeImpact.high,
-        fix: false,
-      });
-      ESLintWithoutErrorsPractice.prototype.fix = fixMock;
-      ESLintWithoutErrorsPractice.prototype.evaluate = () => Promise.resolve(PracticeEvaluationResult.notPracticing);
-      containerCtx.container.bind('ESLintWithoutErrorsPractice').to(ESLintWithoutErrorsPractice);
       const scanner = containerCtx.container.get(Scanner);
+      const fixablePractice = mockFixablePractice({ fixFromConfig: false });
 
-      await scanner.scan({ determineRemote: false });
+      await scanner.fix([fixablePractice]);
 
-      expect(fixMock).not.toBeCalled();
+      expect(fixablePractice.practice.fix).not.toBeCalled();
     });
     it('fix settings from config works only when fix flag is set', async () => {
-      const fixMock = jest.fn();
-      ConfigProvider.prototype.getOverriddenPractice = () => ({
-        impact: PracticeImpact.high,
-        fix: true,
-      });
-      ESLintWithoutErrorsPractice.prototype.fix = fixMock;
-      ESLintWithoutErrorsPractice.prototype.evaluate = () => Promise.resolve(PracticeEvaluationResult.notPracticing);
-      containerCtx.container.bind('ESLintWithoutErrorsPractice').to(ESLintWithoutErrorsPractice);
       const scanner = containerCtx.container.get(Scanner);
+      const fixablePractice = mockFixablePractice({ fixFromConfig: true });
 
-      await scanner.scan({ determineRemote: false });
+      await scanner.fix([fixablePractice]);
 
-      expect(fixMock).not.toBeCalled();
+      expect(fixablePractice.practice.fix).not.toBeCalled();
     });
     it.todo('fixPattern flag works');
     it.todo('fixPattern works only when fix flag is set');
     it('fixPattern flag has higher priority than config', async () => {
-      const fixMock = jest.fn();
       containerCtx = createTestContainer({ fix: true, fixPattern: 'lint' });
-      ConfigProvider.prototype.getOverriddenPractice = () => ({
-        impact: PracticeImpact.high,
-        fix: false,
-      });
-      ESLintWithoutErrorsPractice.prototype.fix = fixMock;
-      ESLintWithoutErrorsPractice.prototype.evaluate = () => Promise.resolve(PracticeEvaluationResult.notPracticing);
-      containerCtx.container.bind('ESLintWithoutErrorsPractice').to(ESLintWithoutErrorsPractice);
       const scanner = containerCtx.container.get(Scanner);
+      const fixablePractice = mockFixablePractice({ fixFromConfig: false });
 
-      await scanner.scan({ determineRemote: false });
+      await scanner.fix([fixablePractice]);
 
-      expect(fixMock).toBeCalled();
+      expect(fixablePractice.practice.fix).toBeCalled();
     });
   });
 });
