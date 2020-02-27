@@ -65,26 +65,30 @@ describe('Scanner', () => {
   });
 
   describe('fixer', () => {
-    const mockFixablePractice = ({ fixFromConfig }: { fixFromConfig?: boolean } = {}) => {
-      const fixMock = jest.fn();
-      const fakePractice = mockDeep<PracticeWithContext>();
-      fakePractice.evaluation = PracticeEvaluationResult.notPracticing;
-      fakePractice.practice.fix = fixMock;
-      fakePractice.practice.getMetadata.mockReturnValue({
-        id: 'JavaScript.ESLintWithoutErrorsPractice',
-        name: 'ESLint Without Errors',
-        impact: PracticeImpact.medium,
-        suggestion: 'Use the ESLint correctly. You have some errors.',
-        reportOnlyOnce: true,
-        url: 'https://dxkb.io/p/linting',
-        dependsOn: { practicing: ['JavaScript.ESLintUsed'] },
+    const mockFixablePractice = ({ fixFromConfig, id }: { fixFromConfig?: boolean; id?: string } = {}) =>
+      mockDeep<PracticeWithContext>({
+        evaluation: PracticeEvaluationResult.notPracticing,
+        practice: {
+          fix: jest.fn(),
+          getMetadata: () => ({
+            id: id || 'JavaScript.ESLintWithoutErrorsPractice',
+            name: 'ESLint Without Errors',
+            impact: PracticeImpact.medium,
+            suggestion: 'Use the ESLint correctly. You have some errors.',
+            reportOnlyOnce: true,
+            url: 'https://dxkb.io/p/linting',
+            dependsOn: { practicing: ['JavaScript.ESLintUsed'] },
+          }),
+        },
+        componentContext: {
+          configProvider: {
+            getOverriddenPractice: () => ({
+              impact: PracticeImpact.high,
+              fix: fixFromConfig,
+            }),
+          },
+        },
       });
-      fakePractice.componentContext.configProvider.getOverriddenPractice.mockReturnValue({
-        impact: PracticeImpact.high,
-        fix: fixFromConfig,
-      });
-      return fakePractice;
-    };
     it('runs fix when fix flag set to true', async () => {
       containerCtx = createTestContainer({ uri: 'github.com/DXHeroes/dx-scanner', fix: true });
       const scanner = containerCtx.container.get(Scanner);
@@ -111,8 +115,39 @@ describe('Scanner', () => {
 
       expect(fixablePractice.practice.fix).not.toBeCalled();
     });
-    it.todo('fixPattern flag works');
-    it.todo('fixPattern works only when fix flag is set');
+    it('multiple practices can be fixed', async () => {
+      containerCtx = createTestContainer({ uri: '.', fix: true });
+      const scanner = containerCtx.container.get(Scanner);
+      const fixablePractice = mockFixablePractice();
+      const fixablePracticeB = mockFixablePractice({ id: 'Totally.FakePractice' });
+
+      await scanner.fix([fixablePractice, fixablePracticeB]);
+
+      expect(fixablePractice.practice.fix).toBeCalled();
+      expect(fixablePracticeB.practice.fix).toBeCalled();
+    });
+    it('fixPattern flag works', async () => {
+      containerCtx = createTestContainer({ uri: '.', fix: true, fixPattern: 'fake' });
+      const scanner = containerCtx.container.get(Scanner);
+      const fixablePractice = mockFixablePractice();
+      const fixablePracticeB = mockFixablePractice({ id: 'Totally.FakePractice' });
+
+      await scanner.fix([fixablePractice, fixablePracticeB]);
+
+      expect(fixablePractice.practice.fix).not.toBeCalled();
+      expect(fixablePracticeB.practice.fix).toBeCalled();
+    });
+    it('fixPattern works only when fix flag is set', async () => {
+      containerCtx = createTestContainer({ uri: '.', fixPattern: 'fake' });
+      const scanner = containerCtx.container.get(Scanner);
+      const fixablePractice = mockFixablePractice();
+      const fixablePracticeB = mockFixablePractice({ id: 'Totally.FakePractice' });
+
+      await scanner.fix([fixablePractice, fixablePracticeB]);
+
+      expect(fixablePractice.practice.fix).not.toBeCalled();
+      expect(fixablePracticeB.practice.fix).not.toBeCalled();
+    });
     it('fixPattern flag has higher priority than config', async () => {
       containerCtx = createTestContainer({ fix: true, fixPattern: 'lint' });
       const scanner = containerCtx.container.get(Scanner);
