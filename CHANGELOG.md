@@ -1,3 +1,21 @@
+# [2.5.0](https://github.com/dxheroes/dx-scanner/compare/v2.4.0...v2.5.0) (2020-02-27)
+
+
+### Bug Fixes
+
+* **tests:** restore nock after each test suite using nock ([2ce7313](https://github.com/dxheroes/dx-scanner/commit/2ce731314707678ce1d83ae06cf63d19401d9461))
+
+
+### Features
+
+* **fixer:** add fix config tests ([26b81dc](https://github.com/dxheroes/dx-scanner/commit/26b81dcd8b0a33b857d5f1e106e605eaae03802d))
+* **fixer:** add fixPattern tests ([b85154f](https://github.com/dxheroes/dx-scanner/commit/b85154fda73a3ffa4fa9c08a7c1f74fdcc63312d))
+* **fixer:** add jest-mock-extended dependency ([bf20ae2](https://github.com/dxheroes/dx-scanner/commit/bf20ae237c03be587d9bd5668b3fff8efc8a491a))
+* **fixer:** clean nock before scanner tests ([f172f81](https://github.com/dxheroes/dx-scanner/commit/f172f81489a859d15a4e109adc7b5e1965fbb3f7))
+* **fixer:** fix fixer logic ([61a1cba](https://github.com/dxheroes/dx-scanner/commit/61a1cba312065cc1bc4e3388a6266f2ad4709018))
+* **fixer:** refactor scanner's fix ([b4dd956](https://github.com/dxheroes/dx-scanner/commit/b4dd9565e7a38bdf665743f1d94c17744f4cce27))
+* **fixer:** use mocks in fixer tests ([d17c443](https://github.com/dxheroes/dx-scanner/commit/d17c4435d2a8b06518aa39018ebfa3fabd3fbbc2))
+
 # [2.4.0](https://github.com/dxheroes/dx-scanner/compare/v2.3.3...v2.4.0) (2020-02-25)
 
 
