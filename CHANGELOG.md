@@ -1,3 +1,19 @@
+# [2.7.0](https://github.com/dxheroes/dx-scanner/compare/v2.6.0...v2.7.0) (2020-03-02)
+
+
+### Bug Fixes
+
+* merged master into feat branch & solved merge conflicts ([3b720bb](https://github.com/dxheroes/dx-scanner/commit/3b720bbc8a3117cf6d75aacbb986ef07df242f30))
+* small typos in Java tests ([8b0f87e](https://github.com/dxheroes/dx-scanner/commit/8b0f87ee91dff6ad444682788f85bec1b835096d))
+* small typos in test descriptions ([d3ccafe](https://github.com/dxheroes/dx-scanner/commit/d3ccafe08a351d19d80c15db8bad0957878b41ad))
+
+
+### Features
+
+* python package inspector ([388eef3](https://github.com/dxheroes/dx-scanner/commit/388eef306ad78153ee9f7ea6ae6c96eaa6d258cf))
+* test for python package inspector ([02da5fc](https://github.com/dxheroes/dx-scanner/commit/02da5fcb5e075729619b0367e7efaee1c00c62c6))
+* **python:** init python component detector and base for inspector ([ec6a7a9](https://github.com/dxheroes/dx-scanner/commit/ec6a7a90a0d3e47979f722b36365db78ff01f631))
+
 # [2.6.0](https://github.com/dxheroes/dx-scanner/compare/v2.5.0...v2.6.0) (2020-02-27)
 
 
