@@ -71,11 +71,11 @@ describe('JavaScriptPackageInspector', () => {
         await inspector.init();
       });
 
-      it('Returns true package if it exists', () => {
+      it('Returns true if package exists', () => {
         expect(inspector.hasPackage('nock')).toBe(true);
       });
 
-      it('Returns false package if it exists', () => {
+      it('Returns false if package does not exists', () => {
         expect(inspector.hasPackage('rock')).toBe(false);
       });
     });
@@ -85,7 +85,7 @@ describe('JavaScriptPackageInspector', () => {
         await inspector.init();
       });
 
-      it('Returns true if one of packages exists', () => {
+      it('Returns true if one of the packages exists', () => {
         expect(inspector.hasOneOfPackages(['nock', 'rock'])).toBe(true);
       });
 

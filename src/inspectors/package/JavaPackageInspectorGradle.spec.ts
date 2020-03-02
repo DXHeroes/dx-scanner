@@ -49,7 +49,7 @@ describe('JavaPackageInspector Gradle', () => {
         await inspector.init();
       });
 
-      it('Returns true package if it exists', () => {
+      it('Returns true if package exists', () => {
         expect(inspector.hasPackage('spring-boot-starter-actuator')).toBe(true);
       });
 
