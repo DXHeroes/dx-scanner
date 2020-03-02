@@ -48,7 +48,7 @@ describe('JavaMockingFrameworkUsedPractice', () => {
     expect(result).toEqual(true);
   });
 
-  it('Is applicable if it is not Java', async () => {
+  it('Is not applicable if it is not Java', async () => {
     containerCtx.practiceContext.projectComponent.language = ProgrammingLanguage.Python;
 
     const result = await practice.isApplicable(containerCtx.practiceContext);
