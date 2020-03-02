@@ -1,2 +1,6 @@
 practices:
   JavaScript.DependenciesVersionMinorPatchLevel: medium
+  LanguageIndependent.ThinPullRequestsPractice:
+    impact: high
+    maxThreshold:
+      measurePullRequestCount: 500

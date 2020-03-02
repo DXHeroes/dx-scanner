@@ -19,6 +19,9 @@ export interface PracticeConfig {
   useEslintrc?: boolean;
   impact?: string;
   fix?: boolean;
+  maxThreshold?: {
+    measurePullRequestCount?: number;
+  };
 }
 
 enum Service {

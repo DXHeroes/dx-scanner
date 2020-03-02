@@ -56,7 +56,7 @@ describe('ConfigProvider', () => {
     expect(configProvider.config).not.toBeDefined();
   });
 
-  it('Get configufation of practice if it is just a string', async () => {
+  it('Get configuration of practice if it is just a string', async () => {
     const structure: DirectoryJSON = {
       '/dxscannerrc.json': `{
         "practices": {
@@ -86,6 +86,38 @@ describe('ConfigProvider', () => {
     await configProvider.init();
     const practiceConfig = configProvider.getOverriddenPractice('JavaScript.GitignoreCorrectlySet');
     expect(practiceConfig).toEqual({ impact: 'medium' });
+  });
+
+  it('Get correct configuration of a practice requiring maximum threshold limits', async () => {
+    const structure: DirectoryJSON = {
+      '/dxscannerrc.yml': `
+      practices:
+        JavaScript.DependenciesVersionMinorPatchLevel: medium
+        LanguageIndependent.ThinPullRequestsPractice:
+          impact: high
+          maxThreshold:
+            measurePullRequestCount: 1`,
+    };
+    virtualFileSystemService.setFileSystem(structure);
+
+    await configProvider.init();
+    const practiceConfig = configProvider.getOverriddenPractice('LanguageIndependent.ThinPullRequestsPractice');
+    expect(practiceConfig).toEqual({ impact: 'high', maxThreshold: { measurePullRequestCount: 1 } });
+  });
+
+  it('Maximum threshold is undefined if it is not provided', async () => {
+    const structure: DirectoryJSON = {
+      '/dxscannerrc.yaml': `
+      practices:
+        JavaScript.DependenciesVersionMinorPatchLevel: medium
+        LanguageIndependent.ThinPullRequestsPractice:
+          impact: small`,
+    };
+    virtualFileSystemService.setFileSystem(structure);
+
+    await configProvider.init();
+    const practiceConfig = configProvider.getOverriddenPractice('LanguageIndependent.ThinPullRequestsPractice');
+    expect(practiceConfig).toEqual({ impact: 'small', maxThreshold: undefined });
   });
 
   it('Returns undefined if there is no config file', async () => {
