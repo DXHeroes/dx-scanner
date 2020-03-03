@@ -37,15 +37,11 @@ export class ThinPullRequestsPractice implements IPractice {
     if (!ctx.fileInspector || !ctx.collaborationInspector) {
       return PracticeEvaluationResult.unknown;
     }
-    console.log(this.measurePullRequestCount);
     if (ctx.config) {
       const config = <IPracticeOverride>ctx.config;
       const overridePullRequestCount = config.override?.measurePullRequestCount;
-      console.log(this.measurePullRequestCount);
       this.measurePullRequestCount = !overridePullRequestCount ? this.measurePullRequestCount : overridePullRequestCount;
-      console.log(this.measurePullRequestCount);
     }
-    console.log(`Hallo ${this.measurePullRequestCount}`);
 
     const repoName = GitServiceUtils.getRepoName(ctx.projectComponent.repositoryPath, ctx.projectComponent.path);
     const ownerAndRepoName = GitServiceUtils.getOwnerAndRepoName(repoName);
