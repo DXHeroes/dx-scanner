@@ -2,8 +2,6 @@ import axios from 'axios';
 import { GitServiceUtils } from '../../services';
 import { has } from 'lodash';
 import debug from 'debug';
-import isUrl from 'is-url';
-
 const d = debug('ScanningStrategyDetectorUtils');
 
 export class ScanningStrategyDetectorUtils {
