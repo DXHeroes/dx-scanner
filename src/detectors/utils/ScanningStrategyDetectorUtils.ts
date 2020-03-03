@@ -2,7 +2,7 @@ import axios from 'axios';
 import { GitServiceUtils } from '../../services';
 import { has } from 'lodash';
 import debug from 'debug';
-import isValidDomain from 'is-valid-domain';
+import isUrl from 'is-url';
 
 const d = debug('ScanningStrategyDetectorUtils');
 
@@ -60,7 +60,10 @@ export class ScanningStrategyDetectorUtils {
   }
 
   static async normalizePath(path: string) {
-    if (isValidDomain(path) && this.testPath(path, /^(?!http|ssh).*$/)) {
+    // src.: https://stackoverflow.com/a/3809435/10826693
+    const isUrl = /[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/.test(path);
+
+    if (isUrl && this.testPath(path, /^(?!http|ssh).*$/)) {
       return `https://${path}`;
     }
 
