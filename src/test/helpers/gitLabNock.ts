@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/camelcase */
 import nock from 'nock';
-import { ListGetterOptions } from '../../inspectors';
+import { ListGetterOptions, PaginationParams } from '../../inspectors';
 import { MergeRequest } from '../../services/gitlab/gitlabClient/resources/MergeRequests';
 import { GitLabPullRequestState } from '../../services/gitlab/IGitLabService';
 import { gitLabPullRequestResponseFactory } from '../factories/responses/gitLab/prResponseFactory';
@@ -83,6 +83,22 @@ export class GitLabNock {
     const response = [gitLabPullRequestResponseFactory(pullRequests[0])];
 
     return GitLabNock.get(baseUrl, queryParams).reply(200, response, {
+      'x-total': '1',
+      'x-next-page': '1',
+      'x-page': '1',
+      'x-prev-page': '',
+      'x-per-page': '1',
+      'x-total-pages': '1',
+    });
+  }
+
+  getPullRequestResponse(pullRequest: MergeRequest, mergeIId: number) {
+    const encodedProjectUrl = encodeURIComponent(`${this.user}/${this.repoName}`);
+    const baseUrl = `${this.url}/projects/${encodedProjectUrl}/merge_requests/${mergeIId}`;
+
+    const response = gitLabPullRequestResponseFactory(pullRequest);
+
+    return GitLabNock.get(baseUrl).reply(200, response, {
       'x-total': '1',
       'x-next-page': '1',
       'x-page': '1',

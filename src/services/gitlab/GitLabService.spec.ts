@@ -6,6 +6,7 @@ import { GitLabService } from './GitLabService';
 import { GitLabPullRequestState } from './IGitLabService';
 import util from 'util';
 import { listPullRequestsResponse } from '../git/__MOCKS__/gitLabServiceMockFolder/listPullRequestsResponse';
+import { getPullRequestResponse } from '../git/__MOCKS__/gitLabServiceMockFolder/getPullRequestResponse';
 
 describe('GitLab Service', () => {
   let service: GitLabService;
@@ -26,5 +27,17 @@ describe('GitLab Service', () => {
 
     const response = await service.listPullRequests('gitlab-org', 'gitlab', { filter: { state: PullRequestState.open } });
     expect(response).toMatchObject(listPullRequestsResponse());
+  });
+
+  it('Returns one pull request in own interface', async () => {
+    jest.setTimeout(100000);
+
+    const mockPr = gitLabPullRequestResponseFactory();
+
+    gitLabNock.getPullRequestResponse(mockPr, 25985);
+    gitLabNock.getGroupInfo();
+
+    const response = await service.getPullRequest('gitlab-org', 'gitlab', 25985);
+    expect(response).toMatchObject(getPullRequestResponse());
   });
 });
