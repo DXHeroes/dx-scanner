@@ -7,15 +7,12 @@ export class GitLabClient {
   protected host: string;
   protected timeout: number;
 
-  constructor({ token, jobToken, oauthToken, host = 'https://gitlab.com', timeout = 20000 }: ClientOptions) {
+  constructor({ token, host = 'https://gitlab.com', timeout = 20000 }: ClientOptions) {
     this.headers = {};
     this.host = host;
     this.timeout = timeout;
 
-    // Handle auth tokens
-    if (oauthToken) this.headers.authorization = `Bearer ${oauthToken}`;
-    else if (jobToken) this.headers['job-token'] = jobToken;
-    else if (token) this.headers['private-token'] = token;
+    if (token) this.headers['private-token'] = token;
   }
 
   protected createAxiosInstance() {

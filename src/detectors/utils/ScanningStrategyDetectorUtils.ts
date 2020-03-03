@@ -2,7 +2,6 @@ import axios from 'axios';
 import { GitServiceUtils } from '../../services';
 import { has } from 'lodash';
 import debug from 'debug';
-import { ArgumentsProvider } from '../../scanner';
 const d = debug('ScanningStrategyDetectorUtils');
 
 export class ScanningStrategyDetectorUtils {
@@ -26,18 +25,14 @@ export class ScanningStrategyDetectorUtils {
   static async isGitLabPath(path: string, auth?: string): Promise<boolean | undefined> {
     if (this.testPath(path, /gitlab\.com/)) return true;
 
-    // axios get GL endpoint
     const parsedUrl = GitServiceUtils.parseUrl(path);
 
-    // get private token for GitLab
-    // TODO another type of token?
+    // set private token for GitLab
     const headers: { [header: string]: string } = {};
     if (auth) headers['private-token'] = auth;
 
     try {
-      const response = await axios
-        .create({ baseURL: `${parsedUrl.protocol}://${parsedUrl.host}`, headers: { ...headers } })
-        .get('/api/v4/version');
+      const response = await axios.create({ baseURL: `${parsedUrl.protocol}://${parsedUrl.host}`, headers }).get('/api/v4/version');
 
       return has(response.data, 'version') && has(response.data, 'revision');
     } catch (error) {
@@ -52,7 +47,7 @@ export class ScanningStrategyDetectorUtils {
   }
 
   static async isRemoteServicePath(path: string): Promise<boolean> {
-    return !(await this.isLocalPath(path)) && (this.isGitHubPath(path) || this.isBitbucketPath(path) || !!(await this.isGitLabPath(path))); // || ...
+    return this.isGitHubPath(path) || this.isBitbucketPath(path) || !!(await this.isGitLabPath(path)); // || ...
   }
 
   static testPath(path: string, regex: RegExp): boolean {
