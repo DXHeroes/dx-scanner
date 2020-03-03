@@ -1,3 +1,16 @@
+# [2.8.0](https://github.com/dxheroes/dx-scanner/compare/v2.7.0...v2.8.0) (2020-03-03)
+
+
+### Bug Fixes
+
+* registering java linter practice to index ([33b40ec](https://github.com/dxheroes/dx-scanner/commit/33b40ec553d3b51354aa195ad255169fb0ef89ef))
+* test descriptions ([3500597](https://github.com/dxheroes/dx-scanner/commit/350059749eaf6c6542d20e52ff3d2f787b37faea))
+
+
+### Features
+
+* java linter practice for maven & gradle scripts ([cd1efaf](https://github.com/dxheroes/dx-scanner/commit/cd1efafd55294784eb7af5721497fbb47eccb361))
+
 # [2.7.0](https://github.com/dxheroes/dx-scanner/compare/v2.6.0...v2.7.0) (2020-03-02)
 
 

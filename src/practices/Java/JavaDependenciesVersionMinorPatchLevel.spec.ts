@@ -64,7 +64,7 @@ describe('JavaDependenciesVersionPractice of Minor and Patch Level', () => {
     expect(result).toEqual(true);
   });
 
-  it('Is applicable if it is not Java', async () => {
+  it('Is not applicable if it is not Java', async () => {
     containerCtx.practiceContext.projectComponent.language = ProgrammingLanguage.UNKNOWN;
 
     const result = await practice.isApplicable(containerCtx.practiceContext);

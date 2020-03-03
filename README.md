@@ -177,6 +177,7 @@ Write Commit Messages by Convention | <span style="color:green">small</span> | �
 Use Mocking Frameworks for Tests  | <span style="color:green">small</span> | ❌ | ✅ | ✅ | ❌
 Use Testing Frameworks | <span style="color:red">high</span> | ❌ | ❌ | ✅ | ❌
 Use a Java Logging Dependency | <span style="color:green">small</span> | ❌ | ❌ | ✅ | ❌
+Use a Java Linter Dependency | <span style="color:green">small</span> | ❌ | ❌ | ✅ | ❌
 Use Java Class Naming Convention | <span style="color:green">small</span> | ❌ | ❌ | ✅ | ❌
 Security vulnerabilities detected | <span style="color:red">high</span> | ❌ | ✅ | ❌ | ❌
 </details>
