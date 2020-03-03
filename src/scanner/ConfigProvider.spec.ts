@@ -95,14 +95,14 @@ describe('ConfigProvider', () => {
         JavaScript.DependenciesVersionMinorPatchLevel: medium
         LanguageIndependent.ThinPullRequestsPractice:
           impact: high
-          maxThreshold:
+          override:
             measurePullRequestCount: 1`,
     };
     virtualFileSystemService.setFileSystem(structure);
 
     await configProvider.init();
     const practiceConfig = configProvider.getOverriddenPractice('LanguageIndependent.ThinPullRequestsPractice');
-    expect(practiceConfig).toEqual({ impact: 'high', maxThreshold: { measurePullRequestCount: 1 } });
+    expect(practiceConfig).toEqual({ impact: 'high', override: { measurePullRequestCount: 1 } });
   });
 
   it('Maximum threshold is undefined if it is not provided', async () => {
@@ -117,7 +117,7 @@ describe('ConfigProvider', () => {
 
     await configProvider.init();
     const practiceConfig = configProvider.getOverriddenPractice('LanguageIndependent.ThinPullRequestsPractice');
-    expect(practiceConfig).toEqual({ impact: 'small', maxThreshold: undefined });
+    expect(practiceConfig).toEqual({ impact: 'small', override: undefined });
   });
 
   it('Returns undefined if there is no config file', async () => {

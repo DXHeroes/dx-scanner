@@ -19,8 +19,8 @@ export interface PracticeConfig {
   useEslintrc?: boolean;
   impact?: string;
   fix?: boolean;
-  maxThreshold?: {
-    measurePullRequestCount?: number;
+  override?: {
+    [key: string]: number | string | number[] | string[];
   };
 }
 
