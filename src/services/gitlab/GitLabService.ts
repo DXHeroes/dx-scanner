@@ -3,7 +3,7 @@ import { Response } from 'bitbucket/src/request/types';
 import Debug from 'debug';
 import { inject, injectable } from 'inversify';
 import { inspect } from 'util';
-import { IVCSService } from '..';
+import { IVCSService, ServicePagination } from '..';
 import { IssueState, ListGetterOptions, Paginated, PullRequestState } from '../../inspectors';
 import { ArgumentsProvider } from '../../scanner';
 import { InMemoryCache } from '../../scanner/cache';
@@ -412,8 +412,7 @@ export class GitLabService implements IVCSService {
     }
   }
 
-  //TODO interface for pagination
-  private getPagination(pagination: PaginationGitLabCustomResponse) {
+  private getPagination(pagination: PaginationGitLabCustomResponse): ServicePagination {
     const hasNextPage = !!pagination.next;
     const hasPreviousPage = !!pagination.previous;
     const page = pagination.current;

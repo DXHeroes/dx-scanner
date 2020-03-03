@@ -55,3 +55,11 @@ export enum VCSServiceType {
   bitbucket = 'Bitbucket',
   gitlab = 'GitLab',
 }
+
+export interface ServicePagination {
+  hasNextPage: boolean;
+  hasPreviousPage: boolean;
+  page: number;
+  perPage: number;
+  totalCount: number;
+}
