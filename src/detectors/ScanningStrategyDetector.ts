@@ -145,7 +145,10 @@ export class ScanningStrategyDetector implements IDetector<string, ScanningStrat
         }
       } catch (error) {
         this.detectorDebug(error.message);
-        if (error.code === 401 || error.code === 404 || error.code === 403) {
+        if (error.code === 401 || error.code === 404 || error.code === 403 || error.code === 500) {
+          if (error.status === 500) {
+            this.isOnline = false;
+          }
           return AccessType.unknown;
         }
         throw error;

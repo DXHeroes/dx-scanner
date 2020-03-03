@@ -12,7 +12,7 @@ export class GitLabClient {
     this.host = host;
     this.timeout = timeout;
 
-    if (token) this.headers['private-token'] = token;
+    if (token) this.headers['Authorization'] = `Bearer ${token}`;
   }
 
   protected createAxiosInstance() {

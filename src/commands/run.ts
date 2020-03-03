@@ -8,7 +8,7 @@ import { CLIArgs } from '../model';
 
 export default class Run {
   static async run(path = process.cwd(), cmd: CLIArgs) {
-    debug('cli cfg')(cmd);
+    debug('cli')(cmd);
     const scanPath = path;
 
     const { json, details, fail } = cmd;
