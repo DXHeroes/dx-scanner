@@ -1,3 +1,12 @@
+## [2.8.1](https://github.com/dxheroes/dx-scanner/compare/v2.8.0...v2.8.1) (2020-03-03)
+
+
+### Bug Fixes
+
+* add back missing octokit lib ([2835480](https://github.com/dxheroes/dx-scanner/commit/2835480466962f5f1a91cde0eca37516fe8aa811))
+* add back missing octokit lib ([#257](https://github.com/dxheroes/dx-scanner/issues/257)) ([5731aae](https://github.com/dxheroes/dx-scanner/commit/5731aae6f14578f285c0ba1b09e3f589b892df6a))
+* revert Octokit to version to ^16.0.0 ([88f2cca](https://github.com/dxheroes/dx-scanner/commit/88f2cca3d358fcbd649d40373e87f56d47adff05))
+
 # [2.8.0](https://github.com/dxheroes/dx-scanner/compare/v2.7.0...v2.8.0) (2020-03-03)
 
 
