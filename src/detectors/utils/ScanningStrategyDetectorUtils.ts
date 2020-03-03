@@ -2,7 +2,8 @@ import axios from 'axios';
 import { GitServiceUtils } from '../../services';
 import { has } from 'lodash';
 import debug from 'debug';
-import { ArgumentsProvider } from '../../scanner';
+import isValidDomain from 'is-valid-domain';
+
 const d = debug('ScanningStrategyDetectorUtils');
 
 export class ScanningStrategyDetectorUtils {
@@ -26,33 +27,32 @@ export class ScanningStrategyDetectorUtils {
   static async isGitLabPath(path: string, auth?: string): Promise<boolean | undefined> {
     if (this.testPath(path, /gitlab\.com/)) return true;
 
-    // axios get GL endpoint
     const parsedUrl = GitServiceUtils.parseUrl(path);
 
-    // get private token for GitLab
-    // TODO another type of token?
+    // set private token for GitLab
     const headers: { [header: string]: string } = {};
-    if (auth) headers['private-token'] = auth;
+    if (auth) headers['Authorization'] = `Bearer ${auth}`;
 
+    d(`${parsedUrl.protocol}://${parsedUrl.host}/api/v4/version`);
+    d(headers);
     try {
-      const response = await axios
-        .create({ baseURL: `${parsedUrl.protocol}://${parsedUrl.host}`, headers: { ...headers } })
-        .get('/api/v4/version');
+      const response = await axios.create({ baseURL: `${parsedUrl.protocol}://${parsedUrl.host}`, headers }).get('/api/v4/version');
 
       return has(response.data, 'version') && has(response.data, 'revision');
     } catch (error) {
+      d(error); //debug error
+
       if (error.response?.status === 401 || error.response?.status === 403) {
         // return undefined if we're not sure that the service is Gitlab
         //  - it prompts user for a credentials
         return undefined;
       }
-      d(error.stack); //debug error
       return false;
     }
   }
 
   static async isRemoteServicePath(path: string): Promise<boolean> {
-    return !(await this.isLocalPath(path)) && (this.isGitHubPath(path) || this.isBitbucketPath(path) || !!(await this.isGitLabPath(path))); // || ...
+    return this.isGitHubPath(path) || this.isBitbucketPath(path) || !!(await this.isGitLabPath(path)); // || ...
   }
 
   static testPath(path: string, regex: RegExp): boolean {
@@ -60,7 +60,7 @@ export class ScanningStrategyDetectorUtils {
   }
 
   static async normalizePath(path: string) {
-    if ((await this.isRemoteServicePath(path)) && this.testPath(path, /^(?!http|ssh).*$/)) {
+    if (isValidDomain(path) && this.testPath(path, /^(?!http|ssh).*$/)) {
       return `https://${path}`;
     }
 

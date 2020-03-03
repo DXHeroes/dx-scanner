@@ -34,7 +34,7 @@ export class CIReporter implements IReporter {
       const msg = "This isn't a pull request.";
       this.d(msg);
       return;
-    } else if (!ScanningStrategyDetectorUtils.isLocalPath(this.argumentsProvider.uri)) {
+    } else if (!(await ScanningStrategyDetectorUtils.isLocalPath(this.argumentsProvider.uri))) {
       const msg = 'CIReporter works only for local path';
       this.d(msg);
       return;

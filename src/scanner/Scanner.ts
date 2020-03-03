@@ -62,10 +62,33 @@ export class Scanner {
     this.allDetectedComponents = undefined;
   }
 
+  async fix(practicesWithContext: PracticeWithContext[]) {
+    if (!this.argumentsProvider.fix) return;
+    const fixablePractice = (p: PracticeWithContext) => p.practice.fix && p.evaluation === PracticeEvaluationResult.notPracticing;
+    const fixPatternMatcher = this.argumentsProvider.fixPattern ? new RegExp(this.argumentsProvider.fixPattern, 'i') : null;
+    const shouldFix = (p: PracticeWithContext) => {
+      const fixFromCli = fixPatternMatcher ? fixPatternMatcher.test(p.practice.getMetadata().id) : undefined;
+      const practiceConfig = p.componentContext.configProvider.getOverriddenPractice(p.practice.getMetadata().id);
+      const fixFromConfig = practiceConfig?.fix;
+      return fixFromCli !== undefined ? fixFromCli : fixFromConfig !== undefined ? fixFromConfig : true;
+    };
+    await Promise.all(
+      practicesWithContext
+        .filter(fixablePractice)
+        .filter(shouldFix)
+        .map((p) => p.practice.fix!(p.practiceContext)),
+    );
+  }
+
   async scan({ determineRemote } = { determineRemote: true }): Promise<ScanResult> {
     let scanStrategy = await this.scanStrategyDetector.detect();
     if (determineRemote && (scanStrategy.serviceType === undefined || scanStrategy.accessType === AccessType.unknown)) {
-      return { shouldExitOnEnd: this.shouldExitOnEnd, needsAuth: true, serviceType: scanStrategy.serviceType };
+      return {
+        shouldExitOnEnd: this.shouldExitOnEnd,
+        needsAuth: true,
+        serviceType: scanStrategy.serviceType,
+        isOnline: scanStrategy.isOnline,
+      };
     }
     this.d(`Scan strategy: ${inspect(scanStrategy)}`);
     scanStrategy = await this.preprocessData(scanStrategy);
@@ -77,16 +100,7 @@ export class Scanner {
     this.d(`Components (${projectComponents.length}):`, inspect(projectComponents));
     const practicesWithContext = await this.detectPractices(projectComponents);
     this.d(`Practices (${practicesWithContext.length}):`, inspect(practicesWithContext));
-    if (this.argumentsProvider.fix) {
-      const fixablePractice = (p: PracticeWithContext) => p.practice.fix && p.evaluation === PracticeEvaluationResult.notPracticing;
-      const fixPatternMatcher = this.argumentsProvider.fixPattern ? new RegExp(this.argumentsProvider.fixPattern, 'i') : null;
-      await Promise.all(
-        practicesWithContext
-          .filter(fixablePractice)
-          .filter((p) => (fixPatternMatcher ? fixPatternMatcher.test(p.practice.getMetadata().id) : true))
-          .map((p) => p.practice.fix!(p.practiceContext)),
-      );
-    }
+    await this.fix(practicesWithContext);
     await this.report(practicesWithContext);
     this.d(
       `Overall scan stats. LanguagesAtPaths: ${inspect(languagesAtPaths.length)}; Components: ${inspect(
@@ -122,8 +136,12 @@ export class Scanner {
    * Clone a repository if the input is remote repository
    */
   private async preprocessData(scanningStrategy: ScanningStrategy) {
-    const { serviceType, accessType, remoteUrl } = scanningStrategy;
+    const { serviceType, accessType, remoteUrl, isOnline } = scanningStrategy;
     let localPath = scanningStrategy.localPath;
+
+    if (!isOnline) {
+      return { serviceType, accessType, remoteUrl, localPath, isOnline };
+    }
 
     if (localPath === undefined && remoteUrl !== undefined && serviceType !== ServiceType.local) {
       const cloneUrl = new url.URL(remoteUrl);
@@ -144,7 +162,7 @@ export class Scanner {
         .clone(cloneUrl.href, localPath);
     }
 
-    return { serviceType, accessType, remoteUrl, localPath };
+    return { serviceType, accessType, remoteUrl, localPath, isOnline };
   }
 
   /**
@@ -228,6 +246,7 @@ export class Scanner {
         component: p.componentContext.projectComponent,
         practice: { ...p.practice.getMetadata(), data: p.practice.data },
         evaluation: p.evaluation,
+        evaluationError: p.evaluationError,
         overridenImpact: <PracticeImpact>(overridenImpact || p.practice.getMetadata().impact),
         isOn: p.isOn,
       };
@@ -272,20 +291,23 @@ export class Scanner {
       const isFulfilled = ScannerUtils.isFulfilled(practice, practicesWithContext);
 
       if (!isFulfilled) continue;
-      let evaluation;
+
+      let evaluation = PracticeEvaluationResult.unknown;
+      let evaluationError: undefined | string;
       try {
         evaluation = await practice.evaluate({ ...practiceContext, config: practiceConfig });
       } catch (error) {
-        evaluation = PracticeEvaluationResult.unknown;
+        evaluationError = error.toString();
         const practiceDebug = debug('practices');
         practiceDebug(`The ${practice.getMetadata().name} practice failed with this error:\n${error}`);
       }
 
-      const practiceWithContext = {
+      const practiceWithContext: PracticeWithContext = {
         practice,
         componentContext,
         practiceContext,
         evaluation,
+        evaluationError,
         isOn: true,
       };
 
@@ -301,6 +323,7 @@ export class Scanner {
         componentContext,
         practiceContext,
         evaluation: PracticeEvaluationResult.unknown,
+        evaluationError: undefined,
         isOn: false,
       };
 
@@ -357,6 +380,7 @@ export interface PracticeWithContext {
   practiceContext: PracticeContext;
   practice: IPracticeWithMetadata;
   evaluation: PracticeEvaluationResult;
+  evaluationError: undefined | string;
   isOn: boolean;
 }
 
@@ -364,4 +388,5 @@ export type ScanResult = {
   shouldExitOnEnd: boolean;
   needsAuth?: boolean;
   serviceType?: ServiceType;
+  isOnline?: boolean;
 };

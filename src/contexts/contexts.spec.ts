@@ -17,6 +17,7 @@ describe('Contexts (And bindings)', () => {
       accessType: undefined,
       localPath: undefined,
       remoteUrl: undefined,
+      isOnline: false,
     });
     return scannerCtx;
   };

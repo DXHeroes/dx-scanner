@@ -10,6 +10,8 @@ import { JavaComponentDetector } from '../../detectors/Java/JavaComponentDetecto
 import { LanguageContext } from './LanguageContext';
 import { CollaborationInspector } from '../../inspectors/CollaborationInspector';
 import { IssueTrackingInspector } from '../../inspectors/IssueTrackingInspector';
+import { PythonComponentDetector } from '../../detectors/Python/PythonComponentDetector';
+import { PythonPackageInspector } from '../../inspectors/package/PythonPackageInspector';
 
 export const bindLanguageContext = (container: Container) => {
   container.bind(Types.LanguageContextFactory).toFactory(
@@ -71,6 +73,17 @@ const bindPackageInspectors = (languageAtPath: LanguageAtPath, container: Contai
     container.bind(Types.InitiableInspector).toDynamicValue((ctx) => {
       return ctx.container.get(Types.IPackageInspector);
     });
+  } else if (languageAtPath.language === ProgrammingLanguage.Python) {
+    container
+      .bind(Types.IPackageInspector)
+      .to(PythonPackageInspector)
+      .inSingletonScope();
+    container.bind(PythonPackageInspector).toDynamicValue((ctx) => {
+      return ctx.container.get(Types.IPackageInspector);
+    });
+    container.bind(Types.InitiableInspector).toDynamicValue((ctx) => {
+      return ctx.container.get(Types.IPackageInspector);
+    });
   }
 };
 
@@ -91,6 +104,10 @@ const bindComponentDetectors = (container: Container) => {
     .bind(Types.IProjectComponentDetector)
     .to(JavaComponentDetector)
     .whenTargetTagged(DETECT_LANGUAGE_TAG, ProgrammingLanguage.Kotlin);
+  container
+    .bind(Types.IProjectComponentDetector)
+    .to(PythonComponentDetector)
+    .whenTargetTagged(DETECT_LANGUAGE_TAG, ProgrammingLanguage.Python);
 
   container.bind(Types.ProjectComponentDetectorFactory).toFactory((ctx) => {
     return getProjectComponentDetectorFactory(ctx.container as Container);

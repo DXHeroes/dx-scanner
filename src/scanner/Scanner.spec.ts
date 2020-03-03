@@ -1,9 +1,9 @@
 import { createRootContainer, createTestContainer, TestContainerContext } from '../inversify.config';
-import { Scanner } from './Scanner';
+import { Scanner, PracticeWithContext } from './Scanner';
 import { FileSystemService } from '../services/FileSystemService';
 import { argumentsProviderFactory } from '../test/factories/ArgumentsProviderFactory';
-import { ESLintWithoutErrorsPractice } from '../practices/JavaScript/ESLintWithoutErrorsPractice';
-import { PracticeEvaluationResult } from '../model';
+import { PracticeEvaluationResult, PracticeImpact } from '../model';
+import { mockDeep } from 'jest-mock-extended';
 
 describe('Scanner', () => {
   let containerCtx: TestContainerContext;
@@ -64,18 +64,98 @@ describe('Scanner', () => {
     });
   });
 
-  it('runs fix when fix flag set to true', async () => {
-    jest.setTimeout(20000);
-    const fixMock = jest.fn();
-    containerCtx = createTestContainer({ fix: true });
-    ESLintWithoutErrorsPractice.prototype.fix = fixMock;
-    ESLintWithoutErrorsPractice.prototype.evaluate = () => Promise.resolve(PracticeEvaluationResult.notPracticing);
-    containerCtx.container.bind('ESLintWithoutErrorsPractice').to(ESLintWithoutErrorsPractice);
-    const scanner = containerCtx.container.get(Scanner);
+  describe('fixer', () => {
+    const mockFixablePractice = ({ fixFromConfig, id }: { fixFromConfig?: boolean; id?: string } = {}) =>
+      mockDeep<PracticeWithContext>({
+        evaluation: PracticeEvaluationResult.notPracticing,
+        practice: {
+          fix: jest.fn(),
+          getMetadata: () => ({
+            id: id || 'JavaScript.ESLintWithoutErrorsPractice',
+            name: 'ESLint Without Errors',
+            impact: PracticeImpact.medium,
+            suggestion: 'Use the ESLint correctly. You have some errors.',
+            reportOnlyOnce: true,
+            url: 'https://dxkb.io/p/linting',
+            dependsOn: { practicing: ['JavaScript.ESLintUsed'] },
+          }),
+        },
+        componentContext: {
+          configProvider: {
+            getOverriddenPractice: () => ({
+              impact: PracticeImpact.high,
+              fix: fixFromConfig,
+            }),
+          },
+        },
+      });
+    it('runs fix when fix flag set to true', async () => {
+      containerCtx = createTestContainer({ uri: 'github.com/DXHeroes/dx-scanner', fix: true });
+      const scanner = containerCtx.container.get(Scanner);
+      const fixablePractice = mockFixablePractice();
 
-    await scanner.scan({ determineRemote: false });
+      await scanner.fix([fixablePractice]);
 
-    expect(fixMock).toBeCalled();
+      expect(fixablePractice.practice.fix).toBeCalled();
+    });
+    it('fix settings from config works', async () => {
+      containerCtx = createTestContainer({ uri: '.', fix: true });
+      const scanner = containerCtx.container.get(Scanner);
+      const fixablePractice = mockFixablePractice({ fixFromConfig: false });
+
+      await scanner.fix([fixablePractice]);
+
+      expect(fixablePractice.practice.fix).not.toBeCalled();
+    });
+    it('fix settings from config works only when fix flag is set', async () => {
+      const scanner = containerCtx.container.get(Scanner);
+      const fixablePractice = mockFixablePractice({ fixFromConfig: true });
+
+      await scanner.fix([fixablePractice]);
+
+      expect(fixablePractice.practice.fix).not.toBeCalled();
+    });
+    it('multiple practices can be fixed', async () => {
+      containerCtx = createTestContainer({ uri: '.', fix: true });
+      const scanner = containerCtx.container.get(Scanner);
+      const fixablePractice = mockFixablePractice();
+      const fixablePracticeB = mockFixablePractice({ id: 'Totally.FakePractice' });
+
+      await scanner.fix([fixablePractice, fixablePracticeB]);
+
+      expect(fixablePractice.practice.fix).toBeCalled();
+      expect(fixablePracticeB.practice.fix).toBeCalled();
+    });
+    it('fixPattern flag works', async () => {
+      containerCtx = createTestContainer({ uri: '.', fix: true, fixPattern: 'fake' });
+      const scanner = containerCtx.container.get(Scanner);
+      const fixablePractice = mockFixablePractice();
+      const fixablePracticeB = mockFixablePractice({ id: 'Totally.FakePractice' });
+
+      await scanner.fix([fixablePractice, fixablePracticeB]);
+
+      expect(fixablePractice.practice.fix).not.toBeCalled();
+      expect(fixablePracticeB.practice.fix).toBeCalled();
+    });
+    it('fixPattern works only when fix flag is set', async () => {
+      containerCtx = createTestContainer({ uri: '.', fixPattern: 'fake' });
+      const scanner = containerCtx.container.get(Scanner);
+      const fixablePractice = mockFixablePractice();
+      const fixablePracticeB = mockFixablePractice({ id: 'Totally.FakePractice' });
+
+      await scanner.fix([fixablePractice, fixablePracticeB]);
+
+      expect(fixablePractice.practice.fix).not.toBeCalled();
+      expect(fixablePracticeB.practice.fix).not.toBeCalled();
+    });
+    it('fixPattern flag has higher priority than config', async () => {
+      containerCtx = createTestContainer({ fix: true, fixPattern: 'lint' });
+      const scanner = containerCtx.container.get(Scanner);
+      const fixablePractice = mockFixablePractice({ fixFromConfig: false });
+
+      await scanner.fix([fixablePractice]);
+
+      expect(fixablePractice.practice.fix).toBeCalled();
+    });
   });
-  it.todo('fixPattern flag works');
 });
