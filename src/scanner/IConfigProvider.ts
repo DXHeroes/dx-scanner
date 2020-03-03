@@ -18,6 +18,7 @@ export interface PracticeConfig {
   eslintIgnore?: string[];
   useEslintrc?: boolean;
   impact?: string;
+  fix?: boolean;
 }
 
 enum Service {

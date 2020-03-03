@@ -60,7 +60,7 @@ export class CLIReporter implements IReporter {
         lines.push('');
 
         for (const p of practicesAndComponentsUnknown) {
-          lines.push(red(`- ${bold(p.practice.name)}`));
+          lines.push(red(`- ${bold(p.practice.name)} (Reason: ${p.evaluationError})`));
         }
         lines.push('');
       }

@@ -49,7 +49,7 @@ describe('JavaPackageInspector Maven', () => {
         await inspector.init();
       });
 
-      it('Returns true package if it exists', () => {
+      it('Returns true if package exists', () => {
         expect(inspector.hasPackage('mysql:mysql-connector-java')).toBe(true);
       });
 

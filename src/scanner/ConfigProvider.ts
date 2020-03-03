@@ -44,7 +44,7 @@ export class ConfigProvider implements IConfigProvider {
     if (!practiceConfig) return undefined;
 
     if (typeof practiceConfig !== 'string' && practiceConfig !== undefined) {
-      return { impact: <PracticeImpact>practiceConfig.impact };
+      return { impact: <PracticeImpact>practiceConfig.impact, fix: practiceConfig.fix };
     }
 
     return {

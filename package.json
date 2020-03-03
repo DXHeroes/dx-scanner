@@ -1,7 +1,7 @@
 {
   "name": "dx-scanner",
   "description": "Scan your project for possible DX recommendations.",
-  "version": "2.4.0",
+  "version": "2.7.0",
   "author": "DX Heroes LTD <info@dxheroes.io> (https://dxheroes.io)",
   "homepage": "https://github.com/dxheroes/dx-scanner",
   "repository": "ssh://git@github.com/dxheroes/dx-scanner.git",
@@ -90,6 +90,7 @@
     "eslint-config-prettier": "6.10.0",
     "eslint-plugin-prettier": "3.1.2",
     "jest": "25.1.0",
+    "jest-mock-extended": "1.0.8",
     "nock": "12.0.1",
     "prettier": "1.19.1",
     "rimraf": "3.0.2",

@@ -1,3 +1,54 @@
+# [2.7.0](https://github.com/dxheroes/dx-scanner/compare/v2.6.0...v2.7.0) (2020-03-02)
+
+
+### Bug Fixes
+
+* merged master into feat branch & solved merge conflicts ([3b720bb](https://github.com/dxheroes/dx-scanner/commit/3b720bbc8a3117cf6d75aacbb986ef07df242f30))
+* small typos in Java tests ([8b0f87e](https://github.com/dxheroes/dx-scanner/commit/8b0f87ee91dff6ad444682788f85bec1b835096d))
+* small typos in test descriptions ([d3ccafe](https://github.com/dxheroes/dx-scanner/commit/d3ccafe08a351d19d80c15db8bad0957878b41ad))
+
+
+### Features
+
+* python package inspector ([388eef3](https://github.com/dxheroes/dx-scanner/commit/388eef306ad78153ee9f7ea6ae6c96eaa6d258cf))
+* test for python package inspector ([02da5fc](https://github.com/dxheroes/dx-scanner/commit/02da5fcb5e075729619b0367e7efaee1c00c62c6))
+* **python:** init python component detector and base for inspector ([ec6a7a9](https://github.com/dxheroes/dx-scanner/commit/ec6a7a90a0d3e47979f722b36365db78ff01f631))
+
+# [2.6.0](https://github.com/dxheroes/dx-scanner/compare/v2.5.0...v2.6.0) (2020-02-27)
+
+
+### Bug Fixes
+
+* adding new tests for offline mode ([0ed69e9](https://github.com/dxheroes/dx-scanner/commit/0ed69e900befc59d93002a6bdd07cce1aeb8edbd))
+* considering offline mode of dxs ([aaef314](https://github.com/dxheroes/dx-scanner/commit/aaef3145c2071c45ba579ab0a7ac33c12c1bf070))
+* context test for isOnline ([2924ee7](https://github.com/dxheroes/dx-scanner/commit/2924ee79e76f1638e673877703bc5af0bf34b6e5))
+* merged master to feat branch & solved merge conflicts ([9f084be](https://github.com/dxheroes/dx-scanner/commit/9f084be7c02a9887044ab636862bcf4bf9de3c76))
+* re-enabling net connect after tests ([c8d1d04](https://github.com/dxheroes/dx-scanner/commit/c8d1d0408780f5b58ef3777e5e33109632d56a6a))
+* tests & isOnline logic to pass all tests ([a8f8783](https://github.com/dxheroes/dx-scanner/commit/a8f8783c4466707d53190fff0a5987d252fa4c25))
+
+
+### Features
+
+* **reporters:** show error message from failed practice in CLI log ([e0d46dc](https://github.com/dxheroes/dx-scanner/commit/e0d46dc5ea9acaf34c4ac6f4a301f1d0a5d659d7))
+
+# [2.5.0](https://github.com/dxheroes/dx-scanner/compare/v2.4.0...v2.5.0) (2020-02-27)
+
+
+### Bug Fixes
+
+* **tests:** restore nock after each test suite using nock ([2ce7313](https://github.com/dxheroes/dx-scanner/commit/2ce731314707678ce1d83ae06cf63d19401d9461))
+
+
+### Features
+
+* **fixer:** add fix config tests ([26b81dc](https://github.com/dxheroes/dx-scanner/commit/26b81dcd8b0a33b857d5f1e106e605eaae03802d))
+* **fixer:** add fixPattern tests ([b85154f](https://github.com/dxheroes/dx-scanner/commit/b85154fda73a3ffa4fa9c08a7c1f74fdcc63312d))
+* **fixer:** add jest-mock-extended dependency ([bf20ae2](https://github.com/dxheroes/dx-scanner/commit/bf20ae237c03be587d9bd5668b3fff8efc8a491a))
+* **fixer:** clean nock before scanner tests ([f172f81](https://github.com/dxheroes/dx-scanner/commit/f172f81489a859d15a4e109adc7b5e1965fbb3f7))
+* **fixer:** fix fixer logic ([61a1cba](https://github.com/dxheroes/dx-scanner/commit/61a1cba312065cc1bc4e3388a6266f2ad4709018))
+* **fixer:** refactor scanner's fix ([b4dd956](https://github.com/dxheroes/dx-scanner/commit/b4dd9565e7a38bdf665743f1d94c17744f4cce27))
+* **fixer:** use mocks in fixer tests ([d17c443](https://github.com/dxheroes/dx-scanner/commit/d17c4435d2a8b06518aa39018ebfa3fabd3fbbc2))
+
 # [2.4.0](https://github.com/dxheroes/dx-scanner/compare/v2.3.3...v2.4.0) (2020-02-25)
 
 
