@@ -4,17 +4,25 @@ import _ from 'lodash';
 export const getRepoCommit = (params?: Partial<Commit>): Commit => {
   return _.merge(
     {
-      sha: 'df760e1c70f6903017a91f57dd3d9d7f230c54d7',
-      url: 'gitlab.com/projects/gitlab-org/gitlab/repository/commits/df760e1c',
-      message: 'Update CHANGELOG.md for 12.8.1\n\n[ci skip]',
+      sha: '4eecfba1b1e2c35c13a7b34fc3d71e58cbb3645d',
+      url: 'gitlab.com/projects/gitlab-org/gitlab/repository/commits/4eecfba1',
+      message:
+        'Conditionally cache Snippet content\n' +
+        '\n' +
+        'Not all Snippets contain Markdown content and so\n' +
+        'the `content` field should not always be cached.\n' +
+        '\n' +
+        'This change will attempt to determine if the content\n' +
+        'is Markdown based on the Snippet filename and only cache\n' +
+        'if it is\n',
       author: {
-        name: 'GitLab Release Tools Bot',
-        email: 'delivery-team+release-tools@gitlab.com',
-        date: '2020-02-24T15:26:36.000+00:00',
+        name: 'Vijay Hawoldar',
+        email: 'vhawoldar@gitlab.com',
+        date: '2020-02-28T08:49:54.000+00:00',
       },
       tree: {
-        sha: '52fe4982b340317231054002c7f3a7cc5165758f',
-        url: 'gitlab.com/projects/gitlab-org/gitlab/repository/commits/52fe4982b340317231054002c7f3a7cc5165758f',
+        sha: '54cd52b6316d15f3124b7223fd7863e7c3d18185',
+        url: 'gitlab.com/projects/gitlab-org/gitlab/repository/commits/54cd52b6316d15f3124b7223fd7863e7c3d18185',
       },
       verified: false,
     },

@@ -1,20 +1,19 @@
 import { PullRequestState } from '../../inspectors';
 import { argumentsProviderFactory } from '../../test/factories/ArgumentsProviderFactory';
+import { gitLabCommitsResponseFactory } from '../../test/factories/responses/gitLab/commitsFactory';
+import { gitLabIssueResponseFactory } from '../../test/factories/responses/gitLab/issueResponseFactory';
 import { gitLabPullRequestResponseFactory } from '../../test/factories/responses/gitLab/prResponseFactory';
+import { gitLabRepoCommitsResponseFactory } from '../../test/factories/responses/gitLab/repoCommitResponseFactory';
 import { GitLabNock } from '../../test/helpers/gitLabNock';
+import { getIssueResponse } from '../git/__MOCKS__/gitLabServiceMockFolder/getIssueResponse';
+import { getPullCommitsResponse } from '../git/__MOCKS__/gitLabServiceMockFolder/getPullCommitsResponse';
+import { getPullRequestResponse } from '../git/__MOCKS__/gitLabServiceMockFolder/getPullRequestResponse';
+import { getRepoCommit } from '../git/__MOCKS__/gitLabServiceMockFolder/getRepoCommitResponse';
+import { listIssuesResponse } from '../git/__MOCKS__/gitLabServiceMockFolder/listIssuesResponse';
+import { listPullRequestsResponse } from '../git/__MOCKS__/gitLabServiceMockFolder/listPullRequestsResponse';
+import { getRepoCommits } from '../git/__MOCKS__/gitLabServiceMockFolder/listRepoCommitsResponse';
 import { GitLabService } from './GitLabService';
 import { GitLabPullRequestState } from './IGitLabService';
-import util from 'util';
-import { listPullRequestsResponse } from '../git/__MOCKS__/gitLabServiceMockFolder/listPullRequestsResponse';
-import { getPullRequestResponse } from '../git/__MOCKS__/gitLabServiceMockFolder/getPullRequestResponse';
-import { getPullCommitsResponse } from '../git/__MOCKS__/gitLabServiceMockFolder/getPullCommitsResponse';
-import { gitLabCommitsResponseFactory } from '../../test/factories/responses/gitLab/commitsFactory';
-import { getRepoCommit } from '../git/__MOCKS__/gitLabServiceMockFolder/getRepoCommitResponse';
-import { gitLabRepoCommitsResponseFactory } from '../../test/factories/responses/gitLab/repoCommitResponseFactory';
-import { getRepoCommits } from '../git/__MOCKS__/gitLabServiceMockFolder/listRepoCommitsResponse';
-import { gitLabIssueResponseFactory } from '../../test/factories/responses/gitLab/issueResponseFactory';
-import { getIssueResponse } from '../git/__MOCKS__/gitLabServiceMockFolder/getIssueResponse';
-import { listIssuesResponse } from '../git/__MOCKS__/gitLabServiceMockFolder/listIssuesResponse';
 
 describe('GitLab Service', () => {
   let service: GitLabService;
