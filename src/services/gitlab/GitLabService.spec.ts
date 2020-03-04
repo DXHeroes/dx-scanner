@@ -7,6 +7,9 @@ import { GitLabPullRequestState } from './IGitLabService';
 import util from 'util';
 import { listPullRequestsResponse } from '../git/__MOCKS__/gitLabServiceMockFolder/listPullRequestsResponse';
 import { getPullRequestResponse } from '../git/__MOCKS__/gitLabServiceMockFolder/getPullRequestResponse';
+import { getPullCommitsResponse } from '../git/__MOCKS__/gitLabServiceMockFolder/getPullCommitsResponse';
+import { gitLabCommitsResponseFactory } from '../../test/factories/responses/gitLab/commitsFactory';
+import { getRepoCommit } from '../git/__MOCKS__/gitLabServiceMockFolder/getRepoCommitResponse';
 
 describe('GitLab Service', () => {
   let service: GitLabService;
@@ -39,5 +42,24 @@ describe('GitLab Service', () => {
 
     const response = await service.getPullRequest('gitlab-org', 'gitlab', 25985);
     expect(response).toMatchObject(getPullRequestResponse());
+  });
+
+  it('Returns pull commits in own interface', async () => {
+    const mockCommits = gitLabCommitsResponseFactory();
+
+    gitLabNock.listPullCommitsResponse([mockCommits], 25985);
+    gitLabNock.getCommitResponse(mockCommits, '4eecfba1b1e2c35c13a7b34fc3d71e58cbb3645d');
+
+    const response = await service.listPullCommits('gitlab-org', 'gitlab', 25985);
+    expect(response).toMatchObject(getPullCommitsResponse());
+  });
+
+  it('Returns repo commit in own interface', async () => {
+    const mockCommits = gitLabCommitsResponseFactory();
+
+    const response = await service.getCommit('gitlab-org', 'gitlab', 'df760e1c');
+
+    gitLabNock.getCommitResponse(mockCommits, 'df760e1c');
+    expect(response).toMatchObject(getRepoCommit());
   });
 });

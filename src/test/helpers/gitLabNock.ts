@@ -1,9 +1,12 @@
 /* eslint-disable @typescript-eslint/camelcase */
 import nock from 'nock';
 import { ListGetterOptions, PaginationParams } from '../../inspectors';
-import { MergeRequest } from '../../services/gitlab/gitlabClient/resources/MergeRequests';
+import { MergeRequest, Commit } from '../../services/gitlab/gitlabClient/resources/MergeRequests';
 import { GitLabPullRequestState } from '../../services/gitlab/IGitLabService';
 import { gitLabPullRequestResponseFactory } from '../factories/responses/gitLab/prResponseFactory';
+import { gitLabCommitsResponseFactory } from '../factories/responses/gitLab/commitsFactory';
+import { gitLabRepoCommitsResponseFactory } from '../factories/responses/gitLab/repoCommitResponseFactory';
+import { gitLabListPullCommitsResponseFactory } from '../factories/responses/gitLab/listPullCommitsResponseFactory';
 
 export class GitLabNock {
   user: string;
@@ -106,5 +109,30 @@ export class GitLabNock {
       'x-per-page': '1',
       'x-total-pages': '1',
     });
+  }
+
+  listPullCommitsResponse(pullCommits: Commit[], mergeIId: number) {
+    const encodedProjectUrl = encodeURIComponent(`${this.user}/${this.repoName}`);
+
+    const baseUrl = `${this.url}/projects/${encodedProjectUrl}/merge_requests/${mergeIId}/commits`;
+
+    const response = gitLabListPullCommitsResponseFactory(pullCommits);
+    return GitLabNock.get(baseUrl).reply(200, response, {
+      'x-total': '1',
+      'x-next-page': '1',
+      'x-page': '1',
+      'x-prev-page': '1',
+      'x-per-page': '1',
+      'x-total-pages': '1',
+    });
+  }
+
+  getCommitResponse(commit: Commit, commitId: string) {
+    const encodedProjectUrl = encodeURIComponent(`${this.user}/${this.repoName}`);
+
+    const baseUrl = `${this.url}/projects/${encodedProjectUrl}/repository/commits/${commitId}`;
+
+    const response = gitLabRepoCommitsResponseFactory(commit);
+    return GitLabNock.get(baseUrl).reply(200, response);
   }
 }
