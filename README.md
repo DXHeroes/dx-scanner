@@ -138,7 +138,7 @@ Add ```dxscannerrc.*``` config file to change default configuration settings. It
 You can also run ```dx-scanner init``` to initialize config automatically.
 
 ### Practices   
-You can switch off practices that you do not want to scan or you can change their impact level. To do so, refer to the id of the practice.
+You can switch off practices that you do not want to scan, change their impact level, and even override their default values. To do so, refer to the id of the practice and specify your configuration.
 
 <details>
 <summary>List of All Practices 🔍</summary>
@@ -195,7 +195,6 @@ off
 Example `dxscannerrc.json`:
 
 ```json
-
 {
     "practices": {
         "JavaScript.GitignoreCorrectlySet": "medium",
@@ -205,9 +204,34 @@ Example `dxscannerrc.json`:
         },
         "JavaScript.ESLintWithoutErrorsPractice": {
           "fix": true
+        },
+        "LanguageIndependent.ThinPullRequestsPractice": {
+          "impact": "high",
+          "override": {
+            "measurePullRequestCount": 500
+          }
         }
     }
 }
+```
+
+In order to override the default values of certain practices, specify `override` and nest the correct overridable variables.
+
+Example `dxscannerrc.yaml`:
+
+```yaml
+---
+practices:
+  JavaScript.GitignoreCorrectlySet: medium
+  JavaScript.LoggerUsed: 'off'
+  LanguageIndependent.DoesPullRequests:
+    impact: small
+  JavaScript.ESLintWithoutErrorsPractice:
+    fix: true
+  LanguageIndependent.ThinPullRequestsPractice:
+    impact: high
+    override:
+      measurePullRequestCount: 500
 ```
 
 ### Github CI Action

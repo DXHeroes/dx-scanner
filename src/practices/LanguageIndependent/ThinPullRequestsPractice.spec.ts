@@ -25,6 +25,7 @@ describe('ThinPullRequestsPractice', () => {
   afterEach(async () => {
     containerCtx.virtualFileSystemService.clearFileSystem();
     containerCtx.practiceContext.fileInspector!.purgeCache();
+    containerCtx.practiceContext.config = {};
   });
 
   it('return practicing if there is not a fat PR no older than 30 days than the newest PR', async () => {
@@ -39,7 +40,7 @@ describe('ThinPullRequestsPractice', () => {
     expect(evaluated).toEqual(PracticeEvaluationResult.practicing);
   });
 
-  it('return notPracticing if there is a fat PR no older than 7 days than the newest PR', async () => {
+  it('return notPracticing if there is a fat PR no older than 7 days than the newest PR (default measurePullRequestsCount)', async () => {
     mockCollaborationInspector.listPullRequests = async () => {
       return getPullRequestsResponse([
         getPullRequestResponse({
@@ -54,6 +55,56 @@ describe('ThinPullRequestsPractice', () => {
         }),
       ]);
     };
+
+    const evaluated = await practice.evaluate({
+      ...containerCtx.practiceContext,
+      collaborationInspector: mockCollaborationInspector,
+    });
+    expect(evaluated).toEqual(PracticeEvaluationResult.notPracticing);
+  });
+
+  it('return practicing if there is a fat PR with higher overriden measurePullRequestsCount', async () => {
+    mockCollaborationInspector.listPullRequests = async () => {
+      return getPullRequestsResponse([
+        getPullRequestResponse({
+          updatedAt: moment()
+            .subtract(3, 'd')
+            .format('YYYY-MM-DDTHH:mm:ss.SSSSSSZ'),
+          lines: {
+            additions: 1000,
+            deletions: 500,
+            changes: 1500,
+          },
+        }),
+      ]);
+    };
+
+    containerCtx.practiceContext.config = { override: { measurePullRequestCount: 2000 } };
+
+    const evaluated = await practice.evaluate({
+      ...containerCtx.practiceContext,
+      collaborationInspector: mockCollaborationInspector,
+    });
+    expect(evaluated).toEqual(PracticeEvaluationResult.practicing);
+  });
+
+  it('return notPracticing if there is a small PR with lower overriden measurePullRequestsCount', async () => {
+    mockCollaborationInspector.listPullRequests = async () => {
+      return getPullRequestsResponse([
+        getPullRequestResponse({
+          updatedAt: moment()
+            .subtract(2, 'd')
+            .format('YYYY-MM-DDTHH:mm:ss.SSSSSSZ'),
+          lines: {
+            additions: 20,
+            deletions: 5,
+            changes: 25,
+          },
+        }),
+      ]);
+    };
+
+    containerCtx.practiceContext.config = { override: { measurePullRequestCount: 10 } };
 
     const evaluated = await practice.evaluate({
       ...containerCtx.practiceContext,
