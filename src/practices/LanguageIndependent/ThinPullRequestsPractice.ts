@@ -10,7 +10,7 @@ import { PullRequest } from '../../services/git/model';
 import { Paginated } from '../../inspectors';
 import { PracticeConfig } from '../../scanner/IConfigProvider';
 
-interface IPracticeOverride extends PracticeConfig {
+interface PracticeOverride extends PracticeConfig {
   override: {
     measurePullRequestCount: number;
   };
@@ -38,7 +38,7 @@ export class ThinPullRequestsPractice implements IPractice {
       return PracticeEvaluationResult.unknown;
     }
     if (ctx.config) {
-      const config = <IPracticeOverride>ctx.config;
+      const config = <PracticeOverride>ctx.config;
       const overridePullRequestCount = config.override?.measurePullRequestCount;
       this.measurePullRequestCount = !overridePullRequestCount ? this.measurePullRequestCount : overridePullRequestCount;
     }

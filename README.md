@@ -194,7 +194,6 @@ off
 Example `dxscannerrc.json`:
 
 ```json
-
 {
     "practices": {
         "JavaScript.GitignoreCorrectlySet": "medium",
@@ -204,6 +203,12 @@ Example `dxscannerrc.json`:
         },
         "JavaScript.ESLintWithoutErrorsPractice": {
           "fix": true
+        },
+        "LanguageIndependent.ThinPullRequestsPractice": {
+          "impact": "high",
+          "override": {
+            "measurePullRequestCount": 500
+          }
         }
     }
 }
@@ -216,7 +221,12 @@ Example `dxscannerrc.yaml`:
 ```yaml
 ---
 practices:
-  JavaScript.DependenciesVersionMinorPatchLevel: medium
+  JavaScript.GitignoreCorrectlySet: medium
+  JavaScript.LoggerUsed: 'off'
+  LanguageIndependent.DoesPullRequests:
+    impact: small
+  JavaScript.ESLintWithoutErrorsPractice:
+    fix: true
   LanguageIndependent.ThinPullRequestsPractice:
     impact: high
     override:
