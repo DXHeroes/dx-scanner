@@ -220,9 +220,14 @@ export class BitbucketService implements IVCSService {
       pull_request_id: prNumber.toString(),
       repo_slug: repo,
       workspace: owner,
-      page: options?.pagination?.page?.toString(),
-      pagelen: options?.pagination?.perPage,
     };
+
+    if (options?.pagination?.page) {
+      params.page = options.pagination.page.toString();
+    }
+    if (options?.pagination?.perPage) {
+      params.pagelen = options.pagination.perPage;
+    }
 
     const response = <DeepRequired<Response<BitbucketCommit>>>await this.client.pullrequests.listCommits(params);
 
