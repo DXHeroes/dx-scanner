@@ -8,6 +8,13 @@ import { PullRequestState } from '../../inspectors/ICollaborationInspector';
 import _ from 'lodash';
 import { PullRequest } from '../../services/git/model';
 import { Paginated } from '../../inspectors';
+import { PracticeConfig } from '../../scanner/IConfigProvider';
+
+interface PracticeOverride extends PracticeConfig {
+  override: {
+    measurePullRequestCount: number;
+  };
+}
 
 @DxPractice({
   id: 'LanguageIndependent.ThinPullRequestsPractice',
@@ -20,7 +27,7 @@ import { Paginated } from '../../inspectors';
   dependsOn: { practicing: ['LanguageIndependent.DoesPullRequests'] },
 })
 export class ThinPullRequestsPractice implements IPractice {
-  private readonly measurePullRequestCount = 1000; // update suggestion text when changed
+  private measurePullRequestCount = 1000; // update suggestion text when changed
 
   async isApplicable(): Promise<boolean> {
     return true;
@@ -29,6 +36,11 @@ export class ThinPullRequestsPractice implements IPractice {
   async evaluate(ctx: PracticeContext): Promise<PracticeEvaluationResult> {
     if (!ctx.fileInspector || !ctx.collaborationInspector) {
       return PracticeEvaluationResult.unknown;
+    }
+    if (ctx.config) {
+      const config = <PracticeOverride>ctx.config;
+      const overridePullRequestCount = config.override?.measurePullRequestCount;
+      this.measurePullRequestCount = !overridePullRequestCount ? this.measurePullRequestCount : overridePullRequestCount;
     }
 
     const repoName = GitServiceUtils.getRepoName(ctx.projectComponent.repositoryPath, ctx.projectComponent.path);
