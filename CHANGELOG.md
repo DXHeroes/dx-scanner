@@ -1,3 +1,19 @@
+# [2.9.0](https://github.com/dxheroes/dx-scanner/compare/v2.8.1...v2.9.0) (2020-03-04)
+
+
+### Bug Fixes
+
+* german fix ([67630d2](https://github.com/dxheroes/dx-scanner/commit/67630d2d641a732f71a6b78847378b920699395d))
+* relocated interfaces of individual practices in the current architecture ([ed48f7b](https://github.com/dxheroes/dx-scanner/commit/ed48f7b5cb8d84d487a508a848e9ac28a3c5424f))
+* removed console.logs & provided tests for the changes ([e44d952](https://github.com/dxheroes/dx-scanner/commit/e44d9527e4c68b13e213b299b1cbc8150fb37422))
+* removed the override from yml config ([0edc1c0](https://github.com/dxheroes/dx-scanner/commit/0edc1c056743b952f6f5e12881eda01c990e6faa))
+
+
+### Features
+
+* dynamic max threshold customization ([e9714f1](https://github.com/dxheroes/dx-scanner/commit/e9714f1458965edab38f631897a5e3865ddc8738))
+* dynamic max threshold customization ([#256](https://github.com/dxheroes/dx-scanner/issues/256)) ([7a6cb01](https://github.com/dxheroes/dx-scanner/commit/7a6cb018316658aeba8daf437650539b1f122625))
+
 ## [2.8.1](https://github.com/dxheroes/dx-scanner/compare/v2.8.0...v2.8.1) (2020-03-03)
 
 
