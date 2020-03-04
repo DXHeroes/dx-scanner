@@ -267,7 +267,7 @@ export class GitLabService implements IVCSService {
 
   async listRepoCommits(owner: string, repo: string, sha?: string, options?: ListGetterOptions): Promise<Paginated<Commit>> {
     const { data, pagination } = await this.client.Commits.list(`${owner}/${repo}`);
-
+    console.log(data);
     const items = data.map((val) => {
       return {
         sha: val.id,

@@ -127,6 +127,22 @@ export class GitLabNock {
     });
   }
 
+  listRepoCommitsResponse(repoCommits: Commit[]) {
+    const encodedProjectUrl = encodeURIComponent(`${this.user}/${this.repoName}`);
+
+    const baseUrl = `${this.url}/projects/${encodedProjectUrl}/repository/commits`;
+
+    const response = gitLabListPullCommitsResponseFactory(repoCommits);
+    return GitLabNock.get(baseUrl).reply(200, response, {
+      'x-total': '1',
+      'x-next-page': '1',
+      'x-page': '1',
+      'x-prev-page': '1',
+      'x-per-page': '1',
+      'x-total-pages': '1',
+    });
+  }
+
   getCommitResponse(commit: Commit, commitId: string) {
     const encodedProjectUrl = encodeURIComponent(`${this.user}/${this.repoName}`);
 
