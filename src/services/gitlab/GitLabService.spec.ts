@@ -12,6 +12,8 @@ import { gitLabCommitsResponseFactory } from '../../test/factories/responses/git
 import { getRepoCommit } from '../git/__MOCKS__/gitLabServiceMockFolder/getRepoCommitResponse';
 import { gitLabRepoCommitsResponseFactory } from '../../test/factories/responses/gitLab/repoCommitResponseFactory';
 import { getRepoCommits } from '../git/__MOCKS__/gitLabServiceMockFolder/listRepoCommitsResponse';
+import { gitLabIssueResponseFactory } from '../../test/factories/responses/gitLab/issueResponseFactory';
+import { getIssueResponse } from '../git/__MOCKS__/gitLabServiceMockFolder/getIssueResponse';
 
 describe('GitLab Service', () => {
   let service: GitLabService;
@@ -72,5 +74,13 @@ describe('GitLab Service', () => {
 
     const response = await service.listRepoCommits('gitlab-org', 'gitlab');
     expect(response).toMatchObject(getRepoCommits());
+  });
+
+  it('Returns one issue in own interface', async () => {
+    const mockIssue = gitLabIssueResponseFactory({});
+    gitLabNock.getIssueResponse(mockIssue);
+
+    const response = await service.getIssue('gitlab-org', 'gitlab', 207825);
+    expect(response).toMatchObject(getIssueResponse());
   });
 });

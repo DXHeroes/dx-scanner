@@ -82,7 +82,7 @@ export interface Issue {
   moved_to_id?: any;
   epic_iid?: any;
   epic?: any;
-  task_status: string;
+  // task_status: string;
 }
 
 export interface IssueComment {

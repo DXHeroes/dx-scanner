@@ -7,6 +7,7 @@ import { gitLabPullRequestResponseFactory } from '../factories/responses/gitLab/
 import { gitLabCommitsResponseFactory } from '../factories/responses/gitLab/commitsFactory';
 import { gitLabRepoCommitsResponseFactory } from '../factories/responses/gitLab/repoCommitResponseFactory';
 import { gitLabListPullCommitsResponseFactory } from '../factories/responses/gitLab/listPullCommitsResponseFactory';
+import { Issue } from '../../services/gitlab/gitlabClient/resources/Issues';
 
 export class GitLabNock {
   user: string;
@@ -150,5 +151,13 @@ export class GitLabNock {
 
     const response = gitLabRepoCommitsResponseFactory(commit);
     return GitLabNock.get(baseUrl).reply(200, response);
+  }
+
+  getIssueResponse(issue: Issue) {
+    const encodedProjectUrl = encodeURIComponent(`${this.user}/${this.repoName}`);
+
+    const baseUrl = `${this.url}/projects/${encodedProjectUrl}/issues/${issue.iid}`;
+
+    return GitLabNock.get(baseUrl).reply(200, issue);
   }
 }
