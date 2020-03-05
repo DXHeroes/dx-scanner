@@ -187,4 +187,38 @@ describe('SecurityVulnerabilitiesPractice', () => {
     const result = await practice.isApplicable(containerCtx.practiceContext);
     expect(result).toEqual(false);
   });
+
+  it('Returns unknown when yarn and npm not installed', async () => {
+    setupMocks([{ f: commandExists, impl: () => false }]);
+    containerCtx.virtualFileSystemService.setFileSystem({
+      'yarn.lock': '',
+    });
+
+    const result = await practice.evaluate(containerCtx.practiceContext);
+
+    expect(result).toBe(PracticeEvaluationResult.unknown);
+  });
+
+  it('Returns unknown when npm audit errors', async () => {
+    setupMocks([
+      {
+        f: shelljs.exec,
+        impl: () => {
+          const result = new String(
+            '{"error": {"code": "ELOCKVERIFY","summary": "Errors were found in your package-lock.json","detail": ""}}',
+          );
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          (result as any).code = 1;
+          return result;
+        },
+      },
+    ]);
+    containerCtx.virtualFileSystemService.setFileSystem({
+      'package-lock.json': '',
+    });
+
+    const result = await practice.evaluate(containerCtx.practiceContext);
+
+    expect(result).toBe(PracticeEvaluationResult.unknown);
+  });
 });
