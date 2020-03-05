@@ -1,3 +1,10 @@
+## [2.10.1](https://github.com/dxheroes/dx-scanner/compare/v2.10.0...v2.10.1) (2020-03-05)
+
+
+### Bug Fixes
+
+* **errors:** use specific imports in ErrorFactory ([a52eaec](https://github.com/dxheroes/dx-scanner/commit/a52eaecf8316a46bdf591e11b838bb4fe58686d2))
+
 # [2.10.0](https://github.com/dxheroes/dx-scanner/compare/v2.9.0...v2.10.0) (2020-03-05)
 
 
