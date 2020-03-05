@@ -8,6 +8,8 @@ import { gitLabCommitsResponseFactory } from '../factories/responses/gitLab/comm
 import { gitLabRepoCommitsResponseFactory } from '../factories/responses/gitLab/repoCommitResponseFactory';
 import { gitLabListPullCommitsResponseFactory } from '../factories/responses/gitLab/listPullCommitsResponseFactory';
 import { Issue } from '../../services/gitlab/gitlabClient/resources/Issues';
+import { gitLabIssueCommentsResponseFactory } from '../factories/responses/gitLab/issueCommentsResponseFactory';
+import { gitLabRepoInfoResponseFactory } from '../factories/responses/gitLab/repoInfoResponseFactory';
 
 export class GitLabNock {
   user: string;
@@ -138,5 +140,22 @@ export class GitLabNock {
     const baseUrl = `${this.url}/projects/${encodedProjectUrl}/issues`;
 
     return GitLabNock.get(baseUrl).reply(200, issues, this.pagination);
+  }
+
+  listIssueCommentsResponse(issueNumber: number) {
+    const encodedProjectUrl = encodeURIComponent(`${this.user}/${this.repoName}`);
+
+    const baseUrl = `${this.url}/projects/${encodedProjectUrl}/issues/${issueNumber}/notes`;
+
+    const response = gitLabIssueCommentsResponseFactory();
+    return GitLabNock.get(baseUrl).reply(200, [response], this.pagination);
+  }
+
+  getRepoResponse() {
+    const encodedProjectUrl = encodeURIComponent(`${this.user}/${this.repoName}`);
+
+    const baseUrl = `${this.url}/projects/${encodedProjectUrl}`;
+    const response = gitLabRepoInfoResponseFactory();
+    return GitLabNock.get(baseUrl).reply(200, response, this.pagination);
   }
 }

@@ -250,7 +250,7 @@ export class GitLabService implements IVCSService {
       },
       url: `${this.host}/projects/${owner}/${repo}/notes/${val.id}`,
       // https://docs.gitlab.com/ee/api/notes.html
-      body: undefined,
+      body: val.body,
       createdAt: val.created_at.toString(),
       updatedAt: val.updated_at.toString(),
       authorAssociation: val.author.username,

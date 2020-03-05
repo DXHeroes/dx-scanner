@@ -15,6 +15,8 @@ import { listPullRequestsResponse } from '../git/__MOCKS__/gitLabServiceMockFold
 import { getRepoCommits } from '../git/__MOCKS__/gitLabServiceMockFolder/listRepoCommitsResponse';
 import { GitLabService } from './GitLabService';
 import { GitLabPullRequestState } from './IGitLabService';
+import util from 'util';
+import { listIssueCommentsResponse } from '../git/__MOCKS__/gitLabServiceMockFolder/listIssueComments';
 
 describe('GitLab Service', () => {
   let service: GitLabService;
@@ -107,5 +109,20 @@ describe('GitLab Service', () => {
 
     const response = await service.listIssues('homolova', 'ted_ontouml_kom');
     expect(response).toMatchObject(listIssuesResponse(mockResponseForUser));
+  });
+
+  it('Returns issue comments in own interface', async () => {
+    gitLabNock = new GitLabNock('homolova', 'ted_ontouml_kom');
+    gitLabNock.listIssueCommentsResponse(1);
+
+    const response = await service.listIssueComments('homolova', 'ted_ontouml_kom', 1);
+    expect(response).toMatchObject(listIssueCommentsResponse());
+  });
+
+  it('The response id defined when getRepo is called', async () => {
+    gitLabNock.getRepoResponse();
+
+    const response = await service.getRepo('gitlab-org', 'gitlab');
+    expect(response).toBeDefined();
   });
 });
