@@ -1,7 +1,8 @@
+/* eslint-disable @typescript-eslint/camelcase */
 import { PullRequestState } from '../../inspectors';
 import { argumentsProviderFactory } from '../../test/factories/ArgumentsProviderFactory';
 import { gitLabCommitsResponseFactory } from '../../test/factories/responses/gitLab/commitsFactory';
-import { gitLabIssueResponseFactory } from '../../test/factories/responses/gitLab/issueResponseFactory';
+import { gitLabIssueResponseFactory, issueFromUser } from '../../test/factories/responses/gitLab/issueResponseFactory';
 import { gitLabPullRequestResponseFactory } from '../../test/factories/responses/gitLab/prResponseFactory';
 import { gitLabRepoCommitsResponseFactory } from '../../test/factories/responses/gitLab/repoCommitResponseFactory';
 import { GitLabNock } from '../../test/helpers/gitLabNock';
@@ -9,7 +10,7 @@ import { getIssueResponse } from '../git/__MOCKS__/gitLabServiceMockFolder/getIs
 import { getPullCommitsResponse } from '../git/__MOCKS__/gitLabServiceMockFolder/getPullCommitsResponse';
 import { getPullRequestResponse } from '../git/__MOCKS__/gitLabServiceMockFolder/getPullRequestResponse';
 import { getRepoCommit } from '../git/__MOCKS__/gitLabServiceMockFolder/getRepoCommitResponse';
-import { listIssuesResponse } from '../git/__MOCKS__/gitLabServiceMockFolder/listIssuesResponse';
+import { listIssuesResponse, mockResponseForUser } from '../git/__MOCKS__/gitLabServiceMockFolder/listIssuesResponse';
 import { listPullRequestsResponse } from '../git/__MOCKS__/gitLabServiceMockFolder/listPullRequestsResponse';
 import { getRepoCommits } from '../git/__MOCKS__/gitLabServiceMockFolder/listRepoCommitsResponse';
 import { GitLabService } from './GitLabService';
@@ -93,5 +94,18 @@ describe('GitLab Service', () => {
 
     const response = await service.listIssues('gitlab-org', 'gitlab');
     expect(response).toMatchObject(listIssuesResponse());
+  });
+
+  it('Returns issues for user in own interface', async () => {
+    gitLabNock = new GitLabNock('homolova', 'ted_ontouml_kom');
+
+    jest.setTimeout(100000);
+    const mockIssue = gitLabIssueResponseFactory(issueFromUser);
+
+    gitLabNock.listIssuesResponse([mockIssue]);
+    gitLabNock.getUserInfo();
+
+    const response = await service.listIssues('homolova', 'ted_ontouml_kom');
+    expect(response).toMatchObject(listIssuesResponse(mockResponseForUser));
   });
 });

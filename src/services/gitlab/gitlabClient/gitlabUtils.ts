@@ -37,6 +37,7 @@ export type GitLabClient = InstanceType<typeof GitLabClient>;
 export const parseResponse = <T>(response: AxiosResponse<T>): CustomAxiosResponse<T> => {
   const { headers } = response;
   const { data } = response;
+
   const pagination = {
     total: parseInt(headers['x-total']),
     next: parseInt(headers['x-next-page']) || null,

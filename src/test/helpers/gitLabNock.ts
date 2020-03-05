@@ -25,7 +25,6 @@ export class GitLabNock {
     const urlObj = new URL(url);
 
     const scope = nock(urlObj.origin, { encodedQueryParams: true });
-
     if (persist) {
       scope.persist();
     }
@@ -39,15 +38,20 @@ export class GitLabNock {
   }
 
   getUserInfo() {
-    const url = `${this.url}/users?username=${this.user}`;
+    const url = `${this.url}/users`;
+    const response = [
+      {
+        id: 3045721,
+        name: 'Adela',
+        username: 'Homolova',
+        state: 'active',
+        avatar_url: 'https://secure.gravatar.com/avatar/3e007e2a4f00c4a02ba6bc28431f4a20?s=80&d=identicon',
+        web_url: 'https://gitlab.com/Homolova',
+      },
+    ];
+    const params = { username: this.user };
 
-    const response = {
-      id: 9970,
-      name: this.user,
-      web_url: `https://gitlab.com/groups/${this.user}`,
-    };
-
-    return GitLabNock.get(url).reply(200, response);
+    return GitLabNock.get(url, params).reply(200, response);
   }
 
   getGroupInfo() {

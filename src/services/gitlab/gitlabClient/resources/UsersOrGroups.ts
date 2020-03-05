@@ -1,4 +1,3 @@
-import { AxiosResponse } from 'axios';
 import { GitLabClient } from '../GitLabClient';
 import { CustomAxiosResponse, parseResponse } from '../gitlabUtils';
 import { Links } from './model';
@@ -7,16 +6,18 @@ export class Users extends GitLabClient {
   api = this.createAxiosInstance();
 
   async getUser(userName: string): Promise<CustomAxiosResponse<User[]>> {
-    const endpoint = `users?username=${userName}`;
+    const endpoint = `users`;
+    const params = { username: userName };
 
-    const response: AxiosResponse<User[]> = await this.api.get(endpoint);
+    const response = await this.api.get(endpoint, { params });
     return parseResponse(response);
   }
 
-  async getGroup(groupName: string): Promise<AxiosResponse<Group>> {
+  async getGroup(groupName: string): Promise<CustomAxiosResponse<Group>> {
     const endpoint = `groups/${groupName}`;
 
-    return this.api.get(endpoint);
+    const response = await this.api.get(endpoint);
+    return parseResponse(response);
   }
 }
 

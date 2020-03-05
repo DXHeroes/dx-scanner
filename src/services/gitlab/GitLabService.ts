@@ -394,6 +394,7 @@ export class GitLabService implements IVCSService {
 
   private async getUserInfo(owner: string) {
     let userInfo;
+
     try {
       userInfo = await this.client.Users.getUser(owner);
 
@@ -404,6 +405,7 @@ export class GitLabService implements IVCSService {
       };
     } catch (error) {
       userInfo = await this.client.Users.getGroup(owner);
+
       return {
         id: userInfo.data.id.toString(),
         login: userInfo.data.name,

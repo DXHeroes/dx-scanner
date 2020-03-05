@@ -42,3 +42,20 @@ export const listIssuesResponse = (items?: Issue[]): Paginated<Issue> => {
     perPage: 1,
   };
 };
+
+export const mockResponseForUser = [
+  {
+    user: {
+      id: '3045721',
+      login: 'Homolova',
+      url: 'https://gitlab.com/Homolova',
+    },
+    url: 'https://gitlab.com/Homolova/ted_ontouml_kom/issues/1',
+    body: 'test',
+    createdAt: '2020-03-05T14:13:37.362Z',
+    updatedAt: '2020-03-05T14:13:37.362Z',
+    closedAt: null,
+    state: 'opened',
+    id: 1,
+  },
+];

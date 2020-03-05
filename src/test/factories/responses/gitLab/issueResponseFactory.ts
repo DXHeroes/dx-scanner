@@ -79,3 +79,56 @@ export const gitLabIssueResponseFactory = (params: Partial<Issue>): Issue => {
     params,
   );
 };
+
+export const issueFromUser = {
+  id: 31618511,
+  iid: 1,
+  project_id: 9068731,
+  title: 'test',
+  description: 'test',
+  state: 'opened',
+  created_at: new Date('2020-03-05T14:13:37.362Z'),
+  updated_at: new Date('2020-03-05T14:13:37.362Z'),
+
+  labels: [],
+  assignees: [],
+  author: {
+    id: 3045721,
+    name: 'Adela',
+    username: 'Homolova',
+    state: 'active',
+    avatar_url: 'https://secure.gravatar.com/avatar/3e007e2a4f00c4a02ba6bc28431f4a20?s=80&d=identicon',
+    web_url: 'https://gitlab.com/Homolova',
+  },
+  user_notes_count: 0,
+  merge_requests_count: 0,
+  upvotes: 0,
+  downvotes: 0,
+  due_date: null,
+  confidential: false,
+  discussion_locked: null,
+  web_url: 'https://gitlab.com/Homolova/ted_ontouml_kom/issues/1',
+  time_stats: {
+    time_estimate: 0,
+    total_time_spent: 0,
+    human_time_estimate: null,
+    human_total_time_spent: null,
+  },
+  task_completion_status: {
+    count: 0,
+    completed_count: 0,
+  },
+  has_tasks: false,
+  _links: {
+    self: 'https://gitlab.com/api/v4/projects/9068731/issues/1',
+    notes: 'https://gitlab.com/api/v4/projects/9068731/issues/1/notes',
+    award_emoji: 'https://gitlab.com/api/v4/projects/9068731/issues/1/award_emoji',
+    project: 'https://gitlab.com/api/v4/projects/9068731',
+  },
+  references: {
+    short: '#1',
+    relative: '#1',
+    full: 'Homolova/ted_ontouml_kom#1',
+  },
+  moved_to_id: null,
+};
