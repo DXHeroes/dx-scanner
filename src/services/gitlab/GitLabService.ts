@@ -29,7 +29,7 @@ import {
   UserInfo,
 } from '../git/model';
 import { VCSServicesUtils } from '../git/VCSServicesUtils';
-import { GitLabClient, PaginationGitLabCustomResponse } from './gitlabClient/gitlabUtils';
+import { GitLabClient, PaginationGitLabCustomResponse, CustomAxiosResponse } from './gitlabClient/gitlabUtils';
 const debug = Debug('cli:services:git:gitlab-service');
 
 @injectable()
@@ -58,7 +58,7 @@ export class GitLabService implements IVCSService {
   }
 
   getRepo(owner: string, repo: string) {
-    return this.client.Projects.get(`${owner}/${repo}`);
+    return this.unwrap(this.client.Projects.get(`${owner}/${repo}`));
   }
 
   /**
@@ -433,10 +433,10 @@ export class GitLabService implements IVCSService {
   /**
    * Debug GitLab request promise
    */
-  private unwrap<T>(clientPromise: Promise<Response<T>>): Promise<Response<T>> {
+  private unwrap<T>(clientPromise: Promise<CustomAxiosResponse<T>>): Promise<CustomAxiosResponse<T>> {
     return clientPromise
       .then((response) => {
-        //this.debugGitLabResponse(response);
+        this.debugGitLabResponse(response);
         return response;
       })
       .catch((error) => {
@@ -453,8 +453,8 @@ export class GitLabService implements IVCSService {
    * Debug GitHub response
    * - count API calls and inform about remaining rate limit
    */
-  private debugGitLabResponse = <T>(response: Response<T>) => {
-    // this.callCount++;
-    // debug(`GitHub API Hit: ${this.callCount}. Remaining ${response.headers['x-ratelimit-remaining']} hits. (${response.headers.link})`);
+  private debugGitLabResponse = <T>(response: CustomAxiosResponse<T>) => {
+    this.callCount++;
+    debug(`GitLab API Hit: ${this.callCount}. Remaining ${response.headers['RateLimit-Remaining']} hits.`);
   };
 }
