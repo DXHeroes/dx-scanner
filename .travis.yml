@@ -75,6 +75,17 @@ jobs:
     env:
       - CONTAINER_NAME=docker.pkg.github.com/dxheroes/dx-scanner/release
     script:
-      - docker build -t $CONTAINER_NAME .
+      - docker build -f Dockerfile.github-action -t $CONTAINER_NAME .
       - docker login -u dxheroes -p $DOCKER_GITHUB_PASSWORD docker.pkg.github.com
       - docker push $CONTAINER_NAME
+  - stage: build docker containers
+    if: (branch = master AND type = push) OR branch = chore/dockerfile-ci
+    node_js: lts/*
+    env:
+      - CONTAINER_NAME=dxheroes/dx-scanner
+    script:
+      - "export DOCKER_IMG_TAG=cat package.json | grep version | head -1 | awk -F: '{ print $2 }' | sed 's/[ \",]//g'"
+      - echo $DOCKER_IMG_TAG
+      - docker build -t $CONTAINER_NAME:$DOCKER_IMG_TAG .
+      - docker login -u $DOCKERHUB_USER -p $DOCKERHUB_PASSWORD
+      # - docker push $CONTAINER_NAME:$DOCKER_IMG_TAG
