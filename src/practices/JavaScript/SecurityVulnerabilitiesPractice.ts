@@ -14,6 +14,17 @@ enum PackageManagerType {
   yarn = 'yarn',
 }
 
+interface NpmAuditOutput {
+  actions: { action: string; module: string; target?: string }[];
+  error?: object;
+}
+
+interface YarnAuditOutput {
+  data: { vulnerabilities: { [key: string]: number } };
+}
+
+const securityVulnerabilitiesPracticeDebug = debug('SecurityVulnerabilitiesPractice');
+
 @DxPractice({
   id: 'JavaScript.SecurityVulnerabilities',
   name: 'Security vulnerabilities detected',
@@ -61,7 +72,6 @@ export class SecurityVulnerabilitiesPractice extends PracticeBase {
     let packageManager = await getPackageManager();
     packageManager = pmInstalled(packageManager);
     if (packageManager === PackageManagerType.unknown) {
-      const securityVulnerabilitiesPracticeDebug = debug('SecurityVulnerabilitiesPractice');
       securityVulnerabilitiesPracticeDebug(
         'Cannot establish package-manager type, missing package-lock.json and yarn.lock or npm command not installed.',
       );
@@ -71,33 +81,40 @@ export class SecurityVulnerabilitiesPractice extends PracticeBase {
     shell.cd(ctx.fileInspector?.basePath);
     const result = shell.exec(packageManager === PackageManagerType.npm ? npmCmd : yarnCmd, { silent: true });
     shell.cd(currentDir);
-    this.setData(result, packageManager);
+    const data =
+      packageManager === PackageManagerType.npm ? (JSON.parse(result) as NpmAuditOutput) : (JSON.parse(result) as YarnAuditOutput);
+    if (packageManager === PackageManagerType.npm && (data as NpmAuditOutput).error) {
+      securityVulnerabilitiesPracticeDebug('Something went wrong.');
+      return PracticeEvaluationResult.unknown;
+    }
+    this.setData(data, packageManager);
     if (packageManager === PackageManagerType.npm && result.code > 0) return PracticeEvaluationResult.notPracticing;
     if (result.code > 15) return PracticeEvaluationResult.notPracticing; // only other option is Yarn
     return PracticeEvaluationResult.practicing;
   }
 
-  setData(result: string, packageManager: PackageManagerType): void {
+  setData<T extends PackageManagerType>(
+    data: T extends PackageManagerType.npm ? NpmAuditOutput : T extends PackageManagerType.yarn ? YarnAuditOutput : unknown,
+    packageManager: T,
+  ): void {
     if (packageManager === PackageManagerType.npm) {
-      const data = JSON.parse(result);
       this.data.details = [
         {
           type: ReportDetailType.table,
           headers: ['Action', 'Module', 'Version'],
-          data: data.actions.map((action: { action: string; module: string; target?: string }) => ({
+          data: (data as NpmAuditOutput).actions.map((action) => ({
             action: action.action,
             module: action.module,
-            version: action.target,
+            version: action.target as string,
           })),
         },
       ];
     } else if (packageManager === PackageManagerType.yarn) {
-      const data = JSON.parse(result);
       this.data.details = [
         {
           type: ReportDetailType.table,
           headers: ['Severity', 'Vulnerabilities'],
-          data: map(data.data.vulnerabilities, (value: number, key: string) => ({ key, value })),
+          data: map((data as YarnAuditOutput).data.vulnerabilities, (value, key) => ({ key, value })),
         },
       ];
     }

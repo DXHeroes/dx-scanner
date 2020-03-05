@@ -30,6 +30,7 @@ export const practiceWithContextFactory = (
         suggestion: '',
         impact: PracticeImpact.high,
         url: '.',
+        fix: false,
       },
       overridenImpact: PracticeImpact.high,
       evaluation: PracticeEvaluationResult.practicing,
