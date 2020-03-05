@@ -10,13 +10,12 @@ import { getIssueResponse } from '../git/__MOCKS__/gitLabServiceMockFolder/getIs
 import { getPullCommitsResponse } from '../git/__MOCKS__/gitLabServiceMockFolder/getPullCommitsResponse';
 import { getPullRequestResponse } from '../git/__MOCKS__/gitLabServiceMockFolder/getPullRequestResponse';
 import { getRepoCommit } from '../git/__MOCKS__/gitLabServiceMockFolder/getRepoCommitResponse';
+import { listIssueCommentsResponse } from '../git/__MOCKS__/gitLabServiceMockFolder/listIssueComments';
 import { listIssuesResponse, mockResponseForUser } from '../git/__MOCKS__/gitLabServiceMockFolder/listIssuesResponse';
 import { listPullRequestsResponse } from '../git/__MOCKS__/gitLabServiceMockFolder/listPullRequestsResponse';
 import { getRepoCommits } from '../git/__MOCKS__/gitLabServiceMockFolder/listRepoCommitsResponse';
 import { GitLabService } from './GitLabService';
 import { GitLabPullRequestState } from './IGitLabService';
-import util from 'util';
-import { listIssueCommentsResponse } from '../git/__MOCKS__/gitLabServiceMockFolder/listIssueComments';
 
 describe('GitLab Service', () => {
   let service: GitLabService;
@@ -28,8 +27,6 @@ describe('GitLab Service', () => {
   });
 
   it('Returns list of merge requests in own interface', async () => {
-    jest.setTimeout(100000);
-
     const mockPr = gitLabPullRequestResponseFactory();
 
     gitLabNock.getGroupInfo();
@@ -40,8 +37,6 @@ describe('GitLab Service', () => {
   });
 
   it('Returns one pull request in own interface', async () => {
-    jest.setTimeout(100000);
-
     const mockPr = gitLabPullRequestResponseFactory();
 
     gitLabNock.getPullRequestResponse(mockPr, 25985);
@@ -88,7 +83,6 @@ describe('GitLab Service', () => {
   });
 
   it('Returns issues in own interface', async () => {
-    jest.setTimeout(100000);
     const mockIssue = gitLabIssueResponseFactory({});
 
     gitLabNock.listIssuesResponse([mockIssue]);
@@ -101,7 +95,6 @@ describe('GitLab Service', () => {
   it('Returns issues for user in own interface', async () => {
     gitLabNock = new GitLabNock('homolova', 'ted_ontouml_kom');
 
-    jest.setTimeout(100000);
     const mockIssue = gitLabIssueResponseFactory(issueFromUser);
 
     gitLabNock.listIssuesResponse([mockIssue]);
