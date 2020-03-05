@@ -1,3 +1,18 @@
+# [2.10.0](https://github.com/dxheroes/dx-scanner/compare/v2.9.0...v2.10.0) (2020-03-05)
+
+
+### Bug Fixes
+
+* **practice:** SecurityVulnerabilitiesPractice won't crash on npm audit error ([39b1523](https://github.com/dxheroes/dx-scanner/commit/39b1523096463c928d59a7d1bc1074af69f809a0))
+
+
+### Features
+
+* **fixer:** add custom reporter for fixer run ([4fb9868](https://github.com/dxheroes/dx-scanner/commit/4fb98682e5c2613b24e07e7e2c0ad4eca7e9692d))
+* **fixer:** add info about fixable practices to CI reporter ([cf361bc](https://github.com/dxheroes/dx-scanner/commit/cf361bc208d0f9a0482e1e46f1eb4c00e48ffa0f))
+* **fixer:** add info about fixable practices to CLI reporter ([d0e7c1a](https://github.com/dxheroes/dx-scanner/commit/d0e7c1ad8ffc8e7ade9e891b363fbff48ab1c058))
+* **tests:** add SecurityVulnerabilites test ([033a339](https://github.com/dxheroes/dx-scanner/commit/033a3399e5ebba3cef7dc87a982fbdce537e71c8))
+
 # [2.9.0](https://github.com/dxheroes/dx-scanner/compare/v2.8.1...v2.9.0) (2020-03-04)
 
 
