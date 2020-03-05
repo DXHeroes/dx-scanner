@@ -33,7 +33,7 @@ export const getPullCommitsResponse = (items?: PullCommits[]): Paginated<PullCom
     items: items || defaultItems,
     totalCount: items?.length || 1,
     hasNextPage: true,
-    hasPreviousPage: true,
+    hasPreviousPage: false,
     page: 1,
     perPage: items?.length || 1,
   };

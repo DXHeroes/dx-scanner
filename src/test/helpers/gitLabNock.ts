@@ -19,18 +19,12 @@ export class GitLabNock {
     this.url = 'https://gitlab.com/api/v4';
   }
 
+  private pagination = { 'x-total': '1', 'x-next-page': '1', 'x-page': '1', 'x-prev-page': '', 'x-per-page': '1', 'x-total-pages': '1' };
+
   private static get(url: string, params: nock.DataMatcherMap = {}, persist = true): nock.Interceptor {
     const urlObj = new URL(url);
-    // defaultReplyHeaders changeable?
+
     const scope = nock(urlObj.origin, { encodedQueryParams: true });
-    // .defaultReplyHeaders({
-    //   'x-total': '1',
-    //   'x-next-page': '1',
-    //   'x-page': '1',
-    //   'x-prev-page': '',
-    //   'x-per-page': '1',
-    //   'x-total-pages': '1',
-    // })
 
     if (persist) {
       scope.persist();
@@ -43,6 +37,7 @@ export class GitLabNock {
 
     return interceptor;
   }
+
   getUserInfo() {
     const url = `${this.url}/users?username=${this.user}`;
 
@@ -86,14 +81,7 @@ export class GitLabNock {
 
     const response = [gitLabPullRequestResponseFactory(pullRequests[0])];
 
-    return GitLabNock.get(baseUrl, queryParams).reply(200, response, {
-      'x-total': '1',
-      'x-next-page': '1',
-      'x-page': '1',
-      'x-prev-page': '',
-      'x-per-page': '1',
-      'x-total-pages': '1',
-    });
+    return GitLabNock.get(baseUrl, queryParams).reply(200, response, this.pagination);
   }
 
   getPullRequestResponse(pullRequest: MergeRequest, mergeIId: number) {
@@ -102,14 +90,7 @@ export class GitLabNock {
 
     const response = gitLabPullRequestResponseFactory(pullRequest);
 
-    return GitLabNock.get(baseUrl).reply(200, response, {
-      'x-total': '1',
-      'x-next-page': '1',
-      'x-page': '1',
-      'x-prev-page': '',
-      'x-per-page': '1',
-      'x-total-pages': '1',
-    });
+    return GitLabNock.get(baseUrl).reply(200, response, this.pagination);
   }
 
   listPullCommitsResponse(pullCommits: Commit[], mergeIId: number) {
@@ -118,14 +99,7 @@ export class GitLabNock {
     const baseUrl = `${this.url}/projects/${encodedProjectUrl}/merge_requests/${mergeIId}/commits`;
 
     const response = gitLabListPullCommitsResponseFactory(pullCommits);
-    return GitLabNock.get(baseUrl).reply(200, response, {
-      'x-total': '1',
-      'x-next-page': '1',
-      'x-page': '1',
-      'x-prev-page': '1',
-      'x-per-page': '1',
-      'x-total-pages': '1',
-    });
+    return GitLabNock.get(baseUrl).reply(200, response, this.pagination);
   }
 
   listRepoCommitsResponse(repoCommits: Commit[]) {
@@ -134,14 +108,7 @@ export class GitLabNock {
     const baseUrl = `${this.url}/projects/${encodedProjectUrl}/repository/commits`;
 
     const response = gitLabListPullCommitsResponseFactory(repoCommits);
-    return GitLabNock.get(baseUrl).reply(200, response, {
-      'x-total': '1',
-      'x-next-page': '1',
-      'x-page': '1',
-      'x-prev-page': '1',
-      'x-per-page': '1',
-      'x-total-pages': '1',
-    });
+    return GitLabNock.get(baseUrl).reply(200, response, this.pagination);
   }
 
   getCommitResponse(commit: Commit, commitId: string) {
@@ -166,13 +133,6 @@ export class GitLabNock {
 
     const baseUrl = `${this.url}/projects/${encodedProjectUrl}/issues`;
 
-    return GitLabNock.get(baseUrl).reply(200, issues, {
-      'x-total': '1',
-      'x-next-page': '1',
-      'x-page': '1',
-      'x-prev-page': '1',
-      'x-per-page': '1',
-      'x-total-pages': '1',
-    });
+    return GitLabNock.get(baseUrl).reply(200, issues, this.pagination);
   }
 }

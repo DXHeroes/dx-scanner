@@ -35,9 +35,9 @@ export const listIssuesResponse = (items?: Issue[]): Paginated<Issue> => {
 
   return {
     items: items || defaultItems,
-    totalCount: 1,
+    totalCount: items?.length || 1,
     hasNextPage: true,
-    hasPreviousPage: true,
+    hasPreviousPage: false,
     page: 1,
     perPage: 1,
   };
