@@ -21,7 +21,7 @@ import { ScannerUtils } from '../scanner/ScannerUtils';
 import _ from 'lodash';
 import { cli } from 'cli-ux';
 import { ScanningStrategyDetector, ScanningStrategy, ServiceType, AccessType } from '../detectors';
-import { IReporter } from '../reporters';
+import { IReporter, PracticeWithContextForReporter } from '../reporters';
 import { FileSystemService } from '../services';
 import { ScannerContext } from '../contexts/scanner/ScannerContext';
 import { sharedSubpath } from '../detectors/utils';
@@ -101,7 +101,8 @@ export class Scanner {
     const practicesWithContext = await this.detectPractices(projectComponents);
     this.d(`Practices (${practicesWithContext.length}):`, inspect(practicesWithContext));
     await this.fix(practicesWithContext);
-    await this.report(practicesWithContext);
+    const practicesAfterFix = await this.detectPractices(projectComponents);
+    await this.report(practicesWithContext, practicesAfterFix);
     this.d(
       `Overall scan stats. LanguagesAtPaths: ${inspect(languagesAtPaths.length)}; Components: ${inspect(
         this.allDetectedComponents!.length,
@@ -234,23 +235,33 @@ export class Scanner {
   /**
    * Report result with specific reporter
    */
-  private async report(practicesWithContext: PracticeWithContext[]): Promise<void> {
-    const relevantPractices = practicesWithContext.map((p) => {
+  private async report(practicesWithContext: PracticeWithContext[], practicesWithContextAfterFix?: PracticeWithContext[]): Promise<void> {
+    const pwcForReporter = (p: PracticeWithContext) => {
       const config = p.componentContext.configProvider.getOverriddenPractice(p.practice.getMetadata().id);
       const overridenImpact = config?.impact;
 
       return {
         component: p.componentContext.projectComponent,
-        practice: { ...p.practice.getMetadata(), data: p.practice.data },
+        practice: { ...p.practice.getMetadata(), data: p.practice.data, fix: Boolean(p.practice.fix) },
         evaluation: p.evaluation,
         evaluationError: p.evaluationError,
         overridenImpact: <PracticeImpact>(overridenImpact ? overridenImpact : p.practice.getMetadata().impact),
         isOn: p.isOn,
       };
-    });
+    };
+    const relevantPractices: PracticeWithContextForReporter[] = practicesWithContext.map(pwcForReporter);
 
     this.d(`Reporters length: ${this.reporters.length}`);
-    await Promise.all(this.reporters.map(async (r) => await r.report(relevantPractices)));
+    if (this.argumentsProvider.fix) {
+      const relevantPracticesAfterFix: PracticeWithContextForReporter[] = practicesWithContextAfterFix!.map(pwcForReporter);
+      await Promise.all(
+        this.reporters.map(async (r) => {
+          this.argumentsProvider.fix ? await r.report(relevantPractices, relevantPracticesAfterFix) : await r.report(relevantPractices);
+        }),
+      );
+    } else {
+      await Promise.all(this.reporters.map(async (r) => await r.report(relevantPractices)));
+    }
 
     if (this.allDetectedComponents!.length > 1 && !this.argumentsProvider.recursive) {
       cli.info(
