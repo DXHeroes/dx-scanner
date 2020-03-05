@@ -155,6 +155,7 @@ export class GitLabNock {
     const encodedProjectUrl = encodeURIComponent(`${this.user}/${this.repoName}`);
 
     const baseUrl = `${this.url}/projects/${encodedProjectUrl}`;
+
     const response = gitLabRepoInfoResponseFactory();
     return GitLabNock.get(baseUrl).reply(200, response, this.pagination);
   }

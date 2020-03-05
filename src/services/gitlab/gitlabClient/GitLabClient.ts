@@ -26,8 +26,6 @@ export class GitLabClient {
 
 export interface ClientOptions {
   token?: string;
-  jobToken?: string;
-  oauthToken?: string;
   host?: string;
   timeout?: number;
 }

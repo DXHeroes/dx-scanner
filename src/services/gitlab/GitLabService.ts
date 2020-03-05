@@ -450,7 +450,7 @@ export class GitLabService implements IVCSService {
   }
 
   /**
-   * Debug GitHub response
+   * Debug GitLab response
    * - count API calls and inform about remaining rate limit
    */
   private debugGitLabResponse = <T>(response: CustomAxiosResponse<T>) => {
