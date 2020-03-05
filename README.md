@@ -36,6 +36,7 @@ Ruby | 🚧
 ## Table of Contents
 
 <!-- toc -->
+* [Supported version control systems](#Which-version-control-system-can-you-use)
 * [Getting Started](#Getting-Started)
   * [Installation](#Installation)
   * [Usage](#Usage)
@@ -47,6 +48,18 @@ Ruby | 🚧
   * [Practices](#Practices)
   * [GitHub CI Action](#GitHub-Ci-Action)
 <!-- tocstop -->
+### Which version control system can you use?
+
+Sure you can use `GitHub`. You can also use `GitLab` and `Bitbucket` no matter if it is public or private repo!
+
+examples:
+```
+dxs run https://github.com/DXHeroes/dx-scanner
+
+dxs run https://gitlab.com/gitlab-org/gitlab
+
+dxs run https://bitbucket.org/atlassian/bitbucketjs
+```
 
 ## Getting Started 🏁
 
