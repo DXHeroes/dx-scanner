@@ -80,7 +80,7 @@ export const gitLabIssueResponseFactory = (params: Partial<Issue>): Issue => {
   );
 };
 
-export const issueFromUser = {
+export const issueOfUser: Issue = {
   id: 31618511,
   iid: 1,
   project_id: 9068731,

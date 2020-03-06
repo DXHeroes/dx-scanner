@@ -59,12 +59,12 @@ export interface Issue {
   created_at: Date;
   updated_at: Date;
   closed_at?: Date;
-  closed_by: User;
+  closed_by?: User;
   labels: string[];
-  milestone: Milestone;
+  milestone?: Milestone;
   assignees: User[];
   author: User;
-  assignee: User;
+  assignee?: User;
   user_notes_count: number;
   merge_requests_count: number;
   upvotes: number;

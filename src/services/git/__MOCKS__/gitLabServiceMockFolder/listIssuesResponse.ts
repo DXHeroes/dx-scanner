@@ -43,7 +43,7 @@ export const listIssuesResponse = (items?: Issue[]): Paginated<Issue> => {
   };
 };
 
-export const mockResponseForUser = [
+export const mockListIssuesResponseForUser: Issue[] = [
   {
     user: {
       id: '3045721',

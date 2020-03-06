@@ -2,7 +2,7 @@
 import { PullRequestState } from '../../inspectors';
 import { argumentsProviderFactory } from '../../test/factories/ArgumentsProviderFactory';
 import { gitLabCommitsResponseFactory } from '../../test/factories/responses/gitLab/commitsFactory';
-import { gitLabIssueResponseFactory, issueFromUser } from '../../test/factories/responses/gitLab/issueResponseFactory';
+import { gitLabIssueResponseFactory, issueOfUser } from '../../test/factories/responses/gitLab/issueResponseFactory';
 import { gitLabPullRequestResponseFactory } from '../../test/factories/responses/gitLab/prResponseFactory';
 import { gitLabRepoCommitsResponseFactory } from '../../test/factories/responses/gitLab/repoCommitResponseFactory';
 import { GitLabNock } from '../../test/helpers/gitLabNock';
@@ -11,7 +11,7 @@ import { getPullCommitsResponse } from '../git/__MOCKS__/gitLabServiceMockFolder
 import { getPullRequestResponse } from '../git/__MOCKS__/gitLabServiceMockFolder/getPullRequestResponse';
 import { getRepoCommit } from '../git/__MOCKS__/gitLabServiceMockFolder/getRepoCommitResponse';
 import { listIssueCommentsResponse } from '../git/__MOCKS__/gitLabServiceMockFolder/listIssueComments';
-import { listIssuesResponse, mockResponseForUser } from '../git/__MOCKS__/gitLabServiceMockFolder/listIssuesResponse';
+import { listIssuesResponse, mockListIssuesResponseForUser } from '../git/__MOCKS__/gitLabServiceMockFolder/listIssuesResponse';
 import { listPullRequestsResponse } from '../git/__MOCKS__/gitLabServiceMockFolder/listPullRequestsResponse';
 import { getRepoCommits } from '../git/__MOCKS__/gitLabServiceMockFolder/listRepoCommitsResponse';
 import { GitLabService } from './GitLabService';
@@ -95,13 +95,13 @@ describe('GitLab Service', () => {
   it('Returns issues for user in own interface', async () => {
     gitLabNock = new GitLabNock('homolova', 'ted_ontouml_kom');
 
-    const mockIssue = gitLabIssueResponseFactory(issueFromUser);
+    const mockIssue = gitLabIssueResponseFactory(issueOfUser);
 
     gitLabNock.listIssuesResponse([mockIssue]);
     gitLabNock.getUserInfo();
 
     const response = await service.listIssues('homolova', 'ted_ontouml_kom');
-    expect(response).toMatchObject(listIssuesResponse(mockResponseForUser));
+    expect(response).toMatchObject(listIssuesResponse(mockListIssuesResponseForUser));
   });
 
   it('Returns issue comments in own interface', async () => {
