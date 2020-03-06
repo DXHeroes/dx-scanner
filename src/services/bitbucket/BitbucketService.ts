@@ -105,11 +105,13 @@ export class BitbucketService implements IVCSService {
       state = VCSServicesUtils.getBitbucketPRState(options.filter.state);
     }
 
-    const ownerId = `${(await this.client.repositories.get({ repo_slug: repo, workspace: owner })).data.owner?.uuid}`;
-    const response: DeepRequired<Response<Schema.PaginatedPullrequests>> = await axios.get(apiUrl, {
-      params: { state, page: options?.pagination?.page, pagelen: options?.pagination?.perPage },
-      paramsSerializer: qs.stringify,
-    });
+    const ownerId = `${(await this.unwrap(this.client.repositories.get({ repo_slug: repo, workspace: owner }))).data.owner?.uuid}`;
+    const response = <DeepRequired<Response<Schema.PaginatedPullrequests>>>await this.unwrap(
+      axios.get(apiUrl, {
+        params: { state, page: options?.pagination?.page, pagelen: options?.pagination?.perPage },
+        paramsSerializer: qs.stringify,
+      }),
+    );
 
     const items = await Promise.all(
       response.data.values.map(async (val) => {
@@ -167,9 +169,9 @@ export class BitbucketService implements IVCSService {
     };
 
     const ownerUrl = `www.bitbucket.org/${owner}`;
-    const ownerId = `${(await this.client.repositories.get({ repo_slug: repo, workspace: owner })).data.owner?.uuid}`;
+    const ownerId = `${(await this.unwrap(this.client.repositories.get({ repo_slug: repo, workspace: owner }))).data.owner?.uuid}`;
 
-    const response = <DeepRequired<Response<Schema.Pullrequest>>>await this.client.pullrequests.get(params);
+    const response = <DeepRequired<Response<Schema.Pullrequest>>>await this.unwrap(this.client.pullrequests.get(params));
 
     const pullRequest = {
       user: {
@@ -229,7 +231,7 @@ export class BitbucketService implements IVCSService {
       params.pagelen = options.pagination.perPage;
     }
 
-    const response = <DeepRequired<Response<BitbucketCommit>>>await this.client.pullrequests.listCommits(params);
+    const response = <DeepRequired<Response<BitbucketCommit>>>await this.unwrap(this.client.pullrequests.listCommits(params));
 
     const items = response.data.values.map((val) => {
       return {
@@ -271,10 +273,12 @@ export class BitbucketService implements IVCSService {
       pagelen: options?.pagination?.perPage,
     };
 
-    const response: DeepRequired<Response<Schema.PaginatedIssues>> = await axios.get(apiUrl, {
-      params,
-      paramsSerializer: qs.stringify,
-    });
+    const response = <DeepRequired<Response<Schema.PaginatedIssues>>>await this.unwrap(
+      axios.get(apiUrl, {
+        params,
+        paramsSerializer: qs.stringify,
+      }),
+    );
 
     const items = response.data.values.map((val) => ({
       user: {
@@ -303,7 +307,7 @@ export class BitbucketService implements IVCSService {
       repo_slug: repo,
       workspace: owner,
     };
-    const response = <DeepRequired<Response<Schema.Issue>>>await this.client.issue_tracker.get(params);
+    const response = <DeepRequired<Response<Schema.Issue>>>await this.unwrap(this.client.issue_tracker.get(params));
 
     return {
       id: response.data.id,
@@ -331,7 +335,9 @@ export class BitbucketService implements IVCSService {
       repo_slug: repo,
       workspace: owner,
     };
-    const response = <DeepRequired<Response<Schema.PaginatedIssueComments>>>await this.client.issue_tracker.listComments(params);
+    const response = <DeepRequired<Response<Schema.PaginatedIssueComments>>>(
+      await this.unwrap(this.client.issue_tracker.listComments(params))
+    );
 
     const items = response.data.values.map((val) => ({
       user: {
@@ -365,7 +371,7 @@ export class BitbucketService implements IVCSService {
     if (options?.pagination?.page) params.page = options.pagination.page.toString();
     if (options?.pagination?.perPage) params.pagelen = options.pagination.perPage;
 
-    const response = <DeepRequired<Response<BitbucketCommit>>>await this.client.repositories.listCommits(params);
+    const response = <DeepRequired<Response<BitbucketCommit>>>await this.unwrap(this.client.repositories.listCommits(params));
     const items = response.data.values.map((val) => {
       return {
         sha: val.hash,
@@ -397,7 +403,7 @@ export class BitbucketService implements IVCSService {
       repo_slug: repo,
       workspace: owner,
     };
-    const response = <DeepRequired<Response<Schema.Commit>>>await this.client.commits.get(params);
+    const response = <DeepRequired<Response<Schema.Commit>>>await this.unwrap(this.client.commits.get(params));
 
     return {
       sha: response.data.hash,
@@ -455,12 +461,14 @@ export class BitbucketService implements IVCSService {
    */
   async createPullRequestComment(owner: string, repo: string, prNumber: number, body: string): Promise<CreatedUpdatedPullRequestComment> {
     this.authenticate();
-    const response = <DeepRequired<Response<Schema.Comment>>>await this.client.pullrequests.createComment({
-      pull_request_id: prNumber,
-      repo_slug: repo,
-      workspace: owner,
-      _body: { type: 'pullrequest_comment', content: { raw: body, markup: 'markdown' } },
-    });
+    const response = <DeepRequired<Response<Schema.Comment>>>await this.unwrap(
+      this.client.pullrequests.createComment({
+        pull_request_id: prNumber,
+        repo_slug: repo,
+        workspace: owner,
+        _body: { type: 'pullrequest_comment', content: { raw: body, markup: 'markdown' } },
+      }),
+    );
 
     const comment = response.data;
     return {
@@ -484,13 +492,15 @@ export class BitbucketService implements IVCSService {
     pullRequestId: number,
   ): Promise<CreatedUpdatedPullRequestComment> {
     this.authenticate();
-    const response = <DeepRequired<Response<Schema.Comment>>>await this.client.pullrequests.updateComment({
-      pull_request_id: `${pullRequestId}`,
-      comment_id: `${commentId}`,
-      repo_slug: repo,
-      workspace: owner,
-      _body: { type: 'pullrequest_comment', content: { raw: body, markup: 'markdown' } },
-    });
+    const response = <DeepRequired<Response<Schema.Comment>>>await this.unwrap(
+      this.client.pullrequests.updateComment({
+        pull_request_id: `${pullRequestId}`,
+        comment_id: `${commentId}`,
+        repo_slug: repo,
+        workspace: owner,
+        _body: { type: 'pullrequest_comment', content: { raw: body, markup: 'markdown' } },
+      }),
+    );
 
     const comment = response.data;
     return {
@@ -523,7 +533,7 @@ export class BitbucketService implements IVCSService {
    */
   async getPullsDiffStat(owner: string, repo: string, prNumber: number) {
     const diffStatData = (
-      await this.client.pullrequests.getDiffStat({ repo_slug: repo, workspace: owner, pull_request_id: prNumber.toString() })
+      await this.unwrap(this.client.pullrequests.getDiffStat({ repo_slug: repo, workspace: owner, pull_request_id: prNumber.toString() }))
     ).data;
 
     let linesRemoved = 0,
