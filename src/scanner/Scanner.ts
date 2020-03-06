@@ -310,7 +310,7 @@ export class Scanner {
       } catch (error) {
         evaluationError = error.toString();
         const practiceDebug = debug('practices');
-        practiceDebug(`The ${practice.getMetadata().name} practice failed with this error:\n${error}`);
+        practiceDebug(`The ${practice.getMetadata().name} practice failed with this error:\n${error.stack}`);
       }
 
       const practiceWithContext: PracticeWithContext = {
