@@ -79,7 +79,6 @@ jobs:
       - docker login -u dxheroes -p $DOCKER_GITHUB_PASSWORD docker.pkg.github.com
       - docker push $CONTAINER_NAME
   - stage: build docker containers
-    if: (branch = master AND type = push) OR branch = chore/dockerfile-ci
     node_js: lts/*
     env:
       - CONTAINER_NAME=dxheroes/dx-scanner
