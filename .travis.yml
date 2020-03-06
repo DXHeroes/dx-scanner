@@ -16,9 +16,6 @@ env:
   matrix:
   - YARN_GPG=no
 
-matrix:
-  fast_finish: true
-
 notifications:
   slack:
     if: branch = master
@@ -41,6 +38,7 @@ script:
   - bin/run run . --fail=high
 
 jobs:
+  fast_finish: true
   include:
   - stage: code style
     if: branch = master
