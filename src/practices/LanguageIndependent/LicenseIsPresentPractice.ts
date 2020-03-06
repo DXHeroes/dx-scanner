@@ -2,6 +2,11 @@ import { IPractice } from '../IPractice';
 import { PracticeEvaluationResult, PracticeImpact } from '../../model';
 import { DxPractice } from '../DxPracticeDecorator';
 import { PracticeContext } from '../../contexts/practice/PracticeContext';
+import yeoman from 'yeoman-environment';
+import cli from 'cli-ux';
+
+const env = yeoman.createEnv();
+env.register(require.resolve('generator-license'), 'license');
 
 @DxPractice({
   id: 'LanguageIndependent.LicenseIsPresent',
@@ -30,5 +35,16 @@ export class LicenseIsPresentPractice implements IPractice {
     }
 
     return PracticeEvaluationResult.notPracticing;
+  }
+
+  async fix() {
+    await cli.action.pauseAsync(
+      () =>
+        new Promise((resolve) => {
+          env.run('license', () => {
+            resolve();
+          });
+        }),
+    );
   }
 }
