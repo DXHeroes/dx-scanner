@@ -2,7 +2,7 @@
 import nock from 'nock';
 import { ListGetterOptions, PaginationParams } from '../../inspectors';
 import { MergeRequest, Commit } from '../../services/gitlab/gitlabClient/resources/MergeRequests';
-import { GitLabPullRequestState } from '../../services/gitlab/IGitLabService';
+import { GitLabPullRequestState, GitLabIssueState } from '../../services/gitlab/IGitLabService';
 import { gitLabPullRequestResponseFactory } from '../factories/responses/gitLab/prResponseFactory';
 import { gitLabCommitsResponseFactory } from '../factories/responses/gitLab/commitsFactory';
 import { gitLabRepoCommitsResponseFactory } from '../factories/responses/gitLab/repoCommitResponseFactory';
@@ -78,12 +78,12 @@ export class GitLabNock {
     const queryParams: {
       state?: GitLabPullRequestState | GitLabPullRequestState[];
       page?: number;
-      pagelen?: number;
+      per_page?: number;
     } = {};
 
     if (options?.filter?.state) queryParams.state = options?.filter?.state;
     if (options?.pagination?.page) queryParams.page = options?.pagination?.page;
-    if (options?.pagination?.perPage) queryParams.pagelen = options?.pagination?.perPage;
+    if (options?.pagination?.perPage) queryParams.per_page = options?.pagination?.perPage;
 
     const response = [gitLabPullRequestResponseFactory(pullRequests[0])];
 
@@ -99,22 +99,36 @@ export class GitLabNock {
     return GitLabNock.get(baseUrl).reply(200, response, this.pagination);
   }
 
-  listPullCommitsResponse(pullCommits: Commit[], mergeIId: number) {
+  listPullCommitsResponse(pullCommits: Commit[], mergeIId: number, options?: ListGetterOptions) {
     const encodedProjectUrl = encodeURIComponent(`${this.user}/${this.repoName}`);
-
     const baseUrl = `${this.url}/projects/${encodedProjectUrl}/merge_requests/${mergeIId}/commits`;
 
+    const queryParams: {
+      page?: number;
+      per_page?: number;
+    } = {};
+
+    if (options?.pagination?.page) queryParams.page = options?.pagination?.page;
+    if (options?.pagination?.perPage) queryParams.per_page = options?.pagination?.perPage;
+
     const response = gitLabListPullCommitsResponseFactory(pullCommits);
-    return GitLabNock.get(baseUrl).reply(200, response, this.pagination);
+    return GitLabNock.get(baseUrl, queryParams).reply(200, response, this.pagination);
   }
 
-  listRepoCommitsResponse(repoCommits: Commit[]) {
+  listRepoCommitsResponse(repoCommits: Commit[], options?: ListGetterOptions) {
     const encodedProjectUrl = encodeURIComponent(`${this.user}/${this.repoName}`);
-
     const baseUrl = `${this.url}/projects/${encodedProjectUrl}/repository/commits`;
 
+    const queryParams: {
+      page?: number;
+      per_page?: number;
+    } = {};
+
+    if (options?.pagination?.page) queryParams.page = options?.pagination?.page;
+    if (options?.pagination?.perPage) queryParams.per_page = options?.pagination?.perPage;
+
     const response = gitLabListPullCommitsResponseFactory(repoCommits);
-    return GitLabNock.get(baseUrl).reply(200, response, this.pagination);
+    return GitLabNock.get(baseUrl, queryParams).reply(200, response, this.pagination);
   }
 
   getCommitResponse(commit: Commit, commitId: string) {
@@ -134,21 +148,37 @@ export class GitLabNock {
     return GitLabNock.get(baseUrl).reply(200, issue);
   }
 
-  listIssuesResponse(issues: Issue[]) {
+  listIssuesResponse(issues: Issue[], options?: ListGetterOptions<{ state: GitLabIssueState }>) {
     const encodedProjectUrl = encodeURIComponent(`${this.user}/${this.repoName}`);
-
     const baseUrl = `${this.url}/projects/${encodedProjectUrl}/issues`;
 
-    return GitLabNock.get(baseUrl).reply(200, issues, this.pagination);
+    const queryParams: {
+      page?: number;
+      per_page?: number;
+      state?: GitLabIssueState;
+    } = {};
+
+    if (options?.pagination?.page) queryParams.page = options?.pagination?.page;
+    if (options?.pagination?.perPage) queryParams.per_page = options?.pagination?.perPage;
+    if (options?.filter?.state) queryParams.state = options.filter.state;
+
+    return GitLabNock.get(baseUrl, queryParams).reply(200, issues, this.pagination);
   }
 
-  listIssueCommentsResponse(issueNumber: number) {
+  listIssueCommentsResponse(issueNumber: number, options?: ListGetterOptions) {
     const encodedProjectUrl = encodeURIComponent(`${this.user}/${this.repoName}`);
-
     const baseUrl = `${this.url}/projects/${encodedProjectUrl}/issues/${issueNumber}/notes`;
 
+    const queryParams: {
+      page?: number;
+      per_page?: number;
+    } = {};
+
+    if (options?.pagination?.page) queryParams.page = options?.pagination?.page;
+    if (options?.pagination?.perPage) queryParams.per_page = options?.pagination?.perPage;
+
     const response = gitLabIssueCommentsResponseFactory();
-    return GitLabNock.get(baseUrl).reply(200, [response], this.pagination);
+    return GitLabNock.get(baseUrl, queryParams).reply(200, [response], this.pagination);
   }
 
   getRepoResponse() {

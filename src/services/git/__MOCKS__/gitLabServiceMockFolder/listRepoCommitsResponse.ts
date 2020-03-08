@@ -1,7 +1,7 @@
-import { Paginated } from '../../../../inspectors/common/Paginated';
+import { Paginated, PaginationParams } from '../../../../inspectors/common/Paginated';
 import { Commit } from '../../model';
 
-export const getRepoCommits = (items?: Commit[]): Paginated<Commit> => {
+export const listRepoCommits = (items?: Commit[], pagination?: PaginationParams): Paginated<Commit> => {
   const defaultItems: Commit[] = [
     {
       sha: '4eecfba1b1e2c35c13a7b34fc3d71e58cbb3645d',
@@ -32,7 +32,7 @@ export const getRepoCommits = (items?: Commit[]): Paginated<Commit> => {
     totalCount: items?.length || 1,
     hasNextPage: true,
     hasPreviousPage: false,
-    page: 1,
-    perPage: 1,
+    page: pagination?.page || 1,
+    perPage: pagination?.perPage || 1,
   };
 };

@@ -1,7 +1,7 @@
-import { Paginated } from '../../../../inspectors/common/Paginated';
+import { Paginated, PaginationParams } from '../../../../inspectors/common/Paginated';
 import { PullRequest } from '../../model';
 
-export const listPullRequestsResponse = (items?: PullRequest[]): Paginated<PullRequest> => {
+export const listPullRequestsResponse = (items?: PullRequest[], pagination?: PaginationParams): Paginated<PullRequest> => {
   const defaultItems = [
     {
       user: {
@@ -79,7 +79,7 @@ export const listPullRequestsResponse = (items?: PullRequest[]): Paginated<PullR
     totalCount: 1,
     hasNextPage: true,
     hasPreviousPage: false,
-    page: 1,
-    perPage: 1,
+    page: pagination?.page || 1,
+    perPage: pagination?.perPage || 1,
   };
 };
