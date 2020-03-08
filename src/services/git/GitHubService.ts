@@ -190,7 +190,7 @@ export class GitHubService implements IVCSService {
    *
    * Sha can be SHA or branch name.
    */
-  async listRepoCommits(owner: string, repo: string, sha?: string, options?: ListGetterOptions): Promise<Paginated<Commit>> {
+  async listRepoCommits(owner: string, repo: string, options?: ListGetterOptions): Promise<Paginated<Commit>> {
     const { data } = await this.unwrap(
       this.client.repos.listCommits({
         owner,
