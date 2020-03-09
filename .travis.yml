@@ -50,10 +50,9 @@ jobs:
     scripts:
       - npm -g i .
       - dx-scanner run
-      - dx-scanner run https://github.com/DXHeroes/dx-scanner
-      - dx-scanner run https://github.com/moment/luxon
-      - dx-scanner run https://github.com/intoli/remote-browser
-      - dx-scanner run
+      - dx-scanner run https://github.com/DXHeroes/dx-scanner --fail=off
+      - dx-scanner run https://github.com/moment/luxon --fail=off
+      - dx-scanner run https://github.com/intoli/remote-browser --fail=off
     os: windows
   - os: linux
   - stage: release
