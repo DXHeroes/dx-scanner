@@ -1,14 +1,13 @@
 /* eslint-disable @typescript-eslint/camelcase */
 import nock from 'nock';
-import { ListGetterOptions, PaginationParams } from '../../inspectors';
-import { MergeRequest, Commit } from '../../services/gitlab/gitlabClient/resources/MergeRequests';
-import { GitLabPullRequestState, GitLabIssueState } from '../../services/gitlab/IGitLabService';
-import { gitLabPullRequestResponseFactory } from '../factories/responses/gitLab/prResponseFactory';
-import { gitLabCommitsResponseFactory } from '../factories/responses/gitLab/commitsFactory';
-import { gitLabRepoCommitsResponseFactory } from '../factories/responses/gitLab/repoCommitResponseFactory';
-import { gitLabListPullCommitsResponseFactory } from '../factories/responses/gitLab/listPullCommitsResponseFactory';
+import { ListGetterOptions } from '../../inspectors';
 import { Issue } from '../../services/gitlab/gitlabClient/resources/Issues';
+import { Commit, MergeRequest } from '../../services/gitlab/gitlabClient/resources/MergeRequests';
+import { GitLabIssueState, GitLabPullRequestState } from '../../services/gitlab/IGitLabService';
 import { gitLabIssueCommentsResponseFactory } from '../factories/responses/gitLab/issueCommentsResponseFactory';
+import { gitLabListPullCommitsResponseFactory } from '../factories/responses/gitLab/listPullCommitsResponseFactory';
+import { gitLabPullRequestResponseFactory } from '../factories/responses/gitLab/prResponseFactory';
+import { gitLabRepoCommitsResponseFactory } from '../factories/responses/gitLab/repoCommitResponseFactory';
 import { gitLabRepoInfoResponseFactory } from '../factories/responses/gitLab/repoInfoResponseFactory';
 
 export class GitLabNock {
@@ -82,8 +81,14 @@ export class GitLabNock {
     } = {};
 
     if (options?.filter?.state) queryParams.state = options?.filter?.state;
-    if (options?.pagination?.page) queryParams.page = options?.pagination?.page;
-    if (options?.pagination?.perPage) queryParams.per_page = options?.pagination?.perPage;
+    if (options?.pagination?.page) {
+      queryParams.page = options?.pagination?.page;
+      this.pagination['x-page'] = options.pagination.page.toString();
+    }
+    if (options?.pagination?.perPage) {
+      queryParams.per_page = options?.pagination?.perPage;
+      this.pagination['x-page'] = options.pagination.perPage.toString();
+    }
 
     const response = [gitLabPullRequestResponseFactory(pullRequests[0])];
 
@@ -108,8 +113,14 @@ export class GitLabNock {
       per_page?: number;
     } = {};
 
-    if (options?.pagination?.page) queryParams.page = options?.pagination?.page;
-    if (options?.pagination?.perPage) queryParams.per_page = options?.pagination?.perPage;
+    if (options?.pagination?.page) {
+      queryParams.page = options?.pagination?.page;
+      this.pagination['x-page'] = options.pagination.page.toString();
+    }
+    if (options?.pagination?.perPage) {
+      queryParams.per_page = options?.pagination?.perPage;
+      this.pagination['x-page'] = options.pagination.perPage.toString();
+    }
 
     const response = gitLabListPullCommitsResponseFactory(pullCommits);
     return GitLabNock.get(baseUrl, queryParams).reply(200, response, this.pagination);
@@ -124,8 +135,14 @@ export class GitLabNock {
       per_page?: number;
     } = {};
 
-    if (options?.pagination?.page) queryParams.page = options?.pagination?.page;
-    if (options?.pagination?.perPage) queryParams.per_page = options?.pagination?.perPage;
+    if (options?.pagination?.page) {
+      queryParams.page = options?.pagination?.page;
+      this.pagination['x-page'] = options.pagination.page.toString();
+    }
+    if (options?.pagination?.perPage) {
+      queryParams.per_page = options?.pagination?.perPage;
+      this.pagination['x-page'] = options.pagination.perPage.toString();
+    }
 
     const response = gitLabListPullCommitsResponseFactory(repoCommits);
     return GitLabNock.get(baseUrl, queryParams).reply(200, response, this.pagination);
@@ -158,8 +175,14 @@ export class GitLabNock {
       state?: GitLabIssueState;
     } = {};
 
-    if (options?.pagination?.page) queryParams.page = options?.pagination?.page;
-    if (options?.pagination?.perPage) queryParams.per_page = options?.pagination?.perPage;
+    if (options?.pagination?.page) {
+      queryParams.page = options?.pagination?.page;
+      this.pagination['x-page'] = options.pagination.page.toString();
+    }
+    if (options?.pagination?.perPage) {
+      queryParams.per_page = options?.pagination?.perPage;
+      this.pagination['x-page'] = options.pagination.perPage.toString();
+    }
     if (options?.filter?.state) queryParams.state = options.filter.state;
 
     return GitLabNock.get(baseUrl, queryParams).reply(200, issues, this.pagination);
@@ -174,8 +197,14 @@ export class GitLabNock {
       per_page?: number;
     } = {};
 
-    if (options?.pagination?.page) queryParams.page = options?.pagination?.page;
-    if (options?.pagination?.perPage) queryParams.per_page = options?.pagination?.perPage;
+    if (options?.pagination?.page) {
+      queryParams.page = options?.pagination?.page;
+      this.pagination['x-page'] = options.pagination.page.toString();
+    }
+    if (options?.pagination?.perPage) {
+      queryParams.per_page = options?.pagination?.perPage;
+      this.pagination['x-page'] = options.pagination.perPage.toString();
+    }
 
     const response = gitLabIssueCommentsResponseFactory();
     return GitLabNock.get(baseUrl, queryParams).reply(200, [response], this.pagination);
