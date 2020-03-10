@@ -5,6 +5,8 @@ import { BitbucketIssueState, BitbucketPullRequestState } from '../bitbucket/IBi
 import { GitHubPullRequestState } from './IGitHubService';
 import qs from 'qs';
 import _ from 'lodash';
+import gitUrlParse from 'git-url-parse';
+import parse from 'url-parse';
 
 export class VCSServicesUtils {
   static getGithubPRState = (state: PullRequestState | undefined) => {
@@ -82,4 +84,68 @@ export class VCSServicesUtils {
       },
     );
   };
+
+  static parseLinkHeader = (link: string, numberOfItems: number): ParsedGitHubLinkHeader | undefined => {
+    if (!link) {
+      return undefined;
+    }
+    let prev,
+      next,
+      page: number,
+      perPage: number,
+      query: string | undefined,
+      params = {};
+
+    const links = link.split(',');
+
+    links.forEach((link) => {
+      const iterator = linkGenerator();
+      let current = iterator.next();
+
+      while (!current.done) {
+        const val = link.match(current.value.link);
+
+        if (val) {
+          const values = val['input']?.match(/\s*<?([^>]*)>(.*)/);
+          const url = values ? values[1] : undefined;
+          query = url ? url.split('?')[1] : undefined;
+          if (query) {
+            const queryParams = qs.parse(query);
+
+            page = queryParams['page'];
+            perPage = queryParams['per_page'];
+          }
+
+          let param = { [current.value.link]: url, page, perPage };
+          if (current.value.link === 'last') {
+            const totalCount = { totalCount: page * perPage };
+            param = { ...totalCount, ...param };
+          }
+          params = { ...param, ...params };
+        }
+        current = iterator.next();
+      }
+      console.log(params);
+      return params;
+    });
+  };
+}
+
+const linkGenerator = function*(): Generator<{
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  link: string;
+}> {
+  yield { link: 'prev' };
+  yield { link: 'next' };
+  yield { link: 'last' };
+
+  return;
+};
+
+interface ParsedGitHubLinkHeader {
+  prev?: string | null;
+  next?: string | null;
+  page: number;
+  perPage: number;
+  totalCount: number;
 }
