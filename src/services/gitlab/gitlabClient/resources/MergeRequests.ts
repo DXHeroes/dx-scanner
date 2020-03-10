@@ -1,13 +1,13 @@
 /* eslint-disable @typescript-eslint/camelcase */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { AxiosResponse, AxiosRequestConfig } from 'axios';
+import { AxiosResponse } from 'axios';
+import qs from 'qs';
 import { ListGetterOptions, PaginationParams } from '../../../../inspectors';
 import { GitLabPullRequestState } from '../../IGitLabService';
 import { GitLabClient } from '../GitLabClient';
 import { CustomAxiosResponse, parseResponse } from '../gitlabUtils';
+import { TaskCompletionStatus, TimeStats } from './model';
 import { User } from './UsersOrGroups';
-import { TimeStats, TaskCompletionStatus } from './model';
-import qs from 'qs';
 
 export class MergeRequests extends GitLabClient {
   api = this.createAxiosInstance();
@@ -40,6 +40,7 @@ export class MergeRequests extends GitLabClient {
         return qs.stringify(params, { arrayFormat: 'repeat', encode: false });
       },
     });
+
     return parseResponse(response);
   }
 

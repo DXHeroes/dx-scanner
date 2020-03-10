@@ -7,7 +7,7 @@ export class GitLabClient {
   protected host: string;
   protected timeout: number;
 
-  constructor({ token, host = 'https://gitlab.com', timeout = 20000 }: ClientOptions) {
+  constructor({ token, host = 'https://gitlab.com', timeout = 5000 }: ClientOptions) {
     this.headers = {};
     this.host = host;
     this.timeout = timeout;
