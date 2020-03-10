@@ -621,7 +621,7 @@
     once "^1.4.0"
     universal-user-agent "^4.0.0"
 
-"@octokit/rest@^16.0.0", "@octokit/rest@^16.43.0":
+"@octokit/rest@16.43.1", "@octokit/rest@^16.43.0":
   version "16.43.1"
   resolved "https://registry.yarnpkg.com/@octokit/rest/-/rest-16.43.1.tgz#3b11e7d1b1ac2bbeeb23b08a17df0b20947eda6b"
   integrity sha512-gfFKwRT/wFxq5qlNjnW2dh+qh74XgTQ2B179UX5K1HYCluioWj8Ndbgqw2PVqa1NnVJkGHp2ovMpVn/DImlmkw==
@@ -5023,7 +5023,7 @@ jest-message-util@^25.1.0:
     slash "^3.0.0"
     stack-utils "^1.0.1"
 
-jest-mock-extended@^1.0.8:
+jest-mock-extended@1.0.8:
   version "1.0.8"
   resolved "https://registry.yarnpkg.com/jest-mock-extended/-/jest-mock-extended-1.0.8.tgz#af6cccf78c7ef0c9a0b5fbae4e2625a792f0d6b8"
   integrity sha512-lwRgbnngx6Woh0OOapes3uJQzngCj69OIhKnXYybEWwE0O1w7UyBJwLciHH6D/MCedogA90qxhEkEANrA20Sfw==
