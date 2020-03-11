@@ -113,7 +113,7 @@ export class GitHubService implements IVCSService {
       }),
     );
 
-    const pagination = this.getPagination(data.length);
+    const pagination = this.getPagination(data.length, headers.link);
 
     return { items, ...pagination };
   }
@@ -177,7 +177,7 @@ export class GitHubService implements IVCSService {
       state: val.state,
       url: val.pull_request_url,
     }));
-    const pagination = this.getPagination(data.length);
+    const pagination = this.getPagination(data.length, headers.link);
 
     return { items, ...pagination };
   }
@@ -214,7 +214,7 @@ export class GitHubService implements IVCSService {
       },
       verified: val.commit.verification.verified,
     }));
-    const pagination = this.getPagination(data.length);
+    const pagination = this.getPagination(data.length, headers.link);
 
     return { items, ...pagination };
   }
@@ -261,7 +261,7 @@ export class GitHubService implements IVCSService {
       followersUrl: val.followers_url,
       contributions: val.contributions,
     }));
-    const pagination = this.getPagination(data.length);
+    const pagination = this.getPagination(data.length, headers.link);
 
     return { items, ...pagination };
   }
@@ -275,7 +275,7 @@ export class GitHubService implements IVCSService {
    *    d - Number of deletions
    *    c - Number of commits
    */
-  async getContributorsStats(owner: string, repo: string): Promise<Paginated<ContributorStats>> {
+  async listContributorsStats(owner: string, repo: string): Promise<Paginated<ContributorStats>> {
     // Wait for GitHub stats to be recomputed
     await this.unwrap(
       this.client.repos.getContributorsStats({ owner, repo }).then((r) => {
@@ -288,7 +288,7 @@ export class GitHubService implements IVCSService {
       }),
     );
 
-    const { data } = await this.unwrap(this.client.repos.getContributorsStats({ owner, repo }));
+    const { data, headers } = await this.unwrap(this.client.repos.getContributorsStats({ owner, repo }));
 
     const items = data.map((val) => ({
       author: {
@@ -304,7 +304,7 @@ export class GitHubService implements IVCSService {
         commits: val.c,
       })),
     }));
-    const pagination = this.getPagination(data.length);
+    const pagination = this.getPagination(data.length, headers.link);
 
     return { items, ...pagination };
   }
@@ -387,7 +387,7 @@ export class GitHubService implements IVCSService {
       id: val.id,
       pullRequestUrl: val.pull_request && val.pull_request.url,
     }));
-    const pagination = this.getPagination(data.length);
+    const pagination = this.getPagination(data.length, headers.link);
 
     return { items, ...pagination };
   }
@@ -438,7 +438,7 @@ export class GitHubService implements IVCSService {
       authorAssociation: val.user.login,
       id: val.id,
     }));
-    const pagination = this.getPagination(data.length);
+    const pagination = this.getPagination(data.length, headers.link);
 
     return { items, ...pagination };
   }
@@ -459,7 +459,7 @@ export class GitHubService implements IVCSService {
       contentsUrl: val.contents_url,
     }));
 
-    const pagination = this.getPagination(data.length);
+    const pagination = this.getPagination(data.length, headers.link);
     return { items, ...pagination };
   }
 
@@ -491,7 +491,7 @@ export class GitHubService implements IVCSService {
       },
     }));
 
-    const pagination = this.getPagination(data.length);
+    const pagination = this.getPagination(data.length, headers.link);
     return { items, ...pagination };
   }
 
@@ -521,7 +521,7 @@ export class GitHubService implements IVCSService {
       authorAssociation: comment.user.login,
     }));
 
-    const pagination = this.getPagination(data.length);
+    const pagination = this.getPagination(data.length, headers.link);
     return { items, ...pagination };
   }
 
@@ -583,13 +583,26 @@ export class GitHubService implements IVCSService {
     };
   }
 
-  getPagination(totalCount: number) {
-    const hasNextPage = false;
-    const hasPreviousPage = false;
-    const page = 1;
-    const perPage = totalCount;
+  getPagination(totalCount: number, link: string) {
+    const parsedLink = VCSServicesUtils.parseLinkHeader(link);
 
-    return { totalCount, hasNextPage, hasPreviousPage, page, perPage };
+    if (!parsedLink) {
+      return {
+        totalCount,
+        hasNextPage: false,
+        hasPreviousPage: false,
+        page: 1,
+        perPage: totalCount,
+      };
+    } else {
+      return {
+        totalCount: parsedLink.totalCount,
+        hasNextPage: !!parsedLink.next,
+        hasPreviousPage: !!parsedLink.prev,
+        page: parsedLink.page,
+        perPage: parsedLink.perPage,
+      };
+    }
   }
 
   /**
