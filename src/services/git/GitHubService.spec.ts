@@ -208,7 +208,7 @@ describe('GitHub Service', () => {
   it('returns contributor stats in own interface', async () => {
     new GitHubNock('1', 'octocat', 1, 'Hello-World').getRepo('/stats/contributors').reply(200, getContributorsStatsResponse);
 
-    const response = await service.getContributorsStats('octocat', 'Hello-World');
+    const response = await service.listContributorsStats('octocat', 'Hello-World');
     expect(response).toMatchObject(getContributorsStatsServiceResponse);
   });
 

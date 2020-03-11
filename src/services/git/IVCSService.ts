@@ -43,7 +43,7 @@ export interface IVCSService {
   getCommit(owner: string, repo: string, commitSha: string): Promise<Commit>;
 
   listContributors(owner: string, repo: string): Promise<Paginated<Contributor>>;
-  getContributorsStats(owner: string, repo: string): Promise<Paginated<ContributorStats>>;
+  listContributorsStats(owner: string, repo: string): Promise<Paginated<ContributorStats>>;
 
   listIssues(owner: string, repo: string): Promise<Paginated<Issue>>;
   getIssue(owner: string, repo: string, issueNumber: number): Promise<Issue>;
