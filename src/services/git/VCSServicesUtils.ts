@@ -1,12 +1,9 @@
-import { PullRequestState } from '../../inspectors/ICollaborationInspector';
-import { GitHubIssueState } from './IGitHubService';
-import { IssueState } from '../../inspectors';
-import { BitbucketIssueState, BitbucketPullRequestState } from '../bitbucket/IBitbucketService';
-import { GitHubPullRequestState } from './IGitHubService';
-import qs from 'qs';
 import _ from 'lodash';
-import gitUrlParse from 'git-url-parse';
-import parse from 'url-parse';
+import qs from 'qs';
+import { IssueState } from '../../inspectors';
+import { PullRequestState } from '../../inspectors/ICollaborationInspector';
+import { BitbucketIssueState, BitbucketPullRequestState } from '../bitbucket/IBitbucketService';
+import { GitHubIssueState, GitHubPullRequestState } from './IGitHubService';
 
 export class VCSServicesUtils {
   static getGithubPRState = (state: PullRequestState | undefined) => {
@@ -85,16 +82,16 @@ export class VCSServicesUtils {
     );
   };
 
-  static parseLinkHeader = (link: string, numberOfItems: number): ParsedGitHubLinkHeader | undefined => {
+  static parseLinkHeader = (link: string | undefined): ParsedGitHubLinkHeader | undefined => {
     if (!link) {
       return undefined;
     }
-    let prev,
-      next,
-      page: number,
+
+    let page: number,
       perPage: number,
       query: string | undefined,
-      params = {};
+      currentPage: number | undefined,
+      parsedLinks: ParsedGitHubLinkHeader | undefined;
 
     const links = link.split(',');
 
@@ -102,32 +99,49 @@ export class VCSServicesUtils {
       const iterator = linkGenerator();
       let current = iterator.next();
 
+      // iterate with prev, next, last through one link
       while (!current.done) {
         const val = link.match(current.value.link);
 
         if (val) {
+          // get url without brackets
           const values = val['input']?.match(/\s*<?([^>]*)>(.*)/);
           const url = values ? values[1] : undefined;
+
+          // save url to the right key (prev, next or last)
+          let parsedLink: any = { [current.value.link]: url };
+
+          // get query string
           query = url ? url.split('?')[1] : undefined;
           if (query) {
+            // parse query to get params
             const queryParams = qs.parse(query);
 
             page = queryParams['page'];
             perPage = queryParams['per_page'];
           }
 
-          let param = { [current.value.link]: url, page, perPage };
-          if (current.value.link === 'last') {
-            const totalCount = { totalCount: page * perPage };
-            param = { ...totalCount, ...param };
+          // get current page
+          if (current.value.link === 'next') {
+            currentPage = page ? page - 1 : page;
           }
-          params = { ...param, ...params };
+
+          if (current.value.link === 'prev') {
+            currentPage = page ? page + 1 : page;
+          }
+
+          // get max totalCount and save every needed param
+          if (current.value.link === 'last') {
+            //Requests that return multiple items will be paginated to 30 items by default. https://developer.github.com/v3/#pagination
+            parsedLink = { totalCount: page * perPage, page: currentPage || 1, perPage: perPage || 30, ...parsedLink };
+          }
+
+          parsedLinks = { ...parsedLink, ...parsedLinks };
         }
         current = iterator.next();
       }
-      console.log(params);
-      return params;
     });
+    return parsedLinks;
   };
 }
 
