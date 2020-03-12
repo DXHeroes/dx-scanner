@@ -56,7 +56,7 @@ examples:
 ```
 dxs run https://github.com/DXHeroes/dx-scanner
 
-dxs run https://gitlab.com/ubon-refer/smart-refer-api
+dx-scanner run https://gitlab.com/ubon-refer/smart-refer-api
 
 dx-scanner run https://bitbucket.org/maras333/node-api-with-ts
 ```
