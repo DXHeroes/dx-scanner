@@ -3,9 +3,10 @@ import { PracticeEvaluationResult, PracticeImpact, ProgrammingLanguage } from '.
 import { DxPractice } from '../DxPracticeDecorator';
 import { IPractice } from '../IPractice';
 import { DependenciesVersionMajorLevelPractice } from './DependenciesVersionMajorLevel';
-import { DependenciesVersionEvaluationUtils } from '../utils/DependenciesVersionEvaluationUtils';
+import { DependenciesVersionEvaluationUtils, PkgToUpdate } from '../utils/DependenciesVersionEvaluationUtils';
 import { SemverLevel } from '../../inspectors/package/PackageInspectorBase';
 import { flatten } from 'lodash';
+import ncu from 'npm-check-updates';
 
 @DxPractice({
   id: 'JavaScript.DependenciesVersionMinorPatchLevel',
@@ -16,6 +17,9 @@ import { flatten } from 'lodash';
   url: 'https://dxkb.io/p/updating-the-dependencies',
 })
 export class DependenciesVersionMinorPatchLevelPractice extends DependenciesVersionMajorLevelPractice implements IPractice {
+  private patchLevelPkgs: PkgToUpdate[] = [];
+  private minorLevelPkgs: PkgToUpdate[] = [];
+
   async isApplicable(ctx: PracticeContext): Promise<boolean> {
     return (
       ctx.projectComponent.language === ProgrammingLanguage.JavaScript || ctx.projectComponent.language === ProgrammingLanguage.TypeScript
@@ -33,11 +37,21 @@ export class DependenciesVersionMinorPatchLevelPractice extends DependenciesVers
 
     const patchLevelPkgs = DependenciesVersionEvaluationUtils.packagesToBeUpdated(result, SemverLevel.patch, pkgs);
     const minorLevelPkgs = DependenciesVersionEvaluationUtils.packagesToBeUpdated(result, SemverLevel.minor, pkgs);
+    this.patchLevelPkgs = patchLevelPkgs;
+    this.minorLevelPkgs = minorLevelPkgs;
     this.setData(flatten([patchLevelPkgs, minorLevelPkgs]));
 
     if (patchLevelPkgs.length > 0 || minorLevelPkgs.length > 0) {
       return PracticeEvaluationResult.notPracticing;
     }
     return PracticeEvaluationResult.practicing;
+  }
+
+  async fix() {
+    const packagesToUpdate = this.patchLevelPkgs
+      .map((p) => p.name)
+      .concat(this.minorLevelPkgs.map((p) => p.name))
+      .join(',');
+    await ncu.run({ filter: packagesToUpdate, upgrade: true });
   }
 }
