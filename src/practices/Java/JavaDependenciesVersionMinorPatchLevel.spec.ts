@@ -26,7 +26,7 @@ describe('JavaDependenciesVersionPractice of Minor and Patch Level', () => {
   });
 
   it('not practicing if newer dependency versions of minor or patch level exists', async () => {
-    mockedAxios.mockResolvedValueOnce({ data: { response: { docs: [{ latestVersion: '2.2.1.RELEASE' }] } } });
+    mockedAxios.mockResolvedValueOnce({ data: { response: { docs: [{ latestVersion: '1.2.1.RELEASE' }] } } });
 
     mockJavaPackageInspector.packages = [mockPackage('org.springframework.boot:spring-boot-starter-actuator')];
     containerCtx.practiceContext.packageInspector!.packages = mockJavaPackageInspector.packages;
