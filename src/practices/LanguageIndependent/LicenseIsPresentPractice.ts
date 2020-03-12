@@ -3,11 +3,20 @@ import { PracticeEvaluationResult, PracticeImpact } from '../../model';
 import { DxPractice } from '../DxPracticeDecorator';
 import { PracticeContext } from '../../contexts/practice/PracticeContext';
 import { FixerContext } from '../../contexts/fixer/FixerContext';
+import { PracticeConfig } from '../../scanner/IConfigProvider';
+import { AccessType } from '../../detectors';
 import yeoman from 'yeoman-environment';
+import { runGenerator } from 'yeoman-gen-run';
 import cli from 'cli-ux';
 
 const env = yeoman.createEnv();
 env.register(require.resolve('generator-license'), 'license');
+
+interface PracticeOverride extends PracticeConfig {
+  override: {
+    defaultLicense: string;
+  };
+}
 
 @DxPractice({
   id: 'LanguageIndependent.LicenseIsPresent',
@@ -38,14 +47,32 @@ export class LicenseIsPresentPractice implements IPractice {
     return PracticeEvaluationResult.notPracticing;
   }
 
+  private getDefaultLicense(ctx: FixerContext) {
+    if (ctx.config && (ctx.config as PracticeOverride).override?.defaultLicense) {
+      return (ctx.config as PracticeOverride).override.defaultLicense;
+    } else if (ctx.scanningStrategy?.accessType === AccessType.private) {
+      return 'UNLICENSED';
+    } else {
+      // public or unknown repo
+      return 'MIT';
+    }
+  }
+
   async fix(ctx: FixerContext) {
-    await cli.action.pauseAsync(
-      () =>
-        new Promise((resolve) => {
-          env.run('license', () => {
-            resolve();
-          });
-        }),
-    );
+    if (ctx.argumentsProvider?.ci) {
+      const license = this.getDefaultLicense(ctx);
+      await runGenerator('license', {
+        answers: { license, options: { nolog: true } },
+      });
+    } else {
+      await cli.action.pauseAsync(
+        () =>
+          new Promise((resolve) => {
+            env.run('license', () => {
+              resolve();
+            });
+          }),
+      );
+    }
   }
 }
