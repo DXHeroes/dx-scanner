@@ -28,7 +28,7 @@ export class ScanningStrategyDetector implements IDetector<string, ScanningStrat
     this.detectorDebug = debug('scanningStrategyDetector');
   }
 
-  async detect() {
+  async detect(): Promise<ScanningStrategy> {
     let serviceType: ServiceType;
     let remoteService: RemoteService;
     let accessType: AccessType | undefined = undefined;

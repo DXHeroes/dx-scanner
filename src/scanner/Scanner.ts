@@ -62,7 +62,7 @@ export class Scanner {
     this.allDetectedComponents = undefined;
   }
 
-  async fix(practicesWithContext: PracticeWithContext[]) {
+  async fix(practicesWithContext: PracticeWithContext[], scanningStrategy?: ScanningStrategy) {
     if (!this.argumentsProvider.fix) return;
     const fixablePractice = (p: PracticeWithContext) => p.practice.fix && p.evaluation === PracticeEvaluationResult.notPracticing;
     const fixPatternMatcher = this.argumentsProvider.fixPattern ? new RegExp(this.argumentsProvider.fixPattern, 'i') : null;
@@ -76,7 +76,14 @@ export class Scanner {
       practicesWithContext
         .filter(fixablePractice)
         .filter(shouldFix)
-        .map((p) => p.practice.fix!(p.practiceContext)),
+        .map((p) =>
+          p.practice.fix!({
+            ...p.practiceContext,
+            scanningStrategy,
+            config: p.componentContext.configProvider.getOverriddenPractice(p.practice.getMetadata().id),
+            argumentsProvider: this.argumentsProvider,
+          }),
+        ),
     );
   }
 
@@ -100,7 +107,7 @@ export class Scanner {
     this.d(`Components (${projectComponents.length}):`, inspect(projectComponents));
     const practicesWithContext = await this.detectPractices(projectComponents);
     this.d(`Practices (${practicesWithContext.length}):`, inspect(practicesWithContext));
-    await this.fix(practicesWithContext);
+    await this.fix(practicesWithContext, scanStrategy);
     const practicesAfterFix = await this.detectPractices(projectComponents);
     await this.report(practicesWithContext, practicesAfterFix);
     this.d(

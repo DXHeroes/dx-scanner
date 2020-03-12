@@ -2,6 +2,7 @@ import { IPractice } from '../IPractice';
 import { PracticeEvaluationResult, PracticeImpact } from '../../model';
 import { DxPractice } from '../DxPracticeDecorator';
 import { PracticeContext } from '../../contexts/practice/PracticeContext';
+import { FixerContext } from '../../contexts/fixer/FixerContext';
 import yeoman from 'yeoman-environment';
 import cli from 'cli-ux';
 
@@ -37,7 +38,7 @@ export class LicenseIsPresentPractice implements IPractice {
     return PracticeEvaluationResult.notPracticing;
   }
 
-  async fix() {
+  async fix(ctx: FixerContext) {
     await cli.action.pauseAsync(
       () =>
         new Promise((resolve) => {
