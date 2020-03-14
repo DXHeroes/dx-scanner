@@ -7,21 +7,28 @@ import { GitServiceUtils } from '../services/git/GitServiceUtils';
 import { ReportDetailType, ReporterData } from './ReporterData';
 import { assertNever } from '../lib/assertNever';
 import { ArgumentsProvider } from '../scanner';
+import { FileSystemService } from '../services';
 import { Types } from '../types';
-import fs from 'fs';
 import path from 'path';
 
 @injectable()
 export class HTMLReporter implements IReporter {
   private readonly argumentsProvider: ArgumentsProvider;
+  private readonly fileSystemService: FileSystemService;
 
-  constructor(@inject(Types.ArgumentsProvider) argumentsProvider: ArgumentsProvider) {
+  constructor(@inject(Types.ArgumentsProvider) argumentsProvider: ArgumentsProvider, @inject(FileSystemService) fileSystemService: FileSystemService) {
     this.argumentsProvider = argumentsProvider;
+    this.fileSystemService = fileSystemService;
   }
 
   async report(practicesAndComponents: PracticeWithContextForReporter[]): Promise<void> {
-    const reportString = this.buildReport(practicesAndComponents);
-    console.log(reportString);
+    const reportHTML = this.buildReport(practicesAndComponents);
+
+    let reportPath = this.argumentsProvider.html;
+    if (!reportPath) reportPath = 'report.html';
+
+    await this.fileSystemService.writeFile(path.resolve(process.cwd(), reportPath), reportHTML);
+    console.log('Report was saved to ' + reportPath);
   }
 
   buildReport(practicesAndComponents: PracticeWithContextForReporter[]): string {
@@ -65,7 +72,7 @@ export class HTMLReporter implements IReporter {
     lines.push('https://dxheroes.io</p>');
     lines.push('</div>');
 
-    const htmlReport = `
+    return `
       <!DOCTYPE html>
       <html lang="en">
       <head>
@@ -75,13 +82,6 @@ export class HTMLReporter implements IReporter {
       <div>${lines.join('\n')}</div>
       </html>
     `;
-
-    let reportPath = this.argumentsProvider.html;
-    if (!reportPath) reportPath = 'report.html';
-
-    fs.writeFileSync(path.resolve(process.cwd(), reportPath), htmlReport);
-
-    return 'Report was saved to ' + reportPath;
   }
 
   private emitImpactSegment(practicesAndComponents: PracticeWithContextForReporter[], impact: PracticeImpact): string | undefined {
