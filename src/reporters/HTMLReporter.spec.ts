@@ -24,7 +24,7 @@ describe('HTMLReporter', () => {
 
   describe('#report', () => {
     it('one practicing practice', async () => {
-      await new HTMLReporter(argumentsProviderFactory(), virtualFileSystemService).report([practicingHighImpactPracticeWithCtx]);
+      await new HTMLReporter(argumentsProviderFactory({ html: true }), virtualFileSystemService).report([practicingHighImpactPracticeWithCtx]);
 
       const result = await virtualFileSystemService.readFile(reportPath);
       await virtualFileSystemService.deleteFile(reportPath);
@@ -32,7 +32,7 @@ describe('HTMLReporter', () => {
     });
 
     it('one practicing practice and one not practicing', async () => {
-      await new HTMLReporter(argumentsProviderFactory(), virtualFileSystemService).report([
+      await new HTMLReporter(argumentsProviderFactory({ html: true }), virtualFileSystemService).report([
         practicingHighImpactPracticeWithCtx,
         notPracticingHighImpactPracticeWithCtx,
       ]);
@@ -43,7 +43,7 @@ describe('HTMLReporter', () => {
     });
 
     it('all impacted practices', async () => {
-      await new HTMLReporter(argumentsProviderFactory(), virtualFileSystemService).report([
+      await new HTMLReporter(argumentsProviderFactory({ html: true }), virtualFileSystemService).report([
         practicingHighImpactPracticeWithCtx,
         notPracticingHighImpactPracticeWithCtx,
         practiceWithContextFactory({

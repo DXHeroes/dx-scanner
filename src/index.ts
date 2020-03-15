@@ -50,7 +50,7 @@ class DXScannerCommand {
       .option('--fix', 'tries to fix problems automatically', false)
       .option('--fixPattern <pattern>', 'fix only rules with IDs matching the regex')
       .option('-j --json', 'print report in JSON', false)
-      .option('-h --html <path>', 'save report in HTML', undefined)
+      .option('--html [path]', 'save report in HTML', false)
       .option('-r --recursive', 'scan all components recursively in all sub folders', false)
       .action(Run.run)
       .on('--help', () => {

@@ -17,7 +17,7 @@ export default class Init {
       fail: PracticeImpact.off,
       fix: false,
       fixPattern: undefined,
-      html: undefined,
+      html: false,
     });
     const scanner = container.get(Scanner);
 

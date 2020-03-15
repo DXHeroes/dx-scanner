@@ -3,11 +3,10 @@ import { PracticeImpact, PracticeMetadata, PracticeEvaluationResult } from '../m
 import { IReporter, PracticeWithContextForReporter } from './IReporter';
 import { ReporterUtils } from './ReporterUtils';
 import { PracticeDetail } from '../practices/IPractice';
-import { GitServiceUtils } from '../services/git/GitServiceUtils';
 import { ReportDetailType, ReporterData } from './ReporterData';
 import { assertNever } from '../lib/assertNever';
 import { ArgumentsProvider } from '../scanner';
-import { FileSystemService } from '../services';
+import { FileSystemService, GitServiceUtils } from '../services';
 import { Types } from '../types';
 import path from 'path';
 
@@ -24,8 +23,9 @@ export class HTMLReporter implements IReporter {
   async report(practicesAndComponents: PracticeWithContextForReporter[]): Promise<void> {
     const reportHTML = this.buildReport(practicesAndComponents);
 
-    let reportPath = this.argumentsProvider.html;
-    if (!reportPath) reportPath = 'report.html';
+    let reportPath: string;
+    if (this.argumentsProvider.html === true) reportPath = 'report.html';
+    else reportPath = <string>this.argumentsProvider.html;
 
     await this.fileSystemService.writeFile(path.resolve(process.cwd(), reportPath), reportHTML);
     console.log('Report was saved to ' + reportPath);

@@ -105,7 +105,7 @@ Options:
   --fix                               tries to fix problems automatically (default: false)
   --fixPattern <pattern>              fix only rules with IDs matching the regex
   -j --json                           print report in JSON (default: false)
-  --html <path>                       save report in HTML file 
+  --html [path]                       save report in HTML file (default: false, default path: ./report.html)
   -r --recursive                      scan all components recursively in all sub folders (default: false)
   -h, --help                          output usage information
 
