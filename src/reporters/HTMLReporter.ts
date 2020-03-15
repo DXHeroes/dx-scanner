@@ -67,9 +67,9 @@ export class HTMLReporter implements IReporter {
 
     lines.push(`<h2 style="text-align: center; border-top: 1px solid #eaecef; padding: 20px 0">Your overall score is ${dxScore.value}.</h2>`);
     lines.push('<div style="text-align: center; background-color: gray; margin: 0; padding: 10px">');
-    lines.push('<a>Implementation is not adoption.</br>');
-    lines.push('We can help you with both. :-)</br>');
-    lines.push('https://dxheroes.io</p>');
+    lines.push('<p>Implementation is not adoption.</br>');
+    lines.push('We can help you with both. :-)</p>');
+    lines.push('<a href="https://dxheroes.io">https://dxheroes.io</a>');
     lines.push('</div>');
 
     return `
@@ -141,7 +141,7 @@ export class HTMLReporter implements IReporter {
     const findingPath = '';
     let practiceLineText = `<li>${practice.name} - ${practice.suggestion}`;
     if (practice.url)
-      practiceLineText += `${findingPath}${practice.url}`;
+      practiceLineText += ` ${findingPath} <a href="${practice.url}">${practice.url}</a>`;
 
     practiceLineText += '</li>';
     return practiceLineText;
