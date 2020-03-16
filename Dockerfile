@@ -1,8 +1,5 @@
 FROM ubuntu:18.04
 
-# replace shell with bash so we can source files
-RUN rm /bin/sh && ln -s /bin/bash /bin/sh
-
 # nvm environment variables
 ENV NVM_DIR /usr/local/nvm
 ENV NODE_VERSION 12.16.1
@@ -21,7 +18,7 @@ RUN apt-get update && apt-get install -y  -q --no-install-recommends \
 RUN curl --silent -o- https://raw.githubusercontent.com/creationix/nvm/v0.35.2/install.sh | bash
 
 # install node and npm
-RUN source $NVM_DIR/nvm.sh \
+RUN . $NVM_DIR/nvm.sh \
     && nvm install $NODE_VERSION \
     && nvm alias default $NODE_VERSION \
     && nvm use default
