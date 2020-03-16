@@ -1046,7 +1046,7 @@
   dependencies:
     "@types/yargs-parser" "*"
 
-"@types/yeoman-environment@^2.3.3":
+"@types/yeoman-environment@2.3.3":
   version "2.3.3"
   resolved "https://registry.yarnpkg.com/@types/yeoman-environment/-/yeoman-environment-2.3.3.tgz#6535ae2a5de2f19199bf4f6fbe1eafacae491acf"
   integrity sha512-s9qn0TVNxnHn6KR71m9Om3Lxsvd4PMc9SfDMnmIjZpbSycp/M+IIgNCKN8xJ4GhK0APJKwm+n9+lCvX5BsmUag==
@@ -1056,7 +1056,7 @@
     "@types/yeoman-generator" "*"
     rxjs ">=6.4.0"
 
-"@types/yeoman-generator@*", "@types/yeoman-generator@^3.1.4":
+"@types/yeoman-generator@*", "@types/yeoman-generator@3.1.4":
   version "3.1.4"
   resolved "https://registry.yarnpkg.com/@types/yeoman-generator/-/yeoman-generator-3.1.4.tgz#21d6599515d41447eb84e2bc45033f1a640bbaf2"
   integrity sha512-5oG9Qlk119qSHQpSClGonDIs4djxZSPurtg6faHItjeg8cffhkKs4twVYE+Wa0crAKJZDOwSd/Vmc6BSqJtgMA==
@@ -3658,7 +3658,7 @@ gauge@~2.7.3:
     strip-ansi "^3.0.1"
     wide-align "^1.1.0"
 
-generator-license@^5.4.0:
+generator-license@5.4.0:
   version "5.4.0"
   resolved "https://registry.yarnpkg.com/generator-license/-/generator-license-5.4.0.tgz#9d662e98d2bd534036079461521036977becb7a0"
   integrity sha512-Nd1V/Pt8kL3DnAiw370F2AWaibSz4+TnR/2j3jAFpdKEsvOeZSkFtIakWSMcGq3+iMAfyHRI7tTFP8QSvedHVQ==
@@ -10255,7 +10255,7 @@ yargs@^8.0.2:
     y18n "^3.2.1"
     yargs-parser "^7.0.0"
 
-yeoman-environment@^2.0.5, yeoman-environment@^2.3.4, yeoman-environment@^2.8.0:
+yeoman-environment@2.8.0, yeoman-environment@^2.0.5, yeoman-environment@^2.3.4:
   version "2.8.0"
   resolved "https://registry.yarnpkg.com/yeoman-environment/-/yeoman-environment-2.8.0.tgz#003f7d3f506e868b86dbc1c1265a963a236807fa"
   integrity sha512-BbJeEna23Qx90fBiJt1awcZ9okfPY/rP3xZYsk1rD3x8LuQgpo4BfegPvQT1sqqh2+gYVZmYZMv5pS8+Muyr9Q==
