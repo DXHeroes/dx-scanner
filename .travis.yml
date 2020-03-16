@@ -18,12 +18,12 @@ env:
 
 notifications:
   slack:
-    if: branch = master
+    if: branch = master AND type = push
     secure: AKt6cnaKZ8Fox3dIHVPzmQP5ROMG3zI0DzOsb3ShLfp8qJwMVJquqKnUG6j7CZKoK0UI4XkMd7PebLmEmExW7A4MjnWZ5VPy4VzpysQP2oV0JI7qEhSUzzwh1C7J+SH5EmNr7JrZW7H5LEiFpCJ00Of2C7kHmOaok/iBM3Nvz9OCiusT+BwmNSVxrkQjiqSmYKTolZhThYPnKwgNcqfIrpXv55Oei3rCFMRzyNnqUQk2mrdW5iitHWjxYLByThDfaf7iZ3SqdDMnx1OYsvuim0Nkr3HQ4KINiOQ6+6cYfuA6b2qGl7UVM/7lP6WfDU/Owe4yYfWK/xS4Po5WeDEi+z4V/V8FTtEtSnK1gez+NnOClKaui89FMavRqe+BKqDFNeDOoDNGCIs8MhsNLt+tTFCa7JfKIukgiYoHlPT5LfS8HIruTglMF7gsp1KTn0o9nuyaGblGblcCldz1QIo16lFnw+0JZIZR1Odn5nit96fLMoXxH6WUX7TShXgcp+RwbjyTEOWJnKtIRQO8BJ2Hjo9GH+J6u5OQ0+v8KlIgJ3E0IkTJTxMM225gfwJ95sv5rMYQByCw40yKa4+K48BEBFB49vwOOq6vDdsfyaowGIFJ0Hl9h3mQb9bOmq5iXt/5ByCP+XHiAkThuIdQCUQftzVj5WRD5rntrRwM5GUjyIk=
     on_success: change
     on_failure: change
   email:
-    if: branch = master
+    if: branch = master AND type = push
     recipients:
       - prokop@dxheroes.io
       - adela@dxheroes.io
@@ -31,6 +31,7 @@ notifications:
     on_failure: always
 
 script:
+  - yarn install
   - yarn build
   - yarn test --coverage
   - bin/run
@@ -42,12 +43,12 @@ jobs:
   include:
   - stage: code style
     if: branch = master
-    scripts:
+    script:
       - yarn lint
       - yarn codecov
   - stage: runtime test
     if: branch = master
-    scripts:
+    script:
       - npm -g i .
       - dx-scanner run
       - dx-scanner run https://github.com/DXHeroes/dx-scanner --fail=off
@@ -61,7 +62,7 @@ jobs:
     deploy:
       provider: script
       email: dev@dxheroes.io
-      skip_cleanup: true
+      cleanup: true
       script:
         - npx semantic-release
       on:
