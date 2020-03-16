@@ -10,11 +10,10 @@ cache:
   directories:
     - lib
     - coverage
-    - node_modules
 
 env:
-  matrix:
-  - YARN_GPG=no
+  global:
+    - YARN_GPG=no
 
 notifications:
   slack:
@@ -32,21 +31,29 @@ notifications:
 
 script:
   - yarn install
-  - yarn build
-  - yarn test --coverage
-  - bin/run
-  - yarn test:codecov:upload
-  - bin/run run . --fail=high
 
 jobs:
   fast_finish: true
   include:
-  - stage: code style
-    if: branch = master
+  - stage: test
+    name: Build
+    script:
+      - yarn install
+      - yarn build
+  - stage: test
+    name: Test
+    script:
+      - yarn test --coverage
+      - bin/run
+      - yarn test:codecov:upload
+      - bin/run run . --fail=high
+  - stage: test
+    name: Run Linter
     script:
       - yarn lint
       - yarn codecov
   - stage: runtime test
+    name: Run Live Tests on Windows
     if: branch = master
     script:
       - npm -g i .
@@ -56,18 +63,22 @@ jobs:
       - dx-scanner run https://github.com/intoli/remote-browser --fail=off
     os: windows
   - os: linux
+    name: Run Live Tests on Linux
+    if: branch = master
   - stage: release
+    name: Release NPM Package
+    if: branch = master
     node_js: lts/*
     script: skip
     deploy:
       provider: script
       email: dev@dxheroes.io
       cleanup: true
-      script:
-        - npx semantic-release
+      script: npx semantic-release
       on:
         all_branches: true
-  - stage: publish gh action in docker container
+  - stage: build docker image
+    name: "Publish Docker Image for Github Action"
     if: branch = master AND type = push
     node_js: lts/*
     env:
@@ -76,7 +87,8 @@ jobs:
       - docker build -f Dockerfile.github-action -t $CONTAINER_NAME .
       - docker login -u dxheroes -p $DOCKER_GITHUB_PASSWORD docker.pkg.github.com
       - docker push $CONTAINER_NAME
-  - stage: build docker containers
+  - stage: build docker image
+    name: "Publish Docker Image with DX Scanner"
     if: branch = master AND type = push
     node_js: lts/*
     env:
