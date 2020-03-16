@@ -10,6 +10,7 @@ import { ScannerContextFactory, Types } from '../../types';
 import { bindLanguageContext } from '../language/languageContextBinding';
 import { ScannerContext } from './ScannerContext';
 import { BitbucketService } from '../../services/bitbucket/BitbucketService';
+import { GitLabService } from '../../services/gitlab/GitLabService';
 import { PythonLanguageDetector } from '../../detectors/Python/PythonLanguageDetector';
 
 export const bindScanningContext = (container: Container) => {
@@ -47,6 +48,9 @@ const bindFileAccess = (scanningStrategy: ScanningStrategy, container: Container
   }
   if (scanningStrategy.serviceType === ServiceType.bitbucket) {
     container.bind(Types.IContentRepositoryBrowser).to(BitbucketService);
+  }
+  if (scanningStrategy.serviceType === ServiceType.gitlab) {
+    container.bind(Types.IContentRepositoryBrowser).to(GitLabService);
   }
   container
     .bind(Types.IFileInspector)

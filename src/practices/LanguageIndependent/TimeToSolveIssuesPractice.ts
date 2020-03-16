@@ -24,7 +24,7 @@ export class TimeToSolveIssuesPractice implements IPractice {
     }
 
     const repoName = GitServiceUtils.getRepoName(ctx.projectComponent.repositoryPath, ctx.projectComponent.path);
-    const ownerAndRepoName = GitServiceUtils.getOwnerAndRepoName(repoName);
+    const ownerAndRepoName = GitServiceUtils.parseUrl(repoName);
 
     //Both GitHub API and Bitbucket API returns open issues by default
     const issues = await ctx.issueTrackingInspector.listIssues(ownerAndRepoName.owner, ownerAndRepoName.repoName);

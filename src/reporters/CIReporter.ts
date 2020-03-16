@@ -10,6 +10,7 @@ import { CreatedUpdatedPullRequestComment, PullRequestComment } from '../service
 import { CIReportBuilder } from './builders/CIReportBuilder';
 import { ScanningStrategyDetectorUtils } from '../detectors/utils/ScanningStrategyDetectorUtils';
 import _ from 'lodash';
+import { GitLabService } from '../services/gitlab/GitLabService';
 
 @injectable()
 export class CIReporter implements IReporter {
@@ -33,7 +34,7 @@ export class CIReporter implements IReporter {
       const msg = "This isn't a pull request.";
       this.d(msg);
       return;
-    } else if (!ScanningStrategyDetectorUtils.isLocalPath(this.argumentsProvider.uri)) {
+    } else if (!(await ScanningStrategyDetectorUtils.isLocalPath(this.argumentsProvider.uri))) {
       const msg = 'CIReporter works only for local path';
       this.d(msg);
       return;
@@ -64,6 +65,9 @@ export class CIReporter implements IReporter {
         break;
       case VCSServiceType.bitbucket:
         client = new BitbucketService(this.argumentsProvider);
+        break;
+      case VCSServiceType.gitlab:
+        client = new GitLabService(this.argumentsProvider);
         break;
       default:
         return assertNever(this.config!.service);

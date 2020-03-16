@@ -1,6 +1,7 @@
 export enum GitService {
   github = 'github.com',
   bitbucket = 'bitbucket.org',
+  gitlab = 'gitlab.com', //when user does not host gitlab on his own
 }
 
 export interface UserInfo {

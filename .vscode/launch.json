@@ -7,6 +7,19 @@
     {
       "type": "node",
       "request": "launch",
+      "name": "run",
+      "program": "${workspaceFolder}/bin/run",
+      "args": [
+        "run",
+        "https://gitlab.com/gitlab-org/gitlab"
+      ],
+      "console": "integratedTerminal",
+      "internalConsoleOptions": "neverOpen",
+      "disableOptimisticBPs": true,
+    },
+    {
+      "type": "node",
+      "request": "launch",
       "name": "Jest All",
       "program": "${workspaceFolder}/node_modules/.bin/jest",
       "args": [
