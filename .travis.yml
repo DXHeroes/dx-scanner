@@ -6,7 +6,10 @@ os:
   - linux
 
 cache:
-  yarn: false
+  yarn: true
+  directories:
+    - lib
+    - coverage
 
 env:
   global:
