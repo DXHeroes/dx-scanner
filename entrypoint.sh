@@ -13,6 +13,6 @@ if [[ $1 == "dx-scanner"* || $1 == "dxs"* || $1 == "dxscanner"* ]]; then
   echo $@
   exec "$@"
 else
-  echo dx-scanner run $@ --ci -r
-  exec dx-scanner run "$@" --ci -r
+  echo dx-scanner run --ci -r $@
+  exec dx-scanner run --ci -r "$@"
 fi
