@@ -54,7 +54,7 @@ Sure you can use `GitHub`. You can also use `GitLab` and `Bitbucket` no matter i
 
 examples:
 ```
-dxs run https://github.com/DXHeroes/dx-scanner
+dx-scanner run https://github.com/DXHeroes/dx-scanner
 
 dx-scanner run https://gitlab.com/ubon-refer/smart-refer-api
 
