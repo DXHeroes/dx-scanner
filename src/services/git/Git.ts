@@ -109,12 +109,12 @@ export class Git implements IProjectFilesBrowserService {
   }
 
   async getContributorCount(): Promise<number> {
-    const params = GitServiceUtils.getOwnerAndRepoName(this.repository.url);
+    const params = GitServiceUtils.parseUrl(this.repository.url);
     return this.service.listContributors(params.owner, params.repoName).then((r) => r.totalCount);
   }
 
   async getPullRequestCount(): Promise<number> {
-    const params = GitServiceUtils.getOwnerAndRepoName(this.repository.url);
+    const params = GitServiceUtils.parseUrl(this.repository.url);
     return this.service.listPullRequests(params.owner, params.repoName, { filter: { state: PullRequestState.all } }).then((r) => {
       if (!r) {
         throw ErrorFactory.newInternalError('Could not get pull requests');
@@ -124,7 +124,7 @@ export class Git implements IProjectFilesBrowserService {
   }
 
   private getRepoContent(path: string): Promise<File | Symlink | Directory | null> {
-    const params = GitServiceUtils.getOwnerAndRepoName(this.repository.url);
+    const params = GitServiceUtils.parseUrl(this.repository.url);
     return this.service.getRepoContent(params.owner, params.repoName, path);
   }
 

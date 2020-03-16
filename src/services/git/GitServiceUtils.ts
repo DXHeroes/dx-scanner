@@ -6,8 +6,8 @@ export class GitServiceUtils {
   static getUrlToRepo = (url: string, path?: string | undefined, branch = 'master') => {
     const parsedUrl = gitUrlParse(url);
 
-    let completeUrl = `${parsedUrl.protocol}://${parsedUrl.source}/${parsedUrl.owner}/${parsedUrl.name}`;
-    const sourceUrl = <GitService | null>parsedUrl.source;
+    let completeUrl = `${parsedUrl.protocol}://${parsedUrl.resource}/${parsedUrl.owner}/${parsedUrl.name}`;
+    const sourceUrl = <GitService | null>parsedUrl.resource;
 
     if (path && sourceUrl) {
       completeUrl += GitServiceUtils.getPath(sourceUrl, path, branch || parsedUrl.ref);
@@ -16,12 +16,14 @@ export class GitServiceUtils {
     return completeUrl;
   };
 
-  static getOwnerAndRepoName = (url: string) => {
+  static parseUrl = (url: string) => {
     const parsedUrl = gitUrlParse(url);
 
     return {
       owner: parsedUrl.owner,
       repoName: parsedUrl.name,
+      host: parsedUrl.resource,
+      protocol: parsedUrl.protocol,
     };
   };
 
@@ -31,6 +33,8 @@ export class GitServiceUtils {
         return `/tree/${branch}${path}`;
       case GitService.bitbucket:
         return `/src/${branch}${path}`;
+      case GitService.gitlab:
+        return `/tree/${branch}${path}`;
 
       default:
         return assertNever(service);
