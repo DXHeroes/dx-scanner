@@ -1,5 +1,18 @@
-#!/bin/sh -l
+#!/bin/bash
+set -e
 
-echo "Start DX Scanner Action"
+if [[ $1 == *"bash" ]]; then
+  exec "/bin/bash"
+elif [[ $1 == *"sh" ]]; then
+  exec "/bin/sh"
+fi
 
-dx-scanner run --ci -r -a $1
+echo "Run DX Scanner"
+
+if [[ $1 == "dx-scanner"* || $1 == "dxs"* || $1 == "dxscanner"* ]]; then
+  echo $@
+  exec "$@"
+else
+  echo dx-scanner run --ci -r $@
+  exec dx-scanner run --ci -r "$@"
+fi
