@@ -69,7 +69,7 @@ To build a Docker image with DX Scanner run
 docker build . -t dxs
 ```
 and to run
-```
+```bash
 docker run -it -v `pwd`:/usr/app dxs
 # or
 docker run -it -v `pwd`:/usr/app dxs dx-scanner run .
