@@ -73,7 +73,7 @@ jobs:
     deploy:
       provider: script
       email: dev@dxheroes.io
-      cleanup: true
+      cleanup: false
       script: npx semantic-release
       on:
         all_branches: true
