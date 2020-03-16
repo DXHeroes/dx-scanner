@@ -151,9 +151,8 @@ export class GitLabService implements IVCSService {
       },
     };
 
-    //TODO
     if (withDiffStat) {
-      const lines: any = await this.getPullsDiffStat(owner, repo, prNumber);
+      const lines = await this.getPullsDiffStat(owner, repo, prNumber);
       return { ...pullRequest, lines };
     }
 
