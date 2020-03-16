@@ -11,7 +11,7 @@ export interface ICollaborationInspector {
   getPullRequest(owner: string, repo: string, prNumber: number, withDiffStat?: boolean): Promise<PullRequest>;
   listPullCommits(owner: string, repo: string, prNumber: number): Promise<Paginated<PullCommits>>;
   listPullRequestFiles(owner: string, repo: string, prNumber: number): Promise<Paginated<PullFiles>>;
-  listRepoCommits(owner: string, repo: string, sha?: string, options?: ListGetterOptions): Promise<Paginated<Commit>>;
+  listRepoCommits(owner: string, repo: string, options?: ListGetterOptions): Promise<Paginated<Commit>>;
   getPullsDiffStat(owner: string, repo: string, prNumber: number): Promise<Lines>;
 }
 

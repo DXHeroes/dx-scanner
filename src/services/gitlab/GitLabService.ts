@@ -244,8 +244,8 @@ export class GitLabService implements IVCSService {
     };
   }
 
-  async listIssueComments(owner: string, repo: string, issueNumber: number): Promise<Paginated<IssueComment>> {
-    const { data, pagination } = await this.unwrap(this.client.Issues.listComments(`${owner}/${repo}`, issueNumber));
+  async listIssueComments(owner: string, repo: string, issueNumber: number, options?: ListGetterOptions): Promise<Paginated<IssueComment>> {
+    const { data, pagination } = await this.unwrap(this.client.Issues.listComments(`${owner}/${repo}`, issueNumber, options?.pagination));
 
     const items = data.map((val) => ({
       user: {
@@ -270,8 +270,8 @@ export class GitLabService implements IVCSService {
     throw new Error('Method not implemented yet.');
   }
 
-  async listRepoCommits(owner: string, repo: string, sha?: string, options?: ListGetterOptions): Promise<Paginated<Commit>> {
-    const { data, pagination } = await this.unwrap(this.client.Commits.list(`${owner}/${repo}`));
+  async listRepoCommits(owner: string, repo: string, options?: ListGetterOptions): Promise<Paginated<Commit>> {
+    const { data, pagination } = await this.unwrap(this.client.Commits.list(`${owner}/${repo}`, options?.pagination));
 
     const items = data.map((val) => {
       return {

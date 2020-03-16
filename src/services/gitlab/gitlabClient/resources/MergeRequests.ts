@@ -28,11 +28,11 @@ export class MergeRequests extends GitLabClient {
     const params: {
       state?: GitLabPullRequestState | GitLabPullRequestState[];
       page?: number;
-      pagelen?: number;
+      per_page?: number;
     } = {};
     if (options?.filter?.state) params.state = options?.filter?.state;
     if (options?.pagination?.page) params.page = options?.pagination?.page;
-    if (options?.pagination?.perPage) params.pagelen = options?.pagination?.perPage;
+    if (options?.pagination?.perPage) params.per_page = options?.pagination?.perPage;
 
     const response: AxiosResponse<MergeRequest[]> = await this.api.get(endpoint, {
       params,

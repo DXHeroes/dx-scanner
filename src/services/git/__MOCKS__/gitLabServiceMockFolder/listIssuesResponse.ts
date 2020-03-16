@@ -1,7 +1,7 @@
-import { Paginated } from '../../../../inspectors/common/Paginated';
+import { Paginated, PaginationParams } from '../../../../inspectors/common/Paginated';
 import { Issue } from '../../model';
 
-export const listIssuesResponse = (items?: Issue[]): Paginated<Issue> => {
+export const listIssuesResponse = (items?: Issue[], pagination?: PaginationParams): Paginated<Issue> => {
   const defaultItems = [
     {
       user: {
@@ -38,8 +38,8 @@ export const listIssuesResponse = (items?: Issue[]): Paginated<Issue> => {
     totalCount: items?.length || 1,
     hasNextPage: true,
     hasPreviousPage: false,
-    page: 1,
-    perPage: 1,
+    page: pagination?.page || 1,
+    perPage: pagination?.perPage || 1,
   };
 };
 

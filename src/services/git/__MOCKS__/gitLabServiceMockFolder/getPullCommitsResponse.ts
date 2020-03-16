@@ -1,7 +1,7 @@
 import { PullCommits } from '../../model';
-import { Paginated } from '../../../../inspectors/common/Paginated';
+import { Paginated, PaginationParams } from '../../../../inspectors/common/Paginated';
 
-export const getPullCommitsResponse = (items?: PullCommits[]): Paginated<PullCommits> => {
+export const getPullCommitsResponse = (items?: PullCommits[], pagination?: PaginationParams): Paginated<PullCommits> => {
   const defaultItems = [
     {
       sha: '4eecfba1b1e2c35c13a7b34fc3d71e58cbb3645d',
@@ -34,7 +34,7 @@ export const getPullCommitsResponse = (items?: PullCommits[]): Paginated<PullCom
     totalCount: items?.length || 1,
     hasNextPage: true,
     hasPreviousPage: false,
-    page: 1,
-    perPage: items?.length || 1,
+    page: pagination?.page || 1,
+    perPage: pagination?.perPage || 1,
   };
 };

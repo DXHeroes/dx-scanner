@@ -38,7 +38,7 @@ export interface IVCSService {
     body: string,
     pullRequestId?: number,
   ): Promise<CreatedUpdatedPullRequestComment>;
-  listRepoCommits(owner: string, repo: string, sha?: string, options?: ListGetterOptions): Promise<Paginated<Commit>>;
+  listRepoCommits(owner: string, repo: string, options?: ListGetterOptions): Promise<Paginated<Commit>>;
   listPullCommits(owner: string, repo: string, prNumber: number, options?: ListGetterOptions): Promise<Paginated<PullCommits>>;
   getCommit(owner: string, repo: string, commitSha: string): Promise<Commit>;
 
