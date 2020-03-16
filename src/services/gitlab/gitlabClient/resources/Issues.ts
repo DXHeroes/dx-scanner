@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/camelcase */
+/* eslint-disable @typescript-eslint/no-explicit-any, @typescript-eslint/camelcase */
 import { AxiosResponse } from 'axios';
 import { PaginationParams } from '../../../../inspectors';
 import { GitLabIssueState } from '../../IGitLabService';

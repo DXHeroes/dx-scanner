@@ -7,7 +7,7 @@ import { PracticeDetail } from '../practices/IPractice';
 import { GitServiceUtils } from '../services/git/GitServiceUtils';
 import { ReportDetailType, ReporterData } from './ReporterData';
 import { assertNever } from '../lib/assertNever';
-import { ArgumentsProvider, PracticeWithContext } from '../scanner';
+import { ArgumentsProvider } from '../scanner';
 import { Types } from '../types';
 
 @injectable()

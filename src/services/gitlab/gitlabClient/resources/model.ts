@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 export interface TimeStats {
   time_estimate: number;
   total_time_spent: number;
