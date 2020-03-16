@@ -68,7 +68,7 @@
     "update-notifier": "4.1.0",
     "xml2js": "0.4.23",
     "yaml": "1.7.2",
-    "yeoman-environment": "2.8.0"
+    "yeoman-environment": "2.8.1"
   },
   "devDependencies": {
     "@semantic-release/changelog": "5.0.0",
