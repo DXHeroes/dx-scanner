@@ -82,6 +82,7 @@ export class Scanner {
 
   async scan({ determineRemote } = { determineRemote: true }): Promise<ScanResult> {
     let scanStrategy = await this.scanStrategyDetector.detect();
+    this.d(`Scan strategy: ${inspect(scanStrategy)}`);
     if (determineRemote && (scanStrategy.serviceType === undefined || scanStrategy.accessType === AccessType.unknown)) {
       return {
         shouldExitOnEnd: this.shouldExitOnEnd,
@@ -90,7 +91,6 @@ export class Scanner {
         isOnline: scanStrategy.isOnline,
       };
     }
-    this.d(`Scan strategy: ${inspect(scanStrategy)}`);
     scanStrategy = await this.preprocessData(scanStrategy);
     this.d(`Scan strategy (after preprocessing): ${inspect(scanStrategy)}`);
     const scannerContext = this.scannerContextFactory(scanStrategy);
