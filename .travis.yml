@@ -67,14 +67,14 @@ jobs:
     if: branch = master
   - stage: release
     name: Release NPM Package
-    if: branch = master
     node_js: lts/*
-    script: skip
+    # script: skip
     deploy:
       provider: script
       email: dev@dxheroes.io
-      cleanup: false
-      script: yarn semantic-release
+      skip_cleanup: true
+      script:
+        - npx semantic-release
       on:
         all_branches: true
   - stage: build docker image
