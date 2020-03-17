@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/no-unused-vars, @typescript-eslint/camelcase */
-import { Response } from 'bitbucket/src/request/types';
 import Debug from 'debug';
 import { inject, injectable } from 'inversify';
 import { inspect } from 'util';
 import { IVCSService, ServicePagination } from '..';
+import { ScanningStrategy } from '../../detectors';
 import { IssueState, ListGetterOptions, Paginated, PullRequestState } from '../../inspectors';
 import { ArgumentsProvider } from '../../scanner';
 import { InMemoryCache } from '../../scanner/cache';
@@ -29,7 +29,7 @@ import {
   UserInfo,
 } from '../git/model';
 import { VCSServicesUtils } from '../git/VCSServicesUtils';
-import { GitLabClient, PaginationGitLabCustomResponse, CustomAxiosResponse } from './gitlabClient/gitlabUtils';
+import { CustomAxiosResponse, GitLabClient, PaginationGitLabCustomResponse } from './gitlabClient/gitlabUtils';
 const debug = Debug('cli:services:git:gitlab-service');
 
 @injectable()
@@ -38,14 +38,22 @@ export class GitLabService implements IVCSService {
   private cache: ICache;
   private callCount = 0;
   private readonly argumentsProvider: ArgumentsProvider;
+  private readonly scanningStrategy: ScanningStrategy;
   private readonly host: string;
 
-  constructor(@inject(Types.ArgumentsProvider) argumentsProvider: ArgumentsProvider) {
+  constructor(
+    @inject(Types.ArgumentsProvider) argumentsProvider: ArgumentsProvider,
+    @inject(Types.ScanningStrategy) scanningStrategy: ScanningStrategy,
+  ) {
     this.argumentsProvider = argumentsProvider;
-    const parsedUrl = GitServiceUtils.parseUrl(argumentsProvider.uri);
+    this.scanningStrategy = scanningStrategy;
+    const parsedUrl = GitServiceUtils.parseUrl(scanningStrategy.remoteUrl || argumentsProvider.uri);
     this.host = parsedUrl.host;
 
     this.cache = new InMemoryCache();
+    console.log(this.host, 'host');
+    console.log(this.argumentsProvider.auth, 'auth');
+    console.log(parsedUrl.protocol, 'protocol');
     this.client = this.setClient(this.host, this.argumentsProvider.auth, parsedUrl.protocol);
   }
 

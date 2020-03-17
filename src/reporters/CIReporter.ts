@@ -11,16 +11,22 @@ import { CIReportBuilder } from './builders/CIReportBuilder';
 import { ScanningStrategyDetectorUtils } from '../detectors/utils/ScanningStrategyDetectorUtils';
 import _ from 'lodash';
 import { GitLabService } from '../services/gitlab/GitLabService';
+import { ScanningStrategy } from '../detectors';
 
 @injectable()
 export class CIReporter implements IReporter {
   private readonly argumentsProvider: ArgumentsProvider;
+  private readonly scanningStrategy: ScanningStrategy;
   private config: CIReporterConfig | undefined;
   private d: debug.Debugger;
 
-  constructor(@inject(Types.ArgumentsProvider) argumentsProvider: ArgumentsProvider) {
+  constructor(
+    @inject(Types.ArgumentsProvider) argumentsProvider: ArgumentsProvider,
+    @inject(Types.ScanningStrategy) scanningStrategy: ScanningStrategy,
+  ) {
     this.d = debug('CIReporter');
     this.argumentsProvider = argumentsProvider;
+    this.scanningStrategy = scanningStrategy;
     this.config = this.detectConfiguration();
     this.d(this.config);
   }
@@ -67,7 +73,7 @@ export class CIReporter implements IReporter {
         client = new BitbucketService(this.argumentsProvider);
         break;
       case VCSServiceType.gitlab:
-        client = new GitLabService(this.argumentsProvider);
+        client = new GitLabService(this.argumentsProvider, this.scanningStrategy);
         break;
       default:
         return assertNever(this.config!.service);
