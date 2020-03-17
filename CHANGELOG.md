@@ -1,3 +1,10 @@
+# [3.1.0](https://github.com/dxheroes/dx-scanner/compare/v3.0.5...v3.1.0) (2020-03-17)
+
+
+### Features
+
+* **gitlab:** support CI reporter ([65a2ca2](https://github.com/dxheroes/dx-scanner/commit/65a2ca2e12a2e45bc24cc950d2d3c7f0ce0b2512))
+
 ## [3.0.5](https://github.com/dxheroes/dx-scanner/compare/v3.0.4...v3.0.5) (2020-03-17)
 
 
