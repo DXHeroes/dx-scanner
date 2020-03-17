@@ -37,8 +37,6 @@ export default class Run {
     if (scanResult.needsAuth) {
       if (scanResult.isOnline && !cmd.ci) {
         authorization = await ScannerUtils.promptAuthorization(scanPath, scanResult);
-      } else if (scanResult.isOnline) {
-        throw ErrorFactory.newAuthorizationError('Invalid Authorization Credentials!');
       }
 
       const container = createRootContainer({
