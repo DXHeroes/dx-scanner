@@ -1,3 +1,4 @@
+/* eslint-disable no-process-env */
 import { IReporter, PracticeWithContextForReporter } from './IReporter';
 import { injectable, inject } from 'inversify';
 import { Types } from '../types';
@@ -11,6 +12,7 @@ import { CIReportBuilder } from './builders/CIReportBuilder';
 import { ScanningStrategyDetectorUtils } from '../detectors/utils/ScanningStrategyDetectorUtils';
 import _ from 'lodash';
 import { GitLabService } from '../services/gitlab/GitLabService';
+import { GitLabClient } from '../services/gitlab/gitlabClient/gitlabUtils';
 
 @injectable()
 export class CIReporter implements IReporter {
@@ -21,11 +23,12 @@ export class CIReporter implements IReporter {
   constructor(@inject(Types.ArgumentsProvider) argumentsProvider: ArgumentsProvider) {
     this.d = debug('CIReporter');
     this.argumentsProvider = argumentsProvider;
-    this.config = this.detectConfiguration();
-    this.d(this.config);
   }
 
   async report(practicesAndComponents: PracticeWithContextForReporter[]): Promise<CreatedUpdatedPullRequestComment | undefined> {
+    this.config = await this.detectConfiguration();
+    this.d(this.config);
+
     if (!this.config) {
       const msg = 'Your CI provider is not supported yet. Please add a feature request on https://github.com/DXHeroes/dx-scanner/issues';
       this.d(msg);
@@ -67,7 +70,7 @@ export class CIReporter implements IReporter {
         client = new BitbucketService(this.argumentsProvider);
         break;
       case VCSServiceType.gitlab:
-        client = new GitLabService(this.argumentsProvider);
+        client = new GitLabService({ ...this.argumentsProvider, ...{ uri: process.env.CI_SERVER_HOST! } });
         break;
       default:
         return assertNever(this.config!.service);
@@ -116,7 +119,7 @@ export class CIReporter implements IReporter {
     return comment;
   }
 
-  private detectConfiguration(): CIReporterConfig | undefined {
+  private async detectConfiguration(): Promise<CIReporterConfig | undefined> {
     // eslint-disable-next-line no-process-env
     const ev = process.env;
 
@@ -136,6 +139,25 @@ export class CIReporter implements IReporter {
       // detect Bitbucket config
       this.d('Is Bitbucket');
       return CIReporterUtils.loadConfigurationBitbucket();
+    } else if ((ev.GITLAB_CI = 'true')) {
+      // detect GitLab config
+      this.d('Is GitLab');
+      const client = new GitLabClient({ token: this.argumentsProvider.auth, host: ev.CI_SERVER_HOST! });
+      const prs = await client.MergeRequests.list(ev.CI_PROJECT_ID!, { filter: { sourceBranch: ev.CI_COMMIT_BRANCH } });
+      const prForThisPipeline = prs.data.find((p) => p.sha === ev.CI_COMMIT_SHA);
+      if (!prForThisPipeline) {
+        this.d('Can not find relevant Merge Request', ev.CI_PROJECT_ID, ev.CI_COMMIT_BRANCH, ev.CI_COMMIT_SHA);
+        return undefined;
+      }
+
+      return {
+        service: VCSServiceType.gitlab,
+        pullRequestId: prForThisPipeline.id,
+        repository: {
+          owner: ev.CI_PROJECT_NAMESPACE!,
+          name: ev.CI_PROJECT_NAME!,
+        },
+      };
     } else {
       // not supported yet
       this.d('Is undefined CI');

@@ -1,6 +1,5 @@
 import axios from 'axios';
 import { injectable } from 'inversify';
-import debug from 'debug';
 
 @injectable()
 export class GitLabClient {
