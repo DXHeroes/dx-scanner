@@ -34,14 +34,11 @@ export default class Run {
 
     let scanResult = await scanner.scan();
 
-    // needsAuth and cmd.ci are both true if the credentials are invalid either due to 401 or 403
-    if (scanResult.needsAuth && cmd.ci) {
-      throw ErrorFactory.newAuthorizationError('Invalid Authorization Credentials!');
-    }
-
-    if (scanResult.needsAuth && !cmd.ci) {
-      if (scanResult.isOnline) {
+    if (scanResult.needsAuth) {
+      if (scanResult.isOnline && !cmd.ci) {
         authorization = await ScannerUtils.promptAuthorization(scanPath, scanResult);
+      } else if (scanResult.isOnline) {
+        throw ErrorFactory.newAuthorizationError('Invalid Authorization Credentials!');
       }
 
       const container = createRootContainer({
