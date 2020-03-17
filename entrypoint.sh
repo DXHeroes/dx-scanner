@@ -1,9 +1,9 @@
 #!/bin/bash
 set -e
 
-if [[ $1 == *"bash" ]]; then
+if [[ $1 == "/bin/bash" ]]; then
   exec "/bin/bash"
-elif [[ $1 == *"sh" ]]; then
+elif [[ $1 == "/bin/sh" ]]; then
   exec "/bin/sh"
 fi
 
