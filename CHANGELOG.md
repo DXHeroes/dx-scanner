@@ -1,3 +1,10 @@
+## [3.0.2](https://github.com/dxheroes/dx-scanner/compare/v3.0.1...v3.0.2) (2020-03-17)
+
+
+### Bug Fixes
+
+* **docker:** remove bash/shell regex ([9ca0796](https://github.com/dxheroes/dx-scanner/commit/9ca0796aa3c5ee8179bb5eb59a4da2f80b3689e6))
+
 ## [3.0.1](https://github.com/dxheroes/dx-scanner/compare/v3.0.0...v3.0.1) (2020-03-17)
 
 
