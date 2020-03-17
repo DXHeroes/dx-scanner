@@ -1,3 +1,15 @@
+## [3.0.1](https://github.com/dxheroes/dx-scanner/compare/v3.0.0...v3.0.1) (2020-03-17)
+
+
+### Bug Fixes
+
+* upgrade libs ([f9011dd](https://github.com/dxheroes/dx-scanner/commit/f9011dd57160aecb3fc144f8ede75010622dce31))
+
+
+### Reverts
+
+* **ci:** disable cache ([216b451](https://github.com/dxheroes/dx-scanner/commit/216b45189a5fc2b6a878476dbec1acb5479706aa))
+
 # [3.0.0](https://github.com/dxheroes/dx-scanner/compare/v2.10.1...v3.0.0) (2020-03-16)
 
 
