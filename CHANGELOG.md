@@ -1,3 +1,10 @@
+## [3.0.3](https://github.com/dxheroes/dx-scanner/compare/v3.0.2...v3.0.3) (2020-03-17)
+
+
+### Bug Fixes
+
+* **docker:** exec all sh&bash commands with all args ([30f9d05](https://github.com/dxheroes/dx-scanner/commit/30f9d05293c54d27fe61e15fab74c28eb882d7af))
+
 ## [3.0.2](https://github.com/dxheroes/dx-scanner/compare/v3.0.1...v3.0.2) (2020-03-17)
 
 
