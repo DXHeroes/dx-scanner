@@ -5,6 +5,7 @@ import debug from 'debug';
 import { createRootContainer } from '../inversify.config';
 import { Scanner, ScannerUtils } from '../scanner';
 import { CLIArgs } from '../model';
+import { ErrorFactory } from '../lib/errors/ErrorFactory';
 
 export default class Run {
   static async run(path = process.cwd(), cmd: CLIArgs) {
@@ -32,6 +33,11 @@ export default class Run {
     const scanner = container.get(Scanner);
 
     let scanResult = await scanner.scan();
+
+    // needsAuth and cmd.ci are both true if the credentials are invalid either due to 401 or 403
+    if (scanResult.needsAuth && cmd.ci) {
+      throw ErrorFactory.newAuthorizationError('Invalid Authorization Credentials!');
+    }
 
     if (scanResult.needsAuth && !cmd.ci) {
       if (scanResult.isOnline) {
