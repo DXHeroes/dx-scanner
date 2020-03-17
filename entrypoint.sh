@@ -1,10 +1,8 @@
 #!/bin/bash
 set -e
 
-if [[ $1 == "/bin/bash" ]]; then
-  exec "/bin/bash"
-elif [[ $1 == "/bin/sh" ]]; then
-  exec "/bin/sh"
+if [[ $1 == *"bash" || $1 == *"sh" ]]; then
+  exec "$@"
 fi
 
 echo "Run DX Scanner"
