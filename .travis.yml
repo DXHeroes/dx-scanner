@@ -74,7 +74,7 @@ jobs:
       provider: script
       email: dev@dxheroes.io
       cleanup: false
-      script: npx semantic-release
+      script: yarn semantic-release
       on:
         all_branches: true
   - stage: build docker image
