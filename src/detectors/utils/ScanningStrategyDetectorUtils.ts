@@ -26,13 +26,12 @@ export class ScanningStrategyDetectorUtils {
     if (this.testPath(path, /gitlab\.com/)) return true;
 
     const parsedUrl = GitServiceUtils.parseUrl(path);
+    if (parsedUrl.protocol === 'file') return false;
 
     // set private token for GitLab
     const headers: { [header: string]: string } = {};
     if (auth) headers['Authorization'] = `Bearer ${auth}`;
 
-    d(`${parsedUrl.protocol}://${parsedUrl.host}/api/v4/version`);
-    d(headers);
     try {
       const response = await axios.create({ baseURL: `${parsedUrl.protocol}://${parsedUrl.host}`, headers }).get('/api/v4/version');
 

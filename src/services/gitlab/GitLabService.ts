@@ -34,7 +34,7 @@ const debug = Debug('cli:services:git:gitlab-service');
 
 @injectable()
 export class GitLabService implements IVCSService {
-  private readonly client: GitLabClient;
+  private client: GitLabClient;
   private cache: ICache;
   private callCount = 0;
   private readonly argumentsProvider: ArgumentsProvider;
@@ -46,11 +46,16 @@ export class GitLabService implements IVCSService {
     this.host = parsedUrl.host;
 
     this.cache = new InMemoryCache();
+    this.client = this.setClient(this.host, this.argumentsProvider.auth, parsedUrl.protocol);
+  }
 
+  setClient(host: string, auth?: string, protocol = 'https') {
+    debug('Set new Gitlab Client', protocol, host);
     this.client = new GitLabClient({
-      token: argumentsProvider.auth,
-      host: `${parsedUrl.protocol}://${this.host}`,
+      token: auth,
+      host: `${protocol}://${host}`,
     });
+    return this.client;
   }
 
   purgeCache() {

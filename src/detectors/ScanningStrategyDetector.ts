@@ -15,7 +15,7 @@ export class ScanningStrategyDetector implements IDetector<string, ScanningStrat
   private bitbucketService: BitbucketService;
   private gitLabService: GitLabService;
   private readonly argumentsProvider: ArgumentsProvider;
-  private readonly detectorDebug: debug.Debugger;
+  private readonly d: debug.Debugger;
   private isOnline = false;
 
   constructor(
@@ -28,7 +28,7 @@ export class ScanningStrategyDetector implements IDetector<string, ScanningStrat
     this.bitbucketService = bitbucketService;
     this.gitLabService = gitLabService;
     this.argumentsProvider = argumentsProvider;
-    this.detectorDebug = debug('scanningStrategyDetector');
+    this.d = debug('scanningStrategyDetector');
   }
 
   async detect() {
@@ -92,7 +92,7 @@ export class ScanningStrategyDetector implements IDetector<string, ScanningStrat
       try {
         response = await this.gitHubService.getRepo(owner, repoName);
       } catch (error) {
-        this.detectorDebug(error.message);
+        this.d(error.message);
         if (error.status === 401 || error.status === 404 || error.status === 403) {
           return AccessType.unknown;
         }
@@ -119,7 +119,7 @@ export class ScanningStrategyDetector implements IDetector<string, ScanningStrat
         }
         return AccessType.public;
       } catch (error) {
-        this.detectorDebug(error.message);
+        this.d(error.message);
         if (error.code === 401 || error.code === 404 || error.code === 403) {
           return AccessType.unknown;
         }
@@ -130,7 +130,8 @@ export class ScanningStrategyDetector implements IDetector<string, ScanningStrat
         throw error;
       }
     } else if (remoteService.serviceType === ServiceType.gitlab) {
-      const { owner, repoName } = GitServiceUtils.parseUrl(remoteService.remoteUrl);
+      const { owner, repoName, host } = GitServiceUtils.parseUrl(remoteService.remoteUrl);
+      this.gitLabService.setClient(host, this.argumentsProvider.auth);
 
       try {
         const { data } = await this.gitLabService.getRepo(owner, repoName);
@@ -144,9 +145,14 @@ export class ScanningStrategyDetector implements IDetector<string, ScanningStrat
           return AccessType.unknown;
         }
       } catch (error) {
-        this.detectorDebug(error.message);
-        if (error.code === 401 || error.code === 404 || error.code === 403 || error.code === 500) {
-          if (error.status === 500) {
+        this.d(error.message);
+        if (
+          error.response.status === 401 ||
+          error.response.status === 404 ||
+          error.response.status === 403 ||
+          error.response.status === 500
+        ) {
+          if (error.response.status === 500) {
             this.isOnline = false;
           }
           return AccessType.unknown;
@@ -186,7 +192,7 @@ export class ScanningStrategyDetector implements IDetector<string, ScanningStrat
     } else {
       remoteService = { serviceType: ServiceType.gitlab, remoteUrl: remote.refs.fetch };
     }
-
+    this.d(remoteService);
     return remoteService;
   };
 }
