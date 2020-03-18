@@ -99,6 +99,8 @@ class DXScannerCommand {
       );
       process.exit(1);
     }
+
+    return value;
   };
 
   private static notifyUpdate = () => {
