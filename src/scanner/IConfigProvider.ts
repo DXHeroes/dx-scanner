@@ -19,6 +19,9 @@ export interface PracticeConfig {
   useEslintrc?: boolean;
   impact?: string;
   fix?: boolean;
+  override?: {
+    [key: string]: number | string | number[] | string[];
+  };
 }
 
 enum Service {

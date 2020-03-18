@@ -10,6 +10,10 @@ import { JavaComponentDetector } from '../../detectors/Java/JavaComponentDetecto
 import { LanguageContext } from './LanguageContext';
 import { CollaborationInspector } from '../../inspectors/CollaborationInspector';
 import { IssueTrackingInspector } from '../../inspectors/IssueTrackingInspector';
+import { PythonComponentDetector } from '../../detectors/Python/PythonComponentDetector';
+import { PythonPackageInspector } from '../../inspectors/package/PythonPackageInspector';
+import { PackageInspectorBase } from '../../inspectors/package/PackageInspectorBase';
+import { IProjectComponentDetector } from '../../detectors/IProjectComponentDetector';
 
 export const bindLanguageContext = (container: Container) => {
   container.bind(Types.LanguageContextFactory).toFactory(
@@ -47,50 +51,26 @@ const bindFileAccess = (languageAtPath: LanguageAtPath, container: Container) =>
 };
 
 const bindPackageInspectors = (languageAtPath: LanguageAtPath, container: Container) => {
+  // do not refactor to switch cases => it changes the behaviour unexpectedly in some tests
   if (languageAtPath.language === ProgrammingLanguage.JavaScript || languageAtPath.language === ProgrammingLanguage.TypeScript) {
-    container
-      .bind(Types.IPackageInspector)
-      .to(JavaScriptPackageInspector)
-      .inSingletonScope();
-
-    // TODO: bind this as InitiableInspector instead of using next line binding
-    container.bind(JavaScriptPackageInspector).toDynamicValue((ctx) => {
-      return ctx.container.get(Types.IPackageInspector);
-    });
-    container.bind(Types.InitiableInspector).toDynamicValue((ctx) => {
-      return ctx.container.get(Types.IPackageInspector);
-    });
+    resolveBindingPackageInspector(JavaScriptPackageInspector, container);
   } else if (languageAtPath.language === ProgrammingLanguage.Java || languageAtPath.language === ProgrammingLanguage.Kotlin) {
-    container
-      .bind(Types.IPackageInspector)
-      .to(JavaPackageInspector)
-      .inSingletonScope();
-    container.bind(JavaPackageInspector).toDynamicValue((ctx) => {
-      return ctx.container.get(Types.IPackageInspector);
-    });
-    container.bind(Types.InitiableInspector).toDynamicValue((ctx) => {
-      return ctx.container.get(Types.IPackageInspector);
-    });
+    resolveBindingPackageInspector(JavaPackageInspector, container);
+  } else if (languageAtPath.language === ProgrammingLanguage.Python) {
+    resolveBindingPackageInspector(PythonPackageInspector, container);
   }
 };
 
 const bindComponentDetectors = (container: Container) => {
-  container
-    .bind(Types.IProjectComponentDetector)
-    .to(JavaScriptComponentDetector)
-    .whenTargetTagged(DETECT_LANGUAGE_TAG, ProgrammingLanguage.JavaScript);
-  container
-    .bind(Types.IProjectComponentDetector)
-    .to(JavaScriptComponentDetector)
-    .whenTargetTagged(DETECT_LANGUAGE_TAG, ProgrammingLanguage.TypeScript);
-  container
-    .bind(Types.IProjectComponentDetector)
-    .to(JavaComponentDetector)
-    .whenTargetTagged(DETECT_LANGUAGE_TAG, ProgrammingLanguage.Java);
-  container
-    .bind(Types.IProjectComponentDetector)
-    .to(JavaComponentDetector)
-    .whenTargetTagged(DETECT_LANGUAGE_TAG, ProgrammingLanguage.Kotlin);
+  const iterator = componentGenerator();
+  let current = iterator.next();
+  while (!current.done) {
+    container
+      .bind(Types.IProjectComponentDetector)
+      .to(current.value.componentDetector)
+      .whenTargetTagged(DETECT_LANGUAGE_TAG, current.value.detectedLanguage);
+    current = iterator.next();
+  }
 
   container.bind(Types.ProjectComponentDetectorFactory).toFactory((ctx) => {
     return getProjectComponentDetectorFactory(ctx.container as Container);
@@ -106,6 +86,34 @@ const bindCollaborationInspectors = (container: Container) => {
     .bind(Types.IIssueTrackingInspector)
     .to(IssueTrackingInspector)
     .inSingletonScope();
+};
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const resolveBindingPackageInspector = (packageInspector: { new (...args: any[]): PackageInspectorBase }, container: Container) => {
+  container
+    .bind(Types.IPackageInspector)
+    .to(packageInspector)
+    .inSingletonScope();
+  // TODO: bind this as InitiableInspector instead of using next line binding
+  container.bind(packageInspector).toDynamicValue((ctx) => {
+    return ctx.container.get(Types.IPackageInspector);
+  });
+  container.bind(Types.InitiableInspector).toDynamicValue((ctx) => {
+    return ctx.container.get(Types.IPackageInspector);
+  });
+};
+
+const componentGenerator = function*(): Generator<{
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  componentDetector: { new (...args: any[]): IProjectComponentDetector };
+  detectedLanguage: ProgrammingLanguage;
+}> {
+  yield { componentDetector: JavaScriptComponentDetector, detectedLanguage: ProgrammingLanguage.JavaScript };
+  yield { componentDetector: JavaScriptComponentDetector, detectedLanguage: ProgrammingLanguage.TypeScript };
+  yield { componentDetector: JavaComponentDetector, detectedLanguage: ProgrammingLanguage.Java };
+  yield { componentDetector: JavaComponentDetector, detectedLanguage: ProgrammingLanguage.Kotlin };
+  yield { componentDetector: PythonComponentDetector, detectedLanguage: ProgrammingLanguage.Python };
+  return;
 };
 
 export const DETECT_LANGUAGE_TAG = 'language';

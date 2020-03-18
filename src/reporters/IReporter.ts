@@ -9,9 +9,15 @@ import {
 import { PracticeData } from '../practices/IPractice';
 
 export interface IReporter {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  report(practicesAndComponents: PracticeWithContextForReporter[]): Promise<any>;
-  buildReport(practicesAndComponents: PracticeWithContextForReporter[]): string | JSONReport;
+  report(
+    practicesAndComponents: PracticeWithContextForReporter[],
+    practicesAndComponentsAfterFix?: PracticeWithContextForReporter[],
+  ): // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  Promise<any>;
+  buildReport(
+    practicesAndComponents: PracticeWithContextForReporter[],
+    practicesAndComponentsAfterFix?: PracticeWithContextForReporter[],
+  ): string | JSONReport;
 }
 
 export type JSONReport = { uri: string; components: ComponentReport[] };
@@ -25,7 +31,7 @@ export interface ComponentReport extends ProjectComponent {
 
 export interface PracticeWithContextForReporter {
   component: ProjectComponent;
-  practice: PracticeMetadata & { data?: PracticeData };
+  practice: PracticeMetadata & { data?: PracticeData; fix: boolean };
   overridenImpact: PracticeImpact;
   evaluation: PracticeEvaluationResult;
   evaluationError?: string;

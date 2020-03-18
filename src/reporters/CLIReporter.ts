@@ -75,6 +75,19 @@ export class CLIReporter implements IReporter {
         }
         lines.push('');
       }
+
+      const fixablePractice = (p: PracticeWithContextForReporter) =>
+        p.practice.fix && p.evaluation === PracticeEvaluationResult.notPracticing;
+      const fixablePractices = cwp.practicesAndComponents.filter(fixablePractice);
+      if (fixablePractices.length) {
+        lines.push(bold(yellow(`These practices might be automatically fixed (re-run the command with ${italic('--fix')} option):`)));
+        lines.push('');
+
+        for (const p of fixablePractices) {
+          lines.push(yellow(`- ${p.practice.name}`));
+        }
+        lines.push('');
+      }
     }
 
     lines.push('----------------------------');

@@ -34,8 +34,8 @@ class DXScannerCommand {
       .description('Scan your project for possible DX recommendations')
       .option(
         '-a --authorization <authorization>',
-        'credentials to the repository (in format "token" or "username:token"; can be set as ENV variable DX_GIT_SERVICE_TOKEN)',
-        process.env.DX_GIT_SERVICE_TOKEN || process.env.GITHUB_TOKEN,
+        'credentials to the repository (in format "token" or "username:token"; can be set as ENV variable DXSCANNER_GIT_SERVICE_TOKEN)',
+        process.env.DXSCANNER_GIT_SERVICE_TOKEN || process.env.GITHUB_TOKEN,
       )
       .option('--ci', 'CI mode', process.env.CI === 'true')
       .option('-d --details', 'print details in reports')

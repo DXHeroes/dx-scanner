@@ -1,6 +1,8 @@
 [![Tweet](https://img.shields.io/twitter/url/http/shields.io.svg?style=social)](https://twitter.com/intent/tweet?text=DX%20Scanner%20is%20an%20open%20source%20CLI%20tool%20that%20allows%20you%20to%20“measure”%20Developer%20Experience%20directly%20based%20on%20your%20source%20code.&url=https://github.com/DXHeroes/dx-scanner&via=dx_heroes&hashtags=developer-experience,dxheroes,developers)
 
-# DX Scanner
+<p align="center">
+  <a href="https://dxscanner.io" target="_blank"><img src="https://github.com/DXHeroes/dx-scanner/blob/master/docs/logo.svg" /></a>
+</p>
 
 [![Version](https://img.shields.io/npm/v/dx-scanner.svg)](https://npmjs.org/package/dx-scanner)
 [![Travis (.org)](https://img.shields.io/travis/DXHeroes/dx-scanner/master)](https://travis-ci.org/DXHeroes/dx-scanner)
@@ -11,39 +13,53 @@
 ![GitHub contributors](https://img.shields.io/github/contributors/DXHeroes/dx-scanner)
 [![All Contributors](https://img.shields.io/badge/all_contributors-5-orange.svg)](#contributors-)
 [![NPM](https://img.shields.io/npm/l/dx-scanner)](LICENSE)
-[![oclif](https://img.shields.io/badge/cli-oclif-brightgreen.svg)](https://oclif.io)
 ![TypeScript](https://img.shields.io/badge/%3C%2F%3E-Typescript-blue)
+
+---
+
+## What is DX Scanner?
 
 DX Scanner is an open source CLI tool that allows you to “measure” Developer Experience directly based on your source code. DX Scanner recommends practices that can help you with improving your product development. You can fix some problems automatically with just one command.
 
+### What language is supported?
+
+Language | Supported
+------------ | -------------
+JavaScript/TypeScript | ✅
+Java/Kotlin | ✅
+Python | ✅
+PHP | 🚧
+C++ | 🚧
+C# | 🚧
+Ruby | 🚧
+
+## Table of Contents
+
 <!-- toc -->
+* [Supported version control systems](#Which-version-control-system-can-you-use)
 * [Getting Started](#Getting-Started)
   * [Installation](#Installation)
   * [Usage](#Usage)
     * [Commands](#Commands)
-    * [Options for dx-scanner run`](#options-for-dx-scanner-run)
+    * [Options for dx-scanner run](#options-for-dx-scanner-run)
     * [Auto-fixer](#Auto-fixer)
 * [Supported Languages](#What-language-is-supported)
 * [Configuration](#Configuration-⚙️)
   * [Practices](#Practices)
   * [GitHub CI Action](#GitHub-Ci-Action)
 <!-- tocstop -->
+### Which version control system can you use?
 
-![DX Scanner Demo](./demo.svg)
+Sure you can use `GitHub`. You can also use `GitLab` and `Bitbucket` no matter if it is public or private repo!
 
+examples:
+```
+dx-scanner run https://github.com/DXHeroes/dx-scanner
 
-## What language is supported?
+dx-scanner run https://gitlab.com/ubon-refer/smart-refer-api
 
-Language | Supported
------------- | -------------
-JavaScript/TypeScript | ✅
-Java/Kotlin | ✅
-Python | 🚧
-PHP | 🚧
-C++ | 🚧
-C# | 🚧
-Ruby | 🚧
-
+dx-scanner run https://bitbucket.org/maras333/node-api-with-ts
+```
 
 ## Getting Started 🏁
 
@@ -98,7 +114,7 @@ Usage: dx-scanner run [path] [options]
 Scan your project for possible DX recommendations
 
 Options:
-  -a --authorization <authorization>  credentials to the repository (in format "token" or "username:token"; can be set as ENV variable DX_GIT_SERVICE_TOKEN)
+  -a --authorization <authorization>  credentials to the repository (in format "token" or "username:token"; can be set as ENV variable DXSCANNER_GIT_SERVICE_TOKEN)
   --ci                                CI mode (default: false)
   -d --details                        print details in reports
   --fail <impact>                     exits process with code 1 for any non-practicing condition of given level (high|medium|small|hint|off|all) (default: "high")
@@ -139,44 +155,45 @@ Add ```dxscannerrc.*``` config file to change default configuration settings. It
 You can also run ```dx-scanner init``` to initialize config automatically.
 
 ### Practices   
-You can switch off practices that you do not want to scan or you can change their impact level. To do so, refer to the id of the practice.
+You can switch off practices that you do not want to scan, change their impact level, and even override their default values. To do so, refer to the id of the practice and specify your configuration.
 
 <details>
 <summary>List of All Practices 🔍</summary>
 
-Practice | Impact | Language Independent | JavaScript/TypeScript | Java/Kotlin
-------------- | ------------- | ------------- | ------------- | ------------- 
-Create a Readme File | <span style="color:red">high</span> | ✅ | ✅ | ✅
-Create a License File | <span style="color:yellow">medium</span> | ✅ | ✅ | ✅
-Create a Lockfile | <span style="color:red">high</span> | ✅ | ✅ | ✅
-Create a .gitignore | <span style="color:red">high</span> | ✅ | ✅ | ✅
-Write in Typescript | <span style="color:yellow">medium</span> | ❌ | ✅ | ❌
-Set .gitignore Correctly | <span style="color:red">high</span> | ❌ | ✅ | ✅
-Use Continuous Integration | <span style="color:red">high</span> | ✅ | ✅ | ✅
-Use Docker | <span style="color:green">small</span> | ✅ | ✅ | ✅
-Use .editorconfig | <span style="color:green">small</span> | ✅ | ✅ | ✅
-Format your code automatically | <span style="color:green">small</span> | ❌ | ✅ | ❌
-Use ESLint | <span style="color:yellow">medium</span> | ❌ | ✅ | ❌
-ESLint Without Errors | <span style="color:yellow">medium</span> | ❌ | ✅ | ❌
-Use a different linter | <span style="color:yellow">medium</span> | ❌ | ✅ | ❌
-Use JS Frontend Testing Framework | <span style="color:yellow">medium</span> | ❌ | ✅ | ❌
-Use JS Frontend Build Tools | <span style="color:yellow">medium</span> | ❌ | ✅ | ❌
-Use JS Backend Testing Frameworks | <span style="color:red">high</span> | ❌ | ✅ | ❌
-Use a JS Logging Library | <span style="color:green">small</span> | ❌ | ✅ | ❌
-Use Package Management | <span style="color:red">high</span> | ❌ | ✅ | ✅
-Configure Scripts in package.json | <span style="color:yellow">medium</span> | ❌ | ✅ | ❌
-Update Dependencies of Major Level | <span style="color:green">small</span> | ❌ | ✅ | ✅ 
-Update Dependencies of Minor and Patch Level | <span style="color:red">high</span> | ❌  | ✅ | ✅ 
-Do PullRequests | <span style="color:yellow">medium</span> | ✅ | ✅ | ✅
-Break down large pull requests into smaller ones | <span style="color:yellow">medium</span> | ✅ | ✅ | ✅
-Solve Pull Requests Continuously | <span style="color:yellow">medium</span> | ✅ | ✅ | ✅
-Solve Issues Continuously | <span style="color:yellow">medium</span> | ✅ | ✅ | ✅
-Write Commit Messages by Convention | <span style="color:green">small</span> | ✅ | ✅ | ✅
-Use Mocking Frameworks for Tests  | <span style="color:green">small</span> | ✅ | ✅ | ✅
-Use Testing Frameworks | <span style="color:red">high</span> | ❌ | ❌ | ✅
-Use a Java Logging Dependency | <span style="color:green">small</span> | ❌ | ❌ | ✅
-Use Java Class Naming Convention | <span style="color:green">small</span> | ❌ | ❌ | ✅
-Security vulnerabilities detected | <span style="color:red">high</span> | ❌ | ✅ | ❌
+Practice | Impact | Language Independent | JavaScript/TypeScript | Java/Kotlin | Python
+------------- | ------------- | ------------- | ------------- | ------------- | ------------- 
+Create a Readme File | <span style="color:red">high</span> | ✅ | ✅ | ✅ | ✅
+Create a License File | <span style="color:yellow">medium</span> | ✅ | ✅ | ✅ | ✅
+Create a Lockfile | <span style="color:red">high</span> | ✅ | ✅ | ✅ | ✅
+Create a .gitignore | <span style="color:red">high</span> | ✅ | ✅ | ✅ | ✅
+Write in Typescript | <span style="color:yellow">medium</span> | ❌ | ✅ | ❌ | ❌
+Set .gitignore Correctly | <span style="color:red">high</span> | ❌ | ✅ | ✅ | ❌
+Use Continuous Integration | <span style="color:red">high</span> | ✅ | ✅ | ✅ | ✅
+Use Docker | <span style="color:green">small</span> | ✅ | ✅ | ✅ | ✅
+Use .editorconfig | <span style="color:green">small</span> | ✅ | ✅ | ✅ | ✅
+Format your code automatically | <span style="color:green">small</span> | ❌ | ✅ | ❌ | ❌
+Use ESLint | <span style="color:yellow">medium</span> | ❌ | ✅ | ❌ | ❌
+ESLint Without Errors | <span style="color:yellow">medium</span> | ❌ | ✅ | ❌ | ❌
+Use a different linter | <span style="color:yellow">medium</span> | ❌ | ✅ | ❌ | ❌
+Use JS Frontend Testing Framework | <span style="color:yellow">medium</span> | ❌ | ✅ | ❌ | ❌
+Use JS Frontend Build Tools | <span style="color:yellow">medium</span> | ❌ | ✅ | ❌ | ❌
+Use JS Backend Testing Frameworks | <span style="color:red">high</span> | ❌ | ✅ | ❌ | ❌
+Use a JS Logging Library | <span style="color:green">small</span> | ❌ | ✅ | ❌ | ❌
+Use Package Management | <span style="color:red">high</span> | ❌ | ✅ | ✅ | ❌
+Configure Scripts in package.json | <span style="color:yellow">medium</span> | ❌ | ✅ | ❌ | ❌
+Update Dependencies of Major Level | <span style="color:green">small</span> | ❌ | ✅ | ✅ | ❌
+Update Dependencies of Minor and Patch Level | <span style="color:red">high</span> | ❌ | ✅ | ✅ | ❌ 
+Do PullRequests | <span style="color:yellow">medium</span> | ✅ | ✅ | ✅ | ✅
+Break down large pull requests into smaller ones | <span style="color:yellow">medium</span> | ✅ | ✅ | ✅ | ✅
+Solve Pull Requests Continuously | <span style="color:yellow">medium</span> | ✅ | ✅ | ✅ | ✅
+Solve Issues Continuously | <span style="color:yellow">medium</span> | ✅ | ✅ | ✅ | ✅
+Write Commit Messages by Convention | <span style="color:green">small</span> | ✅ | ✅ | ✅ | ✅
+Use Mocking Frameworks for Tests  | <span style="color:green">small</span> | ❌ | ✅ | ✅ | ❌
+Use Testing Frameworks | <span style="color:red">high</span> | ❌ | ❌ | ✅ | ❌
+Use a Java Logging Dependency | <span style="color:green">small</span> | ❌ | ❌ | ✅ | ❌
+Use a Java Linter Dependency | <span style="color:green">small</span> | ❌ | ❌ | ✅ | ❌
+Use Java Class Naming Convention | <span style="color:green">small</span> | ❌ | ❌ | ✅ | ❌
+Security vulnerabilities detected | <span style="color:red">high</span> | ❌ | ✅ | ❌ | ❌
 </details>
 
 Possible impact:
@@ -195,7 +212,6 @@ off
 Example `dxscannerrc.json`:
 
 ```json
-
 {
     "practices": {
         "JavaScript.GitignoreCorrectlySet": "medium",
@@ -205,9 +221,34 @@ Example `dxscannerrc.json`:
         },
         "JavaScript.ESLintWithoutErrorsPractice": {
           "fix": true
+        },
+        "LanguageIndependent.ThinPullRequestsPractice": {
+          "impact": "high",
+          "override": {
+            "measurePullRequestCount": 500
+          }
         }
     }
 }
+```
+
+In order to override the default values of certain practices, specify `override` and nest the correct overridable variables.
+
+Example `dxscannerrc.yaml`:
+
+```yaml
+---
+practices:
+  JavaScript.GitignoreCorrectlySet: medium
+  JavaScript.LoggerUsed: 'off'
+  LanguageIndependent.DoesPullRequests:
+    impact: small
+  JavaScript.ESLintWithoutErrorsPractice:
+    fix: true
+  LanguageIndependent.ThinPullRequestsPractice:
+    impact: high
+    override:
+      measurePullRequestCount: 500
 ```
 
 ### Github CI Action

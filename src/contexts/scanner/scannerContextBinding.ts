@@ -10,6 +10,8 @@ import { ScannerContextFactory, Types } from '../../types';
 import { bindLanguageContext } from '../language/languageContextBinding';
 import { ScannerContext } from './ScannerContext';
 import { BitbucketService } from '../../services/bitbucket/BitbucketService';
+import { GitLabService } from '../../services/gitlab/GitLabService';
+import { PythonLanguageDetector } from '../../detectors/Python/PythonLanguageDetector';
 
 export const bindScanningContext = (container: Container) => {
   container.bind(Types.ScannerContextFactory).toFactory(
@@ -47,6 +49,9 @@ const bindFileAccess = (scanningStrategy: ScanningStrategy, container: Container
   if (scanningStrategy.serviceType === ServiceType.bitbucket) {
     container.bind(Types.IContentRepositoryBrowser).to(BitbucketService);
   }
+  if (scanningStrategy.serviceType === ServiceType.gitlab) {
+    container.bind(Types.IContentRepositoryBrowser).to(GitLabService);
+  }
   container
     .bind(Types.IFileInspector)
     .to(FileInspector)
@@ -56,5 +61,5 @@ const bindFileAccess = (scanningStrategy: ScanningStrategy, container: Container
 const bindLanguageDetectors = (container: Container) => {
   container.bind(Types.ILanguageDetector).to(JavaScriptLanguageDetector);
   container.bind(Types.ILanguageDetector).to(JavaLanguageDetector);
-  // container.bind(Types.ILanguageDetector).to(PythonLanguageDetector); // unbind until the Python is fully supported
+  container.bind(Types.ILanguageDetector).to(PythonLanguageDetector);
 };

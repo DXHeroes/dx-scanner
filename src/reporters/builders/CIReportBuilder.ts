@@ -60,6 +60,7 @@ export class CIReportBuilder implements IReportBuilder {
     lines.push(this.renderImpactsList(cwp.practicesAndComponents));
     lines.push(this.renderUnknownPractices(cwp.practicesAndComponents));
     lines.push(this.renderTurnedOffPractices(cwp.practicesAndComponents));
+    lines.push(this.renderFixablePractices(cwp.practicesAndComponents));
 
     return lines.join('\n');
   };
@@ -129,6 +130,23 @@ export class CIReportBuilder implements IReportBuilder {
       lines.push('🚫 You have turned off these practices');
 
       for (const p of practicesAndComponentsOff) {
+        lines.push(`- ${p.practice.name}`);
+      }
+    }
+
+    return lines.join('\n');
+  };
+
+  renderFixablePractices = (practicesAndComponents: PracticeWithContextForReporter[]): string => {
+    const lines: string[] = [];
+    const fixablePractice = (p: PracticeWithContextForReporter) =>
+      p.practice.fix && p.evaluation === PracticeEvaluationResult.notPracticing;
+
+    const fixablePractices = practicesAndComponents.filter(fixablePractice);
+    if (fixablePractices.length) {
+      lines.push('🔧 These practices might be automatically fixed:');
+
+      for (const p of fixablePractices) {
         lines.push(`- ${p.practice.name}`);
       }
     }

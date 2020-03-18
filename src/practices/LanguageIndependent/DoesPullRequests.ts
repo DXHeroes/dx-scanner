@@ -25,7 +25,7 @@ export class DoesPullRequestsPractice implements IPractice {
     }
 
     const repoName = GitServiceUtils.getRepoName(ctx.projectComponent.repositoryPath, ctx.projectComponent.path);
-    const ownerAndRepoName = GitServiceUtils.getOwnerAndRepoName(repoName);
+    const ownerAndRepoName = GitServiceUtils.parseUrl(repoName);
 
     const pullRequests = await ctx.collaborationInspector.listPullRequests(ownerAndRepoName.owner, ownerAndRepoName.repoName, {
       filter: { state: PullRequestState.all },

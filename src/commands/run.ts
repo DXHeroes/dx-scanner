@@ -3,14 +3,13 @@ import 'reflect-metadata';
 import cli from 'cli-ux';
 import debug from 'debug';
 import { createRootContainer } from '../inversify.config';
-import { Scanner } from '../scanner';
-import { ScanningStrategyDetectorUtils } from '../detectors/utils/ScanningStrategyDetectorUtils';
-import { ServiceType } from '../detectors';
+import { Scanner, ScannerUtils } from '../scanner';
 import { CLIArgs } from '../model';
+import { ErrorFactory } from '../lib/errors/ErrorFactory';
 
 export default class Run {
   static async run(path = process.cwd(), cmd: CLIArgs) {
-    debug('cli cfg')(cmd);
+    debug('cli')(cmd);
     const scanPath = path;
 
     const { json, details, fail } = cmd;
@@ -36,18 +35,14 @@ export default class Run {
 
     let scanResult = await scanner.scan();
 
+    // needsAuth and cmd.ci are both true if the credentials are invalid either due to 401 or 403
+    if (scanResult.needsAuth && cmd.ci) {
+      throw ErrorFactory.newAuthorizationError('Invalid Authorization Credentials!');
+    }
+
     if (scanResult.needsAuth && !cmd.ci) {
       if (scanResult.isOnline) {
-        if (ScanningStrategyDetectorUtils.isGitHubPath(scanPath) || scanResult.serviceType === ServiceType.github) {
-          authorization = await cli.prompt('Insert your GitHub personal access token. https://github.com/settings/tokens\n', {
-            type: 'hide',
-          });
-        } else if (ScanningStrategyDetectorUtils.isBitbucketPath(scanPath) || scanResult.serviceType === ServiceType.bitbucket) {
-          authorization = await cli.prompt(
-            'Insert your Bitbucket credentials (in format "appPassword" or "username:appPasword"). https://confluence.atlassian.com/bitbucket/app-passwords-828781300.html\n',
-            { type: 'hide' },
-          );
-        }
+        authorization = await ScannerUtils.promptAuthorization(scanPath, scanResult);
       }
 
       const container = createRootContainer({

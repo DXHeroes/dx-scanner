@@ -1,4 +1,5 @@
-import { ServiceError, ErrorCode } from '.';
+import { ErrorCode } from './model';
+import { ServiceError } from './ServiceError';
 
 export class ErrorFactory {
   static newInternalError(message = 'The app went broken. Sorry about that. Not your fault') {
