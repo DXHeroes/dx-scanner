@@ -1,3 +1,10 @@
+## [3.1.1](https://github.com/dxheroes/dx-scanner/compare/v3.1.0...v3.1.1) (2020-03-18)
+
+
+### Bug Fixes
+
+* **cireporter:** use full URL including protocol from gitlab ENV vars ([05c0991](https://github.com/dxheroes/dx-scanner/commit/05c09913bbc77978953374c26fb018073fa72b26))
+
 # [3.1.0](https://github.com/dxheroes/dx-scanner/compare/v3.0.5...v3.1.0) (2020-03-17)
 
 
