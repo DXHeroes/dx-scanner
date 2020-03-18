@@ -1,3 +1,10 @@
+# [3.2.0](https://github.com/dxheroes/dx-scanner/compare/v3.1.2...v3.2.0) (2020-03-18)
+
+
+### Features
+
+* **fixer:** add info about not-fixed practices to fixer reporter ([08d3db9](https://github.com/dxheroes/dx-scanner/commit/08d3db94452eb78d239041cd630405ca9f76d206))
+
 ## [3.1.2](https://github.com/dxheroes/dx-scanner/compare/v3.1.1...v3.1.2) (2020-03-18)
 
 
