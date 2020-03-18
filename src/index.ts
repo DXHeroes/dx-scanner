@@ -73,16 +73,6 @@ class DXScannerCommand {
       .option('-j --json', 'print practices in JSON')
       .action(Practices.run);
 
-    if (!process.argv.slice(2).length) {
-      cmder.outputHelp();
-    }
-
-    // error on unknown commands
-    cmder.on('command:*', () => {
-      console.error('Invalid command: %s\nSee --help for a list of available commands.', cmder.args.join(' '));
-      process.exit(1);
-    });
-
     await cmder.parseAsync(process.argv);
 
     this.notifyUpdate();
