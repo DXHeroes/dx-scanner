@@ -2,7 +2,7 @@ import { PackageInspectorBase } from './PackageInspectorBase';
 import { IFileInspector } from '../IFileInspector';
 import { inject } from 'inversify';
 import { Types } from '../../types';
-import { DependencyType } from '../IPackageInspector';
+import { DependencyType, PackageVersion } from '../IPackageInspector';
 import * as xml2js from 'xml2js';
 import * as g2js from 'gradle-to-js';
 import { ErrorFactory } from '../../lib/errors/ErrorFactory';
@@ -59,7 +59,15 @@ export class JavaPackageInspector extends PackageInspectorBase {
       this.packages = [];
     }
     for (const dependency of dependencies) {
-      const parsedVersion = PackageInspectorBase.semverToPackageVersion(dependency.version);
+      let parsedVersion: PackageVersion | undefined = {
+        value: '',
+        major: '',
+        minor: '',
+        patch: '',
+      };
+      if (dependency.version) {
+        parsedVersion = PackageInspectorBase.semverToPackageVersion(dependency.version);
+      }
       if (parsedVersion) {
         this.packages.push({
           dependencyType: depType,
@@ -81,7 +89,8 @@ export class JavaPackageInspector extends PackageInspectorBase {
         const dependencyAttributes = xmlDependency.dependency.values();
         for (const attribute of dependencyAttributes) {
           const packageName = `${attribute.groupId.pop()}:${attribute.artifactId.pop()}`;
-          this.parsedDependencies.push({ packageName, version: String(attribute.version.pop()) });
+          const version = attribute.version ? String(attribute.version.pop()) : undefined;
+          this.parsedDependencies.push({ packageName, version });
         }
       }
     });
@@ -93,7 +102,8 @@ export class JavaPackageInspector extends PackageInspectorBase {
         if (dependency.name.startsWith("'") && dependency.name.endsWith("'")) {
           dependency.name = dependency.name.slice(1, -1);
         }
-        this.parsedDependencies.push({ packageName: dependency.name, version: dependency.version });
+        const version = dependency.version ? dependency.version : undefined;
+        this.parsedDependencies.push({ packageName: dependency.name, version });
       }
     });
   }
@@ -161,7 +171,7 @@ export interface BuildGradle {
   ];
 }
 
-export interface ParsedDependency {
+interface ParsedDependency {
   packageName: string;
-  version: string;
+  version: string | undefined;
 }
