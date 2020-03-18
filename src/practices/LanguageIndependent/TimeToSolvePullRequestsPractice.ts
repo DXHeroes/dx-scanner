@@ -25,7 +25,7 @@ export class TimeToSolvePullRequestsPractice implements IPractice {
     }
 
     const repoName = GitServiceUtils.getRepoName(ctx.projectComponent.repositoryPath, ctx.projectComponent.path);
-    const ownerAndRepoName = GitServiceUtils.getOwnerAndRepoName(repoName);
+    const ownerAndRepoName = GitServiceUtils.parseUrl(repoName);
 
     //Both GitHub API and Bitbucket API returns open pullrequests by default
     const pullRequests = await ctx.collaborationInspector.listPullRequests(ownerAndRepoName.owner, ownerAndRepoName.repoName);

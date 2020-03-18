@@ -10,23 +10,19 @@ cache:
   directories:
     - lib
     - coverage
-    - node_modules
 
 env:
-  matrix:
-  - YARN_GPG=no
-
-matrix:
-  fast_finish: true
+  global:
+    - YARN_GPG=no
 
 notifications:
   slack:
-    if: branch = master
+    if: branch = master AND type = push
     secure: AKt6cnaKZ8Fox3dIHVPzmQP5ROMG3zI0DzOsb3ShLfp8qJwMVJquqKnUG6j7CZKoK0UI4XkMd7PebLmEmExW7A4MjnWZ5VPy4VzpysQP2oV0JI7qEhSUzzwh1C7J+SH5EmNr7JrZW7H5LEiFpCJ00Of2C7kHmOaok/iBM3Nvz9OCiusT+BwmNSVxrkQjiqSmYKTolZhThYPnKwgNcqfIrpXv55Oei3rCFMRzyNnqUQk2mrdW5iitHWjxYLByThDfaf7iZ3SqdDMnx1OYsvuim0Nkr3HQ4KINiOQ6+6cYfuA6b2qGl7UVM/7lP6WfDU/Owe4yYfWK/xS4Po5WeDEi+z4V/V8FTtEtSnK1gez+NnOClKaui89FMavRqe+BKqDFNeDOoDNGCIs8MhsNLt+tTFCa7JfKIukgiYoHlPT5LfS8HIruTglMF7gsp1KTn0o9nuyaGblGblcCldz1QIo16lFnw+0JZIZR1Odn5nit96fLMoXxH6WUX7TShXgcp+RwbjyTEOWJnKtIRQO8BJ2Hjo9GH+J6u5OQ0+v8KlIgJ3E0IkTJTxMM225gfwJ95sv5rMYQByCw40yKa4+K48BEBFB49vwOOq6vDdsfyaowGIFJ0Hl9h3mQb9bOmq5iXt/5ByCP+XHiAkThuIdQCUQftzVj5WRD5rntrRwM5GUjyIk=
     on_success: change
     on_failure: change
   email:
-    if: branch = master
+    if: branch = master AND type = push
     recipients:
       - prokop@dxheroes.io
       - adela@dxheroes.io
@@ -34,33 +30,52 @@ notifications:
     on_failure: always
 
 script:
-  - yarn build
-  - yarn test --coverage
-  - bin/run
-  - yarn test:codecov:upload
-  - bin/run run . --fail=high
+  - yarn install
 
 jobs:
+  fast_finish: true
   include:
-  - stage: code style
-    if: branch = master
-    scripts:
+  - stage: test
+    name: Build
+    script:
+      - yarn install
+      - yarn build
+  - stage: test
+    name: Test
+    script:
+      - yarn test --coverage
+      - bin/run
+      - yarn test:codecov:upload
+      - bin/run run . --fail=high
+  - stage: test
+    name: Run Linter
+    script:
       - yarn lint
       - yarn codecov
   - stage: runtime test
+    name: Run Live Tests on Windows
     if: branch = master
-    scripts:
+    script:
       - npm -g i .
       - dx-scanner run
-      - dx-scanner run https://github.com/DXHeroes/dx-scanner
-      - dx-scanner run https://github.com/moment/luxon
-      - dx-scanner run https://github.com/intoli/remote-browser
-      - dx-scanner run
+      - dx-scanner run https://github.com/DXHeroes/dx-scanner --fail=off
+      - dx-scanner run https://github.com/moment/luxon --fail=off
+      - dx-scanner run https://github.com/intoli/remote-browser --fail=off
     os: windows
-  - os: linux
+  - stage: runtime test
+    name: Run Live Tests on Linux
+    if: branch = master
+    script:
+      - npm -g i .
+      - dx-scanner run
+      - dx-scanner run https://github.com/DXHeroes/dx-scanner --fail=off
+      - dx-scanner run https://github.com/moment/luxon --fail=off
+      - dx-scanner run https://github.com/intoli/remote-browser --fail=off
+    os: linux
   - stage: release
+    name: Release NPM Package
     node_js: lts/*
-    script: skip
+    # script: skip
     deploy:
       provider: script
       email: dev@dxheroes.io
@@ -69,12 +84,31 @@ jobs:
         - npx semantic-release
       on:
         all_branches: true
-  - stage: publish gh action in docker container
+  - stage: build docker image
+    name: "Publish Docker Image for Github Action"
     if: branch = master AND type = push
     node_js: lts/*
     env:
       - CONTAINER_NAME=docker.pkg.github.com/dxheroes/dx-scanner/release
     script:
-      - docker build -t $CONTAINER_NAME .
+      - docker build -f Dockerfile.github-action -t $CONTAINER_NAME .
       - docker login -u dxheroes -p $DOCKER_GITHUB_PASSWORD docker.pkg.github.com
       - docker push $CONTAINER_NAME
+  # - stage: build docker image
+  #   name: "Publish Docker Image with DX Scanner"
+  #   if: branch = master AND type = push
+  #   node_js: lts/*
+  #   env:
+  #     - CONTAINER_NAME=dxheroes/dx-scanner
+  #   script:
+  #     - "export DOCKER_IMG_TAG=$(cat package.json | jq -r .version)" # it doesn't work; it takes the previous version instead of the newest because it's not yet pulled
+  #     - |
+  #       if DOCKER_CLI_EXPERIMENTAL=enabled docker manifest inspect $CONTAINER_NAME:$DOCKER_IMG_TAG >/dev/null; then
+  #         echo The image $CONTAINER_NAME:$DOCKER_IMG_TAG already exists
+  #       else
+  #         echo Build new image
+  #         docker build -t $CONTAINER_NAME:$DOCKER_IMG_TAG .
+  #         echo "Current image is $CONTAINER_NAME:$DOCKER_IMG_TAG"
+  #         docker login -u $DOCKERHUB_USER -p $DOCKERHUB_PASSWORD
+  #         docker push $CONTAINER_NAME:$DOCKER_IMG_TAG
+  #       fi

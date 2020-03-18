@@ -1,3 +1,167 @@
+## [3.1.2](https://github.com/dxheroes/dx-scanner/compare/v3.1.1...v3.1.2) (2020-03-18)
+
+
+### Bug Fixes
+
+* **cireporter:** use https in host as default ([0ef888c](https://github.com/dxheroes/dx-scanner/commit/0ef888c5ca5853b7109e43a2389d816a7a3f5b91))
+
+## [3.1.1](https://github.com/dxheroes/dx-scanner/compare/v3.1.0...v3.1.1) (2020-03-18)
+
+
+### Bug Fixes
+
+* **cireporter:** use full URL including protocol from gitlab ENV vars ([05c0991](https://github.com/dxheroes/dx-scanner/commit/05c09913bbc77978953374c26fb018073fa72b26))
+
+# [3.1.0](https://github.com/dxheroes/dx-scanner/compare/v3.0.5...v3.1.0) (2020-03-17)
+
+
+### Features
+
+* **gitlab:** support CI reporter ([65a2ca2](https://github.com/dxheroes/dx-scanner/commit/65a2ca2e12a2e45bc24cc950d2d3c7f0ce0b2512))
+
+## [3.0.5](https://github.com/dxheroes/dx-scanner/compare/v3.0.4...v3.0.5) (2020-03-17)
+
+
+### Bug Fixes
+
+* running ci mode w/ invalid credentials ([c72feb1](https://github.com/dxheroes/dx-scanner/commit/c72feb1f8a8cf1ceafa52145e689ad82509be626))
+
+## [3.0.4](https://github.com/dxheroes/dx-scanner/compare/v3.0.3...v3.0.4) (2020-03-17)
+
+
+### Bug Fixes
+
+* **gitlab:** handle 404 error while scanning locally ([9479044](https://github.com/dxheroes/dx-scanner/commit/9479044ff751993d71745242d6843f8afaf93b25))
+
+## [3.0.3](https://github.com/dxheroes/dx-scanner/compare/v3.0.2...v3.0.3) (2020-03-17)
+
+
+### Bug Fixes
+
+* **docker:** exec all sh&bash commands with all args ([30f9d05](https://github.com/dxheroes/dx-scanner/commit/30f9d05293c54d27fe61e15fab74c28eb882d7af))
+
+## [3.0.2](https://github.com/dxheroes/dx-scanner/compare/v3.0.1...v3.0.2) (2020-03-17)
+
+
+### Bug Fixes
+
+* **docker:** remove bash/shell regex ([9ca0796](https://github.com/dxheroes/dx-scanner/commit/9ca0796aa3c5ee8179bb5eb59a4da2f80b3689e6))
+
+## [3.0.1](https://github.com/dxheroes/dx-scanner/compare/v3.0.0...v3.0.1) (2020-03-17)
+
+
+### Bug Fixes
+
+* upgrade libs ([f9011dd](https://github.com/dxheroes/dx-scanner/commit/f9011dd57160aecb3fc144f8ede75010622dce31))
+
+
+### Reverts
+
+* **ci:** disable cache ([216b451](https://github.com/dxheroes/dx-scanner/commit/216b45189a5fc2b6a878476dbec1acb5479706aa))
+
+# [3.0.0](https://github.com/dxheroes/dx-scanner/compare/v2.10.1...v3.0.0) (2020-03-16)
+
+
+### Bug Fixes
+
+* add pagination to listIssueComments() ([b19028a](https://github.com/dxheroes/dx-scanner/commit/b19028a97c163ef65a16a4cb3ca084f28fdfa044))
+* add param paramsSerializer() to axios for getting right path ([badf5d9](https://github.com/dxheroes/dx-scanner/commit/badf5d95e151f399cad9da8275d01560a6368ad5))
+* add return type in getPullsDiffStat ([601cb35](https://github.com/dxheroes/dx-scanner/commit/601cb35288a26cd02558fef114e3da5258b93439))
+* add ServicePagination as return type of getPagination() ([56d0ff1](https://github.com/dxheroes/dx-scanner/commit/56d0ff19edb37177ce0a42320ab117c55e52d2d1))
+* add type  to practicesAfterFix and remove unnecessary todo ([10bd49e](https://github.com/dxheroes/dx-scanner/commit/10bd49efa7510ef8bd29c00279601a7d275caa14))
+* allow to change page and perPage in tests ([0efe4fa](https://github.com/dxheroes/dx-scanner/commit/0efe4fab4996c9774677947d57d1354318158138))
+* choose smaller repositories as examples ([ddac9b8](https://github.com/dxheroes/dx-scanner/commit/ddac9b8943f200dd1eafd3358f4d122a63c0f55d))
+* clone gitlab private repo properly; try to call gitlab url ([1733524](https://github.com/dxheroes/dx-scanner/commit/1733524dc07806024876d090b4f05e154f43fbfe))
+* debug getRepo() returning response ([835f902](https://github.com/dxheroes/dx-scanner/commit/835f9029022abbf230bdfef6e505325896f97f06))
+* decrease default timeout and increase it for getting group info ([f188bc6](https://github.com/dxheroes/dx-scanner/commit/f188bc64d5f16a52833c80b4727b16b937827469))
+* don't save undefined if there are no pagination params ([c2bca1c](https://github.com/dxheroes/dx-scanner/commit/c2bca1cc613cfa5830d71fd8397ff782852f6a87))
+* don't save undefined to params ([7399ad4](https://github.com/dxheroes/dx-scanner/commit/7399ad4a0baaa9e128137cbd02de6a16b0baa841))
+* encode groupName so it's working if it's subgroup ([58c5fbf](https://github.com/dxheroes/dx-scanner/commit/58c5fbface064190143e270afffb850fab10a30e))
+* endpoint to get group information ([aa0c36c](https://github.com/dxheroes/dx-scanner/commit/aa0c36cec12bf7b115c395e9f1a36014b6ee8c1f))
+* fix getting data after refactoring getRepo() ([04f854e](https://github.com/dxheroes/dx-scanner/commit/04f854ed6bb79d0aaced2126fc30caadd1724847))
+* getting host ([9aecbcd](https://github.com/dxheroes/dx-scanner/commit/9aecbcd6ebf88b7e89df2b486933771feab11515))
+* interfaces and names of mocks ([00ee6a0](https://github.com/dxheroes/dx-scanner/commit/00ee6a0de7518c523d7acfb9c0bc5a15f2be07b9))
+* move GitLabCustom and rename it to GitLabClient ([a3d699e](https://github.com/dxheroes/dx-scanner/commit/a3d699e1ef2d1591de4127e5713e46dcfafb398e))
+* move initializing GitLab Client; allow to set timeout ([7aa0f41](https://github.com/dxheroes/dx-scanner/commit/7aa0f411d46e79d3c8bbeb1e7571db89c1f495a0))
+* name = 'opened' instead 'active' ([c5d0abe](https://github.com/dxheroes/dx-scanner/commit/c5d0abebdb833420066e75405c414e924335e8ca))
+* pagination param ([2aa0a66](https://github.com/dxheroes/dx-scanner/commit/2aa0a66e4326bedce059e07541d04685ad4ebb08))
+* params of listPullCommits() and type of param in getPagination() ([6c99b25](https://github.com/dxheroes/dx-scanner/commit/6c99b2521373457e6d022310d64f89c82d112e99))
+* protect creating Axios Instance ([2160b29](https://github.com/dxheroes/dx-scanner/commit/2160b297c1e94d7026739cc26ca7f256a7ab65c3))
+* remove duplicate file ([73798e8](https://github.com/dxheroes/dx-scanner/commit/73798e8da0422eb7b5e9a7bfba423708d4ef0df3))
+* remove unneccessary params ([a2abac0](https://github.com/dxheroes/dx-scanner/commit/a2abac0999d1c2792c753fed97e36de44ecc2a34))
+* remove unnecessary comments ([28af4f6](https://github.com/dxheroes/dx-scanner/commit/28af4f681a49bf5e0c09a13391a9cb6954014116))
+* remove unnecessary condition and fix path for host ([95fac97](https://github.com/dxheroes/dx-scanner/commit/95fac976fdd7cd69b06cce6edd71e61ac016161c))
+* remove unnecessary timeouts ([0eef498](https://github.com/dxheroes/dx-scanner/commit/0eef498c7ed4199b23a5950111dcb155eac24585))
+* remove unused package ([e48df0d](https://github.com/dxheroes/dx-scanner/commit/e48df0d0141bde8c6363192215b6abbb27c53807))
+* remove unused param ([3d6d106](https://github.com/dxheroes/dx-scanner/commit/3d6d106829b23849609b092436521c22c3f29eb4))
+* remove unused parameter ([3ab958c](https://github.com/dxheroes/dx-scanner/commit/3ab958cf4560b7f060db48846a2094d53806c161))
+* remove unused sha from methods ([942e8e5](https://github.com/dxheroes/dx-scanner/commit/942e8e510534f028ef75c2205f7219adc3a2f284))
+* rename MergeCommit to Commit and type responses for Commits ([8aa4b95](https://github.com/dxheroes/dx-scanner/commit/8aa4b95c0d9c96f64c3bf03ac8e2c2e297e0201e))
+* rename methods ([b702451](https://github.com/dxheroes/dx-scanner/commit/b702451434473705205497cbbceb3d6a8e72eaab))
+* return just one Merge Commit ([272e432](https://github.com/dxheroes/dx-scanner/commit/272e432778ab1732081e326e845fbe189aca5e0d))
+* run fix() only if fix is true in argumentsProvider ([baf2475](https://github.com/dxheroes/dx-scanner/commit/baf2475cc6e964b2ada1749357e7ce088e47ca22))
+* set bash and exec commands instead of raw commands ([3ba2d64](https://github.com/dxheroes/dx-scanner/commit/3ba2d64c9e09b77f67da6e2dbc19e324b92dc6b8))
+* show full url including subdomains ([e9507f1](https://github.com/dxheroes/dx-scanner/commit/e9507f14c1422483bb7eff9957e3b47e9dc6bea2))
+* split getting user and group add interfaces ([29dcad8](https://github.com/dxheroes/dx-scanner/commit/29dcad838b0a7191ad48c9fa27f3ab23636aa009))
+* test for getCommit() ([eb5ccff](https://github.com/dxheroes/dx-scanner/commit/eb5ccffd79dbbddb344624f685a97eace6c46e21))
+* typos and remove unnecessary code ([75be10b](https://github.com/dxheroes/dx-scanner/commit/75be10b404d52d74b13343477067f577de8bb419))
+* update yeoman-environment ([5acfb8b](https://github.com/dxheroes/dx-scanner/commit/5acfb8b70ff1653578629f3337200719b7206f2a))
+* **deps:** pin dependencies ([2a6d43a](https://github.com/dxheroes/dx-scanner/commit/2a6d43a620f63fe90c51dd9f6d2b513cc00b8328))
+* unwrap responses from bitbucket client for debugging ([2af956c](https://github.com/dxheroes/dx-scanner/commit/2af956c35c4d97597f089f5adfa8fcd0c7585829))
+* unwrap responses from client for debugging ([39b4841](https://github.com/dxheroes/dx-scanner/commit/39b4841fa0e181eb9215868b0d04f5c7e4d1762c))
+* use host with protocol to have absolute path; use own client ([ef0d316](https://github.com/dxheroes/dx-scanner/commit/ef0d3168f3ce20e57e6925ab0ce6f5b5c21e77a4))
+* use specific method for getting owner and repo name ([0bdbd30](https://github.com/dxheroes/dx-scanner/commit/0bdbd3022d4e30feb153fc31d3c8d4da35f15f00))
+* wrong named method and add pagination options ([fcfbdde](https://github.com/dxheroes/dx-scanner/commit/fcfbdde9c5817271f440f6f5eeb2e62f2a50750b))
+* y add bitbucket ([8d731a9](https://github.com/dxheroes/dx-scanner/commit/8d731a96ec8f3b9ae77afa6d985d8dce0ab3a1bb))
+
+
+### Features
+
+* **cli:** rename ENV variable to be prefixed with DXSCANNER ([728ffbe](https://github.com/dxheroes/dx-scanner/commit/728ffbec4e1ba18e81cc0504ed72dd2a27c5131f))
+* **Gitlab:** determine gitlab service on version endpoint ([bb6fb7c](https://github.com/dxheroes/dx-scanner/commit/bb6fb7c2063b6414f33f458c4c45b75db26374ec))
+* **practice:** automatic fixer for license practice ([ea47417](https://github.com/dxheroes/dx-scanner/commit/ea47417485721d4c6e7f9eadd577c0c78834fae0))
+* add case when it is gitlab ([5126888](https://github.com/dxheroes/dx-scanner/commit/5126888f2717a2cabc5202875b97f51ea7df7350))
+* add gitlab in models ([8085cbd](https://github.com/dxheroes/dx-scanner/commit/8085cbdc31d845f74f4076a5a334815a7d8999cb))
+* add GitLabPullRequestState enum ([64fc133](https://github.com/dxheroes/dx-scanner/commit/64fc1339c7b8a78ba7fde2712b7162bfbf7b67bb))
+* add interface CustomAxiosResponse ([7105abb](https://github.com/dxheroes/dx-scanner/commit/7105abb24c85a0624f8f5e738a6a517a6eeba090))
+* add interface for GitLabIssueState ([e01776b](https://github.com/dxheroes/dx-scanner/commit/e01776b6f32dcb26512f97fcc1db8c2092e2cdc9))
+* add interfaces and type responses ([4b795ec](https://github.com/dxheroes/dx-scanner/commit/4b795ecd9b7a8f5e8fa3070c19e8980c76215053))
+* add interfaces and type responses ([74ff964](https://github.com/dxheroes/dx-scanner/commit/74ff9640610ce1dd798c2cda7aea8f306ce029de))
+* add ListFilterOptions interface ([1a0301e](https://github.com/dxheroes/dx-scanner/commit/1a0301eec60087cd22edee2b06479f2c2da4a528))
+* add TODOs ([6d87b91](https://github.com/dxheroes/dx-scanner/commit/6d87b910af7d61a9be3e39e665c86e4b749b9f40))
+* bind gitlab when needed ([0120bad](https://github.com/dxheroes/dx-scanner/commit/0120bad165d60f976c77aa8b8e3b40d6fda9aa92))
+* bundle classes to GitlabClient ([4dd21ec](https://github.com/dxheroes/dx-scanner/commit/4dd21ec579726a5f16b3acf3d1eab9cc0f7691ed))
+* determine access type for gitlab ([49b8903](https://github.com/dxheroes/dx-scanner/commit/49b89035e259958e69e629bcabd547ddba334e68))
+* get gitlab serviceType if it's gitlab ([b6ebd4f](https://github.com/dxheroes/dx-scanner/commit/b6ebd4fa9bdbbdd005502d75666818242f38066a))
+* implement all function in GitLab Service ([2a63c5b](https://github.com/dxheroes/dx-scanner/commit/2a63c5b9ef0d11ec282f53bc9f743d5be8810d49))
+* implement comments(), createComment(), updateComment() ([04515dc](https://github.com/dxheroes/dx-scanner/commit/04515dc818926f399a581d8abfff728a1523e9d4))
+* implement commits() to get all commits of specific Merge Request ([8d5d028](https://github.com/dxheroes/dx-scanner/commit/8d5d028a51afc88f99adb1a0ecc2728931abcaea))
+* implement get() - mergeRequests ([3cbe59e](https://github.com/dxheroes/dx-scanner/commit/3cbe59eabb332d9b72dccac254201e9bb1669fe2))
+* implement get() for Projects ([2093722](https://github.com/dxheroes/dx-scanner/commit/2093722b98c2c180b52e97edabc53fcbfdb87ec9))
+* implement get(), private getUser(), private getGroup() for Users ([26ffdfe](https://github.com/dxheroes/dx-scanner/commit/26ffdfefa4a7c88c2b4801251c1a2795cc101233))
+* implement getGitLabIssueState() ([e96e51a](https://github.com/dxheroes/dx-scanner/commit/e96e51a0b392a6592c7fa61e4701ff647a3e0afe))
+* implement getGitLabPRState() ([e4e3bdb](https://github.com/dxheroes/dx-scanner/commit/e4e3bdbbb969c65cbd6eb502d970d8ca66c2a1e0))
+* implement getPagination(); return customized interface of PRs ([8122415](https://github.com/dxheroes/dx-scanner/commit/8122415d32256e345a97072cd788c6604e3f9a31))
+* implement getPullRequest() ([aa5b0fa](https://github.com/dxheroes/dx-scanner/commit/aa5b0fa3a5b429e73112c3e8b451217aee0b5936))
+* implement getRepo() in GitlabService ([0553a5f](https://github.com/dxheroes/dx-scanner/commit/0553a5f55a68038c999db995ead971b964cec4be))
+* implement GitLabClient ([332e537](https://github.com/dxheroes/dx-scanner/commit/332e537be516fda9cd7334abb7cc89e512aa201b))
+* implement isGitLabPath() ([17e9bc4](https://github.com/dxheroes/dx-scanner/commit/17e9bc4be29a9d46263c1fc31782c8d7939dfb78))
+* implement list(), get() for Commits ([a77d847](https://github.com/dxheroes/dx-scanner/commit/a77d847008acdcebb5e9ff0ef42d0b745772359a))
+* implement list(), get(), comments() for Issues ([9acfd30](https://github.com/dxheroes/dx-scanner/commit/9acfd30ca811840191b8fcd5d03a54747b1f8df6))
+* implement listPullCommits() ([43e3e34](https://github.com/dxheroes/dx-scanner/commit/43e3e34891537677c4dfa055f4ef6fe1e35f4481))
+* implement listPullrequests() ([8aef68e](https://github.com/dxheroes/dx-scanner/commit/8aef68eac6995b8f37bac12a70770c6e0ba2d4ae))
+* implement mapper and bundler ([7fba9ed](https://github.com/dxheroes/dx-scanner/commit/7fba9eded78bf2efa9e2fe7c9ec8549c3a670e7f))
+* implement MergeRequests class with list() ([8551811](https://github.com/dxheroes/dx-scanner/commit/855181109e3c87bb379a1f1dac1d3339041a92ea))
+* implement parseGitlabUrl() ([06cd9e3](https://github.com/dxheroes/dx-scanner/commit/06cd9e3db0325098dab4fd1af67865292c4cf743))
+* implement parseResponse() for parsing resp from Gitlab API call ([83c2341](https://github.com/dxheroes/dx-scanner/commit/83c2341c07ab12f726addd1a25a9a4267463f20f))
+* prompt user to insert token if it's necessary ([8a5da7a](https://github.com/dxheroes/dx-scanner/commit/8a5da7a52a0309328beaa3ce243db19594bdd31b))
+* y add gitlab client ([d167f97](https://github.com/dxheroes/dx-scanner/commit/d167f972372bc0e6d99fa46ad7713a3d0fd31f31))
+
+
+### BREAKING CHANGES
+
+* **cli:** rename ENV variable DX_GIT_SERVICE_TOKEN to DXSCANNER_GIT_SERVICE_TOKEN
+
 ## [2.10.1](https://github.com/dxheroes/dx-scanner/compare/v2.10.0...v2.10.1) (2020-03-05)
 
 

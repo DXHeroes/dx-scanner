@@ -62,7 +62,7 @@ export class Scanner {
     this.allDetectedComponents = undefined;
   }
 
-  async fix(practicesWithContext: PracticeWithContext[], scanningStrategy?: ScanningStrategy) {
+  async practicesWithContext: PracticeWithContext[], scanningStrategy?: ScanningStrategy) {
     if (!this.argumentsProvider.fix) return;
     const fixablePractice = (p: PracticeWithContext) => p.practice.fix && p.evaluation === PracticeEvaluationResult.notPracticing;
     const fixPatternMatcher = this.argumentsProvider.fixPattern ? new RegExp(this.argumentsProvider.fixPattern, 'i') : null;
@@ -89,7 +89,8 @@ export class Scanner {
 
   async scan({ determineRemote } = { determineRemote: true }): Promise<ScanResult> {
     let scanStrategy = await this.scanStrategyDetector.detect();
-    if (determineRemote && scanStrategy.accessType === AccessType.unknown) {
+    this.d(`Scan strategy: ${inspect(scanStrategy)}`);
+    if (determineRemote && (scanStrategy.serviceType === undefined || scanStrategy.accessType === AccessType.unknown)) {
       return {
         shouldExitOnEnd: this.shouldExitOnEnd,
         needsAuth: true,
@@ -97,7 +98,6 @@ export class Scanner {
         isOnline: scanStrategy.isOnline,
       };
     }
-    this.d(`Scan strategy: ${inspect(scanStrategy)}`);
     scanStrategy = await this.preprocessData(scanStrategy);
     this.d(`Scan strategy (after preprocessing): ${inspect(scanStrategy)}`);
     const scannerContext = this.scannerContextFactory(scanStrategy);
@@ -107,8 +107,13 @@ export class Scanner {
     this.d(`Components (${projectComponents.length}):`, inspect(projectComponents));
     const practicesWithContext = await this.detectPractices(projectComponents);
     this.d(`Practices (${practicesWithContext.length}):`, inspect(practicesWithContext));
-    await this.fix(practicesWithContext, scanStrategy);
-    const practicesAfterFix = await this.detectPractices(projectComponents);
+
+    let practicesAfterFix: PracticeWithContext[] | undefined;
+    if (this.argumentsProvider.fix) {
+      await this.fix(practicesWithContext, scanStrategy);
+      practicesAfterFix = await this.detectPractices(projectComponents);
+    }
+
     await this.report(practicesWithContext, practicesAfterFix);
     this.d(
       `Overall scan stats. LanguagesAtPaths: ${inspect(languagesAtPaths.length)}; Components: ${inspect(
@@ -160,6 +165,9 @@ export class Scanner {
         cloneUrl.password = this.argumentsProvider.auth.split(':')[1];
       } else if (this.argumentsProvider.auth) {
         cloneUrl.password = this.argumentsProvider.auth;
+        if (serviceType === ServiceType.gitlab) {
+          cloneUrl.username = 'private-token';
+        }
       }
 
       await git()
@@ -252,7 +260,7 @@ export class Scanner {
         practice: { ...p.practice.getMetadata(), data: p.practice.data, fix: Boolean(p.practice.fix) },
         evaluation: p.evaluation,
         evaluationError: p.evaluationError,
-        overridenImpact: <PracticeImpact>(overridenImpact ? overridenImpact : p.practice.getMetadata().impact),
+        overridenImpact: <PracticeImpact>(overridenImpact || p.practice.getMetadata().impact),
         isOn: p.isOn,
       };
     };
@@ -314,7 +322,7 @@ export class Scanner {
       } catch (error) {
         evaluationError = error.toString();
         const practiceDebug = debug('practices');
-        practiceDebug(`The ${practice.getMetadata().name} practice failed with this error:\n${error}`);
+        practiceDebug(`The ${practice.getMetadata().name} practice failed with this error:\n${error.stack}`);
       }
 
       const practiceWithContext: PracticeWithContext = {

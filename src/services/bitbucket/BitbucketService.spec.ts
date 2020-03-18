@@ -124,7 +124,7 @@ describe('Bitbucket Service', () => {
     const mockPullCommits = bitbucketPullCommitsResponseFactory();
     bitbucketNock.listPullCommits([mockPullCommits], 622);
 
-    const response = await service.getPullCommits('pypy', 'pypy', 622);
+    const response = await service.listPullCommits('pypy', 'pypy', 622);
     expect(response).toMatchObject(getPullCommitsResponse());
   });
 

@@ -1,7 +1,7 @@
 {
   "name": "dx-scanner",
   "description": "Scan your project for possible DX recommendations.",
-  "version": "2.10.1",
+  "version": "3.1.2",
   "author": "DX Heroes LTD <info@dxheroes.io> (https://dxheroes.io)",
   "homepage": "https://github.com/dxheroes/dx-scanner",
   "repository": "ssh://git@github.com/dxheroes/dx-scanner.git",
@@ -43,7 +43,7 @@
     "debug": "4.1.1",
     "eslint": "6.8.0",
     "eslint-plugin-eslint-plugin": "2.2.1",
-    "generator-license": "^5.4.0",
+    "generator-license": "5.4.0",
     "git-url-parse": "11.1.2",
     "glob": "7.1.6",
     "gradle-to-js": "2.0.0",
@@ -68,7 +68,7 @@
     "update-notifier": "4.1.0",
     "xml2js": "0.4.23",
     "yaml": "1.7.2",
-    "yeoman-environment": "^2.8.0",
+    "yeoman-environment": "2.8.1",
     "yeoman-gen-run": "^1.2.3"
   },
   "devDependencies": {
@@ -87,8 +87,8 @@
     "@types/toposort": "2.0.3",
     "@types/update-notifier": "4.1.0",
     "@types/xml2js": "0.4.5",
-    "@types/yeoman-environment": "^2.3.3",
-    "@types/yeoman-generator": "^3.1.4",
+    "@types/yeoman-environment": "2.3.3",
+    "@types/yeoman-generator": "3.1.4",
     "@typescript-eslint/eslint-plugin": "2.21.0",
     "@typescript-eslint/parser": "2.21.0",
     "codecov": "3.6.5",
