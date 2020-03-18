@@ -1,3 +1,10 @@
+## [3.1.2](https://github.com/dxheroes/dx-scanner/compare/v3.1.1...v3.1.2) (2020-03-18)
+
+
+### Bug Fixes
+
+* **cireporter:** use https in host as default ([0ef888c](https://github.com/dxheroes/dx-scanner/commit/0ef888c5ca5853b7109e43a2389d816a7a3f5b91))
+
 ## [3.1.1](https://github.com/dxheroes/dx-scanner/compare/v3.1.0...v3.1.1) (2020-03-18)
 
 
