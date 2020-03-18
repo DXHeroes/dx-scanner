@@ -82,7 +82,7 @@ export class JavaPackageInspector extends PackageInspectorBase {
   private async resolveMavenFileString(mavenFileString: string) {
     xml2js.parseString(mavenFileString, (err, result: PomXML) => {
       if (err) {
-        throw err;
+        throw ErrorFactory.newInternalError(`xml2js failed to parse pom.xml: ${err.message}`);
       }
       const xmlDependencies = result.project.dependencies.values();
       for (const xmlDependency of xmlDependencies) {
