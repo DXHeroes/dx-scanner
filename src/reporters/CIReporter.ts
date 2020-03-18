@@ -142,7 +142,7 @@ export class CIReporter implements IReporter {
     } else if ((ev.GITLAB_CI = 'true')) {
       // detect GitLab config
       this.d('Is GitLab');
-      const client = new GitLabClient({ token: this.argumentsProvider.auth, host: ev.CI_SERVER_URL! });
+      const client = new GitLabClient({ token: this.argumentsProvider.auth, host: `https://${ev.CI_SERVER_HOST!}` });
       const prs = await client.MergeRequests.list(ev.CI_PROJECT_ID!, { filter: { sourceBranch: ev.CI_COMMIT_BRANCH } });
       const prForThisPipeline = prs.data.find((p) => p.sha === ev.CI_COMMIT_SHA);
       if (!prForThisPipeline) {
