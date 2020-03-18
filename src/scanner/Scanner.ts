@@ -62,31 +62,6 @@ export class Scanner {
     this.allDetectedComponents = undefined;
   }
 
-  async practicesWithContext: PracticeWithContext[], scanningStrategy?: ScanningStrategy) {
-    if (!this.argumentsProvider.fix) return;
-    const fixablePractice = (p: PracticeWithContext) => p.practice.fix && p.evaluation === PracticeEvaluationResult.notPracticing;
-    const fixPatternMatcher = this.argumentsProvider.fixPattern ? new RegExp(this.argumentsProvider.fixPattern, 'i') : null;
-    const shouldFix = (p: PracticeWithContext) => {
-      const fixFromCli = fixPatternMatcher ? fixPatternMatcher.test(p.practice.getMetadata().id) : undefined;
-      const practiceConfig = p.componentContext.configProvider.getOverriddenPractice(p.practice.getMetadata().id);
-      const fixFromConfig = practiceConfig?.fix;
-      return fixFromCli !== undefined ? fixFromCli : fixFromConfig !== undefined ? fixFromConfig : true;
-    };
-    await Promise.all(
-      practicesWithContext
-        .filter(fixablePractice)
-        .filter(shouldFix)
-        .map((p) =>
-          p.practice.fix!({
-            ...p.practiceContext,
-            scanningStrategy,
-            config: p.componentContext.configProvider.getOverriddenPractice(p.practice.getMetadata().id),
-            argumentsProvider: this.argumentsProvider,
-          }),
-        ),
-    );
-  }
-
   async scan({ determineRemote } = { determineRemote: true }): Promise<ScanResult> {
     let scanStrategy = await this.scanStrategyDetector.detect();
     this.d(`Scan strategy: ${inspect(scanStrategy)}`);
@@ -143,6 +118,31 @@ export class Scanner {
     }
 
     cli.action.stop();
+  }
+
+  async fix(practicesWithContext: PracticeWithContext[], scanningStrategy?: ScanningStrategy) {
+    if (!this.argumentsProvider.fix) return;
+    const fixablePractice = (p: PracticeWithContext) => p.practice.fix && p.evaluation === PracticeEvaluationResult.notPracticing;
+    const fixPatternMatcher = this.argumentsProvider.fixPattern ? new RegExp(this.argumentsProvider.fixPattern, 'i') : null;
+    const shouldFix = (p: PracticeWithContext) => {
+      const fixFromCli = fixPatternMatcher ? fixPatternMatcher.test(p.practice.getMetadata().id) : undefined;
+      const practiceConfig = p.componentContext.configProvider.getOverriddenPractice(p.practice.getMetadata().id);
+      const fixFromConfig = practiceConfig?.fix;
+      return fixFromCli !== undefined ? fixFromCli : fixFromConfig !== undefined ? fixFromConfig : true;
+    };
+    await Promise.all(
+      practicesWithContext
+        .filter(fixablePractice)
+        .filter(shouldFix)
+        .map((p) =>
+          p.practice.fix!({
+            ...p.practiceContext,
+            scanningStrategy,
+            config: p.componentContext.configProvider.getOverriddenPractice(p.practice.getMetadata().id),
+            argumentsProvider: this.argumentsProvider,
+          }),
+        ),
+    );
   }
 
   /**
