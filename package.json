@@ -27,7 +27,7 @@
   "dependencies": {
     "@commitlint/config-conventional": "8.3.4",
     "@commitlint/lint": "8.3.5",
-    "@octokit/rest": "16.43.1",
+    "@octokit/rest": "17.1.0",
     "@types/eslint": "6.1.8",
     "@types/js-yaml": "3.12.2",
     "@types/qs": "6.9.1",
