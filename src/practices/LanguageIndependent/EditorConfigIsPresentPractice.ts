@@ -2,6 +2,21 @@ import { IPractice } from '../IPractice';
 import { PracticeEvaluationResult, PracticeImpact } from '../../model';
 import { DxPractice } from '../DxPracticeDecorator';
 import { PracticeContext } from '../../contexts/practice/PracticeContext';
+import { FixerContext } from '../../contexts/fixer/FixerContext';
+
+const editorConfigTemplate = `root = true
+
+[*]
+end_of_line = lf
+charset = utf-8
+indent_size = 2
+indent_style = space
+insert_final_newline = true
+trim_trailing_whitespace = true
+
+[*.md]
+trim_trailing_whitespace = false
+`;
 
 @DxPractice({
   id: 'LanguageIndependent.EditorConfigIsPresent',
@@ -30,5 +45,11 @@ export class EditorConfigIsPresentPractice implements IPractice {
     }
 
     return PracticeEvaluationResult.notPracticing;
+  }
+
+  async fix(ctx: FixerContext) {
+    await ctx.fileService?.createFile('.editorconfig', editorConfigTemplate);
+    ctx.fileInspector?.purgeCache();
+    ctx.root.fileInspector?.purgeCache();
   }
 }
