@@ -1,3 +1,8 @@
 import { PracticeContext } from '../practice/PracticeContext';
+import { ArgumentsProvider } from '../../scanner';
+import { ScanningStrategy } from '../../detectors/ScanningStrategyDetector';
 
-export type FixerContext = PracticeContext; // same for now, but might change in future - type used by autofixer, interface to be used in future
+export interface FixerContext extends PracticeContext {
+  argumentsProvider?: ArgumentsProvider;
+  scanningStrategy?: ScanningStrategy;
+}
