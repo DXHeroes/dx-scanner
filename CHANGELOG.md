@@ -1,3 +1,39 @@
+# [3.3.0](https://github.com/dxheroes/dx-scanner/compare/v3.2.0...v3.3.0) (2020-03-19)
+
+
+### Features
+
+* **fixer:** add CI version of license fixer ([1723d7d](https://github.com/dxheroes/dx-scanner/commit/1723d7dcd23bea138a2dee0296f1e6a59b79717b))
+* **fixer:** add more data to fixer context ([c4ab2ae](https://github.com/dxheroes/dx-scanner/commit/c4ab2ae4db0f292ed3f2f0c9881a02bc40fa545b))
+
+# [3.2.0](https://github.com/dxheroes/dx-scanner/compare/v3.1.2...v3.2.0) (2020-03-18)
+
+
+### Features
+
+* **fixer:** add info about not-fixed practices to fixer reporter ([08d3db9](https://github.com/dxheroes/dx-scanner/commit/08d3db94452eb78d239041cd630405ca9f76d206))
+
+## [3.1.2](https://github.com/dxheroes/dx-scanner/compare/v3.1.1...v3.1.2) (2020-03-18)
+
+
+### Bug Fixes
+
+* **cireporter:** use https in host as default ([0ef888c](https://github.com/dxheroes/dx-scanner/commit/0ef888c5ca5853b7109e43a2389d816a7a3f5b91))
+
+## [3.1.1](https://github.com/dxheroes/dx-scanner/compare/v3.1.0...v3.1.1) (2020-03-18)
+
+
+### Bug Fixes
+
+* **cireporter:** use full URL including protocol from gitlab ENV vars ([05c0991](https://github.com/dxheroes/dx-scanner/commit/05c09913bbc77978953374c26fb018073fa72b26))
+
+# [3.1.0](https://github.com/dxheroes/dx-scanner/compare/v3.0.5...v3.1.0) (2020-03-17)
+
+
+### Features
+
+* **gitlab:** support CI reporter ([65a2ca2](https://github.com/dxheroes/dx-scanner/commit/65a2ca2e12a2e45bc24cc950d2d3c7f0ce0b2512))
+
 ## [3.0.5](https://github.com/dxheroes/dx-scanner/compare/v3.0.4...v3.0.5) (2020-03-17)
 
 

@@ -27,14 +27,13 @@ RUN . $NVM_DIR/nvm.sh \
 ENV NODE_PATH $NVM_DIR/v$NODE_VERSION/lib/node_modules
 ENV PATH $NVM_DIR/versions/node/v$NODE_VERSION/bin:$PATH
 
-RUN npm i -g yarn
+RUN npm i -g yarn \
+  && node --version \
+  && npm --version \
+  && yarn --version
 
-# check successfull installation
-RUN node --version
-RUN npm --version
-RUN yarn --version
-
-RUN yarn global add dx-scanner
+RUN yarn global add dx-scanner \
+ && dx-scanner --version
 
 RUN mkdir /usr/app
 WORKDIR /usr/app

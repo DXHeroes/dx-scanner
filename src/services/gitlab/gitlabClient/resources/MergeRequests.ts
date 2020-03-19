@@ -21,16 +21,20 @@ export class MergeRequests extends GitLabClient {
    */
   async list(
     projectId: string,
-    options?: ListGetterOptions<{ state?: GitLabPullRequestState | GitLabPullRequestState[] }>,
+    options?: ListGetterOptions<{ state?: GitLabPullRequestState | GitLabPullRequestState[]; sourceBranch?: string }>,
   ): Promise<CustomAxiosResponse<MergeRequest[]>> {
     const endpoint = `projects/${encodeURIComponent(projectId)}/merge_requests`;
 
     const params: {
       state?: GitLabPullRequestState | GitLabPullRequestState[];
+      source_branch?: string;
       page?: number;
       per_page?: number;
     } = {};
+
     if (options?.filter?.state) params.state = options?.filter?.state;
+    if (options?.filter?.sourceBranch) params.source_branch = options?.filter?.sourceBranch;
+
     if (options?.pagination?.page) params.page = options?.pagination?.page;
     if (options?.pagination?.perPage) params.per_page = options?.pagination?.perPage;
 
