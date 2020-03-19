@@ -38,16 +38,11 @@ export class GitLabService implements IVCSService {
   private cache: ICache;
   private callCount = 0;
   private readonly argumentsProvider: ArgumentsProvider;
-  private readonly scanningStrategy: ScanningStrategy;
   private readonly host: string;
 
-  constructor(
-    @inject(Types.ArgumentsProvider) argumentsProvider: ArgumentsProvider,
-    @inject(Types.ScanningStrategy) scanningStrategy: ScanningStrategy,
-  ) {
+  constructor(@inject(Types.ArgumentsProvider) argumentsProvider: ArgumentsProvider) {
     this.argumentsProvider = argumentsProvider;
-    this.scanningStrategy = scanningStrategy;
-    const parsedUrl = GitServiceUtils.parseUrl(scanningStrategy.remoteUrl || argumentsProvider.uri);
+    const parsedUrl = GitServiceUtils.parseUrl(argumentsProvider.uri);
     this.host = parsedUrl.host;
 
     this.cache = new InMemoryCache();

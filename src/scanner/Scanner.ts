@@ -35,6 +35,7 @@ import { ErrorFactory } from '../lib/errors';
 export class Scanner {
   private readonly scanStrategyDetector: ScanningStrategyDetector;
   private readonly scannerContextFactory: ScannerContextFactory;
+  //private readonly discoveryContextFactory: DiscoveryContextFactroy;
   private readonly reporters: IReporter[];
   private readonly fileSystemService: FileSystemService;
   private readonly practices: IPracticeWithMetadata[];
@@ -46,6 +47,7 @@ export class Scanner {
   constructor(
     @inject(ScanningStrategyDetector) scanStrategyDetector: ScanningStrategyDetector,
     @inject(Types.ScannerContextFactory) scannerContextFactory: ScannerContextFactory,
+    //@inject(Types.DiscoveryContextFactroy) discoveryContextFactroy: DiscoveryContextFactroy,
     @multiInject(Types.IReporter) reporters: IReporter[],
     @inject(FileSystemService) fileSystemService: FileSystemService,
     // inject all practices registered under Types.Practice in inversify config
@@ -93,7 +95,8 @@ export class Scanner {
     }
     scanStrategy = await this.preprocessData(scanStrategy);
     this.d(`Scan strategy (after preprocessing): ${inspect(scanStrategy)}`);
-    const scannerContext = this.scannerContextFactory(scanStrategy);
+    //this.scanningstratehyexpoler.explore()
+    const scannerContext = this.scannerContextFactory(scanStrategy); //discoverycontextfactory(repositoryconfig)
     const languagesAtPaths = await this.detectLanguagesAtPaths(scannerContext);
     this.d(`LanguagesAtPaths (${languagesAtPaths.length}):`, inspect(languagesAtPaths));
     const projectComponents = await this.detectProjectComponents(languagesAtPaths, scannerContext, scanStrategy);
