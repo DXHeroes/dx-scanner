@@ -25,10 +25,12 @@ import { packageJSONContents } from './detectors/__MOCKS__/JavaScript/packageJSO
 import { argumentsProviderFactory } from './test/factories/ArgumentsProviderFactory';
 import { ArgumentsProvider } from './scanner';
 import { GitLabService } from './services/gitlab/GitLabService';
+import { bindDiscoveryContext } from './contexts/discovery/discoveryContextBinding';
 
 export const createRootContainer = (args: ArgumentsProvider): Container => {
   const container = new Container();
   bindScanningStrategyDetectors(container);
+  bindDiscoveryContext(container);
   bindScanningContext(container);
   bindReporters(container, args);
 

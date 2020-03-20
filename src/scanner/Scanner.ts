@@ -16,7 +16,7 @@ import {
   PracticeImpact,
 } from '../model';
 import { IPracticeWithMetadata } from '../practices/DxPracticeDecorator';
-import { ScannerContextFactory, Types } from '../types';
+import { ScannerContextFactory, Types, DiscoveryContextFactory } from '../types';
 import { ScannerUtils } from '../scanner/ScannerUtils';
 import _ from 'lodash';
 import { cli } from 'cli-ux';
@@ -35,7 +35,7 @@ import { ErrorFactory } from '../lib/errors';
 export class Scanner {
   private readonly scanStrategyDetector: ScanningStrategyDetector;
   private readonly scannerContextFactory: ScannerContextFactory;
-  //private readonly discoveryContextFactory: DiscoveryContextFactroy;
+  private readonly discoveryContextFactory: DiscoveryContextFactory;
   private readonly reporters: IReporter[];
   private readonly fileSystemService: FileSystemService;
   private readonly practices: IPracticeWithMetadata[];
@@ -47,7 +47,7 @@ export class Scanner {
   constructor(
     @inject(ScanningStrategyDetector) scanStrategyDetector: ScanningStrategyDetector,
     @inject(Types.ScannerContextFactory) scannerContextFactory: ScannerContextFactory,
-    //@inject(Types.DiscoveryContextFactroy) discoveryContextFactroy: DiscoveryContextFactroy,
+    @inject(Types.DiscoveryContextFactory) discoveryContextFactory: DiscoveryContextFactory,
     @multiInject(Types.IReporter) reporters: IReporter[],
     @inject(FileSystemService) fileSystemService: FileSystemService,
     // inject all practices registered under Types.Practice in inversify config
@@ -56,6 +56,7 @@ export class Scanner {
   ) {
     this.scanStrategyDetector = scanStrategyDetector;
     this.scannerContextFactory = scannerContextFactory;
+    this.discoveryContextFactory = discoveryContextFactory;
     this.reporters = reporters;
     this.fileSystemService = fileSystemService;
     this.practices = practices;
@@ -78,7 +79,8 @@ export class Scanner {
     scanStrategy = await this.preprocessData(scanStrategy);
     this.d(`Scan strategy (after preprocessing): ${inspect(scanStrategy)}`);
     //this.scanningstratehyexpoler.explore()
-    const scannerContext = this.scannerContextFactory(scanStrategy); //discoverycontextfactory(repositoryconfig)
+    const scannerContext = this.scannerContextFactory(scanStrategy);
+    //const discoveryContext = this.discoveryContextFactory(this.argumentsProvider.uri);
     const languagesAtPaths = await this.detectLanguagesAtPaths(scannerContext);
     this.d(`LanguagesAtPaths (${languagesAtPaths.length}):`, inspect(languagesAtPaths));
     const projectComponents = await this.detectProjectComponents(languagesAtPaths, scannerContext, scanStrategy);
