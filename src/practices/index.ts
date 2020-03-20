@@ -35,6 +35,7 @@ import { JavaTestingFrameworkUsedPractice } from './Java/JavaTestingFrameworkUse
 import { JavaMockingFrameworkUsedPractice } from './Java/JavaMockingFrameworkUsedPractice';
 import { JavaNamingConventionsPractice } from './Java/JavaNamingConventionsPractice';
 import { JavaLinterUsedPractice } from './Java/JavaLinterUsedPractice';
+import { JavaCodeStyleUsedPractice } from './Java/JavaCodeStyleUsedPractice';
 
 // register practices here
 export const practices = [
@@ -75,4 +76,5 @@ export const practices = [
   JavaMockingFrameworkUsedPractice,
   JavaNamingConventionsPractice,
   JavaLinterUsedPractice,
+  JavaCodeStyleUsedPractice,
 ];
