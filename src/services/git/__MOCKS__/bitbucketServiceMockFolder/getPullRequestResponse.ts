@@ -11,6 +11,7 @@ export const getPullRequestResponse = (params?: Partial<PullRequest>): PullReque
       },
       url: 'https://bitbucket.org/pypy/pypy/pull-requests/1',
       body: 'Added a floor() ufunc to micronumpy',
+      sha: '1234567890',
       createdAt: '2011-06-22T19:44:39.555192+00:00',
       updatedAt: '2011-06-23T13:52:30.230741+00:00',
       closedAt: null,

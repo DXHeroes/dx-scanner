@@ -19,6 +19,7 @@ export const getPullsServiceResponse: Paginated<PullRequest> = {
         },
       },
       body: 'Please pull these awesome changes',
+      sha: '1234567890',
       closedAt: '2011-01-26T19:01:12Z',
       createdAt: '2011-01-26T19:01:12Z',
       id: 1,

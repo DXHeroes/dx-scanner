@@ -24,47 +24,27 @@ import { PracticeContext } from './contexts/practice/PracticeContext';
 import { packageJSONContents } from './detectors/__MOCKS__/JavaScript/packageJSONContents.mock';
 import { argumentsProviderFactory } from './test/factories/ArgumentsProviderFactory';
 import { ArgumentsProvider } from './scanner';
-import { GitLabService } from './services/gitlab/GitLabService';
 import { bindDiscoveryContext } from './contexts/discovery/discoveryContextBinding';
+import { ScanningStrategyExplorer } from './scanner/ScanningStrategyExplorer';
 
 export const createRootContainer = (args: ArgumentsProvider): Container => {
   const container = new Container();
-  bindScanningStrategyDetectors(container);
-  bindDiscoveryContext(container);
-  bindScanningContext(container);
-  bindReporters(container, args);
-
   container.bind(Types.ArgumentsProvider).toConstantValue(args);
+  container.bind(ScanningStrategyExplorer).toSelf();
+  bindDiscoveryContext(container);
+
   container.bind(Scanner).toSelf();
   container.bind(FileSystemService).toSelf();
-  container.bind(GitHubService).toSelf();
-  container.bind(BitbucketService).toSelf();
-  container.bind(GitLabService).toSelf();
+
+  // container.bind(GitHubService).toSelf();
+  // container.bind(BitbucketService).toSelf();
+  // container.bind(GitLabService).toSelf();
+
   // register practices
   practices.forEach((practice) => {
     container.bind<IPracticeWithMetadata>(Types.Practice).toConstantValue(ScannerUtils.initPracticeWithMetadata(practice));
   });
   return container;
-};
-
-const bindScanningStrategyDetectors = (container: Container) => {
-  container.bind(ScanningStrategyDetector).toSelf();
-};
-
-const bindReporters = (container: Container, args: ArgumentsProvider) => {
-  if (args.fix) {
-    container.bind<IReporter>(Types.IReporter).to(FixReporter);
-    return;
-  }
-  if (args.json) {
-    container.bind<IReporter>(Types.IReporter).to(JSONReporter);
-  } else {
-    container.bind<IReporter>(Types.IReporter).to(CLIReporter);
-  }
-
-  if (args.ci) {
-    container.bind<IReporter>(Types.IReporter).to(CIReporter);
-  }
 };
 
 export const createTestContainer = (

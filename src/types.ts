@@ -1,12 +1,13 @@
 import { Repository, ProgrammingLanguage, LanguageAtPath, ProjectComponent } from './model';
 import { Git } from './services/git/Git';
-import { ScanningStrategy } from './detectors/ScanningStrategyDetector';
+import { ScanningStrategy, ScanningStrategyDetector } from './detectors/ScanningStrategyDetector';
 import { ScannerContext } from './contexts/scanner/ScannerContext';
 import { LanguageContext } from './contexts/language/LanguageContext';
 import { IProjectComponentDetector } from './detectors/IProjectComponentDetector';
 import { PracticeContext } from './contexts/practice/PracticeContext';
 import { ProjectComponentContext } from './contexts/projectComponent/ProjectComponentContext';
-import { RepositoryConfig } from './contexts/discovery/RepositoryConfig';
+import { RepositoryConfig } from './scanner/RepositoryConfig';
+import { ScanningStrategyExplorer } from './scanner/ScanningStrategyExplorer';
 import { DiscoveryContext } from './contexts/discovery/DiscoveryContext';
 
 export const Types = {
@@ -61,4 +62,4 @@ export type LanguageContextFactory = (languageAtPath: LanguageAtPath) => Languag
 export type ProjectComponentContextFactory = (component: ProjectComponent) => ProjectComponentContext;
 export type ProjectComponentDetectorFactory = (language: ProgrammingLanguage) => IProjectComponentDetector[];
 export type PracticeContextFactory = (projectComponent: ProjectComponent) => PracticeContext;
-export type DiscoveryContextFactory = (uri: string) => DiscoveryContext;
+export type DiscoveryContextFactory = (repositoryConfig: RepositoryConfig) => DiscoveryContext;

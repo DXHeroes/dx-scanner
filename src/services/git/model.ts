@@ -15,6 +15,7 @@ export interface PullRequest {
   id: number;
   url: string;
   body: string;
+  sha: string;
   createdAt: string;
   updatedAt: string | null;
   closedAt: string | null;

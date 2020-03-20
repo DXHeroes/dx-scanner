@@ -30,6 +30,7 @@ import {
 } from '../git/model';
 import { VCSServicesUtils } from '../git/VCSServicesUtils';
 import { CustomAxiosResponse, GitLabClient, PaginationGitLabCustomResponse } from './gitlabClient/gitlabUtils';
+import { RepositoryConfig } from '../../scanner/RepositoryConfig';
 const debug = Debug('cli:services:git:gitlab-service');
 
 @injectable()
@@ -39,30 +40,31 @@ export class GitLabService implements IVCSService {
   private callCount = 0;
   private readonly argumentsProvider: ArgumentsProvider;
   private readonly host: string;
+  private readonly repositoryConfig: RepositoryConfig;
 
-  constructor(@inject(Types.ArgumentsProvider) argumentsProvider: ArgumentsProvider) {
+  constructor(
+    @inject(Types.ArgumentsProvider) argumentsProvider: ArgumentsProvider,
+    @inject(Types.RepositoryConfig) repositoryConfig: RepositoryConfig,
+  ) {
     this.argumentsProvider = argumentsProvider;
+    this.repositoryConfig = repositoryConfig;
     const parsedUrl = GitServiceUtils.parseUrl(argumentsProvider.uri);
-    this.host = parsedUrl.host;
+    this.host = repositoryConfig.host!;
 
     this.cache = new InMemoryCache();
-    console.log(this.host, 'host');
-    console.log(this.argumentsProvider.auth, 'auth');
-    console.log(parsedUrl.protocol, 'protocol');
-    this.client = this.setClient(this.host, this.argumentsProvider.auth, parsedUrl.protocol);
-  }
 
-  setClient(host: string, auth?: string, protocol = 'https') {
-    debug('Set new Gitlab Client', protocol, host);
     this.client = new GitLabClient({
-      token: auth,
-      host: `${protocol}://${host}`,
+      token: this.argumentsProvider.auth,
+      host: this.repositoryConfig.baseUrl,
     });
-    return this.client;
   }
 
   purgeCache() {
     this.cache.purge();
+  }
+
+  checkVersion() {
+    return this.client.Version.check();
   }
 
   getRepo(owner: string, repo: string) {
@@ -98,6 +100,7 @@ export class GitLabService implements IVCSService {
           },
           url: val.web_url,
           body: val.description,
+          sha: val.sha,
           createdAt: val.created_at.toString(),
           updatedAt: val.updated_at.toString(),
           closedAt: val.closed_at ? val.closed_at?.toString() : null,
@@ -142,6 +145,7 @@ export class GitLabService implements IVCSService {
         url: data.author.web_url,
       },
       url: data.web_url,
+      sha: data.sha,
       body: data.description,
       createdAt: data.created_at.toString(),
       updatedAt: data.updated_at.toString(),

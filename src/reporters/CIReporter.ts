@@ -17,16 +17,25 @@ import { GitLabClient } from '../services/gitlab/gitlabClient/gitlabUtils';
 @injectable()
 export class CIReporter implements IReporter {
   private readonly argumentsProvider: ArgumentsProvider;
+  private gitHubService: GitHubService;
+  private bitbucketService: BitbucketService;
+  private gitLabService: GitLabService;
   //private readonly scanningStrategy: ScanningStrategy;
   private config: CIReporterConfig | undefined;
   private d: debug.Debugger;
 
   constructor(
     @inject(Types.ArgumentsProvider) argumentsProvider: ArgumentsProvider,
+    @inject(GitHubService) gitHubService: GitHubService,
+    @inject(BitbucketService) bitbucketService: BitbucketService,
+    @inject(GitLabService) gitLabService: GitLabService,
     //@inject(Types.ScanningStrategy) scanningStrategy: ScanningStrategy,
   ) {
     this.d = debug('CIReporter');
     this.argumentsProvider = argumentsProvider;
+    this.gitHubService = gitHubService;
+    this.bitbucketService = bitbucketService;
+    this.gitLabService = gitLabService;
   }
 
   async report(practicesAndComponents: PracticeWithContextForReporter[]): Promise<CreatedUpdatedPullRequestComment | undefined> {
@@ -41,7 +50,7 @@ export class CIReporter implements IReporter {
       const msg = "This isn't a pull request.";
       this.d(msg);
       return;
-    } else if (!(await ScanningStrategyDetectorUtils.isLocalPath(this.argumentsProvider.uri))) {
+    } else if (!ScanningStrategyDetectorUtils.isLocalPath(this.argumentsProvider.uri)) {
       const msg = 'CIReporter works only for local path';
       this.d(msg);
       return;
@@ -68,13 +77,13 @@ export class CIReporter implements IReporter {
 
     switch (this.config!.service) {
       case VCSServiceType.github:
-        client = new GitHubService(this.argumentsProvider);
+        client = this.gitHubService;
         break;
       case VCSServiceType.bitbucket:
-        client = new BitbucketService(this.argumentsProvider);
+        client = this.bitbucketService;
         break;
       case VCSServiceType.gitlab:
-        client = new GitLabService({ ...this.argumentsProvider, ...{ uri: process.env.CI_SERVER_HOST! } });
+        client = this.gitLabService;
         break;
       default:
         return assertNever(this.config!.service);
@@ -146,9 +155,11 @@ export class CIReporter implements IReporter {
     } else if ((ev.GITLAB_CI = 'true')) {
       // detect GitLab config
       this.d('Is GitLab');
-      const client = new GitLabClient({ token: this.argumentsProvider.auth, host: `https://${ev.CI_SERVER_HOST!}` });
-      const prs = await client.MergeRequests.list(ev.CI_PROJECT_ID!, { filter: { sourceBranch: ev.CI_COMMIT_BRANCH } });
-      const prForThisPipeline = prs.data.find((p) => p.sha === ev.CI_COMMIT_SHA);
+      const prs = await this.gitLabService.listPullRequests(
+        ev.CI_PROJECT_NAMESPACE!,
+        ev.CI_PROJECT_NAME! /* { filter: { sourceBranch: ev.CI_COMMIT_BRANCH } } */,
+      );
+      const prForThisPipeline = prs.items.find((p) => p.sha === ev.CI_COMMIT_SHA);
       if (!prForThisPipeline) {
         this.d('Can not find relevant Merge Request', ev.CI_PROJECT_ID, ev.CI_COMMIT_BRANCH, ev.CI_COMMIT_SHA);
         return undefined;

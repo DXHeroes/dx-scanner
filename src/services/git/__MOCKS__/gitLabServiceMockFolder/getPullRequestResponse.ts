@@ -53,6 +53,7 @@ export const getPullRequestResponse = (params?: Partial<PullRequest>): PullReque
         '- [ ] Label as ~security and @ mention `@gitlab-com/gl-security/appsec`\r\n' +
         '- [ ] The MR includes necessary changes to maintain consistency between UI, API, email, or other methods\r\n' +
         '- [ ] Security reports checked/validated by a reviewer from the AppSec team ',
+      sha: '1234567890',
       createdAt: '2020-03-02T14:43:01.355Z',
       updatedAt: '2020-03-02T14:52:49.309Z',
       closedAt: null,
