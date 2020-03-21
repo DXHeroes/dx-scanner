@@ -47,6 +47,7 @@ export class Scanner {
     @inject(ScanningStrategyExplorer) scanStrategyExplorer: ScanningStrategyExplorer,
     @inject(Types.DiscoveryContextFactory) discoveryContextFactory: DiscoveryContextFactory,
     @inject(FileSystemService) fileSystemService: FileSystemService,
+    // inject all practices registered under Types.Practice in inversify config
     @multiInject(Types.Practice) practices: IPracticeWithMetadata[],
     @inject(Types.ArgumentsProvider) argumentsProvider: ArgumentsProvider,
   ) {
@@ -158,6 +159,7 @@ export class Scanner {
     if (!isOnline) {
       return { serviceType, accessType, remoteUrl, localPath, isOnline };
     }
+
     if (localPath === undefined && remoteUrl !== undefined && serviceType !== ServiceType.local) {
       const cloneUrl = new url.URL(remoteUrl);
       localPath = fs.mkdtempSync(path.join(os.tmpdir(), 'dx-scanner'));

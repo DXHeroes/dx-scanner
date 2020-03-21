@@ -22,7 +22,6 @@ export const Types = {
   DiscoveryContextFactory: Symbol('Factory<DiscoveryContext>'),
   //Useful constants
   //Discovery context level
-
   RepositoryConfig: Symbol('RepositoryConfig'),
 
   //Scanner context level
