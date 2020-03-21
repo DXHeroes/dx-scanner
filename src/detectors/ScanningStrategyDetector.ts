@@ -1,13 +1,14 @@
-import { inject, injectable } from 'inversify';
 import debug from 'debug';
-import { IDetector } from './IDetector';
-import { GitHubService, BitbucketService, GitServiceUtils } from '../services';
-import { Types } from '../types';
-import { ArgumentsProvider } from '../scanner';
-import { ScanningStrategyDetectorUtils } from './utils/ScanningStrategyDetectorUtils';
-import { GitLabService } from '../services/gitlab/GitLabService';
-import { RepositoryConfig } from '../scanner/RepositoryConfig';
+import { inject, injectable } from 'inversify';
 import { has } from 'lodash';
+import { ArgumentsProvider } from '../scanner';
+import { RepositoryConfig } from '../scanner/RepositoryConfig';
+import { BitbucketService, GitHubService, GitServiceUtils } from '../services';
+import { GitLabService } from '../services/gitlab/GitLabService';
+import { Types } from '../types';
+import { IDetector } from './IDetector';
+import { ScanningStrategyDetectorUtils } from './utils/ScanningStrategyDetectorUtils';
+import { ErrorFactory } from '../lib/errors';
 
 @injectable()
 export class ScanningStrategyDetector implements IDetector<string, ScanningStrategy> {
@@ -39,24 +40,8 @@ export class ScanningStrategyDetector implements IDetector<string, ScanningStrat
     let remoteUrl: RemoteUrl = undefined;
     const path = ScanningStrategyDetectorUtils.normalizePath(this.argumentsProvider.uri);
 
-    //this.repositoryConfig.remoteUrl ||
     const serviceType = await this.determineInputType(this.repositoryConfig.remoteUrl || path);
     this.d('serviceType', serviceType);
-    let remoteService;
-    // TODOOOOO
-    // TODOOOOO
-    // TODOOOOO
-    // TODOOOOO
-    console.log(this.repositoryConfig.remoteUrl, 'remoteurl');
-    if (ScanningStrategyDetectorUtils.isGitHubPath(this.repositoryConfig.remoteUrl!)) {
-      remoteService = { serviceType: ServiceType.github, remoteUrl: this.repositoryConfig.remoteUrl! };
-    } else if (ScanningStrategyDetectorUtils.isBitbucketPath(this.repositoryConfig.remoteUrl!)) {
-      remoteService = { serviceType: ServiceType.git, remoteUrl: this.repositoryConfig.remoteUrl! };
-    } else if (ScanningStrategyDetectorUtils.isGitLabPath(this.repositoryConfig.remoteUrl!)) {
-      remoteService = { serviceType: ServiceType.gitlab, remoteUrl: this.repositoryConfig.remoteUrl! };
-    }
-    remoteService = { serviceType, remoteUrl: this.repositoryConfig.remoteUrl };
-    console.log(remoteService, 'remoteSer');
 
     // try to determine remote origin if input is local file system
     if (serviceType === ServiceType.local) {
@@ -67,9 +52,6 @@ export class ScanningStrategyDetector implements IDetector<string, ScanningStrat
         accessType = await this.determineRemoteAccessType({ remoteUrl: path, serviceType });
       }
     } else {
-      //remoteUrl = path;
-      // remoteUrl = this.repositoryConfig.remoteUrl;
-
       accessType = await this.determineRemoteAccessType({ remoteUrl: this.repositoryConfig.remoteUrl, serviceType });
       this.isOnline = true;
     }
@@ -84,23 +66,19 @@ export class ScanningStrategyDetector implements IDetector<string, ScanningStrat
   }
 
   private determineInputType = async (path: string): Promise<ServiceType | undefined> => {
-    console.log(path, 'path');
     if (ScanningStrategyDetectorUtils.isGitHubPath(path)) return ServiceType.github;
     if (ScanningStrategyDetectorUtils.isBitbucketPath(path)) return ServiceType.bitbucket;
     if (ScanningStrategyDetectorUtils.isGitLabPath(path)) return ServiceType.gitlab;
 
     if (ScanningStrategyDetectorUtils.isLocalPath(path)) return ServiceType.local;
-    console.log('test');
-    // return undefined if we don't know yet the service type
-    //  (e.g. because of missing credentials for Gitlab)
-    const remotelyDetectedService = await this.determineRemoteServiceType();
-    console.log(remotelyDetectedService, 'remotelyDet');
 
-    return remotelyDetectedService;
+    // Try to determine gitLab service type if it's self-hosted
+    const remotelyDetectedService = await this.determineGitLabRemoteServiceType();
+    if (remotelyDetectedService) return remotelyDetectedService;
 
-    // throw ErrorFactory.newInternalError(
-    //   `Unable to detect scanning strategy. It seems that the service is not implemented yet. (Input path: ${path})`,
-    // );
+    throw ErrorFactory.newInternalError(
+      `Unable to detect scanning strategy. It seems that the service is not implemented yet. (Input path: ${path})`,
+    );
   };
 
   private determineRemoteAccessType = async (remoteService: RemoteService): Promise<AccessType | undefined> => {
@@ -185,11 +163,10 @@ export class ScanningStrategyDetector implements IDetector<string, ScanningStrat
     return undefined;
   };
 
-  private determineRemoteServiceType = async (): Promise<ServiceType | undefined> => {
+  private determineGitLabRemoteServiceType = async (): Promise<ServiceType | undefined> => {
     try {
       const response = await this.gitLabService.checkVersion();
       if (has(response.data, 'version') && has(response.data, 'revision')) {
-        console.log('has version');
         return ServiceType.gitlab;
       }
     } catch (error) {
