@@ -27,6 +27,7 @@ describe('CIReporter', () => {
     it('one practicing practice', () => {
       const result = new CIReporter(
         argumentsProviderFactory({ uri: '.' }),
+        repositoryConfig,
         services.githubService,
         services.bitbucketService,
         services.gitLabService,
@@ -38,6 +39,7 @@ describe('CIReporter', () => {
     it('one practicing practice and one not practicing', () => {
       const result = new CIReporter(
         argumentsProviderFactory({ uri: '.' }),
+        repositoryConfig,
         services.githubService,
         services.bitbucketService,
         services.gitLabService,
@@ -49,6 +51,7 @@ describe('CIReporter', () => {
     it('all impacted practices', () => {
       const result = new CIReporter(
         argumentsProviderFactory({ uri: '.' }),
+        repositoryConfig,
         services.githubService,
         services.bitbucketService,
         services.gitLabService,

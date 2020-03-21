@@ -129,7 +129,7 @@ export class BitbucketService implements IVCSService {
           },
           url: val.links.html.href,
           body: val.description,
-          sha: val.merge_commit.hash,
+          sha: val.source.commit.hash,
           createdAt: val.created_on,
           updatedAt: val.updated_on,
           closedAt:
@@ -188,7 +188,7 @@ export class BitbucketService implements IVCSService {
       },
       url: response.data.links.html.href,
       body: response.data.summary.raw,
-      sha: response.data.merge_commit.hash,
+      sha: response.data.source.commit.hash,
       createdAt: response.data.created_on,
       updatedAt: response.data.updated_on,
       closedAt:
