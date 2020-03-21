@@ -68,35 +68,6 @@ describe('ScanningStrategyDetectorUtils', () => {
         expect(result).toEqual(true);
       });
     });
-
-    describe('self-hosted', () => {
-      it('GitLab path', async () => {
-        nock('https://git.example.com')
-          .get('/api/v4/version')
-          .reply(200, { version: '1.0.0', revision: 'any' });
-
-        const result = ScanningStrategyDetectorUtils.isGitLabPath('https://git.example.com/DXHeroes/dx-scanner');
-        expect(result).toEqual(true);
-      });
-
-      it('path but without credentials', async () => {
-        nock('https://git.example.com')
-          .get('/api/v4/version')
-          .reply(403);
-
-        const result = ScanningStrategyDetectorUtils.isGitLabPath('https://git.example.com/DXHeroes/dx-scanner');
-        expect(result).toEqual(undefined);
-      });
-
-      it('but not GitLab', async () => {
-        nock('https://git.example.com')
-          .get('/api/v4/version')
-          .reply(404);
-
-        const result = ScanningStrategyDetectorUtils.isGitLabPath('https://git.example.com/DXHeroes/dx-scanner');
-        expect(result).toEqual(false);
-      });
-    });
   });
 
   describe('#normalizePath', () => {

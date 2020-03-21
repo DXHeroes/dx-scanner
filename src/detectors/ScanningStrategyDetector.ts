@@ -48,19 +48,17 @@ export class ScanningStrategyDetector implements IDetector<string, ScanningStrat
       remoteUrl = this.repositoryConfig.remoteUrl;
 
       if (remoteUrl) {
-        this.isOnline = true;
         accessType = await this.determineRemoteAccessType({ remoteUrl: path, serviceType });
       }
     } else {
       accessType = await this.determineRemoteAccessType({ remoteUrl: this.repositoryConfig.remoteUrl, serviceType });
-      this.isOnline = true;
     }
 
     return {
       serviceType,
       accessType,
       remoteUrl: this.repositoryConfig.remoteUrl,
-      localPath: serviceType === ServiceType.local ? path : undefined,
+      localPath: ScanningStrategyDetectorUtils.isLocalPath(path) ? path : undefined,
       isOnline: this.isOnline,
     };
   }
@@ -94,6 +92,7 @@ export class ScanningStrategyDetector implements IDetector<string, ScanningStrat
       } catch (error) {
         this.d(error.message);
         if (error.status === 401 || error.status === 404 || error.status === 403) {
+          this.isOnline = true;
           return AccessType.unknown;
         }
         if (error.status === 500) {
@@ -104,6 +103,7 @@ export class ScanningStrategyDetector implements IDetector<string, ScanningStrat
       }
 
       if (response.status === 200) {
+        this.isOnline = true;
         if (response.data.private === true) {
           return AccessType.private;
         }
@@ -121,6 +121,7 @@ export class ScanningStrategyDetector implements IDetector<string, ScanningStrat
       } catch (error) {
         this.d(error.message);
         if (error.code === 401 || error.code === 404 || error.code === 403) {
+          this.isOnline = true;
           return AccessType.unknown;
         }
         if (error.status === 500) {
@@ -153,6 +154,8 @@ export class ScanningStrategyDetector implements IDetector<string, ScanningStrat
         ) {
           if (error.response.status === 500) {
             this.isOnline = false;
+          } else {
+            this.isOnline = true;
           }
           return AccessType.unknown;
         }
