@@ -1,6 +1,6 @@
 import { blue, bold, green, grey, italic, red, reset, cyan, yellow } from 'colors';
 import { injectable, inject } from 'inversify';
-import { PracticeEvaluationResult, PracticeImpact } from '../model';
+import { PracticeEvaluationResult } from '../model';
 import { IReporter, PracticeWithContextForReporter } from './IReporter';
 import { ReporterUtils } from './ReporterUtils';
 import { GitServiceUtils } from '../services/git/GitServiceUtils';
