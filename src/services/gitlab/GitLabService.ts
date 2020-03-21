@@ -48,7 +48,6 @@ export class GitLabService implements IVCSService {
   ) {
     this.argumentsProvider = argumentsProvider;
     this.repositoryConfig = repositoryConfig;
-    const parsedUrl = GitServiceUtils.parseUrl(argumentsProvider.uri);
     this.host = repositoryConfig.host!;
 
     this.cache = new InMemoryCache();
