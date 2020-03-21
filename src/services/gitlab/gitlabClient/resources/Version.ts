@@ -7,7 +7,6 @@ export class Version extends GitLabClient {
 
   async check(): Promise<any> {
     const endpoint = 'version';
-
     const response = await this.api.get(endpoint);
     return response;
   }

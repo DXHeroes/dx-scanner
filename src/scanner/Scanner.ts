@@ -31,6 +31,7 @@ import { PracticeContext } from '../contexts/practice/PracticeContext';
 import { ArgumentsProvider } from '.';
 import { ErrorFactory } from '../lib/errors';
 import { ScanningStrategyExplorer } from './ScanningStrategyExplorer';
+import { RepositoryConfig } from './RepositoryConfig';
 
 @injectable()
 export class Scanner {
@@ -40,6 +41,7 @@ export class Scanner {
   private readonly fileSystemService: FileSystemService;
   private readonly practices: IPracticeWithMetadata[];
   private readonly argumentsProvider: ArgumentsProvider;
+  // private readonly repositoryConfig: RepositoryConfig;
   private readonly d: debug.Debugger;
   private shouldExitOnEnd = false;
   private allDetectedComponents: ProjectComponentAndLangContext[] | undefined;
@@ -52,6 +54,7 @@ export class Scanner {
     // inject all practices registered under Types.Practice in inversify config
     @multiInject(Types.Practice) practices: IPracticeWithMetadata[],
     @inject(Types.ArgumentsProvider) argumentsProvider: ArgumentsProvider,
+    // @inject(Types.RepositoryConfig) repositoryConfig: RepositoryConfig,
   ) {
     this.scanStrategyExplorer = scanStrategyExplorer;
     this.discoveryContextFactory = discoveryContextFactory;
@@ -59,6 +62,8 @@ export class Scanner {
     this.fileSystemService = fileSystemService;
     this.practices = practices;
     this.argumentsProvider = argumentsProvider;
+    // this.repositoryConfig = repositoryConfig;
+
     this.d = debug('scanner');
     this.allDetectedComponents = undefined;
   }
@@ -165,8 +170,10 @@ export class Scanner {
     if (!isOnline) {
       return { serviceType, accessType, remoteUrl, localPath, isOnline };
     }
-
+    console.log(remoteUrl, 'remoteUrl in scanningStrategy');
     if (localPath === undefined && remoteUrl !== undefined && serviceType !== ServiceType.local) {
+      console.log(remoteUrl, 'remUrl');
+      // console.log(this.repositoryConfig.remoteUrl, 'config remote');
       const cloneUrl = new url.URL(remoteUrl);
       localPath = fs.mkdtempSync(path.join(os.tmpdir(), 'dx-scanner'));
 

@@ -41,20 +41,24 @@ export class ScanningStrategyDetector implements IDetector<string, ScanningStrat
     let remoteUrl: RemoteUrl = undefined;
     const path = ScanningStrategyDetectorUtils.normalizePath(this.argumentsProvider.uri);
 
-    const serviceType = await this.determineInputType(path);
+    //this.repositoryConfig.remoteUrl ||
+    const serviceType = await this.determineInputType(this.repositoryConfig.remoteUrl || path);
     this.d('serviceType', serviceType);
-
+    let remoteService;
     // TODOOOOO
     // TODOOOOO
     // TODOOOOO
     // TODOOOOO
-    // if (ScanningStrategyDetectorUtils.isGitHubPath(this.repositoryConfig.remoteUrl!)) {
-    //   remoteService = { serviceType: ServiceType.github, remoteUrl: this.repositoryConfig.remoteUrl! };
-    // } else if (ScanningStrategyDetectorUtils.isBitbucketPath(this.repositoryConfig.remoteUrl!)) {
-    //   remoteService = { serviceType: ServiceType.git, remoteUrl: this.repositoryConfig.remoteUrl! };
-    // } else {
-    //   remoteService = { serviceType: ServiceType.gitlab, remoteUrl: this.repositoryConfig.remoteUrl! };
-    // }
+    console.log(this.repositoryConfig.remoteUrl, 'remoteurl');
+    if (ScanningStrategyDetectorUtils.isGitHubPath(this.repositoryConfig.remoteUrl!)) {
+      remoteService = { serviceType: ServiceType.github, remoteUrl: this.repositoryConfig.remoteUrl! };
+    } else if (ScanningStrategyDetectorUtils.isBitbucketPath(this.repositoryConfig.remoteUrl!)) {
+      remoteService = { serviceType: ServiceType.git, remoteUrl: this.repositoryConfig.remoteUrl! };
+    } else if (ScanningStrategyDetectorUtils.isGitLabPath(this.repositoryConfig.remoteUrl!, this.argumentsProvider.auth)) {
+      remoteService = { serviceType: ServiceType.gitlab, remoteUrl: this.repositoryConfig.remoteUrl! };
+    }
+    remoteService = { serviceType, remoteUrl: this.repositoryConfig.remoteUrl };
+    console.log(remoteService, 'remoteSer');
 
     // try to determine remote origin if input is local file system
     if (serviceType === ServiceType.local) {
@@ -65,30 +69,34 @@ export class ScanningStrategyDetector implements IDetector<string, ScanningStrat
         accessType = await this.determineRemoteAccessType({ remoteUrl: path, serviceType });
       }
     } else {
-      remoteUrl = path;
-      accessType = await this.determineRemoteAccessType({ remoteUrl, serviceType });
+      //remoteUrl = path;
+      // remoteUrl = this.repositoryConfig.remoteUrl;
+
+      accessType = await this.determineRemoteAccessType({ remoteUrl: this.repositoryConfig.remoteUrl, serviceType });
       this.isOnline = true;
     }
 
     return {
       serviceType,
       accessType,
-      remoteUrl,
+      remoteUrl: this.repositoryConfig.remoteUrl,
       localPath: serviceType === ServiceType.local ? path : undefined,
       isOnline: this.isOnline,
     };
   }
 
   private determineInputType = async (path: string): Promise<ServiceType | undefined> => {
+    console.log(path, 'path');
     if (ScanningStrategyDetectorUtils.isGitHubPath(path)) return ServiceType.github;
     if (ScanningStrategyDetectorUtils.isBitbucketPath(path)) return ServiceType.bitbucket;
     if (ScanningStrategyDetectorUtils.isGitLabPath(path)) return ServiceType.gitlab;
 
     if (ScanningStrategyDetectorUtils.isLocalPath(path)) return ServiceType.local;
-
+    console.log('test');
     // return undefined if we don't know yet the service type
     //  (e.g. because of missing credentials for Gitlab)
     const remotelyDetectedService = await this.determineRemoteServiceType();
+    console.log(remotelyDetectedService, 'remotelyDet');
 
     return remotelyDetectedService;
 
@@ -183,6 +191,7 @@ export class ScanningStrategyDetector implements IDetector<string, ScanningStrat
     try {
       const response = await this.gitLabService.checkVersion();
       if (has(response.data, 'version') && has(response.data, 'revision')) {
+        console.log('has version');
         return ServiceType.gitlab;
       }
     } catch (error) {
