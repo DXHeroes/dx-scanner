@@ -1,31 +1,27 @@
 import { Container } from 'inversify';
 import { DirectoryJSON } from 'memfs/lib/volume';
+import { bindDiscoveryContext } from './contexts/discovery/discoveryContextBinding';
+import { PracticeContext } from './contexts/practice/PracticeContext';
+import { ScanningStrategyDetector } from './detectors';
+import { packageJSONContents } from './detectors/__MOCKS__/JavaScript/packageJSONContents.mock';
+import {
+  CollaborationInspector,
+  FileInspector,
+  IFileInspector,
+  IPackageInspector,
+  IssueTrackingInspector,
+  JavaScriptPackageInspector,
+} from './inspectors';
+import { ICollaborationInspector } from './inspectors/ICollaborationInspector';
+import { IIssueTrackingInspector } from './inspectors/IIssueTrackingInspector';
 import { ProgrammingLanguage, ProjectComponent, ProjectComponentFramework, ProjectComponentPlatform, ProjectComponentType } from './model';
 import { practices } from './practices';
 import { IPracticeWithMetadata } from './practices/DxPracticeDecorator';
-import { Types } from './types';
-import { IReporter, JSONReporter, CLIReporter, CIReporter, FixReporter } from './reporters';
-import { ScanningStrategyDetector } from './detectors';
-import {
-  FileInspector,
-  IssueTrackingInspector,
-  CollaborationInspector,
-  JavaScriptPackageInspector,
-  IFileInspector,
-  IPackageInspector,
-} from './inspectors';
-import { bindScanningContext } from './contexts/scanner/scannerContextBinding';
-import { Scanner, ScannerUtils } from './scanner';
-import { FileSystemService, GitHubService } from './services';
-import { BitbucketService } from './services/bitbucket/BitbucketService';
-import { ICollaborationInspector } from './inspectors/ICollaborationInspector';
-import { IIssueTrackingInspector } from './inspectors/IIssueTrackingInspector';
-import { PracticeContext } from './contexts/practice/PracticeContext';
-import { packageJSONContents } from './detectors/__MOCKS__/JavaScript/packageJSONContents.mock';
-import { argumentsProviderFactory } from './test/factories/ArgumentsProviderFactory';
-import { ArgumentsProvider } from './scanner';
-import { bindDiscoveryContext } from './contexts/discovery/discoveryContextBinding';
+import { ArgumentsProvider, Scanner, ScannerUtils } from './scanner';
 import { ScanningStrategyExplorer } from './scanner/ScanningStrategyExplorer';
+import { FileSystemService, GitHubService } from './services';
+import { argumentsProviderFactory } from './test/factories/ArgumentsProviderFactory';
+import { Types } from './types';
 
 export const createRootContainer = (args: ArgumentsProvider): Container => {
   const container = new Container();
@@ -35,10 +31,6 @@ export const createRootContainer = (args: ArgumentsProvider): Container => {
 
   container.bind(Scanner).toSelf();
   container.bind(FileSystemService).toSelf();
-
-  // container.bind(GitHubService).toSelf();
-  // container.bind(BitbucketService).toSelf();
-  // container.bind(GitLabService).toSelf();
 
   // register practices
   practices.forEach((practice) => {

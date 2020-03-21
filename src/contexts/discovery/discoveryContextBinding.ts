@@ -1,11 +1,10 @@
 import { Container } from 'inversify';
-import { DiscoveryContextFactory, Types } from '../../types';
-import { RepositoryConfig } from '../../scanner/RepositoryConfig';
-import { ScanningStrategyExplorer } from '../../scanner/ScanningStrategyExplorer';
-import { bindScanningContext } from '../scanner/scannerContextBinding';
-import { FileSystemService, GitHubService, BitbucketService } from '../../services';
-import { GitLabService } from '../../services/gitlab/GitLabService';
 import { ScanningStrategyDetector } from '../../detectors';
+import { RepositoryConfig } from '../../scanner/RepositoryConfig';
+import { BitbucketService, GitHubService } from '../../services';
+import { GitLabService } from '../../services/gitlab/GitLabService';
+import { DiscoveryContextFactory, Types } from '../../types';
+import { bindScanningContext } from '../scanner/scannerContextBinding';
 import { DiscoveryContext } from './DiscoveryContext';
 
 export const bindDiscoveryContext = (container: Container) => {
