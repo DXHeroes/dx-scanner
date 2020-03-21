@@ -13,26 +13,28 @@ import { ScanningStrategyDetectorUtils } from '../detectors/utils/ScanningStrate
 import _ from 'lodash';
 import { GitLabService } from '../services/gitlab/GitLabService';
 import { GitLabClient } from '../services/gitlab/gitlabClient/gitlabUtils';
+import { RepositoryConfig } from '../scanner/RepositoryConfig';
 
 @injectable()
 export class CIReporter implements IReporter {
   private readonly argumentsProvider: ArgumentsProvider;
-  private gitHubService: GitHubService;
-  private bitbucketService: BitbucketService;
-  private gitLabService: GitLabService;
-  //private readonly scanningStrategy: ScanningStrategy;
+  private readonly repositoryConfig: RepositoryConfig;
+  private readonly gitHubService: GitHubService;
+  private readonly bitbucketService: BitbucketService;
+  private readonly gitLabService: GitLabService;
   private config: CIReporterConfig | undefined;
-  private d: debug.Debugger;
+  private readonly d: debug.Debugger;
 
   constructor(
     @inject(Types.ArgumentsProvider) argumentsProvider: ArgumentsProvider,
+    @inject(Types.RepositoryConfig) repositoryConfig: RepositoryConfig,
     @inject(GitHubService) gitHubService: GitHubService,
     @inject(BitbucketService) bitbucketService: BitbucketService,
     @inject(GitLabService) gitLabService: GitLabService,
-    //@inject(Types.ScanningStrategy) scanningStrategy: ScanningStrategy,
   ) {
     this.d = debug('CIReporter');
     this.argumentsProvider = argumentsProvider;
+    this.repositoryConfig = repositoryConfig;
     this.gitHubService = gitHubService;
     this.bitbucketService = bitbucketService;
     this.gitLabService = gitLabService;
@@ -155,11 +157,13 @@ export class CIReporter implements IReporter {
     } else if ((ev.GITLAB_CI = 'true')) {
       // detect GitLab config
       this.d('Is GitLab');
-      const prs = await this.gitLabService.listPullRequests(
-        ev.CI_PROJECT_NAMESPACE!,
-        ev.CI_PROJECT_NAME! /* { filter: { sourceBranch: ev.CI_COMMIT_BRANCH } } */,
-      );
-      const prForThisPipeline = prs.items.find((p) => p.sha === ev.CI_COMMIT_SHA);
+      const client = new GitLabClient({
+        token: this.argumentsProvider.auth,
+        host: this.repositoryConfig.baseUrl,
+      });
+
+      const prs = await client.MergeRequests.list(ev.CI_PROJECT_ID!, { filter: { sourceBranch: ev.CI_COMMIT_BRANCH } });
+      const prForThisPipeline = prs.data.find((p) => p.sha === ev.CI_COMMIT_SHA);
       if (!prForThisPipeline) {
         this.d('Can not find relevant Merge Request', ev.CI_PROJECT_ID, ev.CI_COMMIT_BRANCH, ev.CI_COMMIT_SHA);
         return undefined;
