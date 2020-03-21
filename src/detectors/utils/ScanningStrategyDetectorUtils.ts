@@ -1,6 +1,3 @@
-import debug from 'debug';
-const d = debug('ScanningStrategyDetectorUtils');
-
 export class ScanningStrategyDetectorUtils {
   static isLocalPath(path: string): boolean {
     return this.testPath(path, /^(?!http|ssh).*$/) && !this.isRemoteServicePath(path);
@@ -19,31 +16,9 @@ export class ScanningStrategyDetectorUtils {
    *  - if the url is not gitlab.com it tests the version endpoint of gitlab then
    *  - if the version endpoint returns unauthorized, the body of Scanner prompts user for credentials
    */
-  static isGitLabPath(path: string, auth?: string): boolean | undefined {
+  static isGitLabPath(path: string): boolean | undefined {
     if (this.testPath(path, /gitlab\.com/)) return true;
     return undefined;
-
-    // const parsedUrl = GitServiceUtils.parseUrl(path);
-    // if (parsedUrl.protocol === 'file') return false;
-
-    // // set private token for GitLab
-    // const headers: { [header: string]: string } = {};
-    // if (auth) headers['Authorization'] = `Bearer ${auth}`;
-
-    // try {
-    //   const response = await axios.create({ baseURL: `${parsedUrl.protocol}://${parsedUrl.host}`, headers }).get('/api/v4/version');
-
-    //   return has(response.data, 'version') && has(response.data, 'revision');
-    // } catch (error) {
-    //   d(error); //debug error
-
-    //   if (error.response?.status === 401 || error.response?.status === 403) {
-    //     // return undefined if we're not sure that the service is Gitlab
-    //     //  - it prompts user for a credentials
-    //     return undefined;
-    //   }
-    //   return false;
-    // }
   }
 
   static isRemoteServicePath(path: string): boolean {

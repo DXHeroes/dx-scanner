@@ -1,13 +1,12 @@
 import { Repository, ProgrammingLanguage, LanguageAtPath, ProjectComponent } from './model';
 import { Git } from './services/git/Git';
-import { ScanningStrategy, ScanningStrategyDetector } from './detectors/ScanningStrategyDetector';
+import { ScanningStrategy } from './detectors/ScanningStrategyDetector';
 import { ScannerContext } from './contexts/scanner/ScannerContext';
 import { LanguageContext } from './contexts/language/LanguageContext';
 import { IProjectComponentDetector } from './detectors/IProjectComponentDetector';
 import { PracticeContext } from './contexts/practice/PracticeContext';
 import { ProjectComponentContext } from './contexts/projectComponent/ProjectComponentContext';
 import { RepositoryConfig } from './scanner/RepositoryConfig';
-import { ScanningStrategyExplorer } from './scanner/ScanningStrategyExplorer';
 import { DiscoveryContext } from './contexts/discovery/DiscoveryContext';
 
 export const Types = {

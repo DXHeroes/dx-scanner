@@ -1,9 +1,8 @@
-import { injectable, multiInject, inject } from 'inversify';
+import { injectable, inject } from 'inversify';
 import { Types, ScannerContextFactory } from '../../types';
 import { ContextBase } from '../ContextBase';
 import { ErrorFactory } from '../../lib/errors';
 import { ScanningStrategyDetector, ScanningStrategy } from '../../detectors';
-import { IReporter } from '../../reporters';
 
 @injectable()
 export class DiscoveryContext extends ContextBase {

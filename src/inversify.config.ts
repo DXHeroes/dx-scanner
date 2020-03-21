@@ -4,7 +4,6 @@ import { ProgrammingLanguage, ProjectComponent, ProjectComponentFramework, Proje
 import { practices } from './practices';
 import { IPracticeWithMetadata } from './practices/DxPracticeDecorator';
 import { Types } from './types';
-import { IReporter, JSONReporter, CLIReporter, CIReporter, FixReporter } from './reporters';
 import { ScanningStrategyDetector } from './detectors';
 import {
   FileInspector,
@@ -14,10 +13,8 @@ import {
   IFileInspector,
   IPackageInspector,
 } from './inspectors';
-import { bindScanningContext } from './contexts/scanner/scannerContextBinding';
 import { Scanner, ScannerUtils } from './scanner';
 import { FileSystemService, GitHubService } from './services';
-import { BitbucketService } from './services/bitbucket/BitbucketService';
 import { ICollaborationInspector } from './inspectors/ICollaborationInspector';
 import { IIssueTrackingInspector } from './inspectors/IIssueTrackingInspector';
 import { PracticeContext } from './contexts/practice/PracticeContext';

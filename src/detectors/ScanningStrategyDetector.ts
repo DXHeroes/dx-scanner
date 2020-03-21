@@ -1,10 +1,8 @@
 import { inject, injectable } from 'inversify';
-import git from 'simple-git/promise';
 import debug from 'debug';
 import { IDetector } from './IDetector';
 import { GitHubService, BitbucketService, GitServiceUtils } from '../services';
 import { Types } from '../types';
-import { ErrorFactory } from '../lib/errors';
 import { ArgumentsProvider } from '../scanner';
 import { ScanningStrategyDetectorUtils } from './utils/ScanningStrategyDetectorUtils';
 import { GitLabService } from '../services/gitlab/GitLabService';
@@ -54,7 +52,7 @@ export class ScanningStrategyDetector implements IDetector<string, ScanningStrat
       remoteService = { serviceType: ServiceType.github, remoteUrl: this.repositoryConfig.remoteUrl! };
     } else if (ScanningStrategyDetectorUtils.isBitbucketPath(this.repositoryConfig.remoteUrl!)) {
       remoteService = { serviceType: ServiceType.git, remoteUrl: this.repositoryConfig.remoteUrl! };
-    } else if (ScanningStrategyDetectorUtils.isGitLabPath(this.repositoryConfig.remoteUrl!, this.argumentsProvider.auth)) {
+    } else if (ScanningStrategyDetectorUtils.isGitLabPath(this.repositoryConfig.remoteUrl!)) {
       remoteService = { serviceType: ServiceType.gitlab, remoteUrl: this.repositoryConfig.remoteUrl! };
     }
     remoteService = { serviceType, remoteUrl: this.repositoryConfig.remoteUrl };

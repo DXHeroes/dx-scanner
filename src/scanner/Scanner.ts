@@ -31,7 +31,6 @@ import { PracticeContext } from '../contexts/practice/PracticeContext';
 import { ArgumentsProvider } from '.';
 import { ErrorFactory } from '../lib/errors';
 import { ScanningStrategyExplorer } from './ScanningStrategyExplorer';
-import { RepositoryConfig } from './RepositoryConfig';
 
 @injectable()
 export class Scanner {
