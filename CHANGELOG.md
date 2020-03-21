@@ -1,3 +1,19 @@
+# [3.4.0](https://github.com/dxheroes/dx-scanner/compare/v3.3.0...v3.4.0) (2020-03-21)
+
+
+### Bug Fixes
+
+* undefined error on non-existing versions ([6ab4535](https://github.com/dxheroes/dx-scanner/commit/6ab4535d0c105feae983ef26201856e733fc092d))
+* using error factory instead in rethrowing ([1c76496](https://github.com/dxheroes/dx-scanner/commit/1c76496f58c70d647ff8f03595b40e15e765c865))
+* **semver-check:** add semver checker tests ([4ada25f](https://github.com/dxheroes/dx-scanner/commit/4ada25f1d4daf15ca3cb4fa05a3f0135120ca5e6))
+* **semver-check:** return only updates of the required semver level ([7456f2a](https://github.com/dxheroes/dx-scanner/commit/7456f2a456aa52584b0aab512670d31bc93ce7bf))
+* **semver-check:** update Java.DependenciesVersionMinorPatchLevel test so that it does not increase major level ([be4fffd](https://github.com/dxheroes/dx-scanner/commit/be4fffd6a1b8bb26e4f089e60b8eb34c8da8bf87))
+
+
+### Features
+
+* practice to check for specified versions ([1c9ecef](https://github.com/dxheroes/dx-scanner/commit/1c9ecef41b7925e12a9013b1fba5b5007c9701af))
+
 # [3.3.0](https://github.com/dxheroes/dx-scanner/compare/v3.2.0...v3.3.0) (2020-03-19)
 
 
