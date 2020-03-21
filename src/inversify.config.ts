@@ -19,10 +19,11 @@ import { practices } from './practices';
 import { IPracticeWithMetadata } from './practices/DxPracticeDecorator';
 import { ArgumentsProvider, Scanner, ScannerUtils } from './scanner';
 import { ScanningStrategyExplorer } from './scanner/ScanningStrategyExplorer';
-import { FileSystemService, GitHubService } from './services';
+import { FileSystemService, GitHubService, BitbucketService } from './services';
 import { argumentsProviderFactory } from './test/factories/ArgumentsProviderFactory';
 import { Types } from './types';
 import { RepositoryConfig } from './scanner/RepositoryConfig';
+import { GitLabService } from './services/gitlab/GitLabService';
 
 export const createRootContainer = (args: ArgumentsProvider): Container => {
   const container = new Container();
@@ -71,8 +72,14 @@ export const createTestContainer = (
   container.bind(Types.IPackageInspector).to(JavaScriptPackageInspector);
   container.bind(Types.ICollaborationInspector).to(CollaborationInspector);
   container.bind(Types.IIssueTrackingInspector).to(IssueTrackingInspector);
+  container.bind(ScanningStrategyDetector).toSelf();
+
+  container.bind(GitHubService).toSelf();
+  container.bind(BitbucketService).toSelf();
+  container.bind(GitLabService).toSelf();
 
   const scanningStrategyExplorer = container.get<ScanningStrategyExplorer>(ScanningStrategyExplorer);
+  const scanningStrategyDetector = container.get<ScanningStrategyDetector>(ScanningStrategyDetector);
   const fileSystemService = container.get<FileSystemService>(FileSystemService);
   const fileInspector = container.get<IFileInspector>(Types.IFileInspector);
   const issueTrackingInspector = container.get<IssueTrackingInspector>(Types.IIssueTrackingInspector);
@@ -105,6 +112,7 @@ export const createTestContainer = (
     scanningStrategyExplorer,
     fileSystemService,
     virtualFileSystemService,
+    scanningStrategyDetector,
   };
 };
 
@@ -112,6 +120,7 @@ export interface TestContainerContext {
   container: Container;
   practiceContext: PracticeContext;
   scanningStrategyExplorer: ScanningStrategyExplorer;
+  scanningStrategyDetector: ScanningStrategyDetector;
 
   /**
    * Services
