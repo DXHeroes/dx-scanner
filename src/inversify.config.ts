@@ -22,6 +22,7 @@ import { ScanningStrategyExplorer } from './scanner/ScanningStrategyExplorer';
 import { FileSystemService, GitHubService } from './services';
 import { argumentsProviderFactory } from './test/factories/ArgumentsProviderFactory';
 import { Types } from './types';
+import { RepositoryConfig } from './scanner/RepositoryConfig';
 
 export const createRootContainer = (args: ArgumentsProvider): Container => {
   const container = new Container();
@@ -55,7 +56,15 @@ export const createTestContainer = (
   const vfss = new FileSystemService({ isVirtual: true });
   vfss.setFileSystem(structure);
 
+  const repositoryConfig: RepositoryConfig = {
+    baseUrl: undefined,
+    host: undefined,
+    protocol: undefined,
+    remoteUrl: undefined,
+  };
+
   // FileSystemService as default ProjectBrowser
+  container.bind(Types.RepositoryConfig).toConstantValue(repositoryConfig);
   container.bind(Types.IProjectFilesBrowser).toConstantValue(vfss);
   container.bind(Types.IContentRepositoryBrowser).to(GitHubService);
   container.bind(Types.IFileInspector).to(FileInspector);
@@ -63,7 +72,7 @@ export const createTestContainer = (
   container.bind(Types.ICollaborationInspector).to(CollaborationInspector);
   container.bind(Types.IIssueTrackingInspector).to(IssueTrackingInspector);
 
-  const scanningStrategyDetector = container.get<ScanningStrategyDetector>(ScanningStrategyDetector);
+  const scanningStrategyExplorer = container.get<ScanningStrategyExplorer>(ScanningStrategyExplorer);
   const fileSystemService = container.get<FileSystemService>(FileSystemService);
   const fileInspector = container.get<IFileInspector>(Types.IFileInspector);
   const issueTrackingInspector = container.get<IssueTrackingInspector>(Types.IIssueTrackingInspector);
@@ -93,7 +102,7 @@ export const createTestContainer = (
   return {
     container,
     practiceContext,
-    scanningStrategyDetector,
+    scanningStrategyExplorer,
     fileSystemService,
     virtualFileSystemService,
   };
@@ -102,7 +111,7 @@ export const createTestContainer = (
 export interface TestContainerContext {
   container: Container;
   practiceContext: PracticeContext;
-  scanningStrategyDetector: ScanningStrategyDetector;
+  scanningStrategyExplorer: ScanningStrategyExplorer;
 
   /**
    * Services
