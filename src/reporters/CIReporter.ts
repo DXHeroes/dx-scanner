@@ -171,7 +171,7 @@ export class CIReporter implements IReporter {
 
       return {
         service: VCSServiceType.gitlab,
-        pullRequestId: prForThisPipeline.id,
+        pullRequestId: prForThisPipeline.iid,
         repository: {
           owner: ev.CI_PROJECT_NAMESPACE!,
           name: ev.CI_PROJECT_NAME!,
