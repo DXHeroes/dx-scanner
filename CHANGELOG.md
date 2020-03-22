@@ -1,3 +1,22 @@
+# [3.5.0](https://github.com/dxheroes/dx-scanner/compare/v3.4.0...v3.5.0) (2020-03-22)
+
+
+### Bug Fixes
+
+* add deleted comment ([df4d4fc](https://github.com/dxheroes/dx-scanner/commit/df4d4fc7a4e6fab325a4744423ea1921e303070d))
+* add suggestion text to correctCommitMessagesPractice ([9a96271](https://github.com/dxheroes/dx-scanner/commit/9a96271c0aa411dbe19815958c8ea158b5811e11))
+* bind ScanningStrategyDetector and services in testContainer ([ebab4df](https://github.com/dxheroes/dx-scanner/commit/ebab4df2bf6c3e847133bfd890900dbc15cf0be9))
+* refactor the code ([b8bb465](https://github.com/dxheroes/dx-scanner/commit/b8bb4654c35fee0667692c33902dd1dc81c7d31c))
+* remove comments ([b2f7307](https://github.com/dxheroes/dx-scanner/commit/b2f73076c97ee14e08f6430a7278df26bbdc8675))
+* use scanningStatrategy.remoteUrl instead of argumentsProvider.uri ([06440c2](https://github.com/dxheroes/dx-scanner/commit/06440c2e3e86869237bfb5192b3a43c818e7ea5d))
+
+
+### Features
+
+* implement discovery Container, fix issue [#280](https://github.com/dxheroes/dx-scanner/issues/280) ([b619fcd](https://github.com/dxheroes/dx-scanner/commit/b619fcdfe88b89e2a3ff3de303282486fe972821))
+* wip - implement discoveryContainer; repositoryConfig ([a7d191e](https://github.com/dxheroes/dx-scanner/commit/a7d191ecba32e6a3c9e47ca97f44677ce323173d))
+* wip implement DiscoverContext ([49be8b8](https://github.com/dxheroes/dx-scanner/commit/49be8b8ef755f5d52ca6710658cc7fdbea0b8a57))
+
 # [3.4.0](https://github.com/dxheroes/dx-scanner/compare/v3.3.0...v3.4.0) (2020-03-21)
 
 
