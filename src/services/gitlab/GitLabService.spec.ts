@@ -170,4 +170,52 @@ describe('GitLab Service', () => {
       expect(error.message).toEqual('Request failed with status code 401');
     }
   });
+
+  it('Throws error if listPullRequestReviews is called as the function is not implemented yet', async () => {
+    try {
+      await service.listPullRequestReviews('gitlab-org', 'gitlab', 1);
+    } catch (error) {
+      expect(error.message).toEqual('Method not implemented yet.');
+    }
+  });
+
+  it('Throws error if listPullRequestFiles is called as the function is not implemented yet', async () => {
+    try {
+      await service.listPullRequestFiles('gitlab-org', 'gitlab', 1);
+    } catch (error) {
+      expect(error.message).toEqual('Method not implemented yet.');
+    }
+  });
+
+  it('Throws error if listContributors is called as the function is not implemented yet', async () => {
+    try {
+      await service.listContributors('gitlab-org', 'gitlab');
+    } catch (error) {
+      expect(error.message).toEqual('Method not implemented yet.');
+    }
+  });
+
+  it('Throws error if getContributorsStats is called as the function is not implemented yet', async () => {
+    try {
+      await service.getContributorsStats('gitlab-org', 'gitlab');
+    } catch (error) {
+      expect(error.message).toEqual('Method not implemented yet.');
+    }
+  });
+
+  it('Throws error if getRepoContent is called as the function is not implemented yet', async () => {
+    try {
+      await service.getRepoContent('gitlab-org', 'gitlab', 'path');
+    } catch (error) {
+      expect(error.message).toEqual('Method not implemented yet.');
+    }
+  });
+
+  it('Throws error if getPullsDiffStat is called as the function is not implemented yet', async () => {
+    try {
+      await service.getPullsDiffStat('gitlab-org', 'gitlab', 1);
+    } catch (error) {
+      expect(error.message).toEqual('Method not implemented yet for GitLab.');
+    }
+  });
 });
