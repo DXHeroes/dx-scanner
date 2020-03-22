@@ -9,6 +9,7 @@ import { gitLabListPullCommitsResponseFactory } from '../factories/responses/git
 import { gitLabPullRequestResponseFactory } from '../factories/responses/gitLab/prResponseFactory';
 import { gitLabRepoCommitsResponseFactory } from '../factories/responses/gitLab/repoCommitResponseFactory';
 import { gitLabRepoInfoResponseFactory } from '../factories/responses/gitLab/repoInfoResponseFactory';
+import { gitLabVersionResponseFactory } from '../factories/responses/gitLab/versionResponseFactory';
 
 export class GitLabNock {
   user: string;
@@ -217,5 +218,12 @@ export class GitLabNock {
 
     const response = gitLabRepoInfoResponseFactory();
     return GitLabNock.get(baseUrl).reply(200, response, this.pagination);
+  }
+
+  checkVersion(host: string) {
+    const baseUrl = `https://${host}/api/v4/version`;
+    const response = gitLabVersionResponseFactory();
+
+    return GitLabNock.get(baseUrl).reply(200, response);
   }
 }

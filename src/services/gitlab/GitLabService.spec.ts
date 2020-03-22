@@ -16,6 +16,7 @@ import { listPullRequestsResponse } from '../git/__MOCKS__/gitLabServiceMockFold
 import { listRepoCommits } from '../git/__MOCKS__/gitLabServiceMockFolder/listRepoCommitsResponse';
 import { GitLabService } from './GitLabService';
 import { GitLabPullRequestState } from './IGitLabService';
+import nock from 'nock';
 
 describe('GitLab Service', () => {
   let service: GitLabService;
@@ -130,9 +131,43 @@ describe('GitLab Service', () => {
     expect(response).toBeDefined();
   });
 
-  //TODO test for checkVersion()
-  // it.only('', async () => {
-  //   const response = await service.checkVersion();
-  //   console.log(response);
-  // });
+  it('Returns version and revision if the host name exists and AT is provided', async () => {
+    const repositoryConfig = {
+      remoteUrl: 'https://git.example.cz/dxheroes/user/repo',
+      baseUrl: 'https://git.example.cz',
+      host: 'git.example.cz',
+      protocol: 'https',
+    };
+
+    service = new GitLabService(
+      argumentsProviderFactory({ uri: 'https://git.example.cz/dxheroes/user/repo', auth: 'auth' }),
+      repositoryConfig,
+    );
+    gitLabNock = new GitLabNock('user', 'repo');
+    gitLabNock.checkVersion(repositoryConfig.host);
+
+    const response = await service.checkVersion();
+    expect(response).toMatchObject({ version: '1.0.0', revision: '225c2e' });
+  });
+
+  it('Returns 401 if the host name exists but AT is not provided', async () => {
+    const repositoryConfig = {
+      remoteUrl: 'https://git.example.cz/dxheroes/user/repo',
+      baseUrl: 'https://git.example.cz',
+      host: 'git.example.cz',
+      protocol: 'https',
+    };
+
+    service = new GitLabService(argumentsProviderFactory({ uri: 'https://git.example.cz/dxheroes/user/repo' }), repositoryConfig);
+
+    nock('https://git.example.cz')
+      .get('/api/v4/version')
+      .reply(401);
+
+    try {
+      await service.checkVersion();
+    } catch (error) {
+      expect(error.message).toEqual('Request failed with status code 401');
+    }
+  });
 });

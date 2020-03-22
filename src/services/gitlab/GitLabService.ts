@@ -62,8 +62,8 @@ export class GitLabService implements IVCSService {
     this.cache.purge();
   }
 
-  checkVersion() {
-    return this.client.Version.check();
+  async checkVersion() {
+    return (await this.client.Version.check()).data;
   }
 
   getRepo(owner: string, repo: string) {
