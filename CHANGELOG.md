@@ -1,3 +1,10 @@
+## [3.5.1](https://github.com/dxheroes/dx-scanner/compare/v3.5.0...v3.5.1) (2020-03-22)
+
+
+### Bug Fixes
+
+* **cireporter:** use external ID of PR intstead of internal in GitLab ([3e27383](https://github.com/dxheroes/dx-scanner/commit/3e273830383f44f759a3dc5f463ab65af509e880))
+
 # [3.5.0](https://github.com/dxheroes/dx-scanner/compare/v3.4.0...v3.5.0) (2020-03-22)
 
 
