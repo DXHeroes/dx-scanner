@@ -1,3 +1,10 @@
+## [3.5.2](https://github.com/dxheroes/dx-scanner/compare/v3.5.1...v3.5.2) (2020-03-22)
+
+
+### Bug Fixes
+
+* **cireporter:** post comment to PR as a body key in data ([797a27b](https://github.com/dxheroes/dx-scanner/commit/797a27b6dcc2399637027756920f23d89b1ab8a6))
+
 ## [3.5.1](https://github.com/dxheroes/dx-scanner/compare/v3.5.0...v3.5.1) (2020-03-22)
 
 
