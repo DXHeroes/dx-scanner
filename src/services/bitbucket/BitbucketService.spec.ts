@@ -215,4 +215,11 @@ describe('Bitbucket Service', () => {
     const response = await service.getPullsDiffStat('pypy', 'pypy', 622);
     expect(response).toMatchObject({ additions: 2, deletions: 1, changes: 3 });
   });
+
+  it('The response id defined when getRepo is called', async () => {
+    bitbucketNock.getRepoResponse();
+
+    const response = await service.getRepo('pypy', 'pypy');
+    expect(response).toBeDefined();
+  });
 });
