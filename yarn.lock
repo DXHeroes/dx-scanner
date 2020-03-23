@@ -10573,7 +10573,7 @@ yeoman-environment@^1.6.6:
     text-table "^0.2.0"
     untildify "^2.0.0"
 
-yeoman-gen-run@^1.2.3:
+yeoman-gen-run@1.2.3:
   version "1.2.3"
   resolved "https://registry.yarnpkg.com/yeoman-gen-run/-/yeoman-gen-run-1.2.3.tgz#d8fa9a87cb1560c1b284c04b88c93a990ab6fccb"
   integrity sha512-0LnikTXULF/TFzRgdaV03pEYiNCa+eglmt2yYZzSItlhGn5W+iKc8U2okPoMl9oe7Q82K9RfWSfB2wQL+VtVZA==
