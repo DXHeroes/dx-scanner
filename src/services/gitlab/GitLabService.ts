@@ -349,7 +349,7 @@ export class GitLabService implements IVCSService {
       body: val.body,
       createdAt: val.created_at.toString(),
       updatedAt: val.updated_at.toString(),
-      authorAssociation: val.attachment,
+      authorAssociation: val.author.username,
     }));
 
     const customPagination = this.getPagination(pagination);
