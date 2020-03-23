@@ -21,8 +21,15 @@ describe('Bitbucket Service', () => {
   let service: BitbucketService;
   let bitbucketNock: BitbucketNock;
 
+  const repositoryConfig = {
+    remoteUrl: 'https://bitbucket.org/pypy/pypy',
+    baseUrl: 'https://bitbucket.org',
+    host: 'bitbucket.org',
+    protocol: 'https',
+  };
+
   beforeEach(async () => {
-    service = new BitbucketService(argumentsProviderFactory({ uri: '.' }));
+    service = new BitbucketService(argumentsProviderFactory({ uri: '.' }), repositoryConfig);
 
     bitbucketNock = new BitbucketNock('pypy', 'pypy');
   });
@@ -124,7 +131,7 @@ describe('Bitbucket Service', () => {
     const mockPullCommits = bitbucketPullCommitsResponseFactory();
     bitbucketNock.listPullCommits([mockPullCommits], 622);
 
-    const response = await service.getPullCommits('pypy', 'pypy', 622);
+    const response = await service.listPullCommits('pypy', 'pypy', 622);
     expect(response).toMatchObject(getPullCommitsResponse());
   });
 

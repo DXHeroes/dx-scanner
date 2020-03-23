@@ -1,4 +1,5 @@
 import { ScanningStrategyDetectorUtils } from './ScanningStrategyDetectorUtils';
+import nock from 'nock';
 
 describe('ScanningStrategyDetectorUtils', () => {
   describe('#isLocalPath', () => {
@@ -42,6 +43,30 @@ describe('ScanningStrategyDetectorUtils', () => {
     it('is GitHub path without protocol', async () => {
       const result = ScanningStrategyDetectorUtils.isGitHubPath('github.com/DXHeroes/dx-scanner');
       expect(result).toEqual(true);
+    });
+  });
+
+  describe('#isGitLabPath', () => {
+    describe('SaaS', () => {
+      it('is GitLab path with https protocol', async () => {
+        const result = ScanningStrategyDetectorUtils.isGitLabPath('https://gitlab.com/DXHeroes/dx-scanner');
+        expect(result).toEqual(true);
+      });
+
+      it('is GitLab path with http protocol', async () => {
+        const result = ScanningStrategyDetectorUtils.isGitLabPath('http://gitlab.com/DXHeroes/dx-scanner');
+        expect(result).toEqual(true);
+      });
+
+      it('is GitLab path with ssl protocol', async () => {
+        const result = ScanningStrategyDetectorUtils.isGitLabPath('ssl://git@gitlab.com/DXHeroes/dx-scanner');
+        expect(result).toEqual(true);
+      });
+
+      it('is GitLab path without protocol', async () => {
+        const result = ScanningStrategyDetectorUtils.isGitLabPath('gitlab.com/DXHeroes/dx-scanner');
+        expect(result).toEqual(true);
+      });
     });
   });
 

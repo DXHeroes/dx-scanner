@@ -32,6 +32,7 @@ import {
 import { VCSServicesUtils } from './VCSServicesUtils';
 import { ArgumentsProvider } from '../../scanner';
 import { IssueState } from '../../inspectors/IIssueTrackingInspector';
+import { RepositoryConfig } from '../../scanner/RepositoryConfig';
 const debug = Debug('cli:services:git:github-service');
 
 @injectable()
@@ -39,10 +40,14 @@ export class GitHubService implements IVCSService {
   private readonly client: Octokit;
   private cache: ICache;
   private callCount = 0;
+  private readonly repositoryConfig: RepositoryConfig;
 
-  constructor(@inject(Types.ArgumentsProvider) argumentsProvider: ArgumentsProvider) {
+  constructor(
+    @inject(Types.ArgumentsProvider) argumentsProvider: ArgumentsProvider,
+    @inject(Types.RepositoryConfig) repositoryConfig: RepositoryConfig,
+  ) {
     this.cache = new InMemoryCache();
-
+    this.repositoryConfig = repositoryConfig;
     this.client = new Octokit({
       auth: argumentsProvider.auth,
     });
@@ -89,6 +94,7 @@ export class GitHubService implements IVCSService {
           },
           url: val.url,
           body: val.body,
+          sha: val.merge_commit_sha,
           createdAt: val.created_at,
           updatedAt: val.updated_at,
           closedAt: val.closed_at,
@@ -132,6 +138,7 @@ export class GitHubService implements IVCSService {
       },
       url: response.data.url,
       body: response.data.body,
+      sha: response.data.merge_commit_sha,
       createdAt: response.data.created_at,
       updatedAt: response.data.updated_at,
       closedAt: response.data.closed_at,
@@ -190,7 +197,7 @@ export class GitHubService implements IVCSService {
    *
    * Sha can be SHA or branch name.
    */
-  async listRepoCommits(owner: string, repo: string, sha?: string, options?: ListGetterOptions): Promise<Paginated<Commit>> {
+  async listRepoCommits(owner: string, repo: string, options?: ListGetterOptions): Promise<Paginated<Commit>> {
     const { data, headers } = await this.unwrap(
       this.client.repos.listCommits({
         owner,

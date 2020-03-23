@@ -1,66 +1,44 @@
 import { Container } from 'inversify';
 import { DirectoryJSON } from 'memfs/lib/volume';
+import { bindDiscoveryContext } from './contexts/discovery/discoveryContextBinding';
+import { PracticeContext } from './contexts/practice/PracticeContext';
+import { ScanningStrategyDetector } from './detectors';
+import { packageJSONContents } from './detectors/__MOCKS__/JavaScript/packageJSONContents.mock';
+import {
+  CollaborationInspector,
+  FileInspector,
+  IFileInspector,
+  IPackageInspector,
+  IssueTrackingInspector,
+  JavaScriptPackageInspector,
+} from './inspectors';
+import { ICollaborationInspector } from './inspectors/ICollaborationInspector';
+import { IIssueTrackingInspector } from './inspectors/IIssueTrackingInspector';
 import { ProgrammingLanguage, ProjectComponent, ProjectComponentFramework, ProjectComponentPlatform, ProjectComponentType } from './model';
 import { practices } from './practices';
 import { IPracticeWithMetadata } from './practices/DxPracticeDecorator';
-import { Types } from './types';
-import { IReporter, JSONReporter, CLIReporter, CIReporter, FixReporter } from './reporters';
-import { ScanningStrategyDetector } from './detectors';
-import {
-  FileInspector,
-  IssueTrackingInspector,
-  CollaborationInspector,
-  JavaScriptPackageInspector,
-  IFileInspector,
-  IPackageInspector,
-} from './inspectors';
-import { bindScanningContext } from './contexts/scanner/scannerContextBinding';
-import { Scanner, ScannerUtils } from './scanner';
-import { FileSystemService, GitHubService } from './services';
-import { BitbucketService } from './services/bitbucket/BitbucketService';
-import { ICollaborationInspector } from './inspectors/ICollaborationInspector';
-import { IIssueTrackingInspector } from './inspectors/IIssueTrackingInspector';
-import { PracticeContext } from './contexts/practice/PracticeContext';
-import { packageJSONContents } from './detectors/__MOCKS__/JavaScript/packageJSONContents.mock';
+import { ArgumentsProvider, Scanner, ScannerUtils } from './scanner';
+import { ScanningStrategyExplorer } from './scanner/ScanningStrategyExplorer';
+import { FileSystemService, GitHubService, BitbucketService } from './services';
 import { argumentsProviderFactory } from './test/factories/ArgumentsProviderFactory';
-import { ArgumentsProvider } from './scanner';
+import { Types } from './types';
+import { RepositoryConfig } from './scanner/RepositoryConfig';
+import { GitLabService } from './services/gitlab/GitLabService';
 
 export const createRootContainer = (args: ArgumentsProvider): Container => {
   const container = new Container();
-  bindScanningStrategyDetectors(container);
-  bindScanningContext(container);
-  bindReporters(container, args);
-
   container.bind(Types.ArgumentsProvider).toConstantValue(args);
+  container.bind(ScanningStrategyExplorer).toSelf();
+  bindDiscoveryContext(container);
+
   container.bind(Scanner).toSelf();
   container.bind(FileSystemService).toSelf();
-  container.bind(GitHubService).toSelf();
-  container.bind(BitbucketService).toSelf();
+
   // register practices
   practices.forEach((practice) => {
     container.bind<IPracticeWithMetadata>(Types.Practice).toConstantValue(ScannerUtils.initPracticeWithMetadata(practice));
   });
   return container;
-};
-
-const bindScanningStrategyDetectors = (container: Container) => {
-  container.bind(ScanningStrategyDetector).toSelf();
-};
-
-const bindReporters = (container: Container, args: ArgumentsProvider) => {
-  if (args.fix) {
-    container.bind<IReporter>(Types.IReporter).to(FixReporter);
-    return;
-  }
-  if (args.json) {
-    container.bind<IReporter>(Types.IReporter).to(JSONReporter);
-  } else {
-    container.bind<IReporter>(Types.IReporter).to(CLIReporter);
-  }
-
-  if (args.ci) {
-    container.bind<IReporter>(Types.IReporter).to(CIReporter);
-  }
 };
 
 export const createTestContainer = (
@@ -79,14 +57,28 @@ export const createTestContainer = (
   const vfss = new FileSystemService({ isVirtual: true });
   vfss.setFileSystem(structure);
 
+  const repositoryConfig: RepositoryConfig = {
+    baseUrl: undefined,
+    host: undefined,
+    protocol: undefined,
+    remoteUrl: undefined,
+  };
+
   // FileSystemService as default ProjectBrowser
+  container.bind(Types.RepositoryConfig).toConstantValue(repositoryConfig);
   container.bind(Types.IProjectFilesBrowser).toConstantValue(vfss);
   container.bind(Types.IContentRepositoryBrowser).to(GitHubService);
   container.bind(Types.IFileInspector).to(FileInspector);
   container.bind(Types.IPackageInspector).to(JavaScriptPackageInspector);
   container.bind(Types.ICollaborationInspector).to(CollaborationInspector);
   container.bind(Types.IIssueTrackingInspector).to(IssueTrackingInspector);
+  container.bind(ScanningStrategyDetector).toSelf();
 
+  container.bind(GitHubService).toSelf();
+  container.bind(BitbucketService).toSelf();
+  container.bind(GitLabService).toSelf();
+
+  const scanningStrategyExplorer = container.get<ScanningStrategyExplorer>(ScanningStrategyExplorer);
   const scanningStrategyDetector = container.get<ScanningStrategyDetector>(ScanningStrategyDetector);
   const fileSystemService = container.get<FileSystemService>(FileSystemService);
   const fileInspector = container.get<IFileInspector>(Types.IFileInspector);
@@ -117,15 +109,17 @@ export const createTestContainer = (
   return {
     container,
     practiceContext,
-    scanningStrategyDetector,
+    scanningStrategyExplorer,
     fileSystemService,
     virtualFileSystemService,
+    scanningStrategyDetector,
   };
 };
 
 export interface TestContainerContext {
   container: Container;
   practiceContext: PracticeContext;
+  scanningStrategyExplorer: ScanningStrategyExplorer;
   scanningStrategyDetector: ScanningStrategyDetector;
 
   /**

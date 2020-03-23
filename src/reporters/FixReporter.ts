@@ -1,4 +1,4 @@
-import { blue, bold, green, grey, italic, red, reset, cyan } from 'colors';
+import { blue, bold, green, grey, italic, red, reset, cyan, yellow } from 'colors';
 import { injectable, inject } from 'inversify';
 import { PracticeEvaluationResult } from '../model';
 import { IReporter, PracticeWithContextForReporter } from './IReporter';
@@ -92,6 +92,19 @@ export class FixReporter implements IReporter {
 
         for (const [, p] of fixedPractices) {
           lines.push(green(`- ${p.practice.name}`));
+        }
+        lines.push('');
+      }
+
+      const notFixedPractices = Object.entries(practiceStatusAfterFix).filter(
+        ([, value]) => value.evaluation === PracticeEvaluationResult.notPracticing,
+      );
+      if (notFixedPractices.length) {
+        lines.push(bold(yellow('These practices could not be automatically fixed:')));
+        lines.push('');
+
+        for (const [, p] of notFixedPractices) {
+          lines.push(yellow(`- ${p.practice.name}`));
         }
         lines.push('');
       }

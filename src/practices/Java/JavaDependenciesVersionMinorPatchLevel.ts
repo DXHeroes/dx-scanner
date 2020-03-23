@@ -14,6 +14,7 @@ import { flatten } from 'lodash';
   suggestion: 'Keep the dependencies updated to have all possible features. Use, for example, versions-maven-plugin',
   reportOnlyOnce: true,
   url: 'https://dxkb.io/p/updating-the-dependencies',
+  dependsOn: { practicing: ['Java.SpecifiedDependencyVersions'] },
 })
 export class JavaDependenciesVersionMinorPatchLevel extends JavaDependenciesVersionMajorLevel implements IPractice {
   async isApplicable(ctx: PracticeContext): Promise<boolean> {

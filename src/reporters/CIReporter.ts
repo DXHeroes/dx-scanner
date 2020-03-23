@@ -1,3 +1,4 @@
+/* eslint-disable no-process-env */
 import { IReporter, PracticeWithContextForReporter } from './IReporter';
 import { injectable, inject } from 'inversify';
 import { Types } from '../types';
@@ -10,21 +11,39 @@ import { CreatedUpdatedPullRequestComment, PullRequestComment } from '../service
 import { CIReportBuilder } from './builders/CIReportBuilder';
 import { ScanningStrategyDetectorUtils } from '../detectors/utils/ScanningStrategyDetectorUtils';
 import _ from 'lodash';
+import { GitLabService } from '../services/gitlab/GitLabService';
+import { GitLabClient } from '../services/gitlab/gitlabClient/gitlabUtils';
+import { RepositoryConfig } from '../scanner/RepositoryConfig';
 
 @injectable()
 export class CIReporter implements IReporter {
   private readonly argumentsProvider: ArgumentsProvider;
+  private readonly repositoryConfig: RepositoryConfig;
+  private readonly gitHubService: GitHubService;
+  private readonly bitbucketService: BitbucketService;
+  private readonly gitLabService: GitLabService;
   private config: CIReporterConfig | undefined;
-  private d: debug.Debugger;
+  private readonly d: debug.Debugger;
 
-  constructor(@inject(Types.ArgumentsProvider) argumentsProvider: ArgumentsProvider) {
+  constructor(
+    @inject(Types.ArgumentsProvider) argumentsProvider: ArgumentsProvider,
+    @inject(Types.RepositoryConfig) repositoryConfig: RepositoryConfig,
+    @inject(GitHubService) gitHubService: GitHubService,
+    @inject(BitbucketService) bitbucketService: BitbucketService,
+    @inject(GitLabService) gitLabService: GitLabService,
+  ) {
     this.d = debug('CIReporter');
     this.argumentsProvider = argumentsProvider;
-    this.config = this.detectConfiguration();
-    this.d(this.config);
+    this.repositoryConfig = repositoryConfig;
+    this.gitHubService = gitHubService;
+    this.bitbucketService = bitbucketService;
+    this.gitLabService = gitLabService;
   }
 
   async report(practicesAndComponents: PracticeWithContextForReporter[]): Promise<CreatedUpdatedPullRequestComment | undefined> {
+    this.config = await this.detectConfiguration();
+    this.d(this.config);
+
     if (!this.config) {
       const msg = 'Your CI provider is not supported yet. Please add a feature request on https://github.com/DXHeroes/dx-scanner/issues';
       this.d(msg);
@@ -60,10 +79,13 @@ export class CIReporter implements IReporter {
 
     switch (this.config!.service) {
       case VCSServiceType.github:
-        client = new GitHubService(this.argumentsProvider);
+        client = this.gitHubService;
         break;
       case VCSServiceType.bitbucket:
-        client = new BitbucketService(this.argumentsProvider);
+        client = this.bitbucketService;
+        break;
+      case VCSServiceType.gitlab:
+        client = this.gitLabService;
         break;
       default:
         return assertNever(this.config!.service);
@@ -112,7 +134,7 @@ export class CIReporter implements IReporter {
     return comment;
   }
 
-  private detectConfiguration(): CIReporterConfig | undefined {
+  private async detectConfiguration(): Promise<CIReporterConfig | undefined> {
     // eslint-disable-next-line no-process-env
     const ev = process.env;
 
@@ -132,6 +154,29 @@ export class CIReporter implements IReporter {
       // detect Bitbucket config
       this.d('Is Bitbucket');
       return CIReporterUtils.loadConfigurationBitbucket();
+    } else if ((ev.GITLAB_CI = 'true')) {
+      // detect GitLab config
+      this.d('Is GitLab');
+      const client = new GitLabClient({
+        token: this.argumentsProvider.auth,
+        host: this.repositoryConfig.baseUrl,
+      });
+
+      const prs = await client.MergeRequests.list(ev.CI_PROJECT_ID!, { filter: { sourceBranch: ev.CI_COMMIT_BRANCH } });
+      const prForThisPipeline = prs.data.find((p) => p.sha === ev.CI_COMMIT_SHA);
+      if (!prForThisPipeline) {
+        this.d('Can not find relevant Merge Request', ev.CI_PROJECT_ID, ev.CI_COMMIT_BRANCH, ev.CI_COMMIT_SHA);
+        return undefined;
+      }
+
+      return {
+        service: VCSServiceType.gitlab,
+        pullRequestId: prForThisPipeline.iid,
+        repository: {
+          owner: ev.CI_PROJECT_NAMESPACE!,
+          name: ev.CI_PROJECT_NAME!,
+        },
+      };
     } else {
       // not supported yet
       this.d('Is undefined CI');

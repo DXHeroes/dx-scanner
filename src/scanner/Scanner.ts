@@ -1,41 +1,41 @@
+import { cli } from 'cli-ux';
 import debug from 'debug';
 import fs from 'fs';
 import { inject, injectable, multiInject } from 'inversify';
+import _ from 'lodash';
 import os from 'os';
 import path from 'path';
 import git from 'simple-git/promise';
 import url from 'url';
 import { inspect } from 'util';
+import { ArgumentsProvider } from '.';
+import { LanguageContext } from '../contexts/language/LanguageContext';
+import { PracticeContext } from '../contexts/practice/PracticeContext';
+import { ProjectComponentContext } from '../contexts/projectComponent/ProjectComponentContext';
+import { ScannerContext } from '../contexts/scanner/ScannerContext';
+import { AccessType, ScanningStrategy, ServiceType } from '../detectors';
+import { sharedSubpath } from '../detectors/utils';
+import { ErrorFactory } from '../lib/errors';
 import {
   LanguageAtPath,
   PracticeEvaluationResult,
+  PracticeImpact,
   ProjectComponent,
   ProjectComponentFramework,
   ProjectComponentPlatform,
   ProjectComponentType,
-  PracticeImpact,
 } from '../model';
 import { IPracticeWithMetadata } from '../practices/DxPracticeDecorator';
-import { ScannerContextFactory, Types } from '../types';
-import { ScannerUtils } from '../scanner/ScannerUtils';
-import _ from 'lodash';
-import { cli } from 'cli-ux';
-import { ScanningStrategyDetector, ScanningStrategy, ServiceType, AccessType } from '../detectors';
 import { IReporter, PracticeWithContextForReporter } from '../reporters';
+import { ScannerUtils } from '../scanner/ScannerUtils';
 import { FileSystemService } from '../services';
-import { ScannerContext } from '../contexts/scanner/ScannerContext';
-import { sharedSubpath } from '../detectors/utils';
-import { LanguageContext } from '../contexts/language/LanguageContext';
-import { ProjectComponentContext } from '../contexts/projectComponent/ProjectComponentContext';
-import { PracticeContext } from '../contexts/practice/PracticeContext';
-import { ArgumentsProvider } from '.';
-import { ErrorFactory } from '../lib/errors';
+import { DiscoveryContextFactory, Types } from '../types';
+import { ScanningStrategyExplorer } from './ScanningStrategyExplorer';
 
 @injectable()
 export class Scanner {
-  private readonly scanStrategyDetector: ScanningStrategyDetector;
-  private readonly scannerContextFactory: ScannerContextFactory;
-  private readonly reporters: IReporter[];
+  private readonly scanStrategyExplorer: ScanningStrategyExplorer;
+  private readonly discoveryContextFactory: DiscoveryContextFactory;
   private readonly fileSystemService: FileSystemService;
   private readonly practices: IPracticeWithMetadata[];
   private readonly argumentsProvider: ArgumentsProvider;
@@ -44,45 +44,32 @@ export class Scanner {
   private allDetectedComponents: ProjectComponentAndLangContext[] | undefined;
 
   constructor(
-    @inject(ScanningStrategyDetector) scanStrategyDetector: ScanningStrategyDetector,
-    @inject(Types.ScannerContextFactory) scannerContextFactory: ScannerContextFactory,
-    @multiInject(Types.IReporter) reporters: IReporter[],
+    @inject(ScanningStrategyExplorer) scanStrategyExplorer: ScanningStrategyExplorer,
+    @inject(Types.DiscoveryContextFactory) discoveryContextFactory: DiscoveryContextFactory,
     @inject(FileSystemService) fileSystemService: FileSystemService,
     // inject all practices registered under Types.Practice in inversify config
     @multiInject(Types.Practice) practices: IPracticeWithMetadata[],
     @inject(Types.ArgumentsProvider) argumentsProvider: ArgumentsProvider,
   ) {
-    this.scanStrategyDetector = scanStrategyDetector;
-    this.scannerContextFactory = scannerContextFactory;
-    this.reporters = reporters;
+    this.scanStrategyExplorer = scanStrategyExplorer;
+    this.discoveryContextFactory = discoveryContextFactory;
     this.fileSystemService = fileSystemService;
     this.practices = practices;
     this.argumentsProvider = argumentsProvider;
+
     this.d = debug('scanner');
     this.allDetectedComponents = undefined;
   }
 
-  async fix(practicesWithContext: PracticeWithContext[]) {
-    if (!this.argumentsProvider.fix) return;
-    const fixablePractice = (p: PracticeWithContext) => p.practice.fix && p.evaluation === PracticeEvaluationResult.notPracticing;
-    const fixPatternMatcher = this.argumentsProvider.fixPattern ? new RegExp(this.argumentsProvider.fixPattern, 'i') : null;
-    const shouldFix = (p: PracticeWithContext) => {
-      const fixFromCli = fixPatternMatcher ? fixPatternMatcher.test(p.practice.getMetadata().id) : undefined;
-      const practiceConfig = p.componentContext.configProvider.getOverriddenPractice(p.practice.getMetadata().id);
-      const fixFromConfig = practiceConfig?.fix;
-      return fixFromCli !== undefined ? fixFromCli : fixFromConfig !== undefined ? fixFromConfig : true;
-    };
-    await Promise.all(
-      practicesWithContext
-        .filter(fixablePractice)
-        .filter(shouldFix)
-        .map((p) => p.practice.fix!(p.practiceContext)),
-    );
-  }
-
   async scan({ determineRemote } = { determineRemote: true }): Promise<ScanResult> {
-    let scanStrategy = await this.scanStrategyDetector.detect();
-    if (determineRemote && scanStrategy.accessType === AccessType.unknown) {
+    const repositoryConfig = await this.scanStrategyExplorer.explore();
+    this.d(`Repository Config: ${inspect(repositoryConfig)}`);
+
+    const discoveryContext = this.discoveryContextFactory(repositoryConfig);
+
+    let scanStrategy = await discoveryContext.scanningStrategyDetector.detect();
+    this.d(`Scan strategy: ${inspect(scanStrategy)}`);
+    if (determineRemote && (scanStrategy.serviceType === undefined || scanStrategy.accessType === AccessType.unknown)) {
       return {
         shouldExitOnEnd: this.shouldExitOnEnd,
         needsAuth: true,
@@ -90,19 +77,23 @@ export class Scanner {
         isOnline: scanStrategy.isOnline,
       };
     }
-    this.d(`Scan strategy: ${inspect(scanStrategy)}`);
     scanStrategy = await this.preprocessData(scanStrategy);
     this.d(`Scan strategy (after preprocessing): ${inspect(scanStrategy)}`);
-    const scannerContext = this.scannerContextFactory(scanStrategy);
+    const scannerContext = discoveryContext.getScanningContext(scanStrategy);
     const languagesAtPaths = await this.detectLanguagesAtPaths(scannerContext);
     this.d(`LanguagesAtPaths (${languagesAtPaths.length}):`, inspect(languagesAtPaths));
     const projectComponents = await this.detectProjectComponents(languagesAtPaths, scannerContext, scanStrategy);
     this.d(`Components (${projectComponents.length}):`, inspect(projectComponents));
     const practicesWithContext = await this.detectPractices(projectComponents);
     this.d(`Practices (${practicesWithContext.length}):`, inspect(practicesWithContext));
-    await this.fix(practicesWithContext);
-    const practicesAfterFix = await this.detectPractices(projectComponents);
-    await this.report(practicesWithContext, practicesAfterFix);
+
+    let practicesAfterFix: PracticeWithContext[] | undefined;
+    if (this.argumentsProvider.fix) {
+      await this.fix(practicesWithContext, scanStrategy);
+      practicesAfterFix = await this.detectPractices(projectComponents);
+    }
+
+    await this.report(scannerContext.reporters, practicesWithContext, practicesAfterFix);
     this.d(
       `Overall scan stats. LanguagesAtPaths: ${inspect(languagesAtPaths.length)}; Components: ${inspect(
         this.allDetectedComponents!.length,
@@ -133,6 +124,31 @@ export class Scanner {
     cli.action.stop();
   }
 
+  async fix(practicesWithContext: PracticeWithContext[], scanningStrategy?: ScanningStrategy) {
+    if (!this.argumentsProvider.fix) return;
+    const fixablePractice = (p: PracticeWithContext) => p.practice.fix && p.evaluation === PracticeEvaluationResult.notPracticing;
+    const fixPatternMatcher = this.argumentsProvider.fixPattern ? new RegExp(this.argumentsProvider.fixPattern, 'i') : null;
+    const shouldFix = (p: PracticeWithContext) => {
+      const fixFromCli = fixPatternMatcher ? fixPatternMatcher.test(p.practice.getMetadata().id) : undefined;
+      const practiceConfig = p.componentContext.configProvider.getOverriddenPractice(p.practice.getMetadata().id);
+      const fixFromConfig = practiceConfig?.fix;
+      return fixFromCli !== undefined ? fixFromCli : fixFromConfig !== undefined ? fixFromConfig : true;
+    };
+    await Promise.all(
+      practicesWithContext
+        .filter(fixablePractice)
+        .filter(shouldFix)
+        .map((p) =>
+          p.practice.fix!({
+            ...p.practiceContext,
+            scanningStrategy,
+            config: p.componentContext.configProvider.getOverriddenPractice(p.practice.getMetadata().id),
+            argumentsProvider: this.argumentsProvider,
+          }),
+        ),
+    );
+  }
+
   /**
    * Clone a repository if the input is remote repository
    */
@@ -153,6 +169,9 @@ export class Scanner {
         cloneUrl.password = this.argumentsProvider.auth.split(':')[1];
       } else if (this.argumentsProvider.auth) {
         cloneUrl.password = this.argumentsProvider.auth;
+        if (serviceType === ServiceType.gitlab) {
+          cloneUrl.username = 'private-token';
+        }
       }
 
       await git()
@@ -235,7 +254,11 @@ export class Scanner {
   /**
    * Report result with specific reporter
    */
-  private async report(practicesWithContext: PracticeWithContext[], practicesWithContextAfterFix?: PracticeWithContext[]): Promise<void> {
+  private async report(
+    reporters: IReporter[],
+    practicesWithContext: PracticeWithContext[],
+    practicesWithContextAfterFix?: PracticeWithContext[],
+  ): Promise<void> {
     const pwcForReporter = (p: PracticeWithContext) => {
       const config = p.componentContext.configProvider.getOverriddenPractice(p.practice.getMetadata().id);
       const overridenImpact = config?.impact;
@@ -245,22 +268,22 @@ export class Scanner {
         practice: { ...p.practice.getMetadata(), data: p.practice.data, fix: Boolean(p.practice.fix) },
         evaluation: p.evaluation,
         evaluationError: p.evaluationError,
-        overridenImpact: <PracticeImpact>(overridenImpact ? overridenImpact : p.practice.getMetadata().impact),
+        overridenImpact: <PracticeImpact>(overridenImpact || p.practice.getMetadata().impact),
         isOn: p.isOn,
       };
     };
     const relevantPractices: PracticeWithContextForReporter[] = practicesWithContext.map(pwcForReporter);
 
-    this.d(`Reporters length: ${this.reporters.length}`);
+    this.d(`Reporters length: ${reporters.length}`);
     if (this.argumentsProvider.fix) {
       const relevantPracticesAfterFix: PracticeWithContextForReporter[] = practicesWithContextAfterFix!.map(pwcForReporter);
       await Promise.all(
-        this.reporters.map(async (r) => {
+        reporters.map(async (r) => {
           this.argumentsProvider.fix ? await r.report(relevantPractices, relevantPracticesAfterFix) : await r.report(relevantPractices);
         }),
       );
     } else {
-      await Promise.all(this.reporters.map(async (r) => await r.report(relevantPractices)));
+      await Promise.all(reporters.map(async (r) => await r.report(relevantPractices)));
     }
 
     if (this.allDetectedComponents!.length > 1 && !this.argumentsProvider.recursive) {
@@ -307,7 +330,7 @@ export class Scanner {
       } catch (error) {
         evaluationError = error.toString();
         const practiceDebug = debug('practices');
-        practiceDebug(`The ${practice.getMetadata().name} practice failed with this error:\n${error}`);
+        practiceDebug(`The ${practice.getMetadata().name} practice failed with this error:\n${error.stack}`);
       }
 
       const practiceWithContext: PracticeWithContext = {

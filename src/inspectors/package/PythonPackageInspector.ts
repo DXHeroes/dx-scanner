@@ -1,6 +1,5 @@
 import { PackageInspectorBase } from './PackageInspectorBase';
 import { IFileInspector, DependencyType } from '..';
-import { ParsedDependency } from '.';
 import { inject } from 'inversify';
 import { Types } from '../../types';
 
@@ -62,4 +61,9 @@ export class PythonPackageInspector extends PackageInspectorBase {
   hasLockfile(): boolean | undefined {
     return false;
   }
+}
+
+interface ParsedDependency {
+  packageName: string;
+  version: string;
 }

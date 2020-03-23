@@ -10,7 +10,10 @@ import { ScannerContextFactory, Types } from '../../types';
 import { bindLanguageContext } from '../language/languageContextBinding';
 import { ScannerContext } from './ScannerContext';
 import { BitbucketService } from '../../services/bitbucket/BitbucketService';
+import { GitLabService } from '../../services/gitlab/GitLabService';
 import { PythonLanguageDetector } from '../../detectors/Python/PythonLanguageDetector';
+import { ArgumentsProvider } from '../../scanner';
+import { IReporter, FixReporter, JSONReporter, CLIReporter, CIReporter } from '../../reporters';
 
 export const bindScanningContext = (container: Container) => {
   container.bind(Types.ScannerContextFactory).toFactory(
@@ -23,12 +26,14 @@ export const bindScanningContext = (container: Container) => {
   );
 };
 
-const createScanningContainer = (scanningStrategy: ScanningStrategy, rootContainer: Container): Container => {
-  const container = rootContainer.createChild();
+const createScanningContainer = (scanningStrategy: ScanningStrategy, discoveryContainer: Container): Container => {
+  const container = discoveryContainer.createChild();
   container.bind(Types.ScanningStrategy).toConstantValue(scanningStrategy);
+  const args = container.get<ArgumentsProvider>(Types.ArgumentsProvider);
   bindLanguageDetectors(container);
   bindLanguageContext(container);
   bindFileAccess(scanningStrategy, container);
+  bindReporters(container, args);
   container.bind(ScannerContext).toSelf();
   return container;
 };
@@ -48,10 +53,29 @@ const bindFileAccess = (scanningStrategy: ScanningStrategy, container: Container
   if (scanningStrategy.serviceType === ServiceType.bitbucket) {
     container.bind(Types.IContentRepositoryBrowser).to(BitbucketService);
   }
+  if (scanningStrategy.serviceType === ServiceType.gitlab) {
+    container.bind(Types.IContentRepositoryBrowser).to(GitLabService);
+  }
   container
     .bind(Types.IFileInspector)
     .to(FileInspector)
     .inSingletonScope();
+};
+
+const bindReporters = (container: Container, args: ArgumentsProvider) => {
+  if (args.fix) {
+    container.bind<IReporter>(Types.IReporter).to(FixReporter);
+    return;
+  }
+  if (args.json) {
+    container.bind<IReporter>(Types.IReporter).to(JSONReporter);
+  } else {
+    container.bind<IReporter>(Types.IReporter).to(CLIReporter);
+  }
+
+  if (args.ci) {
+    container.bind<IReporter>(Types.IReporter).to(CIReporter);
+  }
 };
 
 const bindLanguageDetectors = (container: Container) => {
