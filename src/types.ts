@@ -6,6 +6,8 @@ import { LanguageContext } from './contexts/language/LanguageContext';
 import { IProjectComponentDetector } from './detectors/IProjectComponentDetector';
 import { PracticeContext } from './contexts/practice/PracticeContext';
 import { ProjectComponentContext } from './contexts/projectComponent/ProjectComponentContext';
+import { RepositoryConfig } from './scanner/RepositoryConfig';
+import { DiscoveryContext } from './contexts/discovery/DiscoveryContext';
 
 export const Types = {
   //NEW TYPES
@@ -17,7 +19,11 @@ export const Types = {
   ProjectComponentContextFactory: Symbol('Factory<ProjectComponentContext>'),
   ScanningStrategyDetector: Symbol('ScanningStrategyDetector'),
   PracticeContextFactory: Symbol('Factory<PracticeContext>'),
+  DiscoveryContextFactory: Symbol('Factory<DiscoveryContext>'),
   //Useful constants
+  //Discovery context level
+  RepositoryConfig: Symbol('RepositoryConfig'),
+
   //Scanner context level
   ScanningStrategy: Symbol('ScanningStrategy'),
   FileInspectorBasePath: Symbol('FileInspectorBasePath'),
@@ -54,3 +60,4 @@ export type LanguageContextFactory = (languageAtPath: LanguageAtPath) => Languag
 export type ProjectComponentContextFactory = (component: ProjectComponent) => ProjectComponentContext;
 export type ProjectComponentDetectorFactory = (language: ProgrammingLanguage) => IProjectComponentDetector[];
 export type PracticeContextFactory = (projectComponent: ProjectComponent) => PracticeContext;
+export type DiscoveryContextFactory = (repositoryConfig: RepositoryConfig) => DiscoveryContext;

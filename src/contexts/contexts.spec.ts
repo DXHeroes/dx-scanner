@@ -1,5 +1,5 @@
 import { createTestContainer, TestContainerContext } from '../inversify.config';
-import { Types, ScannerContextFactory } from '../types';
+import { Types, DiscoveryContextFactory } from '../types';
 import { ServiceType } from '../detectors/ScanningStrategyDetector';
 import { ProgrammingLanguage, ProjectComponentFramework, ProjectComponentPlatform, ProjectComponentType } from '../model';
 
@@ -10,18 +10,24 @@ describe('Contexts (And bindings)', () => {
     ctx = createTestContainer({ uri: '.' });
   });
 
-  const createScannerCtx = () => {
-    const scannerCtxFactory: ScannerContextFactory = ctx.container.get(Types.ScannerContextFactory);
-    const scannerCtx = scannerCtxFactory({
-      serviceType: ServiceType.git,
-      accessType: undefined,
-      localPath: undefined,
-      remoteUrl: undefined,
-      isOnline: false,
+  const createDiscoveryCtx = () => {
+    const discoveryCtxFactory: DiscoveryContextFactory = ctx.container.get(Types.DiscoveryContextFactory);
+    const discoveryCtx = discoveryCtxFactory({
+      baseUrl: 'https://github.com',
+      host: 'github.com',
+      remoteUrl: 'https://github.com/DXHeroes/dx-scanner',
+      protocol: 'https',
     });
-    return scannerCtx;
+    return discoveryCtx;
   };
 
+  const scanStrategy = {
+    serviceType: ServiceType.git,
+    accessType: undefined,
+    localPath: undefined,
+    remoteUrl: undefined,
+    isOnline: false,
+  };
   const languageAtPathMock = { language: ProgrammingLanguage.JavaScript, path: './var/foo' };
   const componentMock = {
     framework: ProjectComponentFramework.UNKNOWN,
@@ -29,6 +35,10 @@ describe('Contexts (And bindings)', () => {
     path: './var/foo',
     platform: ProjectComponentPlatform.BackEnd,
     type: ProjectComponentType.Application,
+  };
+
+  const createScannerCtx = () => {
+    return createDiscoveryCtx().getScanningContext(scanStrategy);
   };
 
   const createLangCtx = () => {

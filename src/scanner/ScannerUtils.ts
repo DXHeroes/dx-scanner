@@ -155,7 +155,7 @@ export class ScannerUtils {
     } else if (ScanningStrategyDetectorUtils.isBitbucketPath(scanPath) || scanResult.serviceType === ServiceType.bitbucket) {
       promptMsg =
         'Insert your Bitbucket credentials (in format "appPassword" or "username:appPasword"). https://confluence.atlassian.com/bitbucket/app-passwords-828781300.html\n';
-    } else if ((await ScanningStrategyDetectorUtils.isGitLabPath(scanPath)) || scanResult.serviceType === ServiceType.gitlab) {
+    } else if (ScanningStrategyDetectorUtils.isGitLabPath(scanPath) || scanResult.serviceType === ServiceType.gitlab) {
       promptMsg = 'Insert your GitLab private token. https://gitlab.com/profile/personal_access_tokens\n';
     } else {
       // if we don't know the service yet

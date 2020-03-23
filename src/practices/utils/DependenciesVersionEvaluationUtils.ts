@@ -8,9 +8,24 @@ export class DependenciesVersionEvaluationUtils {
       const parsedVersion = PackageInspectorBase.semverToPackageVersion(pkgsWithNewVersion[packageName]);
       if (parsedVersion) {
         for (const pkg of pkgs) {
-          if (pkg.name === packageName) {
-            if (parsedVersion[semverLevel] > pkg.lockfileVersion[semverLevel]) {
-              pkgsToUpdate.push({ name: pkg.name, newVersion: parsedVersion.value, currentVersion: pkg.lockfileVersion.value });
+          if (pkg.name === packageName && parsedVersion[semverLevel] > pkg.lockfileVersion[semverLevel]) {
+            switch (semverLevel) {
+              case SemverLevel.patch:
+                if (
+                  parsedVersion[SemverLevel.minor] === pkg.lockfileVersion[SemverLevel.minor] &&
+                  parsedVersion[SemverLevel.major] === pkg.lockfileVersion[SemverLevel.major]
+                ) {
+                  pkgsToUpdate.push({ name: pkg.name, newVersion: parsedVersion.value, currentVersion: pkg.lockfileVersion.value });
+                }
+                break;
+              case SemverLevel.minor:
+                if (parsedVersion[SemverLevel.major] === pkg.lockfileVersion[SemverLevel.major]) {
+                  pkgsToUpdate.push({ name: pkg.name, newVersion: parsedVersion.value, currentVersion: pkg.lockfileVersion.value });
+                }
+                break;
+              case SemverLevel.major:
+                pkgsToUpdate.push({ name: pkg.name, newVersion: parsedVersion.value, currentVersion: pkg.lockfileVersion.value });
+                break;
             }
           }
         }
