@@ -1,3 +1,10 @@
+## [3.5.3](https://github.com/dxheroes/dx-scanner/compare/v3.5.2...v3.5.3) (2020-03-23)
+
+
+### Bug Fixes
+
+* **deps:** pin dependency yeoman-gen-run to 1.2.3 ([b7942cf](https://github.com/dxheroes/dx-scanner/commit/b7942cf3fdea7666d0fccccaffb1764b7ee71dec))
+
 ## [3.5.2](https://github.com/dxheroes/dx-scanner/compare/v3.5.1...v3.5.2) (2020-03-22)
 
 
