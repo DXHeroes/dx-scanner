@@ -591,7 +591,7 @@ export class GitHubService implements IVCSService {
   }
 
   getPagination(totalCount: number, link: string) {
-    const parsedLink = VCSServicesUtils.parseLinkHeader(link);
+    const parsedLink = VCSServicesUtils.parseGitHubHeaderLink(link);
 
     if (!parsedLink) {
       return {

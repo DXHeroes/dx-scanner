@@ -109,16 +109,14 @@ export class VCSServicesUtils {
     );
   };
 
-  static parseLinkHeader = (link: string | undefined): ParsedGitHubLinkHeader | undefined => {
+  static parseGitHubHeaderLink = (link: string | undefined): ParsedGitHubLinkHeader | undefined => {
     if (!link) {
       return undefined;
     }
 
-    let page: number,
-      perPage: number,
-      query: string | undefined,
-      currentPage: number | undefined,
-      parsedLinks: ParsedGitHubLinkHeader | undefined;
+    let parsedLinks: Partial<ParsedGitHubLinkHeader> | undefined, parsedHeaderLink: ParsedGitHubLinkHeader | undefined;
+    let prev: number, next: number, last: number;
+    let page: number, perPage: number;
 
     const links = link.split(',');
 
@@ -136,39 +134,32 @@ export class VCSServicesUtils {
           const url = values ? values[1] : undefined;
 
           // save url to the right key (prev, next or last)
-          let parsedLink: any = { [current.value.link]: url };
+          const parsedLink: Partial<ParsedGitHubLinkHeader> = { [current.value.link]: url };
 
           // get query string
-          query = url ? url.split('?')[1] : undefined;
+          const query = url ? url.split('?')[1] : undefined;
+
           if (query) {
             // parse query to get params
             const queryParams = qs.parse(query);
 
-            page = queryParams['page'];
-            perPage = queryParams['per_page'];
-          }
-
-          // get current page
-          if (current.value.link === 'next') {
-            currentPage = page ? page - 1 : page;
-          }
-
-          if (current.value.link === 'prev') {
-            currentPage = page ? page + 1 : page;
-          }
-
-          // get max totalCount and save every needed param
-          if (current.value.link === 'last') {
             //Requests that return multiple items will be paginated to 30 items by default. https://developer.github.com/v3/#pagination
-            parsedLink = { totalCount: page * perPage, page: currentPage || 1, perPage: perPage || 30, ...parsedLink };
+            perPage = queryParams['per_page'] || 30;
+            page = queryParams['page'] || 1;
           }
+
+          if (current.value.link === 'prev') prev = page;
+          if (current.value.link === 'next') next = page;
+          if (current.value.link === 'last') last = page;
 
           parsedLinks = { ...parsedLink, ...parsedLinks };
         }
         current = iterator.next();
       }
+      const totalCount = (last || prev) * perPage;
+      parsedHeaderLink = { totalCount, page: +next - 1 || +prev + 1, perPage, ...parsedLinks };
     });
-    return parsedLinks;
+    return parsedHeaderLink;
   };
 }
 
