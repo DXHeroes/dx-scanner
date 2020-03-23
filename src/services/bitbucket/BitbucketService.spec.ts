@@ -249,7 +249,7 @@ describe('Bitbucket Service', () => {
 
   it('Throws error if getContributorsStats is called as the function is not implemented yet', async () => {
     try {
-      await service.getContributorsStats('pypy', 'pypy');
+      await service.listContributorsStats('pypy', 'pypy');
     } catch (error) {
       expect(error.message).toEqual('Method not implemented yet.');
     }

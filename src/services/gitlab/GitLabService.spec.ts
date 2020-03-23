@@ -206,7 +206,7 @@ describe('GitLab Service', () => {
 
   it('Throws error if getContributorsStats is called as the function is not implemented yet', async () => {
     try {
-      await service.getContributorsStats('gitlab-org', 'gitlab');
+      await service.listContributorsStats('gitlab-org', 'gitlab');
     } catch (error) {
       expect(error.message).toEqual('Method not implemented yet.');
     }
