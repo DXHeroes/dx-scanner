@@ -1,15 +1,7 @@
 import { Container } from 'inversify';
 import { DirectoryJSON } from 'memfs/lib/volume';
-<<<<<<< HEAD
-import { ProgrammingLanguage, ProjectComponent, ProjectComponentFramework, ProjectComponentPlatform, ProjectComponentType } from './model';
-import { practices } from './practices';
-import { IPracticeWithMetadata } from './practices/DxPracticeDecorator';
-import { Types } from './types';
-import { IReporter, JSONReporter, CLIReporter, CIReporter, HTMLReporter, FixReporter } from './reporters';
-=======
 import { bindDiscoveryContext } from './contexts/discovery/discoveryContextBinding';
 import { PracticeContext } from './contexts/practice/PracticeContext';
->>>>>>> master
 import { ScanningStrategyDetector } from './detectors';
 import { packageJSONContents } from './detectors/__MOCKS__/JavaScript/packageJSONContents.mock';
 import {
