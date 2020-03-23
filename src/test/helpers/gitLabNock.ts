@@ -211,6 +211,27 @@ export class GitLabNock {
     return GitLabNock.get(baseUrl, queryParams).reply(200, [response], this.pagination);
   }
 
+  listPullRequestCommentsResponse(prNumber: number, options?: ListGetterOptions) {
+    const encodedProjectUrl = encodeURIComponent(`${this.user}/${this.repoName}`);
+    const baseUrl = `${this.url}/projects/${encodedProjectUrl}/merge_requests/${prNumber}/notes`;
+    const queryParams: {
+      page?: number;
+      per_page?: number;
+    } = {};
+
+    if (options?.pagination?.page) {
+      queryParams.page = options?.pagination?.page;
+      this.pagination['x-page'] = options.pagination.page.toString();
+    }
+    if (options?.pagination?.perPage) {
+      queryParams.per_page = options?.pagination?.perPage;
+      this.pagination['x-page'] = options.pagination.perPage.toString();
+    }
+
+    const response = gitLabIssueCommentsResponseFactory();
+    return GitLabNock.get(baseUrl, queryParams).reply(200, [response], this.pagination);
+  }
+
   getRepoResponse() {
     const encodedProjectUrl = encodeURIComponent(`${this.user}/${this.repoName}`);
 

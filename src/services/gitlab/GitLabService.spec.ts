@@ -17,6 +17,7 @@ import { listRepoCommits } from '../git/__MOCKS__/gitLabServiceMockFolder/listRe
 import { GitLabService } from './GitLabService';
 import { GitLabPullRequestState } from './IGitLabService';
 import nock from 'nock';
+import { listPullRequestCommentsResponse } from '../git/__MOCKS__/gitLabServiceMockFolder/listPullRequestComments';
 
 describe('GitLab Service', () => {
   let service: GitLabService;
@@ -129,6 +130,14 @@ describe('GitLab Service', () => {
 
     const response = await service.getRepo('gitlab-org', 'gitlab');
     expect(response).toBeDefined();
+  });
+
+  it('Returns pull request comments in own interface', async () => {
+    gitLabNock = new GitLabNock('homolova', 'ted_ontouml_kom');
+    gitLabNock.listPullRequestCommentsResponse(1);
+
+    const response = await service.listPullRequestComments('homolova', 'ted_ontouml_kom', 1);
+    expect(response).toMatchObject(listPullRequestCommentsResponse());
   });
 
   it('Returns version and revision if the host name exists and AT is provided', async () => {
