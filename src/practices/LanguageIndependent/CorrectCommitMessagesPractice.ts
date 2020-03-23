@@ -12,7 +12,7 @@ import { ReportDetailType } from '../../reporters/ReporterData';
   id: 'LanguageIndependent.CorrectCommitMessages',
   name: 'Write Commit Messages by Convention',
   impact: PracticeImpact.small,
-  suggestion: '',
+  suggestion: 'A commit message should be written in a simple understandable language. Use the conventional structure. See the website.',
   reportOnlyOnce: true,
   url: 'https://www.conventionalcommits.org/',
 })

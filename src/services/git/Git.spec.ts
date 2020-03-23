@@ -6,8 +6,15 @@ import { argumentsProviderFactory } from '../../test/factories/ArgumentsProvider
 describe('Git', () => {
   let service: GitHubService, git: Git, gitHubNock: GitHubNock;
 
+  const repositoryConfig = {
+    remoteUrl: 'https://github.com/octocat/Hello-World',
+    baseUrl: 'https://github.com',
+    host: 'githum.com',
+    protocol: 'https',
+  };
+
   beforeAll(() => {
-    service = new GitHubService(argumentsProviderFactory({ uri: '.' }));
+    service = new GitHubService(argumentsProviderFactory({ uri: '.' }), repositoryConfig);
     git = new Git({ url: 'https://github.com/DXHeroes/dx-scanner.git' }, service);
     gitHubNock = new GitHubNock('1', 'DXHeroes', 1, 'dx-scanner');
   });

@@ -12,6 +12,8 @@ import { ScannerContext } from './ScannerContext';
 import { BitbucketService } from '../../services/bitbucket/BitbucketService';
 import { GitLabService } from '../../services/gitlab/GitLabService';
 import { PythonLanguageDetector } from '../../detectors/Python/PythonLanguageDetector';
+import { ArgumentsProvider } from '../../scanner';
+import { IReporter, FixReporter, JSONReporter, CLIReporter, CIReporter, HTMLReporter } from '../../reporters';
 
 export const bindScanningContext = (container: Container) => {
   container.bind(Types.ScannerContextFactory).toFactory(
@@ -24,12 +26,14 @@ export const bindScanningContext = (container: Container) => {
   );
 };
 
-const createScanningContainer = (scanningStrategy: ScanningStrategy, rootContainer: Container): Container => {
-  const container = rootContainer.createChild();
+const createScanningContainer = (scanningStrategy: ScanningStrategy, discoveryContainer: Container): Container => {
+  const container = discoveryContainer.createChild();
   container.bind(Types.ScanningStrategy).toConstantValue(scanningStrategy);
+  const args = container.get<ArgumentsProvider>(Types.ArgumentsProvider);
   bindLanguageDetectors(container);
   bindLanguageContext(container);
   bindFileAccess(scanningStrategy, container);
+  bindReporters(container, args);
   container.bind(ScannerContext).toSelf();
   return container;
 };
@@ -56,6 +60,22 @@ const bindFileAccess = (scanningStrategy: ScanningStrategy, container: Container
     .bind(Types.IFileInspector)
     .to(FileInspector)
     .inSingletonScope();
+};
+
+const bindReporters = (container: Container, args: ArgumentsProvider) => {
+  if (args.json) {
+    container.bind<IReporter>(Types.IReporter).to(JSONReporter);
+  } else if (args.html) {
+    container.bind<IReporter>(Types.IReporter).to(HTMLReporter);
+  } else if (args.fix) {
+    container.bind<IReporter>(Types.IReporter).to(FixReporter);
+  } else {
+    container.bind<IReporter>(Types.IReporter).to(CLIReporter);
+  }
+
+  if (args.ci) {
+    container.bind<IReporter>(Types.IReporter).to(CIReporter);
+  }
 };
 
 const bindLanguageDetectors = (container: Container) => {

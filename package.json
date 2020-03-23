@@ -1,7 +1,7 @@
 {
   "name": "dx-scanner",
   "description": "Scan your project for possible DX recommendations.",
-  "version": "3.1.2",
+  "version": "3.5.3",
   "author": "DX Heroes LTD <info@dxheroes.io> (https://dxheroes.io)",
   "homepage": "https://github.com/dxheroes/dx-scanner",
   "repository": "ssh://git@github.com/dxheroes/dx-scanner.git",
@@ -68,7 +68,8 @@
     "update-notifier": "4.1.0",
     "xml2js": "0.4.23",
     "yaml": "1.7.2",
-    "yeoman-environment": "2.8.1"
+    "yeoman-environment": "2.8.1",
+    "yeoman-gen-run": "1.2.3"
   },
   "devDependencies": {
     "@semantic-release/changelog": "5.0.0",

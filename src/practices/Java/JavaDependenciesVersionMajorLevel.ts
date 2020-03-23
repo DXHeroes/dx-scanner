@@ -16,6 +16,7 @@ import qs from 'qs';
   suggestion: 'Keep the dependencies updated to have all possible features. Use, for example, versions-maven-plugin',
   reportOnlyOnce: true,
   url: 'https://dxkb.io/p/updating-the-dependencies',
+  dependsOn: { practicing: ['Java.SpecifiedDependencyVersions'] },
 })
 export class JavaDependenciesVersionMajorLevel extends PracticeBase {
   async isApplicable(ctx: PracticeContext): Promise<boolean> {

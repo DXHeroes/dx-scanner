@@ -16,7 +16,7 @@ export class GitServiceUtils {
     return completeUrl;
   };
 
-  static parseUrl = (url: string) => {
+  static parseUrl = (url: string): ParsedUrl => {
     const parsedUrl = gitUrlParse(url);
 
     return {
@@ -58,4 +58,11 @@ export class GitServiceUtils {
 
     return GitServiceUtils.getUrlToRepo(url, path, branch);
   };
+}
+
+export interface ParsedUrl {
+  owner: string;
+  repoName: string;
+  host: string;
+  protocol: string;
 }

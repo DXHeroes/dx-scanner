@@ -2,7 +2,11 @@ import nock from 'nock';
 import git from 'simple-git/promise';
 import { createTestContainer } from '../inversify.config';
 import { GitHubNock } from '../test/helpers/gitHubNock';
-import { AccessType, ServiceType } from './ScanningStrategyDetector';
+import { AccessType, ServiceType, ScanningStrategyDetector } from './ScanningStrategyDetector';
+import { GitHubService, BitbucketService } from '../services';
+import { GitLabService } from '../services/gitlab/GitLabService';
+import { argumentsProviderFactory } from '../test/factories/ArgumentsProviderFactory';
+import { ArgumentsProvider } from '../scanner';
 jest.mock('simple-git/promise');
 
 describe('ScanningStrategyDetector', () => {
@@ -21,16 +25,16 @@ describe('ScanningStrategyDetector', () => {
           getRemotes: () => [],
         };
       });
-      const container = createTestContainer({ uri: '/local/path' });
 
-      const result = await container.scanningStrategyDetector.detect();
+      const scanningStrategyDetector = await createScanningStrategyDetector({ uri: '/local/path' });
+      const result = await scanningStrategyDetector.detect();
 
       expect(result).toEqual({
         accessType: undefined,
         localPath: '/local/path',
         remoteUrl: undefined,
         isOnline: false,
-        serviceType: ServiceType.git,
+        serviceType: ServiceType.local,
       });
     });
 
@@ -44,9 +48,9 @@ describe('ScanningStrategyDetector', () => {
           getRemotes: () => [{ name: 'origin', refs: { fetch: repoPath, push: repoPath } }],
         };
       });
-      const container = createTestContainer({ uri: '/local/path', auth: 'fake_token' });
 
-      const result = await container.scanningStrategyDetector.detect();
+      const scanningStrategyDetector = await createScanningStrategyDetector({ uri: '/local/path', auth: 'fake_token' });
+      const result = await scanningStrategyDetector.detect();
 
       expect(result).toEqual({
         accessType: AccessType.public,
@@ -68,9 +72,9 @@ describe('ScanningStrategyDetector', () => {
           getRemotes: () => [{ name: 'origin', refs: { fetch: repoPath, push: repoPath } }],
         };
       });
-      const container = createTestContainer({ uri: '/local/path', auth: 'fake_token' });
 
-      const result = await container.scanningStrategyDetector.detect();
+      const scanningStrategyDetector = await createScanningStrategyDetector({ uri: '/local/path', auth: 'fake_token' });
+      const result = await scanningStrategyDetector.detect();
 
       expect(result).toEqual({
         accessType: AccessType.unknown,
@@ -91,9 +95,9 @@ describe('ScanningStrategyDetector', () => {
           getRemotes: () => [{ name: 'origin', refs: { fetch: repoPath, push: repoPath } }],
         };
       });
-      const container = createTestContainer({ uri: '/local/path' });
 
-      const result = await container.scanningStrategyDetector.detect();
+      const scanningStrategyDetector = await createScanningStrategyDetector({ uri: '/local/path' });
+      const result = await scanningStrategyDetector.detect();
 
       expect(result).toEqual({
         accessType: 'public',
@@ -115,10 +119,9 @@ describe('ScanningStrategyDetector', () => {
           getRemotes: () => [{ name: 'origin', refs: { fetch: repoPath, push: repoPath } }],
         };
       });
-      const container = createTestContainer({ uri: '/local/path' });
 
-      const result = await container.scanningStrategyDetector.detect();
-
+      const scanningStrategyDetector = await createScanningStrategyDetector({ uri: '/local/path' });
+      const result = await scanningStrategyDetector.detect();
       expect(result).toEqual({
         accessType: AccessType.unknown,
         localPath: '/local/path',
@@ -139,8 +142,8 @@ describe('ScanningStrategyDetector', () => {
         };
       });
 
-      const container = createTestContainer({ uri: '/local/path', auth: 'bad AT' });
-      const result = await container.scanningStrategyDetector.detect();
+      const scanningStrategyDetector = await createScanningStrategyDetector({ uri: '/local/path', auth: 'fake_token' });
+      const result = await scanningStrategyDetector.detect();
 
       expect(result).toEqual({
         accessType: AccessType.unknown,
@@ -153,7 +156,9 @@ describe('ScanningStrategyDetector', () => {
 
     it('offline local path with remote private GitHub', async () => {
       const repoPath = 'git@github.com:DXHeroes/dx-scanner-private.git';
+
       nock.disableNetConnect();
+
       new GitHubNock('1', 'DXHeroes', 1, 'dx-scanner-private').getRepo('').reply(500);
 
       mockedGit.mockImplementation(() => {
@@ -163,8 +168,8 @@ describe('ScanningStrategyDetector', () => {
         };
       });
 
-      const container = createTestContainer({ uri: '/local/path', auth: 'bad AT' });
-      const result = await container.scanningStrategyDetector.detect();
+      const scanningStrategyDetector = await createScanningStrategyDetector({ uri: '/local/path', auth: 'fake_token' });
+      const result = await scanningStrategyDetector.detect();
 
       expect(result).toEqual({
         accessType: AccessType.unknown,
@@ -178,9 +183,9 @@ describe('ScanningStrategyDetector', () => {
     it('remote public GitHub', async () => {
       const repoPath = 'https://github.com/DXHeroes/dx-scanner.git';
       new GitHubNock('1', 'DXHeroes', 1, 'dx-scanner').getRepo('').reply(200);
-      const container = createTestContainer({ uri: repoPath });
 
-      const result = await container.scanningStrategyDetector.detect();
+      const scanningStrategyDetector = await createScanningStrategyDetector({ uri: repoPath });
+      const result = await scanningStrategyDetector.detect();
 
       expect(result).toEqual({
         accessType: AccessType.public,
@@ -194,8 +199,9 @@ describe('ScanningStrategyDetector', () => {
     it('remote private GitHub', async () => {
       const repoPath = 'https://github.com/DXHeroes/dx-scanner-private.git';
       new GitHubNock('1', 'DXHeroes', 1, 'dx-scanner-private').getRepo('').reply(404);
-      const container = createTestContainer({ uri: repoPath, auth: 'bad AT' });
-      const result = await container.scanningStrategyDetector.detect();
+
+      const scanningStrategyDetector = await createScanningStrategyDetector({ uri: repoPath, auth: 'fake_token' });
+      const result = await scanningStrategyDetector.detect();
 
       expect(result).toEqual({
         accessType: AccessType.unknown,
@@ -209,9 +215,9 @@ describe('ScanningStrategyDetector', () => {
     it('remote public GitHub without protocol in the URL', async () => {
       const repoPath = 'github.com/DXHeroes/dx-scanner.git';
       new GitHubNock('1', 'DXHeroes', 1, 'dx-scanner').getRepo('').reply(200);
-      const container = createTestContainer({ uri: repoPath });
 
-      const result = await container.scanningStrategyDetector.detect();
+      const scanningStrategyDetector = await createScanningStrategyDetector({ uri: repoPath, auth: 'fake_token' });
+      const result = await scanningStrategyDetector.detect();
 
       expect(result).toEqual({
         accessType: AccessType.public,
@@ -221,5 +227,18 @@ describe('ScanningStrategyDetector', () => {
         serviceType: ServiceType.github,
       });
     });
+
+    const createScanningStrategyDetector = async (args: Partial<ArgumentsProvider>) => {
+      const container = createTestContainer(args);
+      const argumentsProvider = argumentsProviderFactory(args);
+      const repositoryConfig = await container.scanningStrategyExplorer.explore();
+      return new ScanningStrategyDetector(
+        new GitHubService(argumentsProvider, repositoryConfig),
+        new BitbucketService(argumentsProvider, repositoryConfig),
+        new GitLabService(argumentsProvider, repositoryConfig),
+        argumentsProvider,
+        repositoryConfig,
+      );
+    };
   });
 });
