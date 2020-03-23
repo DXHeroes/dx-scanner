@@ -398,7 +398,7 @@ export class GitLabService implements IVCSService {
     throw new Error('Method not implemented yet.');
   }
 
-  async getContributorsStats(owner: string, repo: string): Promise<Paginated<ContributorStats>> {
+  async listContributorsStats(owner: string, repo: string): Promise<Paginated<ContributorStats>> {
     throw new Error('Method not implemented yet.');
   }
 
