@@ -8602,10 +8602,10 @@ scoped-regex@^1.0.0:
   resolved "https://registry.yarnpkg.com/scoped-regex/-/scoped-regex-1.0.0.tgz#a346bb1acd4207ae70bd7c0c7ca9e566b6baddb8"
   integrity sha1-o0a7Gs1CB65wvXwMfKnlZra63bg=
 
-semantic-release-slack-bot@1.5.0:
-  version "1.5.0"
-  resolved "https://registry.yarnpkg.com/semantic-release-slack-bot/-/semantic-release-slack-bot-1.5.0.tgz#4c13cbd42528e3e885295f18c1db50f850e597d2"
-  integrity sha512-a/7GugwaS+KwqZun7yqaMmDCQXywny1l2+q9t8geL9RGyHD6URPdcmGj5SfOnm4OgxqNLhuLWlqnqozcZ/fOxw==
+semantic-release-slack-bot@1.6.0:
+  version "1.6.0"
+  resolved "https://registry.yarnpkg.com/semantic-release-slack-bot/-/semantic-release-slack-bot-1.6.0.tgz#75b11bd6631a1d699f854929aef26ac195d9186c"
+  integrity sha512-pSxftp+YYMPCc+a1Ck6yIUW+o9+zvyftRgYk+R8OugrkqteC/8SJ/wL8zr9uBcQJKuzjjvw8OZ6KaajDFIm/EA==
   dependencies:
     "@semantic-release/error" "^2.2.0"
     node-fetch "^2.3.0"
@@ -10375,17 +10375,17 @@ yallist@^4.0.0:
   resolved "https://registry.yarnpkg.com/yallist/-/yallist-4.0.0.tgz#9bb92790d9c0effec63be73519e11a35019a3a72"
   integrity sha512-3wdGidZyq5PB084XLES5TpOSRA3wjXAlIWMhum2kRcv/41Sn2emQ0dycQW4uZXLejwKvg6EsvbdlVL+FYEct7A==
 
+yaml@1.8.3:
+  version "1.8.3"
+  resolved "https://registry.yarnpkg.com/yaml/-/yaml-1.8.3.tgz#2f420fca58b68ce3a332d0ca64be1d191dd3f87a"
+  integrity sha512-X/v7VDnK+sxbQ2Imq4Jt2PRUsRsP7UcpSl3Llg6+NRRqWLIvxkMFYtH1FmvwNGYRKKPa+EPA4qDBlI9WVG1UKw==
+  dependencies:
+    "@babel/runtime" "^7.8.7"
+
 yaml@^1.7.2:
   version "1.8.2"
   resolved "https://registry.yarnpkg.com/yaml/-/yaml-1.8.2.tgz#a29c03f578faafd57dcb27055f9a5d569cb0c3d9"
   integrity sha512-omakb0d7FjMo3R1D2EbTKVIk6dAVLRxFXdLZMEUToeAvuqgG/YuHMuQOZ5fgk+vQ8cx+cnGKwyg+8g8PNT0xQg==
-  dependencies:
-    "@babel/runtime" "^7.8.7"
-
-yaml@^1.8.3:
-  version "1.8.3"
-  resolved "https://registry.yarnpkg.com/yaml/-/yaml-1.8.3.tgz#2f420fca58b68ce3a332d0ca64be1d191dd3f87a"
-  integrity sha512-X/v7VDnK+sxbQ2Imq4Jt2PRUsRsP7UcpSl3Llg6+NRRqWLIvxkMFYtH1FmvwNGYRKKPa+EPA4qDBlI9WVG1UKw==
   dependencies:
     "@babel/runtime" "^7.8.7"
 

@@ -67,7 +67,7 @@
     "typescript": "^3.8.3",
     "update-notifier": "4.1.0",
     "xml2js": "0.4.23",
-    "yaml": "^1.8.3",
+    "yaml": "1.8.3",
     "yeoman-environment": "2.8.1",
     "yeoman-gen-run": "1.2.3"
   },
@@ -100,7 +100,7 @@
     "prettier": "1.19.1",
     "rimraf": "3.0.2",
     "semantic-release": "17.0.4",
-    "semantic-release-slack-bot": "1.5.0",
+    "semantic-release-slack-bot": "1.6.0",
     "ts-jest": "25.2.1"
   },
   "engineStrict": true,
