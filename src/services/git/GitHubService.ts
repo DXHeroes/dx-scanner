@@ -536,7 +536,7 @@ export class GitHubService implements IVCSService {
    * Add Comment to a Pull Request
    */
   async createPullRequestComment(owner: string, repo: string, prNumber: number, body: string): Promise<CreatedUpdatedPullRequestComment> {
-    const response: Octokit.Response<Octokit.IssuesCreateCommentResponse> = await this.client.issues.createComment({
+    const response = await this.client.issues.createComment({
       owner,
       repo,
       issue_number: prNumber,
@@ -558,7 +558,7 @@ export class GitHubService implements IVCSService {
    * Update Comment on a Pull Request
    */
   async updatePullRequestComment(owner: string, repo: string, commentId: number, body: string): Promise<CreatedUpdatedPullRequestComment> {
-    const response: Octokit.Response<Octokit.IssuesUpdateCommentResponse> = await this.client.issues.updateComment({
+    const response = await this.client.issues.updateComment({
       owner,
       repo,
       comment_id: commentId,
