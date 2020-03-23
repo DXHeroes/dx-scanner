@@ -36,6 +36,7 @@ import { DeepRequired } from '../../lib/deepRequired';
 import { InMemoryCache } from '../../scanner/cache';
 import { BitbucketPullRequestState, BitbucketIssueState } from './IBitbucketService';
 import _ from 'lodash';
+import { RepositoryConfig } from '../../scanner/RepositoryConfig';
 
 const debug = Debug('cli:services:git:bitbucket-service');
 
@@ -46,10 +47,15 @@ export class BitbucketService implements IVCSService {
   private cache: ICache;
   private callCount = 0;
   private authenticated = false;
+  private readonly repositoryConfig: RepositoryConfig;
 
-  constructor(@inject(Types.ArgumentsProvider) argumentsProvider: ArgumentsProvider) {
+  constructor(
+    @inject(Types.ArgumentsProvider) argumentsProvider: ArgumentsProvider,
+    @inject(Types.RepositoryConfig) repositoryConfig: RepositoryConfig,
+  ) {
     this.cache = new InMemoryCache();
     this.argumentsProvider = argumentsProvider;
+    this.repositoryConfig = repositoryConfig;
     this.client = Bitbucket({
       notice: false,
     });
@@ -123,6 +129,7 @@ export class BitbucketService implements IVCSService {
           },
           url: val.links.html.href,
           body: val.description,
+          sha: val.source.commit.hash,
           createdAt: val.created_on,
           updatedAt: val.updated_on,
           closedAt:
@@ -181,6 +188,7 @@ export class BitbucketService implements IVCSService {
       },
       url: response.data.links.html.href,
       body: response.data.summary.raw,
+      sha: response.data.source.commit.hash,
       createdAt: response.data.created_on,
       updatedAt: response.data.updated_on,
       closedAt:

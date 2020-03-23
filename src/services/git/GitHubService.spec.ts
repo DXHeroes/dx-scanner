@@ -31,8 +31,15 @@ import _ from 'lodash';
 describe('GitHub Service', () => {
   let service: GitHubService;
 
+  const repositoryConfig = {
+    remoteUrl: 'https://github.com/octocat/Hello-World',
+    baseUrl: 'https://github.com',
+    host: 'githum.com',
+    protocol: 'https',
+  };
+
   beforeEach(async () => {
-    service = new GitHubService(argumentsProviderFactory({ uri: '.' }));
+    service = new GitHubService(argumentsProviderFactory({ uri: '.' }), repositoryConfig);
   });
 
   describe('#getPullRequests', () => {

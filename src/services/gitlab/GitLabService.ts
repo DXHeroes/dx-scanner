@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/no-unused-vars, @typescript-eslint/camelcase */
-import { Response } from 'bitbucket/src/request/types';
 import Debug from 'debug';
 import { inject, injectable } from 'inversify';
 import { inspect } from 'util';
 import { IVCSService, ServicePagination } from '..';
+import { ScanningStrategy } from '../../detectors';
 import { IssueState, ListGetterOptions, Paginated, PullRequestState } from '../../inspectors';
 import { ArgumentsProvider } from '../../scanner';
 import { InMemoryCache } from '../../scanner/cache';
@@ -29,7 +29,8 @@ import {
   UserInfo,
 } from '../git/model';
 import { VCSServicesUtils } from '../git/VCSServicesUtils';
-import { GitLabClient, PaginationGitLabCustomResponse, CustomAxiosResponse } from './gitlabClient/gitlabUtils';
+import { CustomAxiosResponse, GitLabClient, PaginationGitLabCustomResponse } from './gitlabClient/gitlabUtils';
+import { RepositoryConfig } from '../../scanner/RepositoryConfig';
 const debug = Debug('cli:services:git:gitlab-service');
 
 @injectable()
@@ -39,27 +40,30 @@ export class GitLabService implements IVCSService {
   private callCount = 0;
   private readonly argumentsProvider: ArgumentsProvider;
   private readonly host: string;
+  private readonly repositoryConfig: RepositoryConfig;
 
-  constructor(@inject(Types.ArgumentsProvider) argumentsProvider: ArgumentsProvider) {
+  constructor(
+    @inject(Types.ArgumentsProvider) argumentsProvider: ArgumentsProvider,
+    @inject(Types.RepositoryConfig) repositoryConfig: RepositoryConfig,
+  ) {
     this.argumentsProvider = argumentsProvider;
-    const parsedUrl = GitServiceUtils.parseUrl(argumentsProvider.uri);
-    this.host = parsedUrl.host;
+    this.repositoryConfig = repositoryConfig;
+    this.host = repositoryConfig.host!;
 
     this.cache = new InMemoryCache();
-    this.client = this.setClient(this.host, this.argumentsProvider.auth, parsedUrl.protocol);
-  }
 
-  setClient(host: string, auth?: string, protocol = 'https') {
-    debug('Set new Gitlab Client', protocol, host);
     this.client = new GitLabClient({
-      token: auth,
-      host: `${protocol}://${host}`,
+      token: this.argumentsProvider.auth,
+      host: this.repositoryConfig.baseUrl,
     });
-    return this.client;
   }
 
   purgeCache() {
     this.cache.purge();
+  }
+
+  checkVersion() {
+    return this.client.Version.check();
   }
 
   getRepo(owner: string, repo: string) {
@@ -95,6 +99,7 @@ export class GitLabService implements IVCSService {
           },
           url: val.web_url,
           body: val.description,
+          sha: val.sha,
           createdAt: val.created_at.toString(),
           updatedAt: val.updated_at.toString(),
           closedAt: val.closed_at ? val.closed_at?.toString() : null,
@@ -139,6 +144,7 @@ export class GitLabService implements IVCSService {
         url: data.author.web_url,
       },
       url: data.web_url,
+      sha: data.sha,
       body: data.description,
       createdAt: data.created_at.toString(),
       updatedAt: data.updated_at.toString(),
