@@ -1,3 +1,20 @@
+# [3.6.0](https://github.com/dxheroes/dx-scanner/compare/v3.5.3...v3.6.0) (2020-03-23)
+
+
+### Bug Fixes
+
+* **gitlab:** do not reject unauthorized certificates ([5338a29](https://github.com/dxheroes/dx-scanner/commit/5338a29fef4b82befb4d413a8f33e7339472b9be))
+* getPagination() ([1c5d5c6](https://github.com/dxheroes/dx-scanner/commit/1c5d5c65136cb250fbc211b3c6e8216b19e3cee5))
+* rename getContributorsStats() to listContributorsStats() ([6bc3346](https://github.com/dxheroes/dx-scanner/commit/6bc334638b84854c80d9d0fe8cf29dbc602c095c))
+
+
+### Features
+
+* implement parseGitHubHeaderLink() ([7159da5](https://github.com/dxheroes/dx-scanner/commit/7159da5d4878683ad6b4a480568ed09097c63174))
+* implement parseLinkHeader() ([e08a26f](https://github.com/dxheroes/dx-scanner/commit/e08a26fa0bc02905dd43ee2de5eb9cd79030803c))
+* save also headers, not only data ([add8f4b](https://github.com/dxheroes/dx-scanner/commit/add8f4bc0ae26f2ce46b3783dc6b41b10f0113bd))
+* wip - parseLinkHeader() ([504b628](https://github.com/dxheroes/dx-scanner/commit/504b62877b69e77d562839215fbfc80769a56acc))
+
 ## [3.5.3](https://github.com/dxheroes/dx-scanner/compare/v3.5.2...v3.5.3) (2020-03-23)
 
 
