@@ -1,3 +1,10 @@
+## [3.6.2](https://github.com/dxheroes/dx-scanner/compare/v3.6.1...v3.6.2) (2020-03-25)
+
+
+### Bug Fixes
+
+* set isOnline variable to true if the API request is ok ([f5c763a](https://github.com/dxheroes/dx-scanner/commit/f5c763a17f050cf4de04ca48d8c9f343f449734a))
+
 ## [3.6.1](https://github.com/dxheroes/dx-scanner/compare/v3.6.0...v3.6.1) (2020-03-25)
 
 
