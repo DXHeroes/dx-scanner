@@ -14,19 +14,27 @@ import * as xml2js from 'xml2js';
 })
 export class JavaCodeStyleUsedPractice implements IPractice {
   async isApplicable(ctx: PracticeContext): Promise<boolean> {
-    // note: not sure if this also applies to Kotlin
+    // note: these styles do not apply to Kotlin
     return ctx.projectComponent.language === ProgrammingLanguage.Java;
   }
 
   async evaluate(ctx: PracticeContext): Promise<PracticeEvaluationResult> {
-    if (!ctx.fileInspector) {
+    if (!ctx.fileInspector || !ctx.packageInspector) {
       return PracticeEvaluationResult.unknown;
+    }
+    // java code styles
+    if (
+      ctx.packageInspector.hasOneOfPackages([
+        'com.github.sherter.googlejavaformatgradleplugin:google-java-format-gradle-plugin',
+        'com.google.googlejavaformat:google-java-format',
+        'io.spring.javaformat:spring-javaformat-gradle-plugin',
+      ])
+    ) {
+      return PracticeEvaluationResult.practicing;
     }
 
     const dotXml = new RegExp('.(xml)', 'i');
     const xmlFiles = await ctx.fileInspector.scanFor(dotXml, '/', { shallow: false });
-
-    // note: this might not be the best way to do this -- try to find another way of distinguishing a style file
     const codeStyleKeys = ['codestylesettings', 'codestyle', 'code_scheme'];
 
     for (const file of xmlFiles) {
