@@ -135,6 +135,8 @@ export class ScanningStrategyDetector implements IDetector<string, ScanningStrat
 
       try {
         const { data } = await this.gitLabService.getRepo(owner, repoName);
+        this.isOnline = true;
+
         if (data.visibility === AccessType.private) {
           return AccessType.private;
         }
