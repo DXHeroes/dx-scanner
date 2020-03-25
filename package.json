@@ -53,7 +53,7 @@
     "memfs": "3.1.2",
     "moment": "2.24.0",
     "node-filter-async": "2.0.0",
-    "npm-check-updates": "4.0.5",
+    "npm-check-updates": "4.0.4",
     "oclif": "1.15.2",
     "qs": "6.9.2",
     "reflect-metadata": "0.1.13",
