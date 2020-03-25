@@ -1,3 +1,10 @@
+## [3.6.1](https://github.com/dxheroes/dx-scanner/compare/v3.6.0...v3.6.1) (2020-03-25)
+
+
+### Bug Fixes
+
+* **gitlab:** update comment with PR ID ([fe5f357](https://github.com/dxheroes/dx-scanner/commit/fe5f357aef4cfc98ab3bdb73b10e2f57171eae15))
+
 # [3.6.0](https://github.com/dxheroes/dx-scanner/compare/v3.5.3...v3.6.0) (2020-03-23)
 
 
