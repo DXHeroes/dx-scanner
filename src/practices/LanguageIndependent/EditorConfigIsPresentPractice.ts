@@ -3,6 +3,7 @@ import { PracticeEvaluationResult, PracticeImpact } from '../../model';
 import { DxPractice } from '../DxPracticeDecorator';
 import { PracticeContext } from '../../contexts/practice/PracticeContext';
 import { FixerContext } from '../../contexts/fixer/FixerContext';
+import path from 'path';
 
 const editorConfigTemplate = `root = true
 
@@ -48,7 +49,7 @@ export class EditorConfigIsPresentPractice implements IPractice {
   }
 
   async fix(ctx: FixerContext) {
-    await ctx.fileService?.createFile('.editorconfig', editorConfigTemplate);
+    await ctx.fileService?.createFile(path.resolve(__dirname, '../../../.editorconfig'), editorConfigTemplate);
     ctx.fileInspector?.purgeCache();
     ctx.root.fileInspector?.purgeCache();
   }
