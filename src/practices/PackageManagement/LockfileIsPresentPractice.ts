@@ -41,7 +41,7 @@ export class LockfileIsPresentPractice implements IPractice {
     const generateNpmLock = () => {
       shell.exec('npm i --package-lock-only');
     };
-    let packageManager = await PackageManagerUtils.getPmInstalled();
+    const packageManager = PackageManagerUtils.packageManagerInstalled(PackageManagerType.yarn); // prefer Yarn
     if (packageManager === PackageManagerType.unknown) {
       // prefer yarn
       const hasYarn = commandExistsSync('yarn');

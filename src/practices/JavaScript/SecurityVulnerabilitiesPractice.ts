@@ -38,7 +38,7 @@ export class SecurityVulnerabilitiesPractice extends PracticeBase {
     const npmCmd = 'npm audit --audit-level=high --json';
     const yarnCmd = 'yarn audit --summary --json';
 
-    const packageManager = await PackageManagerUtils.getPmInstalled(ctx.fileInspector);
+    const packageManager = await PackageManagerUtils.getPackageManagerInstalled(ctx.fileInspector);
     if (packageManager === PackageManagerType.unknown) {
       securityVulnerabilitiesPracticeDebug(
         'Cannot establish package-manager type, missing package-lock.json and yarn.lock or npm command not installed.',
