@@ -44,4 +44,17 @@ describe('EditorConfigIsPresentPractice', () => {
     const result = await practice.isApplicable();
     expect(result).toEqual(true);
   });
+
+  describe('Fixer', () => {
+    it('Creates editorconfig file', async () => {
+      containerCtx.virtualFileSystemService.setFileSystem({
+        [`${__dirname}/.keep`]: '',
+      });
+
+      await practice.fix(containerCtx.fixerContext);
+
+      const exists = await containerCtx.virtualFileSystemService.exists('.editorconfig');
+      expect(exists).toBe(true);
+    });
+  });
 });
