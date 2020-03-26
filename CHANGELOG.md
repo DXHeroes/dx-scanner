@@ -1,3 +1,11 @@
+# [3.8.0](https://github.com/dxheroes/dx-scanner/compare/v3.7.0...v3.8.0) (2020-03-26)
+
+
+### Features
+
+* added code style recognition using dependencies ([8e8d860](https://github.com/dxheroes/dx-scanner/commit/8e8d860d79b737137ba1013f6f14bb993ae89f0f))
+* java code styles practice ([478f4e7](https://github.com/dxheroes/dx-scanner/commit/478f4e7452833a4b6b20071e079a464c435e86b1))
+
 # [3.7.0](https://github.com/dxheroes/dx-scanner/compare/v3.6.2...v3.7.0) (2020-03-26)
 
 
