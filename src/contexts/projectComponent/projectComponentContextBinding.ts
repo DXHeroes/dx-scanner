@@ -34,8 +34,8 @@ const createProjectComponentContainer = (projectComponent: ProjectComponent, roo
           projectComponent: projectComponent,
           packageInspector: ctx.container.get(Types.IPackageInspector),
           gitInspector,
-          issueTrackingInspector: ctx.container.get(Types.IIssueTrackingInspector),
-          collaborationInspector: ctx.container.get(Types.ICollaborationInspector),
+          issueTrackingInspector: projectComponent.repositoryPath ? ctx.container.get(Types.IIssueTrackingInspector) : undefined,
+          collaborationInspector: projectComponent.repositoryPath ? ctx.container.get(Types.ICollaborationInspector) : undefined,
           fileInspector: ctx.container.get(Types.IFileInspector),
           root: {
             fileInspector: ctx.container.get(Types.IRootFileInspector),
