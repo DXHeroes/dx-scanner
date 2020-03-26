@@ -1,3 +1,12 @@
+# [3.7.0](https://github.com/dxheroes/dx-scanner/compare/v3.6.2...v3.7.0) (2020-03-26)
+
+
+### Features
+
+* **fixer:** add fixer for lockfile practice ([0990c4a](https://github.com/dxheroes/dx-scanner/commit/0990c4a8ab9297ee7bb19541bf811531bb48e516))
+* **fixer:** add fixer tests for lockfile practice ([5f78b71](https://github.com/dxheroes/dx-scanner/commit/5f78b71708018cbbead8d2ba7ff138b4e40c7f34))
+* **fixer:** remove redundant checks in Lockfile practice ([c997a3b](https://github.com/dxheroes/dx-scanner/commit/c997a3b84c6f004f3af29ddbd139dc20b47d647c))
+
 ## [3.6.2](https://github.com/dxheroes/dx-scanner/compare/v3.6.1...v3.6.2) (2020-03-25)
 
 
