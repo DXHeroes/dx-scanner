@@ -32,6 +32,7 @@ import {
 import { VCSServicesUtils } from './VCSServicesUtils';
 import { ArgumentsProvider } from '../../scanner';
 import { IssueState } from '../../inspectors/IIssueTrackingInspector';
+import { RepositoryConfig } from '../../scanner/RepositoryConfig';
 const debug = Debug('cli:services:git:github-service');
 
 @injectable()
@@ -39,10 +40,14 @@ export class GitHubService implements IVCSService {
   private readonly client: Octokit;
   private cache: ICache;
   private callCount = 0;
+  private readonly repositoryConfig: RepositoryConfig;
 
-  constructor(@inject(Types.ArgumentsProvider) argumentsProvider: ArgumentsProvider) {
+  constructor(
+    @inject(Types.ArgumentsProvider) argumentsProvider: ArgumentsProvider,
+    @inject(Types.RepositoryConfig) repositoryConfig: RepositoryConfig,
+  ) {
     this.cache = new InMemoryCache();
-
+    this.repositoryConfig = repositoryConfig;
     this.client = new Octokit({
       auth: argumentsProvider.auth,
     });
@@ -77,7 +82,7 @@ export class GitHubService implements IVCSService {
     if (options?.pagination?.page) params.page = options.pagination.page;
     if (options?.pagination?.perPage) params.per_page = options.pagination.perPage;
 
-    const { data } = await this.unwrap(this.client.pulls.list(params));
+    const { data, headers } = await this.unwrap(this.client.pulls.list(params));
 
     const items = await Promise.all(
       data.map(async (val) => {
@@ -89,6 +94,7 @@ export class GitHubService implements IVCSService {
           },
           url: val.url,
           body: val.body,
+          sha: val.merge_commit_sha,
           createdAt: val.created_at,
           updatedAt: val.updated_at,
           closedAt: val.closed_at,
@@ -113,7 +119,7 @@ export class GitHubService implements IVCSService {
       }),
     );
 
-    const pagination = this.getPagination(data.length);
+    const pagination = this.getPagination(data.length, headers.link);
 
     return { items, ...pagination };
   }
@@ -132,6 +138,7 @@ export class GitHubService implements IVCSService {
       },
       url: response.data.url,
       body: response.data.body,
+      sha: response.data.merge_commit_sha,
       createdAt: response.data.created_at,
       updatedAt: response.data.updated_at,
       closedAt: response.data.closed_at,
@@ -164,7 +171,7 @@ export class GitHubService implements IVCSService {
    * Lists all reviews on pull request in the repo.
    */
   async listPullRequestReviews(owner: string, repo: string, prNumber: number): Promise<Paginated<PullRequestReview>> {
-    const { data } = await this.unwrap(this.client.pulls.listReviews({ owner, repo, pull_number: prNumber }));
+    const { data, headers } = await this.unwrap(this.client.pulls.listReviews({ owner, repo, pull_number: prNumber }));
 
     const items = data.map((val) => ({
       user: {
@@ -177,7 +184,7 @@ export class GitHubService implements IVCSService {
       state: val.state,
       url: val.pull_request_url,
     }));
-    const pagination = this.getPagination(data.length);
+    const pagination = this.getPagination(data.length, headers.link);
 
     return { items, ...pagination };
   }
@@ -191,7 +198,7 @@ export class GitHubService implements IVCSService {
    * Sha can be SHA or branch name.
    */
   async listRepoCommits(owner: string, repo: string, options?: ListGetterOptions): Promise<Paginated<Commit>> {
-    const { data } = await this.unwrap(
+    const { data, headers } = await this.unwrap(
       this.client.repos.listCommits({
         owner,
         repo,
@@ -214,7 +221,7 @@ export class GitHubService implements IVCSService {
       },
       verified: val.commit.verification.verified,
     }));
-    const pagination = this.getPagination(data.length);
+    const pagination = this.getPagination(data.length, headers.link);
 
     return { items, ...pagination };
   }
@@ -247,7 +254,7 @@ export class GitHubService implements IVCSService {
    * Lists contributors to the specified repository and sorts them by the number of commits per contributor in descending order.
    */
   async listContributors(owner: string, repo: string): Promise<Paginated<Contributor>> {
-    const { data } = await this.unwrap(this.client.repos.listContributors({ owner, repo }));
+    const { data, headers } = await this.unwrap(this.client.repos.listContributors({ owner, repo }));
 
     const items = data.map((val) => ({
       user: {
@@ -261,7 +268,7 @@ export class GitHubService implements IVCSService {
       followersUrl: val.followers_url,
       contributions: val.contributions,
     }));
-    const pagination = this.getPagination(data.length);
+    const pagination = this.getPagination(data.length, headers.link);
 
     return { items, ...pagination };
   }
@@ -275,7 +282,7 @@ export class GitHubService implements IVCSService {
    *    d - Number of deletions
    *    c - Number of commits
    */
-  async getContributorsStats(owner: string, repo: string): Promise<Paginated<ContributorStats>> {
+  async listContributorsStats(owner: string, repo: string): Promise<Paginated<ContributorStats>> {
     // Wait for GitHub stats to be recomputed
     await this.unwrap(
       this.client.repos.getContributorsStats({ owner, repo }).then((r) => {
@@ -288,7 +295,7 @@ export class GitHubService implements IVCSService {
       }),
     );
 
-    const { data } = await this.unwrap(this.client.repos.getContributorsStats({ owner, repo }));
+    const { data, headers } = await this.unwrap(this.client.repos.getContributorsStats({ owner, repo }));
 
     const items = data.map((val) => ({
       author: {
@@ -304,7 +311,7 @@ export class GitHubService implements IVCSService {
         commits: val.c,
       })),
     }));
-    const pagination = this.getPagination(data.length);
+    const pagination = this.getPagination(data.length, headers.link);
 
     return { items, ...pagination };
   }
@@ -370,7 +377,7 @@ export class GitHubService implements IVCSService {
     if (options?.pagination?.perPage) params.per_page = options.pagination.perPage;
     if (state) params.state = state;
 
-    const { data } = await this.unwrap(this.client.issues.listForRepo(params));
+    const { data, headers } = await this.unwrap(this.client.issues.listForRepo(params));
 
     const items = data.map((val) => ({
       user: {
@@ -387,7 +394,7 @@ export class GitHubService implements IVCSService {
       id: val.id,
       pullRequestUrl: val.pull_request && val.pull_request.url,
     }));
-    const pagination = this.getPagination(data.length);
+    const pagination = this.getPagination(data.length, headers.link);
 
     return { items, ...pagination };
   }
@@ -423,7 +430,7 @@ export class GitHubService implements IVCSService {
     if (options?.pagination?.page) params.page = options.pagination.page;
     if (options?.pagination?.perPage) params.per_page = options.pagination.perPage;
 
-    const { data } = await this.unwrap(this.client.issues.listComments(params));
+    const { data, headers } = await this.unwrap(this.client.issues.listComments(params));
 
     const items = data.map((val) => ({
       user: {
@@ -438,7 +445,7 @@ export class GitHubService implements IVCSService {
       authorAssociation: val.user.login,
       id: val.id,
     }));
-    const pagination = this.getPagination(data.length);
+    const pagination = this.getPagination(data.length, headers.link);
 
     return { items, ...pagination };
   }
@@ -447,7 +454,7 @@ export class GitHubService implements IVCSService {
    * Lists all pull request files.
    */
   async listPullRequestFiles(owner: string, repo: string, prNumber: number): Promise<Paginated<PullFiles>> {
-    const { data } = await this.unwrap(this.client.pulls.listFiles({ owner, repo, pull_number: prNumber }));
+    const { data, headers } = await this.unwrap(this.client.pulls.listFiles({ owner, repo, pull_number: prNumber }));
 
     const items = data.map((val) => ({
       sha: val.sha,
@@ -459,7 +466,7 @@ export class GitHubService implements IVCSService {
       contentsUrl: val.contents_url,
     }));
 
-    const pagination = this.getPagination(data.length);
+    const pagination = this.getPagination(data.length, headers.link);
     return { items, ...pagination };
   }
 
@@ -471,7 +478,7 @@ export class GitHubService implements IVCSService {
     if (options?.pagination?.page) params.page = options.pagination.page;
     if (options?.pagination?.perPage) params.per_page = options.pagination.perPage;
 
-    const { data } = await this.unwrap(this.client.pulls.listCommits(params));
+    const { data, headers } = await this.unwrap(this.client.pulls.listCommits(params));
 
     const items = data.map((val) => ({
       sha: val.sha,
@@ -491,7 +498,7 @@ export class GitHubService implements IVCSService {
       },
     }));
 
-    const pagination = this.getPagination(data.length);
+    const pagination = this.getPagination(data.length, headers.link);
     return { items, ...pagination };
   }
 
@@ -509,7 +516,7 @@ export class GitHubService implements IVCSService {
     if (options?.pagination?.perPage) params.per_page = options.pagination.perPage;
 
     // use issues.listComments to list comments for a pull request
-    const { data } = await this.unwrap(this.client.issues.listComments(params));
+    const { data, headers } = await this.unwrap(this.client.issues.listComments(params));
 
     const items = data.map((comment) => ({
       user: { id: comment.user.id.toString(), login: comment.user.login, url: comment.user.url },
@@ -521,7 +528,7 @@ export class GitHubService implements IVCSService {
       authorAssociation: comment.user.login,
     }));
 
-    const pagination = this.getPagination(data.length);
+    const pagination = this.getPagination(data.length, headers.link);
     return { items, ...pagination };
   }
 
@@ -583,13 +590,26 @@ export class GitHubService implements IVCSService {
     };
   }
 
-  getPagination(totalCount: number) {
-    const hasNextPage = false;
-    const hasPreviousPage = false;
-    const page = 1;
-    const perPage = totalCount;
+  getPagination(totalCount: number, link: string) {
+    const parsedLink = VCSServicesUtils.parseGitHubHeaderLink(link);
 
-    return { totalCount, hasNextPage, hasPreviousPage, page, perPage };
+    if (!parsedLink) {
+      return {
+        totalCount,
+        hasNextPage: false,
+        hasPreviousPage: false,
+        page: 1,
+        perPage: totalCount,
+      };
+    } else {
+      return {
+        totalCount: parsedLink.totalCount,
+        hasNextPage: !!parsedLink.next,
+        hasPreviousPage: !!parsedLink.prev,
+        page: parsedLink.page,
+        perPage: parsedLink.perPage,
+      };
+    }
   }
 
   /**

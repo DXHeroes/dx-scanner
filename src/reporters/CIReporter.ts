@@ -13,16 +13,31 @@ import { ScanningStrategyDetectorUtils } from '../detectors/utils/ScanningStrate
 import _ from 'lodash';
 import { GitLabService } from '../services/gitlab/GitLabService';
 import { GitLabClient } from '../services/gitlab/gitlabClient/gitlabUtils';
+import { RepositoryConfig } from '../scanner/RepositoryConfig';
 
 @injectable()
 export class CIReporter implements IReporter {
   private readonly argumentsProvider: ArgumentsProvider;
+  private readonly repositoryConfig: RepositoryConfig;
+  private readonly gitHubService: GitHubService;
+  private readonly bitbucketService: BitbucketService;
+  private readonly gitLabService: GitLabService;
   private config: CIReporterConfig | undefined;
-  private d: debug.Debugger;
+  private readonly d: debug.Debugger;
 
-  constructor(@inject(Types.ArgumentsProvider) argumentsProvider: ArgumentsProvider) {
+  constructor(
+    @inject(Types.ArgumentsProvider) argumentsProvider: ArgumentsProvider,
+    @inject(Types.RepositoryConfig) repositoryConfig: RepositoryConfig,
+    @inject(GitHubService) gitHubService: GitHubService,
+    @inject(BitbucketService) bitbucketService: BitbucketService,
+    @inject(GitLabService) gitLabService: GitLabService,
+  ) {
     this.d = debug('CIReporter');
     this.argumentsProvider = argumentsProvider;
+    this.repositoryConfig = repositoryConfig;
+    this.gitHubService = gitHubService;
+    this.bitbucketService = bitbucketService;
+    this.gitLabService = gitLabService;
   }
 
   async report(practicesAndComponents: PracticeWithContextForReporter[]): Promise<CreatedUpdatedPullRequestComment | undefined> {
@@ -37,7 +52,7 @@ export class CIReporter implements IReporter {
       const msg = "This isn't a pull request.";
       this.d(msg);
       return;
-    } else if (!(await ScanningStrategyDetectorUtils.isLocalPath(this.argumentsProvider.uri))) {
+    } else if (!ScanningStrategyDetectorUtils.isLocalPath(this.argumentsProvider.uri)) {
       const msg = 'CIReporter works only for local path';
       this.d(msg);
       return;
@@ -64,13 +79,13 @@ export class CIReporter implements IReporter {
 
     switch (this.config!.service) {
       case VCSServiceType.github:
-        client = new GitHubService(this.argumentsProvider);
+        client = this.gitHubService;
         break;
       case VCSServiceType.bitbucket:
-        client = new BitbucketService(this.argumentsProvider);
+        client = this.bitbucketService;
         break;
       case VCSServiceType.gitlab:
-        client = new GitLabService({ ...this.argumentsProvider, ...{ uri: process.env.CI_SERVER_HOST! } });
+        client = this.gitLabService;
         break;
       default:
         return assertNever(this.config!.service);
@@ -104,6 +119,7 @@ export class CIReporter implements IReporter {
         this.config!.repository.name,
         ciReporterComments[ciReporterComments.length - 1].id,
         message,
+        this.config!.pullRequestId,
       );
     } else {
       // post a comment
@@ -142,7 +158,11 @@ export class CIReporter implements IReporter {
     } else if ((ev.GITLAB_CI = 'true')) {
       // detect GitLab config
       this.d('Is GitLab');
-      const client = new GitLabClient({ token: this.argumentsProvider.auth, host: `https://${ev.CI_SERVER_HOST!}` });
+      const client = new GitLabClient({
+        token: this.argumentsProvider.auth,
+        host: this.repositoryConfig.baseUrl,
+      });
+
       const prs = await client.MergeRequests.list(ev.CI_PROJECT_ID!, { filter: { sourceBranch: ev.CI_COMMIT_BRANCH } });
       const prForThisPipeline = prs.data.find((p) => p.sha === ev.CI_COMMIT_SHA);
       if (!prForThisPipeline) {
@@ -152,7 +172,7 @@ export class CIReporter implements IReporter {
 
       return {
         service: VCSServiceType.gitlab,
-        pullRequestId: prForThisPipeline.id,
+        pullRequestId: prForThisPipeline.iid,
         repository: {
           owner: ev.CI_PROJECT_NAMESPACE!,
           name: ev.CI_PROJECT_NAME!,

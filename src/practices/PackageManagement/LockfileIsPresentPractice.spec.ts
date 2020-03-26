@@ -1,6 +1,18 @@
 import { LockfileIsPresentPractice } from './LockfileIsPresentPractice';
 import { PracticeEvaluationResult } from '../../model';
 import { TestContainerContext, createTestContainer } from '../../inversify.config';
+import shelljs from 'shelljs';
+import { sync as commandExists } from 'command-exists';
+
+jest.mock('shelljs', () => ({
+  pwd: jest.fn(),
+  cd: jest.fn(),
+  exec: jest.fn(),
+}));
+
+jest.mock('command-exists', () => ({
+  sync: jest.fn(),
+}));
 
 describe('LockfileIsPresentPractice', () => {
   let containerCtx: TestContainerContext;
@@ -51,5 +63,43 @@ describe('LockfileIsPresentPractice', () => {
   it('Is always applicable', async () => {
     const result = await practice.isApplicable();
     expect(result).toEqual(true);
+  });
+
+  describe('fixer', () => {
+    let npmInstallRun: boolean;
+    let yarnInstallRun: boolean;
+
+    beforeAll(() => {
+      (shelljs.exec as jest.Mock).mockImplementation((cmd: string) => {
+        if (cmd.startsWith('npm i')) npmInstallRun = true;
+        else if (cmd.startsWith('yarn install')) yarnInstallRun = true;
+      });
+      containerCtx.virtualFileSystemService.setFileSystem({
+        'package.json': '',
+      });
+    });
+
+    beforeEach(() => {
+      npmInstallRun = false;
+      yarnInstallRun = false;
+    });
+
+    it('runs npm install when npm installed', async () => {
+      (commandExists as jest.Mock).mockImplementation((cmd: string) => cmd === 'npm');
+
+      await practice.fix();
+
+      expect(npmInstallRun).toBe(true);
+      expect(yarnInstallRun).toBe(false);
+    });
+
+    it('runs yarn install when yarn installed', async () => {
+      (commandExists as jest.Mock).mockImplementation((cmd: string) => cmd === 'yarn');
+
+      await practice.fix();
+
+      expect(npmInstallRun).toBe(false);
+      expect(yarnInstallRun).toBe(true);
+    });
   });
 });

@@ -21,8 +21,15 @@ describe('Bitbucket Service', () => {
   let service: BitbucketService;
   let bitbucketNock: BitbucketNock;
 
+  const repositoryConfig = {
+    remoteUrl: 'https://bitbucket.org/pypy/pypy',
+    baseUrl: 'https://bitbucket.org',
+    host: 'bitbucket.org',
+    protocol: 'https',
+  };
+
   beforeEach(async () => {
-    service = new BitbucketService(argumentsProviderFactory({ uri: '.' }));
+    service = new BitbucketService(argumentsProviderFactory({ uri: '.' }), repositoryConfig);
 
     bitbucketNock = new BitbucketNock('pypy', 'pypy');
   });

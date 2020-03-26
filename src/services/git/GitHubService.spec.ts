@@ -31,8 +31,15 @@ import _ from 'lodash';
 describe('GitHub Service', () => {
   let service: GitHubService;
 
+  const repositoryConfig = {
+    remoteUrl: 'https://github.com/octocat/Hello-World',
+    baseUrl: 'https://github.com',
+    host: 'githum.com',
+    protocol: 'https',
+  };
+
   beforeEach(async () => {
-    service = new GitHubService(argumentsProviderFactory({ uri: '.' }));
+    service = new GitHubService(argumentsProviderFactory({ uri: '.' }), repositoryConfig);
   });
 
   describe('#getPullRequests', () => {
@@ -208,7 +215,7 @@ describe('GitHub Service', () => {
   it('returns contributor stats in own interface', async () => {
     new GitHubNock('1', 'octocat', 1, 'Hello-World').getRepo('/stats/contributors').reply(200, getContributorsStatsResponse);
 
-    const response = await service.getContributorsStats('octocat', 'Hello-World');
+    const response = await service.listContributorsStats('octocat', 'Hello-World');
     expect(response).toMatchObject(getContributorsStatsServiceResponse);
   });
 

@@ -21,8 +21,15 @@ describe('GitLab Service', () => {
   let service: GitLabService;
   let gitLabNock: GitLabNock;
 
+  const repositoryConfig = {
+    remoteUrl: 'https://gitlab.com/gitlab/gitlab-org',
+    baseUrl: 'https://gitlab.com',
+    host: 'gitlab.com',
+    protocol: 'https',
+  };
+
   beforeEach(async () => {
-    service = new GitLabService(argumentsProviderFactory({ uri: 'https://gitlab.com/gitlab-org/gitlab' }));
+    service = new GitLabService(argumentsProviderFactory({ uri: 'https://gitlab.com/gitlab-org/gitlab' }), repositoryConfig);
     gitLabNock = new GitLabNock('gitlab-org', 'gitlab');
   });
 
@@ -122,4 +129,10 @@ describe('GitLab Service', () => {
     const response = await service.getRepo('gitlab-org', 'gitlab');
     expect(response).toBeDefined();
   });
+
+  //TODO test for checkVersion()
+  // it.only('', async () => {
+  //   const response = await service.checkVersion();
+  //   console.log(response);
+  // });
 });

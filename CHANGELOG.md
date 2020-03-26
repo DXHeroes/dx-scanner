@@ -1,3 +1,90 @@
+## [3.6.2](https://github.com/dxheroes/dx-scanner/compare/v3.6.1...v3.6.2) (2020-03-25)
+
+
+### Bug Fixes
+
+* set isOnline variable to true if the API request is ok ([f5c763a](https://github.com/dxheroes/dx-scanner/commit/f5c763a17f050cf4de04ca48d8c9f343f449734a))
+
+## [3.6.1](https://github.com/dxheroes/dx-scanner/compare/v3.6.0...v3.6.1) (2020-03-25)
+
+
+### Bug Fixes
+
+* **gitlab:** update comment with PR ID ([fe5f357](https://github.com/dxheroes/dx-scanner/commit/fe5f357aef4cfc98ab3bdb73b10e2f57171eae15))
+
+# [3.6.0](https://github.com/dxheroes/dx-scanner/compare/v3.5.3...v3.6.0) (2020-03-23)
+
+
+### Bug Fixes
+
+* **gitlab:** do not reject unauthorized certificates ([5338a29](https://github.com/dxheroes/dx-scanner/commit/5338a29fef4b82befb4d413a8f33e7339472b9be))
+* getPagination() ([1c5d5c6](https://github.com/dxheroes/dx-scanner/commit/1c5d5c65136cb250fbc211b3c6e8216b19e3cee5))
+* rename getContributorsStats() to listContributorsStats() ([6bc3346](https://github.com/dxheroes/dx-scanner/commit/6bc334638b84854c80d9d0fe8cf29dbc602c095c))
+
+
+### Features
+
+* implement parseGitHubHeaderLink() ([7159da5](https://github.com/dxheroes/dx-scanner/commit/7159da5d4878683ad6b4a480568ed09097c63174))
+* implement parseLinkHeader() ([e08a26f](https://github.com/dxheroes/dx-scanner/commit/e08a26fa0bc02905dd43ee2de5eb9cd79030803c))
+* save also headers, not only data ([add8f4b](https://github.com/dxheroes/dx-scanner/commit/add8f4bc0ae26f2ce46b3783dc6b41b10f0113bd))
+* wip - parseLinkHeader() ([504b628](https://github.com/dxheroes/dx-scanner/commit/504b62877b69e77d562839215fbfc80769a56acc))
+
+## [3.5.3](https://github.com/dxheroes/dx-scanner/compare/v3.5.2...v3.5.3) (2020-03-23)
+
+
+### Bug Fixes
+
+* **deps:** pin dependency yeoman-gen-run to 1.2.3 ([b7942cf](https://github.com/dxheroes/dx-scanner/commit/b7942cf3fdea7666d0fccccaffb1764b7ee71dec))
+
+## [3.5.2](https://github.com/dxheroes/dx-scanner/compare/v3.5.1...v3.5.2) (2020-03-22)
+
+
+### Bug Fixes
+
+* **cireporter:** post comment to PR as a body key in data ([797a27b](https://github.com/dxheroes/dx-scanner/commit/797a27b6dcc2399637027756920f23d89b1ab8a6))
+
+## [3.5.1](https://github.com/dxheroes/dx-scanner/compare/v3.5.0...v3.5.1) (2020-03-22)
+
+
+### Bug Fixes
+
+* **cireporter:** use external ID of PR intstead of internal in GitLab ([3e27383](https://github.com/dxheroes/dx-scanner/commit/3e273830383f44f759a3dc5f463ab65af509e880))
+
+# [3.5.0](https://github.com/dxheroes/dx-scanner/compare/v3.4.0...v3.5.0) (2020-03-22)
+
+
+### Bug Fixes
+
+* add deleted comment ([df4d4fc](https://github.com/dxheroes/dx-scanner/commit/df4d4fc7a4e6fab325a4744423ea1921e303070d))
+* add suggestion text to correctCommitMessagesPractice ([9a96271](https://github.com/dxheroes/dx-scanner/commit/9a96271c0aa411dbe19815958c8ea158b5811e11))
+* bind ScanningStrategyDetector and services in testContainer ([ebab4df](https://github.com/dxheroes/dx-scanner/commit/ebab4df2bf6c3e847133bfd890900dbc15cf0be9))
+* refactor the code ([b8bb465](https://github.com/dxheroes/dx-scanner/commit/b8bb4654c35fee0667692c33902dd1dc81c7d31c))
+* remove comments ([b2f7307](https://github.com/dxheroes/dx-scanner/commit/b2f73076c97ee14e08f6430a7278df26bbdc8675))
+* use scanningStatrategy.remoteUrl instead of argumentsProvider.uri ([06440c2](https://github.com/dxheroes/dx-scanner/commit/06440c2e3e86869237bfb5192b3a43c818e7ea5d))
+
+
+### Features
+
+* implement discovery Container, fix issue [#280](https://github.com/dxheroes/dx-scanner/issues/280) ([b619fcd](https://github.com/dxheroes/dx-scanner/commit/b619fcdfe88b89e2a3ff3de303282486fe972821))
+* wip - implement discoveryContainer; repositoryConfig ([a7d191e](https://github.com/dxheroes/dx-scanner/commit/a7d191ecba32e6a3c9e47ca97f44677ce323173d))
+* wip implement DiscoverContext ([49be8b8](https://github.com/dxheroes/dx-scanner/commit/49be8b8ef755f5d52ca6710658cc7fdbea0b8a57))
+
+# [3.4.0](https://github.com/dxheroes/dx-scanner/compare/v3.3.0...v3.4.0) (2020-03-21)
+
+
+### Bug Fixes
+
+* undefined error on non-existing versions ([6ab4535](https://github.com/dxheroes/dx-scanner/commit/6ab4535d0c105feae983ef26201856e733fc092d))
+* using error factory instead in rethrowing ([1c76496](https://github.com/dxheroes/dx-scanner/commit/1c76496f58c70d647ff8f03595b40e15e765c865))
+* **semver-check:** add semver checker tests ([4ada25f](https://github.com/dxheroes/dx-scanner/commit/4ada25f1d4daf15ca3cb4fa05a3f0135120ca5e6))
+* **semver-check:** return only updates of the required semver level ([7456f2a](https://github.com/dxheroes/dx-scanner/commit/7456f2a456aa52584b0aab512670d31bc93ce7bf))
+* **semver-check:** update Java.DependenciesVersionMinorPatchLevel test so that it does not increase major level ([be4fffd](https://github.com/dxheroes/dx-scanner/commit/be4fffd6a1b8bb26e4f089e60b8eb34c8da8bf87))
+
+
+### Features
+
+* practice to check for specified versions ([1c9ecef](https://github.com/dxheroes/dx-scanner/commit/1c9ecef41b7925e12a9013b1fba5b5007c9701af))
+
 # [3.3.0](https://github.com/dxheroes/dx-scanner/compare/v3.2.0...v3.3.0) (2020-03-19)
 
 

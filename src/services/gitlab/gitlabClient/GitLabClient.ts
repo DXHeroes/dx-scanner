@@ -1,5 +1,7 @@
 import axios from 'axios';
 import { injectable } from 'inversify';
+import debug from 'debug';
+import https from 'https';
 
 @injectable()
 export class GitLabClient {
@@ -16,10 +18,15 @@ export class GitLabClient {
   }
 
   protected createAxiosInstance() {
+    debug('GitlabClient')(this.host);
+    debug('GitlabClient')(this.timeout);
     return axios.create({
       baseURL: `${this.host}/api/v4`,
       timeout: this.timeout,
       headers: { ...this.headers },
+      httpsAgent: new https.Agent({
+        rejectUnauthorized: false,
+      }),
     });
   }
 }
