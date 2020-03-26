@@ -52,6 +52,8 @@ export class DependenciesVersionMinorPatchLevelPractice extends DependenciesVers
       .map((p) => p.name)
       .concat(this.minorLevelPkgs.map((p) => p.name))
       .join(',');
+    // this should not happen, so just to be on the safer side
+    if (packagesToUpdate === '') return;
     await ncu.run({ filter: packagesToUpdate, upgrade: true });
   }
 }
