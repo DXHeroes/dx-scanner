@@ -3,6 +3,7 @@ import { practiceWithContextFactory } from '../test/factories/PracticeWithContex
 import { PracticeEvaluationResult, PracticeImpact } from '../model';
 import { argumentsProviderFactory } from '../test/factories/ArgumentsProviderFactory';
 import { RepositoryConfig } from '../scanner/RepositoryConfig';
+import { repositoryConfig } from '../scanner/__MOCKS__/RepositoryConfig.mock';
 
 describe('CLIReporter', () => {
   const practicingHighImpactPracticeWithCtx = practiceWithContextFactory();
@@ -56,11 +57,4 @@ describe('CLIReporter', () => {
       expect(result).toContain('You have turned off these practices');
     });
   });
-
-  const repositoryConfig: RepositoryConfig = {
-    remoteUrl: 'https://bitbucket.org/pypy/pypy',
-    baseUrl: 'https://bitbucket.org',
-    host: 'githum.com',
-    protocol: 'https',
-  };
 });

@@ -5,17 +5,11 @@ import { argumentsProviderFactory } from '../test/factories/ArgumentsProviderFac
 import { CIReportBuilder } from './builders/CIReportBuilder';
 import { BitbucketService, GitHubService } from '../services';
 import { GitLabService } from '../services/gitlab/GitLabService';
+import { repositoryConfig } from '../scanner/__MOCKS__/RepositoryConfig.mock';
 
 describe('CIReporter', () => {
   const practicingHighImpactPracticeWithCtx = practiceWithContextFactory();
   const notPracticingHighImpactPracticeWithCtx = practiceWithContextFactory({ evaluation: PracticeEvaluationResult.notPracticing });
-
-  const repositoryConfig = {
-    remoteUrl: 'https://bitbucket.org/pypy/pypy',
-    baseUrl: 'https://bitbucket.org',
-    host: 'githum.com',
-    protocol: 'https',
-  };
 
   const services = {
     bitbucketService: new BitbucketService(argumentsProviderFactory({ uri: '.' }), repositoryConfig),
