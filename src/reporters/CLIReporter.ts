@@ -9,13 +9,19 @@ import { ReportDetailType, ReporterData } from './ReporterData';
 import { assertNever } from '../lib/assertNever';
 import { ArgumentsProvider } from '../scanner';
 import { Types } from '../types';
+import { RepositoryConfig } from '../scanner/RepositoryConfig';
 
 @injectable()
 export class CLIReporter implements IReporter {
   private readonly argumentsProvider: ArgumentsProvider;
+  private readonly repositoryConfig: RepositoryConfig;
 
-  constructor(@inject(Types.ArgumentsProvider) argumentsProvider: ArgumentsProvider) {
+  constructor(
+    @inject(Types.ArgumentsProvider) argumentsProvider: ArgumentsProvider,
+    @inject(Types.RepositoryConfig) repositoryConfig: RepositoryConfig,
+  ) {
     this.argumentsProvider = argumentsProvider;
+    this.repositoryConfig = repositoryConfig;
   }
 
   async report(practicesAndComponents: PracticeWithContextForReporter[]): Promise<void> {
@@ -34,14 +40,20 @@ export class CLIReporter implements IReporter {
     lines.push(bold(blue('|     DX Scanner Result    |')));
     lines.push(bold(blue('|                          |')));
 
-    let repoName;
+    let componentPath: string;
 
     for (const cwp of componentsWithPractices) {
-      repoName = GitServiceUtils.getRepoName(cwp.component.repositoryPath, cwp.component.path);
+      componentPath = GitServiceUtils.getComponentPath(
+        cwp.component.path,
+        <string>this.repositoryConfig.basePath,
+        this.repositoryConfig.localScanning,
+        cwp.component.repositoryPath,
+        this.repositoryConfig.serviceType,
+      );
 
       lines.push(bold(blue('----------------------------')));
       lines.push('');
-      lines.push(bold(blue(`Developer Experience Report for ${italic(repoName)}`)));
+      lines.push(bold(blue(`Developer Experience Report for ${italic(componentPath)}`)));
       lines.push(cyan(bold(`DX Score: ${dxScore.components.find((c) => c.path === cwp.component.path)!.value}`)));
       lines.push('');
 

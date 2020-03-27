@@ -51,6 +51,7 @@ export class ScanningStrategyDetector implements IDetector<string, ScanningStrat
         accessType = await this.determineRemoteAccessType({ remoteUrl: path, serviceType });
       }
     } else {
+      this.repositoryConfig.serviceType = serviceType;
       accessType = await this.determineRemoteAccessType({ remoteUrl: this.repositoryConfig.remoteUrl, serviceType });
     }
 
@@ -176,10 +177,8 @@ export class ScanningStrategyDetector implements IDetector<string, ScanningStrat
       }
     } catch (error) {
       this.d(error); //debug error
-
       if (error.response?.status === 401 || error.response?.status === 403) {
         // return undefined if we're not sure that the service is Gitlab
-        //  - it prompts user for a credentials
         return undefined;
       }
     }

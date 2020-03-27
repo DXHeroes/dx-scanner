@@ -31,6 +31,7 @@ import { ScannerUtils } from '../scanner/ScannerUtils';
 import { FileSystemService } from '../services';
 import { DiscoveryContextFactory, Types } from '../types';
 import { ScanningStrategyExplorer } from './ScanningStrategyExplorer';
+import { RepositoryConfig } from './RepositoryConfig';
 
 @injectable()
 export class Scanner {
@@ -42,6 +43,7 @@ export class Scanner {
   private readonly d: debug.Debugger;
   private shouldExitOnEnd = false;
   private allDetectedComponents: ProjectComponentAndLangContext[] | undefined;
+  private repositoryConfig!: RepositoryConfig;
 
   constructor(
     @inject(ScanningStrategyExplorer) scanStrategyExplorer: ScanningStrategyExplorer,
@@ -62,10 +64,10 @@ export class Scanner {
   }
 
   async scan({ determineRemote } = { determineRemote: true }): Promise<ScanResult> {
-    const repositoryConfig = await this.scanStrategyExplorer.explore();
-    this.d(`Repository Config: ${inspect(repositoryConfig)}`);
+    this.repositoryConfig = await this.scanStrategyExplorer.explore();
+    this.d(`Repository Config: ${inspect(this.repositoryConfig)}`);
 
-    const discoveryContext = this.discoveryContextFactory(repositoryConfig);
+    const discoveryContext = this.discoveryContextFactory(this.repositoryConfig);
 
     let scanStrategy = await discoveryContext.scanningStrategyDetector.detect();
     this.d(`Scan strategy: ${inspect(scanStrategy)}`);
@@ -157,12 +159,15 @@ export class Scanner {
     let localPath = scanningStrategy.localPath;
 
     if (!isOnline) {
+      this.repositoryConfig.localScanning = true;
       return { serviceType, accessType, remoteUrl, localPath, isOnline };
     }
 
     if (localPath === undefined && remoteUrl !== undefined && serviceType !== ServiceType.local) {
       const cloneUrl = new url.URL(remoteUrl);
       localPath = fs.mkdtempSync(path.join(os.tmpdir(), 'dx-scanner'));
+
+      this.repositoryConfig.localScanning = false;
 
       if (this.argumentsProvider.auth?.includes(':')) {
         cloneUrl.username = this.argumentsProvider.auth.split(':')[0];
@@ -177,7 +182,11 @@ export class Scanner {
       await git()
         .silent(true)
         .clone(cloneUrl.href, localPath);
+    } else {
+      this.repositoryConfig.localScanning = true;
     }
+
+    if (localPath) this.repositoryConfig.basePath = localPath;
 
     return { serviceType, accessType, remoteUrl, localPath, isOnline };
   }
