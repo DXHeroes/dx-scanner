@@ -62,8 +62,8 @@ export class GitLabService implements IVCSService {
     this.cache.purge();
   }
 
-  checkVersion() {
-    return this.client.Version.check();
+  async checkVersion() {
+    return (await this.client.Version.check()).data;
   }
 
   getRepo(owner: string, repo: string) {
@@ -349,7 +349,7 @@ export class GitLabService implements IVCSService {
       body: val.body,
       createdAt: val.created_at.toString(),
       updatedAt: val.updated_at.toString(),
-      authorAssociation: val.attachment,
+      authorAssociation: val.author.username,
     }));
 
     const customPagination = this.getPagination(pagination);
