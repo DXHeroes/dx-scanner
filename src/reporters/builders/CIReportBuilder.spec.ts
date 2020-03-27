@@ -1,6 +1,7 @@
 import { practiceWithContextFactory } from '../../test/factories/PracticeWithContextFactory';
 import { PracticeEvaluationResult, PracticeImpact } from '../../model';
 import { CIReportBuilder } from './CIReportBuilder';
+import { RepositoryConfig } from '../../scanner/RepositoryConfig';
 
 describe('CIReportBuilder', () => {
   const practicingHighImpactPracticeWithCtx = practiceWithContextFactory({ practice: { name: 'practicing1', url: './practicing' } });
@@ -11,7 +12,7 @@ describe('CIReportBuilder', () => {
 
   describe('#build', () => {
     it('one practicing practice contains all necessary data', () => {
-      const result = new CIReportBuilder([practicingHighImpactPracticeWithCtx]).build();
+      const result = new CIReportBuilder([practicingHighImpactPracticeWithCtx], repositoryConfig).build();
 
       const mustContainElements = [CIReportBuilder.ciReportIndicator];
 
@@ -21,7 +22,10 @@ describe('CIReportBuilder', () => {
     });
 
     it('one practicing practice and one not practicing', () => {
-      const result = new CIReportBuilder([practicingHighImpactPracticeWithCtx, notPracticingHighImpactPracticeWithCtx]).build();
+      const result = new CIReportBuilder(
+        [practicingHighImpactPracticeWithCtx, notPracticingHighImpactPracticeWithCtx],
+        repositoryConfig,
+      ).build();
 
       const mustContainElements = [
         CIReportBuilder.ciReportIndicator,
@@ -41,28 +45,31 @@ describe('CIReportBuilder', () => {
     });
 
     it('all impacted practices', () => {
-      const result = new CIReportBuilder([
-        practicingHighImpactPracticeWithCtx,
-        notPracticingHighImpactPracticeWithCtx,
-        practiceWithContextFactory({
-          overridenImpact: PracticeImpact.medium,
-          evaluation: PracticeEvaluationResult.notPracticing,
-        }),
-        practiceWithContextFactory({
-          overridenImpact: PracticeImpact.small,
-          evaluation: PracticeEvaluationResult.notPracticing,
-        }),
-        practiceWithContextFactory({
-          overridenImpact: PracticeImpact.hint,
-          evaluation: PracticeEvaluationResult.notPracticing,
-        }),
-        practiceWithContextFactory({
-          overridenImpact: PracticeImpact.off,
-          evaluation: PracticeEvaluationResult.notPracticing,
-          isOn: false,
-        }),
-        practiceWithContextFactory({ overridenImpact: PracticeImpact.high, evaluation: PracticeEvaluationResult.unknown }),
-      ]).build();
+      const result = new CIReportBuilder(
+        [
+          practicingHighImpactPracticeWithCtx,
+          notPracticingHighImpactPracticeWithCtx,
+          practiceWithContextFactory({
+            overridenImpact: PracticeImpact.medium,
+            evaluation: PracticeEvaluationResult.notPracticing,
+          }),
+          practiceWithContextFactory({
+            overridenImpact: PracticeImpact.small,
+            evaluation: PracticeEvaluationResult.notPracticing,
+          }),
+          practiceWithContextFactory({
+            overridenImpact: PracticeImpact.hint,
+            evaluation: PracticeEvaluationResult.notPracticing,
+          }),
+          practiceWithContextFactory({
+            overridenImpact: PracticeImpact.off,
+            evaluation: PracticeEvaluationResult.notPracticing,
+            isOn: false,
+          }),
+          practiceWithContextFactory({ overridenImpact: PracticeImpact.high, evaluation: PracticeEvaluationResult.unknown }),
+        ],
+        repositoryConfig,
+      ).build();
 
       expect(result).toContain('Improvements with highest impact');
       expect(result).toContain('Improvements with medium impact');
@@ -72,4 +79,10 @@ describe('CIReportBuilder', () => {
       expect(result).toContain('You have turned off these practices');
     });
   });
+  const repositoryConfig: RepositoryConfig = {
+    remoteUrl: 'https://bitbucket.org/pypy/pypy',
+    baseUrl: 'https://bitbucket.org',
+    host: 'githum.com',
+    protocol: 'https',
+  };
 });

@@ -7,13 +7,19 @@ import { GitServiceUtils } from '../services/git/GitServiceUtils';
 import { ArgumentsProvider } from '../scanner';
 import { Types } from '../types';
 import { keyBy } from 'lodash';
+import { RepositoryConfig } from '../scanner/RepositoryConfig';
 
 @injectable()
 export class FixReporter implements IReporter {
   private readonly argumentsProvider: ArgumentsProvider;
+  private readonly repositoryConfig: RepositoryConfig;
 
-  constructor(@inject(Types.ArgumentsProvider) argumentsProvider: ArgumentsProvider) {
+  constructor(
+    @inject(Types.ArgumentsProvider) argumentsProvider: ArgumentsProvider,
+    @inject(Types.RepositoryConfig) repositoryConfig: RepositoryConfig,
+  ) {
     this.argumentsProvider = argumentsProvider;
+    this.repositoryConfig = repositoryConfig;
   }
 
   async report(
@@ -40,14 +46,19 @@ export class FixReporter implements IReporter {
     lines.push(bold(blue('|     DX Scanner Fixer     |')));
     lines.push(bold(blue('|                          |')));
 
-    let repoName;
+    let componentPath;
 
     for (const cwp of componentsWithPractices) {
-      repoName = GitServiceUtils.getRepoName(cwp.component.repositoryPath, cwp.component.path);
-
+      componentPath = GitServiceUtils.getComponentPath(
+        cwp.component.path,
+        <string>this.repositoryConfig.basePath,
+        this.repositoryConfig.localScanning,
+        cwp.component.repositoryPath,
+        this.repositoryConfig.serviceType,
+      );
       lines.push(bold(blue('----------------------------')));
       lines.push('');
-      lines.push(bold(blue(`Developer Experience Report for ${italic(repoName)}`)));
+      lines.push(bold(blue(`Developer Experience Report for ${italic(componentPath)}`)));
       lines.push(cyan(bold(`DX Score: ${dxScoreAfterFix.components.find((c) => c.path === cwp.component.path)!.value}`)));
       lines.push('');
 

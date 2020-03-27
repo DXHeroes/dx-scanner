@@ -6,13 +6,21 @@ import { ReportDetailType, ReporterData } from '../ReporterData';
 import { assertNever } from '../../lib/assertNever';
 import { IReportBuilder, BadgeColor } from './IReportBuilder';
 import { DXScoreOverallResult, DXScoreResult } from '../model';
+import { inject } from 'inversify';
+import { Types } from '../../types';
+import { RepositoryConfig } from '../../scanner/RepositoryConfig';
 
 export class CIReportBuilder implements IReportBuilder {
   private readonly practicesAndComponents: PracticeWithContextForReporter[];
   static readonly ciReportIndicator = '<!-- CIReport ID to detect report comment -->';
+  private readonly repositoryConfig: RepositoryConfig;
 
-  constructor(practicesAndComponents: PracticeWithContextForReporter[]) {
+  constructor(
+    practicesAndComponents: PracticeWithContextForReporter[],
+    @inject(Types.RepositoryConfig) repositoryConfig: RepositoryConfig,
+  ) {
     this.practicesAndComponents = practicesAndComponents;
+    this.repositoryConfig = repositoryConfig;
   }
 
   build() {
@@ -157,11 +165,17 @@ export class CIReportBuilder implements IReportBuilder {
   renderComponentHeader = (cwp: ComponentWithPractices, dxScore: DXScoreOverallResult): string => {
     const lines: string[] = [];
 
-    const repoName = GitServiceUtils.getRepoName(cwp.component.repositoryPath, cwp.component.path);
+    const componentPath = GitServiceUtils.getComponentPath(
+      cwp.component.path,
+      <string>this.repositoryConfig.basePath,
+      this.repositoryConfig.localScanning,
+      cwp.component.repositoryPath,
+      this.repositoryConfig.serviceType,
+    );
 
     // display badge for a component only if there is more than one component because there is overall DX Score at the end of report
     const badge = dxScore.components.length > 1 ? this.renderBadge(dxScore.components.find((c) => c.path === cwp.component.path)!) : '';
-    lines.push(`## ${repoName} ${badge}\n`);
+    lines.push(`## ${componentPath} ${badge}\n`);
 
     return lines.join('\n');
   };
