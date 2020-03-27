@@ -4,10 +4,10 @@ import { DxPractice } from '../DxPracticeDecorator';
 import { PracticeContext } from '../../contexts/practice/PracticeContext';
 import { FixerContext } from '../../contexts/fixer/FixerContext';
 import { PracticeConfig } from '../../scanner/IConfigProvider';
-import { AccessType } from '../../detectors';
 import yeoman from 'yeoman-environment';
 import { runGenerator } from 'yeoman-gen-run';
 import cli from 'cli-ux';
+import { AccessType } from '../../detectors/IScanningStrategy';
 
 const env = yeoman.createEnv();
 env.register(require.resolve('generator-license'), 'license');
