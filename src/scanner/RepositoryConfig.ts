@@ -1,4 +1,4 @@
-import { ServiceType } from '../detectors';
+import { ServiceType } from '../detectors/IScanningStrategy';
 
 export interface RepositoryConfig {
   remoteUrl: string | undefined;

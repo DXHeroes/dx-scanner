@@ -13,7 +13,7 @@ import { LanguageContext } from '../contexts/language/LanguageContext';
 import { PracticeContext } from '../contexts/practice/PracticeContext';
 import { ProjectComponentContext } from '../contexts/projectComponent/ProjectComponentContext';
 import { ScannerContext } from '../contexts/scanner/ScannerContext';
-import { AccessType, ScanningStrategy, ServiceType } from '../detectors';
+import { ScanningStrategy } from '../detectors';
 import { sharedSubpath } from '../detectors/utils';
 import { ErrorFactory } from '../lib/errors';
 import {
@@ -32,6 +32,7 @@ import { FileSystemService } from '../services';
 import { DiscoveryContextFactory, Types } from '../types';
 import { ScanningStrategyExplorer } from './ScanningStrategyExplorer';
 import { RepositoryConfig } from './RepositoryConfig';
+import { ServiceType, AccessType } from '../detectors/IScanningStrategy';
 
 @injectable()
 export class Scanner {

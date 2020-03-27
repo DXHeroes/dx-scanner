@@ -9,6 +9,7 @@ import { Types } from '../types';
 import { IDetector } from './IDetector';
 import { ScanningStrategyDetectorUtils } from './utils/ScanningStrategyDetectorUtils';
 import { ErrorFactory } from '../lib/errors';
+import { AccessType, ServiceType } from './IScanningStrategy';
 
 @injectable()
 export class ScanningStrategyDetector implements IDetector<string, ScanningStrategy> {
@@ -193,20 +194,6 @@ export interface ScanningStrategy {
   remoteUrl: RemoteUrl;
   localPath: string | undefined;
   isOnline: boolean;
-}
-
-export enum ServiceType {
-  github = 'github',
-  bitbucket = 'bitbucket',
-  gitlab = 'gitlab',
-  git = 'git',
-  local = 'local',
-}
-
-export enum AccessType {
-  private = 'private',
-  public = 'public',
-  unknown = 'unknown',
 }
 
 export interface RemoteService {

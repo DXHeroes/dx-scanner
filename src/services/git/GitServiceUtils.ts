@@ -1,7 +1,7 @@
 import gitUrlParse from 'git-url-parse';
 import _ from 'lodash';
-import { ServiceType } from '../../detectors';
 import { GitService } from './model';
+import { ServiceType } from '../../detectors/IScanningStrategy';
 
 export class GitServiceUtils {
   static getUrlToRepo = (url: string, path?: string | undefined, branch = 'master', serviceType?: ServiceType) => {

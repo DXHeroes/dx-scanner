@@ -2,6 +2,7 @@ import { CLIReporter } from './CLIReporter';
 import { practiceWithContextFactory } from '../test/factories/PracticeWithContextFactory';
 import { PracticeEvaluationResult, PracticeImpact } from '../model';
 import { argumentsProviderFactory } from '../test/factories/ArgumentsProviderFactory';
+import { RepositoryConfig } from '../scanner/RepositoryConfig';
 
 describe('CLIReporter', () => {
   const practicingHighImpactPracticeWithCtx = practiceWithContextFactory();
@@ -9,13 +10,13 @@ describe('CLIReporter', () => {
 
   describe('#report', () => {
     it('one practicing practice', () => {
-      const result = new CLIReporter(argumentsProviderFactory()).buildReport([practicingHighImpactPracticeWithCtx]);
+      const result = new CLIReporter(argumentsProviderFactory(), repositoryConfig).buildReport([practicingHighImpactPracticeWithCtx]);
 
       expect(result).toContain('DX Score: 100% | 1/1');
     });
 
     it('one practicing practice and one not practicing', () => {
-      const result = new CLIReporter(argumentsProviderFactory()).buildReport([
+      const result = new CLIReporter(argumentsProviderFactory(), repositoryConfig).buildReport([
         practicingHighImpactPracticeWithCtx,
         notPracticingHighImpactPracticeWithCtx,
       ]);
@@ -24,7 +25,7 @@ describe('CLIReporter', () => {
     });
 
     it('all impacted practices', () => {
-      const result = new CLIReporter(argumentsProviderFactory()).buildReport([
+      const result = new CLIReporter(argumentsProviderFactory(), repositoryConfig).buildReport([
         practicingHighImpactPracticeWithCtx,
         notPracticingHighImpactPracticeWithCtx,
         practiceWithContextFactory({
@@ -55,4 +56,11 @@ describe('CLIReporter', () => {
       expect(result).toContain('You have turned off these practices');
     });
   });
+
+  const repositoryConfig: RepositoryConfig = {
+    remoteUrl: 'https://bitbucket.org/pypy/pypy',
+    baseUrl: 'https://bitbucket.org',
+    host: 'githum.com',
+    protocol: 'https',
+  };
 });

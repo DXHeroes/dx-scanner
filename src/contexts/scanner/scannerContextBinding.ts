@@ -1,7 +1,7 @@
 import { Container } from 'inversify';
 import { JavaScriptLanguageDetector } from '../../detectors/JavaScript/JavaScriptLanguageDetector';
 import { JavaLanguageDetector } from '../../detectors/Java/JavaLanguageDetector';
-import { ScanningStrategy, ServiceType } from '../../detectors/ScanningStrategyDetector';
+import { ScanningStrategy } from '../../detectors/ScanningStrategyDetector';
 import { FileInspector } from '../../inspectors/FileInspector';
 import { GitInspector } from '../../inspectors/GitInspector';
 import { FileSystemService } from '../../services/FileSystemService';
@@ -14,6 +14,7 @@ import { GitLabService } from '../../services/gitlab/GitLabService';
 import { PythonLanguageDetector } from '../../detectors/Python/PythonLanguageDetector';
 import { ArgumentsProvider } from '../../scanner';
 import { IReporter, FixReporter, JSONReporter, CLIReporter, CIReporter } from '../../reporters';
+import { ServiceType } from '../../detectors/IScanningStrategy';
 
 export const bindScanningContext = (container: Container) => {
   container.bind(Types.ScannerContextFactory).toFactory(
