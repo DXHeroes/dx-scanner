@@ -1,3 +1,10 @@
+## [3.8.1](https://github.com/dxheroes/dx-scanner/compare/v3.8.0...v3.8.1) (2020-03-27)
+
+
+### Bug Fixes
+
+* scanning local repos without git hotfix ([80cc492](https://github.com/dxheroes/dx-scanner/commit/80cc492fcc769faecd98f86683076c55bdc7ccc9))
+
 # [3.8.0](https://github.com/dxheroes/dx-scanner/compare/v3.7.0...v3.8.0) (2020-03-26)
 
 

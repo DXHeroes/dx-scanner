@@ -9,6 +9,7 @@ import { bitbucketListCommitResponseFactory } from '../factories/responses/bitbu
 import { BitbucketPullRequestState, BitbucketIssueState } from '../../services/bitbucket/IBitbucketService';
 import { VCSServicesUtils } from '../../services/git/VCSServicesUtils';
 import Bitbucket from 'bitbucket';
+import { bitbucketRepoInfoResponseFactory } from '../factories/responses/bitbucket/getRepoContent';
 
 export class BitbucketNock {
   user: string;
@@ -123,5 +124,12 @@ export class BitbucketNock {
     const baseUrl = `${this.url}/repositories/${this.user}/${this.repoName}/commit/${commitSha}`;
 
     return BitbucketNock.get(baseUrl).reply(200, commit);
+  }
+
+  getRepoResponse() {
+    const baseUrl = `${this.url}/repositories/${this.user}/${this.repoName}`;
+
+    const response = bitbucketRepoInfoResponseFactory();
+    return BitbucketNock.get(baseUrl).reply(200, response);
   }
 }

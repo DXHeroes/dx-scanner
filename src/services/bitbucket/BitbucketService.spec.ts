@@ -215,4 +215,51 @@ describe('Bitbucket Service', () => {
     const response = await service.getPullsDiffStat('pypy', 'pypy', 622);
     expect(response).toMatchObject({ additions: 2, deletions: 1, changes: 3 });
   });
+
+  it('The response id defined when getRepo is called', async () => {
+    bitbucketNock.getRepoResponse();
+
+    const response = await service.getRepo('pypy', 'pypy');
+    expect(response).toBeDefined();
+  });
+
+  it('Throws error if listPullRequestReviews is called as the function is not implemented yet', async () => {
+    try {
+      await service.listPullRequestReviews('pypy', 'pypy', 1);
+    } catch (error) {
+      expect(error.message).toEqual('Method not implemented yet.');
+    }
+  });
+
+  it('Throws error if listPullRequestFiles is called as the function is not implemented yet', async () => {
+    try {
+      await service.listPullRequestFiles('pypy', 'pypy', 1);
+    } catch (error) {
+      expect(error.message).toEqual('Method not implemented yet.');
+    }
+  });
+
+  it('Throws error if listContributors is called as the function is not implemented yet', async () => {
+    try {
+      await service.listContributors('pypy', 'pypy');
+    } catch (error) {
+      expect(error.message).toEqual('Method not implemented yet.');
+    }
+  });
+
+  it('Throws error if getContributorsStats is called as the function is not implemented yet', async () => {
+    try {
+      await service.listContributorsStats('pypy', 'pypy');
+    } catch (error) {
+      expect(error.message).toEqual('Method not implemented yet.');
+    }
+  });
+
+  it('Throws error if getRepoContent is called as the function is not implemented yet', async () => {
+    try {
+      await service.getRepoContent('pypy', 'pypy', 'path');
+    } catch (error) {
+      expect(error.message).toEqual('Method not implemented yet.');
+    }
+  });
 });

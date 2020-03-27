@@ -155,6 +155,26 @@ describe('ScanningStrategyDetector', () => {
       });
     });
 
+    it('local path with remote private GitHub, error 402', async () => {
+      const repoPath = 'git@github.com:DXHeroes/dx-scanner-private.git';
+      new GitHubNock('1', 'DXHeroes', 1, 'dx-scanner-private').getRepo('').reply(402);
+
+      mockedGit.mockImplementation(() => {
+        return {
+          checkIsRepo: () => true,
+          getRemotes: () => [{ name: 'origin', refs: { fetch: repoPath, push: repoPath } }],
+        };
+      });
+
+      const scanningStrategyDetector = await createScanningStrategyDetector({ uri: '/local/path', auth: 'fake_token' });
+
+      try {
+        await scanningStrategyDetector.detect();
+      } catch (error) {
+        expect(error.name).toMatch('HttpError');
+      }
+    });
+
     it('offline local path with remote private GitHub', async () => {
       const repoPath = 'git@github.com:DXHeroes/dx-scanner-private.git';
 

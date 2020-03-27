@@ -16,6 +16,8 @@ import { listPullRequestsResponse } from '../git/__MOCKS__/gitLabServiceMockFold
 import { listRepoCommits } from '../git/__MOCKS__/gitLabServiceMockFolder/listRepoCommitsResponse';
 import { GitLabService } from './GitLabService';
 import { GitLabPullRequestState } from './IGitLabService';
+import nock from 'nock';
+import { listPullRequestCommentsResponse } from '../git/__MOCKS__/gitLabServiceMockFolder/listPullRequestComments';
 
 describe('GitLab Service', () => {
   let service: GitLabService;
@@ -130,9 +132,99 @@ describe('GitLab Service', () => {
     expect(response).toBeDefined();
   });
 
-  //TODO test for checkVersion()
-  // it.only('', async () => {
-  //   const response = await service.checkVersion();
-  //   console.log(response);
-  // });
+  it('Returns pull request comments in own interface', async () => {
+    gitLabNock = new GitLabNock('homolova', 'ted_ontouml_kom');
+    gitLabNock.listPullRequestCommentsResponse(1);
+
+    const response = await service.listPullRequestComments('homolova', 'ted_ontouml_kom', 1);
+    expect(response).toMatchObject(listPullRequestCommentsResponse());
+  });
+
+  it('Returns version and revision if the host name exists and AT is provided', async () => {
+    const repositoryConfig = {
+      remoteUrl: 'https://git.example.cz/dxheroes/user/repo',
+      baseUrl: 'https://git.example.cz',
+      host: 'git.example.cz',
+      protocol: 'https',
+    };
+
+    service = new GitLabService(
+      argumentsProviderFactory({ uri: 'https://git.example.cz/dxheroes/user/repo', auth: 'auth' }),
+      repositoryConfig,
+    );
+    gitLabNock = new GitLabNock('user', 'repo');
+    gitLabNock.checkVersion(repositoryConfig.host);
+
+    const response = await service.checkVersion();
+    expect(response).toMatchObject({ version: '1.0.0', revision: '225c2e' });
+  });
+
+  it('Returns 401 if the host name exists but AT is not provided', async () => {
+    const repositoryConfig = {
+      remoteUrl: 'https://git.example.cz/dxheroes/user/repo',
+      baseUrl: 'https://git.example.cz',
+      host: 'git.example.cz',
+      protocol: 'https',
+    };
+
+    service = new GitLabService(argumentsProviderFactory({ uri: 'https://git.example.cz/dxheroes/user/repo' }), repositoryConfig);
+
+    nock('https://git.example.cz')
+      .get('/api/v4/version')
+      .reply(401);
+
+    try {
+      await service.checkVersion();
+    } catch (error) {
+      expect(error.message).toEqual('Request failed with status code 401');
+    }
+  });
+
+  it('Throws error if listPullRequestReviews is called as the function is not implemented yet', async () => {
+    try {
+      await service.listPullRequestReviews('gitlab-org', 'gitlab', 1);
+    } catch (error) {
+      expect(error.message).toEqual('Method not implemented yet.');
+    }
+  });
+
+  it('Throws error if listPullRequestFiles is called as the function is not implemented yet', async () => {
+    try {
+      await service.listPullRequestFiles('gitlab-org', 'gitlab', 1);
+    } catch (error) {
+      expect(error.message).toEqual('Method not implemented yet.');
+    }
+  });
+
+  it('Throws error if listContributors is called as the function is not implemented yet', async () => {
+    try {
+      await service.listContributors('gitlab-org', 'gitlab');
+    } catch (error) {
+      expect(error.message).toEqual('Method not implemented yet.');
+    }
+  });
+
+  it('Throws error if getContributorsStats is called as the function is not implemented yet', async () => {
+    try {
+      await service.listContributorsStats('gitlab-org', 'gitlab');
+    } catch (error) {
+      expect(error.message).toEqual('Method not implemented yet.');
+    }
+  });
+
+  it('Throws error if getRepoContent is called as the function is not implemented yet', async () => {
+    try {
+      await service.getRepoContent('gitlab-org', 'gitlab', 'path');
+    } catch (error) {
+      expect(error.message).toEqual('Method not implemented yet.');
+    }
+  });
+
+  it('Throws error if getPullsDiffStat is called as the function is not implemented yet', async () => {
+    try {
+      await service.getPullsDiffStat('gitlab-org', 'gitlab', 1);
+    } catch (error) {
+      expect(error.message).toEqual('Method not implemented yet for GitLab.');
+    }
+  });
 });
