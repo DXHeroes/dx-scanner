@@ -1,5 +1,7 @@
 interface NCUParams {
-  packageData: string;
+  packageData?: string;
+  filter?: string;
+  upgrade?: boolean;
 }
 
 declare module 'npm-check-updates' {
