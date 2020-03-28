@@ -64,4 +64,40 @@ describe('DependenciesVersionPractice of Minor and Patch Level', () => {
     const evaluated = await practice.evaluate({ ...containerCtx.practiceContext, packageInspector: undefined });
     expect(evaluated).toEqual(PracticeEvaluationResult.unknown);
   });
+
+  describe('Fixer', () => {
+    it('Runs update of minor level change package', async () => {
+      let updateOptions: NCUParams = {};
+      mockedNcu.mockImplementation((options: object) => {
+        updateOptions = options;
+        return { 'ts-node': '^8', typescript: '^1.1.0' };
+      });
+      mockJsPackageInspector.packages = [mockPackage('typescript')];
+      containerCtx.practiceContext.packageInspector!.packages = mockJsPackageInspector.packages;
+
+      await practice.evaluate(containerCtx.practiceContext);
+      await practice.fix();
+
+      expect(updateOptions).toBeDefined();
+      expect(updateOptions.upgrade).toBe(true);
+      expect(updateOptions.filter).toContain('typescript');
+    });
+    it('Updates both patch and minor versions', async () => {
+      let updateOptions: NCUParams = {};
+      mockedNcu.mockImplementation((options: object) => {
+        updateOptions = options;
+        return { dummy: '^1.0.1', typescript: '^1.1.0' };
+      });
+      mockJsPackageInspector.packages = [mockPackage('typescript'), mockPackage('dummy')];
+      containerCtx.practiceContext.packageInspector!.packages = mockJsPackageInspector.packages;
+
+      await practice.evaluate(containerCtx.practiceContext);
+      await practice.fix();
+
+      expect(updateOptions).toBeDefined();
+      expect(updateOptions.upgrade).toBe(true);
+      expect(updateOptions.filter).toContain('typescript');
+      expect(updateOptions.filter).toContain('dummy');
+    });
+  });
 });
