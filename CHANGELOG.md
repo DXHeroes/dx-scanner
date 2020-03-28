@@ -1,3 +1,11 @@
+# [3.9.0](https://github.com/dxheroes/dx-scanner/compare/v3.8.2...v3.9.0) (2020-03-28)
+
+
+### Features
+
+* **fixer:** add fixer for JS patch and minor deps ([4355d69](https://github.com/dxheroes/dx-scanner/commit/4355d69ae43563242ea770c37d45a22657260db5))
+* **fixer:** add test for deps fixer ([9a73424](https://github.com/dxheroes/dx-scanner/commit/9a73424fe56d69470d93f79acc581d12ca3c2170))
+
 ## [3.8.2](https://github.com/dxheroes/dx-scanner/compare/v3.8.1...v3.8.2) (2020-03-28)
 
 
