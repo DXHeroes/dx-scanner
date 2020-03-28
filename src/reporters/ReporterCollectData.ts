@@ -18,7 +18,7 @@ export class ReporterCollectData implements IReporter {
     const reportData = this.buildReport(practicesAndComponents);
 
     //TODO add endpoint
-    await Axios.post('ADD ENDPOINT', reportData);
+    //await Axios.post('ADD ENDPOINT', reportData);
   }
 
   buildReport(practicesAndComponents: PracticeWithContextForReporter[]): ReportData[] {
