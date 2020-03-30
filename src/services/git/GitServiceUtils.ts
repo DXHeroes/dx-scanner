@@ -1,20 +1,19 @@
 import gitUrlParse from 'git-url-parse';
 import _ from 'lodash';
-import { GitService } from './model';
 import { ServiceType } from '../../detectors/IScanningStrategy';
-import { repositoryConfig } from '../../scanner/__MOCKS__/RepositoryConfig.mock';
-import { RepositoryConfig } from '../../scanner/RepositoryConfig';
+import { assertNever } from '../../lib/assertNever';
 import { ProjectComponent } from '../../model';
+import { RepositoryConfig } from '../../scanner/RepositoryConfig';
 
 export class GitServiceUtils {
-  static getUrlToRepo = (url: string, path?: string | undefined, branch = 'master', serviceType?: ServiceType) => {
+  static getUrlToRepo = (url: string, path?: string | undefined, branch = 'master') => {
     const parsedUrl = gitUrlParse(url);
 
     let completeUrl = `${parsedUrl.protocol}://${parsedUrl.resource}/${parsedUrl.owner}/${parsedUrl.name}`;
-    const sourceUrl = <GitService | null>parsedUrl.resource;
+    const sourceUrl = <ServiceType | null>parsedUrl.resource;
 
     if (path && sourceUrl) {
-      completeUrl += GitServiceUtils.getPath(path, branch || parsedUrl.ref, serviceType, sourceUrl);
+      completeUrl += GitServiceUtils.getPath(path, branch || parsedUrl.ref, sourceUrl);
     }
 
     return completeUrl;
@@ -31,7 +30,7 @@ export class GitServiceUtils {
     };
   };
 
-  static getPath = (componentPath: string, branch = 'master', serviceType?: ServiceType, service?: GitService) => {
+  static getPath = (componentPath: string, branch = 'master', serviceType?: ServiceType) => {
     if (serviceType) {
       switch (serviceType) {
         case ServiceType.github:
@@ -40,41 +39,34 @@ export class GitServiceUtils {
           return `/src/${branch}${componentPath}`;
         case ServiceType.gitlab:
           return `/tree/${branch}${componentPath}`;
+        case ServiceType.local:
+          return `${componentPath}`;
+        case ServiceType.git:
+          return `${branch}${componentPath}`;
 
         default:
-          return componentPath;
+          return assertNever(serviceType);
       }
-    }
-
-    switch (service) {
-      case GitService.github:
-        return `/tree/${branch}${componentPath}`;
-      case GitService.bitbucket:
-        return `/src/${branch}${componentPath}`;
-      case GitService.gitlab:
-        return `/tree/${branch}${componentPath}`;
-
-      default:
-        return componentPath;
     }
   };
 
-  static getRepoName = (repositoryPath: string | undefined, path: string, serviceType?: ServiceType): string => {
+  static getRepoName = (repositoryPath: string | undefined, path: string): string => {
     if (repositoryPath) {
-      return GitServiceUtils.getPathOrRepoUrl(repositoryPath, path, 'master', serviceType);
+      const parsedUrl = gitUrlParse(repositoryPath);
+      return `${parsedUrl.protocol}://${parsedUrl.resource}/${parsedUrl.owner}/${parsedUrl.name}`;
     } else {
       return path;
     }
   };
 
-  static getPathOrRepoUrl = (url: string, path?: string | undefined, branch = 'master', serviceType?: ServiceType) => {
+  static getPathOrRepoUrl = (url: string, path?: string | undefined, branch = 'master') => {
     const parsedUrl = gitUrlParse(url);
 
     if (parsedUrl.protocol === 'file') {
       return url;
     }
 
-    return GitServiceUtils.getUrlToRepo(url, path, branch, serviceType);
+    return GitServiceUtils.getUrlToRepo(url, path, branch);
   };
 
   static getComponentPath = (component: ProjectComponent, repositoryConfig: RepositoryConfig, repositoryPath?: string): string => {
