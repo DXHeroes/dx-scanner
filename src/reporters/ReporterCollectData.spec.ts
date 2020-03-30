@@ -12,7 +12,7 @@ describe('ReporterCollectData', () => {
     it('one practicing practice', async () => {
       const result = new ReporterCollectData(argumentsProviderFactory()).buildReport([practicingHighImpactPracticeWithCtx]);
 
-      await expect(result).toContainObject({ dxScore: '100% | 1/1' });
+      await expect(result.componentsWithDxScore).toContainObject({ dxScore: '100% | 1/1' });
     });
 
     it('one practicing practice and one not practicing', async () => {
@@ -21,13 +21,13 @@ describe('ReporterCollectData', () => {
         notPracticingHighImpactPracticeWithCtx,
       ]);
 
-      await expect(result).toContainObject({ dxScore: '50% | 1/2' });
+      await expect(result.componentsWithDxScore).toContainObject({ dxScore: '50% | 1/2' });
     });
 
     it('one not practicing practice', async () => {
       const result = new ReporterCollectData(argumentsProviderFactory()).buildReport([notPracticingHighImpactPracticeWithCtx]);
 
-      await expect(result).toContainObject({ dxScore: '0% | 0/1' });
+      await expect(result.componentsWithDxScore).toContainObject({ dxScore: '0% | 0/1' });
     });
   });
 
