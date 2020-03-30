@@ -17,8 +17,13 @@ export class ReporterCollectData implements IReporter {
   async report(practicesAndComponents: PracticeWithContextForReporter[]): Promise<void> {
     const reportData = this.buildReport(practicesAndComponents);
 
-    //TODO add endpoint
-    //await Axios.post('ADD ENDPOINT', reportData);
+    try {
+      // send data
+      await Axios.post('https://dxscanner.io/api/v1/data-report', reportData);
+      console.log('You can see DX data in your DX account now.\n');
+    } catch (error) {
+      console.log('Your DX data has not been sent to your account.\n');
+    }
   }
 
   buildReport(practicesAndComponents: PracticeWithContextForReporter[]): ReportData[] {
