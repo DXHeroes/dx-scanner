@@ -44,7 +44,7 @@ jobs:
     name: Test
     script:
       - yarn test --coverage
-      - bin/run
+      - bin/run --help
       - yarn test:codecov:upload
       - bin/run run . --fail=high
   - stage: test
