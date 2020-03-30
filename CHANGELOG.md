@@ -1,3 +1,32 @@
+# [3.9.0](https://github.com/dxheroes/dx-scanner/compare/v3.8.2...v3.9.0) (2020-03-28)
+
+
+### Features
+
+* **fixer:** add fixer for JS patch and minor deps ([4355d69](https://github.com/dxheroes/dx-scanner/commit/4355d69ae43563242ea770c37d45a22657260db5))
+* **fixer:** add test for deps fixer ([9a73424](https://github.com/dxheroes/dx-scanner/commit/9a73424fe56d69470d93f79acc581d12ca3c2170))
+
+## [3.8.2](https://github.com/dxheroes/dx-scanner/compare/v3.8.1...v3.8.2) (2020-03-28)
+
+
+### Bug Fixes
+
+* add return type ([fd23c74](https://github.com/dxheroes/dx-scanner/commit/fd23c7421f5592bb0b278e49faef9261301798aa))
+* getting authorAssociation value ([503ef82](https://github.com/dxheroes/dx-scanner/commit/503ef825cd3c40302ac8c0256b33fbf38ddd2620))
+* name of method in tests ([65bd9b3](https://github.com/dxheroes/dx-scanner/commit/65bd9b3cc172e3e45398581fffb2e95c7ee0b4c0))
+* revert ncu version  github.com/tjunnone/npm-check-updates/pull/642 ([5498512](https://github.com/dxheroes/dx-scanner/commit/54985125269d9ea64103cf6b4a1fccb52d8eb270))
+* update lockfile ([0b1ce53](https://github.com/dxheroes/dx-scanner/commit/0b1ce536e1ad027251c381be14648b41347dbf0d))
+* update packages ([03880b6](https://github.com/dxheroes/dx-scanner/commit/03880b6eab69111c7d9b10c808b7c9f06a4bd4cf))
+* update packages and remove ^ ([e616d1d](https://github.com/dxheroes/dx-scanner/commit/e616d1dff31021625cf187fc6cf81372def959f4))
+* upgrade minor and patch version of packages ([db00696](https://github.com/dxheroes/dx-scanner/commit/db0069642a336097273faba105de68476fabe320))
+
+## [3.8.1](https://github.com/dxheroes/dx-scanner/compare/v3.8.0...v3.8.1) (2020-03-27)
+
+
+### Bug Fixes
+
+* scanning local repos without git hotfix ([80cc492](https://github.com/dxheroes/dx-scanner/commit/80cc492fcc769faecd98f86683076c55bdc7ccc9))
+
 # [3.8.0](https://github.com/dxheroes/dx-scanner/compare/v3.7.0...v3.8.0) (2020-03-26)
 
 

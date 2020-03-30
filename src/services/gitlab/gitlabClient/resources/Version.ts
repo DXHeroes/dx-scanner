@@ -11,7 +11,7 @@ export class Version extends GitLabClient {
   }
 }
 
-type VersionResponse = {
+export type VersionResponse = {
   version: string;
   revision: string;
 };
