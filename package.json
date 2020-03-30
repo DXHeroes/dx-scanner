@@ -55,7 +55,7 @@
     "node-filter-async": "2.0.0",
     "npm-check-updates": "4.0.1",
     "oclif": "1.15.2",
-    "properties": "^1.2.1",
+    "properties": "1.2.1",
     "qs": "6.9.1",
     "reflect-metadata": "0.1.13",
     "semver": "7.1.3",
