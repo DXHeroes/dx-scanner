@@ -7,7 +7,7 @@ import {
   PracticeEvaluationResult,
 } from '../model';
 import { PracticeData } from '../practices/IPractice';
-import { JSONReportDxScore } from './ReporterCollectData';
+import { JSONReportDxScore } from './CollectDataReporter';
 
 export interface IReporter {
   report(

@@ -2,9 +2,9 @@
 import { PracticeEvaluationResult } from '../model';
 import { argumentsProviderFactory } from '../test/factories/ArgumentsProviderFactory';
 import { practiceWithContextFactory } from '../test/factories/PracticeWithContextFactory';
-import { CollectDataReporter } from './ReporterCollectData';
+import { CollectDataReporter } from './CollectDataReporter';
 
-describe('ReporterCollectData', () => {
+describe('CollectDataReporter', () => {
   const practicingHighImpactPracticeWithCtx = practiceWithContextFactory();
   const notPracticingHighImpactPracticeWithCtx = practiceWithContextFactory({ evaluation: PracticeEvaluationResult.notPracticing });
 
