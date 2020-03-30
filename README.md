@@ -194,6 +194,7 @@ Use a Java Linter Dependency | <span style="color:green">small</span> | ❌ | �
 Use Java Class Naming Convention | <span style="color:green">small</span> | ❌ | ❌ | ✅ | ❌
 Specify Dependency Versions in your Package Manager | <span style="color:red">high</span> | ❌ | ❌ | ✅ | ❌
 Use Java Code Styles | <span style="color:green">small</span> | ❌ | ❌ | ✅ | ❌
+Use Java Logger Configuration Files | <span style="color:green">small</span> | ❌ | ❌ | ✅ | ❌
 Security vulnerabilities detected | <span style="color:red">high</span> | ❌ | ✅ | ❌ | ❌
 </details>
 
