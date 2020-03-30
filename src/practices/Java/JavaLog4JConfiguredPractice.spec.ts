@@ -152,7 +152,7 @@ describe('JavaLog4JConfiguredPractice', () => {
 
   it('Returns notPracticing if the configuration file is using an unsupported extension', async () => {
     containerCtx.virtualFileSystemService.setFileSystem({
-      'log4j.raml': '...',
+      'log4j.raml': log4jXMLContents,
       'pom.xml': pomXMLContents,
     });
     const evaluated = await practice.evaluate(containerCtx.practiceContext);
