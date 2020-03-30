@@ -26,24 +26,28 @@ export class ReporterCollectData implements IReporter {
     }
   }
 
-  buildReport(practicesAndComponents: PracticeWithContextForReporter[]): ReportData[] {
+  buildReport(practicesAndComponents: PracticeWithContextForReporter[]): JSONReportDxScore {
     const componentsWithPractices = ReporterUtils.getComponentsWithPractices(practicesAndComponents);
 
     const dxScore = ReporterUtils.computeDXScore(practicesAndComponents);
-    const componentsWithScore = [];
+    const report: JSONReportDxScore = { componentsWithDxScore: [] };
 
     for (const cwp of componentsWithPractices) {
       const dxScoreForComponent = dxScore.components.find((c) => c.path === cwp.component.path)!.value;
-      const componentWithScore = { component: cwp.component, dxScore: dxScoreForComponent };
+      const componentWithScore: ComponentWithDxScore = { component: cwp.component, dxScore: dxScoreForComponent };
 
-      componentsWithScore.push(componentWithScore);
+      report.componentsWithDxScore.push(componentWithScore);
     }
 
-    return componentsWithScore;
+    return report;
   }
 }
 
-export interface ReportData {
+export type JSONReportDxScore = {
+  componentsWithDxScore: ComponentWithDxScore[];
+};
+
+export interface ComponentWithDxScore {
   component: ProjectComponent;
   dxScore: string;
 }
