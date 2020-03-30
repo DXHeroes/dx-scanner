@@ -2,6 +2,8 @@ import { IPractice } from '../IPractice';
 import { PracticeEvaluationResult, PracticeImpact } from '../../model';
 import { DxPractice } from '../DxPracticeDecorator';
 import { PracticeContext } from '../../contexts/practice/PracticeContext';
+import { PackageManagerUtils, PackageManagerType } from '../utils/PackageManagerUtils';
+import shell from 'shelljs';
 
 @DxPractice({
   id: 'LanguageIndependent.LockfileIsPresent',
@@ -29,5 +31,17 @@ export class LockfileIsPresentPractice implements IPractice {
     }
 
     return PracticeEvaluationResult.notPracticing;
+  }
+
+  async fix() {
+    const generateYarnLock = () => {
+      shell.exec('yarn install');
+    };
+    const generateNpmLock = () => {
+      shell.exec('npm i --package-lock-only');
+    };
+    const packageManager = PackageManagerUtils.packageManagerInstalled(PackageManagerType.yarn); // prefer Yarn
+    if (packageManager === PackageManagerType.yarn) return generateYarnLock();
+    if (packageManager === PackageManagerType.npm) return generateNpmLock();
   }
 }

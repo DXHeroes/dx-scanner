@@ -3,16 +3,10 @@ import { DxPractice } from '../DxPracticeDecorator';
 import { PracticeContext } from '../../contexts/practice/PracticeContext';
 import shell from 'shelljs';
 import debug from 'debug';
-import { sync as commandExistsSync } from 'command-exists';
 import { PracticeBase } from '../PracticeBase';
 import { ReportDetailType } from '../../reporters/ReporterData';
 import { map } from 'lodash';
-
-enum PackageManagerType {
-  unknown = 'unknown',
-  npm = 'npm',
-  yarn = 'yarn',
-}
+import { PackageManagerType, PackageManagerUtils } from '../utils/PackageManagerUtils';
 
 interface NpmAuditOutput {
   actions: { action: string; module: string; target?: string }[];
@@ -43,34 +37,8 @@ export class SecurityVulnerabilitiesPractice extends PracticeBase {
   async evaluate(ctx: PracticeContext): Promise<PracticeEvaluationResult> {
     const npmCmd = 'npm audit --audit-level=high --json';
     const yarnCmd = 'yarn audit --summary --json';
-    const getPackageManager = async () => {
-      const packageLockExists = await ctx.fileInspector?.exists('./package-lock.json');
-      if (packageLockExists) return PackageManagerType.npm;
-      const shrinkwrapExists = await ctx.fileInspector?.exists('./npm-shrinkwrap.json');
-      if (shrinkwrapExists) return PackageManagerType.npm;
-      const yarnLockExists = await ctx.fileInspector?.exists('./yarn.lock');
-      if (yarnLockExists) return PackageManagerType.yarn;
-      return PackageManagerType.unknown;
-    };
 
-    const pmInstalled = (packageManager: PackageManagerType) => {
-      const hasNpm = commandExistsSync('npm');
-      const hasYarn = commandExistsSync('yarn');
-
-      if (packageManager === PackageManagerType.yarn) {
-        if (hasYarn) return packageManager;
-        else {
-          packageManager = PackageManagerType.npm; // fallback from yarn to npm
-        }
-      }
-
-      if (packageManager === PackageManagerType.npm && hasNpm) return packageManager;
-
-      return PackageManagerType.unknown;
-    };
-
-    let packageManager = await getPackageManager();
-    packageManager = pmInstalled(packageManager);
+    const packageManager = await PackageManagerUtils.getPackageManagerInstalled(ctx.fileInspector);
     if (packageManager === PackageManagerType.unknown) {
       securityVulnerabilitiesPracticeDebug(
         'Cannot establish package-manager type, missing package-lock.json and yarn.lock or npm command not installed.',

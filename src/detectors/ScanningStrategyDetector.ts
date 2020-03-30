@@ -135,6 +135,8 @@ export class ScanningStrategyDetector implements IDetector<string, ScanningStrat
 
       try {
         const { data } = await this.gitLabService.getRepo(owner, repoName);
+        this.isOnline = true;
+
         if (data.visibility === AccessType.private) {
           return AccessType.private;
         }
@@ -169,7 +171,7 @@ export class ScanningStrategyDetector implements IDetector<string, ScanningStrat
   private determineGitLabRemoteServiceType = async (): Promise<ServiceType | undefined> => {
     try {
       const response = await this.gitLabService.checkVersion();
-      if (has(response.data, 'version') && has(response.data, 'revision')) {
+      if (has(response, 'version') && has(response, 'revision')) {
         return ServiceType.gitlab;
       }
     } catch (error) {
