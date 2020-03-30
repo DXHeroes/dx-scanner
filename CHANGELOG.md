@@ -1,3 +1,80 @@
+# [3.9.0](https://github.com/dxheroes/dx-scanner/compare/v3.8.2...v3.9.0) (2020-03-28)
+
+
+### Features
+
+* **fixer:** add fixer for JS patch and minor deps ([4355d69](https://github.com/dxheroes/dx-scanner/commit/4355d69ae43563242ea770c37d45a22657260db5))
+* **fixer:** add test for deps fixer ([9a73424](https://github.com/dxheroes/dx-scanner/commit/9a73424fe56d69470d93f79acc581d12ca3c2170))
+
+## [3.8.2](https://github.com/dxheroes/dx-scanner/compare/v3.8.1...v3.8.2) (2020-03-28)
+
+
+### Bug Fixes
+
+* add return type ([fd23c74](https://github.com/dxheroes/dx-scanner/commit/fd23c7421f5592bb0b278e49faef9261301798aa))
+* getting authorAssociation value ([503ef82](https://github.com/dxheroes/dx-scanner/commit/503ef825cd3c40302ac8c0256b33fbf38ddd2620))
+* name of method in tests ([65bd9b3](https://github.com/dxheroes/dx-scanner/commit/65bd9b3cc172e3e45398581fffb2e95c7ee0b4c0))
+* revert ncu version  github.com/tjunnone/npm-check-updates/pull/642 ([5498512](https://github.com/dxheroes/dx-scanner/commit/54985125269d9ea64103cf6b4a1fccb52d8eb270))
+* update lockfile ([0b1ce53](https://github.com/dxheroes/dx-scanner/commit/0b1ce536e1ad027251c381be14648b41347dbf0d))
+* update packages ([03880b6](https://github.com/dxheroes/dx-scanner/commit/03880b6eab69111c7d9b10c808b7c9f06a4bd4cf))
+* update packages and remove ^ ([e616d1d](https://github.com/dxheroes/dx-scanner/commit/e616d1dff31021625cf187fc6cf81372def959f4))
+* upgrade minor and patch version of packages ([db00696](https://github.com/dxheroes/dx-scanner/commit/db0069642a336097273faba105de68476fabe320))
+
+## [3.8.1](https://github.com/dxheroes/dx-scanner/compare/v3.8.0...v3.8.1) (2020-03-27)
+
+
+### Bug Fixes
+
+* scanning local repos without git hotfix ([80cc492](https://github.com/dxheroes/dx-scanner/commit/80cc492fcc769faecd98f86683076c55bdc7ccc9))
+
+# [3.8.0](https://github.com/dxheroes/dx-scanner/compare/v3.7.0...v3.8.0) (2020-03-26)
+
+
+### Features
+
+* added code style recognition using dependencies ([8e8d860](https://github.com/dxheroes/dx-scanner/commit/8e8d860d79b737137ba1013f6f14bb993ae89f0f))
+* java code styles practice ([478f4e7](https://github.com/dxheroes/dx-scanner/commit/478f4e7452833a4b6b20071e079a464c435e86b1))
+
+# [3.7.0](https://github.com/dxheroes/dx-scanner/compare/v3.6.2...v3.7.0) (2020-03-26)
+
+
+### Features
+
+* **fixer:** add fixer for lockfile practice ([0990c4a](https://github.com/dxheroes/dx-scanner/commit/0990c4a8ab9297ee7bb19541bf811531bb48e516))
+* **fixer:** add fixer tests for lockfile practice ([5f78b71](https://github.com/dxheroes/dx-scanner/commit/5f78b71708018cbbead8d2ba7ff138b4e40c7f34))
+* **fixer:** remove redundant checks in Lockfile practice ([c997a3b](https://github.com/dxheroes/dx-scanner/commit/c997a3b84c6f004f3af29ddbd139dc20b47d647c))
+
+## [3.6.2](https://github.com/dxheroes/dx-scanner/compare/v3.6.1...v3.6.2) (2020-03-25)
+
+
+### Bug Fixes
+
+* set isOnline variable to true if the API request is ok ([f5c763a](https://github.com/dxheroes/dx-scanner/commit/f5c763a17f050cf4de04ca48d8c9f343f449734a))
+
+## [3.6.1](https://github.com/dxheroes/dx-scanner/compare/v3.6.0...v3.6.1) (2020-03-25)
+
+
+### Bug Fixes
+
+* **gitlab:** update comment with PR ID ([fe5f357](https://github.com/dxheroes/dx-scanner/commit/fe5f357aef4cfc98ab3bdb73b10e2f57171eae15))
+
+# [3.6.0](https://github.com/dxheroes/dx-scanner/compare/v3.5.3...v3.6.0) (2020-03-23)
+
+
+### Bug Fixes
+
+* **gitlab:** do not reject unauthorized certificates ([5338a29](https://github.com/dxheroes/dx-scanner/commit/5338a29fef4b82befb4d413a8f33e7339472b9be))
+* getPagination() ([1c5d5c6](https://github.com/dxheroes/dx-scanner/commit/1c5d5c65136cb250fbc211b3c6e8216b19e3cee5))
+* rename getContributorsStats() to listContributorsStats() ([6bc3346](https://github.com/dxheroes/dx-scanner/commit/6bc334638b84854c80d9d0fe8cf29dbc602c095c))
+
+
+### Features
+
+* implement parseGitHubHeaderLink() ([7159da5](https://github.com/dxheroes/dx-scanner/commit/7159da5d4878683ad6b4a480568ed09097c63174))
+* implement parseLinkHeader() ([e08a26f](https://github.com/dxheroes/dx-scanner/commit/e08a26fa0bc02905dd43ee2de5eb9cd79030803c))
+* save also headers, not only data ([add8f4b](https://github.com/dxheroes/dx-scanner/commit/add8f4bc0ae26f2ce46b3783dc6b41b10f0113bd))
+* wip - parseLinkHeader() ([504b628](https://github.com/dxheroes/dx-scanner/commit/504b62877b69e77d562839215fbfc80769a56acc))
+
 ## [3.5.3](https://github.com/dxheroes/dx-scanner/compare/v3.5.2...v3.5.3) (2020-03-23)
 
 

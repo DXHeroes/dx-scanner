@@ -119,6 +119,7 @@ export class CIReporter implements IReporter {
         this.config!.repository.name,
         ciReporterComments[ciReporterComments.length - 1].id,
         message,
+        this.config!.pullRequestId,
       );
     } else {
       // post a comment
