@@ -2,6 +2,9 @@ import gitUrlParse from 'git-url-parse';
 import _ from 'lodash';
 import { GitService } from './model';
 import { ServiceType } from '../../detectors/IScanningStrategy';
+import { repositoryConfig } from '../../scanner/__MOCKS__/RepositoryConfig.mock';
+import { RepositoryConfig } from '../../scanner/RepositoryConfig';
+import { ProjectComponent } from '../../model';
 
 export class GitServiceUtils {
   static getUrlToRepo = (url: string, path?: string | undefined, branch = 'master', serviceType?: ServiceType) => {
@@ -74,17 +77,11 @@ export class GitServiceUtils {
     return GitServiceUtils.getUrlToRepo(url, path, branch, serviceType);
   };
 
-  static getComponentPath = (
-    path: string,
-    basePath: string,
-    isLocalScanning: boolean | undefined,
-    repositoryPath?: string,
-    serviceType?: ServiceType,
-  ): string => {
+  static getComponentPath = (component: ProjectComponent, repositoryConfig: RepositoryConfig, repositoryPath?: string): string => {
     let componentPath, urlComponentPath;
-    if (!isLocalScanning) {
+    if (!repositoryConfig.localScanning) {
       // get component path without tmp folder path
-      componentPath = _.replace(path, basePath, '');
+      componentPath = _.replace(component.path, <string>repositoryConfig.basePath, '');
 
       // if it's root component, return repo path directly
       if (!componentPath) {
@@ -92,11 +89,11 @@ export class GitServiceUtils {
       }
 
       // get path to component according to service type
-      urlComponentPath = GitServiceUtils.getPath(componentPath || path, 'master', serviceType);
+      urlComponentPath = GitServiceUtils.getPath(componentPath || component.path, 'master', repositoryConfig.serviceType);
     }
 
     // if scanner is running remotely, concat repo path with component path, if not return local path directly
-    return urlComponentPath ? (repositoryPath += urlComponentPath) : path;
+    return urlComponentPath ? (repositoryPath += urlComponentPath) : component.path;
   };
 }
 

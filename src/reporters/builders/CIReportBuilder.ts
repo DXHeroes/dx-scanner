@@ -165,13 +165,7 @@ export class CIReportBuilder implements IReportBuilder {
   renderComponentHeader = (cwp: ComponentWithPractices, dxScore: DXScoreOverallResult): string => {
     const lines: string[] = [];
 
-    const componentPath = GitServiceUtils.getComponentPath(
-      cwp.component.path,
-      <string>this.repositoryConfig.basePath,
-      this.repositoryConfig.localScanning,
-      cwp.component.repositoryPath,
-      this.repositoryConfig.serviceType,
-    );
+    const componentPath = GitServiceUtils.getComponentPath(cwp.component, this.repositoryConfig);
 
     // display badge for a component only if there is more than one component because there is overall DX Score at the end of report
     const badge = dxScore.components.length > 1 ? this.renderBadge(dxScore.components.find((c) => c.path === cwp.component.path)!) : '';

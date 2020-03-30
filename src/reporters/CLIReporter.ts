@@ -43,13 +43,7 @@ export class CLIReporter implements IReporter {
     let componentPath: string;
 
     for (const cwp of componentsWithPractices) {
-      componentPath = GitServiceUtils.getComponentPath(
-        cwp.component.path,
-        <string>this.repositoryConfig.basePath,
-        this.repositoryConfig.localScanning,
-        cwp.component.repositoryPath,
-        this.repositoryConfig.serviceType,
-      );
+      componentPath = GitServiceUtils.getComponentPath(cwp.component, this.repositoryConfig);
 
       lines.push(bold(blue('----------------------------')));
       lines.push('');
