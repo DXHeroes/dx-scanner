@@ -30,32 +30,24 @@ describe('ReporterCollectData', () => {
       await expect(result.componentsWithDxScore).toContainObject({ dxScore: '0% | 0/1' });
     });
   });
-
-  // implement custom matcher
-  // match partial object in the array
-  expect.extend({
-    async toContainObject(response: Array<Record<string, any>>, object: Record<string, any>) {
-      const pass = this.equals(response, expect.arrayContaining([expect.objectContaining(object)]));
-
-      if (pass) {
-        return {
-          message: () => `expected ${this.utils.printReceived(response)} not to contain object ${this.utils.printExpected(object)}`,
-          pass: true,
-        };
-      } else {
-        return {
-          message: () => `expected ${this.utils.printReceived(response)} to contain object ${this.utils.printExpected(object)}`,
-          pass: false,
-        };
-      }
-    },
-  });
 });
 
-declare global {
-  namespace jest {
-    interface Matchers<R> {
-      toContainObject(object: Record<string, any>): Promise<object>;
-    }
-  }
-}
+// // implement custom matcher
+// // match partial object in the array
+// expect.extend({
+//   async toContainObject(response: Array<Record<string, any>>, object: Record<string, any>) {
+//     const pass = this.equals(response, expect.arrayContaining([expect.objectContaining(object)]));
+
+//     if (pass) {
+//       return {
+//         message: () => `expected ${this.utils.printReceived(response)} not to contain object ${this.utils.printExpected(object)}`,
+//         pass: true,
+//       };
+//     } else {
+//       return {
+//         message: () => `expected ${this.utils.printReceived(response)} to contain object ${this.utils.printExpected(object)}`,
+//         pass: false,
+//       };
+//     }
+//   },
+// });
