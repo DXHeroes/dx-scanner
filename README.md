@@ -94,12 +94,13 @@ Usage: dx-scanner [command] [options]
 
 Options:
   -V, --version         output the version number
-  -h, --help            output usage information
+  -h, --help            display help for command
 
 Commands:
   run [options] [path]  Scan your project for possible DX recommendations
   init                  Initialize DX Scanner configuration
   practices [options]   List all practices id with name and impact
+  help [command]        display help for command
 
 Aliases:
   dxs
@@ -121,6 +122,7 @@ Options:
   --fix                               tries to fix problems automatically (default: false)
   --fixPattern <pattern>              fix only rules with IDs matching the regex
   -j --json                           print report in JSON (default: false)
+  --html [path]                       save report in HTML file (default: false, default path: ./report.html)
   -r --recursive                      scan all components recursively in all sub folders (default: false)
   -h, --help                          output usage information
 

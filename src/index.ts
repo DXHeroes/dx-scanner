@@ -50,6 +50,7 @@ class DXScannerCommand {
       .option('--fix', 'tries to fix problems automatically', false)
       .option('--fixPattern <pattern>', 'fix only rules with IDs matching the regex')
       .option('-j --json', 'print report in JSON', false)
+      .option('--html [path]', 'save report in HTML', false)
       .option('-r --recursive', 'scan all components recursively in all sub folders', false)
       .action(Run.run)
       .on('--help', () => {
@@ -73,16 +74,6 @@ class DXScannerCommand {
       .option('-j --json', 'print practices in JSON')
       .action(Practices.run);
 
-    if (!process.argv.slice(2).length) {
-      cmder.outputHelp();
-    }
-
-    // error on unknown commands
-    cmder.on('command:*', () => {
-      console.error('Invalid command: %s\nSee --help for a list of available commands.', cmder.args.join(' '));
-      process.exit(1);
-    });
-
     await cmder.parseAsync(process.argv);
 
     this.notifyUpdate();
@@ -99,6 +90,8 @@ class DXScannerCommand {
       );
       process.exit(1);
     }
+
+    return value;
   };
 
   private static notifyUpdate = () => {

@@ -13,8 +13,8 @@ import { BitbucketService } from '../../services/bitbucket/BitbucketService';
 import { GitLabService } from '../../services/gitlab/GitLabService';
 import { PythonLanguageDetector } from '../../detectors/Python/PythonLanguageDetector';
 import { ArgumentsProvider } from '../../scanner';
-import { IReporter, FixReporter, JSONReporter, CLIReporter, CIReporter } from '../../reporters';
 import { ServiceType } from '../../detectors/IScanningStrategy';
+import { IReporter, FixReporter, JSONReporter, CLIReporter, CIReporter, HTMLReporter } from '../../reporters';
 
 export const bindScanningContext = (container: Container) => {
   container.bind(Types.ScannerContextFactory).toFactory(
@@ -64,12 +64,12 @@ const bindFileAccess = (scanningStrategy: ScanningStrategy, container: Container
 };
 
 const bindReporters = (container: Container, args: ArgumentsProvider) => {
-  if (args.fix) {
-    container.bind<IReporter>(Types.IReporter).to(FixReporter);
-    return;
-  }
   if (args.json) {
     container.bind<IReporter>(Types.IReporter).to(JSONReporter);
+  } else if (args.html) {
+    container.bind<IReporter>(Types.IReporter).to(HTMLReporter);
+  } else if (args.fix) {
+    container.bind<IReporter>(Types.IReporter).to(FixReporter);
   } else {
     container.bind<IReporter>(Types.IReporter).to(CLIReporter);
   }
