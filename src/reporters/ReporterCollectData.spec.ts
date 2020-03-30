@@ -2,7 +2,7 @@
 import { PracticeEvaluationResult } from '../model';
 import { argumentsProviderFactory } from '../test/factories/ArgumentsProviderFactory';
 import { practiceWithContextFactory } from '../test/factories/PracticeWithContextFactory';
-import { ReporterCollectData } from './ReporterCollectData';
+import { CollectDataReporter } from './ReporterCollectData';
 
 describe('ReporterCollectData', () => {
   const practicingHighImpactPracticeWithCtx = practiceWithContextFactory();
@@ -10,13 +10,13 @@ describe('ReporterCollectData', () => {
 
   describe('#report', () => {
     it('one practicing practice', async () => {
-      const result = new ReporterCollectData(argumentsProviderFactory()).buildReport([practicingHighImpactPracticeWithCtx]);
+      const result = new CollectDataReporter(argumentsProviderFactory()).buildReport([practicingHighImpactPracticeWithCtx]);
 
       await expect(result.componentsWithDxScore).toContainObject({ dxScore: '100% | 1/1' });
     });
 
     it('one practicing practice and one not practicing', async () => {
-      const result = new ReporterCollectData(argumentsProviderFactory()).buildReport([
+      const result = new CollectDataReporter(argumentsProviderFactory()).buildReport([
         practicingHighImpactPracticeWithCtx,
         notPracticingHighImpactPracticeWithCtx,
       ]);
@@ -25,12 +25,13 @@ describe('ReporterCollectData', () => {
     });
 
     it('one not practicing practice', async () => {
-      const result = new ReporterCollectData(argumentsProviderFactory()).buildReport([notPracticingHighImpactPracticeWithCtx]);
+      const result = new CollectDataReporter(argumentsProviderFactory()).buildReport([notPracticingHighImpactPracticeWithCtx]);
 
       await expect(result.componentsWithDxScore).toContainObject({ dxScore: '0% | 0/1' });
     });
   });
 
+  // TODO move to seperate file when needed
   // implement custom matcher
   // match partial object in the array
   expect.extend({

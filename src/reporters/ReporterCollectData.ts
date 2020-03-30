@@ -7,7 +7,7 @@ import { ProjectComponent } from '../model';
 import Axios from 'axios';
 
 @injectable()
-export class ReporterCollectData implements IReporter {
+export class CollectDataReporter implements IReporter {
   private readonly argumentsProvider: ArgumentsProvider;
 
   constructor(@inject(Types.ArgumentsProvider) argumentsProvider: ArgumentsProvider) {

@@ -14,7 +14,7 @@ import { GitLabService } from '../../services/gitlab/GitLabService';
 import { PythonLanguageDetector } from '../../detectors/Python/PythonLanguageDetector';
 import { ArgumentsProvider } from '../../scanner';
 import { IReporter, FixReporter, JSONReporter, CLIReporter, CIReporter } from '../../reporters';
-import { ReporterCollectData } from '../../reporters/ReporterCollectData';
+import { CollectDataReporter } from '../../reporters/ReporterCollectData';
 
 export const bindScanningContext = (container: Container) => {
   container.bind(Types.ScannerContextFactory).toFactory(
@@ -77,7 +77,7 @@ const bindReporters = (container: Container, args: ArgumentsProvider) => {
   if (args.ci) {
     container.bind<IReporter>(Types.IReporter).to(CIReporter);
   }
-  container.bind<IReporter>(Types.IReporter).to(ReporterCollectData);
+  container.bind<IReporter>(Types.IReporter).to(CollectDataReporter);
 };
 
 const bindLanguageDetectors = (container: Container) => {
