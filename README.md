@@ -121,6 +121,7 @@ Options:
   --fix                               tries to fix problems automatically (default: false)
   --fixPattern <pattern>              fix only rules with IDs matching the regex
   -j --json                           print report in JSON (default: false)
+  --html [path]                       save report in HTML file (default: false, default path: ./report.html)
   -r --recursive                      scan all components recursively in all sub folders (default: false)
   -h, --help                          output usage information
 
@@ -192,6 +193,8 @@ Use Testing Frameworks | <span style="color:red">high</span> | ❌ | ❌ | ✅ |
 Use a Java Logging Dependency | <span style="color:green">small</span> | ❌ | ❌ | ✅ | ❌
 Use a Java Linter Dependency | <span style="color:green">small</span> | ❌ | ❌ | ✅ | ❌
 Use Java Class Naming Convention | <span style="color:green">small</span> | ❌ | ❌ | ✅ | ❌
+Specify Dependency Versions in your Package Manager | <span style="color:red">high</span> | ❌ | ❌ | ✅ | ❌
+Use Java Code Styles | <span style="color:green">small</span> | ❌ | ❌ | ✅ | ❌
 Security vulnerabilities detected | <span style="color:red">high</span> | ❌ | ✅ | ❌ | ❌
 </details>
 
