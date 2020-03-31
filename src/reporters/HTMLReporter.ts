@@ -15,7 +15,10 @@ export class HTMLReporter implements IReporter {
   private readonly argumentsProvider: ArgumentsProvider;
   private readonly fileSystemService: FileSystemService;
 
-  constructor(@inject(Types.ArgumentsProvider) argumentsProvider: ArgumentsProvider, @inject(FileSystemService) fileSystemService: FileSystemService) {
+  constructor(
+    @inject(Types.ArgumentsProvider) argumentsProvider: ArgumentsProvider,
+    @inject(FileSystemService) fileSystemService: FileSystemService,
+  ) {
     this.argumentsProvider = argumentsProvider;
     this.fileSystemService = fileSystemService;
   }
@@ -65,7 +68,9 @@ export class HTMLReporter implements IReporter {
         lines.push(this.renderPracticesAndComponents('You have turned off these practices', practicesAndComponentsOff));
     }
 
-    lines.push(`<h2 style="text-align: center; border-top: 1px solid #eaecef; padding: 20px 0">Your overall score is ${dxScore.value}.</h2>`);
+    lines.push(
+      `<h2 style="text-align: center; border-top: 1px solid #eaecef; padding: 20px 0">Your overall score is ${dxScore.value}.</h2>`,
+    );
     lines.push('<div style="text-align: center; background-color: gray; margin: 0; padding: 10px">');
     lines.push('<p>Implementation is not adoption.</br>');
     lines.push('We can help you with both. :-)</p>');
@@ -93,8 +98,7 @@ export class HTMLReporter implements IReporter {
 
     if (practices.length === 0) return undefined;
 
-    let color,
-      text;
+    let color, text;
 
     if (impact === PracticeImpact.high) {
       color = 'rgba(255,0,0,.5)';
@@ -115,7 +119,6 @@ export class HTMLReporter implements IReporter {
     lines.push(`<div style="background-color: ${color}; padding: 2px">`);
     lines.push(`<h3 style="margin-left: 10px">${text}</h3>`);
 
-
     lines.push('<ul>');
     for (const practiceWithContext of practices) {
       lines.push(this.linesForPractice(practiceWithContext.practice));
@@ -126,9 +129,7 @@ export class HTMLReporter implements IReporter {
       }
 
       if (practiceWithContext.practice.impact !== practiceWithContext.overridenImpact) {
-        lines.push(
-          `<em>Impact changed from ${practiceWithContext.practice.impact} to ${practiceWithContext.overridenImpact}.</em>`,
-        );
+        lines.push(`<em>Impact changed from ${practiceWithContext.practice.impact} to ${practiceWithContext.overridenImpact}.</em>`);
       }
     }
 
@@ -140,8 +141,7 @@ export class HTMLReporter implements IReporter {
   private linesForPractice(practice: PracticeMetadata): string {
     const findingPath = '';
     let practiceLineText = `<li>${practice.name} - ${practice.suggestion}`;
-    if (practice.url)
-      practiceLineText += ` ${findingPath} <a href="${practice.url}">${practice.url}</a>`;
+    if (practice.url) practiceLineText += ` ${findingPath} <a href="${practice.url}">${practice.url}</a>`;
 
     practiceLineText += '</li>';
     return practiceLineText;

@@ -6,3 +6,4 @@ export { FixReporter } from './FixReporter';
 export * from './model';
 export * from './ReporterUtils';
 export * from './HTMLReporter';
+export * from './EnterpriseReporter';
