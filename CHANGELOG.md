@@ -1,3 +1,20 @@
+# [3.10.0](https://github.com/dxheroes/dx-scanner/compare/v3.9.0...v3.10.0) (2020-03-31)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @octokit/rest to v17 ([cb7cf1d](https://github.com/dxheroes/dx-scanner/commit/cb7cf1dbf22ff6db5d4c5d742f62671aa56163d4))
+* **deps:** update dependency @octokit/rest to v17 ([1468824](https://github.com/dxheroes/dx-scanner/commit/1468824e05984945888a8e7054309fa353f31a98))
+* **deps:** update dependency @octokit/rest to v17 ([b293915](https://github.com/dxheroes/dx-scanner/commit/b2939152e89a4490974f8f0f69965c5b39a9d0c4))
+* **deps:** update dependency commander to v5 ([2f6a454](https://github.com/dxheroes/dx-scanner/commit/2f6a454cfa72e5f29f6f58663d6b09eaa19b255b))
+* **deps:** update dependency commander to v5 ([017bf43](https://github.com/dxheroes/dx-scanner/commit/017bf439bc6db67aba4d5463323249b3e5117378))
+
+
+### Features
+
+* Added HTMLReporter ([8a136bf](https://github.com/dxheroes/dx-scanner/commit/8a136bfc36881be05c440595eb049bf8fa5eeea0))
+* implement ReportCollectData with tests ([5c5c479](https://github.com/dxheroes/dx-scanner/commit/5c5c4794048ace9b8bb89875dc9d131162344d78))
+
 # [3.9.0](https://github.com/dxheroes/dx-scanner/compare/v3.8.2...v3.9.0) (2020-03-28)
 
 
