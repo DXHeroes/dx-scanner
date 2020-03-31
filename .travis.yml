@@ -57,20 +57,14 @@ jobs:
     if: branch = master
     script:
       - npm -g i .
-      - dx-scanner run
       - dx-scanner run https://github.com/DXHeroes/dx-scanner --fail=off
-      - dx-scanner run https://github.com/moment/luxon --fail=off
-      - dx-scanner run https://github.com/intoli/remote-browser --fail=off
     os: windows
   - stage: runtime test
     name: Run Live Tests on Linux
     if: branch = master
     script:
       - npm -g i .
-      - dx-scanner run
       - dx-scanner run https://github.com/DXHeroes/dx-scanner --fail=off
-      - dx-scanner run https://github.com/moment/luxon --fail=off
-      - dx-scanner run https://github.com/intoli/remote-browser --fail=off
     os: linux
   - stage: release
     name: Release NPM Package
