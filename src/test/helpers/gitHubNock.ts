@@ -127,7 +127,7 @@ export class GitHubNock {
   }
 
   private getContents<T>(path: string, contents: T, persist = true): T {
-    const url = this.repository.contents_url.replace('{+path}', path);
+    const url = this.repository.contents_url.replace('{+path}', encodeURIComponent(path));
     const params = {};
     const code = contents !== undefined ? 200 : 404;
 

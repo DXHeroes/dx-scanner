@@ -33,6 +33,13 @@ import { VCSServicesUtils } from './VCSServicesUtils';
 import { ArgumentsProvider } from '../../scanner';
 import { IssueState } from '../../inspectors/IIssueTrackingInspector';
 import { RepositoryConfig } from '../../scanner/RepositoryConfig';
+import type {
+  PullsListParams,
+  IssuesListForRepoParams,
+  IssuesListCommentsParams,
+  PullsListCommitsParams,
+} from "@octokit/plugin-rest-endpoint-methods/dist-types/generated/types";
+import type { OctokitResponse } from "@octokit/types";
 const debug = Debug('cli:services:git:github-service');
 
 @injectable()
@@ -77,7 +84,7 @@ export class GitHubService implements IVCSService {
   ): Promise<Paginated<PullRequest>> {
     const state = VCSServicesUtils.getGithubPRState(options?.filter?.state);
 
-    const params: Octokit.PullsListParams = { owner, repo };
+    const params: PullsListParams = { owner, repo };
     if (state) params.state = state;
     if (options?.pagination?.page) params.page = options.pagination.page;
     if (options?.pagination?.perPage) params.per_page = options.pagination.perPage;
@@ -371,7 +378,7 @@ export class GitHubService implements IVCSService {
    * List all issues in the repo.
    */
   async listIssues(owner: string, repo: string, options?: ListGetterOptions<{ state?: IssueState }>): Promise<Paginated<Issue>> {
-    const params: Octokit.IssuesListForRepoParams = { owner, repo };
+    const params: IssuesListForRepoParams = { owner, repo };
     const state = VCSServicesUtils.getGithubIssueState(options?.filter?.state);
     if (options?.pagination?.page) params.page = options.pagination.page;
     if (options?.pagination?.perPage) params.per_page = options.pagination.perPage;
@@ -426,7 +433,7 @@ export class GitHubService implements IVCSService {
    * Get All Comments for an Issue
    */
   async listIssueComments(owner: string, repo: string, issueNumber: number, options?: ListGetterOptions): Promise<Paginated<IssueComment>> {
-    const params: Octokit.IssuesListCommentsParams = { owner, repo, issue_number: issueNumber };
+    const params: IssuesListCommentsParams = { owner, repo, issue_number: issueNumber };
     if (options?.pagination?.page) params.page = options.pagination.page;
     if (options?.pagination?.perPage) params.per_page = options.pagination.perPage;
 
@@ -474,7 +481,7 @@ export class GitHubService implements IVCSService {
    * Lists commits on a pull request.
    */
   async listPullCommits(owner: string, repo: string, prNumber: number, options?: ListGetterOptions): Promise<Paginated<PullCommits>> {
-    const params: Octokit.PullsListCommitsParams = { owner, repo, pull_number: prNumber };
+    const params: PullsListCommitsParams = { owner, repo, pull_number: prNumber };
     if (options?.pagination?.page) params.page = options.pagination.page;
     if (options?.pagination?.perPage) params.per_page = options.pagination.perPage;
 
@@ -511,7 +518,7 @@ export class GitHubService implements IVCSService {
     prNumber: number,
     options?: ListGetterOptions,
   ): Promise<Paginated<PullRequestComment>> {
-    const params: Octokit.IssuesListCommentsParams = { owner, repo, issue_number: prNumber };
+    const params: IssuesListCommentsParams = { owner, repo, issue_number: prNumber };
     if (options?.pagination?.page) params.page = options.pagination.page;
     if (options?.pagination?.perPage) params.per_page = options.pagination.perPage;
 
@@ -536,7 +543,7 @@ export class GitHubService implements IVCSService {
    * Add Comment to a Pull Request
    */
   async createPullRequestComment(owner: string, repo: string, prNumber: number, body: string): Promise<CreatedUpdatedPullRequestComment> {
-    const response: Octokit.Response<Octokit.IssuesCreateCommentResponse> = await this.client.issues.createComment({
+    const response = await this.client.issues.createComment({
       owner,
       repo,
       issue_number: prNumber,
@@ -558,7 +565,7 @@ export class GitHubService implements IVCSService {
    * Update Comment on a Pull Request
    */
   async updatePullRequestComment(owner: string, repo: string, commentId: number, body: string): Promise<CreatedUpdatedPullRequestComment> {
-    const response: Octokit.Response<Octokit.IssuesUpdateCommentResponse> = await this.client.issues.updateComment({
+    const response = await this.client.issues.updateComment({
       owner,
       repo,
       comment_id: commentId,
@@ -590,7 +597,7 @@ export class GitHubService implements IVCSService {
     };
   }
 
-  getPagination(totalCount: number, link: string) {
+  getPagination(totalCount: number, link?: string) {
     const parsedLink = VCSServicesUtils.parseGitHubHeaderLink(link);
 
     if (!parsedLink) {
@@ -615,7 +622,7 @@ export class GitHubService implements IVCSService {
   /**
    * Debug GitHub request promise
    */
-  private unwrap<T>(clientPromise: Promise<Octokit.Response<T>>): Promise<Octokit.Response<T>> {
+  private unwrap<T>(clientPromise: Promise<OctokitResponse<T>>): Promise<OctokitResponse<T>> {
     return clientPromise
       .then((response) => {
         this.debugGitHubResponse(response);
@@ -635,7 +642,7 @@ export class GitHubService implements IVCSService {
    * Debug GitHub response
    * - count API calls and inform about remaining rate limit
    */
-  private debugGitHubResponse = <T>(response: Octokit.Response<T>) => {
+  private debugGitHubResponse = <T>(response: OctokitResponse<T>) => {
     this.callCount++;
     debug(`GitHub API Hit: ${this.callCount}. Remaining ${response.headers['x-ratelimit-remaining']} hits. (${response.headers.link})`);
   };
