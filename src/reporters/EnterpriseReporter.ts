@@ -4,10 +4,10 @@ import { ArgumentsProvider } from '../scanner';
 import { Types } from '../types';
 import { PracticeWithContextForReporter, IReporter } from './IReporter';
 import { ProjectComponent } from '../model';
-import Axios from 'axios';
+import axios from 'axios';
 
 @injectable()
-export class CollectDataReporter implements IReporter {
+export class EnterpriseReporter implements IReporter {
   private readonly argumentsProvider: ArgumentsProvider;
 
   constructor(@inject(Types.ArgumentsProvider) argumentsProvider: ArgumentsProvider) {
@@ -19,7 +19,7 @@ export class CollectDataReporter implements IReporter {
 
     try {
       // send data
-      await Axios.post('https://dxscanner.io/api/v1/data-report', reportData);
+      await axios.post('https://dxscanner.io/api/v1/data-report', reportData);
       console.log('You can see DX data in your DX account now.\n');
     } catch (error) {
       console.log('Your DX data has not been sent to your account.\n');

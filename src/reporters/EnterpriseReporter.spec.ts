@@ -2,7 +2,7 @@
 import { PracticeEvaluationResult } from '../model';
 import { argumentsProviderFactory } from '../test/factories/ArgumentsProviderFactory';
 import { practiceWithContextFactory } from '../test/factories/PracticeWithContextFactory';
-import { CollectDataReporter } from './CollectDataReporter';
+import { EnterpriseReporter } from './EnterpriseReporter';
 
 describe('CollectDataReporter', () => {
   const practicingHighImpactPracticeWithCtx = practiceWithContextFactory();
@@ -10,13 +10,13 @@ describe('CollectDataReporter', () => {
 
   describe('#report', () => {
     it('one practicing practice', async () => {
-      const result = new CollectDataReporter(argumentsProviderFactory()).buildReport([practicingHighImpactPracticeWithCtx]);
+      const result = new EnterpriseReporter(argumentsProviderFactory()).buildReport([practicingHighImpactPracticeWithCtx]);
 
       await expect(result.componentsWithDxScore).toContainObject({ dxScore: '100% | 1/1' });
     });
 
     it('one practicing practice and one not practicing', async () => {
-      const result = new CollectDataReporter(argumentsProviderFactory()).buildReport([
+      const result = new EnterpriseReporter(argumentsProviderFactory()).buildReport([
         practicingHighImpactPracticeWithCtx,
         notPracticingHighImpactPracticeWithCtx,
       ]);
@@ -25,7 +25,7 @@ describe('CollectDataReporter', () => {
     });
 
     it('one not practicing practice', async () => {
-      const result = new CollectDataReporter(argumentsProviderFactory()).buildReport([notPracticingHighImpactPracticeWithCtx]);
+      const result = new EnterpriseReporter(argumentsProviderFactory()).buildReport([notPracticingHighImpactPracticeWithCtx]);
 
       await expect(result.componentsWithDxScore).toContainObject({ dxScore: '0% | 0/1' });
     });

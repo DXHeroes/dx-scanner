@@ -13,8 +13,7 @@ import { BitbucketService } from '../../services/bitbucket/BitbucketService';
 import { GitLabService } from '../../services/gitlab/GitLabService';
 import { PythonLanguageDetector } from '../../detectors/Python/PythonLanguageDetector';
 import { ArgumentsProvider } from '../../scanner';
-import { CollectDataReporter } from '../../reporters/CollectDataReporter';
-import { IReporter, FixReporter, JSONReporter, CLIReporter, CIReporter, HTMLReporter } from '../../reporters';
+import { IReporter, FixReporter, JSONReporter, CLIReporter, CIReporter, HTMLReporter, EnterpriseReporter } from '../../reporters';
 
 export const bindScanningContext = (container: Container) => {
   container.bind(Types.ScannerContextFactory).toFactory(
@@ -77,7 +76,7 @@ const bindReporters = (container: Container, args: ArgumentsProvider) => {
   if (args.ci) {
     container.bind<IReporter>(Types.IReporter).to(CIReporter);
   }
-  container.bind<IReporter>(Types.IReporter).to(CollectDataReporter);
+  container.bind<IReporter>(Types.IReporter).to(EnterpriseReporter);
 };
 
 const bindLanguageDetectors = (container: Container) => {
