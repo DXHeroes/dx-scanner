@@ -37,13 +37,15 @@ export class JavaCodeStyleUsedPractice implements IPractice {
     const xmlFiles = await ctx.fileInspector.scanFor(dotXml, '/', { shallow: false });
     const codeStyleKeys = ['codestylesettings', 'codestyle', 'code_scheme'];
 
-    for (const file of xmlFiles) {
-      if (file.baseName !== 'pom') {
-        const fileContents = await ctx.fileInspector.readFile(file.path);
-        const parsedContents = await xml2js.parseStringPromise(fileContents);
-        for (const key of Object.keys(parsedContents)) {
-          if (codeStyleKeys.includes(key)) {
-            return PracticeEvaluationResult.practicing;
+    if (xmlFiles) {
+      for (const file of xmlFiles) {
+        if (file.baseName !== 'pom') {
+          const fileContents = await ctx.fileInspector.readFile(file.path);
+          const parsedContents = await xml2js.parseStringPromise(fileContents);
+          for (const key of Object.keys(parsedContents)) {
+            if (codeStyleKeys.includes(key)) {
+              return PracticeEvaluationResult.practicing;
+            }
           }
         }
       }

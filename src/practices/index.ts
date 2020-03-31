@@ -37,6 +37,7 @@ import { JavaNamingConventionsPractice } from './Java/JavaNamingConventionsPract
 import { JavaLinterUsedPractice } from './Java/JavaLinterUsedPractice';
 import { JavaCodeStyleUsedPractice } from './Java/JavaCodeStyleUsedPractice';
 import { JavaSpecifiedDependencyVersions } from './Java/JavaSpecifiedDependencyVersions';
+import { JavaLog4JConfiguredPractice } from './Java/JavaLog4JConfiguredPractice';
 
 // register practices here
 export const practices = [
@@ -79,4 +80,5 @@ export const practices = [
   JavaLinterUsedPractice,
   JavaCodeStyleUsedPractice,
   JavaSpecifiedDependencyVersions,
+  JavaLog4JConfiguredPractice,
 ];

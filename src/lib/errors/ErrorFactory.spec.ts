@@ -8,8 +8,8 @@ describe('ErrorFactory', () => {
     } catch (error) {
       expect(error.name).toEqual('ServiceError');
       expect(error.code).toEqual(ErrorCode.INTERNAL_ERROR);
-      expect(error.stack).toMatch('ServiceError: The app went broken. Sorry about that. Not your fault');
-      expect(error.message).toEqual('The app went broken. Sorry about that. Not your fault');
+      expect(error.stack).toMatch('ServiceError: Crashed due to internal error');
+      expect(error.message).toEqual('Crashed due to internal error');
     }
   });
 
