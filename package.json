@@ -81,7 +81,7 @@
     "@types/jest": "25.1.4",
     "@types/lodash": "4.14.149",
     "@types/node": "12.12.32",
-    "@types/rimraf": "2.0.4",
+    "@types/rimraf": "3.0.0",
     "@types/semver": "7.1.0",
     "@types/shelljs": "0.8.7",
     "@types/toposort": "2.0.3",
