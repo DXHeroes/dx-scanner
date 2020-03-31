@@ -73,7 +73,7 @@ describe('JavaLog4JConfiguredPractice', () => {
     expect(evaluated).toEqual(PracticeEvaluationResult.practicing);
   });
 
-  it('Returns practicing if there is a correct configuration log4j.yml file', async () => {
+  it('Returns practicing if there is a correct configuration log4j.yaml file', async () => {
     const log4jYAMLContents = `
     Configuration:
       status: warn
@@ -92,6 +92,31 @@ describe('JavaLog4JConfiguredPractice', () => {
     `;
     containerCtx.virtualFileSystemService.setFileSystem({
       'log4j.yaml': log4jYAMLContents,
+      'pom.xml': pomXMLContents,
+    });
+    const evaluated = await practice.evaluate(containerCtx.practiceContext);
+    expect(evaluated).toEqual(PracticeEvaluationResult.practicing);
+  });
+
+  it('Returns practicing if there is a correct configuration log4j.yml file', async () => {
+    const log4jYAMLContents = `
+    Configuration:
+      status: warn
+      name: YAMLConfigTest
+      properties:
+        property:
+          name: filename
+          value: target/test-yaml.log
+      thresholdFilter:
+        level: debug
+      appenders:
+        Console:
+          name: STDOUT
+          PatternLayout:
+            Pattern: "%m%n"
+    `;
+    containerCtx.virtualFileSystemService.setFileSystem({
+      'log4j.yml': log4jYAMLContents,
       'pom.xml': pomXMLContents,
     });
     const evaluated = await practice.evaluate(containerCtx.practiceContext);

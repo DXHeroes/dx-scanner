@@ -43,6 +43,7 @@ export class JavaLog4JConfiguredPractice implements IPractice {
                 parsedContents = await JSON.parse(fileContents);
                 break;
               case '.yaml':
+              case '.yml':
                 parsedContents = await yaml.safeLoad(fileContents);
                 break;
               case '.properties':
