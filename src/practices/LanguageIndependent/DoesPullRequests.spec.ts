@@ -18,6 +18,7 @@ describe('DoesPullRequests', () => {
   afterEach(async () => {
     containerCtx.virtualFileSystemService.clearFileSystem();
     containerCtx.practiceContext.fileInspector!.purgeCache();
+    containerCtx.practiceContext.collaborationInspector?.purgeCache();
   });
 
   it('return practicing if there is at least one PR which is newer than last commit in master minus 30 days', async () => {
