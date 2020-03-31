@@ -2,7 +2,7 @@ import { ErrorCode } from './model';
 import { ServiceError } from './ServiceError';
 
 export class ErrorFactory {
-  static newInternalError(message = 'The app went broken. Sorry about that. Not your fault') {
+  static newInternalError(message = 'Crashed due to internal error') {
     return new ServiceError({
       code: ErrorCode.INTERNAL_ERROR,
       message,
