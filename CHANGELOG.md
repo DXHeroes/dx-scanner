@@ -1,3 +1,10 @@
+# [3.12.0](https://github.com/dxheroes/dx-scanner/compare/v3.11.0...v3.12.0) (2020-03-31)
+
+
+### Features
+
+* **inspectors:** cache all functions in CollaborationInspector and IssueInspector ([ba43873](https://github.com/dxheroes/dx-scanner/commit/ba4387376d484b0b92fa5a37a0a89a2c66e696fc))
+
 # [3.11.0](https://github.com/dxheroes/dx-scanner/compare/v3.10.0...v3.11.0) (2020-03-31)
 
 
