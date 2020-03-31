@@ -4,7 +4,7 @@ import { argumentsProviderFactory } from '../test/factories/ArgumentsProviderFac
 import { practiceWithContextFactory } from '../test/factories/PracticeWithContextFactory';
 import { EnterpriseReporter } from './EnterpriseReporter';
 
-describe('CollectDataReporter', () => {
+describe('EnterpriseReporter', () => {
   const practicingHighImpactPracticeWithCtx = practiceWithContextFactory();
   const notPracticingHighImpactPracticeWithCtx = practiceWithContextFactory({ evaluation: PracticeEvaluationResult.notPracticing });
 
@@ -35,6 +35,7 @@ describe('CollectDataReporter', () => {
   // implement custom matcher
   // match partial object in the array
   expect.extend({
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     async toContainObject(response: Array<Record<string, any>>, object: Record<string, any>) {
       const pass = this.equals(response, expect.arrayContaining([expect.objectContaining(object)]));
 
@@ -56,6 +57,7 @@ describe('CollectDataReporter', () => {
 declare global {
   namespace jest {
     interface Matchers<R> {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       toContainObject(object: Record<string, any>): Promise<object>;
     }
   }

@@ -24,7 +24,9 @@ describe('HTMLReporter', () => {
 
   describe('#report', () => {
     it('one practicing practice', async () => {
-      await new HTMLReporter(argumentsProviderFactory({ html: true }), virtualFileSystemService).report([practicingHighImpactPracticeWithCtx]);
+      await new HTMLReporter(argumentsProviderFactory({ html: true }), virtualFileSystemService).report([
+        practicingHighImpactPracticeWithCtx,
+      ]);
 
       const result = await virtualFileSystemService.readFile(reportPath);
       await virtualFileSystemService.deleteFile(reportPath);

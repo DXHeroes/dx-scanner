@@ -38,8 +38,8 @@ import type {
   IssuesListForRepoParams,
   IssuesListCommentsParams,
   PullsListCommitsParams,
-} from "@octokit/plugin-rest-endpoint-methods/dist-types/generated/types";
-import type { OctokitResponse } from "@octokit/types";
+} from '@octokit/plugin-rest-endpoint-methods/dist-types/generated/types';
+import type { OctokitResponse } from '@octokit/types';
 const debug = Debug('cli:services:git:github-service');
 
 @injectable()

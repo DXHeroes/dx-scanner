@@ -1,5 +1,4 @@
 import { ScanningStrategyDetectorUtils } from './ScanningStrategyDetectorUtils';
-import nock from 'nock';
 
 describe('ScanningStrategyDetectorUtils', () => {
   describe('#isLocalPath', () => {
