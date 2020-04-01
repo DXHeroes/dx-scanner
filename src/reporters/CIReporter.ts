@@ -74,7 +74,7 @@ export class CIReporter implements IReporter {
   }
 
   buildReport(practicesAndComponents: PracticeWithContextForReporter[]): string {
-    const builder = new CIReportBuilder(practicesAndComponents, this.repositoryConfig, this.scanningStrategy);
+    const builder = new CIReportBuilder(practicesAndComponents, this.scanningStrategy);
     return builder.build();
   }
 

@@ -1,6 +1,6 @@
 export const repositoryConfig = {
-  remoteUrl: 'https://bitbucket.org/pypy/pypy',
-  baseUrl: 'https://bitbucket.org',
-  host: 'githum.com',
+  remoteUrl: 'https://github.com/DXHeroes/dx-scanner',
+  baseUrl: 'https://github.com',
+  host: 'github.com',
   protocol: 'https',
 };

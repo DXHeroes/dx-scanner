@@ -52,7 +52,6 @@ export class ScanningStrategyDetector implements IDetector<string, ScanningStrat
         accessType = await this.determineRemoteAccessType({ remoteUrl: path, serviceType });
       }
     } else {
-      this.repositoryConfig.serviceType = serviceType;
       accessType = await this.determineRemoteAccessType({ remoteUrl: this.repositoryConfig.remoteUrl, serviceType });
     }
 
@@ -162,6 +161,7 @@ export class ScanningStrategyDetector implements IDetector<string, ScanningStrat
           error.response.status === 403 ||
           error.response.status === 500
         ) {
+          this.isOnline = true;
           return AccessType.unknown;
         }
         throw error;

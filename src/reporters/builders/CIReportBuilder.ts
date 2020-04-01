@@ -1,29 +1,25 @@
-import { PracticeWithContextForReporter, ReporterUtils, ComponentWithPractices } from '..';
-import { GitServiceUtils } from '../../services';
-import { PracticeImpact, PracticeEvaluationResult } from '../../model';
-import { PracticeDetail } from '../../practices/IPractice';
-import { ReportDetailType, ReporterData } from '../ReporterData';
-import { assertNever } from '../../lib/assertNever';
-import { IReportBuilder, BadgeColor } from './IReportBuilder';
-import { DXScoreOverallResult, DXScoreResult } from '../model';
 import { inject } from 'inversify';
-import { Types } from '../../types';
-import { RepositoryConfig } from '../../scanner/RepositoryConfig';
+import { ComponentWithPractices, PracticeWithContextForReporter, ReporterUtils } from '..';
 import { ScanningStrategy } from '../../detectors';
+import { assertNever } from '../../lib/assertNever';
+import { PracticeEvaluationResult, PracticeImpact } from '../../model';
+import { PracticeDetail } from '../../practices/IPractice';
+import { GitServiceUtils } from '../../services';
+import { Types } from '../../types';
+import { DXScoreOverallResult, DXScoreResult } from '../model';
+import { ReportDetailType, ReporterData } from '../ReporterData';
+import { BadgeColor, IReportBuilder } from './IReportBuilder';
 
 export class CIReportBuilder implements IReportBuilder {
   private readonly practicesAndComponents: PracticeWithContextForReporter[];
   static readonly ciReportIndicator = '<!-- CIReport ID to detect report comment -->';
-  private readonly repositoryConfig: RepositoryConfig;
   private readonly scanningStrategy: ScanningStrategy;
 
   constructor(
     practicesAndComponents: PracticeWithContextForReporter[],
-    @inject(Types.RepositoryConfig) repositoryConfig: RepositoryConfig,
     @inject(Types.ScanningStrategy) scanningStrategy: ScanningStrategy,
   ) {
     this.practicesAndComponents = practicesAndComponents;
-    this.repositoryConfig = repositoryConfig;
     this.scanningStrategy = scanningStrategy;
   }
 

@@ -1,28 +1,24 @@
-import { blue, bold, green, grey, italic, red, reset, cyan, yellow } from 'colors';
-import { injectable, inject } from 'inversify';
+import { blue, bold, cyan, green, grey, italic, red, reset, yellow } from 'colors';
+import { inject, injectable } from 'inversify';
+import { keyBy } from 'lodash';
+import { ScanningStrategy } from '../detectors';
 import { PracticeEvaluationResult } from '../model';
+import { ArgumentsProvider } from '../scanner';
+import { GitServiceUtils } from '../services/git/GitServiceUtils';
+import { Types } from '../types';
 import { IReporter, PracticeWithContextForReporter } from './IReporter';
 import { ReporterUtils } from './ReporterUtils';
-import { GitServiceUtils } from '../services/git/GitServiceUtils';
-import { ArgumentsProvider } from '../scanner';
-import { Types } from '../types';
-import { keyBy } from 'lodash';
-import { RepositoryConfig } from '../scanner/RepositoryConfig';
-import { ScanningStrategy } from '../detectors';
 
 @injectable()
 export class FixReporter implements IReporter {
   private readonly argumentsProvider: ArgumentsProvider;
-  private readonly repositoryConfig: RepositoryConfig;
   private readonly scanningStrategy: ScanningStrategy;
 
   constructor(
     @inject(Types.ArgumentsProvider) argumentsProvider: ArgumentsProvider,
-    @inject(Types.RepositoryConfig) repositoryConfig: RepositoryConfig,
     @inject(Types.ScanningStrategy) scanningStrategy: ScanningStrategy,
   ) {
     this.argumentsProvider = argumentsProvider;
-    this.repositoryConfig = repositoryConfig;
     this.scanningStrategy = scanningStrategy;
   }
 

@@ -14,6 +14,7 @@ import { PracticeContext } from '../contexts/practice/PracticeContext';
 import { ProjectComponentContext } from '../contexts/projectComponent/ProjectComponentContext';
 import { ScannerContext } from '../contexts/scanner/ScannerContext';
 import { ScanningStrategy } from '../detectors';
+import { AccessType, ServiceType } from '../detectors/IScanningStrategy';
 import { sharedSubpath } from '../detectors/utils';
 import { ErrorFactory } from '../lib/errors';
 import {
@@ -31,8 +32,6 @@ import { ScannerUtils } from '../scanner/ScannerUtils';
 import { FileSystemService } from '../services';
 import { DiscoveryContextFactory, Types } from '../types';
 import { ScanningStrategyExplorer } from './ScanningStrategyExplorer';
-import { RepositoryConfig } from './RepositoryConfig';
-import { ServiceType, AccessType } from '../detectors/IScanningStrategy';
 
 @injectable()
 export class Scanner {
@@ -44,7 +43,6 @@ export class Scanner {
   private readonly d: debug.Debugger;
   private shouldExitOnEnd = false;
   private allDetectedComponents: ProjectComponentAndLangContext[] | undefined;
-  private repositoryConfig!: RepositoryConfig;
 
   constructor(
     @inject(ScanningStrategyExplorer) scanStrategyExplorer: ScanningStrategyExplorer,
@@ -65,10 +63,10 @@ export class Scanner {
   }
 
   async scan({ determineRemote } = { determineRemote: true }): Promise<ScanResult> {
-    this.repositoryConfig = await this.scanStrategyExplorer.explore();
-    this.d(`Repository Config: ${inspect(this.repositoryConfig)}`);
+    const repositoryConfig = await this.scanStrategyExplorer.explore();
+    this.d(`Repository Config: ${inspect(repositoryConfig)}`);
 
-    const discoveryContext = this.discoveryContextFactory(this.repositoryConfig);
+    const discoveryContext = this.discoveryContextFactory(repositoryConfig);
 
     let scanStrategy = await discoveryContext.scanningStrategyDetector.detect();
     this.d(`Scan strategy: ${inspect(scanStrategy)}`);
@@ -160,15 +158,12 @@ export class Scanner {
     let localPath = scanningStrategy.localPath;
 
     if (!isOnline) {
-      this.repositoryConfig.localScanning = true;
       return { serviceType, accessType, remoteUrl, localPath, isOnline };
     }
 
     if (localPath === undefined && remoteUrl !== undefined && serviceType !== ServiceType.local) {
       const cloneUrl = new url.URL(remoteUrl);
       localPath = fs.mkdtempSync(path.join(os.tmpdir(), 'dx-scanner'));
-
-      this.repositoryConfig.localScanning = false;
 
       if (this.argumentsProvider.auth?.includes(':')) {
         cloneUrl.username = this.argumentsProvider.auth.split(':')[0];
@@ -183,11 +178,7 @@ export class Scanner {
       await git()
         .silent(true)
         .clone(cloneUrl.href, localPath);
-    } else {
-      this.repositoryConfig.localScanning = true;
     }
-
-    if (localPath) this.repositoryConfig.basePath = localPath;
 
     return { serviceType, accessType, remoteUrl, localPath, isOnline };
   }

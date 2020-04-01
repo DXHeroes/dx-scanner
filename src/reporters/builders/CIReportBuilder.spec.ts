@@ -1,5 +1,5 @@
 import { PracticeEvaluationResult, PracticeImpact } from '../../model';
-import { repositoryConfig } from '../../scanner/__MOCKS__/RepositoryConfig.mock';
+import { scanningStrategy } from '../../scanner/__MOCKS__/ScanningStrategy.mock';
 import { practiceWithContextFactory } from '../../test/factories/PracticeWithContextFactory';
 import { CIReportBuilder } from './CIReportBuilder';
 
@@ -12,7 +12,7 @@ describe('CIReportBuilder', () => {
 
   describe('#build', () => {
     it('one practicing practice contains all necessary data', () => {
-      const result = new CIReportBuilder([practicingHighImpactPracticeWithCtx], repositoryConfig).build();
+      const result = new CIReportBuilder([practicingHighImpactPracticeWithCtx], scanningStrategy).build();
 
       const mustContainElements = [CIReportBuilder.ciReportIndicator];
 
@@ -24,7 +24,7 @@ describe('CIReportBuilder', () => {
     it('one practicing practice and one not practicing', () => {
       const result = new CIReportBuilder(
         [practicingHighImpactPracticeWithCtx, notPracticingHighImpactPracticeWithCtx],
-        repositoryConfig,
+        scanningStrategy,
       ).build();
 
       const mustContainElements = [
@@ -68,7 +68,7 @@ describe('CIReportBuilder', () => {
           }),
           practiceWithContextFactory({ overridenImpact: PracticeImpact.high, evaluation: PracticeEvaluationResult.unknown }),
         ],
-        repositoryConfig,
+        scanningStrategy,
       ).build();
 
       expect(result).toContain('Improvements with highest impact');
