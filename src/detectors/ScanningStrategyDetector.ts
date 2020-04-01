@@ -150,17 +150,18 @@ export class ScanningStrategyDetector implements IDetector<string, ScanningStrat
         }
       } catch (error) {
         this.d(error.message);
+
+        if (!error.response) {
+          this.isOnline = false;
+          return AccessType.unknown;
+        }
+
         if (
           error.response.status === 401 ||
           error.response.status === 404 ||
           error.response.status === 403 ||
           error.response.status === 500
         ) {
-          if (error.response.status === 500) {
-            this.isOnline = false;
-          } else {
-            this.isOnline = true;
-          }
           return AccessType.unknown;
         }
         throw error;
