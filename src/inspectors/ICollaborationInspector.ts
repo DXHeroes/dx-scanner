@@ -13,6 +13,8 @@ export interface ICollaborationInspector {
   listPullRequestFiles(owner: string, repo: string, prNumber: number): Promise<Paginated<PullFiles>>;
   listRepoCommits(owner: string, repo: string, options?: ListGetterOptions): Promise<Paginated<Commit>>;
   getPullsDiffStat(owner: string, repo: string, prNumber: number): Promise<Lines>;
+
+  purgeCache(): void;
 }
 
 export enum PullRequestState {

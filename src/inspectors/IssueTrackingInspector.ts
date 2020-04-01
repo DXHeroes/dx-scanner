@@ -6,13 +6,20 @@ import { Issue, IssueComment } from '../services/git/model';
 import { Types } from '../types';
 import { VCSService } from '../model';
 import { ListGetterOptions } from '.';
+import { ICache, InMemoryCache } from '../scanner/cache';
 
 @injectable()
 export class IssueTrackingInspector implements IIssueTrackingInspector {
   private service: VCSService;
+  private cache: ICache;
 
   constructor(@inject(Types.IContentRepositoryBrowser) service: VCSService) {
     this.service = service;
+    this.cache = new InMemoryCache();
+  }
+
+  purgeCache() {
+    this.cache.purge();
   }
 
   async listIssues(
@@ -20,15 +27,21 @@ export class IssueTrackingInspector implements IIssueTrackingInspector {
     repo: string,
     options?: { withDiffStat?: boolean } & ListGetterOptions<{ state?: IssueState }>,
   ): Promise<Paginated<Issue>> {
-    return this.service.listIssues(owner, repo, options);
+    return this.cache.getOrSet(`IssueTrackingInspector:listIssues:${owner}:${repo}:${JSON.stringify(options)}`, async () => {
+      return this.service.listIssues(owner, repo, options);
+    });
   }
 
   async getIssue(owner: string, repo: string, issueId: number): Promise<Issue> {
-    return this.service.getIssue(owner, repo, issueId);
+    return this.cache.getOrSet(`IssueTrackingInspector:getIssue:${owner}:${repo}:${issueId}`, async () => {
+      return this.service.getIssue(owner, repo, issueId);
+    });
   }
 
   //TODO add options
   async listIssueComments(owner: string, repo: string, issueId: number): Promise<Paginated<IssueComment>> {
-    return this.service.listIssueComments(owner, repo, issueId);
+    return this.cache.getOrSet(`IssueTrackingInspector:listIssueComments:${owner}:${repo}:${issueId}`, async () => {
+      return this.service.listIssueComments(owner, repo, issueId);
+    });
   }
 }

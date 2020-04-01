@@ -1,3 +1,27 @@
+# [3.12.0](https://github.com/dxheroes/dx-scanner/compare/v3.11.0...v3.12.0) (2020-03-31)
+
+
+### Features
+
+* **inspectors:** cache all functions in CollaborationInspector and IssueInspector ([ba43873](https://github.com/dxheroes/dx-scanner/commit/ba4387376d484b0b92fa5a37a0a89a2c66e696fc))
+
+# [3.11.0](https://github.com/dxheroes/dx-scanner/compare/v3.10.0...v3.11.0) (2020-03-31)
+
+
+### Bug Fixes
+
+* consideration for .yml using case fallthrough ([7b8c660](https://github.com/dxheroes/dx-scanner/commit/7b8c66077079398d6f0f35200614cccb3f2704ca))
+* java code styles pre-condition & added mock for loggers ([9b2de65](https://github.com/dxheroes/dx-scanner/commit/9b2de652edbc2e2d550728db5617dcf21715fba5))
+* lockfile from merge conflict ([9bd940d](https://github.com/dxheroes/dx-scanner/commit/9bd940d3a0df1d36bc88c095fbe951dfd8b4d783))
+* pkg relative versioning to absolute ([9b7e02b](https://github.com/dxheroes/dx-scanner/commit/9b7e02b735e4cd704d19d8f7575fee3eb01ac4ca))
+* removing ambiguity from the test for file extension testing ([78c74a2](https://github.com/dxheroes/dx-scanner/commit/78c74a26d57ae27b8be758db918d1d8f47dd196c))
+
+
+### Features
+
+* adding a new java log4j config checker practice ([a4d045f](https://github.com/dxheroes/dx-scanner/commit/a4d045febe9563af23c3f5e8f5c1987121437e15))
+* adding a properties pkg for parsing & re-typing ([6d440b8](https://github.com/dxheroes/dx-scanner/commit/6d440b84c0e39526c83b7ee67a392564e190e8d4))
+
 # [3.10.0](https://github.com/dxheroes/dx-scanner/compare/v3.9.0...v3.10.0) (2020-03-31)
 
 

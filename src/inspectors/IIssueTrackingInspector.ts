@@ -16,4 +16,6 @@ export interface IIssueTrackingInspector {
   ): Promise<Paginated<Issue>>;
   getIssue(owner: string, repo: string, id: number): Promise<Issue>;
   listIssueComments(owner: string, repo: string, id: number): Promise<Paginated<IssueComment>>;
+
+  purgeCache(): void;
 }
