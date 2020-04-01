@@ -10,18 +10,22 @@ import { assertNever } from '../lib/assertNever';
 import { ArgumentsProvider } from '../scanner';
 import { Types } from '../types';
 import { RepositoryConfig } from '../scanner/RepositoryConfig';
+import { ScanningStrategy } from '../detectors';
 
 @injectable()
 export class CLIReporter implements IReporter {
   private readonly argumentsProvider: ArgumentsProvider;
   private readonly repositoryConfig: RepositoryConfig;
+  private readonly scanningStrategy: ScanningStrategy;
 
   constructor(
     @inject(Types.ArgumentsProvider) argumentsProvider: ArgumentsProvider,
     @inject(Types.RepositoryConfig) repositoryConfig: RepositoryConfig,
+    @inject(Types.ScanningStrategy) scanningStrategy: ScanningStrategy,
   ) {
     this.argumentsProvider = argumentsProvider;
     this.repositoryConfig = repositoryConfig;
+    this.scanningStrategy = scanningStrategy;
   }
 
   async report(practicesAndComponents: PracticeWithContextForReporter[]): Promise<void> {
@@ -43,7 +47,7 @@ export class CLIReporter implements IReporter {
     let componentPath: string;
 
     for (const cwp of componentsWithPractices) {
-      componentPath = GitServiceUtils.getComponentPath(cwp.component, this.repositoryConfig);
+      componentPath = GitServiceUtils.getComponentPath(cwp.component, this.scanningStrategy);
 
       lines.push(bold(blue('----------------------------')));
       lines.push('');

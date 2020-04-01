@@ -4,6 +4,7 @@ import { ServiceType } from '../../detectors/IScanningStrategy';
 import { assertNever } from '../../lib/assertNever';
 import { ProjectComponent } from '../../model';
 import { RepositoryConfig } from '../../scanner/RepositoryConfig';
+import { ScanningStrategy } from '../../detectors';
 
 export class GitServiceUtils {
   static getUrlToRepo = (url: string, path?: string | undefined, branch = 'master') => {
@@ -69,23 +70,28 @@ export class GitServiceUtils {
     return GitServiceUtils.getUrlToRepo(url, path, branch);
   };
 
-  static getComponentPath = (component: ProjectComponent, repositoryConfig: RepositoryConfig, repositoryPath?: string): string => {
-    let componentPath, urlComponentPath;
-    if (!repositoryConfig.localScanning) {
+  static getComponentPath = (component: ProjectComponent, scanningStrategy: ScanningStrategy): string => {
+    let componentPath, urlComponentPath, repoPath;
+
+    if (scanningStrategy.isOnline) {
       // get component path without tmp folder path
-      componentPath = _.replace(component.path, <string>repositoryConfig.basePath, '');
+      componentPath = _.replace(component.path, <string>scanningStrategy.localPath, '');
 
       // if it's root component, return repo path directly
       if (!componentPath) {
-        return <string>repositoryPath;
+        return <string>component.repositoryPath;
       }
+      const parsedUrl = gitUrlParse(<string>component.repositoryPath);
+      repoPath = `${parsedUrl.protocol}://${parsedUrl.resource}/${parsedUrl.full_name}`;
 
       // get path to component according to service type
-      urlComponentPath = GitServiceUtils.getPath(componentPath || component.path, 'master', repositoryConfig.serviceType);
+      urlComponentPath = GitServiceUtils.getPath(componentPath || component.path, 'master', scanningStrategy.serviceType);
     }
 
+    repoPath = repoPath || component.repositoryPath;
+
     // if scanner is running remotely, concat repo path with component path, if not return local path directly
-    return urlComponentPath ? (repositoryPath += urlComponentPath) : component.path;
+    return urlComponentPath ? (repoPath += urlComponentPath) : component.path;
   };
 }
 

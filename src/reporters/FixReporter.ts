@@ -8,18 +8,22 @@ import { ArgumentsProvider } from '../scanner';
 import { Types } from '../types';
 import { keyBy } from 'lodash';
 import { RepositoryConfig } from '../scanner/RepositoryConfig';
+import { ScanningStrategy } from '../detectors';
 
 @injectable()
 export class FixReporter implements IReporter {
   private readonly argumentsProvider: ArgumentsProvider;
   private readonly repositoryConfig: RepositoryConfig;
+  private readonly scanningStrategy: ScanningStrategy;
 
   constructor(
     @inject(Types.ArgumentsProvider) argumentsProvider: ArgumentsProvider,
     @inject(Types.RepositoryConfig) repositoryConfig: RepositoryConfig,
+    @inject(Types.ScanningStrategy) scanningStrategy: ScanningStrategy,
   ) {
     this.argumentsProvider = argumentsProvider;
     this.repositoryConfig = repositoryConfig;
+    this.scanningStrategy = scanningStrategy;
   }
 
   async report(
@@ -49,7 +53,7 @@ export class FixReporter implements IReporter {
     let componentPath;
 
     for (const cwp of componentsWithPractices) {
-      componentPath = GitServiceUtils.getComponentPath(cwp.component, this.repositoryConfig);
+      componentPath = GitServiceUtils.getComponentPath(cwp.component, this.scanningStrategy);
 
       lines.push(bold(blue('----------------------------')));
       lines.push('');

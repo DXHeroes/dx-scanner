@@ -9,18 +9,22 @@ import { DXScoreOverallResult, DXScoreResult } from '../model';
 import { inject } from 'inversify';
 import { Types } from '../../types';
 import { RepositoryConfig } from '../../scanner/RepositoryConfig';
+import { ScanningStrategy } from '../../detectors';
 
 export class CIReportBuilder implements IReportBuilder {
   private readonly practicesAndComponents: PracticeWithContextForReporter[];
   static readonly ciReportIndicator = '<!-- CIReport ID to detect report comment -->';
   private readonly repositoryConfig: RepositoryConfig;
+  private readonly scanningStrategy: ScanningStrategy;
 
   constructor(
     practicesAndComponents: PracticeWithContextForReporter[],
     @inject(Types.RepositoryConfig) repositoryConfig: RepositoryConfig,
+    @inject(Types.ScanningStrategy) scanningStrategy: ScanningStrategy,
   ) {
     this.practicesAndComponents = practicesAndComponents;
     this.repositoryConfig = repositoryConfig;
+    this.scanningStrategy = scanningStrategy;
   }
 
   build() {
@@ -165,7 +169,7 @@ export class CIReportBuilder implements IReportBuilder {
   renderComponentHeader = (cwp: ComponentWithPractices, dxScore: DXScoreOverallResult): string => {
     const lines: string[] = [];
 
-    const componentPath = GitServiceUtils.getComponentPath(cwp.component, this.repositoryConfig);
+    const componentPath = GitServiceUtils.getComponentPath(cwp.component, this.scanningStrategy);
 
     // display badge for a component only if there is more than one component because there is overall DX Score at the end of report
     const badge = dxScore.components.length > 1 ? this.renderBadge(dxScore.components.find((c) => c.path === cwp.component.path)!) : '';

@@ -14,6 +14,7 @@ import { GitLabService } from '../../services/gitlab/GitLabService';
 import { PythonLanguageDetector } from '../../detectors/Python/PythonLanguageDetector';
 import { ArgumentsProvider } from '../../scanner';
 import { IReporter, FixReporter, JSONReporter, CLIReporter, CIReporter, HTMLReporter, EnterpriseReporter } from '../../reporters';
+import { ServiceType } from '../../detectors/IScanningStrategy';
 
 export const bindScanningContext = (container: Container) => {
   container.bind(Types.ScannerContextFactory).toFactory(
