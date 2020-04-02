@@ -1,3 +1,21 @@
+# [3.13.0](https://github.com/dxheroes/dx-scanner/compare/v3.12.1...v3.13.0) (2020-04-02)
+
+
+### Bug Fixes
+
+* insert a blank line to avoid germans ([39db268](https://github.com/dxheroes/dx-scanner/commit/39db268e4113e558b22064dbadb2a85c1eba51b7))
+* remove auto delete rule on merge ([821a896](https://github.com/dxheroes/dx-scanner/commit/821a896403d0fe97a057c2d366cac29a7d255808))
+
+
+### Features
+
+* **fixer:** add fixer for .editorconfig practice ([898e281](https://github.com/dxheroes/dx-scanner/commit/898e2813b47155da36b8bc3c8df056f611fd9b91))
+* **fixer:** add test for editorconfig practice ([4d5853d](https://github.com/dxheroes/dx-scanner/commit/4d5853d29b3befd8b593e0b750b1e67ad6bcf396))
+* **fixer:** add virtual fs to testing fixer context ([6fa4a30](https://github.com/dxheroes/dx-scanner/commit/6fa4a30f79c25ea349afa2417203b1a06b16a231))
+* **fixer:** use absolute path for editorconfig fixer ([e42e70a](https://github.com/dxheroes/dx-scanner/commit/e42e70a0558e39fb5172e025b88526a765418843))
+* **fixer:** use fileInspector for editorConfig fixer ([01ac08d](https://github.com/dxheroes/dx-scanner/commit/01ac08db3ee557274fdafb75b7bac7b2137f7985))
+* **fixer:** use normalized path in fileinspector createfile ([c702599](https://github.com/dxheroes/dx-scanner/commit/c70259986a27b39c046fd705007fecf79c7ce517))
+
 ## [3.12.1](https://github.com/dxheroes/dx-scanner/compare/v3.12.0...v3.12.1) (2020-04-02)
 
 
