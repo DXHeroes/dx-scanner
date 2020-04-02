@@ -1,20 +1,18 @@
 import gitUrlParse from 'git-url-parse';
 import _ from 'lodash';
+import { ScanningStrategy } from '../../detectors';
 import { ServiceType } from '../../detectors/IScanningStrategy';
 import { assertNever } from '../../lib/assertNever';
 import { ProjectComponent } from '../../model';
-import { RepositoryConfig } from '../../scanner/RepositoryConfig';
-import { ScanningStrategy } from '../../detectors';
 
 export class GitServiceUtils {
-  static getUrlToRepo = (url: string, path?: string | undefined, branch = 'master') => {
+  static getUrlToRepo = (url: string, scanningStrategy: ScanningStrategy, path?: string | undefined, branch = 'master') => {
     const parsedUrl = gitUrlParse(url);
 
     let completeUrl = `${parsedUrl.protocol}://${parsedUrl.resource}/${parsedUrl.owner}/${parsedUrl.name}`;
-    const sourceUrl = <ServiceType | null>parsedUrl.resource;
 
-    if (path && sourceUrl) {
-      completeUrl += GitServiceUtils.getPath(path, branch || parsedUrl.ref, sourceUrl);
+    if (path) {
+      completeUrl += GitServiceUtils.getPath(path, branch || parsedUrl.ref, <ServiceType>scanningStrategy.serviceType);
     }
 
     return completeUrl;
@@ -31,7 +29,7 @@ export class GitServiceUtils {
     };
   };
 
-  static getPath = (componentPath: string, branch = 'master', serviceType?: ServiceType) => {
+  static getPath = (componentPath: string, branch = 'master', serviceType: ServiceType) => {
     if (serviceType) {
       switch (serviceType) {
         case ServiceType.github:
@@ -60,14 +58,14 @@ export class GitServiceUtils {
     }
   };
 
-  static getPathOrRepoUrl = (url: string, path?: string | undefined, branch = 'master') => {
+  static getPathOrRepoUrl = (url: string, scanningStrategy: ScanningStrategy, path?: string | undefined, branch = 'master') => {
     const parsedUrl = gitUrlParse(url);
 
     if (parsedUrl.protocol === 'file') {
       return url;
     }
 
-    return GitServiceUtils.getUrlToRepo(url, path, branch);
+    return GitServiceUtils.getUrlToRepo(url, scanningStrategy, path, branch);
   };
 
   static getComponentPath = (component: ProjectComponent, scanningStrategy: ScanningStrategy): string => {
@@ -85,7 +83,7 @@ export class GitServiceUtils {
       repoPath = `${parsedUrl.protocol}://${parsedUrl.resource}/${parsedUrl.full_name}`;
 
       // get path to component according to service type
-      urlComponentPath = GitServiceUtils.getPath(componentPath || component.path, 'master', scanningStrategy.serviceType);
+      urlComponentPath = GitServiceUtils.getPath(componentPath || component.path, 'master', <ServiceType>scanningStrategy.serviceType);
     }
 
     repoPath = repoPath || component.repositoryPath;
