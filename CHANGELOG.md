@@ -1,3 +1,10 @@
+## [3.12.1](https://github.com/dxheroes/dx-scanner/compare/v3.12.0...v3.12.1) (2020-04-02)
+
+
+### Bug Fixes
+
+* **gitlab:** name of body parameter ([70ff955](https://github.com/dxheroes/dx-scanner/commit/70ff955e41312c137291b381305452c2edab819a))
+
 # [3.12.0](https://github.com/dxheroes/dx-scanner/compare/v3.11.0...v3.12.0) (2020-03-31)
 
 
