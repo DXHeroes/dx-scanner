@@ -5,10 +5,9 @@ import { PracticeContext } from '../../contexts/practice/PracticeContext';
 
 @DxPractice({
   id: 'Java.PropertiesUsed',
-  name: 'Store Environment Properties Using .properties Files',
+  name: 'Store Environment Variables Using .properties Files',
   impact: PracticeImpact.medium,
-  suggestion:
-    'Use files such as application.properties to store your sensitive key-value parameters & make sure that there are no syntax errors.',
+  suggestion: 'Use files such as application.properties to store your sensitive key-value parameters.',
   reportOnlyOnce: true,
   url: 'https://www.baeldung.com/java-properties',
 })
