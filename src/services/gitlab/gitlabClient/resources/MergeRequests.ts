@@ -140,7 +140,7 @@ export class MergeRequests extends GitLabClient {
   ): Promise<CustomAxiosResponse<MergeComment>> {
     const endpoint = `projects/${encodeURIComponent(projectId)}/merge_requests/${mergeRequestIId}/notes/${commentId}`;
 
-    const response: AxiosResponse<MergeComment> = await this.api.put(endpoint, { data: body });
+    const response: AxiosResponse<MergeComment> = await this.api.put(endpoint, { body });
     return parseResponse(response);
   }
 }
