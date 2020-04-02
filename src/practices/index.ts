@@ -38,6 +38,7 @@ import { JavaLinterUsedPractice } from './Java/JavaLinterUsedPractice';
 import { JavaCodeStyleUsedPractice } from './Java/JavaCodeStyleUsedPractice';
 import { JavaSpecifiedDependencyVersions } from './Java/JavaSpecifiedDependencyVersions';
 import { JavaLog4JConfiguredPractice } from './Java/JavaLog4JConfiguredPractice';
+import { JavaPropertiesUsedPractice } from './Java/JavaPropertiesUsedPractice';
 
 // register practices here
 export const practices = [
@@ -81,4 +82,5 @@ export const practices = [
   JavaCodeStyleUsedPractice,
   JavaSpecifiedDependencyVersions,
   JavaLog4JConfiguredPractice,
+  JavaPropertiesUsedPractice,
 ];
