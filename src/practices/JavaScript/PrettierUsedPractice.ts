@@ -62,7 +62,7 @@ export class PrettierUsedPractice implements IPractice {
     const packageJsonString = await inspector.readFile('package.json');
     const packageJson = JSON.parse(packageJsonString);
     if (!Object.keys(packageJson.scripts).includes('format')) {
-      packageJson.scripts.format = 'prettier';
+      packageJson.scripts.format = 'prettier --check "**/*.js"';
       await inspector.writeFile('package.json', `${JSON.stringify(packageJson, null, 2)}\n`);
     }
   }
