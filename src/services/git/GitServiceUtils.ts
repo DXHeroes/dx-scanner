@@ -39,7 +39,7 @@ export class GitServiceUtils {
         case ServiceType.gitlab:
           return `/tree/${branch}${componentPath}`;
         case ServiceType.local:
-          return `${componentPath}`;
+          return componentPath;
         case ServiceType.git:
           return `${branch}${componentPath}`;
 
