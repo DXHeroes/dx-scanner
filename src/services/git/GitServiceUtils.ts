@@ -12,7 +12,7 @@ export class GitServiceUtils {
     let completeUrl = `${parsedUrl.protocol}://${parsedUrl.resource}/${parsedUrl.owner}/${parsedUrl.name}`;
 
     if (path) {
-      completeUrl += GitServiceUtils.getPath(path, branch || parsedUrl.ref, <ServiceType>scanningStrategy.serviceType);
+      completeUrl += GitServiceUtils.getPath(path, branch || parsedUrl.ref, scanningStrategy.serviceType!);
     }
 
     return completeUrl;
@@ -38,7 +38,7 @@ export class GitServiceUtils {
       case ServiceType.gitlab:
         return `/tree/${branch}${componentPath}`;
       case ServiceType.local:
-        return `${componentPath}`;
+        return componentPath;
       case ServiceType.git:
         return `${branch}${componentPath}`;
 
