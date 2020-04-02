@@ -46,9 +46,9 @@ export class FileInspector implements IFileInspector {
     });
   }
 
-  createFile(path: string, data: string) {
+  writeFile(path: string, data: string) {
     if (this.projectFilesBrowser instanceof FileSystemService) {
-      return this.projectFilesBrowser.createFile(this.normalizePath(path), data);
+      return this.projectFilesBrowser.writeFile(this.normalizePath(path), data);
     }
     return Promise.resolve();
   }
