@@ -155,7 +155,7 @@ export class CIReporter implements IReporter {
       // detect Bitbucket config
       this.d('Is Bitbucket');
       return CIReporterUtils.loadConfigurationBitbucket();
-    } else if ((ev.GITLAB_CI = 'true')) {
+    } else if (ev.GITLAB_CI === 'true') {
       // detect GitLab config
       this.d('Is GitLab');
       const client = new GitLabClient({
