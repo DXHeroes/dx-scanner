@@ -30,22 +30,20 @@ export class GitServiceUtils {
   };
 
   static getPath = (componentPath: string, branch = 'master', serviceType: ServiceType) => {
-    if (serviceType) {
-      switch (serviceType) {
-        case ServiceType.github:
-          return `/tree/${branch}${componentPath}`;
-        case ServiceType.bitbucket:
-          return `/src/${branch}${componentPath}`;
-        case ServiceType.gitlab:
-          return `/tree/${branch}${componentPath}`;
-        case ServiceType.local:
-          return `${componentPath}`;
-        case ServiceType.git:
-          return `${branch}${componentPath}`;
+    switch (serviceType) {
+      case ServiceType.github:
+        return `/tree/${branch}${componentPath}`;
+      case ServiceType.bitbucket:
+        return `/src/${branch}${componentPath}`;
+      case ServiceType.gitlab:
+        return `/tree/${branch}${componentPath}`;
+      case ServiceType.local:
+        return `${componentPath}`;
+      case ServiceType.git:
+        return `${branch}${componentPath}`;
 
-        default:
-          return assertNever(serviceType);
-      }
+      default:
+        return assertNever(serviceType);
     }
   };
 
