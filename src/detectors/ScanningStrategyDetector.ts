@@ -172,6 +172,15 @@ export class ScanningStrategyDetector implements IDetector<string, ScanningStrat
   };
 
   private determineGitLabRemoteServiceType = async (): Promise<ServiceType | undefined> => {
+    let serviceType = undefined;
+
+    try {
+      await this.gitLabService.listRepos();
+      await this.gitLabService.listGroups();
+    } catch (error) {
+      serviceType = ServiceType.gitlab;
+    }
+
     try {
       const response = await this.gitLabService.checkVersion();
       if (has(response, 'version') && has(response, 'revision')) {
@@ -183,11 +192,11 @@ export class ScanningStrategyDetector implements IDetector<string, ScanningStrat
       if (error.response?.status === 401 || error.response?.status === 403) {
         // return undefined if we're not sure that the service is Gitlab
         //  - it prompts user for a credentials
-        return undefined;
+        return serviceType;
       }
-    }
 
-    return undefined;
+      return undefined;
+    }
   };
 }
 
