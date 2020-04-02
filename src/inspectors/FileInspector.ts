@@ -6,6 +6,7 @@ import { Types } from '../types';
 import * as nodePath from 'path';
 import { ICache } from '../scanner/cache/ICache';
 import { InMemoryCache } from '../scanner/cache/InMemoryCache';
+import { FileSystemService } from '../services';
 
 @injectable()
 export class FileInspector implements IFileInspector {
@@ -43,6 +44,13 @@ export class FileInspector implements IFileInspector {
     return this.cache.getOrSet(`${this.basePath}:readFile:${path}`, async () => {
       return this.projectFilesBrowser.readFile(this.normalizePath(path));
     });
+  }
+
+  createFile(path: string, data: string) {
+    if (this.projectFilesBrowser instanceof FileSystemService) {
+      return this.projectFilesBrowser.createFile(this.normalizePath(path), data);
+    }
+    return Promise.resolve();
   }
 
   isFile(path: string) {

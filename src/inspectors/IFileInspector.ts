@@ -5,6 +5,7 @@ export interface IFileInspector {
   exists(path: string): Promise<boolean>;
   readDirectory(path: string): Promise<string[]>;
   readFile(path: string): Promise<string>;
+  createFile(path: string, data: string): Promise<void>;
   isFile(path: string): Promise<boolean>;
   isDirectory(path: string): Promise<boolean>;
   getMetadata(path: string): Promise<Metadata>;

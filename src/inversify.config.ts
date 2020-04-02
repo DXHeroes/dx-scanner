@@ -24,6 +24,7 @@ import { argumentsProviderFactory } from './test/factories/ArgumentsProviderFact
 import { Types } from './types';
 import { RepositoryConfig } from './scanner/RepositoryConfig';
 import { GitLabService } from './services/gitlab/GitLabService';
+import { FixerContext } from './contexts/fixer/FixerContext';
 
 export const createRootContainer = (args: ArgumentsProvider): Container => {
   const container = new Container();
@@ -106,9 +107,12 @@ export const createTestContainer = (
     root: { fileInspector },
   };
 
+  const fixerContext = { ...practiceContext, fileService: virtualFileSystemService };
+
   return {
     container,
     practiceContext,
+    fixerContext,
     scanningStrategyExplorer,
     fileSystemService,
     virtualFileSystemService,
@@ -119,6 +123,7 @@ export const createTestContainer = (
 export interface TestContainerContext {
   container: Container;
   practiceContext: PracticeContext;
+  fixerContext: FixerContext;
   scanningStrategyExplorer: ScanningStrategyExplorer;
   scanningStrategyDetector: ScanningStrategyDetector;
 
