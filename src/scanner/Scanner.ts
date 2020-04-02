@@ -144,7 +144,6 @@ export class Scanner {
             scanningStrategy,
             config: p.componentContext.configProvider.getOverriddenPractice(p.practice.getMetadata().id),
             argumentsProvider: this.argumentsProvider,
-            fileService: this.fileSystemService,
           }),
         ),
     );

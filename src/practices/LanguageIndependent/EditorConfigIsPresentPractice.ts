@@ -49,7 +49,12 @@ export class EditorConfigIsPresentPractice implements IPractice {
   }
 
   async fix(ctx: FixerContext) {
-    await ctx.fileService?.createFile(path.resolve(__dirname, '../../../.editorconfig'), editorConfigTemplate);
+    await ctx.fileInspector?.createFile(
+      ctx.fileInspector.basePath
+        ? path.resolve(ctx.fileInspector.basePath, '.editorconfig')
+        : path.resolve(__dirname, '../../../.editorconfig'),
+      editorConfigTemplate,
+    );
     ctx.fileInspector?.purgeCache();
     ctx.root.fileInspector?.purgeCache();
   }
