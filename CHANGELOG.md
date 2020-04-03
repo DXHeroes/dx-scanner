@@ -1,3 +1,11 @@
+## [3.13.2](https://github.com/dxheroes/dx-scanner/compare/v3.13.1...v3.13.2) (2020-04-03)
+
+
+### Bug Fixes
+
+* resolves error if it's gitlab but user is offline ([379a85e](https://github.com/dxheroes/dx-scanner/commit/379a85e715d237695f5b20f01fb9ceee22f4dc66))
+* show right component path in report ([48c956a](https://github.com/dxheroes/dx-scanner/commit/48c956a9fe8621487233a9c16ab883b70ecddecd))
+
 ## [3.13.1](https://github.com/dxheroes/dx-scanner/compare/v3.13.0...v3.13.1) (2020-04-03)
 
 
