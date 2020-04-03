@@ -9,6 +9,7 @@ import { Types } from '../types';
 import { IDetector } from './IDetector';
 import { ScanningStrategyDetectorUtils } from './utils/ScanningStrategyDetectorUtils';
 import { ErrorFactory } from '../lib/errors';
+import { AccessType, ServiceType } from './IScanningStrategy';
 
 @injectable()
 export class ScanningStrategyDetector implements IDetector<string, ScanningStrategy> {
@@ -148,17 +149,19 @@ export class ScanningStrategyDetector implements IDetector<string, ScanningStrat
         }
       } catch (error) {
         this.d(error.message);
+
+        if (!error.response) {
+          this.isOnline = false;
+          return AccessType.unknown;
+        }
+
         if (
           error.response.status === 401 ||
           error.response.status === 404 ||
           error.response.status === 403 ||
           error.response.status === 500
         ) {
-          if (error.response.status === 500) {
-            this.isOnline = false;
-          } else {
-            this.isOnline = true;
-          }
+          this.isOnline = true;
           return AccessType.unknown;
         }
         throw error;
@@ -176,10 +179,8 @@ export class ScanningStrategyDetector implements IDetector<string, ScanningStrat
       }
     } catch (error) {
       this.d(error); //debug error
-
       if (error.response?.status === 401 || error.response?.status === 403) {
         // return undefined if we're not sure that the service is Gitlab
-        //  - it prompts user for a credentials
         return undefined;
       }
     }
@@ -194,20 +195,6 @@ export interface ScanningStrategy {
   remoteUrl: RemoteUrl;
   localPath: string | undefined;
   isOnline: boolean;
-}
-
-export enum ServiceType {
-  github = 'github',
-  bitbucket = 'bitbucket',
-  gitlab = 'gitlab',
-  git = 'git',
-  local = 'local',
-}
-
-export enum AccessType {
-  private = 'private',
-  public = 'public',
-  unknown = 'unknown',
 }
 
 export interface RemoteService {

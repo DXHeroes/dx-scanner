@@ -1,11 +1,11 @@
+import debug from 'debug';
 import { inject, injectable } from 'inversify';
 import git from 'simple-git/promise';
-import debug from 'debug';
-import { RepositoryConfig } from './RepositoryConfig';
-import { GitServiceUtils } from '../services';
 import { ArgumentsProvider } from '.';
-import { Types } from '../types';
 import { ScanningStrategyDetectorUtils } from '../detectors/utils/ScanningStrategyDetectorUtils';
+import { GitServiceUtils } from '../services';
+import { Types } from '../types';
+import { RepositoryConfig } from './RepositoryConfig';
 
 @injectable()
 export class ScanningStrategyExplorer {

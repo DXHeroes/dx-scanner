@@ -13,7 +13,8 @@ import { LanguageContext } from '../contexts/language/LanguageContext';
 import { PracticeContext } from '../contexts/practice/PracticeContext';
 import { ProjectComponentContext } from '../contexts/projectComponent/ProjectComponentContext';
 import { ScannerContext } from '../contexts/scanner/ScannerContext';
-import { AccessType, ScanningStrategy, ServiceType } from '../detectors';
+import { ScanningStrategy } from '../detectors';
+import { AccessType, ServiceType } from '../detectors/IScanningStrategy';
 import { sharedSubpath } from '../detectors/utils';
 import { ErrorFactory } from '../lib/errors';
 import {
@@ -89,7 +90,7 @@ export class Scanner {
 
     let practicesAfterFix: PracticeWithContext[] | undefined;
     if (this.argumentsProvider.fix) {
-      await this.fix(practicesWithContext, scanStrategy);
+      await this.fix(practicesWithContext);
       practicesAfterFix = await this.detectPractices(projectComponents);
     }
 

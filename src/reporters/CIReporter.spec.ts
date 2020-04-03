@@ -1,21 +1,16 @@
-import { CIReporter } from './CIReporter';
-import { practiceWithContextFactory } from '../test/factories/PracticeWithContextFactory';
 import { PracticeEvaluationResult, PracticeImpact } from '../model';
-import { argumentsProviderFactory } from '../test/factories/ArgumentsProviderFactory';
-import { CIReportBuilder } from './builders/CIReportBuilder';
+import { repositoryConfig } from '../scanner/__MOCKS__/RepositoryConfig.mock';
+import { scanningStrategy } from '../scanner/__MOCKS__/ScanningStrategy.mock';
 import { BitbucketService, GitHubService } from '../services';
 import { GitLabService } from '../services/gitlab/GitLabService';
+import { argumentsProviderFactory } from '../test/factories/ArgumentsProviderFactory';
+import { practiceWithContextFactory } from '../test/factories/PracticeWithContextFactory';
+import { CIReportBuilder } from './builders/CIReportBuilder';
+import { CIReporter } from './CIReporter';
 
 describe('CIReporter', () => {
   const practicingHighImpactPracticeWithCtx = practiceWithContextFactory();
   const notPracticingHighImpactPracticeWithCtx = practiceWithContextFactory({ evaluation: PracticeEvaluationResult.notPracticing });
-
-  const repositoryConfig = {
-    remoteUrl: 'https://bitbucket.org/pypy/pypy',
-    baseUrl: 'https://bitbucket.org',
-    host: 'githum.com',
-    protocol: 'https',
-  };
 
   const services = {
     bitbucketService: new BitbucketService(argumentsProviderFactory({ uri: '.' }), repositoryConfig),
@@ -28,6 +23,7 @@ describe('CIReporter', () => {
       const result = new CIReporter(
         argumentsProviderFactory({ uri: '.' }),
         repositoryConfig,
+        scanningStrategy,
         services.githubService,
         services.bitbucketService,
         services.gitLabService,
@@ -40,6 +36,7 @@ describe('CIReporter', () => {
       const result = new CIReporter(
         argumentsProviderFactory({ uri: '.' }),
         repositoryConfig,
+        scanningStrategy,
         services.githubService,
         services.bitbucketService,
         services.gitLabService,
@@ -52,6 +49,7 @@ describe('CIReporter', () => {
       const result = new CIReporter(
         argumentsProviderFactory({ uri: '.' }),
         repositoryConfig,
+        scanningStrategy,
         services.githubService,
         services.bitbucketService,
         services.gitLabService,

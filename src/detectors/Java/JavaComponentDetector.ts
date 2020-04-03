@@ -7,10 +7,7 @@ import { LanguageAtPath, ProjectComponent, ProjectComponentFramework, ProjectCom
 @injectable()
 export class JavaComponentDetector implements IProjectComponentDetector {
   private packageInspector: IPackageInspector;
-  constructor(
-    @inject(Types.IPackageInspector)
-    packageInspector: IPackageInspector,
-  ) {
+  constructor(@inject(Types.IPackageInspector) packageInspector: IPackageInspector) {
     this.packageInspector = packageInspector;
   }
 

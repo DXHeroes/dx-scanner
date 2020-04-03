@@ -1,19 +1,25 @@
-import { blue, bold, green, grey, italic, red, reset, cyan, yellow } from 'colors';
-import { injectable, inject } from 'inversify';
+import { blue, bold, cyan, green, grey, italic, red, reset, yellow } from 'colors';
+import { inject, injectable } from 'inversify';
+import { keyBy } from 'lodash';
+import { ScanningStrategy } from '../detectors';
 import { PracticeEvaluationResult } from '../model';
+import { ArgumentsProvider } from '../scanner';
+import { GitServiceUtils } from '../services/git/GitServiceUtils';
+import { Types } from '../types';
 import { IReporter, PracticeWithContextForReporter } from './IReporter';
 import { ReporterUtils } from './ReporterUtils';
-import { GitServiceUtils } from '../services/git/GitServiceUtils';
-import { ArgumentsProvider } from '../scanner';
-import { Types } from '../types';
-import { keyBy } from 'lodash';
 
 @injectable()
 export class FixReporter implements IReporter {
   private readonly argumentsProvider: ArgumentsProvider;
+  private readonly scanningStrategy: ScanningStrategy;
 
-  constructor(@inject(Types.ArgumentsProvider) argumentsProvider: ArgumentsProvider) {
+  constructor(
+    @inject(Types.ArgumentsProvider) argumentsProvider: ArgumentsProvider,
+    @inject(Types.ScanningStrategy) scanningStrategy: ScanningStrategy,
+  ) {
     this.argumentsProvider = argumentsProvider;
+    this.scanningStrategy = scanningStrategy;
   }
 
   async report(
@@ -40,14 +46,14 @@ export class FixReporter implements IReporter {
     lines.push(bold(blue('|     DX Scanner Fixer     |')));
     lines.push(bold(blue('|                          |')));
 
-    let repoName;
+    let componentPath;
 
     for (const cwp of componentsWithPractices) {
-      repoName = GitServiceUtils.getRepoName(cwp.component.repositoryPath, cwp.component.path);
+      componentPath = GitServiceUtils.getComponentPath(cwp.component, this.scanningStrategy);
 
       lines.push(bold(blue('----------------------------')));
       lines.push('');
-      lines.push(bold(blue(`Developer Experience Report for ${italic(repoName)}`)));
+      lines.push(bold(blue(`Developer Experience Report for ${italic(componentPath)}`)));
       lines.push(cyan(bold(`DX Score: ${dxScoreAfterFix.components.find((c) => c.path === cwp.component.path)!.value}`)));
       lines.push('');
 

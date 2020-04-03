@@ -1,18 +1,26 @@
-import { PracticeWithContextForReporter, ReporterUtils, ComponentWithPractices } from '..';
-import { GitServiceUtils } from '../../services';
-import { PracticeImpact, PracticeEvaluationResult } from '../../model';
-import { PracticeDetail } from '../../practices/IPractice';
-import { ReportDetailType, ReporterData } from '../ReporterData';
+import { inject } from 'inversify';
+import { ComponentWithPractices, PracticeWithContextForReporter, ReporterUtils } from '..';
+import { ScanningStrategy } from '../../detectors';
 import { assertNever } from '../../lib/assertNever';
-import { IReportBuilder, BadgeColor } from './IReportBuilder';
+import { PracticeEvaluationResult, PracticeImpact } from '../../model';
+import { PracticeDetail } from '../../practices/IPractice';
+import { GitServiceUtils } from '../../services';
+import { Types } from '../../types';
 import { DXScoreOverallResult, DXScoreResult } from '../model';
+import { ReportDetailType, ReporterData } from '../ReporterData';
+import { BadgeColor, IReportBuilder } from './IReportBuilder';
 
 export class CIReportBuilder implements IReportBuilder {
   private readonly practicesAndComponents: PracticeWithContextForReporter[];
   static readonly ciReportIndicator = '<!-- CIReport ID to detect report comment -->';
+  private readonly scanningStrategy: ScanningStrategy;
 
-  constructor(practicesAndComponents: PracticeWithContextForReporter[]) {
+  constructor(
+    practicesAndComponents: PracticeWithContextForReporter[],
+    @inject(Types.ScanningStrategy) scanningStrategy: ScanningStrategy,
+  ) {
     this.practicesAndComponents = practicesAndComponents;
+    this.scanningStrategy = scanningStrategy;
   }
 
   build() {
@@ -157,11 +165,11 @@ export class CIReportBuilder implements IReportBuilder {
   renderComponentHeader = (cwp: ComponentWithPractices, dxScore: DXScoreOverallResult): string => {
     const lines: string[] = [];
 
-    const repoName = GitServiceUtils.getRepoName(cwp.component.repositoryPath, cwp.component.path);
+    const componentPath = GitServiceUtils.getComponentPath(cwp.component, this.scanningStrategy);
 
     // display badge for a component only if there is more than one component because there is overall DX Score at the end of report
     const badge = dxScore.components.length > 1 ? this.renderBadge(dxScore.components.find((c) => c.path === cwp.component.path)!) : '';
-    lines.push(`## ${repoName} ${badge}\n`);
+    lines.push(`## ${componentPath} ${badge}\n`);
 
     return lines.join('\n');
   };
