@@ -7,6 +7,7 @@ import Init from './commands/init';
 import Practices from './commands/practices';
 import _ from 'lodash';
 import updateNotifier from 'update-notifier';
+import { errorHandler } from './lib/errors';
 // eslint-disable-next-line @typescript-eslint/no-require-imports, @typescript-eslint/no-var-requires
 const pjson = require('../package.json');
 
@@ -98,5 +99,7 @@ class DXScannerCommand {
     updateNotifier({ pkg: pjson, updateCheckInterval: 0, shouldNotifyInNpmScript: true }).notify();
   };
 }
+
+process.on('uncaughtException', errorHandler);
 
 export = DXScannerCommand;

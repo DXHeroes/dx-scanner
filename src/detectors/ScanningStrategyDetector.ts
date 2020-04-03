@@ -93,6 +93,9 @@ export class ScanningStrategyDetector implements IDetector<string, ScanningStrat
       } catch (error) {
         this.d(error.message);
         if (error.status === 401 || error.status === 404 || error.status === 403) {
+          if (error.status === 403 && /API rate limit exceeded/.test(error.message)) {
+            throw ErrorFactory.newAuthorizationError(`GitHub ${error.message}`);
+          }
           this.isOnline = true;
           return AccessType.unknown;
         }
