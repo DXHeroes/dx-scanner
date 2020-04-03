@@ -1,3 +1,10 @@
+## [3.13.1](https://github.com/dxheroes/dx-scanner/compare/v3.13.0...v3.13.1) (2020-04-03)
+
+
+### Bug Fixes
+
+* **CIReporter:** invalid equality ([aa85c92](https://github.com/dxheroes/dx-scanner/commit/aa85c92e5e81ca1cc721c2b0c10fd9c3993006de))
+
 # [3.13.0](https://github.com/dxheroes/dx-scanner/compare/v3.12.1...v3.13.0) (2020-04-02)
 
 
