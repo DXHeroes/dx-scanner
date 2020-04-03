@@ -13,6 +13,11 @@ export class Projects extends GitLabClient {
     const response: AxiosResponse<Project> = await this.api.get(endpoint);
     return parseResponse(response);
   }
+
+  async list(): Promise<CustomAxiosResponse<Project[]>> {
+    const response = await this.api.get('projects');
+    return parseResponse(response);
+  }
 }
 
 export interface Project {

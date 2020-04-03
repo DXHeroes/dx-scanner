@@ -8,6 +8,7 @@ import { GitLabService } from '../services/gitlab/GitLabService';
 import { argumentsProviderFactory } from '../test/factories/ArgumentsProviderFactory';
 import { ArgumentsProvider } from '../scanner';
 import { ServiceType, AccessType } from './IScanningStrategy';
+import { GitLabNock } from '../test/helpers/gitLabNock';
 jest.mock('simple-git/promise');
 
 describe('ScanningStrategyDetector', () => {
@@ -246,6 +247,46 @@ describe('ScanningStrategyDetector', () => {
         remoteUrl: `https://${repoPath}`,
         isOnline: true,
         serviceType: ServiceType.github,
+      });
+    });
+
+    it('remote private GitLab without protocol in the URL with valid credentials', async () => {
+      const repoPath = 'gitlab.com/DXHeroes/dx-scanner.git';
+      const nock = new GitLabNock('DXHeroes', 'dx-scanner', 'gitlab.com');
+      nock.listProjects();
+      nock.listGroups();
+      nock.checkVersion();
+      nock.getRepoResponse(200, { visibility: 'private' });
+
+      const scanningStrategyDetector = await createScanningStrategyDetector({ uri: repoPath, auth: 'valid_token' });
+      const result = await scanningStrategyDetector.detect();
+
+      expect(result).toEqual({
+        accessType: AccessType.private,
+        localPath: undefined,
+        remoteUrl: `https://${repoPath}`,
+        isOnline: true,
+        serviceType: ServiceType.gitlab,
+      });
+    });
+
+    it('remote private GitLab without protocol in the URL with invalid credentials', async () => {
+      const repoPath = 'gitlab.com/DXHeroes/dx-scanner.git';
+      const nock = new GitLabNock('DXHeroes', 'dx-scanner', 'gitlab.com');
+      nock.listProjects();
+      nock.listGroups();
+      nock.checkVersion().reply(403);
+      nock.getRepoResponse(403);
+
+      const scanningStrategyDetector = await createScanningStrategyDetector({ uri: repoPath, auth: 'invalid_token' });
+      const result = await scanningStrategyDetector.detect();
+
+      expect(result).toEqual({
+        accessType: AccessType.unknown,
+        localPath: undefined,
+        remoteUrl: `https://${repoPath}`,
+        isOnline: true,
+        serviceType: ServiceType.gitlab,
       });
     });
 
