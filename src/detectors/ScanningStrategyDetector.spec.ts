@@ -250,7 +250,7 @@ describe('ScanningStrategyDetector', () => {
       });
     });
 
-    it('remote private GitLab without protocol in the URL', async () => {
+    it('remote private GitLab without protocol in the URL with valid credentials', async () => {
       const repoPath = 'gitlab.com/DXHeroes/dx-scanner.git';
       const nock = new GitLabNock('DXHeroes', 'dx-scanner', 'gitlab.com');
       nock.listProjects();
