@@ -394,6 +394,16 @@ export class GitLabService implements IVCSService {
     };
   }
 
+  async listRepos() {
+    const { data } = await this.unwrap(this.client.Projects.list());
+    return data;
+  }
+
+  async listGroups() {
+    const { data } = await this.unwrap(this.client.Users.listGroups());
+    return data;
+  }
+
   async listContributors(owner: string, repo: string): Promise<Paginated<Contributor>> {
     throw new Error('Method not implemented yet.');
   }

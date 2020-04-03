@@ -18,7 +18,12 @@ export class Users extends GitLabClient {
     const endpoint = `groups/${encodeURIComponent(groupName)}`;
 
     // Increase timeout as the request for group info takes longer than the other requests
-    const response = await this.api.get(endpoint, { timeout: 20000 });
+    const response = await this.api.get(endpoint, { timeout: 15000 });
+    return parseResponse(response);
+  }
+
+  async listGroups(): Promise<CustomAxiosResponse<Group[]>> {
+    const response = await this.api.get('groups');
     return parseResponse(response);
   }
 }

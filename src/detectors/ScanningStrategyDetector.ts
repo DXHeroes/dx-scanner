@@ -177,10 +177,12 @@ export class ScanningStrategyDetector implements IDetector<string, ScanningStrat
     try {
       await this.gitLabService.listRepos();
       await this.gitLabService.listGroups();
-    } catch (error) {
       serviceType = ServiceType.gitlab;
+    } catch (error) {
+      return undefined;
     }
 
+    // second check to ensure that it is really a GitLab API
     try {
       const response = await this.gitLabService.checkVersion();
       if (has(response, 'version') && has(response, 'revision')) {
