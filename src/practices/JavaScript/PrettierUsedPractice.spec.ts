@@ -65,6 +65,7 @@ describe('PrettierUsedPractice', () => {
   describe('Fixer', () => {
     afterEach(async () => {
       jest.clearAllMocks();
+      containerCtx.virtualFileSystemService.clearFileSystem();
     });
 
     it('Install prettier package', async () => {
