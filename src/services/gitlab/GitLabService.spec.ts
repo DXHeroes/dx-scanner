@@ -152,8 +152,8 @@ describe('GitLab Service', () => {
       argumentsProviderFactory({ uri: 'https://git.example.cz/dxheroes/user/repo', auth: 'auth' }),
       repositoryConfig,
     );
-    gitLabNock = new GitLabNock('user', 'repo');
-    gitLabNock.checkVersion(repositoryConfig.host);
+    gitLabNock = new GitLabNock('user', 'repo', repositoryConfig.host);
+    gitLabNock.checkVersion().reply(200, { version: '1.0.0', revision: '225c2e' });
 
     const response = await service.checkVersion();
     expect(response).toMatchObject({ version: '1.0.0', revision: '225c2e' });

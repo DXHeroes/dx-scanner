@@ -10,15 +10,19 @@ import { gitLabPullRequestResponseFactory } from '../factories/responses/gitLab/
 import { gitLabRepoCommitsResponseFactory } from '../factories/responses/gitLab/repoCommitResponseFactory';
 import { gitLabRepoInfoResponseFactory } from '../factories/responses/gitLab/repoInfoResponseFactory';
 import { gitLabVersionResponseFactory } from '../factories/responses/gitLab/versionResponseFactory';
+import { gitLabListGroupsResponseFactory } from '../factories/responses/gitLab/listGroupsResponseFactors';
+import { gitLabListProjectsResponseFactory } from '../factories/responses/gitLab/listProjectsResponseFactory';
+import { VersionResponse } from '../../services/gitlab/gitlabClient/resources/Version';
+import { Project } from '../../services/gitlab/gitlabClient/resources/Projects';
 
 export class GitLabNock {
   user: string;
   repoName: string;
   url: string;
 
-  constructor(user: string, repoName: string) {
+  constructor(user: string, repoName: string, host?: string) {
     (this.user = user), (this.repoName = repoName);
-    this.url = 'https://gitlab.com/api/v4';
+    this.url = host ? `https://${host}/api/v4` : 'https://gitlab.com/api/v4';
   }
 
   private pagination = { 'x-total': '1', 'x-next-page': '1', 'x-page': '1', 'x-prev-page': '', 'x-per-page': '1', 'x-total-pages': '1' };
@@ -232,19 +236,32 @@ export class GitLabNock {
     return GitLabNock.get(baseUrl, queryParams).reply(200, [response], this.pagination);
   }
 
-  getRepoResponse() {
+  getRepoResponse(statusCode?: number, project?: Partial<Project>) {
     const encodedProjectUrl = encodeURIComponent(`${this.user}/${this.repoName}`);
 
     const baseUrl = `${this.url}/projects/${encodedProjectUrl}`;
 
-    const response = gitLabRepoInfoResponseFactory();
-    return GitLabNock.get(baseUrl).reply(200, response, this.pagination);
+    const response = gitLabRepoInfoResponseFactory(project);
+    return GitLabNock.get(baseUrl).reply(statusCode || 200, response, this.pagination);
   }
 
-  checkVersion(host: string) {
-    const baseUrl = `https://${host}/api/v4/version`;
-    const response = gitLabVersionResponseFactory();
+  listProjects() {
+    const baseUrl = `${this.url}/projects`;
+    const response = gitLabListProjectsResponseFactory();
 
     return GitLabNock.get(baseUrl).reply(200, response);
+  }
+
+  listGroups() {
+    const baseUrl = `${this.url}/groups`;
+    const response = gitLabListGroupsResponseFactory();
+
+    return GitLabNock.get(baseUrl).reply(200, response);
+  }
+
+  checkVersion() {
+    const baseUrl = `${this.url}/version`;
+
+    return GitLabNock.get(baseUrl);
   }
 }

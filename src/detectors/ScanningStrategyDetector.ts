@@ -152,6 +152,7 @@ export class ScanningStrategyDetector implements IDetector<string, ScanningStrat
         }
       } catch (error) {
         this.d(error.message);
+        console.log(error.message);
 
         if (!error.response) {
           this.isOnline = false;
