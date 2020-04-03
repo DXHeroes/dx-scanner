@@ -278,7 +278,7 @@ describe('ScanningStrategyDetector', () => {
       nock.checkVersion().reply(403);
       nock.getRepoResponse(403);
 
-      const scanningStrategyDetector = await createScanningStrategyDetector({ uri: repoPath, auth: 'valid_token' });
+      const scanningStrategyDetector = await createScanningStrategyDetector({ uri: repoPath, auth: 'invalid_token' });
       const result = await scanningStrategyDetector.detect();
 
       expect(result).toEqual({
