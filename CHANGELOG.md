@@ -1,3 +1,19 @@
+# [3.15.0](https://github.com/dxheroes/dx-scanner/compare/v3.14.0...v3.15.0) (2020-04-03)
+
+
+### Bug Fixes
+
+* unfreezing lockfile ([ea7797c](https://github.com/dxheroes/dx-scanner/commit/ea7797c26f90ddcda629220711cd4ec2c74d2b29))
+* **inspector:** rename fileInspector method ([676ea1e](https://github.com/dxheroes/dx-scanner/commit/676ea1e6ba91cd70ce66c1e50ac840b66471797a))
+
+
+### Features
+
+* **fixer:** add fixer for JavaScript.PrettierUsed ([3768c46](https://github.com/dxheroes/dx-scanner/commit/3768c4658b5b7b3bee7412ef8b676da0d6dcc173))
+* **fixer:** add tests for prettier fixer ([ef49f75](https://github.com/dxheroes/dx-scanner/commit/ef49f75e09b0ba3e663e7fa4b3b802668468f760))
+* **fixer:** change format script command ([07a06ea](https://github.com/dxheroes/dx-scanner/commit/07a06ea135219884fb400e598d3de85201b2b4fd))
+* **utils:** add package install method ([0bbfd50](https://github.com/dxheroes/dx-scanner/commit/0bbfd5016bf1dd10ff5dfb2719b16a2f81486a36))
+
 # [3.14.0](https://github.com/dxheroes/dx-scanner/compare/v3.13.2...v3.14.0) (2020-04-03)
 
 
