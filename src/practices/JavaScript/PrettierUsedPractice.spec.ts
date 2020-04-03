@@ -2,6 +2,13 @@ import { PrettierUsedPractice } from './PrettierUsedPractice';
 import { PracticeEvaluationResult, ProgrammingLanguage } from '../../model';
 import { TestContainerContext, createTestContainer } from '../../inversify.config';
 import { IPackageInspector } from '../../inspectors/IPackageInspector';
+import { JavaScriptPackageInspector } from '../../inspectors';
+import { Types } from '../../types';
+import shelljs from 'shelljs';
+
+jest.mock('shelljs', () => ({
+  exec: jest.fn(),
+}));
 
 describe('PrettierUsedPractice', () => {
   let practice: PrettierUsedPractice;
@@ -53,5 +60,46 @@ describe('PrettierUsedPractice', () => {
 
     const result = await practice.isApplicable(containerCtx.practiceContext);
     expect(result).toEqual(false);
+  });
+
+  describe('Fixer', () => {
+    afterEach(async () => {
+      jest.clearAllMocks();
+      containerCtx.virtualFileSystemService.clearFileSystem();
+    });
+
+    it('Install prettier package', async () => {
+      containerCtx.virtualFileSystemService.setFileSystem({
+        'package.json': '{}',
+        'package-lock.json': '',
+      });
+
+      (shelljs.exec as jest.Mock).mockImplementation();
+      await practice.fix(containerCtx.fixerContext);
+
+      expect((shelljs.exec as jest.Mock).mock.calls[0][0]).toContain('prettier');
+    });
+    it('Creates prettier config file', async () => {
+      containerCtx.virtualFileSystemService.setFileSystem({
+        'package.json': '{}',
+        'package-lock.json': '',
+      });
+
+      await practice.fix(containerCtx.fixerContext);
+
+      const exists = await containerCtx.virtualFileSystemService.exists('.prettierrc');
+      expect(exists).toBe(true);
+    });
+    it('Add prettier script', async () => {
+      containerCtx.virtualFileSystemService.setFileSystem({
+        'package.json': '{}',
+        'package-lock.json': '',
+      });
+
+      await practice.fix(containerCtx.fixerContext);
+
+      const newPackageJson = await containerCtx.virtualFileSystemService.readFile('package.json');
+      expect(newPackageJson).toContain('format');
+    });
   });
 });

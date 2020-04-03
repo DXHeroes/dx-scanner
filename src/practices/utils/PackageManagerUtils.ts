@@ -1,5 +1,6 @@
 import { sync as commandExistsSync } from 'command-exists';
 import { IFileInspector } from '../../inspectors';
+import shell from 'shelljs';
 
 export class PackageManagerUtils {
   /** Guess the package manager by lockfiles and shrinkfile */
@@ -36,6 +37,15 @@ export class PackageManagerUtils {
   static getPackageManagerInstalled = async (fileInspector?: IFileInspector) => {
     const pm = await PackageManagerUtils.getPackageManager(fileInspector);
     return PackageManagerUtils.packageManagerInstalled(pm);
+  };
+
+  static installPackage = async (fileInspector: IFileInspector, packageName: string, options: { dev: boolean } = { dev: false }) => {
+    const pm = await PackageManagerUtils.getPackageManagerInstalled(fileInspector);
+    if (pm === PackageManagerType.npm) {
+      shell.exec(`npm i ${options.dev ? '-D' : ''} --prefix ${fileInspector.basePath} ${packageName}`);
+    } else if (pm === PackageManagerType.yarn) {
+      shell.exec(`yarn add ${options.dev ? '-D' : ''} --cwd ${fileInspector.basePath} ${packageName}`);
+    }
   };
 }
 
