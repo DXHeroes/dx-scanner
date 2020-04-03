@@ -1,3 +1,15 @@
+# [3.16.0](https://github.com/dxheroes/dx-scanner/compare/v3.15.0...v3.16.0) (2020-04-03)
+
+
+### Bug Fixes
+
+* **gitlab:** enhance Gitlab detection ([76d0c92](https://github.com/dxheroes/dx-scanner/commit/76d0c925b157c68452c91c22cb821d8e9de3ce20))
+
+
+### Features
+
+* **gitlab:** better GitLab detection with more API endpoints ([e9382e2](https://github.com/dxheroes/dx-scanner/commit/e9382e2add2fed8a0af27e7fc474887b9390c3e4))
+
 # [3.15.0](https://github.com/dxheroes/dx-scanner/compare/v3.14.0...v3.15.0) (2020-04-03)
 
 
