@@ -1,3 +1,11 @@
+# [3.14.0](https://github.com/dxheroes/dx-scanner/compare/v3.13.2...v3.14.0) (2020-04-03)
+
+
+### Features
+
+* **errors:** add handler for errors ([fab557a](https://github.com/dxheroes/dx-scanner/commit/fab557a8b1477bf424a56558f2127dc5e0b86dcf))
+* **github:** throw error if rate limit has been exceeded ([d5f5c72](https://github.com/dxheroes/dx-scanner/commit/d5f5c726fc3cde93ecc840433928da97e6d27de1))
+
 ## [3.13.2](https://github.com/dxheroes/dx-scanner/compare/v3.13.1...v3.13.2) (2020-04-03)
 
 
