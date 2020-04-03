@@ -1,7 +1,7 @@
 import { createTestContainer, TestContainerContext } from '../inversify.config';
 import { Types, DiscoveryContextFactory } from '../types';
-import { ServiceType } from '../detectors/ScanningStrategyDetector';
 import { ProgrammingLanguage, ProjectComponentFramework, ProjectComponentPlatform, ProjectComponentType } from '../model';
+import { ServiceType } from '../detectors/IScanningStrategy';
 
 describe('Contexts (And bindings)', () => {
   let ctx: TestContainerContext;

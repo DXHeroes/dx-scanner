@@ -1,7 +1,8 @@
-import { CLIReporter } from './CLIReporter';
-import { practiceWithContextFactory } from '../test/factories/PracticeWithContextFactory';
 import { PracticeEvaluationResult, PracticeImpact } from '../model';
+import { scanningStrategy } from '../scanner/__MOCKS__/ScanningStrategy.mock';
 import { argumentsProviderFactory } from '../test/factories/ArgumentsProviderFactory';
+import { practiceWithContextFactory } from '../test/factories/PracticeWithContextFactory';
+import { CLIReporter } from './CLIReporter';
 
 describe('CLIReporter', () => {
   const practicingHighImpactPracticeWithCtx = practiceWithContextFactory();
@@ -9,13 +10,13 @@ describe('CLIReporter', () => {
 
   describe('#report', () => {
     it('one practicing practice', () => {
-      const result = new CLIReporter(argumentsProviderFactory()).buildReport([practicingHighImpactPracticeWithCtx]);
+      const result = new CLIReporter(argumentsProviderFactory(), scanningStrategy).buildReport([practicingHighImpactPracticeWithCtx]);
 
       expect(result).toContain('DX Score: 100% | 1/1');
     });
 
     it('one practicing practice and one not practicing', () => {
-      const result = new CLIReporter(argumentsProviderFactory()).buildReport([
+      const result = new CLIReporter(argumentsProviderFactory(), scanningStrategy).buildReport([
         practicingHighImpactPracticeWithCtx,
         notPracticingHighImpactPracticeWithCtx,
       ]);
@@ -24,7 +25,7 @@ describe('CLIReporter', () => {
     });
 
     it('all impacted practices', () => {
-      const result = new CLIReporter(argumentsProviderFactory()).buildReport([
+      const result = new CLIReporter(argumentsProviderFactory(), scanningStrategy).buildReport([
         practicingHighImpactPracticeWithCtx,
         notPracticingHighImpactPracticeWithCtx,
         practiceWithContextFactory({

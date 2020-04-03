@@ -1,3 +1,26 @@
+# [3.14.0](https://github.com/dxheroes/dx-scanner/compare/v3.13.2...v3.14.0) (2020-04-03)
+
+
+### Features
+
+* **errors:** add handler for errors ([fab557a](https://github.com/dxheroes/dx-scanner/commit/fab557a8b1477bf424a56558f2127dc5e0b86dcf))
+* **github:** throw error if rate limit has been exceeded ([d5f5c72](https://github.com/dxheroes/dx-scanner/commit/d5f5c726fc3cde93ecc840433928da97e6d27de1))
+
+## [3.13.2](https://github.com/dxheroes/dx-scanner/compare/v3.13.1...v3.13.2) (2020-04-03)
+
+
+### Bug Fixes
+
+* resolves error if it's gitlab but user is offline ([379a85e](https://github.com/dxheroes/dx-scanner/commit/379a85e715d237695f5b20f01fb9ceee22f4dc66))
+* show right component path in report ([48c956a](https://github.com/dxheroes/dx-scanner/commit/48c956a9fe8621487233a9c16ab883b70ecddecd))
+
+## [3.13.1](https://github.com/dxheroes/dx-scanner/compare/v3.13.0...v3.13.1) (2020-04-03)
+
+
+### Bug Fixes
+
+* **CIReporter:** invalid equality ([aa85c92](https://github.com/dxheroes/dx-scanner/commit/aa85c92e5e81ca1cc721c2b0c10fd9c3993006de))
+
 # [3.13.0](https://github.com/dxheroes/dx-scanner/compare/v3.12.1...v3.13.0) (2020-04-02)
 
 

@@ -2,11 +2,12 @@ import nock from 'nock';
 import git from 'simple-git/promise';
 import { createTestContainer } from '../inversify.config';
 import { GitHubNock } from '../test/helpers/gitHubNock';
-import { AccessType, ServiceType, ScanningStrategyDetector } from './ScanningStrategyDetector';
+import { ScanningStrategyDetector } from './ScanningStrategyDetector';
 import { GitHubService, BitbucketService } from '../services';
 import { GitLabService } from '../services/gitlab/GitLabService';
 import { argumentsProviderFactory } from '../test/factories/ArgumentsProviderFactory';
 import { ArgumentsProvider } from '../scanner';
+import { ServiceType, AccessType } from './IScanningStrategy';
 jest.mock('simple-git/promise');
 
 describe('ScanningStrategyDetector', () => {

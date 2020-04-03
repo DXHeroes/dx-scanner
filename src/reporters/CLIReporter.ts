@@ -1,21 +1,27 @@
-import { blue, bold, Color, green, grey, italic, red, reset, underline, yellow, cyan } from 'colors';
-import { injectable, inject } from 'inversify';
-import { PracticeImpact, PracticeMetadata, PracticeEvaluationResult } from '../model';
-import { IReporter, PracticeWithContextForReporter } from './IReporter';
-import { ReporterUtils } from './ReporterUtils';
-import { PracticeDetail } from '../practices/IPractice';
-import { GitServiceUtils } from '../services/git/GitServiceUtils';
-import { ReportDetailType, ReporterData } from './ReporterData';
+import { blue, bold, Color, cyan, green, grey, italic, red, reset, underline, yellow } from 'colors';
+import { inject, injectable } from 'inversify';
+import { ScanningStrategy } from '../detectors';
 import { assertNever } from '../lib/assertNever';
+import { PracticeEvaluationResult, PracticeImpact, PracticeMetadata } from '../model';
+import { PracticeDetail } from '../practices/IPractice';
 import { ArgumentsProvider } from '../scanner';
+import { GitServiceUtils } from '../services/git/GitServiceUtils';
 import { Types } from '../types';
+import { IReporter, PracticeWithContextForReporter } from './IReporter';
+import { ReportDetailType, ReporterData } from './ReporterData';
+import { ReporterUtils } from './ReporterUtils';
 
 @injectable()
 export class CLIReporter implements IReporter {
   private readonly argumentsProvider: ArgumentsProvider;
+  private readonly scanningStrategy: ScanningStrategy;
 
-  constructor(@inject(Types.ArgumentsProvider) argumentsProvider: ArgumentsProvider) {
+  constructor(
+    @inject(Types.ArgumentsProvider) argumentsProvider: ArgumentsProvider,
+    @inject(Types.ScanningStrategy) scanningStrategy: ScanningStrategy,
+  ) {
     this.argumentsProvider = argumentsProvider;
+    this.scanningStrategy = scanningStrategy;
   }
 
   async report(practicesAndComponents: PracticeWithContextForReporter[]): Promise<void> {
@@ -34,14 +40,14 @@ export class CLIReporter implements IReporter {
     lines.push(bold(blue('|     DX Scanner Result    |')));
     lines.push(bold(blue('|                          |')));
 
-    let repoName;
+    let componentPath: string;
 
     for (const cwp of componentsWithPractices) {
-      repoName = GitServiceUtils.getRepoName(cwp.component.repositoryPath, cwp.component.path);
+      componentPath = GitServiceUtils.getComponentPath(cwp.component, this.scanningStrategy);
 
       lines.push(bold(blue('----------------------------')));
       lines.push('');
-      lines.push(bold(blue(`Developer Experience Report for ${italic(repoName)}`)));
+      lines.push(bold(blue(`Developer Experience Report for ${italic(componentPath)}`)));
       lines.push(cyan(bold(`DX Score: ${dxScore.components.find((c) => c.path === cwp.component.path)!.value}`)));
       lines.push('');
 

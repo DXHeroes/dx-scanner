@@ -10,8 +10,8 @@ import { PracticeWithContext, ScanResult } from './Scanner';
 import { PracticeWithContextForReporter } from '../reporters/IReporter';
 import { ArgumentsProvider } from '.';
 import { ScanningStrategyDetectorUtils } from '../detectors/utils/ScanningStrategyDetectorUtils';
-import { ServiceType } from '../detectors';
 import cli from 'cli-ux';
+import { ServiceType } from '../detectors/IScanningStrategy';
 
 /**
  * Scanner helpers & utilities

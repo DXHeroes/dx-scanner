@@ -14,11 +14,13 @@ import _ from 'lodash';
 import { GitLabService } from '../services/gitlab/GitLabService';
 import { GitLabClient } from '../services/gitlab/gitlabClient/gitlabUtils';
 import { RepositoryConfig } from '../scanner/RepositoryConfig';
+import { ScanningStrategy } from '../detectors';
 
 @injectable()
 export class CIReporter implements IReporter {
   private readonly argumentsProvider: ArgumentsProvider;
   private readonly repositoryConfig: RepositoryConfig;
+  private readonly scanningStrategy: ScanningStrategy;
   private readonly gitHubService: GitHubService;
   private readonly bitbucketService: BitbucketService;
   private readonly gitLabService: GitLabService;
@@ -28,6 +30,7 @@ export class CIReporter implements IReporter {
   constructor(
     @inject(Types.ArgumentsProvider) argumentsProvider: ArgumentsProvider,
     @inject(Types.RepositoryConfig) repositoryConfig: RepositoryConfig,
+    @inject(Types.ScanningStrategy) scanningStrategy: ScanningStrategy,
     @inject(GitHubService) gitHubService: GitHubService,
     @inject(BitbucketService) bitbucketService: BitbucketService,
     @inject(GitLabService) gitLabService: GitLabService,
@@ -35,6 +38,7 @@ export class CIReporter implements IReporter {
     this.d = debug('CIReporter');
     this.argumentsProvider = argumentsProvider;
     this.repositoryConfig = repositoryConfig;
+    this.scanningStrategy = scanningStrategy;
     this.gitHubService = gitHubService;
     this.bitbucketService = bitbucketService;
     this.gitLabService = gitLabService;
@@ -70,7 +74,7 @@ export class CIReporter implements IReporter {
   }
 
   buildReport(practicesAndComponents: PracticeWithContextForReporter[]): string {
-    const builder = new CIReportBuilder(practicesAndComponents);
+    const builder = new CIReportBuilder(practicesAndComponents, this.scanningStrategy);
     return builder.build();
   }
 
