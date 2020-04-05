@@ -1,3 +1,10 @@
+## [3.17.1](https://github.com/dxheroes/dx-scanner/compare/v3.17.0...v3.17.1) (2020-04-05)
+
+
+### Bug Fixes
+
+* move prettier dependency to root dependencies ([8c6012a](https://github.com/dxheroes/dx-scanner/commit/8c6012ab1c0504e85d3ebf7f9edb86fa45ddb567))
+
 # [3.17.0](https://github.com/dxheroes/dx-scanner/compare/v3.16.0...v3.17.0) (2020-04-05)
 
 
