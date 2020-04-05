@@ -10,5 +10,6 @@
   "major": {
     "automerge": false,
     "ignoreDeps": ["@types/node"]
-  }
+  },
+  "lockFileMaintenance": { "enabled": true, "automerge": true }
 }
