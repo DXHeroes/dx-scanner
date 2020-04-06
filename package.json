@@ -31,7 +31,7 @@
     "@types/eslint": "6.1.8",
     "@types/js-yaml": "3.12.3",
     "@types/qs": "6.9.1",
-    "@types/table": "4.0.7",
+    "@types/table": "5.0.0",
     "@types/yaml": "1.2.0",
     "axios": "0.19.2",
     "bitbucket": "2.0.3",
