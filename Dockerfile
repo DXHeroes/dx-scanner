@@ -1,4 +1,4 @@
-FROM ubuntu:18.04
+FROM ubuntu:18.10
 
 # nvm environment variables
 ENV NVM_DIR /usr/local/nvm
