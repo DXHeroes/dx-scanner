@@ -1,3 +1,10 @@
+## [3.17.2](https://github.com/dxheroes/dx-scanner/compare/v3.17.1...v3.17.2) (2020-04-07)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @types/table to v5 ([2086d40](https://github.com/dxheroes/dx-scanner/commit/2086d40149cfc17b1c586f822d27282aea097324))
+
 ## [3.17.1](https://github.com/dxheroes/dx-scanner/compare/v3.17.0...v3.17.1) (2020-04-05)
 
 
