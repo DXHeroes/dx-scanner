@@ -1,4 +1,4 @@
-FROM ubuntu:18.10
+FROM ubuntu:18.04
 
 # nvm environment variables
 ENV NVM_DIR /usr/local/nvm
@@ -15,7 +15,7 @@ RUN apt-get update && apt-get install -y  -q --no-install-recommends \
   git
 
 # install nvm
-RUN curl --silent -o- https://raw.githubusercontent.com/creationix/nvm/v0.35.2/install.sh | bash
+RUN curl --silent -o- https://raw.githubusercontent.com/creationix/nvm/v0.35.3/install.sh | bash
 
 # install node and npm
 RUN . $NVM_DIR/nvm.sh \
