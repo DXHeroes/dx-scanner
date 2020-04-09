@@ -1,3 +1,11 @@
+# [3.19.0](https://github.com/dxheroes/dx-scanner/compare/v3.18.1...v3.19.0) (2020-04-09)
+
+
+### Features
+
+* **fixer:** add fixer for TS gitignore practice ([9cd1c74](https://github.com/dxheroes/dx-scanner/commit/9cd1c74ba54fa0f65dad7e3bc5a36f968ac7b46c))
+* **fixer:** add tests for TS gitignore fixer ([0cd8c66](https://github.com/dxheroes/dx-scanner/commit/0cd8c6665ef0c07e88d3d24a11cf109a6a97d6e9))
+
 ## [3.18.1](https://github.com/dxheroes/dx-scanner/compare/v3.18.0...v3.18.1) (2020-04-09)
 
 
