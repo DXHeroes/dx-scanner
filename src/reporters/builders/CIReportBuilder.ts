@@ -55,7 +55,7 @@ export class CIReportBuilder implements IReportBuilder {
     const lines: string[] = [];
 
     lines.push(
-      `# [DX Scanner](https://dxscanner.io) Report <a href="https://dxscanner.io" target="_blank"><img src="https://dxscanner.io/static/images/logo.png" alt="DXScanner.io" width="40" style="border-radius: 2px;"/></a>`,
+      `# [DX Scanner](https://dxscanner.io) Report <a href="https://dxscanner.io" target="_blank"><img src="https://dxscanner.io/logo.png" alt="DXScanner.io" width="40" style="border-radius: 2px;"/></a>`,
     );
 
     return lines.join('\n');
