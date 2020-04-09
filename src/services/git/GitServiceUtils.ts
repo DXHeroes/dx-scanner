@@ -74,11 +74,12 @@ export class GitServiceUtils {
       componentPath = _.replace(component.path, <string>scanningStrategy.localPath, '');
 
       // if it's root component, return repo path directly
-      if (!componentPath) {
-        return <string>component.repositoryPath;
-      }
       const parsedUrl = gitUrlParse(<string>component.repositoryPath);
       repoPath = `${parsedUrl.protocol}://${parsedUrl.resource}/${parsedUrl.full_name}`;
+
+      if (!componentPath) {
+        return repoPath;
+      }
 
       // get path to component according to service type
       urlComponentPath = GitServiceUtils.getPath(componentPath || component.path, 'master', <ServiceType>scanningStrategy.serviceType);
