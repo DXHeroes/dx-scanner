@@ -1,3 +1,10 @@
+## [3.18.1](https://github.com/dxheroes/dx-scanner/compare/v3.18.0...v3.18.1) (2020-04-09)
+
+
+### Bug Fixes
+
+* **docker:** use LTS version of Ubuntu ([08bf4c2](https://github.com/dxheroes/dx-scanner/commit/08bf4c29e7e35dfa31270aa06771d9f362e28a44))
+
 # [3.18.0](https://github.com/dxheroes/dx-scanner/compare/v3.17.3...v3.18.0) (2020-04-09)
 
 
