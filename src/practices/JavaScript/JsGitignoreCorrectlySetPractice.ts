@@ -3,6 +3,7 @@ import { DxPractice } from '../DxPracticeDecorator';
 import { PracticeContext } from '../../contexts/practice/PracticeContext';
 import { PracticeBase } from '../PracticeBase';
 import { ReportDetailType } from '../../reporters/ReporterData';
+import { FixerContext } from '../../contexts/fixer/FixerContext';
 
 @DxPractice({
   id: 'JavaScript.GitignoreCorrectlySet',
@@ -14,6 +15,8 @@ import { ReportDetailType } from '../../reporters/ReporterData';
   dependsOn: { practicing: ['LanguageIndependent.GitignoreIsPresent'] },
 })
 export class JsGitignoreCorrectlySetPractice extends PracticeBase {
+  private parsedGitignore: string[] = [];
+
   async isApplicable(ctx: PracticeContext): Promise<boolean> {
     return ctx.projectComponent.language === ProgrammingLanguage.JavaScript;
   }
@@ -31,6 +34,7 @@ export class JsGitignoreCorrectlySetPractice extends PracticeBase {
     };
     const content = await ctx.root.fileInspector.readFile('.gitignore');
     const parsedGitignore = parseGitignore(content);
+    this.parsedGitignore = parsedGitignore;
 
     // lockfiles
     const packageJsonRegex = parsedGitignore.find((value: string) => /package-lock\.json/.test(value));
@@ -49,6 +53,27 @@ export class JsGitignoreCorrectlySetPractice extends PracticeBase {
 
     this.setData();
     return PracticeEvaluationResult.notPracticing;
+  }
+
+  async fix(ctx: FixerContext) {
+    const inspector = ctx.fileInspector?.basePath ? ctx.fileInspector : ctx.root.fileInspector;
+    if (!inspector) return;
+    // node_modules
+    const nodeModulesRegex = this.parsedGitignore.find((value: string) => /node_modules/.test(value));
+    // misc
+    const coverageRegex = this.parsedGitignore.find((value: string) => /coverage/.test(value));
+    const errorLogRegex = this.parsedGitignore.find((value: string) => /\.log/.test(value));
+    const fixes = [
+      nodeModulesRegex ? undefined : '/node_modules',
+      coverageRegex ? undefined : '/coverage',
+      errorLogRegex ? undefined : '*.log',
+    ]
+      .filter(Boolean)
+      .concat(''); // append newline if we add something
+
+    if (fixes.length > 1) fixes.unshift(''); // if there is something to add, make sure we start with newline
+
+    await inspector.appendFile('.gitignore', fixes.join('\n'));
   }
 
   private setData() {
