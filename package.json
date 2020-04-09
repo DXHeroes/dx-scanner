@@ -55,7 +55,7 @@
     "node-filter-async": "2.0.0",
     "npm-check-updates": "4.1.0",
     "oclif": "1.15.2",
-    "prettier": "1.19.1",
+    "prettier": "2.0.4",
     "prettier-default-config": "0.2.3",
     "properties": "1.2.1",
     "qs": "6.9.3",
