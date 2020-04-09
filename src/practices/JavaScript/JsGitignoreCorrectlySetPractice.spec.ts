@@ -74,4 +74,34 @@ describe('JsGitignoreCorrectlySetPractice', () => {
     const evaluated = await practice.evaluate(containerCtx.practiceContext);
     expect(evaluated).toEqual(PracticeEvaluationResult.notPracticing);
   });
+
+  describe('Fixer', () => {
+    afterEach(async () => {
+      containerCtx.virtualFileSystemService.clearFileSystem();
+    });
+
+    it('Does not change correct .gitignore', async () => {
+      const gitignore = `${basicGitignore}\npackage-lock.json\n`;
+      containerCtx.virtualFileSystemService.setFileSystem({
+        '.gitignore': gitignore,
+      });
+
+      await practice.evaluate(containerCtx.practiceContext);
+      await practice.fix(containerCtx.fixerContext);
+
+      const fixedGitignore = await containerCtx.virtualFileSystemService.readFile('.gitignore');
+      expect(fixedGitignore).toBe(gitignore);
+    });
+    it('Appends to .gitignore if entry is missing', async () => {
+      containerCtx.virtualFileSystemService.setFileSystem({
+        '.gitignore': '/node_modules\n/coverage\n',
+      });
+
+      await practice.evaluate(containerCtx.practiceContext);
+      await practice.fix(containerCtx.fixerContext);
+
+      const fixedGitignore = await containerCtx.virtualFileSystemService.readFile('.gitignore');
+      expect(fixedGitignore).toBe('/node_modules\n/coverage\n\n*.log\n');
+    });
+  });
 });
