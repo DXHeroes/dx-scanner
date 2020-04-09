@@ -101,7 +101,7 @@
   },
   "overrides": [
     {
-      "files": ["*.spec.ts"],
+      "files": ["*.spec.ts", "src/**/*.ts", "types/**/*.ts"],
       "excludedFiles": ["lib/*"],
       "rules": {
         "@typescript-eslint/explicit-function-return-type": "off"

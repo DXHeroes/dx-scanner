@@ -69,6 +69,6 @@
     "preserveConstEnums": true,
     "forceConsistentCasingInFileNames": true
   },
-  "include": ["src/**/*", "src/test/**/*"],
+  "include": ["src/**/*", "src/test/**/*", "jest.config.js"],
   "exclude": ["node_modules", "lib", "types"]
 }
