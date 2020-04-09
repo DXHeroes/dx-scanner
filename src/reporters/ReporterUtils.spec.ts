@@ -36,6 +36,18 @@ describe('ReporterUtils', () => {
       expect(result.points.percentage).toEqual(100);
       expect(result.value).toEqual('100% | 1/1 (1 skipped)');
     });
+
+    it('one skipped practice', () => {
+      notPracticingHighImpactPracticeWithCtx.overridenImpact = PracticeImpact.off;
+      notPracticingHighImpactPracticeWithCtx.isOn = false;
+
+      const result = ReporterUtils.computeDXScore([notPracticingHighImpactPracticeWithCtx]);
+
+      expect(result.points.max).toEqual(0);
+      expect(result.points.total).toEqual(0);
+      expect(result.points.percentage).toEqual(0);
+      expect(result.value).toEqual('0% | 0/0 (1 skipped)');
+    });
   });
 
   describe('#getComponentsWithPractices', () => {
