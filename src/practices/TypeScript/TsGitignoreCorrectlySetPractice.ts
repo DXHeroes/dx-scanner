@@ -80,12 +80,15 @@ export class TsGitignoreCorrectlySetPractice extends PracticeBase {
     const tsConfig = await tsLoad(inspector.basePath || '.');
     if (tsConfig) {
       if (tsConfig.config.compilerOptions.outDir) {
-        const folderName = path.basename(path.resolve(tsConfig.config.compilerOptions.outDir));
+        const folderName = path.basename(tsConfig.config.compilerOptions.outDir);
         if (!this.parsedGitignore.find((value: string) => new RegExp(folderName).test(value))) {
           fixes.unshift(`/${folderName}`);
         }
       } else if (tsConfig.config.compilerOptions.outFile) {
-        fixes.unshift(`${tsConfig.config.compilerOptions.outFile}`);
+        const fileName = path.basename(tsConfig.config.compilerOptions.outFile);
+        if (!this.parsedGitignore.find((value: string) => new RegExp(fileName).test(value))) {
+          fixes.unshift(`${fileName}`);
+        }
       }
     }
 
