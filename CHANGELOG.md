@@ -1,3 +1,10 @@
+## [3.17.3](https://github.com/dxheroes/dx-scanner/compare/v3.17.2...v3.17.3) (2020-04-09)
+
+
+### Bug Fixes
+
+* **report:** logo path for new web ([819d9be](https://github.com/dxheroes/dx-scanner/commit/819d9be67575d0161bc8d40a2bea69d19e4c4874))
+
 ## [3.17.2](https://github.com/dxheroes/dx-scanner/compare/v3.17.1...v3.17.2) (2020-04-07)
 
 
