@@ -67,4 +67,18 @@ describe('GitServiceUtils', () => {
     const response = GitServiceUtils.getComponentPath(componentMock, { ...scanningStrategy, localPath: '../dx-scannerSAJK' });
     expect(response).toEqual('https://www.github.com/DXHeroes/dx-scanner');
   });
+
+  it('Returns component path without credentials', () => {
+    const componentMock: ProjectComponent = {
+      framework: ProjectComponentFramework.UNKNOWN,
+      language: ProgrammingLanguage.JavaScript,
+      path: '../dx-scannerSAJK',
+      platform: ProjectComponentPlatform.BackEnd,
+      type: ProjectComponentType.Library,
+      repositoryPath: 'https://user:passwrod@www.github.com/DXHeroes/dx-scanner',
+    };
+
+    const response = GitServiceUtils.getComponentPath(componentMock, { ...scanningStrategy, localPath: '../dx-scannerSAJK' });
+    expect(response).toEqual('https://www.github.com/DXHeroes/dx-scanner');
+  });
 });
