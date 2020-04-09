@@ -84,7 +84,7 @@ export class ReporterUtils {
     /**
      * Compute percentage points
      */
-    score.points.percentage = Math.round((100 / score.points.max) * score.points.total);
+    score.points.percentage = score.points.max ? Math.round((100 / score.points.max) * score.points.total) : 0;
     const practicingCount = score.practices.practicing.length;
     const notPracticingCount = score.practices.notPracticing.length;
     const offCount = score.practices.off.length;
