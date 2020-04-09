@@ -53,6 +53,13 @@ export class FileInspector implements IFileInspector {
     return Promise.resolve();
   }
 
+  appendFile(path: string, data: string) {
+    if (this.projectFilesBrowser instanceof FileSystemService) {
+      return this.projectFilesBrowser.createFile(this.normalizePath(path), data);
+    }
+    return Promise.resolve();
+  }
+
   isFile(path: string) {
     return this.cache.getOrSet(`${this.basePath}:isFile:${path}`, async () => {
       return this.projectFilesBrowser.isFile(this.normalizePath(path));
