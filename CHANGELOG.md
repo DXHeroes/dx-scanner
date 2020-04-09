@@ -1,3 +1,12 @@
+# [3.20.0](https://github.com/dxheroes/dx-scanner/compare/v3.19.0...v3.20.0) (2020-04-09)
+
+
+### Features
+
+* **report:** omit URL credentials from component path ([3123972](https://github.com/dxheroes/dx-scanner/commit/31239727c734db35d119d4600d50be10ed6b5350))
+* **reporter:** add test for no active practices percentage ([f6a66b6](https://github.com/dxheroes/dx-scanner/commit/f6a66b62ee9f838660582f258e1a2a1202ed2ca5))
+* **reporter:** fix edge case where no practice is active ([8701dc6](https://github.com/dxheroes/dx-scanner/commit/8701dc63fad4119b82fb54f9a5bc30b30f07fdeb))
+
 # [3.19.0](https://github.com/dxheroes/dx-scanner/compare/v3.18.1...v3.19.0) (2020-04-09)
 
 
