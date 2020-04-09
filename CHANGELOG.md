@@ -1,3 +1,12 @@
+# [3.18.0](https://github.com/dxheroes/dx-scanner/compare/v3.17.3...v3.18.0) (2020-04-09)
+
+
+### Features
+
+* **files:** add appendFile to FileInspector ([dd798ce](https://github.com/dxheroes/dx-scanner/commit/dd798cef60d7147bdfe8fecbe25597efa2bab470))
+* **fixer:** add fixer for JsGitignore practice ([d31588d](https://github.com/dxheroes/dx-scanner/commit/d31588dac79dd9cace4c871f145333158d5e6200))
+* **fixer:** add tests for JsGitignore practice ([6491406](https://github.com/dxheroes/dx-scanner/commit/64914063ef40958542ba08d49d4fd04640b273ca))
+
 ## [3.17.3](https://github.com/dxheroes/dx-scanner/compare/v3.17.2...v3.17.3) (2020-04-09)
 
 
