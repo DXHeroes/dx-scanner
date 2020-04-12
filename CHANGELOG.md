@@ -1,3 +1,10 @@
+## [3.20.1](https://github.com/dxheroes/dx-scanner/compare/v3.20.0...v3.20.1) (2020-04-12)
+
+
+### Bug Fixes
+
+* **deps:** update dependency prettier to v2 ([9115667](https://github.com/dxheroes/dx-scanner/commit/911566776d35834a59fd93bdcf599ba3ce477780))
+
 # [3.20.0](https://github.com/dxheroes/dx-scanner/compare/v3.19.0...v3.20.0) (2020-04-09)
 
 
