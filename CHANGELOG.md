@@ -1,3 +1,10 @@
+## [3.20.2](https://github.com/dxheroes/dx-scanner/compare/v3.20.1...v3.20.2) (2020-04-13)
+
+
+### Bug Fixes
+
+* **deps:** pin dependency tsconfig to 7.0.0 ([05f9a0a](https://github.com/dxheroes/dx-scanner/commit/05f9a0a0f59fac90c9bab5947590d9ca26931825))
+
 ## [3.20.1](https://github.com/dxheroes/dx-scanner/compare/v3.20.0...v3.20.1) (2020-04-12)
 
 
