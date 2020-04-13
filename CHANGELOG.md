@@ -1,3 +1,10 @@
+## [3.20.3](https://github.com/dxheroes/dx-scanner/compare/v3.20.2...v3.20.3) (2020-04-13)
+
+
+### Bug Fixes
+
+* **deps:** update dependency camelcase to v6 ([d1fac22](https://github.com/dxheroes/dx-scanner/commit/d1fac2243033060cf45bd3394eb95faf4401c988))
+
 ## [3.20.2](https://github.com/dxheroes/dx-scanner/compare/v3.20.1...v3.20.2) (2020-04-13)
 
 
