@@ -2,6 +2,7 @@
   "extends": [
     "config:js-app",
     ":rebaseStalePrs",
+    "docker:disable",
     "group:allNonMajor",
     "schedule:earlyMondays"
   ],
@@ -10,6 +11,5 @@
   "major": {
     "automerge": false,
     "ignoreDeps": ["@types/node"]
-  },
-  "lockFileMaintenance": { "enabled": true, "automerge": true }
+  }
 }
