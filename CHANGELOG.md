@@ -1,3 +1,10 @@
+## [3.20.4](https://github.com/dxheroes/dx-scanner/compare/v3.20.3...v3.20.4) (2020-04-14)
+
+
+### Bug Fixes
+
+* **docker:** use 18.04 LTS and don't let Renovate update Dockerfile ([d52356c](https://github.com/dxheroes/dx-scanner/commit/d52356c2c8226a367692928195338d649d487b5c))
+
 ## [3.20.3](https://github.com/dxheroes/dx-scanner/compare/v3.20.2...v3.20.3) (2020-04-13)
 
 
