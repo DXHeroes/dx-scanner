@@ -50,6 +50,7 @@
     "gitignore": "^0.6.0",
     "glob": "7.1.6",
     "gradle-to-js": "2.0.0",
+    "inquirer": "^7.1.0",
     "inversify": "5.0.1",
     "js-yaml": "3.13.1",
     "lodash": "4.17.15",

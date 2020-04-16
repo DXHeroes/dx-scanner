@@ -1,13 +1,15 @@
+import fs, { unlink } from 'fs';
+import os from 'os';
+import { promisify } from 'util';
+import { v4 as uuidv4 } from 'uuid';
+import gi from 'gitignore';
+import inquirer from 'inquirer';
+import cli from 'cli-ux';
 import { IPractice } from '../IPractice';
 import { PracticeEvaluationResult, PracticeImpact, ProgrammingLanguage } from '../../model';
 import { DxPractice } from '../DxPracticeDecorator';
 import { PracticeContext } from '../../contexts/practice/PracticeContext';
 import { FixerContext } from '../../contexts/fixer/FixerContext';
-import gi from 'gitignore';
-import fs, { unlink } from 'fs';
-import os from 'os';
-import { v4 as uuidv4 } from 'uuid';
-import { promisify } from 'util';
 
 const noop = () => undefined;
 
@@ -55,8 +57,13 @@ export class GitignoreIsPresentPractice implements IPractice {
       type = 'Node';
     } else if (availableTypes.includes(ctx.projectComponent.language)) {
       type = ctx.projectComponent.language;
+    } else if (!ctx.argumentsProvider?.ci) {
+      // get type from user
+      const name = 'Pick a gitignore template';
+      type = (await cli.action.pauseAsync(() => inquirer.prompt({ name, type: 'list', choices: availableTypes })))[name];
+    } else {
+      return;
     }
-    if (!type) return;
 
     // download data to tmp file
     const tmpFilePath = `${os.tmpdir()}/${uuidv4()}`;
