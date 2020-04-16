@@ -44,4 +44,22 @@ describe('GitignoreIsPresentPractice', () => {
     const result = await practice.isApplicable();
     expect(result).toEqual(true);
   });
+
+  describe('Fixer', () => {
+    afterEach(async () => {
+      jest.clearAllMocks();
+      containerCtx.virtualFileSystemService.clearFileSystem();
+    });
+
+    it('Creates gitignore file', async () => {
+      containerCtx.virtualFileSystemService.setFileSystem({
+        'package.json': '{}',
+      });
+
+      await practice.fix(containerCtx.fixerContext);
+
+      const exists = await containerCtx.virtualFileSystemService.exists('.gitignore');
+      expect(exists).toBe(true);
+    });
+  });
 });
