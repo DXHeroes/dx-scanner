@@ -1,5 +1,5 @@
 import { GitignoreIsPresentPractice } from './GitignoreIsPresentPractice';
-import { PracticeEvaluationResult } from '../../model';
+import { PracticeEvaluationResult, ProgrammingLanguage } from '../../model';
 import { TestContainerContext, createTestContainer } from '../../inversify.config';
 
 describe('GitignoreIsPresentPractice', () => {
@@ -55,6 +55,7 @@ describe('GitignoreIsPresentPractice', () => {
       containerCtx.virtualFileSystemService.setFileSystem({
         'package.json': '{}',
       });
+      containerCtx.fixerContext.projectComponent.language = ProgrammingLanguage.Java;
 
       await practice.fix(containerCtx.fixerContext);
 
