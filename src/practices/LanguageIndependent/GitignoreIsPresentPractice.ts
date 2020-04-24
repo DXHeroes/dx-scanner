@@ -53,9 +53,7 @@ export class GitignoreIsPresentPractice implements IPractice {
 
     // get the gitignore type
     let type: string | undefined;
-    if ([ProgrammingLanguage.JavaScript, ProgrammingLanguage.TypeScript].includes(ctx.projectComponent.language)) {
-      type = 'Node';
-    } else if (availableTypes.includes(ctx.projectComponent.language)) {
+    if (availableTypes.includes(ctx.projectComponent.language)) {
       type = ctx.projectComponent.language;
     } else if (!ctx.argumentsProvider?.ci) {
       // get type from user
