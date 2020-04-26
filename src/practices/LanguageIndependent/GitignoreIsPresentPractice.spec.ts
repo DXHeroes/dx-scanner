@@ -1,5 +1,5 @@
 import { GitignoreIsPresentPractice } from './GitignoreIsPresentPractice';
-import { PracticeEvaluationResult } from '../../model';
+import { PracticeEvaluationResult, ProgrammingLanguage } from '../../model';
 import { TestContainerContext, createTestContainer } from '../../inversify.config';
 
 describe('GitignoreIsPresentPractice', () => {
@@ -43,5 +43,24 @@ describe('GitignoreIsPresentPractice', () => {
   it('Is always applicable', async () => {
     const result = await practice.isApplicable();
     expect(result).toEqual(true);
+  });
+
+  describe('Fixer', () => {
+    afterEach(async () => {
+      jest.clearAllMocks();
+      containerCtx.virtualFileSystemService.clearFileSystem();
+    });
+
+    it('Creates gitignore file', async () => {
+      containerCtx.virtualFileSystemService.setFileSystem({
+        'package.json': '{}',
+      });
+      containerCtx.fixerContext.projectComponent.language = ProgrammingLanguage.Java;
+
+      await practice.fix(containerCtx.fixerContext);
+
+      const exists = await containerCtx.virtualFileSystemService.exists('.gitignore');
+      expect(exists).toBe(true);
+    });
   });
 });
