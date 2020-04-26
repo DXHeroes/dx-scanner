@@ -9,7 +9,7 @@ import { runGenerator } from 'yeoman-gen-run';
 import cli from 'cli-ux';
 import { AccessType } from '../../detectors/IScanningStrategy';
 
-const env = yeoman.createEnv();
+const env = yeoman.createEnv(undefined, { console });
 env.register(require.resolve('generator-license'), 'license');
 
 interface PracticeOverride extends PracticeConfig {
