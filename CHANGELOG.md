@@ -1,3 +1,12 @@
+## [3.20.5](https://github.com/dxheroes/dx-scanner/compare/v3.20.4...v3.20.5) (2020-04-26)
+
+
+### Bug Fixes
+
+* **dep:** add missing dependency ([9c169fd](https://github.com/dxheroes/dx-scanner/commit/9c169fd5a2b6bab15179d8e11e10a77e18378bab))
+* **deps:** update all non-major dependencies ([c2d2730](https://github.com/dxheroes/dx-scanner/commit/c2d27300292e0d65926727fdb50034e84cf06c4d))
+* **practice:** pass console to yeoman-environment ([6716e50](https://github.com/dxheroes/dx-scanner/commit/6716e50f863ced995b3f6bd7b64c1513b5da243e))
+
 ## [3.20.4](https://github.com/dxheroes/dx-scanner/compare/v3.20.3...v3.20.4) (2020-04-14)
 
 
