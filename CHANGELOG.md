@@ -1,3 +1,15 @@
+# [3.21.0](https://github.com/dxheroes/dx-scanner/compare/v3.20.5...v3.21.0) (2020-04-26)
+
+
+### Features
+
+* **fixer:** add basic gitignore fixer test ([4cabda3](https://github.com/dxheroes/dx-scanner/commit/4cabda3261be4ab339a822406b6816dc9385c8ce))
+* **fixer:** add gitignore fixer ([4d07446](https://github.com/dxheroes/dx-scanner/commit/4d07446a85772e413beecf59b59f8089fc9d428d))
+* **fixer:** add missing gitignore typedef ([fc97111](https://github.com/dxheroes/dx-scanner/commit/fc97111bdde41b869c41648e50d04cb280854f24))
+* **fixer:** add user input option to gitignore practice fixer ([f4d0b26](https://github.com/dxheroes/dx-scanner/commit/f4d0b26d29d866ef5ae90da7759ae85ba1b176d7))
+* **fixer:** fix gitignore fixer test ([ba86907](https://github.com/dxheroes/dx-scanner/commit/ba86907f3b8dd32e98fe32a5d73767200d760a2e))
+* **fixer:** More generic gitignore guesser ([2d1fac0](https://github.com/dxheroes/dx-scanner/commit/2d1fac04a0edf72f3e3d6ca3c557690c5ceb41d7))
+
 ## [3.20.5](https://github.com/dxheroes/dx-scanner/compare/v3.20.4...v3.20.5) (2020-04-26)
 
 
