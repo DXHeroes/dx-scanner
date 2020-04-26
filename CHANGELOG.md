@@ -1,3 +1,10 @@
+## [3.21.1](https://github.com/dxheroes/dx-scanner/compare/v3.21.0...v3.21.1) (2020-04-26)
+
+
+### Bug Fixes
+
+* **e-reporter:** use url for provider ([a42ab50](https://github.com/dxheroes/dx-scanner/commit/a42ab5067a8c268416c6e38ba0fa46197fd5540b))
+
 # [3.21.0](https://github.com/dxheroes/dx-scanner/compare/v3.20.5...v3.21.0) (2020-04-26)
 
 
