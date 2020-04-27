@@ -1,3 +1,10 @@
+## [3.21.2](https://github.com/dxheroes/dx-scanner/compare/v3.21.1...v3.21.2) (2020-04-27)
+
+
+### Bug Fixes
+
+* **deps:** pin dependencies ([4f656e1](https://github.com/dxheroes/dx-scanner/commit/4f656e1473f675f875df60a107639269bfe1aa2e))
+
 ## [3.21.1](https://github.com/dxheroes/dx-scanner/compare/v3.21.0...v3.21.1) (2020-04-26)
 
 
