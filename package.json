@@ -34,7 +34,6 @@
     "@types/qs": "6.9.1",
     "@types/table": "5.0.0",
     "@types/uuid": "7.0.2",
-    "@types/yaml": "1.2.0",
     "axios": "0.19.2",
     "bitbucket": "2.0.3",
     "camelcase": "6.0.0",
