@@ -1,3 +1,10 @@
+## [3.21.3](https://github.com/dxheroes/dx-scanner/compare/v3.21.2...v3.21.3) (2020-04-30)
+
+
+### Bug Fixes
+
+* **reporter:** disable enterprise reporter logs for now ([1d51b91](https://github.com/dxheroes/dx-scanner/commit/1d51b91ce71a241c343df7fa86edfdae26dadd8d))
+
 ## [3.21.2](https://github.com/dxheroes/dx-scanner/compare/v3.21.1...v3.21.2) (2020-04-27)
 
 
