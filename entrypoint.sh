@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 set -e
 
 if [[ $1 == *"bash" || $1 == *"sh" ]]; then
