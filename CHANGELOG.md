@@ -1,3 +1,12 @@
+# [3.22.0](https://github.com/dxheroes/dx-scanner/compare/v3.21.3...v3.22.0) (2020-05-03)
+
+
+### Features
+
+* **deps:** move types, ts-node, ts and prettier to devdeps ([f5c479d](https://github.com/dxheroes/dx-scanner/commit/f5c479d04bf38cf05a6427359454259332dd783b))
+* **deps:** remove @types/yaml dependency ([1861ad5](https://github.com/dxheroes/dx-scanner/commit/1861ad58bcf07620feb7a2d8a927c1c24083a8ad))
+* **Dockerfile:** use node dockerfile image ([35682fc](https://github.com/dxheroes/dx-scanner/commit/35682fcc383a51ec91610b3a1c8a0c574ec642f7))
+
 ## [3.21.3](https://github.com/dxheroes/dx-scanner/compare/v3.21.2...v3.21.3) (2020-04-30)
 
 
