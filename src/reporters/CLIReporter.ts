@@ -103,10 +103,13 @@ export class CLIReporter implements IReporter {
     lines.push(italic(blue('Implementation is not adoption.')));
     lines.push(italic(blue('We can help you with both. :-)')));
     lines.push(italic(blue('- https://dxheroes.io')));
+    lines.push('');
+    lines.push(italic(red('Get support - https://bit.ly/slack_developer_experience')));
+
     lines.push(reset(' '));
 
     if (!this.argumentsProvider.details)
-      lines.push(grey(`You can run the command with option ${italic('-d')} or ${italic('--details')} to show detailed informations.`));
+      lines.push(green(`You can run the command with option ${italic('-d')} or ${italic('--details')} to show detailed informations.\n`));
 
     return lines.join('\n');
   }
