@@ -205,6 +205,7 @@ export class CIReportBuilder implements IReportBuilder {
     lines.push('[dxheroes.io](https://dxheroes.io)');
     lines.push('\n\n');
     lines.push('##### Found a bug? Please <a href="https://github.com/DXHeroes/dx-scanner/issues" target="_blank">report</a>.');
+    lines.push('Get support - https://bit.ly/slack_developer_experience');
 
     return lines.join('\n');
   };
