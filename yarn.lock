@@ -519,6 +519,11 @@
     "@types/yargs" "^15.0.0"
     chalk "^3.0.0"
 
+"@kwsites/exec-p@^0.4.0":
+  version "0.4.0"
+  resolved "https://registry.yarnpkg.com/@kwsites/exec-p/-/exec-p-0.4.0.tgz#ab3765d482849ba6e825721077c248cf9f3323b7"
+  integrity sha512-44DWNv5gDR9EwrCTVQ4ZC99yPqVS0VCWrYIBl45qNR8XQy+4lbl0IQG8kBDf6NHwj4Ib4c2z1Fq1IUJOCbkZcw==
+
 "@mrmlnc/readdir-enhanced@^2.2.1":
   version "2.2.1"
   resolved "https://registry.yarnpkg.com/@mrmlnc/readdir-enhanced/-/readdir-enhanced-2.2.1.tgz#524af240d1a360527b730475ecfa1344aa540dde"
@@ -8997,11 +9002,12 @@ signale@^1.2.1:
     figures "^2.0.0"
     pkg-conf "^2.1.0"
 
-simple-git@1.132.0:
-  version "1.132.0"
-  resolved "https://registry.yarnpkg.com/simple-git/-/simple-git-1.132.0.tgz#53ac4c5ec9e74e37c2fd461e23309f22fcdf09b1"
-  integrity sha512-xauHm1YqCTom1sC9eOjfq3/9RKiUA9iPnxBbrY2DdL8l4ADMu0jjM5l5lphQP5YWNqAL2aXC/OeuQ76vHtW5fg==
+simple-git@2.3.0:
+  version "2.3.0"
+  resolved "https://registry.yarnpkg.com/simple-git/-/simple-git-2.3.0.tgz#fe74d4b8783d05b0007c8901947d9ab67ceec318"
+  integrity sha512-hyDbcdwB8mLMv1EhSGcJ5jv1SMrCLMzLzRoNPhSV6RBvtw7gGEldnxJtYcqudQdBxV+4lMwNd4UOrUjFrmPrDQ==
   dependencies:
+    "@kwsites/exec-p" "^0.4.0"
     debug "^4.0.1"
 
 sisteransi@^1.0.4:
