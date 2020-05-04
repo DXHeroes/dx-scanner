@@ -104,7 +104,7 @@ export class CLIReporter implements IReporter {
     lines.push(italic(blue('We can help you with both. :-)')));
     lines.push(italic(blue('- https://dxheroes.io')));
     lines.push('');
-    lines.push(italic(red('Get support - https://bit.ly/slack_developer_experience')));
+    lines.push(italic(red('Join us on Slack! - https://bit.ly/slack_developer_experience')));
 
     lines.push(reset(' '));
 
