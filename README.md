@@ -39,18 +39,18 @@ Ruby | 🚧
 
 <!-- toc -->
 * [Supported version control systems](#Which-version-control-system-can-you-use)
-* [Getting Started](#Getting-Started-🏁)
+* [Getting Started](#Getting-Started-)
   * [Installation](#Installation)
   * [Usage](#Usage)
     * [Commands](#Commands)
     * [Options for dx-scanner run](#options-for-dx-scanner-run)
     * [Auto-fixer](#Auto-fixer)
 * [Supported Languages](#What-language-is-supported)
-* [Configuration](#Configuration-⚙️)
+* [Configuration](#configuration-%EF%B8%8F)
   * [Practices](#Practices)
   * [GitHub CI Action](#GitHub-Ci-Action)
-* [Support](#Support-🦸‍♀️-🦸‍♂️)
-* [Contributing](#Contributing-👩‍💻-👨‍💻)  
+* [Support](#support-%EF%B8%8F-%EF%B8%8F)
+* [Contributing](#Contributing--)  
 <!-- tocstop -->
 ### Which version control system can you use?
 
