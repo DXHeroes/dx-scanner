@@ -1,3 +1,10 @@
+## [3.22.1](https://github.com/dxheroes/dx-scanner/compare/v3.22.0...v3.22.1) (2020-05-04)
+
+
+### Bug Fixes
+
+* **deps:** update dependency simple-git to v2 ([53b329c](https://github.com/dxheroes/dx-scanner/commit/53b329c7f16eb93989db11528cd52f03eef301a9))
+
 # [3.22.0](https://github.com/dxheroes/dx-scanner/compare/v3.21.3...v3.22.0) (2020-05-03)
 
 
