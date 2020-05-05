@@ -74,7 +74,8 @@ export class HTMLReporter implements IReporter {
     lines.push('<div style="text-align: center; background-color: gray; margin: 0; padding: 10px">');
     lines.push('<p>Implementation is not adoption.</br>');
     lines.push('We can help you with both. :-)</p>');
-    lines.push('<a href="https://dxheroes.io">https://dxheroes.io</a>');
+    lines.push('<a href="https://dxheroes.io">https://dxheroes.io</a><br />');
+    lines.push('<a href="https://bit.ly/slack_developer_experience" target="_blank">Join us on Slack!</a>');
     lines.push('</div>');
 
     return `

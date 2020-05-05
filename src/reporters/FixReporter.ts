@@ -125,9 +125,10 @@ export class FixReporter implements IReporter {
     lines.push(italic(blue('We can help you with both. :-)')));
     lines.push(italic(blue('- https://dxheroes.io')));
     lines.push(reset(' '));
+    lines.push(italic(red('Join us on Slack! - https://bit.ly/slack_developer_experience')));
 
     if (!this.argumentsProvider.details)
-      lines.push(grey(`You can run the command with option ${italic('-d')} or ${italic('--details')} to show detailed informations.`));
+      lines.push(green(`You can run the command with option ${italic('-d')} or ${italic('--details')} to show detailed informations.`));
 
     return lines.join('\n');
   }

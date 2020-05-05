@@ -4,6 +4,8 @@
   <a href="https://dxscanner.io" target="_blank"><img src="https://github.com/DXHeroes/dx-scanner/blob/master/docs/logo.svg" /></a>
 </p>
 
+[![Slack](https://img.shields.io/badge/slack-@DeveloperExperience-%234A154B.svg?logo=slack)](https://bit.ly/slack_developer_experience)
+
 [![Version](https://img.shields.io/npm/v/dx-scanner.svg)](https://npmjs.org/package/dx-scanner)
 [![Travis (.org)](https://img.shields.io/travis/DXHeroes/dx-scanner/master)](https://travis-ci.org/DXHeroes/dx-scanner)
 [![codecov](https://codecov.io/gh/DXHeroes/dx-scanner/branch/master/graph/badge.svg)](https://codecov.io/gh/DXHeroes/dx-scanner)
@@ -37,16 +39,18 @@ Ruby | 🚧
 
 <!-- toc -->
 * [Supported version control systems](#Which-version-control-system-can-you-use)
-* [Getting Started](#Getting-Started)
+* [Getting Started](#Getting-Started-)
   * [Installation](#Installation)
   * [Usage](#Usage)
     * [Commands](#Commands)
     * [Options for dx-scanner run](#options-for-dx-scanner-run)
     * [Auto-fixer](#Auto-fixer)
 * [Supported Languages](#What-language-is-supported)
-* [Configuration](#Configuration-⚙️)
+* [Configuration](#configuration-%EF%B8%8F)
   * [Practices](#Practices)
   * [GitHub CI Action](#GitHub-Ci-Action)
+* [Support](#support-%EF%B8%8F-%EF%B8%8F)
+* [Contributing](#Contributing--)  
 <!-- tocstop -->
 ### Which version control system can you use?
 
@@ -292,6 +296,9 @@ hint = 25 points
 ```
 
 The practices you have switched off are not included in the calculation (0 points).
+
+## Support 🦸‍♀️ 🦸‍♂️
+Didn't you find what you expected? Contact us via our public [Slack!](https://bit.ly/slack_developer_experience)
 
 ## Contributing 👩‍💻 👨‍💻
 Feel free to contribute to our DX Scanner. Please follow the [Contribution Guide](CONTRIBUTING.md).
