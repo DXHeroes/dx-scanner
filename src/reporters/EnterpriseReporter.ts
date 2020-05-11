@@ -5,6 +5,9 @@ import { Types } from '../types';
 import { PracticeWithContextForReporter, IReporter } from './IReporter';
 import { ProjectComponent } from '../model';
 import axios from 'axios';
+import * as uuid from 'uuid';
+// eslint-disable-next-line @typescript-eslint/no-require-imports, @typescript-eslint/no-var-requires
+const pjson = require('../../package.json');
 
 @injectable()
 export class EnterpriseReporter implements IReporter {
@@ -35,7 +38,12 @@ export class EnterpriseReporter implements IReporter {
 
     for (const cwp of componentsWithPractices) {
       const dxScoreForComponent = dxScore.components.find((c) => c.path === cwp.component.path)!.value;
-      const componentWithScore: ComponentWithDxScore = { component: cwp.component, dxScore: dxScoreForComponent };
+      const componentWithScore: ComponentWithDxScore = {
+        component: cwp.component,
+        dxScore: dxScoreForComponent,
+        version: pjson.version,
+        id: uuid.v4(),
+      };
 
       report.componentsWithDxScore.push(componentWithScore);
     }
@@ -51,4 +59,6 @@ export type JSONReportDxScore = {
 export interface ComponentWithDxScore {
   component: ProjectComponent;
   dxScore: string;
+  version: string;
+  id: string;
 }
