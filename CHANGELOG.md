@@ -1,3 +1,10 @@
+## [3.22.2](https://github.com/dxheroes/dx-scanner/compare/v3.22.1...v3.22.2) (2020-05-11)
+
+
+### Bug Fixes
+
+* **deps:** update dependency uuid to v8 ([30e9647](https://github.com/dxheroes/dx-scanner/commit/30e9647f8ed828b7de1f2d97aea1755ca3ec40ad))
+
 ## [3.22.1](https://github.com/dxheroes/dx-scanner/compare/v3.22.0...v3.22.1) (2020-05-04)
 
 
