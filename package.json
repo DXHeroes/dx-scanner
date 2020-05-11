@@ -67,7 +67,7 @@
     "tsconfig": "7.0.0",
     "tslib": "1.11.1",
     "update-notifier": "4.1.0",
-    "uuid": "7.0.3",
+    "uuid": "8.0.0",
     "xml2js": "0.4.23",
     "yaml": "1.9.1",
     "yeoman-environment": "2.9.4",
