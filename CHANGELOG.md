@@ -1,3 +1,10 @@
+## [3.23.2](https://github.com/dxheroes/dx-scanner/compare/v3.23.1...v3.23.2) (2020-05-12)
+
+
+### Bug Fixes
+
+* **docker:** use ash (alpine's sh) syntax for "ends with" check ([97f8f7e](https://github.com/dxheroes/dx-scanner/commit/97f8f7e10d73bcb94858adbab7298ff1cfbc1c5f))
+
 ## [3.23.1](https://github.com/dxheroes/dx-scanner/compare/v3.23.0...v3.23.1) (2020-05-12)
 
 
