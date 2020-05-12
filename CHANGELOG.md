@@ -1,3 +1,15 @@
+# [3.23.0](https://github.com/dxheroes/dx-scanner/compare/v3.22.2...v3.23.0) (2020-05-12)
+
+
+### Bug Fixes
+
+* **deps:** update dependency eslint to v7 ([c55858d](https://github.com/dxheroes/dx-scanner/commit/c55858da3d9e8467aae939b8b0df20ffdac9c6a4))
+
+
+### Features
+
+* add version and id to enterprise report ([38d9321](https://github.com/dxheroes/dx-scanner/commit/38d9321a2d40541281eac1cbd19886b4fa836aed))
+
 ## [3.22.2](https://github.com/dxheroes/dx-scanner/compare/v3.22.1...v3.22.2) (2020-05-11)
 
 
