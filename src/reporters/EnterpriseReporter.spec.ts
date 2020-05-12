@@ -11,8 +11,13 @@ describe('EnterpriseReporter', () => {
   describe('#report', () => {
     it('one practicing practice', async () => {
       const result = new EnterpriseReporter(argumentsProviderFactory()).buildReport([practicingHighImpactPracticeWithCtx]);
+      const componentWithDxScoreReport = result.componentsWithDxScore[0];
 
-      await expect(result.componentsWithDxScore).toContainObject({ dxScore: '100% | 1/1' });
+      await expect(result.componentsWithDxScore).toContainObject({
+        dxScore: '100% | 1/1',
+        id: componentWithDxScoreReport.id,
+        version: componentWithDxScoreReport.version,
+      });
     });
 
     it('one practicing practice and one not practicing', async () => {
@@ -20,14 +25,24 @@ describe('EnterpriseReporter', () => {
         practicingHighImpactPracticeWithCtx,
         notPracticingHighImpactPracticeWithCtx,
       ]);
+      const componentWithDxScoreReport = result.componentsWithDxScore[0];
 
-      await expect(result.componentsWithDxScore).toContainObject({ dxScore: '50% | 1/2' });
+      await expect(result.componentsWithDxScore).toContainObject({
+        dxScore: '50% | 1/2',
+        id: componentWithDxScoreReport.id,
+        version: componentWithDxScoreReport.version,
+      });
     });
 
     it('one not practicing practice', async () => {
       const result = new EnterpriseReporter(argumentsProviderFactory()).buildReport([notPracticingHighImpactPracticeWithCtx]);
+      const componentWithDxScoreReport = result.componentsWithDxScore[0];
 
-      await expect(result.componentsWithDxScore).toContainObject({ dxScore: '0% | 0/1' });
+      await expect(result.componentsWithDxScore).toContainObject({
+        dxScore: '0% | 0/1',
+        id: componentWithDxScoreReport.id,
+        version: componentWithDxScoreReport.version,
+      });
     });
   });
 
