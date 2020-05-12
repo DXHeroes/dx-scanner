@@ -1,3 +1,10 @@
+## [3.23.1](https://github.com/dxheroes/dx-scanner/compare/v3.23.0...v3.23.1) (2020-05-12)
+
+
+### Bug Fixes
+
+* **deps:** update dependency npm-check-updates to v5 ([b6b677d](https://github.com/dxheroes/dx-scanner/commit/b6b677d982e85717235ba52e6bb8743bf7ecf14e))
+
 # [3.23.0](https://github.com/dxheroes/dx-scanner/compare/v3.22.2...v3.23.0) (2020-05-12)
 
 
