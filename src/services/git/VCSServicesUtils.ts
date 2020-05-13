@@ -144,8 +144,8 @@ export class VCSServicesUtils {
             const queryParams = qs.parse(query);
 
             //Requests that return multiple items will be paginated to 30 items by default. https://developer.github.com/v3/#pagination
-            perPage = queryParams['per_page'] || 30;
-            page = queryParams['page'] || 1;
+            perPage = Number(queryParams['per_page']) || 30;
+            page = Number(queryParams['page']) || 1;
           }
 
           if (current.value.link === 'prev') prev = page;
@@ -163,7 +163,7 @@ export class VCSServicesUtils {
   };
 }
 
-const linkGenerator = function*(): Generator<{
+const linkGenerator = function* (): Generator<{
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   link: string;
 }> {

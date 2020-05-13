@@ -166,7 +166,7 @@ describe('VCSServicesUtils', () => {
     expect(response).toMatchObject({
       totalCount: 15,
       page: 2,
-      perPage: '5',
+      perPage: 5,
       last: 'https://api.github.com/repositories/199797123/issues?per_page=5&page=3',
       next: 'https://api.github.com/repositories/199797123/issues?per_page=5&page=3',
       prev: 'https://api.github.com/repositories/199797123/issues?per_page=5&page=1',
@@ -180,7 +180,7 @@ describe('VCSServicesUtils', () => {
     expect(response).toMatchObject({
       totalCount: 20,
       page: 1,
-      perPage: '5',
+      perPage: 5,
       last: 'https://api.github.com/repositories/199797123/issues?per_page=5&page=4',
       next: 'https://api.github.com/repositories/199797123/issues?per_page=5&page=2',
     });
@@ -193,7 +193,7 @@ describe('VCSServicesUtils', () => {
     expect(response).toMatchObject({
       totalCount: 10,
       page: 2,
-      perPage: '10',
+      perPage: 10,
       prev: 'https://api.github.com/repositories/199797123/issues?per_page=10&page=1',
     });
   });

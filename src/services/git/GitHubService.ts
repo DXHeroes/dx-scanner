@@ -33,13 +33,8 @@ import { VCSServicesUtils } from './VCSServicesUtils';
 import { ArgumentsProvider } from '../../scanner';
 import { IssueState } from '../../inspectors/IIssueTrackingInspector';
 import { RepositoryConfig } from '../../scanner/RepositoryConfig';
-import type {
-  PullsListParams,
-  IssuesListForRepoParams,
-  IssuesListCommentsParams,
-  PullsListCommitsParams,
-} from '@octokit/plugin-rest-endpoint-methods/dist-types/generated/types';
 import type { OctokitResponse } from '@octokit/types';
+import { PullsListParams, IssuesListForRepoParams, IssuesListCommentsParams, PullsListCommitsParams } from './OctokitTypes';
 const debug = Debug('cli:services:git:github-service');
 
 @injectable()
