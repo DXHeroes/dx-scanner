@@ -1,3 +1,11 @@
+## [3.23.3](https://github.com/dxheroes/dx-scanner/compare/v3.23.2...v3.23.3) (2020-05-13)
+
+
+### Bug Fixes
+
+* define types for Octokit, fix type of qs.parse() ([bf2d3e6](https://github.com/dxheroes/dx-scanner/commit/bf2d3e61a521da40802fc062c12e0047db339368))
+* **deps:** update all non-major dependencies ([3eec294](https://github.com/dxheroes/dx-scanner/commit/3eec2943f08da0eaa8db2369b7c704679bc9abff))
+
 ## [3.23.2](https://github.com/dxheroes/dx-scanner/compare/v3.23.1...v3.23.2) (2020-05-12)
 
 
