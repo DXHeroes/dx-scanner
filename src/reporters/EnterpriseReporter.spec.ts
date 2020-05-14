@@ -13,7 +13,7 @@ describe('EnterpriseReporter', () => {
       const result = new EnterpriseReporter(argumentsProviderFactory()).buildReport([practicingHighImpactPracticeWithCtx]);
 
       await expect(result.componentsWithDxScore).toContainObject({
-        dxScoreResult: { points: { total: 100, max: 100, percentage: 100 }, value: '100% | 1/1' },
+        dxScore: { points: { total: 100, max: 100, percentage: 100 }, value: '100% | 1/1' },
       });
       expect(result.id).toBeDefined;
       expect(result.version).toBeDefined;
@@ -26,7 +26,7 @@ describe('EnterpriseReporter', () => {
       ]);
 
       await expect(result.componentsWithDxScore).toContainObject({
-        dxScoreResult: {
+        dxScore: {
           value: '50% | 1/2',
           points: {
             total: 100,
@@ -35,7 +35,7 @@ describe('EnterpriseReporter', () => {
           },
         },
       });
-      expect(result.dxScoreResult).toMatchObject({
+      expect(result.dxScore).toMatchObject({
         value: '50% | 1/2',
         points: {
           total: 100,
@@ -51,7 +51,7 @@ describe('EnterpriseReporter', () => {
       const result = new EnterpriseReporter(argumentsProviderFactory()).buildReport([notPracticingHighImpactPracticeWithCtx]);
 
       await expect(result.componentsWithDxScore).toContainObject({
-        dxScoreResult: {
+        dxScore: {
           value: '0% | 0/1',
           points: {
             total: 0,

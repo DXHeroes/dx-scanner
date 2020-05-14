@@ -39,7 +39,7 @@ export class EnterpriseReporter implements IReporter {
       componentsWithDxScore: [],
       version: pjson.version,
       id: uuid.v4(),
-      dxScoreResult: { value: dxScore.value, points: dxScore.points },
+      dxScore: { value: dxScore.value, points: dxScore.points },
     };
 
     for (const cwp of componentsWithPractices) {
@@ -48,7 +48,7 @@ export class EnterpriseReporter implements IReporter {
 
       const componentWithScore: ComponentWithDxScore = {
         component: cwp.component,
-        dxScoreResult: { value: dxScoreForComponent, points: dxScorePoints },
+        dxScore: { value: dxScoreForComponent, points: dxScorePoints },
       };
 
       report.componentsWithDxScore.push(componentWithScore);
@@ -62,10 +62,10 @@ export type JSONReportDxScore = {
   componentsWithDxScore: ComponentWithDxScore[];
   version: string;
   id: string;
-  dxScoreResult: Pick<DXScoreResult, 'value' | 'points'>;
+  dxScore: Pick<DXScoreResult, 'value' | 'points'>;
 };
 
 export interface ComponentWithDxScore {
   component: ProjectComponent;
-  dxScoreResult: Pick<DXScoreResult, 'value' | 'points'>;
+  dxScore: Pick<DXScoreResult, 'value' | 'points'>;
 }
