@@ -11,38 +11,57 @@ describe('EnterpriseReporter', () => {
   describe('#report', () => {
     it('one practicing practice', async () => {
       const result = new EnterpriseReporter(argumentsProviderFactory()).buildReport([practicingHighImpactPracticeWithCtx]);
-      const componentWithDxScoreReport = result.componentsWithDxScore[0];
 
       await expect(result.componentsWithDxScore).toContainObject({
-        dxScore: '100% | 1/1',
-        id: componentWithDxScoreReport.id,
-        version: componentWithDxScoreReport.version,
+        dxScoreResult: { points: { total: 100, max: 100, percentage: 100 }, value: '100% | 1/1' },
       });
+      expect(result.id).toBeDefined;
+      expect(result.version).toBeDefined;
     });
 
-    it('one practicing practice and one not practicing', async () => {
+    it('one practicing practice and one not practicing in two components', async () => {
       const result = new EnterpriseReporter(argumentsProviderFactory()).buildReport([
         practicingHighImpactPracticeWithCtx,
         notPracticingHighImpactPracticeWithCtx,
       ]);
-      const componentWithDxScoreReport = result.componentsWithDxScore[0];
 
       await expect(result.componentsWithDxScore).toContainObject({
-        dxScore: '50% | 1/2',
-        id: componentWithDxScoreReport.id,
-        version: componentWithDxScoreReport.version,
+        dxScoreResult: {
+          value: '50% | 1/2',
+          points: {
+            total: 100,
+            max: 200,
+            percentage: 50,
+          },
+        },
       });
+      expect(result.dxScoreResult).toMatchObject({
+        value: '50% | 1/2',
+        points: {
+          total: 100,
+          max: 200,
+          percentage: 50,
+        },
+      });
+      expect(result.id).toBeDefined;
+      expect(result.version).toBeDefined;
     });
 
     it('one not practicing practice', async () => {
       const result = new EnterpriseReporter(argumentsProviderFactory()).buildReport([notPracticingHighImpactPracticeWithCtx]);
-      const componentWithDxScoreReport = result.componentsWithDxScore[0];
 
       await expect(result.componentsWithDxScore).toContainObject({
-        dxScore: '0% | 0/1',
-        id: componentWithDxScoreReport.id,
-        version: componentWithDxScoreReport.version,
+        dxScoreResult: {
+          value: '0% | 0/1',
+          points: {
+            total: 0,
+            max: 100,
+            percentage: 0,
+          },
+        },
       });
+      expect(result.id).toBeDefined;
+      expect(result.version).toBeDefined;
     });
   });
 
