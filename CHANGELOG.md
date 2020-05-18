@@ -1,3 +1,12 @@
+## [3.23.4](https://github.com/dxheroes/dx-scanner/compare/v3.23.3...v3.23.4) (2020-05-18)
+
+
+### Bug Fixes
+
+* **deps:** update dependency npm-check-updates to v6 ([efae05f](https://github.com/dxheroes/dx-scanner/commit/efae05f6cc009a4102fd154ae0ecf28263d8e634))
+* **deps:** update dependency tslib to v2 ([19b76ce](https://github.com/dxheroes/dx-scanner/commit/19b76ce127bafd218f09289c2514293c9287292f))
+* data report ([9594d24](https://github.com/dxheroes/dx-scanner/commit/9594d2472da2a75f9bd7410f141fd727a1e1b309))
+
 ## [3.23.3](https://github.com/dxheroes/dx-scanner/compare/v3.23.2...v3.23.3) (2020-05-13)
 
 
