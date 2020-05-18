@@ -1,5 +1,5 @@
 import { inject, injectable } from 'inversify';
-import { ReporterUtils } from '.';
+import { ReporterUtils, DXScoreResult } from '.';
 import { ArgumentsProvider } from '../scanner';
 import { Types } from '../types';
 import { PracticeWithContextForReporter, IReporter } from './IReporter';
@@ -34,15 +34,21 @@ export class EnterpriseReporter implements IReporter {
     const componentsWithPractices = ReporterUtils.getComponentsWithPractices(practicesAndComponents);
 
     const dxScore = ReporterUtils.computeDXScore(practicesAndComponents);
-    const report: JSONReportDxScore = { componentsWithDxScore: [] };
+
+    const report: JSONReportDxScore = {
+      componentsWithDxScore: [],
+      version: pjson.version,
+      id: uuid.v4(),
+      dxScore: { value: dxScore.value, points: dxScore.points },
+    };
 
     for (const cwp of componentsWithPractices) {
       const dxScoreForComponent = dxScore.components.find((c) => c.path === cwp.component.path)!.value;
+      const dxScorePoints = dxScore.components.find((c) => c.path === cwp.component.path)!.points;
+
       const componentWithScore: ComponentWithDxScore = {
         component: cwp.component,
-        dxScore: dxScoreForComponent,
-        version: pjson.version,
-        id: uuid.v4(),
+        dxScore: { value: dxScoreForComponent, points: dxScorePoints },
       };
 
       report.componentsWithDxScore.push(componentWithScore);
@@ -54,11 +60,12 @@ export class EnterpriseReporter implements IReporter {
 
 export type JSONReportDxScore = {
   componentsWithDxScore: ComponentWithDxScore[];
+  version: string;
+  id: string;
+  dxScore: Pick<DXScoreResult, 'value' | 'points'>;
 };
 
 export interface ComponentWithDxScore {
   component: ProjectComponent;
-  dxScore: string;
-  version: string;
-  id: string;
+  dxScore: Pick<DXScoreResult, 'value' | 'points'>;
 }
