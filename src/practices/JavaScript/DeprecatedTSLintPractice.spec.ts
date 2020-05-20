@@ -1,7 +1,7 @@
-import { DeprecatedTSLintPractice } from './DeprecatedTSLintPractice';
-import { PracticeEvaluationResult } from '../../model';
-import { TestContainerContext, createTestContainer } from '../../inversify.config';
 import { IPackageInspector } from '../../inspectors/IPackageInspector';
+import { createTestContainer, TestContainerContext } from '../../inversify.config';
+import { PracticeEvaluationResult } from '../../model';
+import { DeprecatedTSLintPractice } from './DeprecatedTSLintPractice';
 
 describe('DeprecatedTSLintPractice', () => {
   let practice: DeprecatedTSLintPractice;
