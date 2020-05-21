@@ -7,7 +7,7 @@ fi
 
 echo "Run DX Scanner"
 
-if [[ $1 == "dx-scanner"* || $1 == "dxs"* || $1 == "dxscanner"* ]]; then
+if [[ $1 != "${1#dx-scanner}" || $1 != "${1#dxs}" || $1 != "${1#dxscanner}" ]]; then
   echo $@
   exec "$@"
 else
