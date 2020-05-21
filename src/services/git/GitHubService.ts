@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/camelcase */
-import { Octokit } from '@octokit/rest';
+import { Octokit, RestEndpointMethodTypes } from '@octokit/rest';
 import Debug from 'debug';
 import { inject, injectable } from 'inversify';
 import { inspect, isArray } from 'util';
@@ -34,7 +34,14 @@ import { ArgumentsProvider } from '../../scanner';
 import { IssueState } from '../../inspectors/IIssueTrackingInspector';
 import { RepositoryConfig } from '../../scanner/RepositoryConfig';
 import type { OctokitResponse } from '@octokit/types';
-import { PullsListParams, IssuesListForRepoParams, IssuesListCommentsParams, PullsListCommitsParams } from './OctokitTypes';
+import {
+  PullsListParams,
+  IssuesListForRepoParams,
+  IssuesListCommentsParams,
+  PullsListCommitsParams,
+  GetContentsResponse,
+  GetReposResponse,
+} from './OctokitTypes';
 const debug = Debug('cli:services:git:github-service');
 
 @injectable()
@@ -65,7 +72,7 @@ export class GitHubService implements IVCSService {
    * 'parent' is the repository this repository was forked from.
    * 'source' is the ultimate source for the network.
    */
-  getRepo(owner: string, repo: string) {
+  getRepo(owner: string, repo: string): Promise<GetReposResponse> {
     return this.unwrap(this.client.repos.get({ owner, repo }));
   }
 
@@ -326,8 +333,9 @@ export class GitHubService implements IVCSService {
 
     return this.cache.getOrSet(key, async () => {
       let response;
+
       try {
-        response = await this.unwrap(this.client.repos.getContents({ owner, repo, path }));
+        response = <GetContentsResponse>await this.unwrap(this.client.repos.getContents({ owner, repo, path }));
       } catch (e) {
         if (e.name !== 'HttpError' || e.status !== 404) {
           throw e;

@@ -1,6 +1,7 @@
 import { Container } from 'inversify';
 import { DirectoryJSON } from 'memfs/lib/volume';
 import { bindDiscoveryContext } from './contexts/discovery/discoveryContextBinding';
+import { FixerContext } from './contexts/fixer/FixerContext';
 import { PracticeContext } from './contexts/practice/PracticeContext';
 import { ScanningStrategyDetector } from './detectors';
 import { packageJSONContents } from './detectors/__MOCKS__/JavaScript/packageJSONContents.mock';
@@ -18,13 +19,12 @@ import { ProgrammingLanguage, ProjectComponent, ProjectComponentFramework, Proje
 import { practices } from './practices';
 import { IPracticeWithMetadata } from './practices/DxPracticeDecorator';
 import { ArgumentsProvider, Scanner, ScannerUtils } from './scanner';
+import { RepositoryConfig } from './scanner/RepositoryConfig';
 import { ScanningStrategyExplorer } from './scanner/ScanningStrategyExplorer';
-import { FileSystemService, GitHubService, BitbucketService } from './services';
+import { BitbucketService, FileSystemService, GitHubService } from './services';
+import { GitLabService } from './services/gitlab/GitLabService';
 import { argumentsProviderFactory } from './test/factories/ArgumentsProviderFactory';
 import { Types } from './types';
-import { RepositoryConfig } from './scanner/RepositoryConfig';
-import { GitLabService } from './services/gitlab/GitLabService';
-import { FixerContext } from './contexts/fixer/FixerContext';
 
 export const createRootContainer = (args: ArgumentsProvider): Container => {
   const container = new Container();

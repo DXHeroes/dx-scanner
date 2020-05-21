@@ -1,12 +1,12 @@
+import * as axios from 'axios';
 import { PracticeContext } from '../../contexts/practice/PracticeContext';
 import { Package } from '../../inspectors/IPackageInspector';
 import { SemverLevel } from '../../inspectors/package/PackageInspectorBase';
 import { PracticeEvaluationResult, PracticeImpact, ProgrammingLanguage } from '../../model';
-import { DxPractice } from '../DxPracticeDecorator';
-import * as axios from 'axios';
-import { DependenciesVersionEvaluationUtils, PkgToUpdate } from '../utils/DependenciesVersionEvaluationUtils';
-import { PracticeBase } from '../PracticeBase';
 import { ReportDetailType } from '../../reporters/ReporterData';
+import { DxPractice } from '../DxPracticeDecorator';
+import { PracticeBase } from '../PracticeBase';
+import { DependenciesVersionEvaluationUtils, PkgToUpdate } from '../utils/DependenciesVersionEvaluationUtils';
 import qs from 'qs';
 
 @DxPractice({
