@@ -1,3 +1,12 @@
+## [3.23.5](https://github.com/dxheroes/dx-scanner/compare/v3.23.4...v3.23.5) (2020-05-21)
+
+
+### Bug Fixes
+
+* OctokitTypes and lower the TS version because of breaking changes ([04d71b0](https://github.com/dxheroes/dx-scanner/commit/04d71b09ba092c33a5d779b2fcef29917ca3e6b1))
+* **deps:** update all non-major dependencies ([db9816e](https://github.com/dxheroes/dx-scanner/commit/db9816e3a4539e4e0d23eef4a55d8ee2207e29fa))
+* **docker:** fix entrypoint's "starts with" check ([176cdb4](https://github.com/dxheroes/dx-scanner/commit/176cdb4cfdc152d18280805eaff117d0b40cc26b))
+
 ## [3.23.4](https://github.com/dxheroes/dx-scanner/compare/v3.23.3...v3.23.4) (2020-05-18)
 
 
