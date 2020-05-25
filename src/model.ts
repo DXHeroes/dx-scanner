@@ -73,6 +73,7 @@ export type CLIArgs = {
   fix: boolean;
   fixPattern: string;
   html: string;
+  apiToken?: string;
 };
 
 // Old model starts here

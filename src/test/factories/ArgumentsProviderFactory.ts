@@ -15,6 +15,7 @@ export const argumentsProviderFactory = (params: Partial<ArgumentsProvider> = {}
       fix: false,
       fixPattern: undefined,
       html: false,
+      apiToken: undefined,
     },
     params,
   );

@@ -14,6 +14,7 @@ export default class Run {
 
     const { json, details, fail } = cmd;
     let { authorization } = cmd;
+    const { apiToken } = cmd;
 
     const hrstart = process.hrtime();
 
@@ -30,6 +31,7 @@ export default class Run {
       fix: cmd.fix,
       fixPattern: cmd.fixPattern,
       html: cmd.html,
+      apiToken,
     });
     const scanner = container.get(Scanner);
 
@@ -56,6 +58,7 @@ export default class Run {
         fix: cmd.fix,
         fixPattern: cmd.fixPattern,
         html: cmd.html,
+        apiToken,
       });
       const scanner = container.get(Scanner);
 

@@ -11,4 +11,5 @@ export type ArgumentsProvider = {
   fix: boolean;
   fixPattern: string | undefined;
   html: string | boolean;
+  apiToken: string | undefined;
 };
