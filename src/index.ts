@@ -38,6 +38,11 @@ class DXScannerCommand {
         'credentials to the repository (in format "token" or "username:token"; can be set as ENV variable DXSCANNER_GIT_SERVICE_TOKEN)',
         process.env.DXSCANNER_GIT_SERVICE_TOKEN || process.env.GITHUB_TOKEN,
       )
+      .option(
+        '-t --apiToken <apiToken>',
+        'credentials to DX Scanner, can be set as ENV variable DXSCANNER_API_TOKEN',
+        process.env.DXSCANNER_API_TOKEN,
+      )
       .option('--ci', 'CI mode', process.env.CI === 'true')
       .option('-d --details', 'print details in reports')
       .option(
@@ -63,10 +68,7 @@ class DXScannerCommand {
       });
 
     // cmd: init
-    cmder
-      .command('init')
-      .description('Initialize DX Scanner configuration')
-      .action(Init.run);
+    cmder.command('init').description('Initialize DX Scanner configuration').action(Init.run);
 
     // cmd: practices
     cmder
@@ -82,13 +84,7 @@ class DXScannerCommand {
 
   private static validateFailInput = (value: string | undefined) => {
     if (value && !_.includes(PracticeImpact, value)) {
-      console.error(
-        'Invalid value for --fail: %s\nValid values are: %s\n',
-        value,
-        Object.keys(PracticeImpact)
-          .concat('all')
-          .join(', '),
-      );
+      console.error('Invalid value for --fail: %s\nValid values are: %s\n', value, Object.keys(PracticeImpact).concat('all').join(', '));
       process.exit(1);
     }
 

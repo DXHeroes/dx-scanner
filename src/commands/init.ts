@@ -18,6 +18,7 @@ export default class Init {
       fix: false,
       fixPattern: undefined,
       html: false,
+      apiToken: undefined,
     });
     const scanner = container.get(Scanner);
 
