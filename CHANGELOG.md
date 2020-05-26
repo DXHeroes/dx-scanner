@@ -1,3 +1,10 @@
+# [3.24.0](https://github.com/dxheroes/dx-scanner/compare/v3.23.5...v3.24.0) (2020-05-26)
+
+
+### Features
+
+* allow user to pass apiToken in CLI or env variables ([c9a4417](https://github.com/dxheroes/dx-scanner/commit/c9a4417923db512b420017620da4538a9d0c21ef))
+
 ## [3.23.5](https://github.com/dxheroes/dx-scanner/compare/v3.23.4...v3.23.5) (2020-05-21)
 
 
