@@ -93,7 +93,6 @@ export class Scanner {
       await this.fix(practicesWithContext);
       practicesAfterFix = await this.detectPractices(projectComponents);
     }
-
     await this.report(scannerContext.reporters, practicesWithContext, practicesAfterFix);
     this.d(
       `Overall scan stats. LanguagesAtPaths: ${inspect(languagesAtPaths.length)}; Components: ${inspect(
