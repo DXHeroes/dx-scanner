@@ -3,7 +3,7 @@ import { JavaDependenciesVersionMajorLevel } from './JavaDependenciesVersionMajo
 import { createTestContainer, TestContainerContext } from '../../inversify.config';
 import { mockPackage } from '../../test/helpers/mockPackage';
 import { JavaPackageInspector } from '../../inspectors';
-import * as axios from 'axios';
+import axios from 'axios';
 jest.mock('axios');
 
 describe('JavaDependenciesVersionPractice of Major Level', () => {
@@ -11,7 +11,7 @@ describe('JavaDependenciesVersionPractice of Major Level', () => {
   let containerCtx: TestContainerContext;
   const MockedJavaPackageInspector = <jest.Mock<JavaPackageInspector>>(<unknown>JavaPackageInspector);
   let mockJavaPackageInspector: JavaPackageInspector;
-  const mockedAxios = <jest.Mock>axios.default.get;
+  const mockedAxios = <jest.Mock>axios.get;
 
   beforeAll(async () => {
     containerCtx = createTestContainer();
