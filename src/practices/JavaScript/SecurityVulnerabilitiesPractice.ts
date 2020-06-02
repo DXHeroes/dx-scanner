@@ -10,7 +10,7 @@ import { PackageManagerType, PackageManagerUtils } from '../utils/PackageManager
 
 interface NpmAuditOutput {
   actions: { action: string; module: string; target?: string }[];
-  error?: object;
+  error?: Record<string, unknown>;
 }
 
 interface YarnAuditOutput {

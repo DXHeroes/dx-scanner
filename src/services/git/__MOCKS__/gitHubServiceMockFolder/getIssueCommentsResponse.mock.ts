@@ -1,6 +1,5 @@
 import { UserItem } from '../../../../test/helpers/gitHubNock';
 
-/* eslint-disable @typescript-eslint/camelcase */
 export const getIssueCommentsResponse = [
   {
     url: 'https://api.github.com/repos/octocat/Hello-World/issues/comments/1340258',

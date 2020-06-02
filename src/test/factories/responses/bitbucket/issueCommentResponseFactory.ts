@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/camelcase */
 import _ from 'lodash';
 import Bitbucket from 'bitbucket';
 

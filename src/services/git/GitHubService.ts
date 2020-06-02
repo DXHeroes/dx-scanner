@@ -1,21 +1,25 @@
-/* eslint-disable @typescript-eslint/camelcase */
-import { Octokit, RestEndpointMethodTypes } from '@octokit/rest';
+import { Octokit } from '@octokit/rest';
+import type { OctokitResponse } from '@octokit/types';
 import Debug from 'debug';
 import { inject, injectable } from 'inversify';
 import { inspect, isArray } from 'util';
 import { ListGetterOptions } from '../../inspectors/common/ListGetterOptions';
 import { Paginated } from '../../inspectors/common/Paginated';
 import { PullRequestState } from '../../inspectors/ICollaborationInspector';
+import { IssueState } from '../../inspectors/IIssueTrackingInspector';
 import { delay } from '../../lib/delay';
 import { ErrorFactory } from '../../lib/errors';
+import { ArgumentsProvider } from '../../scanner';
 import { ICache } from '../../scanner/cache/ICache';
 import { InMemoryCache } from '../../scanner/cache/InMemoryCache';
+import { RepositoryConfig } from '../../scanner/RepositoryConfig';
 import { Types } from '../../types';
 import { IVCSService } from './IVCSService';
 import {
   Commit,
   Contributor,
   ContributorStats,
+  CreatedUpdatedPullRequestComment,
   Directory,
   File,
   Issue,
@@ -23,25 +27,20 @@ import {
   PullCommits,
   PullFiles,
   PullRequest,
+  PullRequestComment,
   PullRequestReview,
   RepoContentType,
   Symlink,
-  PullRequestComment,
-  CreatedUpdatedPullRequestComment,
 } from './model';
-import { VCSServicesUtils } from './VCSServicesUtils';
-import { ArgumentsProvider } from '../../scanner';
-import { IssueState } from '../../inspectors/IIssueTrackingInspector';
-import { RepositoryConfig } from '../../scanner/RepositoryConfig';
-import type { OctokitResponse } from '@octokit/types';
 import {
-  PullsListParams,
-  IssuesListForRepoParams,
-  IssuesListCommentsParams,
-  PullsListCommitsParams,
   GetContentsResponse,
   GetReposResponse,
+  IssuesListCommentsParams,
+  IssuesListForRepoParams,
+  PullsListCommitsParams,
+  PullsListParams,
 } from './OctokitTypes';
+import { VCSServicesUtils } from './VCSServicesUtils';
 const debug = Debug('cli:services:git:github-service');
 
 @injectable()
@@ -137,7 +136,6 @@ export class GitHubService implements IVCSService {
    * Get a single pull request.
    */
   async getPullRequest(owner: string, repo: string, prNumber: number, withDiffStat?: boolean): Promise<PullRequest> {
-    // eslint-disable-next-line @typescript-eslint/camelcase
     const response = await this.unwrap(this.client.pulls.get({ owner, repo, pull_number: prNumber }));
     const pullRequest = {
       user: {
@@ -239,7 +237,6 @@ export class GitHubService implements IVCSService {
    * Get the Commit of the given commit_sha in the repo.
    */
   async getCommit(owner: string, repo: string, commitSha: string): Promise<Commit> {
-    // eslint-disable-next-line @typescript-eslint/camelcase
     const response = await this.unwrap(this.client.git.getCommit({ owner, repo, commit_sha: commitSha }));
 
     return {
@@ -413,7 +410,6 @@ export class GitHubService implements IVCSService {
    * Get a single issue in the repo.
    */
   async getIssue(owner: string, repo: string, issueNumber: number): Promise<Issue> {
-    // eslint-disable-next-line @typescript-eslint/camelcase
     const response = await this.unwrap(this.client.issues.get({ owner, repo, issue_number: issueNumber }));
 
     return {
@@ -590,7 +586,6 @@ export class GitHubService implements IVCSService {
    * Add additions, deletions and changes of pull request when the getPullRequests() is called with withDiffStat = true
    */
   async getPullsDiffStat(owner: string, repo: string, prNumber: number) {
-    // eslint-disable-next-line @typescript-eslint/camelcase
     const response = await this.unwrap(this.client.pulls.get({ owner, repo, pull_number: prNumber }));
 
     return {

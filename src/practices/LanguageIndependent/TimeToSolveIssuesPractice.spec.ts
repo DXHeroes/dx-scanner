@@ -33,9 +33,7 @@ describe('TimeToSolveIssuesPractice', () => {
       return getIssuesResponse([
         getIssueResponse({
           state: BitbucketPullRequestState.open,
-          updatedAt: moment()
-            .subtract(7, 'd')
-            .format('YYYY-MM-DDTHH:mm:ss.SSSSSSZ'),
+          updatedAt: moment().subtract(7, 'd').format('YYYY-MM-DDTHH:mm:ss.SSSSSSZ'),
         }),
       ]);
     };
@@ -53,9 +51,7 @@ describe('TimeToSolveIssuesPractice', () => {
       return getIssuesResponse([
         getIssueResponse({
           state: 'new',
-          updatedAt: moment()
-            .subtract(61, 'd')
-            .format('YYYY-MM-DDTHH:mm:ss.SSSSSSZ'),
+          updatedAt: moment().subtract(61, 'd').format('YYYY-MM-DDTHH:mm:ss.SSSSSSZ'),
         }),
       ]);
     };

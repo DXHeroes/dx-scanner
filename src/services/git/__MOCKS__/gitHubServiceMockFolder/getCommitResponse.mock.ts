@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/camelcase */
 export const getCommitResponse = {
   sha: '762941318ee16e59dabbacb1b4049eec22f0d303',
   node_id: 'MDY6Q29tbWl0MTI5NjI2OTo3NjI5NDEzMThlZTE2ZTU5ZGFiYmFjYjFiNDA0OWVlYzIyZjBkMzAz',

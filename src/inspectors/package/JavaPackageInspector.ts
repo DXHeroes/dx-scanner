@@ -117,13 +117,13 @@ export interface PomXML {
       'xsi:schemaLocation': string;
     };
     modelVersion: string;
-    parent: {};
+    parent: Record<string, unknown>;
     groupId: string;
     artifactId: string;
     version: string;
     name: string;
     description: string;
-    properties: {};
+    properties: Record<string, unknown>;
     dependencies: [
       {
         dependency: [

@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/camelcase */
 import _ from 'lodash';
 import { IssueComment } from '../../../../services/gitlab/gitlabClient/resources/Issues';
 

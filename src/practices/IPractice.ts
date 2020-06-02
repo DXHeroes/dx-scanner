@@ -3,6 +3,7 @@ import { PracticeContext } from '../contexts/practice/PracticeContext';
 import { ReportTable, ReportText } from '../reporters/ReporterData';
 import { FixerContext } from '../contexts/fixer/FixerContext';
 
+// eslint-disable-next-line @typescript-eslint/ban-types
 export interface IPractice<T extends {} = {}> {
   data?: Partial<T> & PracticeData;
 

@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/camelcase */
 import nock from 'nock';
 import * as nodePath from 'path';
 

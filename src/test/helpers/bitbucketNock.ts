@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/camelcase */
 import nock from 'nock';
 import { ListGetterOptions } from '../../inspectors';
 import { bitbucketListIssueCommentsResponseFactory } from '../factories/responses/bitbucket/listIssueCommentsResponseFactory';

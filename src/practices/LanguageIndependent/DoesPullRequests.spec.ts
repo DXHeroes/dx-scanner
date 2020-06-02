@@ -55,7 +55,6 @@ describe('DoesPullRequests', () => {
           body: '',
           head: 'new-topic',
           base: 'master',
-          // eslint-disable-next-line @typescript-eslint/camelcase
           created_at: '2000-03-06T23:06:50Z',
         },
       ],
