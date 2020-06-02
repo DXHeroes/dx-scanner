@@ -14,7 +14,7 @@ import { GitLabService } from '../../services/gitlab/GitLabService';
 import { PythonLanguageDetector } from '../../detectors/Python/PythonLanguageDetector';
 import { ArgumentsProvider } from '../../scanner';
 import { IReporter, FixReporter, JSONReporter, CLIReporter, CIReporter, HTMLReporter, EnterpriseReporter } from '../../reporters';
-import { ServiceType } from '../../detectors/IScanningStrategy';
+import { ServiceType, AccessType } from '../../detectors/IScanningStrategy';
 
 export const bindScanningContext = (container: Container) => {
   container.bind(Types.ScannerContextFactory).toFactory(
@@ -34,7 +34,8 @@ const createScanningContainer = (scanningStrategy: ScanningStrategy, discoveryCo
   bindLanguageDetectors(container);
   bindLanguageContext(container);
   bindFileAccess(scanningStrategy, container);
-  bindReporters(container, args);
+
+  bindReporters(container, args, scanningStrategy.accessType);
   container.bind(ScannerContext).toSelf();
   return container;
 };
@@ -57,13 +58,10 @@ const bindFileAccess = (scanningStrategy: ScanningStrategy, container: Container
   if (scanningStrategy.serviceType === ServiceType.gitlab) {
     container.bind(Types.IContentRepositoryBrowser).to(GitLabService);
   }
-  container
-    .bind(Types.IFileInspector)
-    .to(FileInspector)
-    .inSingletonScope();
+  container.bind(Types.IFileInspector).to(FileInspector).inSingletonScope();
 };
 
-const bindReporters = (container: Container, args: ArgumentsProvider) => {
+const bindReporters = (container: Container, args: ArgumentsProvider, accessType: AccessType | undefined) => {
   if (args.json) {
     container.bind<IReporter>(Types.IReporter).to(JSONReporter);
   } else if (args.html) {
@@ -77,7 +75,10 @@ const bindReporters = (container: Container, args: ArgumentsProvider) => {
   if (args.ci) {
     container.bind<IReporter>(Types.IReporter).to(CIReporter);
   }
-  container.bind<IReporter>(Types.IReporter).to(EnterpriseReporter);
+
+  if (accessType !== AccessType.private || (accessType === AccessType.private && args.apiToken)) {
+    container.bind<IReporter>(Types.IReporter).to(EnterpriseReporter);
+  }
 };
 
 const bindLanguageDetectors = (container: Container) => {
