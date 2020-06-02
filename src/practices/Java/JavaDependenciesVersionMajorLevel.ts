@@ -1,4 +1,5 @@
-import * as axios from 'axios';
+import axios from 'axios';
+import qs from 'qs';
 import { PracticeContext } from '../../contexts/practice/PracticeContext';
 import { Package } from '../../inspectors/IPackageInspector';
 import { SemverLevel } from '../../inspectors/package/PackageInspectorBase';
@@ -7,7 +8,6 @@ import { ReportDetailType } from '../../reporters/ReporterData';
 import { DxPractice } from '../DxPracticeDecorator';
 import { PracticeBase } from '../PracticeBase';
 import { DependenciesVersionEvaluationUtils, PkgToUpdate } from '../utils/DependenciesVersionEvaluationUtils';
-import qs from 'qs';
 
 @DxPractice({
   id: 'Java.DependenciesVersionMajorLevel',
@@ -46,7 +46,8 @@ export class JavaDependenciesVersionMajorLevel extends PracticeBase {
         const listOfIds = p.name.split(':', 2);
         const queryRequest = qs.stringify({ q: `${listOfIds[0]}+AND+a:${listOfIds[1]}`, rows, wt: 'json' }, { encode: false });
         const listVersionsEndpoint = `${URL}${queryRequest}`;
-        await axios.default.get(listVersionsEndpoint).then((response) => {
+
+        await axios.get(listVersionsEndpoint).then((response) => {
           latestVersionsJson[p.name] = `${response.data.response.docs.pop().latestVersion}`;
         });
       }
