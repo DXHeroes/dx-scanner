@@ -23,7 +23,7 @@ export class EnterpriseReporter implements IReporter {
     try {
       // send data
       await axios.post('https://provider.dxscanner.io/api/v1/data-report', reportData, {
-        headers: { apiToken: this.argumentsProvider.apiToken },
+        headers: { Authorization: this.argumentsProvider.apiToken },
       });
       // TODO: enable logs later, when account is available
       // console.log('You can see DX data in your DX account now.\n');
