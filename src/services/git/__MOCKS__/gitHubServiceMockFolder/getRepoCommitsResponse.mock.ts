@@ -1,6 +1,5 @@
 import { UserItem } from '../../../../test/helpers/gitHubNock';
 
-/* eslint-disable @typescript-eslint/camelcase */
 export const getRepoCommitsResponse = [
   {
     sha: '7fd1a60b01f91b314f59955a4e4d4e80d8edf11d',

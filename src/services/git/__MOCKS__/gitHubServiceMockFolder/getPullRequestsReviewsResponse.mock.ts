@@ -1,6 +1,5 @@
 import { UserItem } from '../../../../test/helpers/gitHubNock';
 
-/* eslint-disable @typescript-eslint/camelcase */
 export const getPullRequestsReviewsResponse = [
   {
     id: 41231978,

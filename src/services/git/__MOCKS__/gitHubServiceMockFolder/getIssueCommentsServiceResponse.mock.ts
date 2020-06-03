@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/camelcase */
 export const getIssueCommentsServiceResponse = {
   hasNextPage: false,
   hasPreviousPage: false,

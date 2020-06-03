@@ -44,9 +44,7 @@ describe('ThinPullRequestsPractice', () => {
     mockCollaborationInspector.listPullRequests = async () => {
       return getPullRequestsResponse([
         getPullRequestResponse({
-          updatedAt: moment()
-            .subtract(7, 'd')
-            .format('YYYY-MM-DDTHH:mm:ss.SSSSSSZ'),
+          updatedAt: moment().subtract(7, 'd').format('YYYY-MM-DDTHH:mm:ss.SSSSSSZ'),
           lines: {
             additions: 1000,
             deletions: 500,
@@ -67,9 +65,7 @@ describe('ThinPullRequestsPractice', () => {
     mockCollaborationInspector.listPullRequests = async () => {
       return getPullRequestsResponse([
         getPullRequestResponse({
-          updatedAt: moment()
-            .subtract(3, 'd')
-            .format('YYYY-MM-DDTHH:mm:ss.SSSSSSZ'),
+          updatedAt: moment().subtract(3, 'd').format('YYYY-MM-DDTHH:mm:ss.SSSSSSZ'),
           lines: {
             additions: 1000,
             deletions: 500,
@@ -92,9 +88,7 @@ describe('ThinPullRequestsPractice', () => {
     mockCollaborationInspector.listPullRequests = async () => {
       return getPullRequestsResponse([
         getPullRequestResponse({
-          updatedAt: moment()
-            .subtract(2, 'd')
-            .format('YYYY-MM-DDTHH:mm:ss.SSSSSSZ'),
+          updatedAt: moment().subtract(2, 'd').format('YYYY-MM-DDTHH:mm:ss.SSSSSSZ'),
           lines: {
             additions: 20,
             deletions: 5,

@@ -44,10 +44,7 @@ const createLanguageContainer = (languageAtPath: LanguageAtPath, rootContainer: 
 const bindFileAccess = (languageAtPath: LanguageAtPath, container: Container) => {
   container.bind(Types.FileInspectorBasePath).toConstantValue(languageAtPath.path);
 
-  container
-    .bind(Types.IFileInspector)
-    .to(FileInspector)
-    .inSingletonScope();
+  container.bind(Types.IFileInspector).to(FileInspector).inSingletonScope();
 };
 
 const bindPackageInspectors = (languageAtPath: LanguageAtPath, container: Container) => {
@@ -78,22 +75,13 @@ const bindComponentDetectors = (container: Container) => {
 };
 
 const bindCollaborationInspectors = (container: Container) => {
-  container
-    .bind(Types.ICollaborationInspector)
-    .to(CollaborationInspector)
-    .inSingletonScope();
-  container
-    .bind(Types.IIssueTrackingInspector)
-    .to(IssueTrackingInspector)
-    .inSingletonScope();
+  container.bind(Types.ICollaborationInspector).to(CollaborationInspector).inSingletonScope();
+  container.bind(Types.IIssueTrackingInspector).to(IssueTrackingInspector).inSingletonScope();
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const resolveBindingPackageInspector = (packageInspector: { new (...args: any[]): PackageInspectorBase }, container: Container) => {
-  container
-    .bind(Types.IPackageInspector)
-    .to(packageInspector)
-    .inSingletonScope();
+  container.bind(Types.IPackageInspector).to(packageInspector).inSingletonScope();
   // TODO: bind this as InitiableInspector instead of using next line binding
   container.bind(packageInspector).toDynamicValue((ctx) => {
     return ctx.container.get(Types.IPackageInspector);
@@ -103,7 +91,7 @@ const resolveBindingPackageInspector = (packageInspector: { new (...args: any[])
   });
 };
 
-const componentGenerator = function*(): Generator<{
+const componentGenerator = function* (): Generator<{
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   componentDetector: { new (...args: any[]): IProjectComponentDetector };
   detectedLanguage: ProgrammingLanguage;

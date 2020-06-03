@@ -1,19 +1,16 @@
-/* eslint-disable @typescript-eslint/camelcase */
 import nock from 'nock';
 import { ListGetterOptions } from '../../inspectors';
 import { Issue } from '../../services/gitlab/gitlabClient/resources/Issues';
 import { Commit, MergeRequest } from '../../services/gitlab/gitlabClient/resources/MergeRequests';
+import { Project } from '../../services/gitlab/gitlabClient/resources/Projects';
 import { GitLabIssueState, GitLabPullRequestState } from '../../services/gitlab/IGitLabService';
 import { gitLabIssueCommentsResponseFactory } from '../factories/responses/gitLab/issueCommentsResponseFactory';
+import { gitLabListGroupsResponseFactory } from '../factories/responses/gitLab/listGroupsResponseFactors';
+import { gitLabListProjectsResponseFactory } from '../factories/responses/gitLab/listProjectsResponseFactory';
 import { gitLabListPullCommitsResponseFactory } from '../factories/responses/gitLab/listPullCommitsResponseFactory';
 import { gitLabPullRequestResponseFactory } from '../factories/responses/gitLab/prResponseFactory';
 import { gitLabRepoCommitsResponseFactory } from '../factories/responses/gitLab/repoCommitResponseFactory';
 import { gitLabRepoInfoResponseFactory } from '../factories/responses/gitLab/repoInfoResponseFactory';
-import { gitLabVersionResponseFactory } from '../factories/responses/gitLab/versionResponseFactory';
-import { gitLabListGroupsResponseFactory } from '../factories/responses/gitLab/listGroupsResponseFactors';
-import { gitLabListProjectsResponseFactory } from '../factories/responses/gitLab/listProjectsResponseFactory';
-import { VersionResponse } from '../../services/gitlab/gitlabClient/resources/Version';
-import { Project } from '../../services/gitlab/gitlabClient/resources/Projects';
 
 export class GitLabNock {
   user: string;

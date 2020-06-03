@@ -1,7 +1,6 @@
 import _ from 'lodash';
 import { Commit } from '../../../../services/gitlab/gitlabClient/resources/MergeRequests';
 
-/* eslint-disable @typescript-eslint/camelcase */
 export const gitLabCommitsResponseFactory = (params?: Partial<Commit>): Commit => {
   return _.merge(
     {

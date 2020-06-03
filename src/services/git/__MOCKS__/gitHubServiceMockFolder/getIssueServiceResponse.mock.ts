@@ -1,6 +1,5 @@
 import { Issue } from '../../model';
 
-/* eslint-disable @typescript-eslint/camelcase */
 export const getIssueServiceResponse: Issue = {
   url: 'https://api.github.com/repos/octocat/Hello-World/issues/1',
   id: 872858,

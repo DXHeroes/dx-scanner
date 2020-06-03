@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars, @typescript-eslint/camelcase */
 import { Bitbucket, APIClient, Schema, Params } from 'bitbucket';
 import { Response } from 'bitbucket/src/request/types';
 import { AuthBasic } from 'bitbucket/src/plugins/auth/types';

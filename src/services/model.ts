@@ -5,7 +5,7 @@ export type ProjectFilesBrowserServices = FileSystemService | Git;
 
 export interface IProjectFilesBrowserService {
   exists(path: string): Promise<boolean>;
-  readDirectory(path: string): Promise<object>;
+  readDirectory(path: string): Promise<string[]>;
   readFile(path: string): Promise<string>;
   isFile(path: string): Promise<boolean>;
   isDirectory(path: string): Promise<boolean>;

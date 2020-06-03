@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/camelcase */
 import _ from 'lodash';
 import { MergeRequest } from '../../../../services/gitlab/gitlabClient/resources/MergeRequests';
 

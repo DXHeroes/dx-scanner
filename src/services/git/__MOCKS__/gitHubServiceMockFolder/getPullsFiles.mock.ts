@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/camelcase */
 export const getPullsFilesResponse = [
   {
     sha: '719be62e9382eaed6b25ec98d8190e141ce329eb',

@@ -1,6 +1,5 @@
 import { UserItem } from '../../../../test/helpers/gitHubNock';
 
-/* eslint-disable @typescript-eslint/camelcase */
 export const getContributorsStatsResponse = [
   {
     total: 1,

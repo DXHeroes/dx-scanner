@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/camelcase */
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { AxiosResponse } from 'axios';
 import qs from 'qs';
 import { ListGetterOptions, PaginationParams } from '../../../../inspectors';

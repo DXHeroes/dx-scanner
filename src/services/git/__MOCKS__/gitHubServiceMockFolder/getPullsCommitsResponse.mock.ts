@@ -1,6 +1,5 @@
 import { UserItem } from '../../../../test/helpers/gitHubNock';
 
-/* eslint-disable @typescript-eslint/camelcase */
 export const getPullCommitsResponse = [
   {
     sha: '7044a8a032e85b6ab611033b2ac8af7ce85805b2',

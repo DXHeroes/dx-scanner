@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/camelcase */
 import { injectable, inject } from 'inversify';
 import { IIssueTrackingInspector, IssueState } from './IIssueTrackingInspector';
 import { Paginated } from './common/Paginated';
@@ -18,6 +17,7 @@ export class IssueTrackingInspector implements IIssueTrackingInspector {
     this.cache = new InMemoryCache();
   }
 
+  // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
   purgeCache() {
     this.cache.purge();
   }

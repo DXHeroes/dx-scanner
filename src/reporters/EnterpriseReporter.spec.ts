@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-namespace */
 import { PracticeEvaluationResult } from '../model';
 import { argumentsProviderFactory } from '../test/factories/ArgumentsProviderFactory';
 import { practiceWithContextFactory } from '../test/factories/PracticeWithContextFactory';
@@ -89,10 +88,11 @@ describe('EnterpriseReporter', () => {
 });
 
 declare global {
+  // eslint-disable-next-line @typescript-eslint/no-namespace
   namespace jest {
     interface Matchers<R> {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      toContainObject(object: Record<string, any>): Promise<object>;
+      toContainObject(object: Record<string, any>): Promise<Record<string, unknown>>;
     }
   }
 }

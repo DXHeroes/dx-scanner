@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/camelcase */
 import { GitHubService } from './GitHubService';
 import { GitHubNock } from '../../test/helpers/gitHubNock';
 import {

@@ -1,6 +1,5 @@
 import { UserItem } from '../../../../test/helpers/gitHubNock';
 
-/* eslint-disable @typescript-eslint/camelcase */
 export const getIssueResponse = {
   url: 'https://api.github.com/repos/octocat/Hello-World/issues/1',
   repository_url: 'https://api.github.com/repos/octocat/Hello-World',

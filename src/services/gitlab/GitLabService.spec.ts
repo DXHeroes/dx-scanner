@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/camelcase */
 import { PullRequestState } from '../../inspectors';
 import { argumentsProviderFactory } from '../../test/factories/ArgumentsProviderFactory';
 import { gitLabCommitsResponseFactory } from '../../test/factories/responses/gitLab/commitsFactory';
@@ -169,9 +168,7 @@ describe('GitLab Service', () => {
 
     service = new GitLabService(argumentsProviderFactory({ uri: 'https://git.example.cz/dxheroes/user/repo' }), repositoryConfig);
 
-    nock('https://git.example.cz')
-      .get('/api/v4/version')
-      .reply(401);
+    nock('https://git.example.cz').get('/api/v4/version').reply(401);
 
     try {
       await service.checkVersion();

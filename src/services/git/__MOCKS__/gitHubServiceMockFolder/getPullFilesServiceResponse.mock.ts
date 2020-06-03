@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/camelcase */
 export const getPullsFilesServiceResponse = {
   hasNextPage: false,
   hasPreviousPage: false,

@@ -1,7 +1,7 @@
 declare module 'yeoman-gen-run' {
   export function runGenerator(
     genName: string,
-    config: { answers?: object; options?: object; cli?: object },
+    config: { answers?: Record<string, unknown>; options?: Record<string, unknown>; cli?: Record<string, unknown> },
     outDir?: string,
   ): Promise<void>;
 }

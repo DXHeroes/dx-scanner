@@ -68,7 +68,7 @@ describe('DependenciesVersionPractice of Minor and Patch Level', () => {
   describe('Fixer', () => {
     it('Runs update of minor level change package', async () => {
       let updateOptions: NCUParams = {};
-      mockedNcu.mockImplementation((options: object) => {
+      mockedNcu.mockImplementation((options: Record<string, unknown>) => {
         updateOptions = options;
         return { 'ts-node': '^8', typescript: '^1.1.0' };
       });
@@ -84,7 +84,7 @@ describe('DependenciesVersionPractice of Minor and Patch Level', () => {
     });
     it('Updates both patch and minor versions', async () => {
       let updateOptions: NCUParams = {};
-      mockedNcu.mockImplementation((options: object) => {
+      mockedNcu.mockImplementation((options: Record<string, unknown>) => {
         updateOptions = options;
         return { dummy: '^1.0.1', typescript: '^1.1.0' };
       });

@@ -1,5 +1,4 @@
 // https://github.com/jdalrymple/gitbeaker/blob/master/src/core/infrastructure/Utils.ts
-/* eslint @typescript-eslint/no-explicit-any: 0 */
 
 import { ClientOptions } from './GitLabClient';
 import { AxiosResponse } from 'axios';
@@ -65,7 +64,7 @@ export interface CustomAxiosResponse<T> {
   pagination: PaginationGitLabCustomResponse;
 }
 
-export interface ListFilterOptions<Filter = {}> {
+export interface ListFilterOptions<Filter = Record<string, unknown>> {
   pagination?: PaginationParams;
   filter?: Filter;
 }

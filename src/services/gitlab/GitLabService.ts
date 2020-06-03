@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars, @typescript-eslint/camelcase */
 import Debug from 'debug';
 import { inject, injectable } from 'inversify';
 import { inspect } from 'util';
