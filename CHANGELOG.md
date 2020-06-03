@@ -1,3 +1,13 @@
+## [3.24.1](https://github.com/dxheroes/dx-scanner/compare/v3.24.0...v3.24.1) (2020-06-03)
+
+
+### Bug Fixes
+
+* importing and using axios ([71a554a](https://github.com/dxheroes/dx-scanner/commit/71a554a74c878a6be2b2e7d83dfefee5b4050af0))
+* lint issues ([231ef8b](https://github.com/dxheroes/dx-scanner/commit/231ef8b9f9cfba508d3212c78788b46ed2eb34c8))
+* **deps:** update all non-major dependencies ([abdae57](https://github.com/dxheroes/dx-scanner/commit/abdae57d174b592ad1de46a8b8c0978ce92930ab))
+* **deps:** update all non-major dependencies ([76dbc10](https://github.com/dxheroes/dx-scanner/commit/76dbc101fdbc45536946b7926736f810f3bcbdce))
+
 # [3.24.0](https://github.com/dxheroes/dx-scanner/compare/v3.23.5...v3.24.0) (2020-05-26)
 
 
