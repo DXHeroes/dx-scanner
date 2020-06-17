@@ -110,10 +110,9 @@
     "ts-node": "8.10.2",
     "typescript": "3.9.3"
   },
-  "engineStrict": true,
   "engines": {
-    "node": "^12",
-    "yarn": "^1"
+    "node": ">=12",
+    "yarn": ">=1"
   },
   "main": "lib/index.js",
   "bin": {
