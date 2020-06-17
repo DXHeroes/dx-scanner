@@ -1,3 +1,10 @@
+# [3.25.0](https://github.com/dxheroes/dx-scanner/compare/v3.24.1...v3.25.0) (2020-06-17)
+
+
+### Features
+
+* **types:** export types from the index.ts ([f617c57](https://github.com/dxheroes/dx-scanner/commit/f617c573cd2185420d7925aeca5870f5c48e23b9))
+
 ## [3.24.1](https://github.com/dxheroes/dx-scanner/compare/v3.24.0...v3.24.1) (2020-06-03)
 
 
