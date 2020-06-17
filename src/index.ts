@@ -98,4 +98,6 @@ class DXScannerCommand {
 
 process.on('uncaughtException', errorHandler);
 
-export = DXScannerCommand;
+export default DXScannerCommand;
+
+export { JSONReportDxScore } from "./reporters"
