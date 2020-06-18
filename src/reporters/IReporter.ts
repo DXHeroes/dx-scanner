@@ -7,7 +7,7 @@ import {
   PracticeEvaluationResult,
 } from '../model';
 import { PracticeData } from '../practices/IPractice';
-import { JSONReportDxScore } from './EnterpriseReporter';
+import { DataReportDto } from './EnterpriseReporter';
 
 export interface IReporter {
   report(
@@ -18,7 +18,7 @@ export interface IReporter {
   buildReport(
     practicesAndComponents: PracticeWithContextForReporter[],
     practicesAndComponentsAfterFix?: PracticeWithContextForReporter[],
-  ): string | JSONReport | JSONReportDxScore;
+  ): string | JSONReport | DataReportDto;
 }
 
 export type JSONReport = { uri: string; components: ComponentReport[] };
