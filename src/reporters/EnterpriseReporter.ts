@@ -32,12 +32,12 @@ export class EnterpriseReporter implements IReporter {
     }
   }
 
-  buildReport(practicesAndComponents: PracticeWithContextForReporter[]): JSONReportDxScore {
+  buildReport(practicesAndComponents: PracticeWithContextForReporter[]): DataReportDto {
     const componentsWithPractices = ReporterUtils.getComponentsWithPractices(practicesAndComponents);
 
     const dxScore = ReporterUtils.computeDXScore(practicesAndComponents);
 
-    const report: JSONReportDxScore = {
+    const report: DataReportDto = {
       componentsWithDxScore: [],
       version: pjson.version,
       id: uuid.v4(),
@@ -48,7 +48,7 @@ export class EnterpriseReporter implements IReporter {
       const dxScoreForComponent = dxScore.components.find((c) => c.path === cwp.component.path)!.value;
       const dxScorePoints = dxScore.components.find((c) => c.path === cwp.component.path)!.points;
 
-      const componentWithScore: ComponentWithDxScore = {
+      const componentWithScore: ComponentDto = {
         component: cwp.component,
         dxScore: { value: dxScoreForComponent, points: dxScorePoints },
       };
@@ -60,14 +60,32 @@ export class EnterpriseReporter implements IReporter {
   }
 }
 
-export type JSONReportDxScore = {
-  componentsWithDxScore: ComponentWithDxScore[];
+export type DataReportDto = {
+  componentsWithDxScore: ComponentDto[];
   version: string;
   id: string;
-  dxScore: Pick<DXScoreResult, 'value' | 'points'>;
+  dxScore: DxScoreDto
 };
 
-export interface ComponentWithDxScore {
+export interface ComponentDto {
   component: ProjectComponent;
-  dxScore: Pick<DXScoreResult, 'value' | 'points'>;
+  dxScore:  DxScoreDto
+}
+
+export type SecurityIssueDto = {
+  library: string;
+  currentVersion: string;
+  type: string;
+  newestVersion: string;
+  severity: SecurityIssueSeverity;
+};
+
+export type DxScoreDto = Pick<DXScoreResult, 'value' | 'points'>;
+
+export enum SecurityIssueSeverity{
+  Info = 'info',
+  Low = 'low',
+  Moderate = 'moderate',
+  High = 'high',
+  Critical = 'critical',
 }
