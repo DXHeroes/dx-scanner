@@ -1,3 +1,10 @@
+# [3.26.0](https://github.com/dxheroes/dx-scanner/compare/v3.25.0...v3.26.0) (2020-06-18)
+
+
+### Features
+
+* add exported types ([b1ec9b0](https://github.com/dxheroes/dx-scanner/commit/b1ec9b094e8a63c98b809400c606117ccb133b79))
+
 # [3.25.0](https://github.com/dxheroes/dx-scanner/compare/v3.24.1...v3.25.0) (2020-06-17)
 
 
