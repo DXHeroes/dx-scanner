@@ -1,7 +1,7 @@
 {
   "name": "dx-scanner",
   "description": "Scan your project for possible DX recommendations.",
-  "version": "3.25.0",
+  "version": "3.26.0",
   "author": "DX Heroes LTD <info@dxheroes.io> (https://dxheroes.io)",
   "homepage": "https://github.com/dxheroes/dx-scanner",
   "repository": "ssh://git@github.com/dxheroes/dx-scanner.git",
@@ -80,7 +80,7 @@
     "@types/debug": "4.1.5",
     "@types/git-url-parse": "9.0.0",
     "@types/glob": "7.1.1",
-    "@types/jest": "25.2.3",
+    "@types/jest": "26.0.0",
     "@types/js-yaml": "3.12.4",
     "@types/lodash": "4.14.154",
     "@types/node": "12.12.43",
