@@ -34,11 +34,11 @@ import {
 } from './model';
 import {
   GetContentsResponse,
-  GetReposResponse,
   IssuesListCommentsParams,
   IssuesListForRepoParams,
   PullsListCommitsParams,
   PullsListParams,
+  ReposGetResponseData,
 } from './OctokitTypes';
 import { VCSServicesUtils } from './VCSServicesUtils';
 const debug = Debug('cli:services:git:github-service');
@@ -71,7 +71,7 @@ export class GitHubService implements IVCSService {
    * 'parent' is the repository this repository was forked from.
    * 'source' is the ultimate source for the network.
    */
-  getRepo(owner: string, repo: string): Promise<GetReposResponse> {
+  getRepo(owner: string, repo: string): Promise<ReposGetResponseData> {
     return this.unwrap(this.client.repos.get({ owner, repo }));
   }
 
@@ -332,7 +332,7 @@ export class GitHubService implements IVCSService {
       let response;
 
       try {
-        response = <GetContentsResponse>await this.unwrap(this.client.repos.getContents({ owner, repo, path }));
+        response = <GetContentsResponse>await this.unwrap(this.client.repos.getContent({ owner, repo, path }));
       } catch (e) {
         if (e.name !== 'HttpError' || e.status !== 404) {
           throw e;
