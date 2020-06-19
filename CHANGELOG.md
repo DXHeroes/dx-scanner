@@ -1,3 +1,10 @@
+## [3.26.1](https://github.com/dxheroes/dx-scanner/compare/v3.26.0...v3.26.1) (2020-06-19)
+
+
+### Bug Fixes
+
+* add missing security issue array ([8711b8b](https://github.com/dxheroes/dx-scanner/commit/8711b8b34025e62a8ef0b57ecf6ee69b25e46f73))
+
 # [3.26.0](https://github.com/dxheroes/dx-scanner/compare/v3.25.0...v3.26.0) (2020-06-18)
 
 
