@@ -51,6 +51,7 @@ export class EnterpriseReporter implements IReporter {
       const componentWithScore: ComponentDto = {
         component: cwp.component,
         dxScore: { value: dxScoreForComponent, points: dxScorePoints },
+        securityIssues: []
       };
 
       report.componentsWithDxScore.push(componentWithScore);
@@ -69,7 +70,8 @@ export type DataReportDto = {
 
 export interface ComponentDto {
   component: ProjectComponent;
-  dxScore:  DxScoreDto
+  dxScore:  DxScoreDto,
+  securityIssues: SecurityIssueDto[];
 }
 
 export type SecurityIssueDto = {
