@@ -1,3 +1,12 @@
+## [3.26.2](https://github.com/dxheroes/dx-scanner/compare/v3.26.1...v3.26.2) (2020-06-19)
+
+
+### Bug Fixes
+
+* octokit types due to changes in library ([3bf1d6f](https://github.com/dxheroes/dx-scanner/commit/3bf1d6fc4df8f98d3a8d58c8fb6522cd10bfbaaf))
+* **deps:** update dependency @octokit/plugin-rest-endpoint-methods to v4 ([d10bd32](https://github.com/dxheroes/dx-scanner/commit/d10bd32c6a49d2166eab74e553330cb07b1f48fa))
+* **deps:** update dependency @octokit/plugin-rest-endpoint-methods to v4 ([6a3461f](https://github.com/dxheroes/dx-scanner/commit/6a3461fc550a5c2db6e90efdf9d508c8ed47ec3d))
+
 ## [3.26.1](https://github.com/dxheroes/dx-scanner/compare/v3.26.0...v3.26.1) (2020-06-19)
 
 
