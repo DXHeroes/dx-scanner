@@ -12,7 +12,7 @@ import { GitLabNock } from '../test/helpers/gitLabNock';
 jest.mock('simple-git/promise');
 
 describe('ScanningStrategyDetector', () => {
-  const mockedGit = <jest.Mock>git;
+  const mockedGit = <jest.Mock>(<unknown>git);
 
   beforeEach(() => {
     nock.cleanAll();
