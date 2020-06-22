@@ -82,7 +82,7 @@ export class TsGitignoreCorrectlySetPractice extends PracticeBase {
       .filter(Boolean)
       .concat(''); // append newline if we add something
 
-    const tsConfig = await tsLoad.load(inspector.basePath || '.');
+    const tsConfig = await tsconfig.load(inspector.basePath || '.');
     if (tsConfig) {
       if (tsConfig.config.compilerOptions.outDir) {
         const folderName = path.basename(tsConfig.config.compilerOptions.outDir);
