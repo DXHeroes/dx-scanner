@@ -66,7 +66,7 @@ export class TsGitignoreCorrectlySetPractice extends PracticeBase {
      * We need to require tsconfig here due to issues with tsconfig in DXSE
      */
     // eslint-disable-next-line @typescript-eslint/no-require-imports
-    const tsLoad = require('tsconfig');
+    const tsconfig = require('tsconfig');
     const inspector = ctx.fileInspector?.basePath ? ctx.fileInspector : ctx.root.fileInspector;
     if (!inspector) return;
     // node_modules
