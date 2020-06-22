@@ -1,3 +1,11 @@
+## [3.26.3](https://github.com/dxheroes/dx-scanner/compare/v3.26.2...v3.26.3) (2020-06-22)
+
+
+### Bug Fixes
+
+* move tsconfig require ([c5a7aa9](https://github.com/dxheroes/dx-scanner/commit/c5a7aa941f4343d0b12d113d00519bd676bd156f))
+* rename tsconfig ([eafbc2b](https://github.com/dxheroes/dx-scanner/commit/eafbc2b336cc217faad9d3230a53887df5c40902))
+
 ## [3.26.2](https://github.com/dxheroes/dx-scanner/compare/v3.26.1...v3.26.2) (2020-06-19)
 
 
