@@ -23,7 +23,7 @@ export class EnterpriseReporter implements IReporter {
     try {
       // send data
       await axios.post('https://provider.dxscanner.io/api/v1/data-report', reportData, {
-        headers: { Authorization: this.argumentsProvider.apiToken },
+        headers: this.argumentsProvider.apiToken && { Authorization: this.argumentsProvider.apiToken },
       });
       // TODO: enable logs later, when account is available
       // console.log('You can see DX data in your DX account now.\n');
@@ -51,7 +51,7 @@ export class EnterpriseReporter implements IReporter {
       const componentWithScore: ComponentDto = {
         component: cwp.component,
         dxScore: { value: dxScoreForComponent, points: dxScorePoints },
-        securityIssues: []
+        securityIssues: [],
       };
 
       report.componentsWithDxScore.push(componentWithScore);
@@ -65,12 +65,12 @@ export type DataReportDto = {
   componentsWithDxScore: ComponentDto[];
   version: string;
   id: string;
-  dxScore: DxScoreDto
+  dxScore: DxScoreDto;
 };
 
 export interface ComponentDto {
   component: ProjectComponent;
-  dxScore:  DxScoreDto,
+  dxScore: DxScoreDto;
   securityIssues: SecurityIssueDto[];
 }
 
@@ -84,7 +84,7 @@ export type SecurityIssueDto = {
 
 export type DxScoreDto = Pick<DXScoreResult, 'value' | 'points'>;
 
-export enum SecurityIssueSeverity{
+export enum SecurityIssueSeverity {
   Info = 'info',
   Low = 'low',
   Moderate = 'moderate',
