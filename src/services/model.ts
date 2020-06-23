@@ -1,7 +1,7 @@
 import { FileSystemService } from './FileSystemService';
 import { Git } from './git/Git';
 
-export type ProjectFilesBrowserServices = FileSystemService | Git;
+export type ProjectFilesBrowserService = FileSystemService | Git;
 
 export interface IProjectFilesBrowserService {
   exists(path: string): Promise<boolean>;

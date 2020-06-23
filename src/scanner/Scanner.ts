@@ -153,13 +153,14 @@ export class Scanner {
    * Clone a repository if the input is remote repository
    */
   private async preprocessData(scanningStrategy: ScanningStrategy) {
-    const { serviceType, accessType, remoteUrl, isOnline } = scanningStrategy;
-    let localPath = scanningStrategy.localPath;
+    const { serviceType, accessType, remoteUrl, rootPath, isOnline } = scanningStrategy;
+    let { localPath } = scanningStrategy;
 
     if (!isOnline) {
-      return { serviceType, accessType, remoteUrl, localPath, isOnline };
+      return { serviceType, accessType, remoteUrl, localPath, rootPath, isOnline };
     }
 
+    console.log(localPath === undefined && remoteUrl !== undefined && serviceType !== ServiceType.local);
     if (localPath === undefined && remoteUrl !== undefined && serviceType !== ServiceType.local) {
       const cloneUrl = new url.URL(remoteUrl);
       localPath = fs.mkdtempSync(path.join(os.tmpdir(), 'dx-scanner'));
@@ -177,7 +178,7 @@ export class Scanner {
       await git().silent(true).clone(cloneUrl.href, localPath);
     }
 
-    return { serviceType, accessType, remoteUrl, localPath, isOnline };
+    return { serviceType, accessType, remoteUrl, localPath, rootPath, isOnline };
   }
 
   /**

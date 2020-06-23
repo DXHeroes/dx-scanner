@@ -1,5 +1,5 @@
 import { IFileInspector } from './IFileInspector';
-import { Metadata, MetadataType, ProjectFilesBrowserServices } from '../services/model';
+import { Metadata, MetadataType, ProjectFilesBrowserService } from '../services/model';
 import debug from 'debug';
 import { injectable, optional, inject } from 'inversify';
 import { Types } from '../types';
@@ -11,11 +11,11 @@ import { FileSystemService } from '../services';
 @injectable()
 export class FileInspector implements IFileInspector {
   readonly basePath: string | undefined;
-  private projectFilesBrowser: ProjectFilesBrowserServices;
+  private projectFilesBrowser: ProjectFilesBrowserService;
   private cache: ICache;
 
   constructor(
-    @inject(Types.IProjectFilesBrowser) projectFilesBrowser: ProjectFilesBrowserServices,
+    @inject(Types.IProjectFilesBrowser) projectFilesBrowser: ProjectFilesBrowserService,
     @inject(Types.FileInspectorBasePath) @optional() basePath: string | undefined,
   ) {
     this.basePath = basePath && this.normalizePath(basePath);
