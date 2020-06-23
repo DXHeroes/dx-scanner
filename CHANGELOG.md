@@ -1,3 +1,10 @@
+## [3.26.4](https://github.com/dxheroes/dx-scanner/compare/v3.26.3...v3.26.4) (2020-06-23)
+
+
+### Bug Fixes
+
+* **enterprise-reporter:** do not add undefined auth header ([268a36f](https://github.com/dxheroes/dx-scanner/commit/268a36f1a54a34e77042b004acef0c2ba5d39334))
+
 ## [3.26.3](https://github.com/dxheroes/dx-scanner/compare/v3.26.2...v3.26.3) (2020-06-22)
 
 
