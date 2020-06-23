@@ -1,3 +1,10 @@
+## [3.26.5](https://github.com/dxheroes/dx-scanner/compare/v3.26.4...v3.26.5) (2020-06-23)
+
+
+### Bug Fixes
+
+* **deps:** update commitlint monorepo to v9 ([736dc6d](https://github.com/dxheroes/dx-scanner/commit/736dc6d8c7f48d9905b7ef8c7f42993b1e596e49))
+
 ## [3.26.4](https://github.com/dxheroes/dx-scanner/compare/v3.26.3...v3.26.4) (2020-06-23)
 
 
