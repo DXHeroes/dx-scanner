@@ -2,7 +2,7 @@ import nock from 'nock';
 import git from 'simple-git/promise';
 import { createTestContainer } from '../inversify.config';
 import { GitHubNock } from '../test/helpers/gitHubNock';
-import { ScanningStrategyDetector } from './ScanningStrategyDetector';
+import { ScanningStrategyDetector, ScanningStrategy } from './ScanningStrategyDetector';
 import { GitHubService, BitbucketService } from '../services';
 import { GitLabService } from '../services/gitlab/GitLabService';
 import { argumentsProviderFactory } from '../test/factories/ArgumentsProviderFactory';
@@ -24,6 +24,7 @@ describe('ScanningStrategyDetector', () => {
       mockedGit.mockImplementation(() => {
         return {
           checkIsRepo: () => true,
+          revparse: () => '/local/path',
           getRemotes: () => [],
         };
       });
@@ -31,9 +32,54 @@ describe('ScanningStrategyDetector', () => {
       const scanningStrategyDetector = await createScanningStrategyDetector({ uri: '/local/path' });
       const result = await scanningStrategyDetector.detect();
 
-      expect(result).toEqual({
+      expect(result).toEqual(<ScanningStrategy>{
         accessType: undefined,
         localPath: '/local/path',
+        rootPath: '/local/path',
+        remoteUrl: undefined,
+        isOnline: false,
+        serviceType: ServiceType.local,
+      });
+    });
+
+    it('local path that is a git repository', async () => {
+      const repoPath = 'git@github.com:DXHeroes/dx-scanner.git';
+      mockedGit.mockImplementation(() => {
+        return {
+          checkIsRepo: () => true,
+          revparse: () => '/local/rootDir',
+          getRemotes: () => [{ name: 'origin', refs: { fetch: repoPath, push: repoPath } }],
+        };
+      });
+
+      const scanningStrategyDetector = await createScanningStrategyDetector({ uri: '/local/rootDir/subDir' });
+      const result = await scanningStrategyDetector.detect();
+
+      expect(result).toEqual(<ScanningStrategy>{
+        accessType: AccessType.public,
+        localPath: '/local/rootDir/subDir',
+        rootPath: '/local/rootDir',
+        remoteUrl: repoPath,
+        isOnline: true,
+        serviceType: ServiceType.github,
+      });
+    });
+
+    it('local path that is not a git repository', async () => {
+      mockedGit.mockImplementation(() => {
+        return {
+          checkIsRepo: () => false,
+          getRemotes: () => [],
+        };
+      });
+
+      const scanningStrategyDetector = await createScanningStrategyDetector({ uri: '/local/rootDir/subDir' });
+      const result = await scanningStrategyDetector.detect();
+
+      expect(result).toEqual(<ScanningStrategy>{
+        accessType: undefined,
+        localPath: '/local/rootDir/subDir',
+        rootPath: '/local/rootDir/subDir',
         remoteUrl: undefined,
         isOnline: false,
         serviceType: ServiceType.local,
@@ -47,6 +93,7 @@ describe('ScanningStrategyDetector', () => {
       mockedGit.mockImplementation(() => {
         return {
           checkIsRepo: () => true,
+          revparse: () => '/local/path',
           getRemotes: () => [{ name: 'origin', refs: { fetch: repoPath, push: repoPath } }],
         };
       });
@@ -54,9 +101,10 @@ describe('ScanningStrategyDetector', () => {
       const scanningStrategyDetector = await createScanningStrategyDetector({ uri: '/local/path', auth: 'fake_token' });
       const result = await scanningStrategyDetector.detect();
 
-      expect(result).toEqual({
+      expect(result).toEqual(<ScanningStrategy>{
         accessType: AccessType.public,
         localPath: '/local/path',
+        rootPath: '/local/path',
         remoteUrl: repoPath,
         isOnline: true,
         serviceType: ServiceType.github,
@@ -71,6 +119,7 @@ describe('ScanningStrategyDetector', () => {
       mockedGit.mockImplementation(() => {
         return {
           checkIsRepo: () => true,
+          revparse: () => '/local/path',
           getRemotes: () => [{ name: 'origin', refs: { fetch: repoPath, push: repoPath } }],
         };
       });
@@ -78,9 +127,10 @@ describe('ScanningStrategyDetector', () => {
       const scanningStrategyDetector = await createScanningStrategyDetector({ uri: '/local/path', auth: 'fake_token' });
       const result = await scanningStrategyDetector.detect();
 
-      expect(result).toEqual({
+      expect(result).toEqual(<ScanningStrategy>{
         accessType: AccessType.unknown,
         localPath: '/local/path',
+        rootPath: '/local/path',
         remoteUrl: repoPath,
         isOnline: false,
         serviceType: ServiceType.github,
@@ -94,6 +144,7 @@ describe('ScanningStrategyDetector', () => {
       mockedGit.mockImplementation(() => {
         return {
           checkIsRepo: () => true,
+          revparse: () => '/local/path',
           getRemotes: () => [{ name: 'origin', refs: { fetch: repoPath, push: repoPath } }],
         };
       });
@@ -101,9 +152,10 @@ describe('ScanningStrategyDetector', () => {
       const scanningStrategyDetector = await createScanningStrategyDetector({ uri: '/local/path' });
       const result = await scanningStrategyDetector.detect();
 
-      expect(result).toEqual({
+      expect(result).toEqual(<ScanningStrategy>{
         accessType: 'public',
         localPath: '/local/path',
+        rootPath: '/local/path',
         remoteUrl: repoPath,
         isOnline: true,
         serviceType: ServiceType.github,
@@ -118,15 +170,17 @@ describe('ScanningStrategyDetector', () => {
       mockedGit.mockImplementation(() => {
         return {
           checkIsRepo: () => true,
+          revparse: () => '/local/path',
           getRemotes: () => [{ name: 'origin', refs: { fetch: repoPath, push: repoPath } }],
         };
       });
 
       const scanningStrategyDetector = await createScanningStrategyDetector({ uri: '/local/path' });
       const result = await scanningStrategyDetector.detect();
-      expect(result).toEqual({
+      expect(result).toEqual(<ScanningStrategy>{
         accessType: AccessType.unknown,
         localPath: '/local/path',
+        rootPath: '/local/path',
         remoteUrl: repoPath,
         isOnline: false,
         serviceType: ServiceType.github,
@@ -140,6 +194,7 @@ describe('ScanningStrategyDetector', () => {
       mockedGit.mockImplementation(() => {
         return {
           checkIsRepo: () => true,
+          revparse: () => '/local/path',
           getRemotes: () => [{ name: 'origin', refs: { fetch: repoPath, push: repoPath } }],
         };
       });
@@ -147,9 +202,10 @@ describe('ScanningStrategyDetector', () => {
       const scanningStrategyDetector = await createScanningStrategyDetector({ uri: '/local/path', auth: 'fake_token' });
       const result = await scanningStrategyDetector.detect();
 
-      expect(result).toEqual({
+      expect(result).toEqual(<ScanningStrategy>{
         accessType: AccessType.unknown,
         localPath: '/local/path',
+        rootPath: '/local/path',
         remoteUrl: repoPath,
         isOnline: true,
         serviceType: ServiceType.github,
@@ -171,6 +227,7 @@ describe('ScanningStrategyDetector', () => {
 
       try {
         await scanningStrategyDetector.detect();
+        fail();
       } catch (error) {
         expect(error.name).toMatch('HttpError');
       }
@@ -186,6 +243,7 @@ describe('ScanningStrategyDetector', () => {
       mockedGit.mockImplementation(() => {
         return {
           checkIsRepo: () => true,
+          revparse: () => '/local/path',
           getRemotes: () => [{ name: 'origin', refs: { fetch: repoPath, push: repoPath } }],
         };
       });
@@ -193,9 +251,10 @@ describe('ScanningStrategyDetector', () => {
       const scanningStrategyDetector = await createScanningStrategyDetector({ uri: '/local/path', auth: 'fake_token' });
       const result = await scanningStrategyDetector.detect();
 
-      expect(result).toEqual({
+      expect(result).toEqual(<ScanningStrategy>{
         accessType: AccessType.unknown,
         localPath: '/local/path',
+        rootPath: '/local/path',
         remoteUrl: repoPath,
         isOnline: false,
         serviceType: ServiceType.github,
@@ -209,7 +268,7 @@ describe('ScanningStrategyDetector', () => {
       const scanningStrategyDetector = await createScanningStrategyDetector({ uri: repoPath });
       const result = await scanningStrategyDetector.detect();
 
-      expect(result).toEqual({
+      expect(result).toEqual(<ScanningStrategy>{
         accessType: AccessType.public,
         localPath: undefined,
         remoteUrl: repoPath,
@@ -225,7 +284,7 @@ describe('ScanningStrategyDetector', () => {
       const scanningStrategyDetector = await createScanningStrategyDetector({ uri: repoPath, auth: 'fake_token' });
       const result = await scanningStrategyDetector.detect();
 
-      expect(result).toEqual({
+      expect(result).toEqual(<ScanningStrategy>{
         accessType: AccessType.unknown,
         localPath: undefined,
         remoteUrl: repoPath,
@@ -241,7 +300,7 @@ describe('ScanningStrategyDetector', () => {
       const scanningStrategyDetector = await createScanningStrategyDetector({ uri: repoPath, auth: 'fake_token' });
       const result = await scanningStrategyDetector.detect();
 
-      expect(result).toEqual({
+      expect(result).toEqual(<ScanningStrategy>{
         accessType: AccessType.public,
         localPath: undefined,
         remoteUrl: `https://${repoPath}`,
@@ -261,7 +320,7 @@ describe('ScanningStrategyDetector', () => {
       const scanningStrategyDetector = await createScanningStrategyDetector({ uri: repoPath, auth: 'valid_token' });
       const result = await scanningStrategyDetector.detect();
 
-      expect(result).toEqual({
+      expect(result).toEqual(<ScanningStrategy>{
         accessType: AccessType.private,
         localPath: undefined,
         remoteUrl: `https://${repoPath}`,
@@ -281,7 +340,7 @@ describe('ScanningStrategyDetector', () => {
       const scanningStrategyDetector = await createScanningStrategyDetector({ uri: repoPath, auth: 'invalid_token' });
       const result = await scanningStrategyDetector.detect();
 
-      expect(result).toEqual({
+      expect(result).toEqual(<ScanningStrategy>{
         accessType: AccessType.unknown,
         localPath: undefined,
         remoteUrl: `https://${repoPath}`,

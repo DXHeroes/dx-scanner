@@ -14,6 +14,8 @@ import { PythonComponentDetector } from '../../detectors/Python/PythonComponentD
 import { PythonPackageInspector } from '../../inspectors/package/PythonPackageInspector';
 import { PackageInspectorBase } from '../../inspectors/package/PackageInspectorBase';
 import { IProjectComponentDetector } from '../../detectors/IProjectComponentDetector';
+import { ScanningStrategy } from '../../detectors';
+import { ProjectFilesBrowserService } from '../../services';
 
 export const bindLanguageContext = (container: Container) => {
   container.bind(Types.LanguageContextFactory).toFactory(
@@ -29,7 +31,12 @@ export const bindLanguageContext = (container: Container) => {
 const createLanguageContainer = (languageAtPath: LanguageAtPath, rootContainer: Container): Container => {
   const container = rootContainer.createChild();
   container.bind(Types.LanguageAtPath).toConstantValue(languageAtPath);
-  container.bind(Types.IRootFileInspector).toConstantValue(container.get(Types.IFileInspector));
+  const scanningStrategy = container.get<ScanningStrategy>(Types.ScanningStrategy);
+
+  const projectFilesBrowserService = container.get<ProjectFilesBrowserService>(Types.IProjectFilesBrowser);
+  const fileInspector = container.get<FileInspector>(Types.IFileInspector);
+  const fileInspectorForRoot = new FileInspector(projectFilesBrowserService, scanningStrategy.rootPath || fileInspector.basePath);
+  container.bind(Types.IRootFileInspector).toConstantValue(fileInspectorForRoot);
 
   bindFileAccess(languageAtPath, container);
   bindComponentDetectors(container);
