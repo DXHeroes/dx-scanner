@@ -1,3 +1,10 @@
+## [3.26.6](https://github.com/dxheroes/dx-scanner/compare/v3.26.5...v3.26.6) (2020-06-24)
+
+
+### Bug Fixes
+
+* use repository root path as a root path for FileInspector ([5763a18](https://github.com/dxheroes/dx-scanner/commit/5763a187a9f62ab0a730a46b88a388a0feb79c58))
+
 ## [3.26.5](https://github.com/dxheroes/dx-scanner/compare/v3.26.4...v3.26.5) (2020-06-23)
 
 
