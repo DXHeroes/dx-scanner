@@ -19,7 +19,6 @@ export class EnterpriseReporter implements IReporter {
 
   async report(practicesAndComponents: PracticeWithContextForReporter[]): Promise<void> {
     const reportData = this.buildReport(practicesAndComponents);
-
     try {
       // send data
       await axios.post('https://provider.dxscanner.io/api/v1/data-report', reportData, {
@@ -43,6 +42,7 @@ export class EnterpriseReporter implements IReporter {
       id: uuid.v4(),
       dxScore: { value: dxScore.value, points: dxScore.points },
     };
+    const securityVulnerabilitiesPractice = practicesAndComponents.filter((p) => p.practice.id === 'JavaScript.SecurityVulnerabilities');
 
     for (const cwp of componentsWithPractices) {
       const dxScoreForComponent = dxScore.components.find((c) => c.path === cwp.component.path)!.value;
@@ -51,7 +51,7 @@ export class EnterpriseReporter implements IReporter {
       const componentWithScore: ComponentDto = {
         component: cwp.component,
         dxScore: { value: dxScoreForComponent, points: dxScorePoints },
-        securityIssues: [],
+        securityIssues: <SecurityIssueDto[]>securityVulnerabilitiesPractice[0].practice.data?.statistics?.securityIssues,
       };
 
       report.componentsWithDxScore.push(componentWithScore);
