@@ -51,7 +51,7 @@ export class EnterpriseReporter implements IReporter {
       const componentWithScore: ComponentDto = {
         component: cwp.component,
         dxScore: { value: dxScoreForComponent, points: dxScorePoints },
-        securityIssues: []
+        securityIssues: [],
       };
 
       report.componentsWithDxScore.push(componentWithScore);
@@ -65,26 +65,37 @@ export type DataReportDto = {
   componentsWithDxScore: ComponentDto[];
   version: string;
   id: string;
-  dxScore: DxScoreDto
+  dxScore: DxScoreDto;
 };
 
 export interface ComponentDto {
   component: ProjectComponent;
-  dxScore:  DxScoreDto,
+  dxScore: DxScoreDto;
   securityIssues: SecurityIssueDto[];
 }
 
 export type SecurityIssueDto = {
   library: string;
-  currentVersion: string;
   type: string;
-  newestVersion: string;
   severity: SecurityIssueSeverity;
+  vulnerable_versions: string;
+  patchedIn: string;
+  dependencyOf: string;
+  path: string;
+};
+
+export type SecurityIssueSummaryDto = {
+  info: number;
+  low: number;
+  moderate: number;
+  high: number;
+  critical: number;
+  code: number;
 };
 
 export type DxScoreDto = Pick<DXScoreResult, 'value' | 'points'>;
 
-export enum SecurityIssueSeverity{
+export enum SecurityIssueSeverity {
   Info = 'info',
   Low = 'low',
   Moderate = 'moderate',
