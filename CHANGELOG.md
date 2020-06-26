@@ -1,3 +1,32 @@
+## [3.26.6](https://github.com/dxheroes/dx-scanner/compare/v3.26.5...v3.26.6) (2020-06-24)
+
+
+### Bug Fixes
+
+* use repository root path as a root path for FileInspector ([5763a18](https://github.com/dxheroes/dx-scanner/commit/5763a187a9f62ab0a730a46b88a388a0feb79c58))
+
+## [3.26.5](https://github.com/dxheroes/dx-scanner/compare/v3.26.4...v3.26.5) (2020-06-23)
+
+
+### Bug Fixes
+
+* **deps:** update commitlint monorepo to v9 ([736dc6d](https://github.com/dxheroes/dx-scanner/commit/736dc6d8c7f48d9905b7ef8c7f42993b1e596e49))
+
+## [3.26.4](https://github.com/dxheroes/dx-scanner/compare/v3.26.3...v3.26.4) (2020-06-23)
+
+
+### Bug Fixes
+
+* **enterprise-reporter:** do not add undefined auth header ([268a36f](https://github.com/dxheroes/dx-scanner/commit/268a36f1a54a34e77042b004acef0c2ba5d39334))
+
+## [3.26.3](https://github.com/dxheroes/dx-scanner/compare/v3.26.2...v3.26.3) (2020-06-22)
+
+
+### Bug Fixes
+
+* move tsconfig require ([c5a7aa9](https://github.com/dxheroes/dx-scanner/commit/c5a7aa941f4343d0b12d113d00519bd676bd156f))
+* rename tsconfig ([eafbc2b](https://github.com/dxheroes/dx-scanner/commit/eafbc2b336cc217faad9d3230a53887df5c40902))
+
 ## [3.26.2](https://github.com/dxheroes/dx-scanner/compare/v3.26.1...v3.26.2) (2020-06-19)
 
 

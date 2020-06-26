@@ -1,10 +1,10 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
 import { PracticeEvaluationResult, PracticeImpact, ProgrammingLanguage } from '../../model';
 import { DxPractice } from '../DxPracticeDecorator';
 import { PracticeContext } from '../../contexts/practice/PracticeContext';
 import { PracticeBase } from '../PracticeBase';
 import { ReportDetailType } from '../../reporters/ReporterData';
 import { FixerContext } from '../../contexts/fixer/FixerContext';
-import { load as tsLoad } from 'tsconfig';
 import * as path from 'path';
 
 @DxPractice({
@@ -62,6 +62,11 @@ export class TsGitignoreCorrectlySetPractice extends PracticeBase {
   }
 
   async fix(ctx: FixerContext) {
+    /**
+     * We need to require tsconfig here due to issues with tsconfig in DXSE
+     */
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
+    const tsconfig = require('tsconfig');
     const inspector = ctx.fileInspector?.basePath ? ctx.fileInspector : ctx.root.fileInspector;
     if (!inspector) return;
     // node_modules
@@ -77,7 +82,7 @@ export class TsGitignoreCorrectlySetPractice extends PracticeBase {
       .filter(Boolean)
       .concat(''); // append newline if we add something
 
-    const tsConfig = await tsLoad(inspector.basePath || '.');
+    const tsConfig = await tsconfig.load(inspector.basePath || '.');
     if (tsConfig) {
       if (tsConfig.config.compilerOptions.outDir) {
         const folderName = path.basename(tsConfig.config.compilerOptions.outDir);
@@ -93,7 +98,6 @@ export class TsGitignoreCorrectlySetPractice extends PracticeBase {
     }
 
     if (fixes.length > 1) fixes.unshift(''); // if there is something to add, make sure we start with newline
-
     await inspector.appendFile('.gitignore', fixes.join('\n'));
   }
 

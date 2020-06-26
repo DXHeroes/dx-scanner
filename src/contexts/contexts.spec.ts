@@ -25,6 +25,7 @@ describe('Contexts (And bindings)', () => {
     serviceType: ServiceType.git,
     accessType: undefined,
     localPath: undefined,
+    rootPath: undefined,
     remoteUrl: undefined,
     isOnline: false,
   };
