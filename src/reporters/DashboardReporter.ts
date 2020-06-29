@@ -11,7 +11,7 @@ import { ScanningStrategy } from '../detectors';
 const pjson = require('../../package.json');
 
 @injectable()
-export class EnterpriseReporter implements IReporter {
+export class DashboardReporter implements IReporter {
   private readonly argumentsProvider: ArgumentsProvider;
   private readonly scanningStrategy: ScanningStrategy;
 

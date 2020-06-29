@@ -7,7 +7,7 @@ import {
   PracticeEvaluationResult,
 } from '../model';
 import { PracticeData } from '../practices/IPractice';
-import { DataReportDto } from './EnterpriseReporter';
+import { DataReportDto } from './DashboardReporter';
 
 export interface IReporter {
   report(

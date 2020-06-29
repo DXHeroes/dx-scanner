@@ -13,7 +13,7 @@ import { BitbucketService } from '../../services/bitbucket/BitbucketService';
 import { GitLabService } from '../../services/gitlab/GitLabService';
 import { PythonLanguageDetector } from '../../detectors/Python/PythonLanguageDetector';
 import { ArgumentsProvider } from '../../scanner';
-import { IReporter, FixReporter, JSONReporter, CLIReporter, CIReporter, HTMLReporter, EnterpriseReporter } from '../../reporters';
+import { IReporter, FixReporter, JSONReporter, CLIReporter, CIReporter, HTMLReporter, DashboardReporter } from '../../reporters';
 import { ServiceType, AccessType } from '../../detectors/IScanningStrategy';
 
 export const bindScanningContext = (container: Container) => {
@@ -77,7 +77,7 @@ const bindReporters = (container: Container, args: ArgumentsProvider, accessType
   }
 
   if (accessType !== AccessType.private || (accessType === AccessType.private && args.apiToken)) {
-    container.bind<IReporter>(Types.IReporter).to(EnterpriseReporter);
+    container.bind<IReporter>(Types.IReporter).to(DashboardReporter);
   }
 };
 

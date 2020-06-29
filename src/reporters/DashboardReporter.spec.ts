@@ -1,10 +1,10 @@
 import { PracticeEvaluationResult } from '../model';
 import { argumentsProviderFactory } from '../test/factories/ArgumentsProviderFactory';
 import { practiceWithContextFactory } from '../test/factories/PracticeWithContextFactory';
-import { EnterpriseReporter } from './EnterpriseReporter';
+import { DashboardReporter } from './DashboardReporter';
 import { AccessType, ServiceType } from '../detectors/IScanningStrategy';
 
-describe('EnterpriseReporter', () => {
+describe('DashboardReporter', () => {
   const practicingHighImpactPracticeWithCtx = practiceWithContextFactory();
   const notPracticingHighImpactPracticeWithCtx = practiceWithContextFactory({ evaluation: PracticeEvaluationResult.notPracticing });
   const scanningStrategy = {
@@ -18,9 +18,7 @@ describe('EnterpriseReporter', () => {
 
   describe('#report', () => {
     it('one practicing practice', async () => {
-      const result = new EnterpriseReporter(argumentsProviderFactory(), scanningStrategy).buildReport([
-        practicingHighImpactPracticeWithCtx,
-      ]);
+      const result = new DashboardReporter(argumentsProviderFactory(), scanningStrategy).buildReport([practicingHighImpactPracticeWithCtx]);
 
       await expect(result.componentsWithDxScore).toContainObject({
         dxScore: { points: { total: 100, max: 100, percentage: 100 }, value: '100% | 1/1' },
@@ -30,7 +28,7 @@ describe('EnterpriseReporter', () => {
     });
 
     it('one practicing practice and one not practicing in two components', async () => {
-      const result = new EnterpriseReporter(argumentsProviderFactory(), scanningStrategy).buildReport([
+      const result = new DashboardReporter(argumentsProviderFactory(), scanningStrategy).buildReport([
         practicingHighImpactPracticeWithCtx,
         notPracticingHighImpactPracticeWithCtx,
       ]);
@@ -58,7 +56,7 @@ describe('EnterpriseReporter', () => {
     });
 
     it('one not practicing practice', async () => {
-      const result = new EnterpriseReporter(argumentsProviderFactory(), scanningStrategy).buildReport([
+      const result = new DashboardReporter(argumentsProviderFactory(), scanningStrategy).buildReport([
         notPracticingHighImpactPracticeWithCtx,
       ]);
 
