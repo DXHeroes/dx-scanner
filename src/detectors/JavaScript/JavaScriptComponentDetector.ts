@@ -14,7 +14,18 @@ export class JavaScriptComponentDetector implements IProjectComponentDetector {
   }
 
   async detectComponent(langAtPath: LanguageAtPath): Promise<ProjectComponent[]> {
-    const backendPackages = ['express', 'koa', 'hapi', 'flatiron', 'locomotive', 'nodal', '@adonisjs/framework', 'thinkjs', 'sails'];
+    const backendPackages = [
+      'express',
+      'koa',
+      'hapi',
+      'flatiron',
+      'locomotive',
+      'nodal',
+      '@adonisjs/framework',
+      'thinkjs',
+      'sails',
+      '@nestjs/core',
+    ];
 
     const frontendPackages = ['webpack', 'jquery', 'gulp', 'grunt', 'browserify', 'babel'];
 
