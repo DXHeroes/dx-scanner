@@ -1,3 +1,10 @@
+## [3.26.7](https://github.com/dxheroes/dx-scanner/compare/v3.26.6...v3.26.7) (2020-06-29)
+
+
+### Bug Fixes
+
+* relaxing conditions for .gitignore & fix tests ([1afdcbe](https://github.com/dxheroes/dx-scanner/commit/1afdcbed68383fbd4e3b288901b8a1edee43fe7d))
+
 ## [3.26.6](https://github.com/dxheroes/dx-scanner/compare/v3.26.5...v3.26.6) (2020-06-24)
 
 
