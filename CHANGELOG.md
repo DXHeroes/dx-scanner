@@ -1,3 +1,10 @@
+## [3.26.8](https://github.com/dxheroes/dx-scanner/compare/v3.26.7...v3.26.8) (2020-06-29)
+
+
+### Bug Fixes
+
+* add nestjs to backend packages for JS/TS ([b6264e4](https://github.com/dxheroes/dx-scanner/commit/b6264e4f38ef21e7d445c7b14d9ca28e803c6651))
+
 ## [3.26.7](https://github.com/dxheroes/dx-scanner/compare/v3.26.6...v3.26.7) (2020-06-29)
 
 
