@@ -2,14 +2,25 @@ import { PracticeEvaluationResult } from '../model';
 import { argumentsProviderFactory } from '../test/factories/ArgumentsProviderFactory';
 import { practiceWithContextFactory } from '../test/factories/PracticeWithContextFactory';
 import { EnterpriseReporter } from './EnterpriseReporter';
+import { AccessType, ServiceType } from '../detectors/IScanningStrategy';
 
 describe('EnterpriseReporter', () => {
   const practicingHighImpactPracticeWithCtx = practiceWithContextFactory();
   const notPracticingHighImpactPracticeWithCtx = practiceWithContextFactory({ evaluation: PracticeEvaluationResult.notPracticing });
+  const scanningStrategy = {
+    accessType: AccessType.public,
+    localPath: '.',
+    rootPath: undefined,
+    remoteUrl: 'www.github.com/DXHeroes/dx-scanner',
+    isOnline: true,
+    serviceType: ServiceType.github,
+  };
 
   describe('#report', () => {
     it('one practicing practice', async () => {
-      const result = new EnterpriseReporter(argumentsProviderFactory()).buildReport([practicingHighImpactPracticeWithCtx]);
+      const result = new EnterpriseReporter(argumentsProviderFactory(), scanningStrategy).buildReport([
+        practicingHighImpactPracticeWithCtx,
+      ]);
 
       await expect(result.componentsWithDxScore).toContainObject({
         dxScore: { points: { total: 100, max: 100, percentage: 100 }, value: '100% | 1/1' },
@@ -19,7 +30,7 @@ describe('EnterpriseReporter', () => {
     });
 
     it('one practicing practice and one not practicing in two components', async () => {
-      const result = new EnterpriseReporter(argumentsProviderFactory()).buildReport([
+      const result = new EnterpriseReporter(argumentsProviderFactory(), scanningStrategy).buildReport([
         practicingHighImpactPracticeWithCtx,
         notPracticingHighImpactPracticeWithCtx,
       ]);
@@ -47,7 +58,9 @@ describe('EnterpriseReporter', () => {
     });
 
     it('one not practicing practice', async () => {
-      const result = new EnterpriseReporter(argumentsProviderFactory()).buildReport([notPracticingHighImpactPracticeWithCtx]);
+      const result = new EnterpriseReporter(argumentsProviderFactory(), scanningStrategy).buildReport([
+        notPracticingHighImpactPracticeWithCtx,
+      ]);
 
       await expect(result.componentsWithDxScore).toContainObject({
         dxScore: {

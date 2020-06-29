@@ -32,8 +32,8 @@ export class CLIReporter implements IReporter {
   buildReport(practicesAndComponents: PracticeWithContextForReporter[]): string {
     const lines: string[] = [];
 
-    const componentsWithPractices = ReporterUtils.getComponentsWithPractices(practicesAndComponents);
-    const dxScore = ReporterUtils.computeDXScore(practicesAndComponents);
+    const componentsWithPractices = ReporterUtils.getComponentsWithPractices(practicesAndComponents, this.scanningStrategy);
+    const dxScore = ReporterUtils.computeDXScore(practicesAndComponents, this.scanningStrategy);
 
     lines.push(bold(blue('----------------------------')));
     lines.push(bold(blue('|                          |')));

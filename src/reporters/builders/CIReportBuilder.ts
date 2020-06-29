@@ -33,8 +33,8 @@ export class CIReportBuilder implements IReportBuilder {
   renderFromTemplate(): string {
     const lines: string[] = [];
 
-    const componentsWithPractices = ReporterUtils.getComponentsWithPractices(this.practicesAndComponents);
-    const dxScore = ReporterUtils.computeDXScore(this.practicesAndComponents);
+    const componentsWithPractices = ReporterUtils.getComponentsWithPractices(this.practicesAndComponents, this.scanningStrategy);
+    const dxScore = ReporterUtils.computeDXScore(this.practicesAndComponents, this.scanningStrategy);
 
     // render html comment as an ID for updating PR comment
     lines.push(CIReportBuilder.ciReportIndicator);

@@ -5,6 +5,7 @@ import { argumentsProviderFactory } from '../test/factories/ArgumentsProviderFac
 import { FileSystemService } from '../services';
 import path from 'path';
 import { DirectoryJSON } from 'memfs/lib/volume';
+import { scanningStrategy } from '../scanner/__MOCKS__/ScanningStrategy.mock';
 
 describe('HTMLReporter', () => {
   const practicingHighImpactPracticeWithCtx = practiceWithContextFactory();
@@ -24,7 +25,7 @@ describe('HTMLReporter', () => {
 
   describe('#report', () => {
     it('one practicing practice', async () => {
-      await new HTMLReporter(argumentsProviderFactory({ html: true }), virtualFileSystemService).report([
+      await new HTMLReporter(argumentsProviderFactory({ html: true }), virtualFileSystemService, scanningStrategy).report([
         practicingHighImpactPracticeWithCtx,
       ]);
 
@@ -34,7 +35,7 @@ describe('HTMLReporter', () => {
     });
 
     it('one practicing practice and one not practicing', async () => {
-      await new HTMLReporter(argumentsProviderFactory({ html: true }), virtualFileSystemService).report([
+      await new HTMLReporter(argumentsProviderFactory({ html: true }), virtualFileSystemService, scanningStrategy).report([
         practicingHighImpactPracticeWithCtx,
         notPracticingHighImpactPracticeWithCtx,
       ]);
@@ -45,7 +46,7 @@ describe('HTMLReporter', () => {
     });
 
     it('all impacted practices', async () => {
-      await new HTMLReporter(argumentsProviderFactory({ html: true }), virtualFileSystemService).report([
+      await new HTMLReporter(argumentsProviderFactory({ html: true }), virtualFileSystemService, scanningStrategy).report([
         practicingHighImpactPracticeWithCtx,
         notPracticingHighImpactPracticeWithCtx,
         practiceWithContextFactory({

@@ -36,10 +36,10 @@ export class FixReporter implements IReporter {
   ): string {
     const lines: string[] = [];
 
-    const componentsWithPractices = ReporterUtils.getComponentsWithPractices(practicesAndComponents);
-    const componentsWithPracticesAfterFix = ReporterUtils.getComponentsWithPractices(practicesAndComponentsAfterFix);
-    const dxScore = ReporterUtils.computeDXScore(practicesAndComponents);
-    const dxScoreAfterFix = ReporterUtils.computeDXScore(practicesAndComponentsAfterFix);
+    const componentsWithPractices = ReporterUtils.getComponentsWithPractices(practicesAndComponents, this.scanningStrategy);
+    const componentsWithPracticesAfterFix = ReporterUtils.getComponentsWithPractices(practicesAndComponentsAfterFix, this.scanningStrategy);
+    const dxScore = ReporterUtils.computeDXScore(practicesAndComponents, this.scanningStrategy);
+    const dxScoreAfterFix = ReporterUtils.computeDXScore(practicesAndComponentsAfterFix, this.scanningStrategy);
 
     lines.push(bold(blue('----------------------------')));
     lines.push(bold(blue('|                          |')));
