@@ -1,4 +1,12 @@
-import { PracticeEvaluationResult, PracticeImpact } from '../model';
+import {
+  PracticeEvaluationResult,
+  PracticeImpact,
+  ProgrammingLanguage,
+  ProjectComponentFramework,
+  ProjectComponentType,
+  ProjectComponentPlatform,
+} from '../model';
+import nodePath from 'path';
 import { ReporterUtils } from './ReporterUtils';
 import { practiceWithContextFactory } from '../test/factories/PracticeWithContextFactory';
 import { AccessType, ServiceType } from '../detectors/IScanningStrategy';
@@ -9,9 +17,9 @@ describe('ReporterUtils', () => {
   const notPracticingHighImpactPracticeWithCtx = practiceWithContextFactory({ evaluation: PracticeEvaluationResult.notPracticing });
   const scanningStrategy: ScanningStrategy = {
     accessType: AccessType.public,
-    localPath: '.',
+    localPath: nodePath.resolve('./'),
     rootPath: undefined,
-    remoteUrl: 'www.github.com/DXHeroes/dx-scanner',
+    remoteUrl: 'https://github.com/DXHeroes/dx-scanner',
     isOnline: true,
     serviceType: ServiceType.github,
   };
@@ -72,7 +80,7 @@ describe('ReporterUtils', () => {
 
       expect(result.length).toEqual(1);
 
-      expect(result[0].component).toEqual(practicingHighImpactPracticeWithCtx.component);
+      expect(result[0].component).toEqual({ ...practicingHighImpactPracticeWithCtx.component, path: '' });
       expect(result[0].practicesAndComponents.length).toEqual(1);
       expect(result[0].practicesAndComponents[0]).toEqual(practicingHighImpactPracticeWithCtx);
     });
@@ -85,27 +93,43 @@ describe('ReporterUtils', () => {
 
       expect(result.length).toEqual(1);
 
-      expect(result[0].component).toEqual(practicingHighImpactPracticeWithCtx.component);
+      expect(result[0].component).toEqual({ ...practicingHighImpactPracticeWithCtx.component, path: '' });
       expect(result[0].practicesAndComponents.length).toEqual(2);
       expect(result[0].practicesAndComponents[0]).toEqual(practicingHighImpactPracticeWithCtx);
       expect(result[0].practicesAndComponents[1]).toEqual(practicingHighImpactPracticeWithCtx);
     });
 
     it('returns two components on different path with one practiceWithContext each', () => {
-      const mockPracticeWithContext2nd = practiceWithContextFactory({ component: { path: './2nd' } });
+      const mockPracticeWithContext1st = practiceWithContextFactory({
+        component: { repositoryPath: 'https://github.com/dxheroes/dx-scanner', path: './1stService' },
+      });
+      const mockPracticeWithContext2nd = practiceWithContextFactory({
+        component: { repositoryPath: 'https://github.com/dxheroes/dx-scanner', path: './2ndService' },
+      });
 
-      const result = ReporterUtils.getComponentsWithPractices(
-        [practicingHighImpactPracticeWithCtx, mockPracticeWithContext2nd],
-        scanningStrategy,
-      );
+      const result = ReporterUtils.getComponentsWithPractices([mockPracticeWithContext1st, mockPracticeWithContext2nd], scanningStrategy);
 
       expect(result.length).toEqual(2);
 
-      expect(result[0].component).toEqual(practicingHighImpactPracticeWithCtx.component);
+      expect(result[0].component).toEqual({
+        repositoryPath: 'https://github.com/dxheroes/dx-scanner',
+        path: '1stService',
+        language: ProgrammingLanguage.JavaScript,
+        framework: ProjectComponentFramework.UNKNOWN,
+        type: ProjectComponentType.UNKNOWN,
+        platform: ProjectComponentPlatform.UNKNOWN,
+      });
       expect(result[0].practicesAndComponents.length).toEqual(1);
-      expect(result[0].practicesAndComponents[0]).toEqual(practicingHighImpactPracticeWithCtx);
+      expect(result[0].practicesAndComponents[0]).toEqual(mockPracticeWithContext1st);
 
-      expect(result[1].component).toEqual(mockPracticeWithContext2nd.component);
+      expect(result[1].component).toEqual({
+        repositoryPath: 'https://github.com/dxheroes/dx-scanner',
+        path: '2ndService',
+        language: ProgrammingLanguage.JavaScript,
+        framework: ProjectComponentFramework.UNKNOWN,
+        type: ProjectComponentType.UNKNOWN,
+        platform: ProjectComponentPlatform.UNKNOWN,
+      });
       expect(result[1].practicesAndComponents.length).toEqual(1);
       expect(result[1].practicesAndComponents[0]).toEqual(mockPracticeWithContext2nd);
     });
@@ -126,8 +150,8 @@ describe('ReporterUtils', () => {
 
       expect(result[0].component).toEqual({
         ...practiceWithContext.component,
-        repositoryPath: 'https://github.com/DXHeroes/dx-scanner/tree/master/myApp',
-        path: 'myApp',
+        repositoryPath: 'https://github.com/DXHeroes/dx-scanner',
+        path: '',
       });
       expect(result[0].practicesAndComponents.length).toEqual(1);
       expect(result[0].practicesAndComponents[0]).toEqual(practiceWithContext);
@@ -149,8 +173,8 @@ describe('ReporterUtils', () => {
 
       expect(result[0].component).toEqual({
         ...practiceWithContext.component,
-        repositoryPath: 'https://gitlab.com/DXHeroes/dx-scanner/tree/master/myApp',
-        path: 'myApp',
+        repositoryPath: 'https://gitlab.com/DXHeroes/dx-scanner',
+        path: '',
       });
       expect(result[0].practicesAndComponents.length).toEqual(1);
       expect(result[0].practicesAndComponents[0]).toEqual(practiceWithContext);
@@ -172,8 +196,8 @@ describe('ReporterUtils', () => {
 
       expect(result[0].component).toEqual({
         ...practiceWithContext.component,
-        repositoryPath: 'https://bitbucket.org/DXHeroes/dx-scanner/src/master/myApp',
-        path: 'myApp',
+        repositoryPath: 'https://bitbucket.org/DXHeroes/dx-scanner',
+        path: '',
       });
       expect(result[0].practicesAndComponents.length).toEqual(1);
       expect(result[0].practicesAndComponents[0]).toEqual(practiceWithContext);
@@ -196,7 +220,7 @@ describe('ReporterUtils', () => {
       expect(result[0].component).toEqual({
         ...practiceWithContext.component,
         repositoryPath: practiceWithContext.component.repositoryPath,
-        path: 'myApp',
+        path: '',
       });
       expect(result[0].practicesAndComponents.length).toEqual(1);
       expect(result[0].practicesAndComponents[0]).toEqual(practiceWithContext);

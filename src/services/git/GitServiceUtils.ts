@@ -1,5 +1,6 @@
 import gitUrlParse from 'git-url-parse';
 import _ from 'lodash';
+import nodePath from 'path';
 import { ScanningStrategy } from '../../detectors';
 import { ServiceType } from '../../detectors/IScanningStrategy';
 import { assertNever } from '../../lib/assertNever';
@@ -89,6 +90,11 @@ export class GitServiceUtils {
 
     // if scanner is running remotely, concat repo path with component path, if not return local path directly
     return urlComponentPath ? (repoPath += urlComponentPath) : component.path;
+  };
+
+  static getComponentLocalPath = (component: ProjectComponent, scanningStrategy: ScanningStrategy): string => {
+    const cwp = _.replace(component.path, <string>scanningStrategy.localPath, '');
+    return nodePath.basename(cwp);
   };
 }
 
