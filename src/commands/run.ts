@@ -8,7 +8,7 @@ import { CLIArgs } from '../model';
 import { ErrorFactory } from '../lib/errors/ErrorFactory';
 
 export default class Run {
-  static async run(path = process.cwd(), cmd: CLIArgs) {
+  static async run(path = process.cwd(), cmd: CLIArgs): Promise<void> {
     debug('cli')(cmd);
     const scanPath = path;
 
