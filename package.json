@@ -34,6 +34,7 @@
     "axios": "0.19.2",
     "bitbucket": "2.2.0",
     "camelcase": "6.0.0",
+    "cli-ux": "5.4.7",
     "colors": "1.4.0",
     "command-exists": "1.2.9",
     "commander": "5.1.0",
@@ -44,7 +45,6 @@
     "generator-license": "5.4.0",
     "git-url-parse": "11.1.2",
     "gitignore": "0.6.0",
-    "glob": "7.1.6",
     "gradle-to-js": "2.0.0",
     "inquirer": "7.2.0",
     "inversify": "5.0.1",
@@ -54,7 +54,6 @@
     "moment": "2.27.0",
     "node-filter-async": "2.0.0",
     "npm-check-updates": "7.0.1",
-    "oclif": "1.16.1",
     "prettier-default-config": "0.2.3",
     "properties": "1.2.1",
     "qs": "6.9.4",
@@ -65,11 +64,9 @@
     "table": "5.4.6",
     "toposort": "2.0.2",
     "tsconfig": "7.0.0",
-    "tslib": "2.0.0",
     "update-notifier": "4.1.0",
     "uuid": "8.1.0",
     "xml2js": "0.4.23",
-    "yaml": "1.10.0",
     "yeoman-environment": "2.10.3",
     "yeoman-gen-run": "1.2.3"
   },
@@ -125,7 +122,6 @@
     "/lib"
   ],
   "keywords": [
-    "oclif",
     "dx-scanner",
     "developer experience",
     "dxheroes",
