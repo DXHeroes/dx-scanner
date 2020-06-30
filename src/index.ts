@@ -12,7 +12,7 @@ import { errorHandler } from './lib/errors';
 const pjson = require('../package.json');
 
 class DXScannerCommand {
-  static async run() {
+  static async run(): Promise<void> {
     const cmder = new commander.Command();
 
     // default cmd config
