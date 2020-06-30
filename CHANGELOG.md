@@ -1,3 +1,16 @@
+# [3.27.0](https://github.com/dxheroes/dx-scanner/compare/v3.26.8...v3.27.0) (2020-06-30)
+
+
+### Bug Fixes
+
+* recursion when then flag is false ([0d04fe8](https://github.com/dxheroes/dx-scanner/commit/0d04fe88a3c644142cf66b5a894c1529904f0a00))
+
+
+### Features
+
+* do not require auth input ([75fba94](https://github.com/dxheroes/dx-scanner/commit/75fba948f2e22ac1f48f8a096ee45c641182b606))
+* remove unused libs & lockfile maintenance ([41ff45c](https://github.com/dxheroes/dx-scanner/commit/41ff45c5b20c7cf95046027e084eeb1df505cee2))
+
 ## [3.26.8](https://github.com/dxheroes/dx-scanner/compare/v3.26.7...v3.26.8) (2020-06-29)
 
 
