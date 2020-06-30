@@ -160,7 +160,6 @@ export class Scanner {
       return { serviceType, accessType, remoteUrl, localPath, rootPath, isOnline };
     }
 
-    console.log(localPath === undefined && remoteUrl !== undefined && serviceType !== ServiceType.local);
     if (localPath === undefined && remoteUrl !== undefined && serviceType !== ServiceType.local) {
       const cloneUrl = new url.URL(remoteUrl);
       localPath = fs.mkdtempSync(path.join(os.tmpdir(), 'dx-scanner'));
