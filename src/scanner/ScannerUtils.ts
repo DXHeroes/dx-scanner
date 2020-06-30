@@ -164,6 +164,7 @@ export class ScannerUtils {
 
     const authorization = await cli.prompt(promptMsg, {
       type: 'hide',
+      required: false,
     });
 
     return authorization;
