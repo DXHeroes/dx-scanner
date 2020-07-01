@@ -100,5 +100,13 @@ process.on('uncaughtException', errorHandler);
 
 export default DXScannerCommand;
 
-export { DataReportDto, DxScoreDto, ComponentDto, SecurityIssueDto, SecurityIssueSeverity } from './reporters';
+export {
+  DataReportDto,
+  DxScoreDto,
+  ComponentDto,
+  SecurityIssueDto,
+  SecurityIssueSeverity,
+  UpdatedDependencySeverity,
+  UpdatedDependencyDto,
+} from './reporters';
 export { ProgrammingLanguage, ProjectComponent, ProjectComponentPlatform, ProjectComponentFramework, ProjectComponentType } from './model';
