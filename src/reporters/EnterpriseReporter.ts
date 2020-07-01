@@ -52,6 +52,7 @@ export class EnterpriseReporter implements IReporter {
         component: cwp.component,
         dxScore: { value: dxScoreForComponent, points: dxScorePoints },
         securityIssues: [],
+        updatedDependencies: [],
       };
 
       report.componentsWithDxScore.push(componentWithScore);
@@ -72,6 +73,7 @@ export interface ComponentDto {
   component: ProjectComponent;
   dxScore: DxScoreDto;
   securityIssues: SecurityIssueDto[];
+  updatedDependencies: UpdatedDependencyDto[];
 }
 
 export type DxScoreDto = Pick<DXScoreResult, 'value' | 'points'>;
