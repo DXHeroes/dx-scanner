@@ -1,3 +1,13 @@
+## [3.28.1](https://github.com/dxheroes/dx-scanner/compare/v3.28.0...v3.28.1) (2020-07-02)
+
+
+### Bug Fixes
+
+* component paths ([9733969](https://github.com/dxheroes/dx-scanner/commit/97339697d334ea8a03d624deb610ba27929a3219))
+* component repo url ([fdd9217](https://github.com/dxheroes/dx-scanner/commit/fdd9217c0d0086919e9a7c9375c806a03a314352))
+* correct component paths ([1cd53f9](https://github.com/dxheroes/dx-scanner/commit/1cd53f959961e2720800b64af6a07187f8de786e))
+* full repositoryPath in report including fixes for local path ([b54a885](https://github.com/dxheroes/dx-scanner/commit/b54a885f3b9d9ecceeb7f90080268349c7ef12a6))
+
 # [3.28.0](https://github.com/dxheroes/dx-scanner/compare/v3.27.0...v3.28.0) (2020-07-02)
 
 
