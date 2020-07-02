@@ -14,15 +14,14 @@ export class ReporterUtils {
     const result: ComponentResult[] = [];
 
     for (const pac of practicesAndComponents) {
-      const componentPath = GitServiceUtils.getComponentLocalPath(pac.component, scanningStrategy);
-      let component: ComponentResult | undefined = _.find(result, { component: { path: componentPath } });
+      let component: ComponentResult | undefined = _.find(result, { component: { path: pac.component.path } });
       if (!component) {
         const currentComponentReport = {
           component: {
             ...pac.component,
             repositoryPath:
-              pac.component.repositoryPath && GitServiceUtils.getPathOrRepoUrl(pac.component.repositoryPath, scanningStrategy),
-            path: componentPath,
+              pac.component.repositoryPath &&
+              GitServiceUtils.getPathOrRepoUrl(pac.component.repositoryPath, scanningStrategy, pac.component.path),
           },
           practicesAndComponents: [pac],
         };

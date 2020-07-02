@@ -11,7 +11,7 @@ describe('DashboardReporter', () => {
     accessType: AccessType.public,
     localPath: '.',
     rootPath: undefined,
-    remoteUrl: 'www.github.com/DXHeroes/dx-scanner',
+    remoteUrl: 'https://github.com/DXHeroes/dx-scanner',
     isOnline: true,
     serviceType: ServiceType.github,
   };

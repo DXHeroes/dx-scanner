@@ -1,5 +1,5 @@
 import gitUrlParse from 'git-url-parse';
-import _ from 'lodash';
+import _, { replace } from 'lodash';
 import nodePath from 'path';
 import { ScanningStrategy } from '../../detectors';
 import { ServiceType } from '../../detectors/IScanningStrategy';
@@ -10,7 +10,7 @@ export class GitServiceUtils {
   static getUrlToRepo = (url: string, scanningStrategy: ScanningStrategy, path?: string | undefined, branch = 'master') => {
     const parsedUrl = gitUrlParse(url);
 
-    let completeUrl = `${parsedUrl.protocol}://${parsedUrl.resource}/${parsedUrl.owner}/${parsedUrl.name}`;
+    let completeUrl = `https://${parsedUrl.resource}/${parsedUrl.owner}/${parsedUrl.name}`;
 
     if (path) {
       completeUrl += GitServiceUtils.getPath(path, branch || parsedUrl.ref, scanningStrategy.serviceType!);
@@ -31,21 +31,24 @@ export class GitServiceUtils {
   };
 
   static getPath = (componentPath: string, branch = 'master', serviceType: ServiceType) => {
-    switch (serviceType) {
-      case ServiceType.github:
-        return `/tree/${branch}/${componentPath}`;
-      case ServiceType.bitbucket:
-        return `/src/${branch}/${componentPath}`;
-      case ServiceType.gitlab:
-        return `/tree/${branch}/${componentPath}`;
-      case ServiceType.local:
-        return componentPath;
-      case ServiceType.git:
-        return `${branch}/${componentPath}`;
+    const resPath = (): string => {
+      switch (serviceType) {
+        case ServiceType.github:
+          return `/tree/${branch}/${componentPath}`;
+        case ServiceType.bitbucket:
+          return `/src/${branch}/${componentPath}`;
+        case ServiceType.gitlab:
+          return `/tree/${branch}/${componentPath}`;
+        case ServiceType.local:
+          return componentPath;
+        case ServiceType.git:
+          return `${branch}/${componentPath}`;
 
-      default:
-        return assertNever(serviceType);
-    }
+        default:
+          return assertNever(serviceType);
+      }
+    };
+    return nodePath.normalize(resPath());
   };
 
   static getRepoName = (repositoryPath: string | undefined, path: string): string => {

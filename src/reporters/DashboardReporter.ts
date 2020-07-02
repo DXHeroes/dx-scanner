@@ -26,7 +26,6 @@ export class DashboardReporter implements IReporter {
 
   async report(practicesAndComponents: PracticeWithContextForReporter[]): Promise<void> {
     // console.log(inspect(practicesAndComponents, true, 5));
-    console.log(inspect(practicesAndComponents, true, 5));
 
     const reportData = this.buildReport(practicesAndComponents);
     try {

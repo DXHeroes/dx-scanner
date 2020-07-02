@@ -11,6 +11,7 @@ import { ScanningStrategyDetectorUtils } from './utils/ScanningStrategyDetectorU
 import { ErrorFactory } from '../lib/errors';
 import { AccessType, ServiceType } from './IScanningStrategy';
 import git from 'simple-git/promise';
+import nodePath from 'path';
 
 @injectable()
 export class ScanningStrategyDetector implements IDetector<string, ScanningStrategy> {
@@ -72,8 +73,8 @@ export class ScanningStrategyDetector implements IDetector<string, ScanningStrat
       serviceType,
       accessType,
       remoteUrl: this.repositoryConfig.remoteUrl,
-      localPath,
-      rootPath,
+      localPath: localPath && nodePath.resolve(localPath),
+      rootPath: rootPath && nodePath.resolve(rootPath),
       isOnline: this.isOnline,
     };
   }
