@@ -1,3 +1,11 @@
+# [3.28.0](https://github.com/dxheroes/dx-scanner/compare/v3.27.0...v3.28.0) (2020-07-02)
+
+
+### Features
+
+* add updated dependencies dto ([1d79530](https://github.com/dxheroes/dx-scanner/commit/1d795306e4341e482c0e77d70dd2baf4239013ba))
+* add updated dependencies property ([dde517b](https://github.com/dxheroes/dx-scanner/commit/dde517b191af45dae71c9663e9d8de58b66ccb59))
+
 # [3.27.0](https://github.com/dxheroes/dx-scanner/compare/v3.26.8...v3.27.0) (2020-06-30)
 
 
