@@ -1,6 +1,7 @@
 import { GitignoreIsPresentPractice } from './GitignoreIsPresentPractice';
 import { PracticeEvaluationResult, ProgrammingLanguage } from '../../model';
 import { TestContainerContext, createTestContainer } from '../../inversify.config';
+import nock from 'nock';
 
 describe('GitignoreIsPresentPractice', () => {
   let practice: GitignoreIsPresentPractice;
@@ -56,7 +57,10 @@ describe('GitignoreIsPresentPractice', () => {
         'package.json': '{}',
       });
       containerCtx.fixerContext.projectComponent.language = ProgrammingLanguage.Java;
-
+      nock('https://api.github.com')
+        .get('/repos/github/gitignore/contents')
+        .reply(200, [{ name: 'Java.gitignore' }]);
+      nock('https://raw.githubusercontent.com').get('/github/gitignore/master/Java.gitignore').reply(200, '*.log');
       await practice.fix(containerCtx.fixerContext);
 
       const exists = await containerCtx.virtualFileSystemService.exists('.gitignore');
