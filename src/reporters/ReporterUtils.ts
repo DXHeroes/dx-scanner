@@ -19,9 +19,7 @@ export class ReporterUtils {
         const currentComponentReport = {
           component: {
             ...pac.component,
-            repositoryPath:
-              pac.component.repositoryPath &&
-              GitServiceUtils.getPathOrRepoUrl(pac.component.repositoryPath, scanningStrategy, pac.component.path),
+            repositoryPath: pac.component.repositoryPath && GitServiceUtils.getComponentPath(pac.component, scanningStrategy),
           },
           practicesAndComponents: [pac],
         };
