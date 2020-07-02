@@ -13,7 +13,8 @@ export class GitServiceUtils {
     let completeUrl = `https://${parsedUrl.resource}/${parsedUrl.owner}/${parsedUrl.name}`;
 
     if (path) {
-      completeUrl += GitServiceUtils.getPath(path, branch || parsedUrl.ref, scanningStrategy.serviceType!);
+      const relPath = replace(path, scanningStrategy.rootPath || '', '');
+      completeUrl += GitServiceUtils.getPath(relPath, branch || parsedUrl.ref, scanningStrategy.serviceType!);
     }
 
     return completeUrl;
