@@ -7,6 +7,7 @@ import { ProjectComponent } from '../model';
 import axios from 'axios';
 import * as uuid from 'uuid';
 import { ScanningStrategy } from '../detectors';
+import { inspect } from 'util';
 // eslint-disable-next-line @typescript-eslint/no-require-imports, @typescript-eslint/no-var-requires
 const pjson = require('../../package.json');
 
@@ -24,13 +25,15 @@ export class DashboardReporter implements IReporter {
   }
 
   async report(practicesAndComponents: PracticeWithContextForReporter[]): Promise<void> {
-    const reportData = this.buildReport(practicesAndComponents);
+    // console.log(inspect(practicesAndComponents, true, 5));
+    console.log(inspect(practicesAndComponents, true, 5));
 
+    const reportData = this.buildReport(practicesAndComponents);
     try {
       // send data
-      await axios.post('https://provider.dxscanner.io/api/v1/data-report', reportData, {
-        headers: this.argumentsProvider.apiToken && { Authorization: this.argumentsProvider.apiToken },
-      });
+      // await axios.post('https://provider.dxscanner.io/api/v1/data-report', reportData, {
+      //   headers: this.argumentsProvider.apiToken && { Authorization: this.argumentsProvider.apiToken },
+      // });
       // TODO: enable logs later, when account is available
       // console.log('You can see DX data in your DX account now.\n');
     } catch (error) {

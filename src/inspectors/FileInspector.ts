@@ -89,7 +89,7 @@ export class FileInspector implements IFileInspector {
       path = `${this.basePath}/${path}`;
     }
 
-    return nodePath.normalize(path);
+    return nodePath.normalize(nodePath.resolve(path));
   }
 
   async scanFor(
