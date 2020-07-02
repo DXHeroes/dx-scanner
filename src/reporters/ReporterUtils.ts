@@ -3,19 +3,26 @@ import { assertNever } from '../lib/assertNever';
 import { PracticeEvaluationResult, PracticeImpact, PracticeMetadata, ProjectComponent } from '../model';
 import { PracticeWithContextForReporter } from './IReporter';
 import { DXScoreOverallResult, DXScoreResult } from './model';
+import { GitServiceUtils } from '../services';
+import { ScanningStrategy } from '../detectors';
 
 export class ReporterUtils {
-  static getComponentsWithPractices(practicesAndComponents: PracticeWithContextForReporter[]): ComponentWithPractices[] {
-    const result: {
-      component: ProjectComponent;
-      practicesAndComponents: PracticeWithContextForReporter[];
-    }[] = [];
+  static getComponentsWithPractices(
+    practicesAndComponents: PracticeWithContextForReporter[],
+    scanningStrategy: ScanningStrategy,
+  ): ComponentWithPractices[] {
+    const result: ComponentResult[] = [];
 
     for (const pac of practicesAndComponents) {
-      let component = _.find(result, { component: { path: pac.component.path } });
+      let component: ComponentResult | undefined = _.find(result, { component: { path: pac.component.path } });
       if (!component) {
         const currentComponentReport = {
-          component: pac.component,
+          component: {
+            ...pac.component,
+            repositoryPath:
+              pac.component.repositoryPath &&
+              GitServiceUtils.getPathOrRepoUrl(pac.component.repositoryPath, scanningStrategy, pac.component.path),
+          },
           practicesAndComponents: [pac],
         };
 
@@ -30,10 +37,13 @@ export class ReporterUtils {
     return result;
   }
 
-  static computeDXScore(practicesAndComponents: PracticeWithContextForReporter[]): DXScoreOverallResult {
+  static computeDXScore(
+    practicesAndComponents: PracticeWithContextForReporter[],
+    scanningStrategy: ScanningStrategy,
+  ): DXScoreOverallResult {
     const scoreResult: DXScoreOverallResult = { ...this.computeDXScoreResult(practicesAndComponents), components: [] };
 
-    const componentsWithPractices = this.getComponentsWithPractices(practicesAndComponents);
+    const componentsWithPractices = this.getComponentsWithPractices(practicesAndComponents, scanningStrategy);
     for (const cwp of componentsWithPractices) {
       scoreResult.components.push({
         path: cwp.component.path,
@@ -118,6 +128,11 @@ export class ReporterUtils {
     }
   }
 }
+
+type ComponentResult = {
+  component: ProjectComponent;
+  practicesAndComponents: PracticeWithContextForReporter[];
+};
 
 export type ComponentWithPractices = {
   component: ProjectComponent;

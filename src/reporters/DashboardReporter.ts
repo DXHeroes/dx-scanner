@@ -6,20 +6,26 @@ import { PracticeWithContextForReporter, IReporter } from './IReporter';
 import { ProjectComponent } from '../model';
 import axios from 'axios';
 import * as uuid from 'uuid';
+import { ScanningStrategy } from '../detectors';
+import { inspect } from 'util';
 // eslint-disable-next-line @typescript-eslint/no-require-imports, @typescript-eslint/no-var-requires
 const pjson = require('../../package.json');
 
 @injectable()
-export class EnterpriseReporter implements IReporter {
+export class DashboardReporter implements IReporter {
   private readonly argumentsProvider: ArgumentsProvider;
+  private readonly scanningStrategy: ScanningStrategy;
 
-  constructor(@inject(Types.ArgumentsProvider) argumentsProvider: ArgumentsProvider) {
+  constructor(
+    @inject(Types.ArgumentsProvider) argumentsProvider: ArgumentsProvider,
+    @inject(Types.ScanningStrategy) scanningStrategy: ScanningStrategy,
+  ) {
     this.argumentsProvider = argumentsProvider;
+    this.scanningStrategy = scanningStrategy;
   }
 
   async report(practicesAndComponents: PracticeWithContextForReporter[]): Promise<void> {
     const reportData = this.buildReport(practicesAndComponents);
-
     try {
       // send data
       await axios.post('https://provider.dxscanner.io/api/v1/data-report', reportData, {
@@ -33,9 +39,9 @@ export class EnterpriseReporter implements IReporter {
   }
 
   buildReport(practicesAndComponents: PracticeWithContextForReporter[]): DataReportDto {
-    const componentsWithPractices = ReporterUtils.getComponentsWithPractices(practicesAndComponents);
+    const componentsWithPractices = ReporterUtils.getComponentsWithPractices(practicesAndComponents, this.scanningStrategy);
 
-    const dxScore = ReporterUtils.computeDXScore(practicesAndComponents);
+    const dxScore = ReporterUtils.computeDXScore(practicesAndComponents, this.scanningStrategy);
 
     const report: DataReportDto = {
       componentsWithDxScore: [],

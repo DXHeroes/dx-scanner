@@ -11,6 +11,7 @@ import { ScanningStrategyDetectorUtils } from './utils/ScanningStrategyDetectorU
 import { ErrorFactory } from '../lib/errors';
 import { AccessType, ServiceType } from './IScanningStrategy';
 import git from 'simple-git/promise';
+import nodePath from 'path';
 
 @injectable()
 export class ScanningStrategyDetector implements IDetector<string, ScanningStrategy> {
@@ -38,9 +39,10 @@ export class ScanningStrategyDetector implements IDetector<string, ScanningStrat
   }
 
   async detect(): Promise<ScanningStrategy> {
-    let accessType: AccessType | undefined = undefined;
-    let remoteUrl: RemoteUrl = undefined;
+    let accessType: AccessType | undefined;
+    let remoteUrl: RemoteUrl;
     let rootPath: string | undefined;
+    let localPath: string | undefined;
 
     const path = ScanningStrategyDetectorUtils.normalizePath(this.argumentsProvider.uri);
 
@@ -60,6 +62,7 @@ export class ScanningStrategyDetector implements IDetector<string, ScanningStrat
 
     if (ScanningStrategyDetectorUtils.isLocalPath(path)) {
       rootPath = path;
+      localPath = path;
 
       if (await git(path).checkIsRepo()) {
         rootPath = await git(path).revparse(['--show-toplevel']);
@@ -70,8 +73,8 @@ export class ScanningStrategyDetector implements IDetector<string, ScanningStrat
       serviceType,
       accessType,
       remoteUrl: this.repositoryConfig.remoteUrl,
-      localPath: ScanningStrategyDetectorUtils.isLocalPath(path) ? path : undefined,
-      rootPath,
+      localPath: localPath && nodePath.resolve(localPath),
+      rootPath: rootPath && nodePath.resolve(rootPath),
       isOnline: this.isOnline,
     };
   }
