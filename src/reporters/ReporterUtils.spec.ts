@@ -80,7 +80,7 @@ describe('ReporterUtils', () => {
 
       expect(result.length).toEqual(1);
 
-      expect(result[0].component).toEqual({ ...practicingHighImpactPracticeWithCtx.component, path: '' });
+      expect(result[0].component).toEqual(practicingHighImpactPracticeWithCtx.component);
       expect(result[0].practicesAndComponents.length).toEqual(1);
       expect(result[0].practicesAndComponents[0]).toEqual(practicingHighImpactPracticeWithCtx);
     });
@@ -93,7 +93,7 @@ describe('ReporterUtils', () => {
 
       expect(result.length).toEqual(1);
 
-      expect(result[0].component).toEqual({ ...practicingHighImpactPracticeWithCtx.component, path: '' });
+      expect(result[0].component).toEqual(practicingHighImpactPracticeWithCtx.component);
       expect(result[0].practicesAndComponents.length).toEqual(2);
       expect(result[0].practicesAndComponents[0]).toEqual(practicingHighImpactPracticeWithCtx);
       expect(result[0].practicesAndComponents[1]).toEqual(practicingHighImpactPracticeWithCtx);
@@ -112,8 +112,8 @@ describe('ReporterUtils', () => {
       expect(result.length).toEqual(2);
 
       expect(result[0].component).toEqual({
-        repositoryPath: 'https://github.com/dxheroes/dx-scanner',
-        path: '1stService',
+        repositoryPath: 'https://github.com/dxheroes/dx-scanner/tree/master/1stService',
+        path: './1stService',
         language: ProgrammingLanguage.JavaScript,
         framework: ProjectComponentFramework.UNKNOWN,
         type: ProjectComponentType.UNKNOWN,
@@ -123,8 +123,8 @@ describe('ReporterUtils', () => {
       expect(result[0].practicesAndComponents[0]).toEqual(mockPracticeWithContext1st);
 
       expect(result[1].component).toEqual({
-        repositoryPath: 'https://github.com/dxheroes/dx-scanner',
-        path: '2ndService',
+        repositoryPath: 'https://github.com/dxheroes/dx-scanner/tree/master/2ndService',
+        path: './2ndService',
         language: ProgrammingLanguage.JavaScript,
         framework: ProjectComponentFramework.UNKNOWN,
         type: ProjectComponentType.UNKNOWN,
@@ -150,8 +150,7 @@ describe('ReporterUtils', () => {
 
       expect(result[0].component).toEqual({
         ...practiceWithContext.component,
-        repositoryPath: 'https://github.com/DXHeroes/dx-scanner',
-        path: '',
+        repositoryPath: 'https://github.com/DXHeroes/dx-scanner/tree/master/myApp',
       });
       expect(result[0].practicesAndComponents.length).toEqual(1);
       expect(result[0].practicesAndComponents[0]).toEqual(practiceWithContext);
@@ -173,8 +172,7 @@ describe('ReporterUtils', () => {
 
       expect(result[0].component).toEqual({
         ...practiceWithContext.component,
-        repositoryPath: 'https://gitlab.com/DXHeroes/dx-scanner',
-        path: '',
+        repositoryPath: 'https://gitlab.com/DXHeroes/dx-scanner/tree/master/myApp',
       });
       expect(result[0].practicesAndComponents.length).toEqual(1);
       expect(result[0].practicesAndComponents[0]).toEqual(practiceWithContext);
@@ -196,8 +194,7 @@ describe('ReporterUtils', () => {
 
       expect(result[0].component).toEqual({
         ...practiceWithContext.component,
-        repositoryPath: 'https://bitbucket.org/DXHeroes/dx-scanner',
-        path: '',
+        repositoryPath: 'https://bitbucket.org/DXHeroes/dx-scanner/src/master/myApp',
       });
       expect(result[0].practicesAndComponents.length).toEqual(1);
       expect(result[0].practicesAndComponents[0]).toEqual(practiceWithContext);
@@ -217,11 +214,7 @@ describe('ReporterUtils', () => {
 
       expect(result.length).toEqual(1);
 
-      expect(result[0].component).toEqual({
-        ...practiceWithContext.component,
-        repositoryPath: practiceWithContext.component.repositoryPath,
-        path: '',
-      });
+      expect(result[0].component).toEqual(practiceWithContext.component);
       expect(result[0].practicesAndComponents.length).toEqual(1);
       expect(result[0].practicesAndComponents[0]).toEqual(practiceWithContext);
     });
