@@ -1,3 +1,48 @@
+## [3.28.1](https://github.com/dxheroes/dx-scanner/compare/v3.28.0...v3.28.1) (2020-07-02)
+
+
+### Bug Fixes
+
+* component paths ([9733969](https://github.com/dxheroes/dx-scanner/commit/97339697d334ea8a03d624deb610ba27929a3219))
+* component repo url ([fdd9217](https://github.com/dxheroes/dx-scanner/commit/fdd9217c0d0086919e9a7c9375c806a03a314352))
+* correct component paths ([1cd53f9](https://github.com/dxheroes/dx-scanner/commit/1cd53f959961e2720800b64af6a07187f8de786e))
+* full repositoryPath in report including fixes for local path ([b54a885](https://github.com/dxheroes/dx-scanner/commit/b54a885f3b9d9ecceeb7f90080268349c7ef12a6))
+
+# [3.28.0](https://github.com/dxheroes/dx-scanner/compare/v3.27.0...v3.28.0) (2020-07-02)
+
+
+### Features
+
+* add updated dependencies dto ([1d79530](https://github.com/dxheroes/dx-scanner/commit/1d795306e4341e482c0e77d70dd2baf4239013ba))
+* add updated dependencies property ([dde517b](https://github.com/dxheroes/dx-scanner/commit/dde517b191af45dae71c9663e9d8de58b66ccb59))
+
+# [3.27.0](https://github.com/dxheroes/dx-scanner/compare/v3.26.8...v3.27.0) (2020-06-30)
+
+
+### Bug Fixes
+
+* recursion when then flag is false ([0d04fe8](https://github.com/dxheroes/dx-scanner/commit/0d04fe88a3c644142cf66b5a894c1529904f0a00))
+
+
+### Features
+
+* do not require auth input ([75fba94](https://github.com/dxheroes/dx-scanner/commit/75fba948f2e22ac1f48f8a096ee45c641182b606))
+* remove unused libs & lockfile maintenance ([41ff45c](https://github.com/dxheroes/dx-scanner/commit/41ff45c5b20c7cf95046027e084eeb1df505cee2))
+
+## [3.26.8](https://github.com/dxheroes/dx-scanner/compare/v3.26.7...v3.26.8) (2020-06-29)
+
+
+### Bug Fixes
+
+* add nestjs to backend packages for JS/TS ([b6264e4](https://github.com/dxheroes/dx-scanner/commit/b6264e4f38ef21e7d445c7b14d9ca28e803c6651))
+
+## [3.26.7](https://github.com/dxheroes/dx-scanner/compare/v3.26.6...v3.26.7) (2020-06-29)
+
+
+### Bug Fixes
+
+* relaxing conditions for .gitignore & fix tests ([1afdcbe](https://github.com/dxheroes/dx-scanner/commit/1afdcbed68383fbd4e3b288901b8a1edee43fe7d))
+
 ## [3.26.6](https://github.com/dxheroes/dx-scanner/compare/v3.26.5...v3.26.6) (2020-06-24)
 
 

@@ -9,17 +9,21 @@ import { ArgumentsProvider } from '../scanner';
 import { FileSystemService, GitServiceUtils } from '../services';
 import { Types } from '../types';
 import path from 'path';
+import { ScanningStrategy } from '../detectors';
 
 @injectable()
 export class HTMLReporter implements IReporter {
   private readonly argumentsProvider: ArgumentsProvider;
   private readonly fileSystemService: FileSystemService;
+  private readonly scanningStrategy: ScanningStrategy;
 
   constructor(
     @inject(Types.ArgumentsProvider) argumentsProvider: ArgumentsProvider,
     @inject(FileSystemService) fileSystemService: FileSystemService,
+    @inject(Types.ScanningStrategy) scanningStrategy: ScanningStrategy,
   ) {
     this.argumentsProvider = argumentsProvider;
+    this.scanningStrategy = scanningStrategy;
     this.fileSystemService = fileSystemService;
   }
 
@@ -37,8 +41,8 @@ export class HTMLReporter implements IReporter {
   buildReport(practicesAndComponents: PracticeWithContextForReporter[]): string {
     const lines: string[] = [];
 
-    const componentsWithPractices = ReporterUtils.getComponentsWithPractices(practicesAndComponents);
-    const dxScore = ReporterUtils.computeDXScore(practicesAndComponents);
+    const componentsWithPractices = ReporterUtils.getComponentsWithPractices(practicesAndComponents, this.scanningStrategy);
+    const dxScore = ReporterUtils.computeDXScore(practicesAndComponents, this.scanningStrategy);
 
     lines.push('<h1 style="text-align: center">DX Scanner Result</h1>');
 

@@ -124,7 +124,7 @@ export class Scanner {
     cli.action.stop();
   }
 
-  async fix(practicesWithContext: PracticeWithContext[], scanningStrategy?: ScanningStrategy) {
+  async fix(practicesWithContext: PracticeWithContext[], scanningStrategy?: ScanningStrategy): Promise<void> {
     if (!this.argumentsProvider.fix) return;
     const fixablePractice = (p: PracticeWithContext) => p.practice.fix && p.evaluation === PracticeEvaluationResult.notPracticing;
     const fixPatternMatcher = this.argumentsProvider.fixPattern ? new RegExp(this.argumentsProvider.fixPattern, 'i') : null;
@@ -371,6 +371,9 @@ export class Scanner {
     if (!this.argumentsProvider.recursive && relevantComponents.length > 1) {
       const componentsSharedPath = sharedSubpath(relevantComponents.map((cwc) => cwc.component.path));
       const componentsAtRootPath = relevantComponents.filter((cwc) => cwc.component.path === componentsSharedPath);
+
+      // scan the first component only if recursion flag is not true && there are more than 1 components on root
+      relevantComponents = [relevantComponents[0]];
 
       // do not scan only root path if found 0 components there
       if (componentsAtRootPath.length > 0) {

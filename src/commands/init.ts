@@ -4,7 +4,7 @@ import { PracticeImpact } from '../model';
 import path from 'path';
 
 export default class Init {
-  static async run() {
+  static async run(): Promise<void> {
     const scanPath = process.cwd();
 
     const container = createRootContainer({

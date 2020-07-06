@@ -4,7 +4,7 @@ import { PracticeImpact, CLIArgs } from '../model';
 import { ReporterData } from '../reporters/ReporterData';
 
 export default class Practices {
-  static async run(cmd: CLIArgs) {
+  static async run(cmd: CLIArgs): Promise<void> {
     const scanPath = process.cwd();
 
     const container = createRootContainer({

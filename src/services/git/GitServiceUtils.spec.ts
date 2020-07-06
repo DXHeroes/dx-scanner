@@ -19,7 +19,7 @@ describe('GitServiceUtils', () => {
     const response = GitServiceUtils.getUrlToRepo(
       'https://www.bitbucket.com/pypy/pypy.git',
       { ...scanningStrategy, serviceType: ServiceType.bitbucket },
-      '/component',
+      'component',
     );
     expect(response).toEqual('https://www.bitbucket.com/pypy/pypy/src/master/component');
   });
@@ -48,7 +48,7 @@ describe('GitServiceUtils', () => {
       type: ProjectComponentType.Library,
       repositoryPath: 'https://www.github.com/DXHeroes/dx-scanner',
     };
-    scanningStrategy.localPath = '../dx-scannerSAJK';
+    scanningStrategy.localPath = '../dx-scannerSAJK/';
 
     const response = GitServiceUtils.getComponentPath(componentMock, scanningStrategy);
     expect(response).toEqual('https://www.github.com/DXHeroes/dx-scanner/tree/master/component');

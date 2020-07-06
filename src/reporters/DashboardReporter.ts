@@ -6,15 +6,22 @@ import { PracticeWithContextForReporter, IReporter } from './IReporter';
 import { ProjectComponent } from '../model';
 import axios from 'axios';
 import * as uuid from 'uuid';
+import { ScanningStrategy } from '../detectors';
+import { inspect } from 'util';
 // eslint-disable-next-line @typescript-eslint/no-require-imports, @typescript-eslint/no-var-requires
 const pjson = require('../../package.json');
 
 @injectable()
-export class EnterpriseReporter implements IReporter {
+export class DashboardReporter implements IReporter {
   private readonly argumentsProvider: ArgumentsProvider;
+  private readonly scanningStrategy: ScanningStrategy;
 
-  constructor(@inject(Types.ArgumentsProvider) argumentsProvider: ArgumentsProvider) {
+  constructor(
+    @inject(Types.ArgumentsProvider) argumentsProvider: ArgumentsProvider,
+    @inject(Types.ScanningStrategy) scanningStrategy: ScanningStrategy,
+  ) {
     this.argumentsProvider = argumentsProvider;
+    this.scanningStrategy = scanningStrategy;
   }
 
   async report(practicesAndComponents: PracticeWithContextForReporter[]): Promise<void> {
@@ -32,9 +39,9 @@ export class EnterpriseReporter implements IReporter {
   }
 
   buildReport(practicesAndComponents: PracticeWithContextForReporter[]): DataReportDto {
-    const componentsWithPractices = ReporterUtils.getComponentsWithPractices(practicesAndComponents);
+    const componentsWithPractices = ReporterUtils.getComponentsWithPractices(practicesAndComponents, this.scanningStrategy);
 
-    const dxScore = ReporterUtils.computeDXScore(practicesAndComponents);
+    const dxScore = ReporterUtils.computeDXScore(practicesAndComponents, this.scanningStrategy);
 
     const report: DataReportDto = {
       componentsWithDxScore: [],
@@ -52,6 +59,7 @@ export class EnterpriseReporter implements IReporter {
         component: cwp.component,
         dxScore: { value: dxScoreForComponent, points: dxScorePoints },
         securityIssues: <SecurityIssueDto[]>securityVulnerabilitiesPractice[0].practice.data?.statistics?.securityIssues,
+        updatedDependencies: [],
       };
 
       report.componentsWithDxScore.push(componentWithScore);
@@ -72,8 +80,12 @@ export interface ComponentDto {
   component: ProjectComponent;
   dxScore: DxScoreDto;
   securityIssues: SecurityIssueDto[];
+  updatedDependencies: UpdatedDependencyDto[];
 }
 
+export type DxScoreDto = Pick<DXScoreResult, 'value' | 'points'>;
+
+//security issues
 export type SecurityIssueDto = {
   library: string;
   type: string;
@@ -93,12 +105,24 @@ export type SecurityIssueSummaryDto = {
   code: number;
 };
 
-export type DxScoreDto = Pick<DXScoreResult, 'value' | 'points'>;
-
 export enum SecurityIssueSeverity {
   Info = 'info',
   Low = 'low',
   Moderate = 'moderate',
   High = 'high',
   Critical = 'critical',
+}
+
+//updated dependencies
+export type UpdatedDependencyDto = {
+  library: string;
+  currentVersion: string;
+  newestVersion: string;
+  severity: UpdatedDependencySeverity;
+};
+
+export enum UpdatedDependencySeverity {
+  Low = 'low',
+  Moderate = 'moderate',
+  High = 'high',
 }

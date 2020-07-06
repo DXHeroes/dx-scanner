@@ -51,6 +51,7 @@ describe('ScanningStrategyDetector', () => {
           getRemotes: () => [{ name: 'origin', refs: { fetch: repoPath, push: repoPath } }],
         };
       });
+      new GitHubNock('1', 'DXHeroes', 1, 'dx-scanner').getRepo('').reply(200);
 
       const scanningStrategyDetector = await createScanningStrategyDetector({ uri: '/local/rootDir/subDir' });
       const result = await scanningStrategyDetector.detect();

@@ -12,7 +12,7 @@ import { errorHandler } from './lib/errors';
 const pjson = require('../package.json');
 
 class DXScannerCommand {
-  static async run() {
+  static async run(): Promise<void> {
     const cmder = new commander.Command();
 
     // default cmd config
@@ -100,5 +100,13 @@ process.on('uncaughtException', errorHandler);
 
 export default DXScannerCommand;
 
-export { DataReportDto, DxScoreDto, ComponentDto, SecurityIssueDto, SecurityIssueSeverity } from './reporters';
+export {
+  DataReportDto,
+  DxScoreDto,
+  ComponentDto,
+  SecurityIssueDto,
+  SecurityIssueSeverity,
+  UpdatedDependencySeverity,
+  UpdatedDependencyDto,
+} from './reporters';
 export { ProgrammingLanguage, ProjectComponent, ProjectComponentPlatform, ProjectComponentFramework, ProjectComponentType } from './model';

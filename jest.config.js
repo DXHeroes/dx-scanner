@@ -27,10 +27,7 @@ module.exports = {
   coverageDirectory: 'coverage',
 
   // An array of regexp pattern strings used to skip coverage collection
-  coveragePathIgnorePatterns: [
-    "/node_modules/",
-    "__MOCKS__",
-  ],
+  coveragePathIgnorePatterns: ['/node_modules/', '__MOCKS__'],
 
   // A list of reporter names that Jest uses when writing coverage reports
   // coverageReporters: [
@@ -171,7 +168,7 @@ module.exports = {
   // verbose: null,
 
   // An array of regexp patterns that are matched against all source file paths before re-running tests in watch mode
-  watchPathIgnorePatterns: ['__MOCKS__'],
+  watchPathIgnorePatterns: ['node_modules', '__MOCKS__'],
 
   // Whether to use watchman for file crawling
   // watchman: true,

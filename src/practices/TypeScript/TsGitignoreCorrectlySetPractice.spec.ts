@@ -53,31 +53,22 @@ describe('TsGitignoreCorrectlySetPractice', () => {
     expect(evaluated).toEqual(PracticeEvaluationResult.unknown);
   });
 
-  it('Returns notPracticing if there are no lockfiles in .gitignore', async () => {
+  it('Returns practicing even if there are no lockfiles in .gitignore', async () => {
     containerCtx.virtualFileSystemService.setFileSystem({
       '.gitignore': basicGitignore,
-    });
-
-    const evaluated = await practice.evaluate(containerCtx.practiceContext);
-    expect(evaluated).toEqual(PracticeEvaluationResult.notPracticing);
-  });
-
-  it('Returns practicing if there is only one lockfile in .gitignore', async () => {
-    containerCtx.virtualFileSystemService.setFileSystem({
-      '.gitignore': `${basicGitignore}\nyarn.lock`,
     });
 
     const evaluated = await practice.evaluate(containerCtx.practiceContext);
     expect(evaluated).toEqual(PracticeEvaluationResult.practicing);
   });
 
-  it('Returns notPracticing if there are both lockfiles in .gitignore', async () => {
+  it('Returns practicing if there is a lockfile in .gitignore', async () => {
     containerCtx.virtualFileSystemService.setFileSystem({
-      '.gitignore': `${basicGitignore}\nyarn.lock\npackage-lock.json`,
+      '.gitignore': `${basicGitignore}\nyarn.lock`,
     });
 
     const evaluated = await practice.evaluate(containerCtx.practiceContext);
-    expect(evaluated).toEqual(PracticeEvaluationResult.notPracticing);
+    expect(evaluated).toEqual(PracticeEvaluationResult.practicing);
   });
 
   it('Is applicable if programming language is TypeScript ', async () => {
