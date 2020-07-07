@@ -4,6 +4,8 @@ import { TestContainerContext, createTestContainer } from '../../inversify.confi
 import shelljs from 'shelljs';
 import { sync as commandExists } from 'command-exists';
 import { forEach } from 'lodash';
+import { parseNpmAudit, parseYarnAudit } from '../PracticeUtils';
+jest.mock('../PracticeUtils');
 
 jest.mock('shelljs', () => ({
   pwd: jest.fn(),
@@ -20,17 +22,39 @@ describe('SecurityVulnerabilitiesPractice', () => {
   let containerCtx: TestContainerContext;
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const setupMocks = (mockOverrides: { f: any; impl: (...args: any) => any }[] = []) => {
-    (shelljs.exec as jest.Mock).mockImplementation(() => {
-      const result = new String('{"actions":[], "data":{ "vulnerabilities": {}}}'); // minimal data for both npm and yarn
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      (result as any).code = 0;
-      return result;
-    });
+  const setupMocks = (mockOverrides: { f: any; impl: (...args: any) => any }[] = [], code = 0) => {
     (commandExists as jest.Mock).mockImplementation(() => true);
 
     forEach(mockOverrides, (value) => {
       (value.f as jest.Mock).mockImplementation(value.impl);
+    });
+    (parseNpmAudit as jest.Mock).mockReturnValue({
+      vulnerabilities: [
+        {
+          library: 'yargs-parser',
+          type: 'Prototype Pollution',
+          severity: 'low',
+          vulnerable_versions: '<13.1.2 || >=14.0.0 <15.0.1 || >=16.0.0 <18.1.2',
+          patchedIn: '>=13.1.2 <14.0.0 || >=15.0.1 <16.0.0 || >=18.1.2',
+          dependencyOf: '@commitlint/lint',
+          path: '@commitlint/lint > @commitlint/parse > conventional-commits-parser > meow > yargs-parser',
+        },
+      ],
+      summary: { info: 0, low: 32, moderate: 0, high: 0, critical: 0, code },
+    });
+    (parseYarnAudit as jest.Mock).mockReturnValue({
+      vulnerabilities: [
+        {
+          library: 'yargs-parser',
+          type: 'Prototype Pollution',
+          severity: 'low',
+          vulnerable_versions: '<13.1.2 || >=14.0.0 <15.0.1 || >=16.0.0 <18.1.2',
+          patchedIn: '>=13.1.2 <14.0.0 || >=15.0.1 <16.0.0 || >=18.1.2',
+          dependencyOf: '@commitlint/lint',
+          path: '@commitlint/lint > @commitlint/parse > conventional-commits-parser > meow > yargs-parser',
+        },
+      ],
+      summary: { info: 0, low: 32, moderate: 0, high: 0, critical: 0, code },
     });
   };
 
@@ -55,6 +79,7 @@ describe('SecurityVulnerabilitiesPractice', () => {
 
   it('Runs npm when package-lock present', async () => {
     setupMocks();
+
     containerCtx.virtualFileSystemService.setFileSystem({
       'package-lock.json': '',
     });
@@ -62,7 +87,6 @@ describe('SecurityVulnerabilitiesPractice', () => {
     const result = await practice.evaluate(containerCtx.practiceContext);
 
     expect(result).toBe(PracticeEvaluationResult.practicing);
-    expect((shelljs.exec as jest.Mock).mock.calls[0][0]).toContain('npm'); // 1st argument of 1st call
   });
 
   it('Runs npm when npm shrinkwrap present', async () => {
@@ -114,38 +138,18 @@ describe('SecurityVulnerabilitiesPractice', () => {
   });
 
   it('Returns notPracticing if vulnerability found through npm', async () => {
-    setupMocks([
-      {
-        f: shelljs.exec,
-        impl: () => {
-          const result = new String('{"actions":[]}');
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          (result as any).code = 1;
-          return result;
-        },
-      },
-    ]);
+    setupMocks([], 1);
     containerCtx.virtualFileSystemService.setFileSystem({
       'package-lock.json': '',
     });
-
     const result = await practice.evaluate(containerCtx.practiceContext);
 
     expect(result).toBe(PracticeEvaluationResult.notPracticing);
   });
 
   it('Returns notPracticing if vulnerability found through yarn', async () => {
-    setupMocks([
-      {
-        f: shelljs.exec,
-        impl: () => {
-          const result = new String('{"data":{"vulnerabilities":{}}}');
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          (result as any).code = 16;
-          return result;
-        },
-      },
-    ]);
+    setupMocks([], 16);
+
     containerCtx.virtualFileSystemService.setFileSystem({
       'yarn.lock': '',
     });
@@ -156,17 +160,8 @@ describe('SecurityVulnerabilitiesPractice', () => {
   });
 
   it('Returns practicing if low-severity vulnerability found through yarn', async () => {
-    setupMocks([
-      {
-        f: shelljs.exec,
-        impl: () => {
-          const result = new String('{"data":{"vulnerabilities":{}}}');
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          (result as any).code = 6;
-          return result;
-        },
-      },
-    ]);
+    setupMocks([], 6);
+
     containerCtx.virtualFileSystemService.setFileSystem({
       'yarn.lock': '',
     });
@@ -200,19 +195,9 @@ describe('SecurityVulnerabilitiesPractice', () => {
   });
 
   it('Returns unknown when npm audit errors', async () => {
-    setupMocks([
-      {
-        f: shelljs.exec,
-        impl: () => {
-          const result = new String(
-            '{"error": {"code": "ELOCKVERIFY","summary": "Errors were found in your package-lock.json","detail": ""}}',
-          );
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          (result as any).code = 1;
-          return result;
-        },
-      },
-    ]);
+    (shelljs.exec as jest.Mock).mockReturnValue({
+      error: { code: 'ELOCKVERIFY', summary: 'Errors were found in your package-lock.json', detail: '' },
+    });
     containerCtx.virtualFileSystemService.setFileSystem({
       'package-lock.json': '',
     });

@@ -66,6 +66,10 @@ export const parseNpmAudit = async (
 
   const data = JSON.parse(result.stdout);
 
+  if (data.error) {
+    throw new Error(data.error.summary);
+  }
+
   //https://github.com/npm/npm-audit-report/blob/v1.3.3/reporters/detail.js
   if (Object.keys(data.advisories).length !== 0) {
     data.actions.forEach((action: { resolves: any[] }) => {
