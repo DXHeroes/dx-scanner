@@ -17,7 +17,6 @@ export const parseYarnAudit = async (
   arrayOfJSON.forEach((json) => {
     if (json !== '') {
       const element = JSON.parse(json);
-
       if (element?.data?.advisory) {
         // https://github.com/yarnpkg/yarn/blob/158da6c6287cbc4fee900e3704f140c3391dc28d/src/reporters/console/console-reporter.js
         const path = element.data.resolution?.path?.split('>').join(' > ');
@@ -63,11 +62,10 @@ export const parseNpmAudit = async (
 }> => {
   const vulnerabilities: SecurityIssueDto[] = [];
   let summary;
-
   const data = JSON.parse(result.stdout);
 
   if (data.error) {
-    throw new Error(data.error.summary);
+    throw new Error(data.error.detail);
   }
 
   //https://github.com/npm/npm-audit-report/blob/v1.3.3/reporters/detail.js
