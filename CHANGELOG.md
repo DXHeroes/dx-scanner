@@ -1,3 +1,10 @@
+## [3.28.2](https://github.com/dxheroes/dx-scanner/compare/v3.28.1...v3.28.2) (2020-07-09)
+
+
+### Bug Fixes
+
+* lower the bitbucket as it has breaking changes ([a2c8895](https://github.com/dxheroes/dx-scanner/commit/a2c889537d039030f44dfe3dbf1a77f1d6302589))
+
 ## [3.28.1](https://github.com/dxheroes/dx-scanner/compare/v3.28.0...v3.28.1) (2020-07-02)
 
 
