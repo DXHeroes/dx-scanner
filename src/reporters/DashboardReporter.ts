@@ -58,7 +58,7 @@ export class DashboardReporter implements IReporter {
       const componentWithScore: ComponentDto = {
         component: cwp.component,
         dxScore: { value: dxScoreForComponent, points: dxScorePoints },
-        securityIssues: <SecurityIssueDto[]>securityVulnerabilitiesPractice[0].practice.data?.statistics?.securityIssues,
+        securityIssues: <SecurityIssueDto[]>securityVulnerabilitiesPractice[0]?.practice.data?.statistics?.securityIssues,
         updatedDependencies: [],
       };
 
