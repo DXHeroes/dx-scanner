@@ -73,7 +73,7 @@ export class SecurityVulnerabilitiesPractice extends PracticeBase {
       type: vulnerability.type,
       severity: vulnerability.severity,
       dependencyOf: vulnerability.dependencyOf,
-      vulnerableVersions: vulnerability.vulnerable_versions,
+      vulnerableVersions: vulnerability.vulnerableVersions,
       patchedIn: vulnerability.patchedIn,
       path: vulnerability.path,
     }));

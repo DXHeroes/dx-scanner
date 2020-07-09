@@ -48,8 +48,7 @@ export class DashboardReporter implements IReporter {
       id: uuid.v4(),
       dxScore: { value: dxScore.value, points: dxScore.points },
     };
-    const securityVulnerabilitiesPractice = practicesAndComponents.filter((p) => p.practice.id === 'JavaScript.SecurityVulnerabilities');
-
+    const securityVulnerabilitiesPractice = practicesAndComponents.find((p) => p.practice.id === 'JavaScript.SecurityVulnerabilities');
     for (const cwp of componentsWithPractices) {
       const dxScoreForComponent = dxScore.components.find((c) => c.path === cwp.component.path)!.value;
       const dxScorePoints = dxScore.components.find((c) => c.path === cwp.component.path)!.points;
@@ -57,7 +56,7 @@ export class DashboardReporter implements IReporter {
       const componentWithScore: ComponentDto = {
         component: cwp.component,
         dxScore: { value: dxScoreForComponent, points: dxScorePoints },
-        securityIssues: <SecurityIssueDto[]>securityVulnerabilitiesPractice[0]?.practice.data?.statistics?.securityIssues,
+        securityIssues: <SecurityIssueDto[]>securityVulnerabilitiesPractice?.practice.data?.statistics?.securityIssues,
         updatedDependencies: [],
       };
 

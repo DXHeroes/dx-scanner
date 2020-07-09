@@ -33,7 +33,7 @@ export const parseYarnAudit = async (
           dependencyOf,
           path,
           patchedIn,
-          vulnerable_versions: element.data.advisory.vulnerable_versions,
+          vulnerableVersions: element.data.advisory.vulnerable_versions,
         };
         vulnerabilities.push(vulnerability);
       }
@@ -79,7 +79,7 @@ export const parseNpmAudit = async (
           library: advisory.module_name,
           type: advisory.title,
           severity: advisory.severity,
-          vulnerable_versions: advisory.vulnerable_versions,
+          vulnerableVersions: advisory.vulnerable_versions,
           patchedIn: advisory.patched_versions,
           dependencyOf: resolution.path.split('>')[0],
           path: resolution.path.split('>').join(' > '),
