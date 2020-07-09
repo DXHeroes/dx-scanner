@@ -89,7 +89,7 @@ export type SecurityIssueDto = {
   library: string;
   type: string;
   severity: SecurityIssueSeverity;
-  vulnerable_versions: string;
+  vulnerableVersions: string;
   patchedIn: string;
   dependencyOf: string;
   path: string;
