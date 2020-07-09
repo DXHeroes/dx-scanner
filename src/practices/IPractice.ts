@@ -2,6 +2,8 @@ import { PracticeEvaluationResult } from '../model';
 import { PracticeContext } from '../contexts/practice/PracticeContext';
 import { ReportTable, ReportText } from '../reporters/ReporterData';
 import { FixerContext } from '../contexts/fixer/FixerContext';
+import { SecurityIssueDto } from '..';
+import { SecurityIssueSummaryDto } from '../reporters';
 
 // eslint-disable-next-line @typescript-eslint/ban-types
 export interface IPractice<T extends {} = {}> {
@@ -35,6 +37,12 @@ export interface IPractice<T extends {} = {}> {
 
 export type PracticeData = {
   details?: PracticeDetail[];
+  statistics?: Statistics;
 };
 
 export type PracticeDetail = ReportTable | ReportText;
+
+export type Statistics = {
+  securityIssues: SecurityIssueDto[];
+  summary: SecurityIssueSummaryDto | undefined;
+};

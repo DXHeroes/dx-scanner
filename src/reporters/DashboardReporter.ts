@@ -1,13 +1,12 @@
+import axios from 'axios';
 import { inject, injectable } from 'inversify';
-import { ReporterUtils, DXScoreResult } from '.';
+import * as uuid from 'uuid';
+import { DXScoreResult, ReporterUtils } from '.';
+import { ScanningStrategy } from '../detectors';
+import { ProjectComponent } from '../model';
 import { ArgumentsProvider } from '../scanner';
 import { Types } from '../types';
-import { PracticeWithContextForReporter, IReporter } from './IReporter';
-import { ProjectComponent } from '../model';
-import axios from 'axios';
-import * as uuid from 'uuid';
-import { ScanningStrategy } from '../detectors';
-import { inspect } from 'util';
+import { IReporter, PracticeWithContextForReporter } from './IReporter';
 // eslint-disable-next-line @typescript-eslint/no-require-imports, @typescript-eslint/no-var-requires
 const pjson = require('../../package.json');
 
@@ -49,7 +48,7 @@ export class DashboardReporter implements IReporter {
       id: uuid.v4(),
       dxScore: { value: dxScore.value, points: dxScore.points },
     };
-
+    const securityVulnerabilitiesPractice = practicesAndComponents.find((p) => p.practice.id === 'JavaScript.SecurityVulnerabilities');
     for (const cwp of componentsWithPractices) {
       const dxScoreForComponent = dxScore.components.find((c) => c.path === cwp.component.path)!.value;
       const dxScorePoints = dxScore.components.find((c) => c.path === cwp.component.path)!.points;
@@ -57,7 +56,7 @@ export class DashboardReporter implements IReporter {
       const componentWithScore: ComponentDto = {
         component: cwp.component,
         dxScore: { value: dxScoreForComponent, points: dxScorePoints },
-        securityIssues: [],
+        securityIssues: <SecurityIssueDto[]>securityVulnerabilitiesPractice?.practice.data?.statistics?.securityIssues,
         updatedDependencies: [],
       };
 
@@ -87,10 +86,21 @@ export type DxScoreDto = Pick<DXScoreResult, 'value' | 'points'>;
 //security issues
 export type SecurityIssueDto = {
   library: string;
-  currentVersion: string;
   type: string;
-  newestVersion: string;
   severity: SecurityIssueSeverity;
+  vulnerableVersions: string;
+  patchedIn: string;
+  dependencyOf: string;
+  path: string;
+};
+
+export type SecurityIssueSummaryDto = {
+  info: number;
+  low: number;
+  moderate: number;
+  high: number;
+  critical: number;
+  code: number;
 };
 
 export enum SecurityIssueSeverity {

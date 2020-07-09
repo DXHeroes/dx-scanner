@@ -1,15 +1,15 @@
+import cli from 'cli-ux';
 import fs, { unlink } from 'fs';
+import gi from 'gitignore';
+import inquirer from 'inquirer';
 import os from 'os';
 import { promisify } from 'util';
 import { v4 as uuidv4 } from 'uuid';
-import gi from 'gitignore';
-import inquirer from 'inquirer';
-import cli from 'cli-ux';
-import { IPractice } from '../IPractice';
-import { PracticeEvaluationResult, PracticeImpact, ProgrammingLanguage } from '../../model';
-import { DxPractice } from '../DxPracticeDecorator';
-import { PracticeContext } from '../../contexts/practice/PracticeContext';
 import { FixerContext } from '../../contexts/fixer/FixerContext';
+import { PracticeContext } from '../../contexts/practice/PracticeContext';
+import { PracticeEvaluationResult, PracticeImpact } from '../../model';
+import { DxPractice } from '../DxPracticeDecorator';
+import { IPractice } from '../IPractice';
 
 const noop = () => undefined;
 
