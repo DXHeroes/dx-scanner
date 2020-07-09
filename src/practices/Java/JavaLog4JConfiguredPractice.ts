@@ -33,7 +33,7 @@ export class JavaLog4JConfiguredPractice implements IPractice {
       for (const file of configurationFiles) {
         if (file.baseName === 'log4j' || file.baseName === 'log4j2') {
           const fileContents = await ctx.fileInspector.readFile(file.path);
-          let parsedContents = {};
+          let parsedContents;
           try {
             switch (file.extension) {
               case '.xml':
@@ -44,7 +44,7 @@ export class JavaLog4JConfiguredPractice implements IPractice {
                 break;
               case '.yaml':
               case '.yml':
-                parsedContents = await yaml.safeLoad(fileContents);
+                parsedContents = yaml.safeLoad(fileContents);
                 break;
               case '.properties':
                 parsedContents = await properties.parse(fileContents, { namespaces: true });
