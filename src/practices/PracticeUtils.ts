@@ -70,6 +70,7 @@ export const parseNpmAudit = async (
 
   //https://github.com/npm/npm-audit-report/blob/v1.3.3/reporters/detail.js
   if (Object.keys(data.advisories).length !== 0) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     data.actions.forEach((action: { resolves: any[] }) => {
       action.resolves.forEach((resolution) => {
         const advisory = data.advisories[resolution.id];

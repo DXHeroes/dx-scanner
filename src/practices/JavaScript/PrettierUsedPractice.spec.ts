@@ -1,10 +1,8 @@
-import { PrettierUsedPractice } from './PrettierUsedPractice';
-import { PracticeEvaluationResult, ProgrammingLanguage } from '../../model';
-import { TestContainerContext, createTestContainer } from '../../inversify.config';
-import { IPackageInspector } from '../../inspectors/IPackageInspector';
-import { JavaScriptPackageInspector } from '../../inspectors';
-import { Types } from '../../types';
 import shelljs from 'shelljs';
+import { IPackageInspector } from '../../inspectors/IPackageInspector';
+import { createTestContainer, TestContainerContext } from '../../inversify.config';
+import { PracticeEvaluationResult, ProgrammingLanguage } from '../../model';
+import { PrettierUsedPractice } from './PrettierUsedPractice';
 
 jest.mock('shelljs', () => ({
   exec: jest.fn(),

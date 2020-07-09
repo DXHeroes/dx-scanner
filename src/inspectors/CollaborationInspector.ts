@@ -1,10 +1,9 @@
 import { inject, injectable } from 'inversify';
+import { VCSService } from '../model';
+import { ICache, InMemoryCache } from '../scanner/cache';
 import { Types } from '../types';
 import { ListGetterOptions } from './common/ListGetterOptions';
 import { ICollaborationInspector, PullRequestState } from './ICollaborationInspector';
-import { VCSService } from '../model';
-import { ICache, InMemoryCache } from '../scanner/cache';
-import debug from 'debug';
 
 @injectable()
 export class CollaborationInspector implements ICollaborationInspector {

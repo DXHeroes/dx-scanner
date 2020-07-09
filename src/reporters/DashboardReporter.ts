@@ -1,13 +1,12 @@
+import axios from 'axios';
 import { inject, injectable } from 'inversify';
-import { ReporterUtils, DXScoreResult } from '.';
+import * as uuid from 'uuid';
+import { DXScoreResult, ReporterUtils } from '.';
+import { ScanningStrategy } from '../detectors';
+import { ProjectComponent } from '../model';
 import { ArgumentsProvider } from '../scanner';
 import { Types } from '../types';
-import { PracticeWithContextForReporter, IReporter } from './IReporter';
-import { ProjectComponent } from '../model';
-import axios from 'axios';
-import * as uuid from 'uuid';
-import { ScanningStrategy } from '../detectors';
-import { inspect } from 'util';
+import { IReporter, PracticeWithContextForReporter } from './IReporter';
 // eslint-disable-next-line @typescript-eslint/no-require-imports, @typescript-eslint/no-var-requires
 const pjson = require('../../package.json');
 
