@@ -1,3 +1,11 @@
+# [3.29.0](https://github.com/dxheroes/dx-scanner/compare/v3.28.2...v3.29.0) (2020-07-09)
+
+
+### Features
+
+* send statistics of security issues from npm and yarn audit ([6b28126](https://github.com/dxheroes/dx-scanner/commit/6b28126c6b8077cf580fc31b1620b1110369f1c7))
+* send yarn audit detailed data to dxse ([f2e910a](https://github.com/dxheroes/dx-scanner/commit/f2e910a3a0a3ac00c7ab1fd2b5b45398f058d5d1))
+
 ## [3.28.2](https://github.com/dxheroes/dx-scanner/compare/v3.28.1...v3.28.2) (2020-07-09)
 
 
