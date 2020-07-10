@@ -7,7 +7,7 @@ import { DependenciesVersionEvaluationUtils } from '../utils/DependenciesVersion
 import { SemverLevel } from '../../inspectors/package/PackageInspectorBase';
 import { flatten } from 'lodash';
 import ncu from 'npm-check-updates';
-import { UpdatedDependencyDto } from '../..';
+import { UpdatedDependencyDto } from '../../reporters/DashboardReporter';
 
 @DxPractice({
   id: 'JavaScript.DependenciesVersionMinorPatchLevel',

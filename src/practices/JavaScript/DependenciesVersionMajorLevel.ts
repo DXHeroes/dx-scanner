@@ -7,7 +7,7 @@ import { DxPractice } from '../DxPracticeDecorator';
 import { PracticeBase } from '../PracticeBase';
 import { ReportDetailType } from '../../reporters/ReporterData';
 import { DependenciesVersionEvaluationUtils } from '../utils/DependenciesVersionEvaluationUtils';
-import { UpdatedDependencyDto } from '../..';
+import { UpdatedDependencyDto } from '../../reporters/DashboardReporter';
 
 @DxPractice({
   id: 'JavaScript.DependenciesVersionMajorLevel',

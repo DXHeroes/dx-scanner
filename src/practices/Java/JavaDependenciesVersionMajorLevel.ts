@@ -57,6 +57,7 @@ export class JavaDependenciesVersionMajorLevel extends PracticeBase {
   }
 
   setData(pkgsToUpdate: UpdatedDependencyDto[]): void {
-    this.data.details = [{ type: ReportDetailType.table, headers: ['Name', 'New', 'Current'], data: pkgsToUpdate }];
+    this.data.details = [{ type: ReportDetailType.table, headers: ['Library', 'New', 'Current', 'Severity'], data: pkgsToUpdate }];
+    this.data.statistics = { updatedDependencies: pkgsToUpdate };
   }
 }
