@@ -6,7 +6,8 @@ import { PracticeEvaluationResult, PracticeImpact, ProgrammingLanguage } from '.
 import { DxPractice } from '../DxPracticeDecorator';
 import { PracticeBase } from '../PracticeBase';
 import { ReportDetailType } from '../../reporters/ReporterData';
-import { DependenciesVersionEvaluationUtils, PkgToUpdate } from '../utils/DependenciesVersionEvaluationUtils';
+import { DependenciesVersionEvaluationUtils } from '../utils/DependenciesVersionEvaluationUtils';
+import { UpdatedDependencyDto } from '../..';
 
 @DxPractice({
   id: 'JavaScript.DependenciesVersionMajorLevel',
@@ -52,7 +53,8 @@ export class DependenciesVersionMajorLevelPractice extends PracticeBase {
     return pkgsToBeUpdated;
   }
 
-  setData(pkgsToUpdate: PkgToUpdate[]): void {
-    this.data.details = [{ type: ReportDetailType.table, headers: ['Name', 'New', 'Current'], data: pkgsToUpdate }];
+  setData(pkgsToUpdate: UpdatedDependencyDto[]): void {
+    this.data.details = [{ type: ReportDetailType.table, headers: ['Library', 'New', 'Current', 'Severity'], data: pkgsToUpdate }];
+    this.data.statistics = { updatedDependencies: pkgsToUpdate };
   }
 }

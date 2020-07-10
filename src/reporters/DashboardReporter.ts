@@ -49,6 +49,12 @@ export class DashboardReporter implements IReporter {
       dxScore: { value: dxScore.value, points: dxScore.points },
     };
     const securityVulnerabilitiesPractice = practicesAndComponents.find((p) => p.practice.id === 'JavaScript.SecurityVulnerabilities');
+
+    const updatedDependenciesMinorPatch = practicesAndComponents.find(
+      (p) => p.practice.id === 'JavaScript.DependenciesVersionMinorPatchLevel',
+    );
+    const updatedDependenciesMajor = practicesAndComponents.find((p) => p.practice.id === 'JavaScript.DependenciesVersionMajorLevel');
+
     for (const cwp of componentsWithPractices) {
       const dxScoreForComponent = dxScore.components.find((c) => c.path === cwp.component.path)!.value;
       const dxScorePoints = dxScore.components.find((c) => c.path === cwp.component.path)!.points;
@@ -56,8 +62,11 @@ export class DashboardReporter implements IReporter {
       const componentWithScore: ComponentDto = {
         component: cwp.component,
         dxScore: { value: dxScoreForComponent, points: dxScorePoints },
-        securityIssues: <SecurityIssueDto[]>securityVulnerabilitiesPractice?.practice.data?.statistics?.securityIssues,
-        updatedDependencies: [],
+        securityIssues: <SecurityIssueDto[]>securityVulnerabilitiesPractice?.practice.data?.statistics?.securityIssues?.issues,
+        updatedDependencies: <UpdatedDependencyDto[]>[
+          ...(updatedDependenciesMinorPatch?.practice.data?.statistics?.updatedDependencies || []),
+          ...(updatedDependenciesMajor?.practice.data?.statistics?.updatedDependencies || []),
+        ],
       };
 
       report.componentsWithDxScore.push(componentWithScore);

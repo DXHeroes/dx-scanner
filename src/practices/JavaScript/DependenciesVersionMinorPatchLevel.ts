@@ -3,10 +3,11 @@ import { PracticeEvaluationResult, PracticeImpact, ProgrammingLanguage } from '.
 import { DxPractice } from '../DxPracticeDecorator';
 import { IPractice } from '../IPractice';
 import { DependenciesVersionMajorLevelPractice } from './DependenciesVersionMajorLevel';
-import { DependenciesVersionEvaluationUtils, PkgToUpdate } from '../utils/DependenciesVersionEvaluationUtils';
+import { DependenciesVersionEvaluationUtils } from '../utils/DependenciesVersionEvaluationUtils';
 import { SemverLevel } from '../../inspectors/package/PackageInspectorBase';
 import { flatten } from 'lodash';
 import ncu from 'npm-check-updates';
+import { UpdatedDependencyDto } from '../..';
 
 @DxPractice({
   id: 'JavaScript.DependenciesVersionMinorPatchLevel',
@@ -17,8 +18,8 @@ import ncu from 'npm-check-updates';
   url: 'https://dxkb.io/p/updating-the-dependencies',
 })
 export class DependenciesVersionMinorPatchLevelPractice extends DependenciesVersionMajorLevelPractice implements IPractice {
-  private patchLevelPkgs: PkgToUpdate[] = [];
-  private minorLevelPkgs: PkgToUpdate[] = [];
+  private patchLevelPkgs: UpdatedDependencyDto[] = [];
+  private minorLevelPkgs: UpdatedDependencyDto[] = [];
 
   async isApplicable(ctx: PracticeContext): Promise<boolean> {
     return (
@@ -49,8 +50,8 @@ export class DependenciesVersionMinorPatchLevelPractice extends DependenciesVers
 
   async fix() {
     const packagesToUpdate = this.patchLevelPkgs
-      .map((p) => p.name)
-      .concat(this.minorLevelPkgs.map((p) => p.name))
+      .map((p) => p.library)
+      .concat(this.minorLevelPkgs.map((p) => p.library))
       .join(',');
     // this should not happen, so just to be on the safer side
     if (packagesToUpdate === '') return;

@@ -7,7 +7,8 @@ import { PracticeEvaluationResult, PracticeImpact, ProgrammingLanguage } from '.
 import { ReportDetailType } from '../../reporters/ReporterData';
 import { DxPractice } from '../DxPracticeDecorator';
 import { PracticeBase } from '../PracticeBase';
-import { DependenciesVersionEvaluationUtils, PkgToUpdate } from '../utils/DependenciesVersionEvaluationUtils';
+import { DependenciesVersionEvaluationUtils } from '../utils/DependenciesVersionEvaluationUtils';
+import { UpdatedDependencyDto } from '../..';
 
 @DxPractice({
   id: 'Java.DependenciesVersionMajorLevel',
@@ -55,7 +56,7 @@ export class JavaDependenciesVersionMajorLevel extends PracticeBase {
     return latestVersionsJson;
   }
 
-  setData(pkgsToUpdate: PkgToUpdate[]): void {
+  setData(pkgsToUpdate: UpdatedDependencyDto[]): void {
     this.data.details = [{ type: ReportDetailType.table, headers: ['Name', 'New', 'Current'], data: pkgsToUpdate }];
   }
 }

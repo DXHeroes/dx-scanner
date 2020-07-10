@@ -1,8 +1,9 @@
 import { SemverLevel, Package, PackageInspectorBase } from '../../inspectors';
+import { UpdatedDependencyDto, UpdatedDependencySeverity } from '../..';
 
 export class DependenciesVersionEvaluationUtils {
   static packagesToBeUpdated(pkgsWithNewVersion: { [key: string]: string }, semverLevel: SemverLevel, pkgs: Package[]) {
-    const pkgsToUpdate: PkgToUpdate[] = [];
+    const pkgsToUpdate: UpdatedDependencyDto[] = [];
 
     for (const packageName in pkgsWithNewVersion) {
       const parsedVersion = PackageInspectorBase.semverToPackageVersion(pkgsWithNewVersion[packageName]);
@@ -15,16 +16,31 @@ export class DependenciesVersionEvaluationUtils {
                   parsedVersion[SemverLevel.minor] === pkg.lockfileVersion[SemverLevel.minor] &&
                   parsedVersion[SemverLevel.major] === pkg.lockfileVersion[SemverLevel.major]
                 ) {
-                  pkgsToUpdate.push({ name: pkg.name, newVersion: parsedVersion.value, currentVersion: pkg.lockfileVersion.value });
+                  pkgsToUpdate.push({
+                    library: pkg.name,
+                    newestVersion: parsedVersion.value,
+                    currentVersion: pkg.lockfileVersion.value,
+                    severity: UpdatedDependencySeverity.High,
+                  });
                 }
                 break;
               case SemverLevel.minor:
                 if (parsedVersion[SemverLevel.major] === pkg.lockfileVersion[SemverLevel.major]) {
-                  pkgsToUpdate.push({ name: pkg.name, newVersion: parsedVersion.value, currentVersion: pkg.lockfileVersion.value });
+                  pkgsToUpdate.push({
+                    library: pkg.name,
+                    newestVersion: parsedVersion.value,
+                    currentVersion: pkg.lockfileVersion.value,
+                    severity: UpdatedDependencySeverity.Moderate,
+                  });
                 }
                 break;
               case SemverLevel.major:
-                pkgsToUpdate.push({ name: pkg.name, newVersion: parsedVersion.value, currentVersion: pkg.lockfileVersion.value });
+                pkgsToUpdate.push({
+                  library: pkg.name,
+                  newestVersion: parsedVersion.value,
+                  currentVersion: pkg.lockfileVersion.value,
+                  severity: UpdatedDependencySeverity.Low,
+                });
                 break;
             }
           }
@@ -36,4 +52,4 @@ export class DependenciesVersionEvaluationUtils {
   }
 }
 
-export type PkgToUpdate = { name: string; newVersion: string; currentVersion: string };
+// export type PkgToUpdate = { name: string; newVersion: string; currentVersion: string };
