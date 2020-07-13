@@ -1,12 +1,12 @@
+import { flatten } from 'lodash';
+import ncu from 'npm-check-updates';
 import { PracticeContext } from '../../contexts/practice/PracticeContext';
+import { SemverLevel } from '../../inspectors/package/PackageInspectorBase';
 import { PracticeEvaluationResult, PracticeImpact, ProgrammingLanguage } from '../../model';
 import { DxPractice } from '../DxPracticeDecorator';
 import { IPractice } from '../IPractice';
-import { DependenciesVersionMajorLevelPractice } from './DependenciesVersionMajorLevel';
 import { DependenciesVersionEvaluationUtils, PkgToUpdate } from '../utils/DependenciesVersionEvaluationUtils';
-import { SemverLevel } from '../../inspectors/package/PackageInspectorBase';
-import { flatten } from 'lodash';
-import ncu from 'npm-check-updates';
+import { DependenciesVersionMajorLevelPractice } from './DependenciesVersionMajorLevel';
 
 @DxPractice({
   id: 'JavaScript.DependenciesVersionMinorPatchLevel',
@@ -49,8 +49,8 @@ export class DependenciesVersionMinorPatchLevelPractice extends DependenciesVers
 
   async fix() {
     const packagesToUpdate = this.patchLevelPkgs
-      .map((p) => p.name)
-      .concat(this.minorLevelPkgs.map((p) => p.name))
+      .map((p) => p.library)
+      .concat(this.minorLevelPkgs.map((p) => p.library))
       .join(',');
     // this should not happen, so just to be on the safer side
     if (packagesToUpdate === '') return;

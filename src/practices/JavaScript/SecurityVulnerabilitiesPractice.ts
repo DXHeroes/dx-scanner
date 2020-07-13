@@ -85,7 +85,6 @@ export class SecurityVulnerabilitiesPractice extends PracticeBase {
         data: vulnerableData,
       },
     ];
-
-    this.data.statistics = { securityIssues: vulnerableData, summary: data.summary };
+    this.data.statistics = { securityIssues: { issues: vulnerableData, summary: data.summary } };
   }
 }

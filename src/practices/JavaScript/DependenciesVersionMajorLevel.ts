@@ -3,9 +3,9 @@ import { PracticeContext } from '../../contexts/practice/PracticeContext';
 import { Package } from '../../inspectors/IPackageInspector';
 import { SemverLevel } from '../../inspectors/package/PackageInspectorBase';
 import { PracticeEvaluationResult, PracticeImpact, ProgrammingLanguage } from '../../model';
+import { ReportDetailType } from '../../reporters/ReporterData';
 import { DxPractice } from '../DxPracticeDecorator';
 import { PracticeBase } from '../PracticeBase';
-import { ReportDetailType } from '../../reporters/ReporterData';
 import { DependenciesVersionEvaluationUtils, PkgToUpdate } from '../utils/DependenciesVersionEvaluationUtils';
 
 @DxPractice({
@@ -53,6 +53,7 @@ export class DependenciesVersionMajorLevelPractice extends PracticeBase {
   }
 
   setData(pkgsToUpdate: PkgToUpdate[]): void {
-    this.data.details = [{ type: ReportDetailType.table, headers: ['Name', 'New', 'Current'], data: pkgsToUpdate }];
+    this.data.details = [{ type: ReportDetailType.table, headers: ['Library', 'New', 'Current', 'Severity'], data: pkgsToUpdate }];
+    this.data.statistics = { updatedDependencies: pkgsToUpdate };
   }
 }

@@ -1,4 +1,5 @@
 import { SemverLevel, Package, PackageInspectorBase } from '../../inspectors';
+import { UpdatedDependencySeverity, UpdatedDependencyDto } from '../../reporters/DashboardReporter';
 
 export class DependenciesVersionEvaluationUtils {
   static packagesToBeUpdated(pkgsWithNewVersion: { [key: string]: string }, semverLevel: SemverLevel, pkgs: Package[]) {
@@ -15,16 +16,31 @@ export class DependenciesVersionEvaluationUtils {
                   parsedVersion[SemverLevel.minor] === pkg.lockfileVersion[SemverLevel.minor] &&
                   parsedVersion[SemverLevel.major] === pkg.lockfileVersion[SemverLevel.major]
                 ) {
-                  pkgsToUpdate.push({ name: pkg.name, newVersion: parsedVersion.value, currentVersion: pkg.lockfileVersion.value });
+                  pkgsToUpdate.push({
+                    library: pkg.name,
+                    newestVersion: parsedVersion.value,
+                    currentVersion: pkg.lockfileVersion.value,
+                    severity: UpdatedDependencySeverity.High,
+                  });
                 }
                 break;
               case SemverLevel.minor:
                 if (parsedVersion[SemverLevel.major] === pkg.lockfileVersion[SemverLevel.major]) {
-                  pkgsToUpdate.push({ name: pkg.name, newVersion: parsedVersion.value, currentVersion: pkg.lockfileVersion.value });
+                  pkgsToUpdate.push({
+                    library: pkg.name,
+                    newestVersion: parsedVersion.value,
+                    currentVersion: pkg.lockfileVersion.value,
+                    severity: UpdatedDependencySeverity.Moderate,
+                  });
                 }
                 break;
               case SemverLevel.major:
-                pkgsToUpdate.push({ name: pkg.name, newVersion: parsedVersion.value, currentVersion: pkg.lockfileVersion.value });
+                pkgsToUpdate.push({
+                  library: pkg.name,
+                  newestVersion: parsedVersion.value,
+                  currentVersion: pkg.lockfileVersion.value,
+                  severity: UpdatedDependencySeverity.Low,
+                });
                 break;
             }
           }
@@ -36,4 +52,5 @@ export class DependenciesVersionEvaluationUtils {
   }
 }
 
-export type PkgToUpdate = { name: string; newVersion: string; currentVersion: string };
+// Use UpdatedDependencyDto just in connection with dashboard, otherwise use PkgToUpdate as it can change in the future unlike UpdatedDependencyDto
+export type PkgToUpdate = UpdatedDependencyDto;

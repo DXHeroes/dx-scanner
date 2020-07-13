@@ -21,7 +21,7 @@ describe('DependenciesVersionEvaluationUtils', () => {
   it('Detects change in major level', () => {
     const newVersions = { fake: '2.0.0', dummy: '1.0.0' };
     const toUpdate = DependenciesVersionEvaluationUtils.packagesToBeUpdated(newVersions, SemverLevel.major, oldPackages);
-    const toUpdateNames = toUpdate.map((p) => p.name);
+    const toUpdateNames = toUpdate.map((p) => p.library);
 
     expect(toUpdateNames).toEqual(['fake']);
   });
@@ -29,7 +29,7 @@ describe('DependenciesVersionEvaluationUtils', () => {
   it('Detects change in minor level', () => {
     const newVersions = { fake: '1.2.0', dummy: '1.0.0' };
     const toUpdate = DependenciesVersionEvaluationUtils.packagesToBeUpdated(newVersions, SemverLevel.minor, oldPackages);
-    const toUpdateNames = toUpdate.map((p) => p.name);
+    const toUpdateNames = toUpdate.map((p) => p.library);
 
     expect(toUpdateNames).toEqual(['fake']);
   });
@@ -37,7 +37,7 @@ describe('DependenciesVersionEvaluationUtils', () => {
   it('Detects change in patch level', () => {
     const newVersions = { fake: '1.0.2', dummy: '1.0.0' };
     const toUpdate = DependenciesVersionEvaluationUtils.packagesToBeUpdated(newVersions, SemverLevel.patch, oldPackages);
-    const toUpdateNames = toUpdate.map((p) => p.name);
+    const toUpdateNames = toUpdate.map((p) => p.library);
 
     expect(toUpdateNames).toEqual(['fake']);
   });
@@ -45,7 +45,7 @@ describe('DependenciesVersionEvaluationUtils', () => {
   it('Does not detect major update as minor level update', () => {
     const newVersions = { fake: '2.4.6', dummy: '1.0.0' };
     const toUpdate = DependenciesVersionEvaluationUtils.packagesToBeUpdated(newVersions, SemverLevel.minor, oldPackages);
-    const toUpdateNames = toUpdate.map((p) => p.name);
+    const toUpdateNames = toUpdate.map((p) => p.library);
 
     expect(toUpdateNames).toEqual([]);
   });
@@ -53,7 +53,7 @@ describe('DependenciesVersionEvaluationUtils', () => {
   it('Does not detect major update as patch level update', () => {
     const newVersions = { fake: '2.4.6', dummy: '1.0.0' };
     const toUpdate = DependenciesVersionEvaluationUtils.packagesToBeUpdated(newVersions, SemverLevel.patch, oldPackages);
-    const toUpdateNames = toUpdate.map((p) => p.name);
+    const toUpdateNames = toUpdate.map((p) => p.library);
 
     expect(toUpdateNames).toEqual([]);
   });

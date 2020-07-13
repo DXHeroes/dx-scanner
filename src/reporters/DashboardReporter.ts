@@ -7,6 +7,7 @@ import { ProjectComponent } from '../model';
 import { ArgumentsProvider } from '../scanner';
 import { Types } from '../types';
 import { IReporter, PracticeWithContextForReporter } from './IReporter';
+import { PkgToUpdate } from '../practices/utils/DependenciesVersionEvaluationUtils';
 // eslint-disable-next-line @typescript-eslint/no-require-imports, @typescript-eslint/no-var-requires
 const pjson = require('../../package.json');
 
@@ -48,16 +49,24 @@ export class DashboardReporter implements IReporter {
       id: uuid.v4(),
       dxScore: { value: dxScore.value, points: dxScore.points },
     };
-    const securityVulnerabilitiesPractice = practicesAndComponents.find((p) => p.practice.id === 'JavaScript.SecurityVulnerabilities');
+
     for (const cwp of componentsWithPractices) {
+      let updatedDependencies: PkgToUpdate[] = [];
+      let securityIssues: SecurityIssueDto[] = [];
+
       const dxScoreForComponent = dxScore.components.find((c) => c.path === cwp.component.path)!.value;
       const dxScorePoints = dxScore.components.find((c) => c.path === cwp.component.path)!.points;
+
+      for (const p of cwp.practicesAndComponents) {
+        updatedDependencies = [...updatedDependencies, ...(p.practice.data?.statistics?.updatedDependencies || [])];
+        securityIssues = [...securityIssues, ...(p.practice.data?.statistics?.securityIssues?.issues || [])];
+      }
 
       const componentWithScore: ComponentDto = {
         component: cwp.component,
         dxScore: { value: dxScoreForComponent, points: dxScorePoints },
-        securityIssues: <SecurityIssueDto[]>securityVulnerabilitiesPractice?.practice.data?.statistics?.securityIssues,
-        updatedDependencies: [],
+        securityIssues,
+        updatedDependencies,
       };
 
       report.componentsWithDxScore.push(componentWithScore);
