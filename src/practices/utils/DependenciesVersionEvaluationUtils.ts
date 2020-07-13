@@ -3,7 +3,7 @@ import { UpdatedDependencySeverity, UpdatedDependencyDto } from '../../reporters
 
 export class DependenciesVersionEvaluationUtils {
   static packagesToBeUpdated(pkgsWithNewVersion: { [key: string]: string }, semverLevel: SemverLevel, pkgs: Package[]) {
-    const pkgsToUpdate: UpdatedDependencyDto[] = [];
+    const pkgsToUpdate: PkgToUpdate[] = [];
 
     for (const packageName in pkgsWithNewVersion) {
       const parsedVersion = PackageInspectorBase.semverToPackageVersion(pkgsWithNewVersion[packageName]);
@@ -52,4 +52,5 @@ export class DependenciesVersionEvaluationUtils {
   }
 }
 
-// export type PkgToUpdate = { name: string; newVersion: string; currentVersion: string };
+// Use UpdatedDependencyDto just in connection with dashboard, otherwise use PkgToUpdate as it can change in the future unlike UpdatedDependencyDto
+export type PkgToUpdate = UpdatedDependencyDto;

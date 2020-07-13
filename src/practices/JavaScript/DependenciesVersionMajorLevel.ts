@@ -3,11 +3,10 @@ import { PracticeContext } from '../../contexts/practice/PracticeContext';
 import { Package } from '../../inspectors/IPackageInspector';
 import { SemverLevel } from '../../inspectors/package/PackageInspectorBase';
 import { PracticeEvaluationResult, PracticeImpact, ProgrammingLanguage } from '../../model';
+import { ReportDetailType } from '../../reporters/ReporterData';
 import { DxPractice } from '../DxPracticeDecorator';
 import { PracticeBase } from '../PracticeBase';
-import { ReportDetailType } from '../../reporters/ReporterData';
-import { DependenciesVersionEvaluationUtils } from '../utils/DependenciesVersionEvaluationUtils';
-import { UpdatedDependencyDto } from '../../reporters/DashboardReporter';
+import { DependenciesVersionEvaluationUtils, PkgToUpdate } from '../utils/DependenciesVersionEvaluationUtils';
 
 @DxPractice({
   id: 'JavaScript.DependenciesVersionMajorLevel',
@@ -53,7 +52,7 @@ export class DependenciesVersionMajorLevelPractice extends PracticeBase {
     return pkgsToBeUpdated;
   }
 
-  setData(pkgsToUpdate: UpdatedDependencyDto[]): void {
+  setData(pkgsToUpdate: PkgToUpdate[]): void {
     this.data.details = [{ type: ReportDetailType.table, headers: ['Library', 'New', 'Current', 'Severity'], data: pkgsToUpdate }];
     this.data.statistics = { updatedDependencies: pkgsToUpdate };
   }

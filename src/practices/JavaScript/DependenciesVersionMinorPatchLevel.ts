@@ -1,13 +1,12 @@
+import { flatten } from 'lodash';
+import ncu from 'npm-check-updates';
 import { PracticeContext } from '../../contexts/practice/PracticeContext';
+import { SemverLevel } from '../../inspectors/package/PackageInspectorBase';
 import { PracticeEvaluationResult, PracticeImpact, ProgrammingLanguage } from '../../model';
 import { DxPractice } from '../DxPracticeDecorator';
 import { IPractice } from '../IPractice';
+import { DependenciesVersionEvaluationUtils, PkgToUpdate } from '../utils/DependenciesVersionEvaluationUtils';
 import { DependenciesVersionMajorLevelPractice } from './DependenciesVersionMajorLevel';
-import { DependenciesVersionEvaluationUtils } from '../utils/DependenciesVersionEvaluationUtils';
-import { SemverLevel } from '../../inspectors/package/PackageInspectorBase';
-import { flatten } from 'lodash';
-import ncu from 'npm-check-updates';
-import { UpdatedDependencyDto } from '../../reporters/DashboardReporter';
 
 @DxPractice({
   id: 'JavaScript.DependenciesVersionMinorPatchLevel',
@@ -18,8 +17,8 @@ import { UpdatedDependencyDto } from '../../reporters/DashboardReporter';
   url: 'https://dxkb.io/p/updating-the-dependencies',
 })
 export class DependenciesVersionMinorPatchLevelPractice extends DependenciesVersionMajorLevelPractice implements IPractice {
-  private patchLevelPkgs: UpdatedDependencyDto[] = [];
-  private minorLevelPkgs: UpdatedDependencyDto[] = [];
+  private patchLevelPkgs: PkgToUpdate[] = [];
+  private minorLevelPkgs: PkgToUpdate[] = [];
 
   async isApplicable(ctx: PracticeContext): Promise<boolean> {
     return (
