@@ -1,3 +1,15 @@
+# [3.30.0](https://github.com/dxheroes/dx-scanner/compare/v3.29.0...v3.30.0) (2020-07-13)
+
+
+### Bug Fixes
+
+* imports and set data also for javaDependencies practice ([e4f81c8](https://github.com/dxheroes/dx-scanner/commit/e4f81c80f4dd7fb7825cf65c1159cdb0d8a28043))
+
+
+### Features
+
+* send updated dependencies stats to the dashboard ([ae15144](https://github.com/dxheroes/dx-scanner/commit/ae15144df2175566ddc19b239df8359b9b7e3e90))
+
 # [3.29.0](https://github.com/dxheroes/dx-scanner/compare/v3.28.2...v3.29.0) (2020-07-09)
 
 
