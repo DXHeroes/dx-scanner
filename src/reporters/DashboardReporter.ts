@@ -50,9 +50,10 @@ export class DashboardReporter implements IReporter {
       dxScore: { value: dxScore.value, points: dxScore.points },
     };
 
-    let updatedDependencies: PkgToUpdate[] = [];
-    let securityIssues: SecurityIssueDto[] = [];
     for (const cwp of componentsWithPractices) {
+      let updatedDependencies: PkgToUpdate[] = [];
+      let securityIssues: SecurityIssueDto[] = [];
+
       const dxScoreForComponent = dxScore.components.find((c) => c.path === cwp.component.path)!.value;
       const dxScorePoints = dxScore.components.find((c) => c.path === cwp.component.path)!.points;
 
