@@ -1,3 +1,10 @@
+## [3.30.2](https://github.com/dxheroes/dx-scanner/compare/v3.30.1...v3.30.2) (2020-07-15)
+
+
+### Bug Fixes
+
+* send data only if it's public or private but with apiToken ([dd7fc18](https://github.com/dxheroes/dx-scanner/commit/dd7fc18e393547b8ccf31759a224ee579e27e86f))
+
 ## [3.30.1](https://github.com/dxheroes/dx-scanner/compare/v3.30.0...v3.30.1) (2020-07-15)
 
 
