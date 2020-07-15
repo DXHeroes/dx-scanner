@@ -8,6 +8,7 @@ import { ArgumentsProvider } from '../scanner';
 import { Types } from '../types';
 import { IReporter, PracticeWithContextForReporter } from './IReporter';
 import { PkgToUpdate } from '../practices/utils/DependenciesVersionEvaluationUtils';
+import { ServiceType } from '../detectors/IScanningStrategy';
 // eslint-disable-next-line @typescript-eslint/no-require-imports, @typescript-eslint/no-var-requires
 const pjson = require('../../package.json');
 
@@ -48,6 +49,7 @@ export class DashboardReporter implements IReporter {
       version: pjson.version,
       id: uuid.v4(),
       dxScore: { value: dxScore.value, points: dxScore.points },
+      serviceType: this.scanningStrategy.serviceType,
     };
 
     for (const cwp of componentsWithPractices) {
@@ -81,6 +83,7 @@ export type DataReportDto = {
   version: string;
   id: string;
   dxScore: DxScoreDto;
+  serviceType: ServiceType | undefined;
 };
 
 export interface ComponentDto {

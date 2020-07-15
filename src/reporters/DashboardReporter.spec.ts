@@ -25,6 +25,7 @@ describe('DashboardReporter', () => {
       });
       expect(result.id).toBeDefined;
       expect(result.version).toBeDefined;
+      expect(result.serviceType).toEqual(ServiceType.github);
     });
 
     it('one practicing practice and one not practicing in two components', async () => {
