@@ -49,13 +49,11 @@ export class DashboardReporter implements IReporter {
       version: pjson.version,
       id: uuid.v4(),
       dxScore: { value: dxScore.value, points: dxScore.points },
-      serviceType: this.scanningStrategy.serviceType,
     };
 
     for (const cwp of componentsWithPractices) {
       let updatedDependencies: PkgToUpdate[] = [];
       let securityIssues: SecurityIssueDto[] = [];
-
       const dxScoreForComponent = dxScore.components.find((c) => c.path === cwp.component.path)!.value;
       const dxScorePoints = dxScore.components.find((c) => c.path === cwp.component.path)!.points;
 
@@ -69,6 +67,7 @@ export class DashboardReporter implements IReporter {
         dxScore: { value: dxScoreForComponent, points: dxScorePoints },
         securityIssues,
         updatedDependencies,
+        serviceType: <ServiceType>this.scanningStrategy.serviceType
       };
 
       report.componentsWithDxScore.push(componentWithScore);
@@ -83,7 +82,6 @@ export type DataReportDto = {
   version: string;
   id: string;
   dxScore: DxScoreDto;
-  serviceType: ServiceType | undefined;
 };
 
 export interface ComponentDto {
@@ -91,6 +89,7 @@ export interface ComponentDto {
   dxScore: DxScoreDto;
   securityIssues: SecurityIssueDto[];
   updatedDependencies: UpdatedDependencyDto[];
+  serviceType: ServiceType;
 }
 
 export type DxScoreDto = Pick<DXScoreResult, 'value' | 'points'>;
