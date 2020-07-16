@@ -9,6 +9,7 @@ import { Types } from '../types';
 import { IReporter, PracticeWithContextForReporter } from './IReporter';
 import { PkgToUpdate } from '../practices/utils/DependenciesVersionEvaluationUtils';
 import { ServiceType } from '../detectors/IScanningStrategy';
+import { GitServiceUtils } from '../services';
 // eslint-disable-next-line @typescript-eslint/no-require-imports, @typescript-eslint/no-var-requires
 const pjson = require('../../package.json');
 
@@ -52,6 +53,8 @@ export class DashboardReporter implements IReporter {
     };
 
     for (const cwp of componentsWithPractices) {
+      const componentName = GitServiceUtils.getComponentName(cwp.component, this.scanningStrategy);
+
       let updatedDependencies: PkgToUpdate[] = [];
       let securityIssues: SecurityIssueDto[] = [];
       const dxScoreForComponent = dxScore.components.find((c) => c.path === cwp.component.path)!.value;
@@ -63,11 +66,11 @@ export class DashboardReporter implements IReporter {
       }
 
       const componentWithScore: ComponentDto = {
-        component: cwp.component,
+        component: { ...cwp.component, componentName },
         dxScore: { value: dxScoreForComponent, points: dxScorePoints },
         securityIssues,
         updatedDependencies,
-        serviceType: <ServiceType>this.scanningStrategy.serviceType
+        serviceType: <ServiceType>this.scanningStrategy.serviceType,
       };
 
       report.componentsWithDxScore.push(componentWithScore);
@@ -85,7 +88,7 @@ export type DataReportDto = {
 };
 
 export interface ComponentDto {
-  component: ProjectComponent;
+  component: ProjectComponent & { componentName: string };
   dxScore: DxScoreDto;
   securityIssues: SecurityIssueDto[];
   updatedDependencies: UpdatedDependencyDto[];

@@ -100,6 +100,22 @@ export class GitServiceUtils {
     const cwp = _.replace(component.path, <string>scanningStrategy.localPath, '');
     return nodePath.basename(cwp);
   };
+
+  static getComponentName = (component: ProjectComponent, scanningStrategy: ScanningStrategy) => {
+    let componentPath;
+    if (scanningStrategy.isOnline) {
+      // get component path without tmp folder path
+      componentPath = _.replace(component.path, <string>scanningStrategy.localPath, '');
+
+      // if it's root component, return repo path directly
+      const parsedUrl = gitUrlParse(<string>component.repositoryPath);
+      if (!componentPath) {
+        return parsedUrl.full_name;
+      }
+    }
+
+    return componentPath || component.path;
+  };
 }
 
 export interface ParsedUrl {
