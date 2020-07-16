@@ -34,7 +34,6 @@ import { VCSServicesUtils } from '../git/VCSServicesUtils';
 import { DeepRequired } from '../../lib/deepRequired';
 import { InMemoryCache } from '../../scanner/cache';
 import { BitbucketPullRequestState, BitbucketIssueState } from './IBitbucketService';
-import _ from 'lodash';
 import { RepositoryConfig } from '../../scanner/RepositoryConfig';
 
 const debug = Debug('cli:services:git:bitbucket-service');
@@ -126,6 +125,7 @@ export class BitbucketService implements IVCSService {
             login: val.author.nickname,
             url: val.author.links.html.href,
           },
+          title: val.title,
           url: val.links.html.href,
           body: val.description,
           sha: val.source.commit.hash,
@@ -185,6 +185,7 @@ export class BitbucketService implements IVCSService {
         login: response.data.author.nickname,
         url: response.data.author.links.html.href,
       },
+      title: response.data.title,
       url: response.data.links.html.href,
       body: response.data.summary.raw,
       sha: response.data.source.commit.hash,

@@ -12,6 +12,7 @@ export interface UserInfo {
 
 export interface PullRequest {
   user: UserInfo;
+  title: string;
   id: number;
   url: string;
   body: string;

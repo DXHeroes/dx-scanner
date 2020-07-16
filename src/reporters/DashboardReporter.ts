@@ -53,6 +53,7 @@ export class DashboardReporter implements IReporter {
     for (const cwp of componentsWithPractices) {
       let updatedDependencies: PkgToUpdate[] = [];
       let securityIssues: SecurityIssueDto[] = [];
+      let pullRequests: PullRequestDto[] = [];
 
       const dxScoreForComponent = dxScore.components.find((c) => c.path === cwp.component.path)!.value;
       const dxScorePoints = dxScore.components.find((c) => c.path === cwp.component.path)!.points;
@@ -60,6 +61,7 @@ export class DashboardReporter implements IReporter {
       for (const p of cwp.practicesAndComponents) {
         updatedDependencies = [...updatedDependencies, ...(p.practice.data?.statistics?.updatedDependencies || [])];
         securityIssues = [...securityIssues, ...(p.practice.data?.statistics?.securityIssues?.issues || [])];
+        pullRequests = [...pullRequests, ...(p.practice.data?.statistics?.pullRequests || [])];
       }
 
       const componentWithScore: ComponentDto = {
@@ -67,6 +69,7 @@ export class DashboardReporter implements IReporter {
         dxScore: { value: dxScoreForComponent, points: dxScorePoints },
         securityIssues,
         updatedDependencies,
+        pullRequests,
       };
 
       report.componentsWithDxScore.push(componentWithScore);
@@ -88,6 +91,7 @@ export interface ComponentDto {
   dxScore: DxScoreDto;
   securityIssues: SecurityIssueDto[];
   updatedDependencies: UpdatedDependencyDto[];
+  pullRequests: PullRequestDto[];
 }
 
 export type DxScoreDto = Pick<DXScoreResult, 'value' | 'points'>;
@@ -133,3 +137,15 @@ export enum UpdatedDependencySeverity {
   Moderate = 'moderate',
   High = 'high',
 }
+
+//pull requests
+export type PullRequestDto = {
+  id: number;
+  name: string;
+  createdAt: string;
+  updatedAt: string | null;
+  closedAt: string | null;
+  mergedAt: string | null;
+  login: string;
+  authorUrl: string;
+};

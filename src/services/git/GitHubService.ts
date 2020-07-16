@@ -98,8 +98,9 @@ export class GitHubService implements IVCSService {
           user: {
             id: val.user.id.toString(),
             login: val.user.login,
-            url: val.user.url,
+            url: val.user.html_url,
           },
+          title: val.title,
           url: val.url,
           body: val.body,
           sha: val.merge_commit_sha,
@@ -143,6 +144,7 @@ export class GitHubService implements IVCSService {
         login: response.data.user.login,
         url: response.data.user.url,
       },
+      title: response.data.title,
       url: response.data.url,
       body: response.data.body,
       sha: response.data.merge_commit_sha,
