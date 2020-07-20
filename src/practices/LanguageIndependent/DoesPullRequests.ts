@@ -37,7 +37,7 @@ export class DoesPullRequestsPractice extends PracticeBase {
         return {
           id: pr.id,
           url: pr.url,
-          name: pr.title, //TODO send pr url too?
+          name: pr.title,
           createdAt: pr.createdAt,
           updatedAt: pr.updatedAt,
           //if mergedAt is null and closedAt is not null pr was closed, if both are not null pr is opened, if mergedAt is not null and closedAt is null pr was merged
