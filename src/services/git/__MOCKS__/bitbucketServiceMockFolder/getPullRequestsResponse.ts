@@ -9,6 +9,7 @@ export const getPullRequestsResponse = (items?: PullRequest[]): Paginated<PullRe
         login: 'landtuna',
         url: 'https://bitbucket.org/%7B9d65d517-4898-47ac-9d2f-fd902d25d9f6%7D/',
       },
+      title: 'bitbucket test pull request',
       url: 'https://bitbucket.org/pypy/pypy/pull-requests/1',
       body: 'Added a floor() ufunc to micronumpy',
       sha: '1234567890',

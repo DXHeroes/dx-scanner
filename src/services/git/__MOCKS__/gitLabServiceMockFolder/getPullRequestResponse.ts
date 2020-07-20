@@ -10,6 +10,7 @@ export const getPullRequestResponse = (params?: Partial<PullRequest>): PullReque
         url: 'https://gitlab.com/nkipling',
       },
       url: 'https://gitlab.com/gitlab-org/gitlab/-/merge_requests/26291',
+      title: 'WIP: Add package_name as option to packages API',
       body:
         '## What does this MR do?\r\n' +
         '\r\n' +

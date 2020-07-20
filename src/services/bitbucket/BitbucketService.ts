@@ -34,7 +34,6 @@ import { VCSServicesUtils } from '../git/VCSServicesUtils';
 import { DeepRequired } from '../../lib/deepRequired';
 import { InMemoryCache } from '../../scanner/cache';
 import { BitbucketPullRequestState, BitbucketIssueState } from './IBitbucketService';
-import _ from 'lodash';
 import { RepositoryConfig } from '../../scanner/RepositoryConfig';
 
 const debug = Debug('cli:services:git:bitbucket-service');
@@ -101,7 +100,6 @@ export class BitbucketService implements IVCSService {
     options?: { withDiffStat?: boolean } & ListGetterOptions<{ state?: PullRequestState }>,
   ): Promise<Paginated<PullRequest>> {
     this.authenticate();
-
     const apiUrl = `https://api.bitbucket.org/2.0/repositories/${owner}/${repo}/pullrequests`;
     const ownerUrl = `www.bitbucket.org/${owner}`;
 
@@ -109,12 +107,13 @@ export class BitbucketService implements IVCSService {
     if (options?.filter?.state) {
       state = VCSServicesUtils.getBitbucketPRState(options.filter.state);
     }
-
     const ownerId = `${(await this.unwrap(this.client.repositories.get({ repo_slug: repo, workspace: owner }))).data.owner?.uuid}`;
     const response = <DeepRequired<Response<Schema.PaginatedPullrequests>>>await this.unwrap(
       axios.get(apiUrl, {
         params: { state, page: options?.pagination?.page, pagelen: options?.pagination?.perPage },
-        paramsSerializer: qs.stringify,
+        paramsSerializer: function (params) {
+          return qs.stringify(params, { arrayFormat: 'repeat', encode: false });
+        },
       }),
     );
 
@@ -126,9 +125,10 @@ export class BitbucketService implements IVCSService {
             login: val.author.nickname,
             url: val.author.links.html.href,
           },
+          title: val.title,
           url: val.links.html.href,
           body: val.description,
-          sha: val.source.commit.hash,
+          sha: val.source?.commit?.hash,
           createdAt: val.created_on,
           updatedAt: val.updated_on,
           closedAt:
@@ -185,6 +185,7 @@ export class BitbucketService implements IVCSService {
         login: response.data.author.nickname,
         url: response.data.author.links.html.href,
       },
+      title: response.data.title,
       url: response.data.links.html.href,
       body: response.data.summary.raw,
       sha: response.data.source.commit.hash,

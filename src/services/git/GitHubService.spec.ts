@@ -59,7 +59,7 @@ describe('GitHub Service', () => {
           {
             number: 1,
             state: 'open',
-            title: 'new-feature',
+            title: 'Edited README via GitHub',
             body: 'Please pull these awesome changes',
             head: 'new-topic',
             base: 'master',
@@ -75,7 +75,7 @@ describe('GitHub Service', () => {
       const params = {
         number: 1,
         state: 'open',
-        title: 'new-feature',
+        title: 'Edited README via GitHub',
         body: 'Please pull these awesome changes',
         head: 'new-topic',
         base: 'master',
@@ -114,7 +114,7 @@ describe('GitHub Service', () => {
           {
             number: 1,
             state: 'open',
-            title: 'new-feature',
+            title: 'Edited README via GitHub',
             body: 'Please pull these awesome changes',
             head: 'new-topic',
             base: 'master',

@@ -54,20 +54,24 @@ export class DashboardReporter implements IReporter {
     for (const cwp of componentsWithPractices) {
       let updatedDependencies: PkgToUpdate[] = [];
       let securityIssues: SecurityIssueDto[] = [];
+      let pullRequests: PullRequestDto[] = [];
+
       const dxScoreForComponent = dxScore.components.find((c) => c.path === cwp.component.path)!.value;
       const dxScorePoints = dxScore.components.find((c) => c.path === cwp.component.path)!.points;
 
       for (const p of cwp.practicesAndComponents) {
         updatedDependencies = [...updatedDependencies, ...(p.practice.data?.statistics?.updatedDependencies || [])];
         securityIssues = [...securityIssues, ...(p.practice.data?.statistics?.securityIssues?.issues || [])];
+        pullRequests = [...pullRequests, ...(p.practice.data?.statistics?.pullRequests || [])];
       }
 
       const componentWithScore: ComponentDto = {
         component: cwp.component,
         dxScore: { value: dxScoreForComponent, points: dxScorePoints },
+        serviceType: <ServiceType>this.scanningStrategy.serviceType,
         securityIssues,
         updatedDependencies,
-        serviceType: <ServiceType>this.scanningStrategy.serviceType
+        pullRequests,
       };
 
       report.componentsWithDxScore.push(componentWithScore);
@@ -87,9 +91,10 @@ export type DataReportDto = {
 export interface ComponentDto {
   component: ProjectComponent;
   dxScore: DxScoreDto;
+  serviceType: ServiceType;
   securityIssues: SecurityIssueDto[];
   updatedDependencies: UpdatedDependencyDto[];
-  serviceType: ServiceType;
+  pullRequests: PullRequestDto[];
 }
 
 export type DxScoreDto = Pick<DXScoreResult, 'value' | 'points'>;
@@ -135,3 +140,16 @@ export enum UpdatedDependencySeverity {
   Moderate = 'moderate',
   High = 'high',
 }
+
+//pull requests
+export type PullRequestDto = {
+  id: number;
+  url: string;
+  name: string;
+  createdAt: string;
+  updatedAt: string | null;
+  closedAt: string | null;
+  mergedAt: string | null;
+  authorName: string;
+  authorUrl: string;
+};

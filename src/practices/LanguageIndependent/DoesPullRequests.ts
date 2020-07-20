@@ -3,8 +3,9 @@ import { PracticeContext } from '../../contexts/practice/PracticeContext';
 import { PracticeEvaluationResult, PracticeImpact } from '../../model';
 import { GitServiceUtils } from '../../services/git/GitServiceUtils';
 import { DxPractice } from '../DxPracticeDecorator';
-import { IPractice } from '../IPractice';
 import { PullRequestState } from '../../inspectors/ICollaborationInspector';
+import { PracticeBase } from '../PracticeBase';
+import { PullRequestDto } from '../../reporters';
 
 @DxPractice({
   id: 'LanguageIndependent.DoesPullRequests',
@@ -14,7 +15,7 @@ import { PullRequestState } from '../../inspectors/ICollaborationInspector';
   reportOnlyOnce: true,
   url: 'https://dxkb.io/p/pull-requests',
 })
-export class DoesPullRequestsPractice implements IPractice {
+export class DoesPullRequestsPractice extends PracticeBase {
   async isApplicable(): Promise<boolean> {
     return true;
   }
@@ -31,6 +32,22 @@ export class DoesPullRequestsPractice implements IPractice {
       filter: { state: PullRequestState.all },
     });
     const repoCommits = await ctx.collaborationInspector.listRepoCommits(ownerAndRepoName.owner, ownerAndRepoName.repoName);
+    this.setData(
+      pullRequests.items.map((pr) => {
+        return {
+          id: pr.id,
+          url: pr.url,
+          name: pr.title,
+          createdAt: pr.createdAt,
+          updatedAt: pr.updatedAt,
+          //if mergedAt is null and closedAt is not null pr was closed, if both are not null pr is opened, if mergedAt is not null and closedAt is null pr was merged
+          closedAt: pr.mergedAt ? null : pr.closedAt,
+          mergedAt: pr.mergedAt,
+          authorName: pr.user.login,
+          authorUrl: pr.user.url,
+        };
+      }),
+    );
 
     if (pullRequests.items.length === 0) {
       return PracticeEvaluationResult.notPracticing;
@@ -52,5 +69,9 @@ export class DoesPullRequestsPractice implements IPractice {
     }
 
     return PracticeEvaluationResult.notPracticing;
+  }
+
+  setData(pullRequests: PullRequestDto[]): void {
+    this.data.statistics = { pullRequests: pullRequests };
   }
 }
