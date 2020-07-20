@@ -1,3 +1,10 @@
+# [3.31.0](https://github.com/dxheroes/dx-scanner/compare/v3.30.2...v3.31.0) (2020-07-15)
+
+
+### Features
+
+* send serviceType ([f08406a](https://github.com/dxheroes/dx-scanner/commit/f08406a7849a9da5b4f6f0a6ca105619bc27bdea))
+
 ## [3.30.2](https://github.com/dxheroes/dx-scanner/compare/v3.30.1...v3.30.2) (2020-07-15)
 
 
