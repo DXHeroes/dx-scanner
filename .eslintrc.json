@@ -21,7 +21,7 @@
   },
   "rules": {
     "quotes": [
-      "error"
+      "off"
     ],
     "eqeqeq": [
       "warn", "always"
