@@ -33,6 +33,7 @@ describe('DoesPullRequests', () => {
 
     const evaluated = await practice.evaluate(containerCtx.practiceContext);
     expect(evaluated).toEqual(PracticeEvaluationResult.practicing);
+    expect(practice.data.statistics?.pullRequests).not.toBeUndefined();
   });
 
   it('return notPracticing if there is no PR which is newer than last commit in master minus 30 days', async () => {
