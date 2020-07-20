@@ -1,3 +1,23 @@
+## [3.32.1](https://github.com/dxheroes/dx-scanner/compare/v3.32.0...v3.32.1) (2020-07-20)
+
+
+### Bug Fixes
+
+* saving rootPath ([a1feef7](https://github.com/dxheroes/dx-scanner/commit/a1feef7f03d3ab9a7a3277c53312d64ef389b4e5))
+
+# [3.32.0](https://github.com/dxheroes/dx-scanner/compare/v3.31.0...v3.32.0) (2020-07-20)
+
+
+### Bug Fixes
+
+* bitbucket service ([a718d53](https://github.com/dxheroes/dx-scanner/commit/a718d53ab426e86abaf3b8f48353c254228c33bb))
+
+
+### Features
+
+* add pull request title ([48e3699](https://github.com/dxheroes/dx-scanner/commit/48e36993e5416768411feb53b560b55373d44223))
+* send pr url ([106e68f](https://github.com/dxheroes/dx-scanner/commit/106e68f703c7b974c98b88c7c4f6669f07d04744))
+
 # [3.31.0](https://github.com/dxheroes/dx-scanner/compare/v3.30.2...v3.31.0) (2020-07-15)
 
 

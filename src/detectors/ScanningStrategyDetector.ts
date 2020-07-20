@@ -133,6 +133,7 @@ export class ScanningStrategyDetector implements IDetector<string, ScanningStrat
 
       try {
         const response = await this.bitbucketService.getRepo(owner, repoName);
+        this.isOnline = true;
         if (response.data.is_private === true) {
           return AccessType.private;
         }

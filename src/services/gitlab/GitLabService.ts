@@ -2,13 +2,11 @@ import Debug from 'debug';
 import { inject, injectable } from 'inversify';
 import { inspect } from 'util';
 import { IVCSService, ServicePagination } from '..';
-import { ScanningStrategy } from '../../detectors';
 import { IssueState, ListGetterOptions, Paginated, PullRequestState } from '../../inspectors';
 import { ArgumentsProvider } from '../../scanner';
 import { InMemoryCache } from '../../scanner/cache';
 import { ICache } from '../../scanner/cache/ICache';
 import { Types } from '../../types';
-import { GitServiceUtils } from '../git/GitServiceUtils';
 import {
   Commit,
   Contributor,
@@ -96,6 +94,7 @@ export class GitLabService implements IVCSService {
             login: val.author.username,
             url: val.author.web_url,
           },
+          title: val.title,
           url: val.web_url,
           body: val.description,
           sha: val.sha,
@@ -104,7 +103,7 @@ export class GitLabService implements IVCSService {
           closedAt: val.closed_at ? val.closed_at?.toString() : null,
           mergedAt: val.merged_at ? val.merged_at?.toString() : null,
           state: val.state,
-          id: val.iid, //id?
+          id: val.iid,
           base: {
             repo: {
               url: `${this.host}/${owner}/${repo}`,
@@ -142,6 +141,7 @@ export class GitLabService implements IVCSService {
         login: data.author.username,
         url: data.author.web_url,
       },
+      title: data.title,
       url: data.web_url,
       sha: data.sha,
       body: data.description,

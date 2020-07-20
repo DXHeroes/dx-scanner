@@ -9,6 +9,7 @@ export const listPullRequestsResponse = (items?: PullRequest[], pagination?: Pag
         login: 'nkipling',
         url: 'https://gitlab.com/nkipling',
       },
+      title: 'WIP: Add package_name as option to packages API',
       url: 'https://gitlab.com/gitlab-org/gitlab/-/merge_requests/26291',
       body:
         '## What does this MR do?\r\n' +
