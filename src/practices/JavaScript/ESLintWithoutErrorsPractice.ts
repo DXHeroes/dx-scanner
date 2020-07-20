@@ -12,7 +12,6 @@ import { LinterIssueDto, LinterIssueSeverity } from '../../reporters';
 import { GitServiceUtils } from '../../services';
 import { ServiceType } from '../../detectors/IScanningStrategy';
 import { ScanningStrategy } from '../../detectors';
-import { config } from 'cli-ux';
 import { ScanningStrategyDetectorUtils } from '../../detectors/utils/ScanningStrategyDetectorUtils';
 
 @DxPractice({
@@ -93,13 +92,9 @@ export class ESLintWithoutErrorsPractice extends PracticeBase {
       return PracticeEvaluationResult.unknown;
     }
 
-    if (report['errorCount'] === 0) {
-      return PracticeEvaluationResult.practicing;
-    }
-
     const linterIssues: LinterIssueDto[] = [];
 
-    //TODO: resolve file path
+    //resolve file path
     let serviceType: ServiceType = ServiceType.local;
     if (ctx.projectComponent.repositoryPath) {
       //gitLab
@@ -137,6 +132,10 @@ export class ESLintWithoutErrorsPractice extends PracticeBase {
       }
     }
     this.setData(linterIssues);
+
+    if (report['errorCount'] === 0) {
+      return PracticeEvaluationResult.practicing;
+    }
     return PracticeEvaluationResult.notPracticing;
   }
 
