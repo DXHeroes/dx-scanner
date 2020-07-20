@@ -9,6 +9,7 @@ import { Types } from '../types';
 import { IReporter, PracticeWithContextForReporter } from './IReporter';
 import { PkgToUpdate } from '../practices/utils/DependenciesVersionEvaluationUtils';
 import { ServiceType } from '../detectors/IScanningStrategy';
+import { GitServiceUtils } from '../services';
 // eslint-disable-next-line @typescript-eslint/no-require-imports, @typescript-eslint/no-var-requires
 const pjson = require('../../package.json');
 
@@ -62,7 +63,13 @@ export class DashboardReporter implements IReporter {
       for (const p of cwp.practicesAndComponents) {
         updatedDependencies = [...updatedDependencies, ...(p.practice.data?.statistics?.updatedDependencies || [])];
         securityIssues = [...securityIssues, ...(p.practice.data?.statistics?.securityIssues?.issues || [])];
-        linterIssues = [...linterIssues, ...(p.practice.data?.statistics?.linterIssues || [])];
+        linterIssues =
+          p.practice.data?.statistics?.linterIssues?.map((issue) => {
+            return {
+              ...issue,
+              url: GitServiceUtils.getUrlToRepo(p.component.repositoryPath!, this.scanningStrategy, issue.url),
+            };
+          }) || [];
       }
 
       const componentWithScore: ComponentDto = {

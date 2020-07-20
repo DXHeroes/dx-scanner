@@ -9,10 +9,6 @@ import * as nodePath from 'path';
 import { FixerContext } from '../../contexts/fixer/FixerContext';
 import { PracticeBase } from '../PracticeBase';
 import { LinterIssueDto, LinterIssueSeverity } from '../../reporters';
-import { GitServiceUtils } from '../../services';
-import { ServiceType } from '../../detectors/IScanningStrategy';
-import { ScanningStrategy } from '../../detectors';
-import { ScanningStrategyDetectorUtils } from '../../detectors/utils/ScanningStrategyDetectorUtils';
 
 @DxPractice({
   id: 'JavaScript.ESLintWithoutErrorsPractice',
@@ -93,39 +89,13 @@ export class ESLintWithoutErrorsPractice extends PracticeBase {
     }
 
     const linterIssues: LinterIssueDto[] = [];
-
-    //resolve file path
-    let serviceType: ServiceType = ServiceType.local;
-    if (ctx.projectComponent.repositoryPath) {
-      //gitLab
-      if (ScanningStrategyDetectorUtils.isGitLabPath(ctx.projectComponent.repositoryPath)) {
-        serviceType = ServiceType.gitlab;
-      }
-      //gitHub
-      if (ScanningStrategyDetectorUtils.isGitHubPath(ctx.projectComponent.repositoryPath)) {
-        serviceType = ServiceType.github;
-      }
-      //bitBusket
-      if (ScanningStrategyDetectorUtils.isBitbucketPath(ctx.projectComponent.repositoryPath)) {
-        serviceType = ServiceType.bitbucket;
-      }
-    }
-
     for (const result of report.results) {
       if (result.errorCount > 0 || result.warningCount > 0) {
-        const url =
-          serviceType === ServiceType.local
-            ? result.filePath
-            : GitServiceUtils.getUrlToRepo(
-                ctx.projectComponent.repositoryPath!,
-                <ScanningStrategy>{ serviceType },
-                result.filePath.replace(ctx.projectComponent.path, ''),
-              );
         for (const message of result.messages) {
           linterIssues.push({
             filePath: `${result.filePath}(${message.line})(${message.column})`,
             severity: message.severity === 2 ? LinterIssueSeverity.Error : LinterIssueSeverity.Warning,
-            url,
+            url: result.filePath,
             type: message.message,
           });
         }
