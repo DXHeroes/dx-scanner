@@ -141,11 +141,12 @@ export enum UpdatedDependencySeverity {
 //pull requests
 export type PullRequestDto = {
   id: number;
+  url: string;
   name: string;
   createdAt: string;
   updatedAt: string | null;
   closedAt: string | null;
   mergedAt: string | null;
-  login: string;
+  authorName: string;
   authorUrl: string;
 };

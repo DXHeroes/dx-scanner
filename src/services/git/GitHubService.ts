@@ -101,7 +101,7 @@ export class GitHubService implements IVCSService {
             url: val.user.html_url,
           },
           title: val.title,
-          url: val.url,
+          url: val.html_url,
           body: val.body,
           sha: val.merge_commit_sha,
           createdAt: val.created_at,

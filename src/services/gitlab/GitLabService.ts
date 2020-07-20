@@ -103,7 +103,7 @@ export class GitLabService implements IVCSService {
           closedAt: val.closed_at ? val.closed_at?.toString() : null,
           mergedAt: val.merged_at ? val.merged_at?.toString() : null,
           state: val.state,
-          id: val.iid, //id?
+          id: val.iid,
           base: {
             repo: {
               url: `${this.host}/${owner}/${repo}`,
