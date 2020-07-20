@@ -106,7 +106,10 @@ export {
   ComponentDto,
   SecurityIssueDto,
   SecurityIssueSeverity,
-  UpdatedDependencySeverity,
   UpdatedDependencyDto,
+  UpdatedDependencySeverity,
+  LinterIssueDto,
+  LinterIssueSeverity,
 } from './reporters';
+export { ServiceType } from './detectors';
 export { ProgrammingLanguage, ProjectComponent, ProjectComponentPlatform, ProjectComponentFramework, ProjectComponentType } from './model';
