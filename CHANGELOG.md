@@ -1,3 +1,10 @@
+## [3.32.1](https://github.com/dxheroes/dx-scanner/compare/v3.32.0...v3.32.1) (2020-07-20)
+
+
+### Bug Fixes
+
+* saving rootPath ([a1feef7](https://github.com/dxheroes/dx-scanner/commit/a1feef7f03d3ab9a7a3277c53312d64ef389b4e5))
+
 # [3.32.0](https://github.com/dxheroes/dx-scanner/compare/v3.31.0...v3.32.0) (2020-07-20)
 
 
