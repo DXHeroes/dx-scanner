@@ -95,7 +95,7 @@ export class ESLintWithoutErrorsPractice extends PracticeBase {
           linterIssues.push({
             filePath: `${result.filePath}(${message.line})(${message.column})`,
             severity: message.severity === 2 ? LinterIssueSeverity.Error : LinterIssueSeverity.Warning,
-            url: result.filePath,
+            url: `${result.filePath}#L${message.line}`,
             type: message.message,
           });
         }

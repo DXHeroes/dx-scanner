@@ -65,13 +65,16 @@ export class DashboardReporter implements IReporter {
         updatedDependencies = [...updatedDependencies, ...(p.practice.data?.statistics?.updatedDependencies || [])];
         securityIssues = [...securityIssues, ...(p.practice.data?.statistics?.securityIssues?.issues || [])];
         pullRequests = [...pullRequests, ...(p.practice.data?.statistics?.pullRequests || [])];
-        linterIssues =
-          p.practice.data?.statistics?.linterIssues?.map((issue) => {
+        linterIssues = [
+          ...linterIssues,
+          ...(p.practice.data?.statistics?.linterIssues?.map((issue) => {
             return {
               ...issue,
+              filePath: issue.filePath.replace(this.scanningStrategy.rootPath || '', ''),
               url: GitServiceUtils.getUrlToRepo(p.component.repositoryPath!, this.scanningStrategy, issue.url),
             };
-          }) || [];
+          }) || []),
+        ];
       }
 
       const componentWithScore: ComponentDto = {
