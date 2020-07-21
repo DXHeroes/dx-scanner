@@ -106,7 +106,7 @@ describe('ESLintWithoutErrorsPractice', () => {
       filePath: '/Users/jakubvacek/dx-scanner/src/commands/init.ts(1)(37)',
       severity: 'error',
       type: 'Strings must use doublequote.',
-      url: '/Users/jakubvacek/dx-scanner/src/commands/init.ts',
+      url: '/Users/jakubvacek/dx-scanner/src/commands/init.ts#L1',
     });
     expect(result).toEqual(PracticeEvaluationResult.notPracticing);
   });
