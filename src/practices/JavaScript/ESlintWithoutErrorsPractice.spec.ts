@@ -7,6 +7,7 @@ import * as fs from 'fs';
 import path from 'path';
 import { eslintrRcJson } from './__MOCKS__/eslintRcMockJson';
 import { PracticeContext } from '../../contexts/practice/PracticeContext';
+import { getEsLintReport } from './__MOCKS__/eslintReport';
 jest.mock('eslint');
 
 describe('ESLintWithoutErrorsPractice', () => {
@@ -44,19 +45,7 @@ describe('ESLintWithoutErrorsPractice', () => {
   });
 
   it('Returns practicing, if errorCount === 0', async () => {
-    const report = {
-      errorCount: 0,
-      results: [
-        {
-          filePath: '/Users/jakubvacek/dx-scanner/src/commands/init.ts',
-          messages: [],
-          errorCount: 0,
-          warningCount: 0,
-          fixableErrorCount: 0,
-          fixableWarningCount: 0,
-        },
-      ],
-    };
+    const report = getEsLintReport();
     mockedEslint.mockImplementation(() => {
       return {
         executeOnFiles: () => report,
@@ -68,15 +57,14 @@ describe('ESLintWithoutErrorsPractice', () => {
   });
 
   it('Returns not practicing, if errorCount !== 0, creates correct linter issue dtos if there are errors', async () => {
-    const report = {
+    const report = getEsLintReport({
       errorCount: 1,
       results: [
         {
           filePath: '/Users/jakubvacek/dx-scanner/src/commands/init.ts',
           messages: [
             {
-              ruleId: 'quotes',
-              severity: 2,
+              severity: <0 | 1 | 2>2,
               message: 'Strings must use doublequote.',
               line: 1,
               column: 37,
@@ -84,17 +72,18 @@ describe('ESLintWithoutErrorsPractice', () => {
               messageId: 'wrongQuotes',
               endLine: 1,
               endColumn: 58,
-              fix: [Object],
+              ruleId: '',
             },
           ],
           errorCount: 1,
           warningCount: 0,
           fixableErrorCount: 1,
           fixableWarningCount: 0,
+          usedDeprecatedRules: [],
           source: '',
         },
       ],
-    };
+    });
     mockedEslint.mockImplementation(() => {
       return {
         executeOnFiles: () => report,
@@ -112,19 +101,7 @@ describe('ESLintWithoutErrorsPractice', () => {
   });
 
   it('Correctly read .eslintrc.json file', async () => {
-    const report = {
-      errorCount: 0,
-      results: [
-        {
-          filePath: '/Users/jakubvacek/dx-scanner/src/commands/init.ts',
-          messages: [],
-          errorCount: 0,
-          warningCount: 0,
-          fixableErrorCount: 0,
-          fixableWarningCount: 0,
-        },
-      ],
-    };
+    const report = getEsLintReport();
     const mockFileSystem: DirectoryJSON = {
       '/.eslintrc.json': JSON.stringify(eslintrRcJson),
     };
@@ -141,19 +118,7 @@ describe('ESLintWithoutErrorsPractice', () => {
   });
 
   it('Correctly read correct .eslintrc.yml file', async () => {
-    const report = {
-      errorCount: 0,
-      results: [
-        {
-          filePath: '/Users/jakubvacek/dx-scanner/src/commands/init.ts',
-          messages: [],
-          errorCount: 0,
-          warningCount: 0,
-          fixableErrorCount: 0,
-          fixableWarningCount: 0,
-        },
-      ],
-    };
+    const report = getEsLintReport();
     const p = path.join(__dirname, '__MOCKS__/eslintRcMock.yml');
 
     const mockFileSystem: DirectoryJSON = {
@@ -172,19 +137,7 @@ describe('ESLintWithoutErrorsPractice', () => {
   });
 
   it('Throw error if it is not correct yaml file', async () => {
-    const report = {
-      errorCount: 0,
-      results: [
-        {
-          filePath: '/Users/jakubvacek/dx-scanner/src/commands/init.ts',
-          messages: [],
-          errorCount: 0,
-          warningCount: 0,
-          fixableErrorCount: 0,
-          fixableWarningCount: 0,
-        },
-      ],
-    };
+    const report = getEsLintReport();
 
     const mockFileSystem: DirectoryJSON = {
       '/.eslintrc.yml': `badYaml: true
