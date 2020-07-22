@@ -32,6 +32,10 @@ export class GitServiceUtils {
   };
 
   static getPath = (componentPath: string, branch = 'master', serviceType: ServiceType) => {
+    if (!componentPath || componentPath === '') {
+      return '';
+    }
+
     const resPath = (): string => {
       switch (serviceType) {
         case ServiceType.github:

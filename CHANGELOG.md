@@ -1,3 +1,11 @@
+## [3.32.2](https://github.com/dxheroes/dx-scanner/compare/v3.32.1...v3.32.2) (2020-07-22)
+
+
+### Bug Fixes
+
+* component repository path ([a8fde44](https://github.com/dxheroes/dx-scanner/commit/a8fde448c106e91ad2c6bbbc4af8467fcadbe7b5))
+* re-export all from DashboardReporter ([71ca40e](https://github.com/dxheroes/dx-scanner/commit/71ca40ea6089c4ab66daa67fa46f5bfc69b49eea))
+
 ## [3.32.1](https://github.com/dxheroes/dx-scanner/compare/v3.32.0...v3.32.1) (2020-07-20)
 
 
