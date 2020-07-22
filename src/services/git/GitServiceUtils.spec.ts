@@ -7,21 +7,63 @@ import {
   ProjectComponentType,
   ProjectComponent,
 } from '../../model';
-import { ServiceType } from '../../detectors/IScanningStrategy';
+import { ServiceType, AccessType } from '../../detectors/IScanningStrategy';
+import { ScanningStrategy } from '../../detectors';
 
 describe('GitServiceUtils', () => {
-  it('Returns url', () => {
-    const response = GitServiceUtils.getUrlToRepo('https://www.github.com/DXHeroes/dx-scanner.git', scanningStrategy);
-    expect(response).toEqual('https://www.github.com/DXHeroes/dx-scanner');
-  });
+  describe('#getUrlToRepo', () => {
+    it('returns url for github to root of repository', () => {
+      const scanStrg: ScanningStrategy = {
+        accessType: AccessType.public,
+        localPath: '/builds/repos/myRepository',
+        rootPath: '/builds/repos/myRepository',
+        remoteUrl: 'https://github.com/DXHeroes/dx-scanner',
+        isOnline: true,
+        serviceType: ServiceType.github,
+      };
+      const response = GitServiceUtils.getUrlToRepo(scanStrg.remoteUrl!, scanStrg, scanStrg.localPath);
+      expect(response).toEqual('https://github.com/DXHeroes/dx-scanner');
+    });
 
-  it('Returns url', () => {
-    const response = GitServiceUtils.getUrlToRepo(
-      'https://www.bitbucket.com/pypy/pypy.git',
-      { ...scanningStrategy, serviceType: ServiceType.bitbucket },
-      'component',
-    );
-    expect(response).toEqual('https://www.bitbucket.com/pypy/pypy/src/master/component');
+    it('returns url for github to path for a component in a repository', () => {
+      const scanStrg: ScanningStrategy = {
+        accessType: AccessType.public,
+        localPath: '/builds/repos/myRepository/myComponent',
+        rootPath: '/builds/repos/myRepository',
+        remoteUrl: 'https://github.com/DXHeroes/dx-scanner',
+        isOnline: true,
+        serviceType: ServiceType.github,
+      };
+      const response = GitServiceUtils.getUrlToRepo(scanStrg.remoteUrl!, scanStrg, scanStrg.localPath);
+      expect(response).toEqual('https://github.com/DXHeroes/dx-scanner/tree/master/myComponent');
+    });
+
+    it('returns url for github to path for a subcomponent in a repository', () => {
+      const scanStrg: ScanningStrategy = {
+        accessType: AccessType.public,
+        localPath: '/builds/repos/myRepository/myComponent/mySubcomponent',
+        rootPath: '/builds/repos/myRepository',
+        remoteUrl: 'https://github.com/DXHeroes/dx-scanner',
+        isOnline: true,
+        serviceType: ServiceType.github,
+      };
+      const response = GitServiceUtils.getUrlToRepo(scanStrg.remoteUrl!, scanStrg, scanStrg.localPath);
+      expect(response).toEqual('https://github.com/DXHeroes/dx-scanner/tree/master/myComponent/mySubcomponent');
+    });
+
+    it('returns url for github to root of repository', () => {
+      const response = GitServiceUtils.getUrlToRepo('https://www.github.com/DXHeroes/dx-scanner.git', scanningStrategy);
+      expect(response).toEqual('https://www.github.com/DXHeroes/dx-scanner');
+    });
+
+    it('returns url to component for bitbucket', () => {
+      const response = GitServiceUtils.getUrlToRepo(
+        'https://www.bitbucket.com/pypy/pypy.git',
+        { ...scanningStrategy, serviceType: ServiceType.bitbucket },
+        'component',
+      );
+      expect(response).toEqual('https://www.bitbucket.com/pypy/pypy/src/master/component');
+    });
   });
 
   it('Parses url', () => {
