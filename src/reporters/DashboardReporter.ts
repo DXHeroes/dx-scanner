@@ -9,6 +9,7 @@ import { Types } from '../types';
 import { IReporter, PracticeWithContextForReporter } from './IReporter';
 import { PkgToUpdate } from '../practices/utils/DependenciesVersionEvaluationUtils';
 import { ServiceType } from '../detectors/IScanningStrategy';
+import { GitServiceUtils } from '../services';
 // eslint-disable-next-line @typescript-eslint/no-require-imports, @typescript-eslint/no-var-requires
 const pjson = require('../../package.json');
 
@@ -54,6 +55,7 @@ export class DashboardReporter implements IReporter {
     for (const cwp of componentsWithPractices) {
       let updatedDependencies: PkgToUpdate[] = [];
       let securityIssues: SecurityIssueDto[] = [];
+      let linterIssues: LinterIssueDto[] = [];
       let pullRequests: PullRequestDto[] = [];
 
       const dxScoreForComponent = dxScore.components.find((c) => c.path === cwp.component.path)!.value;
@@ -63,6 +65,16 @@ export class DashboardReporter implements IReporter {
         updatedDependencies = [...updatedDependencies, ...(p.practice.data?.statistics?.updatedDependencies || [])];
         securityIssues = [...securityIssues, ...(p.practice.data?.statistics?.securityIssues?.issues || [])];
         pullRequests = [...pullRequests, ...(p.practice.data?.statistics?.pullRequests || [])];
+        linterIssues = [
+          ...linterIssues,
+          ...(p.practice.data?.statistics?.linterIssues?.map((issue) => {
+            return {
+              ...issue,
+              filePath: issue.filePath.replace(this.scanningStrategy.rootPath || '', ''),
+              url: GitServiceUtils.getUrlToRepo(p.component.repositoryPath!, this.scanningStrategy, issue.url),
+            };
+          }) || []),
+        ];
       }
 
       const componentWithScore: ComponentDto = {
@@ -71,6 +83,7 @@ export class DashboardReporter implements IReporter {
         serviceType: <ServiceType>this.scanningStrategy.serviceType,
         securityIssues,
         updatedDependencies,
+        linterIssues,
         pullRequests,
       };
 
@@ -94,6 +107,7 @@ export interface ComponentDto {
   serviceType: ServiceType;
   securityIssues: SecurityIssueDto[];
   updatedDependencies: UpdatedDependencyDto[];
+  linterIssues: LinterIssueDto[];
   pullRequests: PullRequestDto[];
 }
 
@@ -139,6 +153,19 @@ export enum UpdatedDependencySeverity {
   Low = 'low',
   Moderate = 'moderate',
   High = 'high',
+}
+
+//linter issues
+export type LinterIssueDto = {
+  filePath: string;
+  url: string;
+  type: string;
+  severity: LinterIssueSeverity;
+};
+
+export enum LinterIssueSeverity {
+  Warning = 'warning',
+  Error = 'error',
 }
 
 //pull requests

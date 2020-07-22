@@ -1,11 +1,13 @@
 import { CLIEngine } from 'eslint';
 import { DirectoryJSON } from 'memfs/lib/volume';
 import { createTestContainer, TestContainerContext } from '../../inversify.config';
-import { PracticeEvaluationResult } from '../../model';
+import { PracticeEvaluationResult, ProgrammingLanguage } from '../../model';
 import { ESLintWithoutErrorsPractice } from './ESLintWithoutErrorsPractice';
 import * as fs from 'fs';
 import path from 'path';
 import { eslintrRcJson } from './__MOCKS__/eslintRcMockJson';
+import { PracticeContext } from '../../contexts/practice/PracticeContext';
+import { getEsLintReport } from './__MOCKS__/eslintReport';
 jest.mock('eslint');
 
 describe('ESLintWithoutErrorsPractice', () => {
@@ -14,7 +16,7 @@ describe('ESLintWithoutErrorsPractice', () => {
 
   const mockedEslint = <jest.Mock>(<unknown>CLIEngine);
 
-  beforeAll(() => {
+  beforeEach(() => {
     containerCtx = createTestContainer();
     containerCtx.container.bind('ESLintWithoutErrorsPractice').to(ESLintWithoutErrorsPractice);
     practice = containerCtx.container.get('ESLintWithoutErrorsPractice');
@@ -24,32 +26,82 @@ describe('ESLintWithoutErrorsPractice', () => {
     containerCtx.practiceContext.fileInspector!.purgeCache();
   });
 
+  it('Returns true if lang is a JavaScript or TypeScript', async () => {
+    const result = await practice.isApplicable(containerCtx.practiceContext);
+    expect(result).toEqual(true);
+  });
+
+  it('Returns false if lang is NOT a JavaScript or TypeScript', async () => {
+    containerCtx.practiceContext.projectComponent.language = ProgrammingLanguage.UNKNOWN;
+
+    const result = await practice.isApplicable(containerCtx.practiceContext);
+    expect(result).toEqual(false);
+  });
+
+  it('Returns undefined if ctx file inspector is undefined', async () => {
+    practice = containerCtx.container.get('ESLintWithoutErrorsPractice');
+    const result = await practice.evaluate(<PracticeContext>{ fileInspector: undefined });
+    expect(result).toEqual(PracticeEvaluationResult.unknown);
+  });
+
   it('Returns practicing, if errorCount === 0', async () => {
-    const report = { errorCount: 0 };
+    const report = getEsLintReport();
     mockedEslint.mockImplementation(() => {
       return {
         executeOnFiles: () => report,
       };
     });
     const result = await practice.evaluate(containerCtx.practiceContext);
-
+    expect(practice.data.statistics?.linterIssues).toEqual([]);
     expect(result).toEqual(PracticeEvaluationResult.practicing);
   });
 
-  it('Returns not practicing, if errorCount !== 0', async () => {
-    const report = { errorCount: 1 };
+  it('Returns not practicing, if errorCount !== 0, creates correct linter issue dtos if there are errors', async () => {
+    const report = getEsLintReport({
+      errorCount: 1,
+      results: [
+        {
+          filePath: '/Users/jakubvacek/dx-scanner/src/commands/init.ts',
+          messages: [
+            {
+              severity: <0 | 1 | 2>2,
+              message: 'Strings must use doublequote.',
+              line: 1,
+              column: 37,
+              nodeType: 'Literal',
+              messageId: 'wrongQuotes',
+              endLine: 1,
+              endColumn: 58,
+              ruleId: '',
+            },
+          ],
+          errorCount: 1,
+          warningCount: 0,
+          fixableErrorCount: 1,
+          fixableWarningCount: 0,
+          usedDeprecatedRules: [],
+          source: '',
+        },
+      ],
+    });
     mockedEslint.mockImplementation(() => {
       return {
         executeOnFiles: () => report,
       };
     });
     const result = await practice.evaluate(containerCtx.practiceContext);
-
+    expect(practice.data.statistics?.linterIssues).toBeDefined();
+    expect(practice.data.statistics?.linterIssues![0]).toEqual({
+      filePath: '/Users/jakubvacek/dx-scanner/src/commands/init.ts(1)(37)',
+      severity: 'error',
+      type: 'Strings must use doublequote.',
+      url: '/Users/jakubvacek/dx-scanner/src/commands/init.ts#L1',
+    });
     expect(result).toEqual(PracticeEvaluationResult.notPracticing);
   });
 
   it('Correctly read .eslintrc.json file', async () => {
-    const report = { errorCount: 0 };
+    const report = getEsLintReport();
     const mockFileSystem: DirectoryJSON = {
       '/.eslintrc.json': JSON.stringify(eslintrRcJson),
     };
@@ -66,7 +118,7 @@ describe('ESLintWithoutErrorsPractice', () => {
   });
 
   it('Correctly read correct .eslintrc.yml file', async () => {
-    const report = { errorCount: 0 };
+    const report = getEsLintReport();
     const p = path.join(__dirname, '__MOCKS__/eslintRcMock.yml');
 
     const mockFileSystem: DirectoryJSON = {
@@ -85,7 +137,7 @@ describe('ESLintWithoutErrorsPractice', () => {
   });
 
   it('Throw error if it is not correct yaml file', async () => {
-    const report = { errorCount: 0 };
+    const report = getEsLintReport();
 
     const mockFileSystem: DirectoryJSON = {
       '/.eslintrc.yml': `badYaml: true

@@ -101,4 +101,5 @@ process.on('uncaughtException', errorHandler);
 export default DXScannerCommand;
 
 export * from './reporters/DashboardReporter';
+export { ServiceType } from './detectors';
 export { ProgrammingLanguage, ProjectComponent, ProjectComponentPlatform, ProjectComponentFramework, ProjectComponentType } from './model';

@@ -5,9 +5,10 @@ import _ from 'lodash';
 import { PracticeContext } from '../../contexts/practice/PracticeContext';
 import { PracticeEvaluationResult, PracticeImpact, ProgrammingLanguage } from '../../model';
 import { DxPractice } from '../DxPracticeDecorator';
-import { IPractice } from '../IPractice';
 import * as nodePath from 'path';
 import { FixerContext } from '../../contexts/fixer/FixerContext';
+import { PracticeBase } from '../PracticeBase';
+import { LinterIssueDto, LinterIssueSeverity } from '../../reporters';
 
 @DxPractice({
   id: 'JavaScript.ESLintWithoutErrorsPractice',
@@ -18,7 +19,7 @@ import { FixerContext } from '../../contexts/fixer/FixerContext';
   url: 'https://dxkb.io/p/linting',
   dependsOn: { practicing: ['JavaScript.ESLintUsed'] },
 })
-export class ESLintWithoutErrorsPractice implements IPractice {
+export class ESLintWithoutErrorsPractice extends PracticeBase {
   async isApplicable(ctx: PracticeContext): Promise<boolean> {
     return (
       ctx.projectComponent.language === ProgrammingLanguage.JavaScript || ctx.projectComponent.language === ProgrammingLanguage.TypeScript
@@ -87,14 +88,32 @@ export class ESLintWithoutErrorsPractice implements IPractice {
       return PracticeEvaluationResult.unknown;
     }
 
+    const linterIssues: LinterIssueDto[] = [];
+    for (const result of report.results) {
+      if (result.errorCount > 0 || result.warningCount > 0) {
+        for (const message of result.messages) {
+          linterIssues.push({
+            filePath: `${result.filePath}(${message.line})(${message.column})`,
+            severity: message.severity === 2 ? LinterIssueSeverity.Error : LinterIssueSeverity.Warning,
+            url: `${result.filePath}#L${message.line}`,
+            type: message.message,
+          });
+        }
+      }
+    }
+    this.setData(linterIssues);
+
     if (report['errorCount'] === 0) {
       return PracticeEvaluationResult.practicing;
     }
-
     return PracticeEvaluationResult.notPracticing;
   }
 
   async fix(ctx: FixerContext) {
     await this.runEslint(ctx, { fix: true });
+  }
+
+  setData(linterIssues: LinterIssueDto[]): void {
+    this.data.statistics = { linterIssues };
   }
 }
