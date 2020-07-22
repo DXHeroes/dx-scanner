@@ -1,3 +1,16 @@
+# [3.33.0](https://github.com/dxheroes/dx-scanner/compare/v3.32.2...v3.33.0) (2020-07-22)
+
+
+### Bug Fixes
+
+* move url logic to reporter ([7f29fa5](https://github.com/dxheroes/dx-scanner/commit/7f29fa59a12549760f8fb72f39b327ef2be07be0))
+* test ([d792735](https://github.com/dxheroes/dx-scanner/commit/d792735c6548845bad373944662c98bc9f3a3c12))
+
+
+### Features
+
+* add linter issues ([32d6978](https://github.com/dxheroes/dx-scanner/commit/32d69782c277108b7046c13636bc0d39f9b32575))
+
 ## [3.32.2](https://github.com/dxheroes/dx-scanner/compare/v3.32.1...v3.32.2) (2020-07-22)
 
 
