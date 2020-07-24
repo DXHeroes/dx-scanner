@@ -1,3 +1,10 @@
+## [3.33.1](https://github.com/dxheroes/dx-scanner/compare/v3.33.0...v3.33.1) (2020-07-24)
+
+
+### Bug Fixes
+
+* **deps:** update dependency commander to v6 ([820a5fa](https://github.com/dxheroes/dx-scanner/commit/820a5fa50b3cc16f0ecab5c55ab9ec5cf52d4eac))
+
 # [3.33.0](https://github.com/dxheroes/dx-scanner/compare/v3.32.2...v3.33.0) (2020-07-22)
 
 
