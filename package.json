@@ -37,7 +37,7 @@
     "cli-ux": "5.4.9",
     "colors": "1.4.0",
     "command-exists": "1.2.9",
-    "commander": "5.1.0",
+    "commander": "6.0.0",
     "cross-env": "7.0.2",
     "debug": "4.1.1",
     "eslint": "7.4.0",
