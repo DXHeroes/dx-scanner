@@ -27,7 +27,7 @@ export const getPullRequestResponse = (params?: Partial<PullRequest>): PullReque
           owner: {
             login: 'pypy',
             id: '{f122f6a4-9111-4431-9f88-884d8cedd194}',
-            url: 'www.bitbucket.org/pypy',
+            url: 'https://bitbucket.org/pypy',
           },
         },
       },

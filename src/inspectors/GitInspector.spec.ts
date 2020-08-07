@@ -294,7 +294,7 @@ describe('GitInspector', () => {
     it('throws an error if the path does not exist', async () => {
       const gitInspector = new GitInspector(path.join(testDir.path, 'non-existing-dir'));
 
-      await expect(gitInspector.getCommits({})).rejects.toThrow('Cannot use simple-git on a directory that does not exist.');
+      await expect(gitInspector.getCommits({})).rejects.toThrow('Cannot use simple-git on a directory that does not exist');
     });
 
     it('throws an error if the path is not a repository', async () => {
@@ -448,7 +448,7 @@ describe('GitInspector', () => {
     it('throws an error if the path does not exist', async () => {
       const gitInspector = new GitInspector(path.join(testDir.path, 'non-existing-dir'));
 
-      await expect(gitInspector.getAuthors({})).rejects.toThrow('Cannot use simple-git on a directory that does not exist.');
+      await expect(gitInspector.getAuthors({})).rejects.toThrow('Cannot use simple-git on a directory that does not exist');
     });
 
     it('throws an error if the path is not a repository', async () => {
@@ -497,7 +497,7 @@ describe('GitInspector', () => {
     it('throws an error if the path does not exist', async () => {
       const gitInspector = new GitInspector(path.join(testDir.path, 'non-existing-dir'));
 
-      await expect(gitInspector.getAllTags()).rejects.toThrow('Cannot use simple-git on a directory that does not exist.');
+      await expect(gitInspector.getAllTags()).rejects.toThrow('Cannot use simple-git on a directory that does not exist');
     });
 
     it('throws an error if the path is not a repository', async () => {

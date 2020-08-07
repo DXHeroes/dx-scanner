@@ -101,7 +101,7 @@ export class BitbucketService implements IVCSService {
   ): Promise<Paginated<PullRequest>> {
     this.authenticate();
     const apiUrl = `https://api.bitbucket.org/2.0/repositories/${owner}/${repo}/pullrequests`;
-    const ownerUrl = `www.bitbucket.org/${owner}`;
+    const ownerUrl = `https://bitbucket.org/${owner}`;
 
     let state;
     if (options?.filter?.state) {
@@ -127,7 +127,7 @@ export class BitbucketService implements IVCSService {
           },
           title: val.title,
           url: val.links.html.href,
-          body: val.description,
+          body: val.summary.markup,
           sha: val.source?.commit?.hash,
           createdAt: val.created_on,
           updatedAt: val.updated_on,
@@ -174,7 +174,7 @@ export class BitbucketService implements IVCSService {
       workspace: owner,
     };
 
-    const ownerUrl = `www.bitbucket.org/${owner}`;
+    const ownerUrl = `https://bitbucket.org/${owner}`;
     const ownerId = `${(await this.unwrap(this.client.repositories.get({ repo_slug: repo, workspace: owner }))).data.owner?.uuid}`;
 
     const response = <DeepRequired<Response<Schema.Pullrequest>>>await this.unwrap(this.client.pullrequests.get(params));
@@ -242,10 +242,11 @@ export class BitbucketService implements IVCSService {
     const response = <DeepRequired<Response<BitbucketCommit>>>await this.unwrap(this.client.pullrequests.listCommits(params));
 
     const items = response.data.values.map((val) => {
+      const commitUrl = `https://bitbucket.org/${val.repository.full_name}/commits/${val.hash}`;
       return {
         sha: val.hash,
         commit: {
-          url: val.links.html.href,
+          url: commitUrl,
           message: val.message,
           author: {
             name: val.author.raw,
@@ -254,7 +255,7 @@ export class BitbucketService implements IVCSService {
           },
           tree: {
             sha: val.hash,
-            url: val.links.html.href,
+            url: commitUrl,
           },
           //TODO
           verified: false,
@@ -357,7 +358,7 @@ export class BitbucketService implements IVCSService {
       body: val.content.raw,
       createdAt: val.created_on,
       updatedAt: val.updated_on,
-      authorAssociation: val.author_association,
+      authorAssociation: val.user.username,
       id: val.id,
     }));
     const pagination = this.getPagination(response.data);
@@ -383,8 +384,8 @@ export class BitbucketService implements IVCSService {
     const items = response.data.values.map((val) => {
       return {
         sha: val.hash,
-        url: val.links.html.href,
-        message: val.rendered.message.raw,
+        url: `https://bitbucket.org/${val.repository.full_name}/commits/${val.hash}`,
+        message: val.message,
         author: {
           name: val.author.user.nickname,
           email: this.extractEmailFromString(val.author.raw) || '',
@@ -392,7 +393,7 @@ export class BitbucketService implements IVCSService {
         },
         tree: {
           sha: val.parents[0].hash,
-          url: val.parents[0].links.html.href,
+          url: `https://bitbucket.org/${val.repository.full_name}/commits/${val.parents[0].hash}`,
         },
         // TODO
         verified: false,
@@ -415,8 +416,8 @@ export class BitbucketService implements IVCSService {
 
     return {
       sha: response.data.hash,
-      url: response.data.links.html.href,
-      message: response.data.rendered.message.raw,
+      url: `https://bitbucket.org/${response.data.repository.full_name}/commits/${response.data.hash}`,
+      message: response.data.message,
       author: {
         name: response.data.author.user.nickname,
         email: this.extractEmailFromString(response.data.author.raw) || '',
@@ -424,7 +425,7 @@ export class BitbucketService implements IVCSService {
       },
       tree: {
         sha: response.data.parents[0].hash,
-        url: response.data.parents[0].links.html.href,
+        url: `https://bitbucket.org/${response.data.repository.full_name}/commits/${response.data.parents[0].hash}`,
       },
       // TODO
       verified: false,
@@ -480,12 +481,12 @@ export class BitbucketService implements IVCSService {
 
     const comment = response.data;
     return {
-      user: { id: `${comment.user.id}`, login: comment.user.login, url: comment.user.url },
+      user: { id: `${comment.user.id}`, login: comment.user.username, url: comment.user.links.html.href },
       id: comment.id,
-      url: comment.url,
-      body: comment.body,
-      createdAt: comment.created_at,
-      updatedAt: comment.updated_at,
+      url: comment.links.html.href,
+      body: comment.content.raw,
+      createdAt: comment.created_on,
+      updatedAt: comment.updated_on,
     };
   }
 
@@ -512,12 +513,12 @@ export class BitbucketService implements IVCSService {
 
     const comment = response.data;
     return {
-      user: { id: `${comment.user.id}`, login: comment.user.login, url: comment.user.url },
+      user: { id: `${comment.user.id}`, login: comment.user.username, url: comment.user.website },
       id: comment.id,
-      url: comment.url,
-      body: comment.body,
-      createdAt: comment.created_at,
-      updatedAt: comment.updated_at,
+      url: comment.links.html.href,
+      body: comment.content.markup,
+      createdAt: comment.created_on,
+      updatedAt: comment.updated_on,
     };
   }
 
