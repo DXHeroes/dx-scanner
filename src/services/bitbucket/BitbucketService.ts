@@ -242,7 +242,7 @@ export class BitbucketService implements IVCSService {
     const response = <DeepRequired<Response<BitbucketCommit>>>await this.unwrap(this.client.pullrequests.listCommits(params));
 
     const items = response.data.values.map((val) => {
-      const commitUrl = `https://bitbucket.org/${val.repository.owner}/${val.repository.name}/commits/${val.hash}`;
+      const commitUrl = `https://bitbucket.org/${val.repository.full_name}/commits/${val.hash}`;
       return {
         sha: val.hash,
         commit: {
@@ -384,7 +384,7 @@ export class BitbucketService implements IVCSService {
     const items = response.data.values.map((val) => {
       return {
         sha: val.hash,
-        url: `https://bitbucket.org/${val.repository.owner}/${val.repository.name}/commits/${val.hash}`,
+        url: `https://bitbucket.org/${val.repository.full_name}/commits/${val.hash}`,
         message: val.message,
         author: {
           name: val.author.user.nickname,
@@ -393,7 +393,7 @@ export class BitbucketService implements IVCSService {
         },
         tree: {
           sha: val.parents[0].hash,
-          url: `https://bitbucket.org/${val.repository.owner}/${val.repository.name}/commits/${val.parents[0].hash}`,
+          url: `https://bitbucket.org/${val.repository.full_name}/commits/${val.parents[0].hash}`,
         },
         // TODO
         verified: false,
@@ -416,7 +416,7 @@ export class BitbucketService implements IVCSService {
 
     return {
       sha: response.data.hash,
-      url: `https://bitbucket.org/${response.data.repository.owner}/${response.data.repository.name}/commits/${response.data.hash}`,
+      url: `https://bitbucket.org/${response.data.repository.full_name}/commits/${response.data.hash}`,
       message: response.data.message,
       author: {
         name: response.data.author.user.nickname,
@@ -425,7 +425,7 @@ export class BitbucketService implements IVCSService {
       },
       tree: {
         sha: response.data.parents[0].hash,
-        url: `https://bitbucket.org/${response.data.repository.owner}/${response.data.repository.name}/commits/${response.data.parents[0].hash}`,
+        url: `https://bitbucket.org/${response.data.repository.full_name}/commits/${response.data.parents[0].hash}`,
       },
       // TODO
       verified: false,
