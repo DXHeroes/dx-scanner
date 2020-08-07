@@ -1,3 +1,15 @@
+# [3.34.0](https://github.com/dxheroes/dx-scanner/compare/v3.33.1...v3.34.0) (2020-08-07)
+
+
+### Bug Fixes
+
+* bitbucket tests ([3ca8f4a](https://github.com/dxheroes/dx-scanner/commit/3ca8f4adacd2ff7428400eaab64304446537b46e))
+
+
+### Features
+
+* update dependencies ([325a9cd](https://github.com/dxheroes/dx-scanner/commit/325a9cd1fdc24388fe4628c1471795db1995fc0f))
+
 ## [3.33.1](https://github.com/dxheroes/dx-scanner/compare/v3.33.0...v3.33.1) (2020-07-24)
 
 
