@@ -87,13 +87,16 @@ export class Scanner {
     this.d(`Components (${projectComponents.length}):`, inspect(projectComponents));
     const practicesWithContext = await this.detectPractices(projectComponents);
     this.d(`Practices (${practicesWithContext.length}):`, inspect(practicesWithContext));
+    // TODO: Data collectors process here
+    const data = await this.dataCollector.collectData(projectComponents);
+    this.d(`Data (${data}):`, inspect(data));
 
     let practicesAfterFix: PracticeWithContext[] | undefined;
     if (this.argumentsProvider.fix) {
       await this.fix(practicesWithContext);
       practicesAfterFix = await this.detectPractices(projectComponents);
     }
-    await this.report(scannerContext.reporters, practicesWithContext, practicesAfterFix);
+    await this.report(scannerContext.reporters, practicesWithContext, practicesAfterFix /* data */);
     this.d(
       `Overall scan stats. LanguagesAtPaths: ${inspect(languagesAtPaths.length)}; Components: ${inspect(
         this.allDetectedComponents!.length,
@@ -250,6 +253,19 @@ export class Scanner {
   }
 
   /**
+   * Collect extended data for each component
+   */
+  private async collectData(componentsWithContext: ProjectComponentAndLangContext[]): Promise<ComponentDataWithContext[]> {
+    // const practicesWithComponentContext = await Promise.all(
+    //   componentsWithContext.map(async (cwctx) => await this.detectPracticesForComponent(cwctx)),
+    // );
+    // const practicesWithContext = _.flatten(practicesWithComponentContext);
+    // this.d('Applicable practices:');
+    // this.d(practicesWithContext.map((p) => p.practice.getMetadata().name));
+    // return practicesWithContext;
+  }
+
+  /**
    * Report result with specific reporter
    */
   private async report(
@@ -263,6 +279,7 @@ export class Scanner {
 
       return {
         component: p.componentContext.projectComponent,
+        // data: data.filter(...)
         practice: { ...p.practice.getMetadata(), data: p.practice.data, fix: Boolean(p.practice.fix) },
         evaluation: p.evaluation,
         evaluationError: p.evaluationError,
@@ -414,6 +431,13 @@ export interface PracticeWithContext {
   evaluation: PracticeEvaluationResult;
   evaluationError: undefined | string;
   isOn: boolean;
+}
+
+export interface ComponentDataWithContext {
+  componentContext: ProjectComponentContext;
+  data: {
+    collaborators: [{ name: string; email: string; username: string }];
+  };
 }
 
 export type ScanResult = {
