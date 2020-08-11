@@ -94,7 +94,7 @@ export class GitInspector implements IGitInspector {
       throw ErrorFactory.newInternalError('filtering and sorting not implemented');
     }
 
-    const commits = await this.getCommits({});
+    const commits = await this.getCommits(options);
     const items = uniqWith(
       commits.items.map((commit) => commit.author),
       isEqual,

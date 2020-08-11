@@ -46,6 +46,7 @@ export class Scanner {
 
   constructor(
     @inject(ScanningStrategyExplorer) scanStrategyExplorer: ScanningStrategyExplorer,
+    @inject(DataCollector) dataCollector: DataCollector,
     @inject(Types.DiscoveryContextFactory) discoveryContextFactory: DiscoveryContextFactory,
     @inject(FileSystemService) fileSystemService: FileSystemService,
     // inject all practices registered under Types.Practice in inversify config
@@ -272,6 +273,7 @@ export class Scanner {
     reporters: IReporter[],
     practicesWithContext: PracticeWithContext[],
     practicesWithContextAfterFix?: PracticeWithContext[],
+    data: any;
   ): Promise<void> {
     const pwcForReporter = (p: PracticeWithContext) => {
       const config = p.componentContext.configProvider.getOverriddenPractice(p.practice.getMetadata().id);
