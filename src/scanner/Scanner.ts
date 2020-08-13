@@ -32,6 +32,7 @@ import { ScannerUtils } from '../scanner/ScannerUtils';
 import { FileSystemService } from '../services';
 import { DiscoveryContextFactory, Types } from '../types';
 import { ScanningStrategyExplorer } from './ScanningStrategyExplorer';
+import { CollectorsData } from '../collectors/ICollector';
 
 @injectable()
 export class Scanner {
@@ -46,7 +47,6 @@ export class Scanner {
 
   constructor(
     @inject(ScanningStrategyExplorer) scanStrategyExplorer: ScanningStrategyExplorer,
-    @inject(DataCollector) dataCollector: DataCollector,
     @inject(Types.DiscoveryContextFactory) discoveryContextFactory: DiscoveryContextFactory,
     @inject(FileSystemService) fileSystemService: FileSystemService,
     // inject all practices registered under Types.Practice in inversify config
@@ -89,7 +89,7 @@ export class Scanner {
     const practicesWithContext = await this.detectPractices(projectComponents);
     this.d(`Practices (${practicesWithContext.length}):`, inspect(practicesWithContext));
     // TODO: Data collectors process here
-    const data = await this.dataCollector.collectData(projectComponents);
+    const data = await scannerContext.dataCollector.collectData(projectComponents);
     this.d(`Data (${data}):`, inspect(data));
 
     let practicesAfterFix: PracticeWithContext[] | undefined;
@@ -97,7 +97,7 @@ export class Scanner {
       await this.fix(practicesWithContext);
       practicesAfterFix = await this.detectPractices(projectComponents);
     }
-    await this.report(scannerContext.reporters, practicesWithContext, practicesAfterFix /* data */);
+    await this.report(scannerContext.reporters, practicesWithContext, data, practicesAfterFix);
     this.d(
       `Overall scan stats. LanguagesAtPaths: ${inspect(languagesAtPaths.length)}; Components: ${inspect(
         this.allDetectedComponents!.length,
@@ -256,15 +256,15 @@ export class Scanner {
   /**
    * Collect extended data for each component
    */
-  private async collectData(componentsWithContext: ProjectComponentAndLangContext[]): Promise<ComponentDataWithContext[]> {
-    // const practicesWithComponentContext = await Promise.all(
-    //   componentsWithContext.map(async (cwctx) => await this.detectPracticesForComponent(cwctx)),
-    // );
-    // const practicesWithContext = _.flatten(practicesWithComponentContext);
-    // this.d('Applicable practices:');
-    // this.d(practicesWithContext.map((p) => p.practice.getMetadata().name));
-    // return practicesWithContext;
-  }
+  //private async collectData(componentsWithContext: ProjectComponentAndLangContext[]): Promise<ComponentDataWithContext[]> {
+  // const practicesWithComponentContext = await Promise.all(
+  //   componentsWithContext.map(async (cwctx) => await this.detectPracticesForComponent(cwctx)),
+  // );
+  // const practicesWithContext = _.flatten(practicesWithComponentContext);
+  // this.d('Applicable practices:');
+  // this.d(practicesWithContext.map((p) => p.practice.getMetadata().name));
+  // return practicesWithContext;
+  //}
 
   /**
    * Report result with specific reporter
@@ -272,8 +272,8 @@ export class Scanner {
   private async report(
     reporters: IReporter[],
     practicesWithContext: PracticeWithContext[],
+    collectorsData: CollectorsData,
     practicesWithContextAfterFix?: PracticeWithContext[],
-    data: any;
   ): Promise<void> {
     const pwcForReporter = (p: PracticeWithContext) => {
       const config = p.componentContext.configProvider.getOverriddenPractice(p.practice.getMetadata().id);
@@ -421,7 +421,7 @@ export class Scanner {
   }
 }
 
-interface ProjectComponentAndLangContext {
+export interface ProjectComponentAndLangContext {
   component: ProjectComponent;
   languageContext: LanguageContext;
 }

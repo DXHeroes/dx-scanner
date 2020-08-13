@@ -15,6 +15,7 @@ import { PythonLanguageDetector } from '../../detectors/Python/PythonLanguageDet
 import { ArgumentsProvider } from '../../scanner';
 import { IReporter, FixReporter, JSONReporter, CLIReporter, CIReporter, HTMLReporter, DashboardReporter } from '../../reporters';
 import { ServiceType, AccessType } from '../../detectors/IScanningStrategy';
+import { ContributorsCollector } from '../../collectors/ContributorsCollector';
 
 export const bindScanningContext = (container: Container) => {
   container.bind(Types.ScannerContextFactory).toFactory(
@@ -36,6 +37,7 @@ const createScanningContainer = (scanningStrategy: ScanningStrategy, discoveryCo
   bindFileAccess(scanningStrategy, container);
 
   bindReporters(container, args, scanningStrategy.accessType);
+  bindCollectors(scanningStrategy, container, args, scanningStrategy.accessType);
   container.bind(ScannerContext).toSelf();
   return container;
 };
@@ -59,6 +61,19 @@ const bindFileAccess = (scanningStrategy: ScanningStrategy, container: Container
     container.bind(Types.IContentRepositoryBrowser).to(GitLabService);
   }
   container.bind(Types.IFileInspector).to(FileInspector).inSingletonScope();
+};
+
+const bindCollectors = (
+  scanningStrategy: ScanningStrategy,
+  container: Container,
+  args: ArgumentsProvider,
+  accessType: AccessType | undefined,
+) => {
+  if (accessType === AccessType.public || (accessType === AccessType.private && args.apiToken)) {
+    container.bind(Types.ICollector).to(ContributorsCollector);
+    container.bind(Types.RepositoryPath).toConstantValue(scanningStrategy.localPath);
+    container.bind(Types.IGitInspector).to(GitInspector);
+  }
 };
 
 const bindReporters = (container: Container, args: ArgumentsProvider, accessType: AccessType | undefined) => {
