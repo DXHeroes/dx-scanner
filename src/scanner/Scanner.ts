@@ -32,7 +32,6 @@ import { ScannerUtils } from '../scanner/ScannerUtils';
 import { FileSystemService } from '../services';
 import { DiscoveryContextFactory, Types } from '../types';
 import { ScanningStrategyExplorer } from './ScanningStrategyExplorer';
-import { CollectorsData } from '../collectors/ICollector';
 
 @injectable()
 export class Scanner {
@@ -89,15 +88,14 @@ export class Scanner {
     const practicesWithContext = await this.detectPractices(projectComponents);
     this.d(`Practices (${practicesWithContext.length}):`, inspect(practicesWithContext));
     // TODO: Data collectors process here
-    const data = await scannerContext.dataCollector.collectData(projectComponents);
-    this.d(`Data (${data}):`, inspect(data));
-
+    //const data = await scannerContext.dataCollector.collectData(projectComponents);
+    //this.d(`Data (${data}):`, inspect(data));
     let practicesAfterFix: PracticeWithContext[] | undefined;
     if (this.argumentsProvider.fix) {
       await this.fix(practicesWithContext);
       practicesAfterFix = await this.detectPractices(projectComponents);
     }
-    await this.report(scannerContext.reporters, practicesWithContext, data, practicesAfterFix);
+    await this.report(scannerContext.reporters, practicesWithContext, practicesAfterFix);
     this.d(
       `Overall scan stats. LanguagesAtPaths: ${inspect(languagesAtPaths.length)}; Components: ${inspect(
         this.allDetectedComponents!.length,
@@ -272,7 +270,6 @@ export class Scanner {
   private async report(
     reporters: IReporter[],
     practicesWithContext: PracticeWithContext[],
-    collectorsData: CollectorsData,
     practicesWithContextAfterFix?: PracticeWithContext[],
   ): Promise<void> {
     const pwcForReporter = (p: PracticeWithContext) => {
@@ -281,7 +278,6 @@ export class Scanner {
 
       return {
         component: p.componentContext.projectComponent,
-        // data: data.filter(...)
         practice: { ...p.practice.getMetadata(), data: p.practice.data, fix: Boolean(p.practice.fix) },
         evaluation: p.evaluation,
         evaluationError: p.evaluationError,

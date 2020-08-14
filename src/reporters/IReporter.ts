@@ -18,7 +18,7 @@ export interface IReporter {
   buildReport(
     practicesAndComponents: PracticeWithContextForReporter[],
     practicesAndComponentsAfterFix?: PracticeWithContextForReporter[],
-  ): string | JSONReport | DataReportDto;
+  ): string | JSONReport | Promise<DataReportDto>;
 }
 
 export type JSONReport = { uri: string; components: ComponentReport[] };

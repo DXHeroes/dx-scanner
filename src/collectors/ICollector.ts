@@ -1,8 +1,7 @@
-import { ProjectComponentAndLangContext } from '../scanner';
-import { Contributor } from './ContributorsCollector';
+import { Contributor } from '../services/git/model';
 
 export interface ICollector {
-  collectData(projectComponents: ProjectComponentAndLangContext[]): Promise<CollectorsData>;
+  collectData(remoteUrl: string): Promise<CollectorsData>;
 }
 
 export type CollectorsData = Contributor[];

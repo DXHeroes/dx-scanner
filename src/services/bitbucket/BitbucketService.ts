@@ -35,6 +35,7 @@ import { DeepRequired } from '../../lib/deepRequired';
 import { InMemoryCache } from '../../scanner/cache';
 import { BitbucketPullRequestState, BitbucketIssueState } from './IBitbucketService';
 import { RepositoryConfig } from '../../scanner/RepositoryConfig';
+import { uniqWith, isEqual } from 'lodash';
 
 const debug = Debug('cli:services:git:bitbucket-service');
 
@@ -524,7 +525,30 @@ export class BitbucketService implements IVCSService {
 
   async listContributors(owner: string, repo: string): Promise<Paginated<Contributor>> {
     this.authenticate();
-    throw new Error('Method not implemented yet.');
+    const params: Params.RepositoriesListCommits = {
+      repo_slug: repo,
+      workspace: owner,
+    };
+
+    const response = <DeepRequired<Response<BitbucketCommit>>>await this.unwrap(this.client.repositories.listCommits(params));
+    const commitsWithAuthors = response.data.values.map((val) => {
+      return {
+        user: {
+          id: val.author.user.uuid,
+          url: val.author.user.links.html.href,
+          login: val.author.user.nickname,
+        },
+        followersUrl: undefined,
+        contributions: response.data.values.filter((value) => value.author.user.nickname === val.author.user.nickname).length,
+      };
+    });
+    const contributors = uniqWith(
+      commitsWithAuthors.map((commit) => commit),
+      isEqual,
+    );
+    const pagination = this.getPagination(response.data);
+
+    return { items: contributors, ...pagination };
   }
 
   async listContributorsStats(owner: string, repo: string): Promise<Paginated<ContributorStats>> {
