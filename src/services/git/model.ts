@@ -58,7 +58,7 @@ interface Weeks {
 
 export interface Contributor {
   user: UserInfo;
-  followersUrl: string | undefined;
+  lastActivity: string | undefined;
   contributions: number | undefined;
 }
 

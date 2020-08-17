@@ -263,7 +263,6 @@ export class GitHubService implements IVCSService {
    */
   async listContributors(owner: string, repo: string): Promise<Paginated<Contributor>> {
     const { data, headers } = await this.unwrap(this.client.repos.listContributors({ owner, repo }));
-
     const items = data.map((val) => ({
       user: {
         id: val.id.toString(),
@@ -273,7 +272,7 @@ export class GitHubService implements IVCSService {
       id: val.id,
       login: val.login,
       url: val.url,
-      followersUrl: val.followers_url,
+      lastActivity: undefined,
       contributions: val.contributions,
     }));
     const pagination = this.getPagination(data.length, headers.link);

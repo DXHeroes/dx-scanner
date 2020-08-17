@@ -538,7 +538,11 @@ export class BitbucketService implements IVCSService {
           url: val.author.user.links.html.href,
           login: val.author.user.nickname,
         },
-        followersUrl: undefined,
+        lastActivity: response.data.values
+          .filter((value) => value.author.user.nickname === val.author.user.nickname)
+          .reduce((prev, current) => {
+            return new Date(prev.date) > new Date(current.date) ? prev : current;
+          }).date,
         contributions: response.data.values.filter((value) => value.author.user.nickname === val.author.user.nickname).length,
       };
     });
