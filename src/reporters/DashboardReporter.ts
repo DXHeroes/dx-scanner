@@ -10,8 +10,7 @@ import { IReporter, PracticeWithContextForReporter } from './IReporter';
 import { PkgToUpdate } from '../practices/utils/DependenciesVersionEvaluationUtils';
 import { ServiceType } from '../detectors/IScanningStrategy';
 import { GitServiceUtils } from '../services';
-import { CollectorsData } from '../collectors/ICollector';
-import { ContributorsCollector } from '../collectors/ContributorsCollector';
+import { DataCollector, CollectorsData } from '../collectors/DataCollector';
 // eslint-disable-next-line @typescript-eslint/no-require-imports, @typescript-eslint/no-var-requires
 const pjson = require('../../package.json');
 
@@ -19,23 +18,23 @@ const pjson = require('../../package.json');
 export class DashboardReporter implements IReporter {
   private readonly argumentsProvider: ArgumentsProvider;
   private readonly scanningStrategy: ScanningStrategy;
-  private readonly contributorsCollector: ContributorsCollector;
+  private readonly dataCollector: DataCollector;
 
   constructor(
     @inject(Types.ArgumentsProvider) argumentsProvider: ArgumentsProvider,
     @inject(Types.ScanningStrategy) scanningStrategy: ScanningStrategy,
-    @inject(Types.ICollector) contributorsCollector: ContributorsCollector,
+    @inject(DataCollector) dataCollector: DataCollector,
   ) {
     this.argumentsProvider = argumentsProvider;
     this.scanningStrategy = scanningStrategy;
-    this.contributorsCollector = contributorsCollector;
+    this.dataCollector = dataCollector;
   }
 
   async report(practicesAndComponents: PracticeWithContextForReporter[]): Promise<void> {
     const reportData = await this.buildReport(practicesAndComponents);
     try {
       // send data
-      console.log('send', reportData);
+      console.log('send', reportData.collectorsData);
       // await axios.post('https://provider.dxscanner.io/api/v1/data-report', reportData, {
       //   headers: this.argumentsProvider.apiToken && { Authorization: this.argumentsProvider.apiToken },
       // });
@@ -50,11 +49,10 @@ export class DashboardReporter implements IReporter {
     const componentsWithPractices = ReporterUtils.getComponentsWithPractices(practicesAndComponents, this.scanningStrategy);
 
     const dxScore = ReporterUtils.computeDXScore(practicesAndComponents, this.scanningStrategy);
-    const collectorsData = await this.contributorsCollector.collectData(this.scanningStrategy.remoteUrl!);
 
     const report: DataReportDto = {
       componentsWithDxScore: [],
-      collectorsData,
+      collectorsData: await this.dataCollector.collectData(this.scanningStrategy.remoteUrl!),
       version: pjson.version,
       id: uuid.v4(),
       dxScore: { value: dxScore.value, points: dxScore.points },

@@ -403,32 +403,33 @@ export class GitLabService implements IVCSService {
     return data;
   }
 
-  async listContributors(owner: string, repo: string, options?: ListGetterOptions): Promise<Paginated<Contributor>> {
+  async listContributors(owner: string, repo: string, options?: ListGetterOptions): Promise<Contributor[]> {
+    // const commits = await this.client.paginate('GET /repos/:owner/:repo/commits', { owner, repo, per_page: 100 }, (response) => {
+    //   this.debugGitHubResponse(response);
+    //   return response.data;
+    // });
     const commits = await this.unwrap(this.client.Commits.list(`${owner}/${repo}`, options?.pagination));
 
-    const users = commits.data
-      .filter((commit, index, array) => array.findIndex((t) => t.committer_name === commit.committer_name) === index)
-      .map((commit) => commit.committer_name);
-    const items: Contributor[] = [];
-    for (const user of users) {
-      const userInfo = await this.unwrap(this.client.Users.getUser(user));
-      items.push({
-        user: {
-          id: userInfo.data[0].id.toString(),
-          url: userInfo.data[0].web_url,
-          login: userInfo.data[0].username,
-        },
-        lastActivity: commits.data
-          .filter((value) => value.committer_name === user)
-          .reduce((prev, current) => {
-            return new Date(prev.committed_date) > new Date(current.committed_date) ? prev : current;
-          })
-          .committed_date.toString(),
-        contributions: commits.data.filter((value) => value.committer_name === user).length,
-      });
-    }
-    const customPagination = this.getPagination(commits.pagination);
-    return { items, ...customPagination };
+    const items = await Promise.all(
+      commits.data
+        //filter diplicate commiter names
+        .filter((commit, index, array) => array.findIndex((c) => c.committer_name === commit.committer_name) === index)
+        //get user info and create contributor object
+        .map(async (commit) => {
+          const userInfo = await this.getUserInfo(commit.committer_name);
+          return {
+            user: userInfo,
+            lastActivity: commits.data
+              .filter((value) => value.committer_name === commit.committer_name)
+              .reduce((prev, current) => {
+                return prev.committed_date > current.committed_date ? prev : current;
+              })
+              .committed_date.toString(),
+            contributions: commits.data.filter((value) => value.committer_name === commit.committer_name).length,
+          };
+        }),
+    );
+    return items;
   }
 
   async listContributorsStats(owner: string, repo: string): Promise<Paginated<ContributorStats>> {

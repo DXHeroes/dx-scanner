@@ -36,6 +36,7 @@ import { InMemoryCache } from '../../scanner/cache';
 import { BitbucketPullRequestState, BitbucketIssueState } from './IBitbucketService';
 import { RepositoryConfig } from '../../scanner/RepositoryConfig';
 import { uniqWith, isEqual } from 'lodash';
+import { AsyncResponse } from 'bitbucket/lib/bitbucket';
 
 const debug = Debug('cli:services:git:bitbucket-service');
 
@@ -523,36 +524,34 @@ export class BitbucketService implements IVCSService {
     };
   }
 
-  async listContributors(owner: string, repo: string): Promise<Paginated<Contributor>> {
+  async listContributors(owner: string, repo: string): Promise<Contributor[]> {
     this.authenticate();
     const params: Params.RepositoriesListCommits = {
       repo_slug: repo,
       workspace: owner,
     };
+    const commits = await this.paginate(this.client.repositories.listCommits, params);
 
-    const response = <DeepRequired<Response<BitbucketCommit>>>await this.unwrap(this.client.repositories.listCommits(params));
-    const commitsWithAuthors = response.data.values.map((val) => {
-      return {
-        user: {
-          id: val.author.user.uuid,
-          url: val.author.user.links.html.href,
-          login: val.author.user.nickname,
-        },
-        lastActivity: response.data.values
-          .filter((value) => value.author.user.nickname === val.author.user.nickname)
-          .reduce((prev, current) => {
-            return new Date(prev.date) > new Date(current.date) ? prev : current;
-          }).date,
-        contributions: response.data.values.filter((value) => value.author.user.nickname === val.author.user.nickname).length,
-      };
-    });
-    const contributors = uniqWith(
-      commitsWithAuthors.map((commit) => commit),
-      isEqual,
-    );
-    const pagination = this.getPagination(response.data);
-
-    return { items: contributors, ...pagination };
+    const contributors = commits
+      //filter diplicate commiter names
+      .filter((commit, index, array) => array.findIndex((t) => t.author.user.nickname === commit.author.user.nickname) === index)
+      //create contributor object
+      .map((commit) => {
+        return {
+          user: {
+            id: commit.author.user.uuid,
+            url: commit.author.user.links.html.href,
+            login: commit.author.user.nickname,
+          },
+          lastActivity: commits
+            .filter((value) => value.author.user.nickname === commit.author.user.nickname)
+            .reduce((prev, current) => {
+              return new Date(prev.date) > new Date(current.date) ? prev : current;
+            }).date,
+          contributions: commits.filter((value) => value.author.user.nickname === commit.author.user.nickname).length,
+        };
+      });
+    return contributors;
   }
 
   async listContributorsStats(owner: string, repo: string): Promise<Paginated<ContributorStats>> {
@@ -586,6 +585,16 @@ export class BitbucketService implements IVCSService {
       deletions: linesRemoved,
       changes: linesAdded + linesRemoved,
     };
+  }
+
+  private async paginate(method: (params: Params.RepositoriesListCommits) => AsyncResponse<any>, params: Params.RepositoriesListCommits) {
+    let response = <DeepRequired<Response<BitbucketCommit>>>await this.unwrap(method(params));
+    let values = response.data.values;
+    while (this.client.hasNextPage(response.data)) {
+      response = <DeepRequired<Response<BitbucketCommit>>>await this.unwrap(this.client.request(response.data.next, params));
+      values = values.concat(response.data.values);
+    }
+    return values;
   }
 
   private unwrap<T>(clientPromise: Promise<Response<T>>) {

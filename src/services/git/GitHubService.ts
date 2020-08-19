@@ -261,23 +261,22 @@ export class GitHubService implements IVCSService {
   /**
    * Lists contributors to the specified repository and sorts them by the number of commits per contributor in descending order.
    */
-  async listContributors(owner: string, repo: string): Promise<Paginated<Contributor>> {
-    const { data, headers } = await this.unwrap(this.client.repos.listContributors({ owner, repo }));
-    const items = data.map((val) => ({
+  async listContributors(owner: string, repo: string): Promise<Contributor[]> {
+    const contributors = await this.client.paginate(this.client.repos.listContributors, { owner, repo, per_page: 100 }, (response) => {
+      this.debugGitHubResponse(response);
+      return response.data;
+    });
+    return contributors.map((contributor) => ({
       user: {
-        id: val.id.toString(),
-        login: val.login,
-        url: val.url,
+        id: contributor.id.toString(),
+        login: contributor.login,
+        url: contributor.url,
       },
-      id: val.id,
-      login: val.login,
-      url: val.url,
-      lastActivity: undefined,
-      contributions: val.contributions,
+      id: contributor.id,
+      login: contributor.login,
+      url: contributor.url,
+      contributions: contributor.contributions,
     }));
-    const pagination = this.getPagination(data.length, headers.link);
-
-    return { items, ...pagination };
   }
 
   /**
