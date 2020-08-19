@@ -3,6 +3,11 @@ import { argumentsProviderFactory } from '../test/factories/ArgumentsProviderFac
 import { practiceWithContextFactory } from '../test/factories/PracticeWithContextFactory';
 import { DashboardReporter } from './DashboardReporter';
 import { AccessType, ServiceType } from '../detectors/IScanningStrategy';
+import { DataCollector } from '../collectors/DataCollector';
+
+const mockDataCollector = () => ({
+  collectData: jest.fn(),
+});
 
 describe('DashboardReporter', () => {
   const practicingHighImpactPracticeWithCtx = practiceWithContextFactory();
@@ -18,7 +23,11 @@ describe('DashboardReporter', () => {
 
   describe('#report', () => {
     it('one practicing practice', async () => {
-      const result = new DashboardReporter(argumentsProviderFactory(), scanningStrategy).buildReport([practicingHighImpactPracticeWithCtx]);
+      const result = await new DashboardReporter(
+        argumentsProviderFactory(),
+        scanningStrategy,
+        <DataCollector>(<unknown>mockDataCollector),
+      ).buildReport([practicingHighImpactPracticeWithCtx]);
 
       await expect(result.componentsWithDxScore).toContainObject({
         dxScore: { points: { total: 100, max: 100, percentage: 100 }, value: '100% | 1/1' },
@@ -28,10 +37,11 @@ describe('DashboardReporter', () => {
     });
 
     it('one practicing practice and one not practicing in two components', async () => {
-      const result = new DashboardReporter(argumentsProviderFactory(), scanningStrategy).buildReport([
-        practicingHighImpactPracticeWithCtx,
-        notPracticingHighImpactPracticeWithCtx,
-      ]);
+      const result = await new DashboardReporter(
+        argumentsProviderFactory(),
+        scanningStrategy,
+        <DataCollector>(<unknown>mockDataCollector),
+      ).buildReport([practicingHighImpactPracticeWithCtx, notPracticingHighImpactPracticeWithCtx]);
 
       await expect(result.componentsWithDxScore).toContainObject({
         dxScore: {
@@ -56,9 +66,11 @@ describe('DashboardReporter', () => {
     });
 
     it('one not practicing practice', async () => {
-      const result = new DashboardReporter(argumentsProviderFactory(), scanningStrategy).buildReport([
-        notPracticingHighImpactPracticeWithCtx,
-      ]);
+      const result = await new DashboardReporter(
+        argumentsProviderFactory(),
+        scanningStrategy,
+        <DataCollector>(<unknown>mockDataCollector),
+      ).buildReport([notPracticingHighImpactPracticeWithCtx]);
 
       await expect(result.componentsWithDxScore).toContainObject({
         dxScore: {

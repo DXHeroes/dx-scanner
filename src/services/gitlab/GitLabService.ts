@@ -2,7 +2,7 @@ import Debug from 'debug';
 import { inject, injectable } from 'inversify';
 import { inspect } from 'util';
 import { IVCSService, ServicePagination } from '..';
-import { IssueState, ListGetterOptions, Paginated, PullRequestState } from '../../inspectors';
+import { IssueState, ListGetterOptions, Paginated, PullRequestState, PaginationParams } from '../../inspectors';
 import { ArgumentsProvider } from '../../scanner';
 import { InMemoryCache } from '../../scanner/cache';
 import { ICache } from '../../scanner/cache/ICache';
@@ -28,6 +28,9 @@ import {
 import { VCSServicesUtils } from '../git/VCSServicesUtils';
 import { CustomAxiosResponse, GitLabClient, PaginationGitLabCustomResponse } from './gitlabClient/gitlabUtils';
 import { RepositoryConfig } from '../../scanner/RepositoryConfig';
+import { method } from 'lodash';
+import { DeepRequired } from '../../lib/deepRequired';
+import _ from 'lodash';
 const debug = Debug('cli:services:git:gitlab-service');
 
 @injectable()
@@ -404,14 +407,10 @@ export class GitLabService implements IVCSService {
   }
 
   async listContributors(owner: string, repo: string, options?: ListGetterOptions): Promise<Contributor[]> {
-    // const commits = await this.client.paginate('GET /repos/:owner/:repo/commits', { owner, repo, per_page: 100 }, (response) => {
-    //   this.debugGitHubResponse(response);
-    //   return response.data;
-    // });
-    const commits = await this.unwrap(this.client.Commits.list(`${owner}/${repo}`, options?.pagination));
+    const commits = await this.getAllCommits(`${owner}/${repo}`, options?.pagination);
 
     const items = await Promise.all(
-      commits.data
+      commits
         //filter diplicate commiter names
         .filter((commit, index, array) => array.findIndex((c) => c.committer_name === commit.committer_name) === index)
         //get user info and create contributor object
@@ -419,17 +418,28 @@ export class GitLabService implements IVCSService {
           const userInfo = await this.getUserInfo(commit.committer_name);
           return {
             user: userInfo,
-            lastActivity: commits.data
+            lastActivity: commits
               .filter((value) => value.committer_name === commit.committer_name)
               .reduce((prev, current) => {
                 return prev.committed_date > current.committed_date ? prev : current;
               })
               .committed_date.toString(),
-            contributions: commits.data.filter((value) => value.committer_name === commit.committer_name).length,
+            contributions: commits.filter((value) => value.committer_name === commit.committer_name).length,
           };
         }),
     );
     return items;
+  }
+
+  private async getAllCommits(projectId: string, pagination?: PaginationParams) {
+    let response = await this.unwrap(this.client.Commits.list(projectId, pagination));
+    let data = response.data;
+    while (response.pagination.next) {
+      const updatedPagination = _.merge(pagination, { page: response.pagination.next });
+      response = await this.unwrap(this.client.Commits.list(projectId, updatedPagination));
+      data = data.concat(response.data);
+    }
+    return data;
   }
 
   async listContributorsStats(owner: string, repo: string): Promise<Paginated<ContributorStats>> {
