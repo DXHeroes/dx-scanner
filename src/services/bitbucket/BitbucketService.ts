@@ -534,7 +534,7 @@ export class BitbucketService implements IVCSService {
 
     return (
       commits
-        //filter diplicate commiter names
+        //filter duplicate committer names
         .filter((commit, index, array) => array.findIndex((t) => t.author.user.nickname === commit.author.user.nickname) === index)
         //create contributor object
         .map((commit) => {
