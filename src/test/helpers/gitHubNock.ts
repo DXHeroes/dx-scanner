@@ -117,11 +117,10 @@ export class GitHubNock {
 
   getContributors(contributors: { id: string; login: string }[], persist = true): Contributor[] {
     const url = this.repository.contributors_url;
-    const params = {};
     const code = 200;
     const body = contributors.map(({ id, login }) => new Contributor(id, login));
 
-    GitHubNock.get(url, params, persist).reply(code, body);
+    GitHubNock.get(url, {}, persist).reply(code, body);
     return body;
   }
 

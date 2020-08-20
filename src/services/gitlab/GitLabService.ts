@@ -28,8 +28,6 @@ import {
 import { VCSServicesUtils } from '../git/VCSServicesUtils';
 import { CustomAxiosResponse, GitLabClient, PaginationGitLabCustomResponse } from './gitlabClient/gitlabUtils';
 import { RepositoryConfig } from '../../scanner/RepositoryConfig';
-import { method } from 'lodash';
-import { DeepRequired } from '../../lib/deepRequired';
 import _ from 'lodash';
 const debug = Debug('cli:services:git:gitlab-service');
 
@@ -408,22 +406,14 @@ export class GitLabService implements IVCSService {
 
   async listContributors(owner: string, repo: string, options?: ListGetterOptions): Promise<Contributor[]> {
     const commits = await this.getAllCommits(`${owner}/${repo}`, options?.pagination);
-
     const items = await Promise.all(
       commits
         //filter diplicate commiter names
         .filter((commit, index, array) => array.findIndex((c) => c.committer_name === commit.committer_name) === index)
         //get user info and create contributor object
         .map(async (commit) => {
-          const userInfo = await this.getUserInfo(commit.committer_name);
           return {
-            user: userInfo,
-            lastActivity: commits
-              .filter((value) => value.committer_name === commit.committer_name)
-              .reduce((prev, current) => {
-                return prev.committed_date > current.committed_date ? prev : current;
-              })
-              .committed_date.toString(),
+            user: await this.getUserInfo(commit.committer_name),
             contributions: commits.filter((value) => value.committer_name === commit.committer_name).length,
           };
         }),

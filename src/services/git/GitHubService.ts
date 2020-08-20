@@ -262,7 +262,7 @@ export class GitHubService implements IVCSService {
    * Lists contributors to the specified repository and sorts them by the number of commits per contributor in descending order.
    */
   async listContributors(owner: string, repo: string): Promise<Contributor[]> {
-    const contributors = await this.client.paginate(this.client.repos.listContributors, { owner, repo, per_page: 100 }, (response) => {
+    const contributors = await this.client.paginate(this.client.repos.listContributors, { owner, repo }, (response) => {
       this.debugGitHubResponse(response);
       return response.data;
     });
@@ -272,9 +272,6 @@ export class GitHubService implements IVCSService {
         login: contributor.login,
         url: contributor.url,
       },
-      id: contributor.id,
-      login: contributor.login,
-      url: contributor.url,
       contributions: contributor.contributions,
     }));
   }

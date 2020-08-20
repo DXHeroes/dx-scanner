@@ -16,6 +16,7 @@ import { BitbucketNock } from '../../test/helpers/bitbucketNock';
 import { VCSServicesUtils } from '../git/VCSServicesUtils';
 import { BitbucketService } from './BitbucketService';
 import { BitbucketIssueState, BitbucketPullRequestState } from './IBitbucketService';
+import { getContributorsServiceResponse } from '../git/__MOCKS__/bitbucketServiceMockFolder/getContributorsServiceResponse.mock';
 
 describe('Bitbucket Service', () => {
   let service: BitbucketService;
@@ -194,8 +195,9 @@ describe('Bitbucket Service', () => {
   });
 
   it('returns repo commits in own interface', async () => {
-    const mockRepoCommit = bitbucketRepoCommitsResponseFactory();
-    bitbucketNock.listCommitsResponse([mockRepoCommit]);
+    bitbucketNock.listCommitsResponse({
+      values: [bitbucketRepoCommitsResponseFactory()],
+    });
 
     const response = await service.listRepoCommits('pypy', 'pypy');
     expect(response).toMatchObject(getRepoCommits());
@@ -239,12 +241,11 @@ describe('Bitbucket Service', () => {
     }
   });
 
-  it('Throws error if listContributors is called as the function is not implemented yet', async () => {
-    try {
-      await service.listContributors('pypy', 'pypy');
-    } catch (error) {
-      expect(error.message).toEqual('Method not implemented yet.');
-    }
+  it('returns contributors in own interface', async () => {
+    bitbucketNock.listCommitsResponse({ values: [bitbucketRepoCommitsResponseFactory()] });
+
+    const response = await service.listContributors('pypy', 'pypy');
+    expect(response).toMatchObject(getContributorsServiceResponse);
   });
 
   it('Throws error if getContributorsStats is called as the function is not implemented yet', async () => {

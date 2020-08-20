@@ -4,6 +4,10 @@ import { practiceWithContextFactory } from '../test/factories/PracticeWithContex
 import { DashboardReporter } from './DashboardReporter';
 import { AccessType, ServiceType } from '../detectors/IScanningStrategy';
 import { DataCollector } from '../collectors/DataCollector';
+import { repositoryConfig } from '../scanner/__MOCKS__/RepositoryConfig.mock';
+import { GitHubService } from '../services';
+import { ContributorsCollector } from '../collectors/ContributorsCollector';
+import { GitHubNock } from '../test/helpers/gitHubNock';
 
 const mockDataCollector = () => ({
   collectData: jest.fn(),
@@ -20,14 +24,20 @@ describe('DashboardReporter', () => {
     isOnline: true,
     serviceType: ServiceType.github,
   };
+  const githubService = new GitHubService(argumentsProviderFactory({ uri: '.' }), repositoryConfig);
+  const contributorsCollector = new ContributorsCollector(githubService);
+  const dataCollector = new DataCollector(contributorsCollector);
+  const gitHubNock = new GitHubNock('1', 'DXHeroes', 1, 'dx-scanner');
 
   describe('#report', () => {
     it('one practicing practice', async () => {
-      const result = await new DashboardReporter(
-        argumentsProviderFactory(),
-        scanningStrategy,
-        <DataCollector>(<unknown>mockDataCollector),
-      ).buildReport([practicingHighImpactPracticeWithCtx]);
+      gitHubNock.getContributors([
+        { id: '251370', login: 'Spaceghost' },
+        { id: '583231', login: 'octocat' },
+      ]);
+      const result = await new DashboardReporter(argumentsProviderFactory(), scanningStrategy, dataCollector).buildReport([
+        practicingHighImpactPracticeWithCtx,
+      ]);
 
       await expect(result.componentsWithDxScore).toContainObject({
         dxScore: { points: { total: 100, max: 100, percentage: 100 }, value: '100% | 1/1' },
@@ -37,11 +47,14 @@ describe('DashboardReporter', () => {
     });
 
     it('one practicing practice and one not practicing in two components', async () => {
-      const result = await new DashboardReporter(
-        argumentsProviderFactory(),
-        scanningStrategy,
-        <DataCollector>(<unknown>mockDataCollector),
-      ).buildReport([practicingHighImpactPracticeWithCtx, notPracticingHighImpactPracticeWithCtx]);
+      gitHubNock.getContributors([
+        { id: '251370', login: 'Spaceghost' },
+        { id: '583231', login: 'octocat' },
+      ]);
+      const result = await new DashboardReporter(argumentsProviderFactory(), scanningStrategy, dataCollector).buildReport([
+        practicingHighImpactPracticeWithCtx,
+        notPracticingHighImpactPracticeWithCtx,
+      ]);
 
       await expect(result.componentsWithDxScore).toContainObject({
         dxScore: {
@@ -66,11 +79,13 @@ describe('DashboardReporter', () => {
     });
 
     it('one not practicing practice', async () => {
-      const result = await new DashboardReporter(
-        argumentsProviderFactory(),
-        scanningStrategy,
-        <DataCollector>(<unknown>mockDataCollector),
-      ).buildReport([notPracticingHighImpactPracticeWithCtx]);
+      gitHubNock.getContributors([
+        { id: '251370', login: 'Spaceghost' },
+        { id: '583231', login: 'octocat' },
+      ]);
+      const result = await new DashboardReporter(argumentsProviderFactory(), scanningStrategy, dataCollector).buildReport([
+        notPracticingHighImpactPracticeWithCtx,
+      ]);
 
       await expect(result.componentsWithDxScore).toContainObject({
         dxScore: {
