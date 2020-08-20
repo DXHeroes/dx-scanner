@@ -87,9 +87,6 @@ export class Scanner {
     this.d(`Components (${projectComponents.length}):`, inspect(projectComponents));
     const practicesWithContext = await this.detectPractices(projectComponents);
     this.d(`Practices (${practicesWithContext.length}):`, inspect(practicesWithContext));
-    // TODO: Data collectors process here
-    //const data = await scannerContext.dataCollector.collectData(projectComponents);
-    //this.d(`Data (${data}):`, inspect(data));
     let practicesAfterFix: PracticeWithContext[] | undefined;
     if (this.argumentsProvider.fix) {
       await this.fix(practicesWithContext);
@@ -252,19 +249,6 @@ export class Scanner {
   }
 
   /**
-   * Collect extended data for each component
-   */
-  //private async collectData(componentsWithContext: ProjectComponentAndLangContext[]): Promise<ComponentDataWithContext[]> {
-  // const practicesWithComponentContext = await Promise.all(
-  //   componentsWithContext.map(async (cwctx) => await this.detectPracticesForComponent(cwctx)),
-  // );
-  // const practicesWithContext = _.flatten(practicesWithComponentContext);
-  // this.d('Applicable practices:');
-  // this.d(practicesWithContext.map((p) => p.practice.getMetadata().name));
-  // return practicesWithContext;
-  //}
-
-  /**
    * Report result with specific reporter
    */
   private async report(
@@ -417,7 +401,7 @@ export class Scanner {
   }
 }
 
-export interface ProjectComponentAndLangContext {
+interface ProjectComponentAndLangContext {
   component: ProjectComponent;
   languageContext: LanguageContext;
 }
@@ -429,13 +413,6 @@ export interface PracticeWithContext {
   evaluation: PracticeEvaluationResult;
   evaluationError: undefined | string;
   isOn: boolean;
-}
-
-export interface ComponentDataWithContext {
-  componentContext: ProjectComponentContext;
-  data: {
-    collaborators: [{ name: string; email: string; username: string }];
-  };
 }
 
 export type ScanResult = {

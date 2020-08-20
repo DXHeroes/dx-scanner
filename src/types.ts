@@ -35,7 +35,6 @@ export const Types = {
   IRootFileInspector: Symbol('IRootFileInspector'),
   IProjectFilesBrowser: Symbol('IProjectFilesBrowser'),
   RepositoryPath: Symbol('RepositoryPath'),
-  ICollector: Symbol('ICollector'),
   //Language context level
   LanguageAtPath: Symbol('LanguageAtPath'),
   InitiableInspector: Symbol('InitiableInspector'),

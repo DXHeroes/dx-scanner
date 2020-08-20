@@ -532,26 +532,22 @@ export class BitbucketService implements IVCSService {
     };
     const commits = await this.paginate(this.client.repositories.listCommits, params);
 
-    const contributors = commits
-      //filter diplicate commiter names
-      .filter((commit, index, array) => array.findIndex((t) => t.author.user.nickname === commit.author.user.nickname) === index)
-      //create contributor object
-      .map((commit) => {
-        return {
-          user: {
-            id: commit.author.user.uuid,
-            url: commit.author.user.links.html.href,
-            login: commit.author.user.nickname,
-          },
-          lastActivity: commits
-            .filter((value) => value.author.user.nickname === commit.author.user.nickname)
-            .reduce((prev, current) => {
-              return new Date(prev.date) > new Date(current.date) ? prev : current;
-            }).date,
-          contributions: commits.filter((value) => value.author.user.nickname === commit.author.user.nickname).length,
-        };
-      });
-    return contributors;
+    return (
+      commits
+        //filter diplicate commiter names
+        .filter((commit, index, array) => array.findIndex((t) => t.author.user.nickname === commit.author.user.nickname) === index)
+        //create contributor object
+        .map((commit) => {
+          return {
+            user: {
+              id: commit.author.user.uuid,
+              url: commit.author.user.links.html.href,
+              login: commit.author.user.nickname,
+            },
+            contributions: commits.filter((value) => value.author.user.nickname === commit.author.user.nickname).length,
+          };
+        })
+    );
   }
 
   async listContributorsStats(owner: string, repo: string): Promise<Paginated<ContributorStats>> {
