@@ -583,7 +583,7 @@ export class BitbucketService implements IVCSService {
     };
   }
 
-  private async paginate(method: (params: Params.RepositoriesListCommits) => AsyncResponse<any>, params: Params.RepositoriesListCommits) {
+  private async paginate<T = Params.RepositoriesListCommits>(method: (params: T) => AsyncResponse<any>, params: T) {
     let response = <DeepRequired<Response<BitbucketCommit>>>await this.unwrap(method(params));
     let values = response.data.values;
     while (this.client.hasNextPage(response.data)) {
