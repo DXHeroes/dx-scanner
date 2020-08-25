@@ -10,6 +10,7 @@ import { IReporter, PracticeWithContextForReporter } from './IReporter';
 import { PkgToUpdate } from '../practices/utils/DependenciesVersionEvaluationUtils';
 import { ServiceType } from '../detectors/IScanningStrategy';
 import { GitServiceUtils } from '../services';
+import { DataCollector, CollectorsData } from '../collectors/DataCollector';
 // eslint-disable-next-line @typescript-eslint/no-require-imports, @typescript-eslint/no-var-requires
 const pjson = require('../../package.json');
 
@@ -17,17 +18,20 @@ const pjson = require('../../package.json');
 export class DashboardReporter implements IReporter {
   private readonly argumentsProvider: ArgumentsProvider;
   private readonly scanningStrategy: ScanningStrategy;
+  private readonly dataCollector: DataCollector;
 
   constructor(
     @inject(Types.ArgumentsProvider) argumentsProvider: ArgumentsProvider,
     @inject(Types.ScanningStrategy) scanningStrategy: ScanningStrategy,
+    @inject(DataCollector) dataCollector: DataCollector,
   ) {
     this.argumentsProvider = argumentsProvider;
     this.scanningStrategy = scanningStrategy;
+    this.dataCollector = dataCollector;
   }
 
   async report(practicesAndComponents: PracticeWithContextForReporter[]): Promise<void> {
-    const reportData = this.buildReport(practicesAndComponents);
+    const reportData = await this.buildReport(practicesAndComponents);
     try {
       // send data
       await axios.post('https://provider.dxscanner.io/api/v1/data-report', reportData, {
@@ -40,13 +44,14 @@ export class DashboardReporter implements IReporter {
     }
   }
 
-  buildReport(practicesAndComponents: PracticeWithContextForReporter[]): DataReportDto {
+  async buildReport(practicesAndComponents: PracticeWithContextForReporter[]): Promise<DataReportDto> {
     const componentsWithPractices = ReporterUtils.getComponentsWithPractices(practicesAndComponents, this.scanningStrategy);
 
     const dxScore = ReporterUtils.computeDXScore(practicesAndComponents, this.scanningStrategy);
 
     const report: DataReportDto = {
       componentsWithDxScore: [],
+      collectorsData: await this.dataCollector.collectData(this.scanningStrategy.remoteUrl!),
       version: pjson.version,
       id: uuid.v4(),
       dxScore: { value: dxScore.value, points: dxScore.points },
@@ -96,6 +101,7 @@ export class DashboardReporter implements IReporter {
 
 export type DataReportDto = {
   componentsWithDxScore: ComponentDto[];
+  collectorsData: CollectorsData;
   version: string;
   id: string;
   dxScore: DxScoreDto;

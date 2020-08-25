@@ -107,7 +107,7 @@ export class GitInspector implements IGitInspector {
    * Get tags in the repository.
    *
    * @returns The tags.
-   * @throws Throws an arror if there is no repository (the path does not exist, the path is not a repository).
+   * @throws Throws an error if there is no repository (the path does not exist, the path is not a repository).
    */
   async getAllTags(): Promise<Tag[]> {
     const tags = await this.git.tags();

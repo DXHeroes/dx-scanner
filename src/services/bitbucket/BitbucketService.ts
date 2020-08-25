@@ -35,6 +35,8 @@ import { DeepRequired } from '../../lib/deepRequired';
 import { InMemoryCache } from '../../scanner/cache';
 import { BitbucketPullRequestState, BitbucketIssueState } from './IBitbucketService';
 import { RepositoryConfig } from '../../scanner/RepositoryConfig';
+import { uniqWith, isEqual } from 'lodash';
+import { AsyncResponse } from 'bitbucket/lib/bitbucket';
 
 const debug = Debug('cli:services:git:bitbucket-service');
 
@@ -522,9 +524,30 @@ export class BitbucketService implements IVCSService {
     };
   }
 
-  async listContributors(owner: string, repo: string): Promise<Paginated<Contributor>> {
+  async listContributors(owner: string, repo: string): Promise<Contributor[]> {
     this.authenticate();
-    throw new Error('Method not implemented yet.');
+    const params: Params.RepositoriesListCommits = {
+      repo_slug: repo,
+      workspace: owner,
+    };
+    const commits = await this.paginateCommits(params);
+
+    return (
+      commits
+        //filter duplicate committer names
+        .filter((commit, index, array) => array.findIndex((t) => t.author.user.nickname === commit.author.user.nickname) === index)
+        //create contributor object
+        .map((commit) => {
+          return {
+            user: {
+              id: commit.author.user.uuid,
+              url: commit.author.user.links.html.href,
+              login: commit.author.user.nickname,
+            },
+            contributions: commits.filter((value) => value.author.user.nickname === commit.author.user.nickname).length,
+          };
+        })
+    );
   }
 
   async listContributorsStats(owner: string, repo: string): Promise<Paginated<ContributorStats>> {
@@ -558,6 +581,16 @@ export class BitbucketService implements IVCSService {
       deletions: linesRemoved,
       changes: linesAdded + linesRemoved,
     };
+  }
+
+  private async paginateCommits(params: Params.RepositoriesListCommits) {
+    let response = <DeepRequired<Response<BitbucketCommit>>>await this.unwrap(this.client.repositories.listCommits(params));
+    let values = response.data.values;
+    while (this.client.hasNextPage(response.data)) {
+      response = <DeepRequired<Response<BitbucketCommit>>>await this.unwrap(this.client.request(response.data.next, params));
+      values = values.concat(response.data.values);
+    }
+    return values;
   }
 
   private unwrap<T>(clientPromise: Promise<Response<T>>) {

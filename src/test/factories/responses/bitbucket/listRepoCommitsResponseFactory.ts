@@ -1,13 +1,16 @@
 import { BitbucketCommit } from '../../../../services';
-import Bitbucket from 'bitbucket';
+import _ from 'lodash';
 
-export const bitbucketListCommitResponseFactory = (items: Bitbucket.Schema.Commit[]): BitbucketCommit => {
-  return {
-    values: items,
-    next: 'https://api.bitbucket.org/2.0/repositories/pypy/pypy/commits?page=2',
-    previous: '//TODO: "previous" is not present when it is a first page',
-    page: 1,
-    pagelen: items.length,
-    size: items.length,
-  };
+export const bitbucketListCommitResponseFactory = (params?: Partial<BitbucketCommit>): BitbucketCommit => {
+  return _.merge(
+    {
+      values: [],
+      next: null,
+      previous: '//TODO: "previous" is not present when it is a first page',
+      page: 1,
+      pagelen: 0,
+      size: 0,
+    },
+    params,
+  );
 };

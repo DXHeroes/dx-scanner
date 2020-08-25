@@ -87,7 +87,6 @@ export class Scanner {
     this.d(`Components (${projectComponents.length}):`, inspect(projectComponents));
     const practicesWithContext = await this.detectPractices(projectComponents);
     this.d(`Practices (${practicesWithContext.length}):`, inspect(practicesWithContext));
-
     let practicesAfterFix: PracticeWithContext[] | undefined;
     if (this.argumentsProvider.fix) {
       await this.fix(practicesWithContext);

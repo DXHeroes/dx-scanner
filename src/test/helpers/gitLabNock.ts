@@ -128,7 +128,7 @@ export class GitLabNock {
     return GitLabNock.get(baseUrl, queryParams).reply(200, response, this.pagination);
   }
 
-  listRepoCommitsResponse(repoCommits: Commit[], options?: ListGetterOptions) {
+  listRepoCommitsResponse(repoCommits: Commit[], hasNextPage = true, options?: ListGetterOptions) {
     const encodedProjectUrl = encodeURIComponent(`${this.user}/${this.repoName}`);
     const baseUrl = `${this.url}/projects/${encodedProjectUrl}/repository/commits`;
 
@@ -136,18 +136,21 @@ export class GitLabNock {
       page?: number;
       per_page?: number;
     } = {};
-
+    const pagination = this.pagination;
     if (options?.pagination?.page) {
       queryParams.page = options?.pagination?.page;
-      this.pagination['x-page'] = options.pagination.page.toString();
+      pagination['x-page'] = options.pagination.page.toString();
     }
     if (options?.pagination?.perPage) {
       queryParams.per_page = options?.pagination?.perPage;
-      this.pagination['x-page'] = options.pagination.perPage.toString();
+      pagination['x-page'] = options.pagination.perPage.toString();
+    }
+    if (!hasNextPage) {
+      pagination['x-next-page'] = '';
     }
 
     const response = gitLabListPullCommitsResponseFactory(repoCommits);
-    return GitLabNock.get(baseUrl, queryParams).reply(200, response, this.pagination);
+    return GitLabNock.get(baseUrl, queryParams).reply(200, response, pagination);
   }
 
   getCommitResponse(commit: Commit, commitId: string) {

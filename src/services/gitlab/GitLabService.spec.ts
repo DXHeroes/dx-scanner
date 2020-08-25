@@ -17,6 +17,7 @@ import { GitLabService } from './GitLabService';
 import { GitLabPullRequestState } from './IGitLabService';
 import nock from 'nock';
 import { listPullRequestCommentsResponse } from '../git/__MOCKS__/gitLabServiceMockFolder/listPullRequestComments';
+import { getContributorsServiceResponse } from '../git/__MOCKS__/gitLabServiceMockFolder/getContributorsServiceResponse.mock';
 
 describe('GitLab Service', () => {
   let service: GitLabService;
@@ -80,7 +81,7 @@ describe('GitLab Service', () => {
   it('Returns repo commits in own interface', async () => {
     const mockCommits = gitLabRepoCommitsResponseFactory();
 
-    gitLabNock.listRepoCommitsResponse([mockCommits], { pagination: { page: 1, perPage: 1 } });
+    gitLabNock.listRepoCommitsResponse([mockCommits], true, { pagination: { page: 1, perPage: 1 } });
 
     const response = await service.listRepoCommits('gitlab-org', 'gitlab', { pagination: { page: 1, perPage: 1 } });
     expect(response).toMatchObject(listRepoCommits(undefined, { page: 1, perPage: 1 }));
@@ -193,12 +194,12 @@ describe('GitLab Service', () => {
     }
   });
 
-  it('Throws error if listContributors is called as the function is not implemented yet', async () => {
-    try {
-      await service.listContributors('gitlab-org', 'gitlab');
-    } catch (error) {
-      expect(error.message).toEqual('Method not implemented yet.');
-    }
+  it('returns contributors in own interface', async () => {
+    gitLabNock.listRepoCommitsResponse([gitLabCommitsResponseFactory({ committer_name: 'gitlab-org' })], false);
+    gitLabNock.getUserInfo();
+
+    const response = await service.listContributors('gitlab-org', 'gitlab');
+    expect(response).toMatchObject(getContributorsServiceResponse);
   });
 
   it('Throws error if getContributorsStats is called as the function is not implemented yet', async () => {

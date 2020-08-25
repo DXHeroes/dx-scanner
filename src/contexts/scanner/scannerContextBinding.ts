@@ -15,6 +15,8 @@ import { PythonLanguageDetector } from '../../detectors/Python/PythonLanguageDet
 import { ArgumentsProvider } from '../../scanner';
 import { IReporter, FixReporter, JSONReporter, CLIReporter, CIReporter, HTMLReporter, DashboardReporter } from '../../reporters';
 import { ServiceType, AccessType } from '../../detectors/IScanningStrategy';
+import { ContributorsCollector } from '../../collectors/ContributorsCollector';
+import { DataCollector } from '../../collectors/DataCollector';
 
 export const bindScanningContext = (container: Container) => {
   container.bind(Types.ScannerContextFactory).toFactory(
@@ -36,6 +38,7 @@ const createScanningContainer = (scanningStrategy: ScanningStrategy, discoveryCo
   bindFileAccess(scanningStrategy, container);
 
   bindReporters(container, args, scanningStrategy.accessType);
+  bindCollectors(container, args, scanningStrategy.accessType);
   container.bind(ScannerContext).toSelf();
   return container;
 };
@@ -59,6 +62,13 @@ const bindFileAccess = (scanningStrategy: ScanningStrategy, container: Container
     container.bind(Types.IContentRepositoryBrowser).to(GitLabService);
   }
   container.bind(Types.IFileInspector).to(FileInspector).inSingletonScope();
+};
+
+const bindCollectors = (container: Container, args: ArgumentsProvider, accessType: AccessType | undefined) => {
+  if (accessType === AccessType.public || (accessType === AccessType.private && args.apiToken)) {
+    container.bind(ContributorsCollector).toSelf().inSingletonScope();
+    container.bind(DataCollector).toSelf().inSingletonScope();
+  }
 };
 
 const bindReporters = (container: Container, args: ArgumentsProvider, accessType: AccessType | undefined) => {

@@ -10,6 +10,7 @@ import { IReporter } from '../../reporters';
 export class ScannerContext extends ContextBase {
   readonly languageDetectors: ILanguageDetector[];
   readonly reporters: IReporter[];
+
   private readonly languageContextFactory: LanguageContextFactory;
 
   constructor(
