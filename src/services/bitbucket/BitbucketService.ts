@@ -530,7 +530,7 @@ export class BitbucketService implements IVCSService {
       repo_slug: repo,
       workspace: owner,
     };
-    const commits = await this.paginate(this.client.repositories.listCommits, params);
+    const commits = await this.paginateCommits(params);
 
     return (
       commits
@@ -583,8 +583,8 @@ export class BitbucketService implements IVCSService {
     };
   }
 
-  private async paginate<T = Params.RepositoriesListCommits>(method: (params: T) => AsyncResponse<any>, params: T) {
-    let response = <DeepRequired<Response<BitbucketCommit>>>await this.unwrap(method(params));
+  private async paginateCommits(params: Params.RepositoriesListCommits) {
+    let response = <DeepRequired<Response<BitbucketCommit>>>await this.unwrap(this.client.repositories.listCommits(params));
     let values = response.data.values;
     while (this.client.hasNextPage(response.data)) {
       response = <DeepRequired<Response<BitbucketCommit>>>await this.unwrap(this.client.request(response.data.next, params));
