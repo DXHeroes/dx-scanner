@@ -1,3 +1,18 @@
+# [3.35.0](https://github.com/dxheroes/dx-scanner/compare/v3.34.0...v3.35.0) (2020-08-25)
+
+
+### Bug Fixes
+
+* yarn build ([7c6954b](https://github.com/dxheroes/dx-scanner/commit/7c6954b71b5455abd4da85fc4bc8ead00c1ded94))
+
+
+### Features
+
+* binding contributors collector ([20db787](https://github.com/dxheroes/dx-scanner/commit/20db787accc4cb0c03503665006dcdb204101ce7))
+* list gitlab contributors ([7332117](https://github.com/dxheroes/dx-scanner/commit/7332117689f7a60b184cef1c847c486f6feb0339))
+* try to get contributors from bitbucket ([48c2a59](https://github.com/dxheroes/dx-scanner/commit/48c2a59bc30ccf81912f339b359f50d02b3a793e))
+* use data collector ([766b3f4](https://github.com/dxheroes/dx-scanner/commit/766b3f46409a337959111bbfb122f41ad81bb6b4))
+
 # [3.34.0](https://github.com/dxheroes/dx-scanner/compare/v3.33.1...v3.34.0) (2020-08-07)
 
 
