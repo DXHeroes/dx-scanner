@@ -2,6 +2,7 @@
 import 'reflect-metadata';
 import cli from 'cli-ux';
 import debug from 'debug';
+import { sync as commandExistsSync } from 'command-exists';
 import { createRootContainer } from '../inversify.config';
 import { Scanner, ScannerUtils } from '../scanner';
 import { CLIArgs } from '../model';
@@ -9,6 +10,10 @@ import { ErrorFactory } from '../lib/errors/ErrorFactory';
 
 export default class Run {
   static async run(path = process.cwd(), cmd: CLIArgs): Promise<void> {
+    if (!commandExistsSync('git')) {
+      cli.warn('\'git\' command dependency not installed. See https://git-scm.com/book/en/v2/Getting-Started-Installing-Git for installation instructions');
+      return;
+    }
     debug('cli')(cmd);
     const scanPath = path;
 

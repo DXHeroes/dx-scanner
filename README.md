@@ -67,6 +67,11 @@ dx-scanner run https://bitbucket.org/maras333/node-api-with-ts
 
 ## Getting Started 🏁
 
+### Dependencies
+- npm ([how to install npm](https://www.npmjs.com/get-npm))
+- git ([how to install git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git))
+- (optional) yarn ([how to install npm](https://www.npmjs.com/get-npm) and [yarn](https://yarnpkg.com/getting-started/install))
+
 ### Installation
 
 - with NPM
