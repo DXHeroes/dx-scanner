@@ -1,3 +1,10 @@
+# [3.36.0](https://github.com/dxheroes/dx-scanner/compare/v3.35.0...v3.36.0) (2020-08-27)
+
+
+### Features
+
+* add git exist check before the scanner run ([2138bd7](https://github.com/dxheroes/dx-scanner/commit/2138bd7b2c39065d6dc7ee7df5cb199d57b0f56b))
+
 # [3.35.0](https://github.com/dxheroes/dx-scanner/compare/v3.34.0...v3.35.0) (2020-08-25)
 
 
