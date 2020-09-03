@@ -2,6 +2,7 @@ import { IPractice } from '../IPractice';
 import { PracticeEvaluationResult, PracticeImpact, ProgrammingLanguage } from '../../model';
 import { DxPractice } from '../DxPracticeDecorator';
 import { PracticeContext } from '../../contexts/practice/PracticeContext';
+import { ErrorFactory } from '../../lib/errors';
 
 @DxPractice({
   id: 'Java.GitignoreCorrectlySet',
@@ -17,9 +18,9 @@ export class JavaGitignoreCorrectlySetPractice implements IPractice {
     return ctx.projectComponent.language === ProgrammingLanguage.Java || ctx.projectComponent.language === ProgrammingLanguage.Kotlin;
   }
 
-  async evaluate(ctx: PracticeContext): Promise<PracticeEvaluationResult> {
+  async evaluate(ctx: PracticeContext): ReturnType<IPractice['evaluate']> {
     if (!ctx.fileInspector) {
-      return PracticeEvaluationResult.unknown;
+      throw ErrorFactory.newInternalError('File inspector not found');
     }
 
     const parseGitignore = (gitignoreFile: string) => {
@@ -50,7 +51,7 @@ export class JavaGitignoreCorrectlySetPractice implements IPractice {
         return PracticeEvaluationResult.practicing;
       }
     }
-    return PracticeEvaluationResult.unknown;
+    throw ErrorFactory.newPracticeEvaluateError('Gitignore is partially correct');
   }
 
   private async resolveGitignorePractice(parsedGitignore: string[], javaArchitecture: string) {

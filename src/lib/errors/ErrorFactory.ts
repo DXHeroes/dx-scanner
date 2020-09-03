@@ -29,4 +29,11 @@ export class ErrorFactory {
       message,
     });
   }
+
+  static newPracticeEvaluateError(message = 'Practice evaluation error') {
+    return new ServiceError({
+      code: ErrorCode.PRACTICE_EVALUATION_ERROR,
+      message,
+    })
+  }
 }

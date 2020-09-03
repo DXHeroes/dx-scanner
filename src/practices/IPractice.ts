@@ -27,6 +27,7 @@ export interface IPractice<T extends {} = {}> {
    * @param ctx Context used for evaluation.
    */
   evaluate(ctx: PracticeContext): Promise<PracticeEvaluationResult>;
+  // TODO: enforce this type in the future: evaluate(ctx: PracticeContext): Promise<Exclude<PracticeEvaluationResult, PracticeEvaluationResult.unknown>>;
 
   /**
    * Tries to fix the problem being checked by this practice
