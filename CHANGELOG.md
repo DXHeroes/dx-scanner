@@ -1,3 +1,11 @@
+## [3.36.1](https://github.com/dxheroes/dx-scanner/compare/v3.36.0...v3.36.1) (2020-09-03)
+
+
+### Bug Fixes
+
+* run fix command only on local folder ([3e37361](https://github.com/dxheroes/dx-scanner/commit/3e3736192dfc3329d2311a91f9ccf1f2394de046))
+* update CLIReporter error message to be more clear about the fix command ([1baa2dc](https://github.com/dxheroes/dx-scanner/commit/1baa2dc2a64af21e6e3db4b8640f19d9f995ab21))
+
 # [3.36.0](https://github.com/dxheroes/dx-scanner/compare/v3.35.0...v3.36.0) (2020-08-27)
 
 
