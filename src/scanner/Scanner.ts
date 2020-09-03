@@ -78,6 +78,7 @@ export class Scanner {
         isOnline: scanStrategy.isOnline,
       };
     }
+    const isLocal = !scanStrategy.localPath;
     scanStrategy = await this.preprocessData(scanStrategy);
     this.d(`Scan strategy (after preprocessing): ${inspect(scanStrategy)}`);
     const scannerContext = discoveryContext.getScanningContext(scanStrategy);
@@ -89,8 +90,12 @@ export class Scanner {
     this.d(`Practices (${practicesWithContext.length}):`, inspect(practicesWithContext));
     let practicesAfterFix: PracticeWithContext[] | undefined;
     if (this.argumentsProvider.fix) {
-      await this.fix(practicesWithContext);
-      practicesAfterFix = await this.detectPractices(projectComponents);
+      if (isLocal) {
+        cli.warn('`fix` command only works for local folder, not for online repositories');
+      } else {
+        await this.fix(practicesWithContext);
+        practicesAfterFix = await this.detectPractices(projectComponents);
+      }
     }
     await this.report(scannerContext.reporters, practicesWithContext, practicesAfterFix);
     this.d(
@@ -272,13 +277,9 @@ export class Scanner {
     const relevantPractices: PracticeWithContextForReporter[] = practicesWithContext.map(pwcForReporter);
 
     this.d(`Reporters length: ${reporters.length}`);
-    if (this.argumentsProvider.fix) {
-      const relevantPracticesAfterFix: PracticeWithContextForReporter[] = practicesWithContextAfterFix!.map(pwcForReporter);
-      await Promise.all(
-        reporters.map(async (r) => {
-          this.argumentsProvider.fix ? await r.report(relevantPractices, relevantPracticesAfterFix) : await r.report(relevantPractices);
-        }),
-      );
+    if (practicesWithContextAfterFix) {
+      const relevantPracticesAfterFix: PracticeWithContextForReporter[] = practicesWithContextAfterFix.map(pwcForReporter);
+      await Promise.all(reporters.map((r) => r.report(relevantPractices, relevantPracticesAfterFix)));
     } else {
       await Promise.all(reporters.map(async (r) => await r.report(relevantPractices)));
     }

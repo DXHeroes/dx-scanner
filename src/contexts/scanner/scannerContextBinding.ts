@@ -37,7 +37,7 @@ const createScanningContainer = (scanningStrategy: ScanningStrategy, discoveryCo
   bindLanguageContext(container);
   bindFileAccess(scanningStrategy, container);
 
-  bindReporters(container, args, scanningStrategy.accessType);
+  bindReporters(container, args, scanningStrategy);
   bindCollectors(container, args, scanningStrategy.accessType);
   container.bind(ScannerContext).toSelf();
   return container;
@@ -71,12 +71,17 @@ const bindCollectors = (container: Container, args: ArgumentsProvider, accessTyp
   }
 };
 
-const bindReporters = (container: Container, args: ArgumentsProvider, accessType: AccessType | undefined) => {
+const bindReporters = (
+  container: Container,
+  args: ArgumentsProvider,
+  { accessType, localPath }: Pick<ScanningStrategy, 'accessType' | 'localPath'>,
+) => {
   if (args.json) {
     container.bind<IReporter>(Types.IReporter).to(JSONReporter);
   } else if (args.html) {
     container.bind<IReporter>(Types.IReporter).to(HTMLReporter);
-  } else if (args.fix) {
+  } else if (args.fix && !localPath) {
+    // fix only local runs
     container.bind<IReporter>(Types.IReporter).to(FixReporter);
   } else {
     container.bind<IReporter>(Types.IReporter).to(CLIReporter);
