@@ -83,6 +83,9 @@ export class Scanner {
     this.d(`Scan strategy (after preprocessing): ${inspect(scanStrategy)}`);
     const scannerContext = discoveryContext.getScanningContext(scanStrategy);
     const languagesAtPaths = await this.detectLanguagesAtPaths(scannerContext);
+    if (!languagesAtPaths.length) {
+      cli.warn('No language was detected. Score will be 0%.');
+    }
     this.d(`LanguagesAtPaths (${languagesAtPaths.length}):`, inspect(languagesAtPaths));
     const projectComponents = await this.detectProjectComponents(languagesAtPaths, scannerContext, scanStrategy);
     this.d(`Components (${projectComponents.length}):`, inspect(projectComponents));
