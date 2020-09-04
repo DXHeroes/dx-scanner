@@ -1,3 +1,10 @@
+# [3.37.0](https://github.com/dxheroes/dx-scanner/compare/v3.36.1...v3.37.0) (2020-09-04)
+
+
+### Features
+
+* Add warning when no languages detected ([d2918fd](https://github.com/dxheroes/dx-scanner/commit/d2918fd05d0eda1fb4275a85f3e5853360873f30))
+
 ## [3.36.1](https://github.com/dxheroes/dx-scanner/compare/v3.36.0...v3.36.1) (2020-09-03)
 
 
