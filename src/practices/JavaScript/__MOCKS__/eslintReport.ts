@@ -1,26 +1,19 @@
-import { CLIEngine } from 'eslint';
+import { ESLint } from 'eslint';
 import _ from 'lodash';
 
-export const getEsLintReport = (params?: Partial<CLIEngine.LintReport>): CLIEngine.LintReport => {
+export const getEsLintReport = (params?: Partial<ESLint.LintResult[]>): ESLint.LintResult[] => {
   return _.merge(
-    {
-      errorCount: 0,
-      warningCount: 0,
-      fixableErrorCount: 0,
-      fixableWarningCount: 0,
-      usedDeprecatedRules: [],
-      results: [
-        {
-          filePath: '/Users/jakubvacek/dx-scanner/src/commands/init.ts',
-          messages: [],
-          errorCount: 0,
-          warningCount: 0,
-          fixableErrorCount: 0,
-          fixableWarningCount: 0,
-          usedDeprecatedRules: [],
-        },
-      ],
-    },
+    [
+      {
+        filePath: '/Users/adelka/lodash/.internal/cloneDataView.js',
+        messages: [],
+        errorCount: 0,
+        warningCount: 0,
+        fixableErrorCount: 0,
+        fixableWarningCount: 0,
+        usedDeprecatedRules: [],
+      },
+    ],
     params,
   );
 };

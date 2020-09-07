@@ -69,10 +69,12 @@ export class ESLintWithoutErrorsPractice extends PracticeBase {
     if (eslintConfig.length > 0) {
       let baseConfig, content;
       const packageManager = await PackageManagerUtils.getPackageManagerInstalled(ctx.fileInspector);
+
       if (packageManager === PackageManagerType.unknown) {
         securityVulnerabilitiesPracticeDebug(
           'Cannot establish package-manager type, missing package-lock.json and yarn.lock or npm command not installed.',
         );
+        this.setData([]);
         return PracticeEvaluationResult.unknown;
       }
 
