@@ -235,7 +235,11 @@ Example `dxscannerrc.json`:
           "impact": "small"
         },
         "JavaScript.ESLintWithoutErrorsPractice": {
-          "fix": true
+          "fix": true,
+          "override": {
+            "lintFilesPatterns": [".internal/**/*.js", "*.js"],
+            "ignorePatterns": []
+          }
         },
         "LanguageIndependent.ThinPullRequestsPractice": {
           "impact": "high",
@@ -260,6 +264,9 @@ practices:
     impact: small
   JavaScript.ESLintWithoutErrorsPractice:
     fix: true
+    ovverride: 
+      lintFilesPatterns: ['.internal/**/*.js', '*.js']
+      ignorePatterns: []
   LanguageIndependent.ThinPullRequestsPractice:
     impact: high
     override:

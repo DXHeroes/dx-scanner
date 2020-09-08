@@ -1,14 +1,24 @@
 import debug from 'debug';
-import { CLIEngine } from 'eslint';
+import { ESLint } from 'eslint';
 import yaml from 'js-yaml';
 import _ from 'lodash';
+import * as nodePath from 'path';
+import shell from 'shelljs';
+import { FixerContext } from '../../contexts/fixer/FixerContext';
 import { PracticeContext } from '../../contexts/practice/PracticeContext';
 import { PracticeEvaluationResult, PracticeImpact, ProgrammingLanguage } from '../../model';
-import { DxPractice } from '../DxPracticeDecorator';
-import * as nodePath from 'path';
-import { FixerContext } from '../../contexts/fixer/FixerContext';
-import { PracticeBase } from '../PracticeBase';
 import { LinterIssueDto, LinterIssueSeverity } from '../../reporters';
+import { PracticeConfig } from '../../scanner/IConfigProvider';
+import { DxPractice } from '../DxPracticeDecorator';
+import { PracticeBase } from '../PracticeBase';
+import { PackageManagerType, PackageManagerUtils } from '../utils/PackageManagerUtils';
+
+interface PracticeOverride extends PracticeConfig {
+  override: {
+    lintFilesPatterns: string[];
+    ignorePatterns: string[];
+  };
+}
 
 @DxPractice({
   id: 'JavaScript.ESLintWithoutErrorsPractice',
@@ -30,28 +40,71 @@ export class ESLintWithoutErrorsPractice extends PracticeBase {
     if (!ctx.fileInspector) {
       return;
     }
-    let options: CLIEngine.Options = {
+
+    let ignorePatterns = ['lib', 'build', 'dist'];
+    let lintFilesPatterns = [`${ctx.projectComponent.path}`];
+    if (ctx.config) {
+      const config = <PracticeOverride>ctx.config;
+
+      ignorePatterns = config.override?.ignorePatterns.length === 0 ? ignorePatterns : config.override?.ignorePatterns;
+
+      // get absolute paths for lint files patterns
+      const lintFilesPatternsOverride = config.override?.lintFilesPatterns.map((pattern) => {
+        return `${ctx.projectComponent.path}/${pattern}`;
+      });
+      lintFilesPatterns = _.merge(lintFilesPatterns, lintFilesPatternsOverride);
+    }
+    const securityVulnerabilitiesPracticeDebug = debug('ESLintWithoutErrorsPractice');
+
+    // Get the eslint config and ignore for a component.
+    const eslintConfig = await ctx.fileInspector.scanFor(/\.eslintrc/, '/', { shallow: true });
+    const eslintIgnore = await ctx.fileInspector.scanFor(/\.eslintignore/, '/', { shallow: true });
+
+    let options: ESLint.Options = {
       fix, // Use auto-fixer.
       useEslintrc: false, // Set to false so the project doesn't take the eslint config from home folder.
-      rules: {
-        semi: 2,
-      },
+      errorOnUnmatchedPattern: true,
     };
-
-    // Get the eslint config for component.
-    const eslintConfig = await ctx.fileInspector.scanFor(/\.eslintrc/, '/', { shallow: true });
 
     if (eslintConfig.length > 0) {
       let baseConfig, content;
+      const packageManager = await PackageManagerUtils.getPackageManagerInstalled(ctx.fileInspector);
+
+      if (packageManager === PackageManagerType.unknown) {
+        securityVulnerabilitiesPracticeDebug(
+          'Cannot establish package-manager type, missing package-lock.json and yarn.lock or npm command not installed.',
+        );
+        this.setData([]);
+        return PracticeEvaluationResult.unknown;
+      }
+
+      shell.cd(ctx.fileInspector?.basePath);
+
+      const npmCmd = 'npm install';
+      const yarnCmd = 'yarn install';
+
+      if (packageManager === PackageManagerType.yarn) {
+        shell.exec(yarnCmd, { silent: true });
+      }
+
+      if (packageManager === PackageManagerType.npm) {
+        shell.exec(npmCmd, { silent: true });
+      }
 
       try {
         // eslint-disable-next-line @typescript-eslint/no-require-imports
         baseConfig = require(nodePath.resolve(ctx.fileInspector.basePath!, eslintConfig[0].path));
-
         const plugins = _.clone(baseConfig.plugins);
+
         _.unset(baseConfig, 'plugins');
         _.unset(baseConfig, 'extends');
-        options = { ...options, baseConfig, plugins };
+        options = {
+          ...options,
+          baseConfig,
+          overrideConfig: { plugins, ignorePatterns },
+          overrideConfigFile: eslintConfig[0].path,
+          resolvePluginsRelativeTo: `${ctx.fileInspector.basePath}/node_modules`,
+        };
       } catch (error) {
         const eSLintWithoutErrorsPracticeDebug = debug('ESLintWithoutErrorsPractice');
         eSLintWithoutErrorsPracticeDebug(`Loading .eslintrc file failed with this error: ${error.stack}`);
@@ -61,14 +114,8 @@ export class ESLintWithoutErrorsPractice extends PracticeBase {
       }
     }
 
-    let eslintIgnore;
-    if (typeof ctx.config !== 'string') {
-      eslintIgnore = ctx.config && ctx.config.eslintIgnore;
-    }
-    if (eslintIgnore && eslintIgnore.length > 0) {
-      options = { ...options, ignorePattern: eslintIgnore };
-    } else {
-      options = { ...options, ignorePattern: ['lib', 'dist', 'build'] };
+    if (eslintIgnore.length > 0) {
+      options = { ...options, ignorePath: eslintIgnore[0].path };
     }
 
     if (ctx.projectComponent.language === ProgrammingLanguage.TypeScript) {
@@ -78,20 +125,24 @@ export class ESLintWithoutErrorsPractice extends PracticeBase {
       options = { ...options, extensions: ['.js'] };
     }
 
-    const cli = new CLIEngine(options);
-    return cli.executeOnFiles([ctx.projectComponent.path]);
+    const cli = new ESLint(options);
+
+    return cli.lintFiles(lintFilesPatterns);
   }
 
   async evaluate(ctx: PracticeContext): Promise<PracticeEvaluationResult> {
     const report = await this.runEslint(ctx);
-    if (!report) {
+    if (!report || report === PracticeEvaluationResult.unknown) {
       return PracticeEvaluationResult.unknown;
     }
 
     const linterIssues: LinterIssueDto[] = [];
-    for (const result of report.results) {
+    let errorCount = 0;
+    for (const result of report) {
       if (result.errorCount > 0 || result.warningCount > 0) {
         for (const message of result.messages) {
+          errorCount += result.errorCount;
+
           linterIssues.push({
             filePath: `${result.filePath}(${message.line})(${message.column})`,
             severity: message.severity === 2 ? LinterIssueSeverity.Error : LinterIssueSeverity.Warning,
@@ -103,7 +154,7 @@ export class ESLintWithoutErrorsPractice extends PracticeBase {
     }
     this.setData(linterIssues);
 
-    if (report['errorCount'] === 0) {
+    if (errorCount === 0) {
       return PracticeEvaluationResult.practicing;
     }
     return PracticeEvaluationResult.notPracticing;

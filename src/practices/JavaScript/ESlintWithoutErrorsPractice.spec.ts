@@ -1,4 +1,4 @@
-import { CLIEngine } from 'eslint';
+import { ESLint } from 'eslint';
 import { DirectoryJSON } from 'memfs/lib/volume';
 import { createTestContainer, TestContainerContext } from '../../inversify.config';
 import { PracticeEvaluationResult, ProgrammingLanguage } from '../../model';
@@ -8,18 +8,20 @@ import path from 'path';
 import { eslintrRcJson } from './__MOCKS__/eslintRcMockJson';
 import { PracticeContext } from '../../contexts/practice/PracticeContext';
 import { getEsLintReport } from './__MOCKS__/eslintReport';
+import { PackageManagerUtils, PackageManagerType } from '../utils/PackageManagerUtils';
 jest.mock('eslint');
 
 describe('ESLintWithoutErrorsPractice', () => {
   let practice: ESLintWithoutErrorsPractice;
   let containerCtx: TestContainerContext;
 
-  const mockedEslint = <jest.Mock>(<unknown>CLIEngine);
+  const mockedEslint = <jest.Mock>(<unknown>ESLint);
 
   beforeEach(() => {
     containerCtx = createTestContainer();
     containerCtx.container.bind('ESLintWithoutErrorsPractice').to(ESLintWithoutErrorsPractice);
     practice = containerCtx.container.get('ESLintWithoutErrorsPractice');
+    jest.spyOn(PackageManagerUtils, 'getPackageManagerInstalled').mockImplementation(async () => PackageManagerType.npm);
   });
 
   afterEach(() => {
@@ -48,7 +50,7 @@ describe('ESLintWithoutErrorsPractice', () => {
     const report = getEsLintReport();
     mockedEslint.mockImplementation(() => {
       return {
-        executeOnFiles: () => report,
+        lintFiles: () => report,
       };
     });
     const result = await practice.evaluate(containerCtx.practiceContext);
@@ -57,36 +59,21 @@ describe('ESLintWithoutErrorsPractice', () => {
   });
 
   it('Returns not practicing, if errorCount !== 0, creates correct linter issue dtos if there are errors', async () => {
-    const report = getEsLintReport({
-      errorCount: 1,
-      results: [
-        {
-          filePath: '/Users/jakubvacek/dx-scanner/src/commands/init.ts',
-          messages: [
-            {
-              severity: <0 | 1 | 2>2,
-              message: 'Strings must use doublequote.',
-              line: 1,
-              column: 37,
-              nodeType: 'Literal',
-              messageId: 'wrongQuotes',
-              endLine: 1,
-              endColumn: 58,
-              ruleId: '',
-            },
-          ],
-          errorCount: 1,
-          warningCount: 0,
-          fixableErrorCount: 1,
-          fixableWarningCount: 0,
-          usedDeprecatedRules: [],
-          source: '',
-        },
-      ],
-    });
+    const report = getEsLintReport([
+      {
+        filePath: '/Users/jakubvacek/dx-scanner/src/commands/init.ts',
+        messages: [{ line: 1, column: 37, ruleId: '', message: 'Strings must use doublequote.', severity: <0 | 1 | 2>2 }],
+        errorCount: 1,
+        warningCount: 0,
+        fixableErrorCount: 1,
+        fixableWarningCount: 0,
+        usedDeprecatedRules: [],
+      },
+    ]);
+
     mockedEslint.mockImplementation(() => {
       return {
-        executeOnFiles: () => report,
+        lintFiles: () => report,
       };
     });
     const result = await practice.evaluate(containerCtx.practiceContext);
@@ -109,7 +96,7 @@ describe('ESLintWithoutErrorsPractice', () => {
 
     mockedEslint.mockImplementation(() => {
       return {
-        executeOnFiles: () => report,
+        lintFiles: () => report,
       };
     });
 
@@ -128,7 +115,7 @@ describe('ESLintWithoutErrorsPractice', () => {
 
     mockedEslint.mockImplementation(() => {
       return {
-        executeOnFiles: () => report,
+        lintFiles: () => report,
       };
     });
 
@@ -148,7 +135,7 @@ describe('ESLintWithoutErrorsPractice', () => {
 
     mockedEslint.mockImplementation(() => {
       return {
-        executeOnFiles: () => report,
+        lintFiles: () => report,
       };
     });
     try {
