@@ -1,3 +1,10 @@
+## [3.37.1](https://github.com/dxheroes/dx-scanner/compare/v3.37.0...v3.37.1) (2020-09-08)
+
+
+### Bug Fixes
+
+* migrate CLIEngine to Eslint Class and fix linted files ([23e4a51](https://github.com/dxheroes/dx-scanner/commit/23e4a51db884eee8513775109a76c11e538637d7))
+
 # [3.37.0](https://github.com/dxheroes/dx-scanner/compare/v3.36.1...v3.37.0) (2020-09-04)
 
 
