@@ -61,7 +61,7 @@
     "semver": "7.3.2",
     "shelljs": "0.8.4",
     "simple-git": "2.17.0",
-    "table": "5.4.6",
+    "table": "6.0.3",
     "toposort": "2.0.2",
     "tsconfig": "7.0.0",
     "update-notifier": "4.1.0",
