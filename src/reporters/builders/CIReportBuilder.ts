@@ -119,10 +119,10 @@ export class CIReportBuilder implements IReportBuilder {
     const practicesAndComponentsUnknown = practicesAndComponents.filter((p) => p.isOn && p.evaluation === PracticeEvaluationResult.unknown);
 
     if (practicesAndComponentsUnknown.length > 0) {
-      lines.push('🔥 Evaluation of these practices failed');
+      lines.push('<h3>🔥 Evaluation of these practices failed</h3>');
 
       for (const p of practicesAndComponentsUnknown) {
-        lines.push(`- ${p.practice.name}`);
+        lines.push(this.renderPracticesLines(p));
       }
     }
 
@@ -135,10 +135,10 @@ export class CIReportBuilder implements IReportBuilder {
     const practicesAndComponentsOff = practicesAndComponents.filter((p) => !p.isOn);
 
     if (practicesAndComponentsOff.length > 0) {
-      lines.push('🚫 You have turned off these practices');
+      lines.push('<h3>🚫 You have turned off these practices</h3>');
 
       for (const p of practicesAndComponentsOff) {
-        lines.push(`- ${p.practice.name}`);
+        lines.push(this.renderPracticesLines(p));
       }
     }
 
@@ -152,10 +152,10 @@ export class CIReportBuilder implements IReportBuilder {
 
     const fixablePractices = practicesAndComponents.filter(fixablePractice);
     if (fixablePractices.length) {
-      lines.push('🔧 These practices might be automatically fixed:');
+      lines.push('<h3>🔧 These practices might be automatically fixed:</h3>');
 
       for (const p of fixablePractices) {
-        lines.push(`- ${p.practice.name}`);
+        lines.push(this.renderPracticesLines(p));
       }
     }
 
