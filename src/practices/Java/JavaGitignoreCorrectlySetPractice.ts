@@ -43,15 +43,15 @@ export class JavaGitignoreCorrectlySetPractice implements IPractice {
     }
 
     if (await ctx.fileInspector.exists('pom.xml')) {
-      if (await this.resolveGitignorePractice(parsedGitignore, 'Maven')) {
-        return PracticeEvaluationResult.practicing;
-      }
+      return (await this.resolveGitignorePractice(parsedGitignore, 'Maven'))
+        ? PracticeEvaluationResult.practicing
+        : PracticeEvaluationResult.notPracticing;
     } else if ((await ctx.fileInspector.exists('build.gradle')) || (await ctx.fileInspector.exists('build.gradle.kts'))) {
-      if (await this.resolveGitignorePractice(parsedGitignore, 'Gradle')) {
-        return PracticeEvaluationResult.practicing;
-      }
+      return (await this.resolveGitignorePractice(parsedGitignore, 'Gradle'))
+        ? PracticeEvaluationResult.practicing
+        : PracticeEvaluationResult.notPracticing;
     }
-    throw ErrorFactory.newPracticeEvaluateError('Gitignore is partially correct');
+    return PracticeEvaluationResult.practicing;
   }
 
   private async resolveGitignorePractice(parsedGitignore: string[], javaArchitecture: string) {

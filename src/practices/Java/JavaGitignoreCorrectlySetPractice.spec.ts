@@ -71,7 +71,7 @@ describe('JavaGitignoreCorrectlySetPractice', () => {
     expect(thrown).toBeCalled();
   });
 
-  it('Throws evaluate error if there is *.class, *.log, *.jar, *.war in .gitignore but not correctly set for build.gradle', async () => {
+  it('Returns notPracticing if there is *.class, *.log, *.jar, *.war in .gitignore but not correctly set for build.gradle', async () => {
     containerCtx.virtualFileSystemService.setFileSystem({
       '.gitignore': `
       *.class
@@ -81,17 +81,11 @@ describe('JavaGitignoreCorrectlySetPractice', () => {
       'build.gradle': buildGRADLEContents,
     });
 
-    const thrown = jest.fn();
-    try {
-      await practice.evaluate(containerCtx.practiceContext);
-    } catch (error) {
-      thrown();
-      expect(error.code).toEqual(ErrorCode.PRACTICE_EVALUATION_ERROR);
-    }
-    expect(thrown).toBeCalled();
+    const evaluated = await practice.evaluate(containerCtx.practiceContext);
+    expect(evaluated).toEqual(PracticeEvaluationResult.notPracticing);
   });
 
-  it('Throws evaluate error if there is *.class, *.log, *.jar, *.war in .gitignore but not correctly set for build.gradle.kts', async () => {
+  it('Returns notPracticing if there is *.class, *.log, *.jar, *.war in .gitignore but not correctly set for build.gradle.kts', async () => {
     containerCtx.virtualFileSystemService.setFileSystem({
       '.gitignore': `
       *.class
@@ -101,17 +95,11 @@ describe('JavaGitignoreCorrectlySetPractice', () => {
       'build.gradle.kts': buildGRADLEContents,
     });
 
-    const thrown = jest.fn();
-    try {
-      await practice.evaluate(containerCtx.practiceContext);
-    } catch (error) {
-      thrown();
-      expect(error.code).toEqual(ErrorCode.PRACTICE_EVALUATION_ERROR);
-    }
-    expect(thrown).toBeCalled();
+    const evaluated = await practice.evaluate(containerCtx.practiceContext);
+    expect(evaluated).toEqual(PracticeEvaluationResult.notPracticing);
   });
 
-  it('Throws evaluate error if there is *.class, *.log, *.jar, *.war in .gitignore but not correctly set for pom.xml', async () => {
+  it('Returns notPracticing if there is *.class, *.log, *.jar, *.war in .gitignore but not correctly set for pom.xml', async () => {
     containerCtx.virtualFileSystemService.setFileSystem({
       '.gitignore': `
       *.class
@@ -121,29 +109,17 @@ describe('JavaGitignoreCorrectlySetPractice', () => {
       'pom.xml': pomXMLContents,
     });
 
-    const thrown = jest.fn();
-    try {
-      await practice.evaluate(containerCtx.practiceContext);
-    } catch (error) {
-      thrown();
-      expect(error.code).toEqual(ErrorCode.PRACTICE_EVALUATION_ERROR);
-    }
-    expect(thrown).toBeCalled();
+    const evaluated = await practice.evaluate(containerCtx.practiceContext);
+    expect(evaluated).toEqual(PracticeEvaluationResult.notPracticing);
   });
 
-  it('Throws evaluate error if there is correctly set .gitignore, but no pom.xml and build.gradle or build.gradle.kts', async () => {
+  it('Returns practicing if there is correctly set .gitignore, but no pom.xml and build.gradle or build.gradle.kts', async () => {
     containerCtx.virtualFileSystemService.setFileSystem({
       '.gitignore': gitignoreContent,
     });
 
-    const thrown = jest.fn();
-    try {
-      await practice.evaluate(containerCtx.practiceContext);
-    } catch (error) {
-      thrown();
-      expect(error.code).toEqual(ErrorCode.PRACTICE_EVALUATION_ERROR);
-    }
-    expect(thrown).toBeCalled();
+    const evaluated = await practice.evaluate(containerCtx.practiceContext);
+    expect(evaluated).toEqual(PracticeEvaluationResult.practicing);
   });
 
   it('Returns true if language is Java', async () => {
