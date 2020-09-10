@@ -2,6 +2,7 @@ import { IPractice } from '../IPractice';
 import { PracticeEvaluationResult, PracticeImpact, ProgrammingLanguage } from '../../model';
 import { DxPractice } from '../DxPracticeDecorator';
 import { PracticeContext } from '../../contexts/practice/PracticeContext';
+import { ErrorFactory } from '../../lib/errors';
 
 @DxPractice({
   id: 'Java.GitignoreCorrectlySet',
@@ -17,9 +18,9 @@ export class JavaGitignoreCorrectlySetPractice implements IPractice {
     return ctx.projectComponent.language === ProgrammingLanguage.Java || ctx.projectComponent.language === ProgrammingLanguage.Kotlin;
   }
 
-  async evaluate(ctx: PracticeContext): Promise<PracticeEvaluationResult> {
+  async evaluate(ctx: PracticeContext): ReturnType<IPractice['evaluate']> {
     if (!ctx.fileInspector) {
-      return PracticeEvaluationResult.unknown;
+      throw ErrorFactory.newInternalError('File inspector not found');
     }
 
     const parseGitignore = (gitignoreFile: string) => {
@@ -42,15 +43,15 @@ export class JavaGitignoreCorrectlySetPractice implements IPractice {
     }
 
     if (await ctx.fileInspector.exists('pom.xml')) {
-      if (await this.resolveGitignorePractice(parsedGitignore, 'Maven')) {
-        return PracticeEvaluationResult.practicing;
-      }
+      return (await this.resolveGitignorePractice(parsedGitignore, 'Maven'))
+        ? PracticeEvaluationResult.practicing
+        : PracticeEvaluationResult.notPracticing;
     } else if ((await ctx.fileInspector.exists('build.gradle')) || (await ctx.fileInspector.exists('build.gradle.kts'))) {
-      if (await this.resolveGitignorePractice(parsedGitignore, 'Gradle')) {
-        return PracticeEvaluationResult.practicing;
-      }
+      return (await this.resolveGitignorePractice(parsedGitignore, 'Gradle'))
+        ? PracticeEvaluationResult.practicing
+        : PracticeEvaluationResult.notPracticing;
     }
-    return PracticeEvaluationResult.unknown;
+    return PracticeEvaluationResult.practicing;
   }
 
   private async resolveGitignorePractice(parsedGitignore: string[], javaArchitecture: string) {

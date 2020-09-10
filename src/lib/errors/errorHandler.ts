@@ -19,6 +19,7 @@ export const errorHandler = (error: Error) => {
       case ErrorCode.NOT_IMPLEMENTED_ERROR:
       case ErrorCode.INTERNAL_ERROR:
       case ErrorCode.ARGUMENT_ERROR:
+      case ErrorCode.PRACTICE_EVALUATION_ERROR:
         cli.error(error);
       default:
         assertNever(error.code);
