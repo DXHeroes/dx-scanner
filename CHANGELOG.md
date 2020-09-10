@@ -1,3 +1,11 @@
+## [3.37.2](https://github.com/dxheroes/dx-scanner/compare/v3.37.1...v3.37.2) (2020-09-10)
+
+
+### Bug Fixes
+
+* **deps:** update dependency npm-check-updates to v8 ([cdabc50](https://github.com/dxheroes/dx-scanner/commit/cdabc501a1dc700ba84f3991b640b98ad1a7db81))
+* **deps:** update dependency table to v6 ([4565b91](https://github.com/dxheroes/dx-scanner/commit/4565b91dfc073546fafa8d418a27e3a0b4e98425))
+
 ## [3.37.1](https://github.com/dxheroes/dx-scanner/compare/v3.37.0...v3.37.1) (2020-09-08)
 
 
