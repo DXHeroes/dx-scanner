@@ -1,3 +1,16 @@
+# [3.38.0](https://github.com/dxheroes/dx-scanner/compare/v3.37.2...v3.38.0) (2020-09-10)
+
+
+### Bug Fixes
+
+* update practice tests ([35e7403](https://github.com/dxheroes/dx-scanner/commit/35e74030f23260c1a5b05b38343b71b5cff934ea))
+
+
+### Features
+
+* add new error for practice evaluate ([e38e596](https://github.com/dxheroes/dx-scanner/commit/e38e59650068e247e1b11ca388f51caaa64e4439))
+* Changed Java gitignore practice return ([4a5eb4b](https://github.com/dxheroes/dx-scanner/commit/4a5eb4be0a7bf8f4f98c53f6cff212ac9ca13529))
+
 ## [3.37.2](https://github.com/dxheroes/dx-scanner/compare/v3.37.1...v3.37.2) (2020-09-10)
 
 
