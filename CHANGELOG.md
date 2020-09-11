@@ -1,3 +1,10 @@
+## [3.38.1](https://github.com/dxheroes/dx-scanner/compare/v3.38.0...v3.38.1) (2020-09-11)
+
+
+### Bug Fixes
+
+* CI reporter formatting for unknown, turned off and fixable practices ([f757528](https://github.com/dxheroes/dx-scanner/commit/f7575285b2ce3f52f2b0e82fc54676f08748eb2e))
+
 # [3.38.0](https://github.com/dxheroes/dx-scanner/compare/v3.37.2...v3.38.0) (2020-09-10)
 
 
