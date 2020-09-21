@@ -1,3 +1,12 @@
+## [3.38.2](https://github.com/dxheroes/dx-scanner/compare/v3.38.1...v3.38.2) (2020-09-21)
+
+
+### Bug Fixes
+
+* **deps:** update commitlint monorepo to v11 ([334d3ff](https://github.com/dxheroes/dx-scanner/commit/334d3ffd9ccb19c6318a5bc9d705de7e7d6750ab))
+* **deps:** update dependency @types/table to v6 ([a2fb8fb](https://github.com/dxheroes/dx-scanner/commit/a2fb8fb4e376c80f9202f46617536e31418ac6ed))
+* **deps:** update dependency npm-check-updates to v9 ([bd5a543](https://github.com/dxheroes/dx-scanner/commit/bd5a54358e605361c8f20d881f383b9c33981e5a))
+
 ## [3.38.1](https://github.com/dxheroes/dx-scanner/compare/v3.38.0...v3.38.1) (2020-09-11)
 
 
