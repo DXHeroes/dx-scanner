@@ -2,11 +2,7 @@
 name: Feature
 about: Use this template for suggesting a new feature.
 title: "[FEATURE]"
-<<<<<<< HEAD
 labels: "Status: Proposal, Type: Enhancement"
-=======
-labels: "Status: Proposal", "Type: Enhancement"
->>>>>>> master
 assignees: prokopsimek
 ---
 
