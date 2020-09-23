@@ -42,7 +42,6 @@ export class GitInspector implements IGitInspector {
 
     const logOptions: git.Options = {
       multiLine: 'true',
-      '--fixed-strings': 'true',
     };
     if (options.filter !== undefined) {
       if (options.filter.author !== undefined) {
