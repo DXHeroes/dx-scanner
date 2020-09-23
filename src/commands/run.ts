@@ -11,7 +11,9 @@ import { ErrorFactory } from '../lib/errors/ErrorFactory';
 export default class Run {
   static async run(path = process.cwd(), cmd: CLIArgs): Promise<void> {
     if (!commandExistsSync('git')) {
-      cli.warn('\'git\' command dependency not installed. See https://git-scm.com/book/en/v2/Getting-Started-Installing-Git for installation instructions');
+      cli.warn(
+        "'git' command dependency not installed. See https://git-scm.com/book/en/v2/Getting-Started-Installing-Git for installation instructions",
+      );
       return;
     }
     debug('cli')(cmd);
