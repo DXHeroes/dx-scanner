@@ -6,7 +6,6 @@ import _ from 'lodash';
 import os from 'os';
 import path from 'path';
 import git from 'simple-git/promise';
-import url from 'url';
 import { inspect } from 'util';
 import { ArgumentsProvider } from '.';
 import { LanguageContext } from '../contexts/language/LanguageContext';
@@ -168,7 +167,8 @@ export class Scanner {
     }
 
     if (localPath === undefined && remoteUrl !== undefined && serviceType !== ServiceType.local) {
-      const cloneUrl = new url.URL(remoteUrl);
+      const cloneUrl = new URL(remoteUrl);
+
       localPath = fs.mkdtempSync(path.join(os.tmpdir(), 'dx-scanner'));
 
       if (this.argumentsProvider.auth?.includes(':')) {
@@ -176,8 +176,12 @@ export class Scanner {
         cloneUrl.password = this.argumentsProvider.auth.split(':')[1];
       } else if (this.argumentsProvider.auth) {
         cloneUrl.password = this.argumentsProvider.auth;
+
         if (serviceType === ServiceType.gitlab) {
           cloneUrl.username = 'private-token';
+        }
+        if (serviceType === ServiceType.github) {
+          cloneUrl.username = 'access-token';
         }
       }
 
