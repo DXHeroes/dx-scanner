@@ -35,6 +35,26 @@ C++ | 🚧
 C# | 🚧
 Ruby | 🚧
 
+## Hacktoberfest 2020 🎉
+
+We are celebrating **Hacktoberfest 2020!** DX Scanner is a perfect project to progress your programming skills. Our senior developers will provide feedback, if your pull request will not be merged. You can use this feedback to further improve your skills.
+
+During the event, we will be periodically updating the **"Leaderboard of Contributors"** - table with the most active contributors. The Leaderboard will be posted to our [Twitter](https://twitter.com/DX_Heroes). By the end of the event, **Top 3 contributors** will receive a **permanent Badge of Honor** with links to their socials/websites on this repository. On top of that, **the contributor with the most merged pull requests** will receive **exclusive DX Heroes merchandise!**
+
+#### How to participate in the Leaderboard of Contributors? 
+- First, please kindly fill out this [DX Heroes Hacktoberfest 2020 Participant Form](https://forms.gle/o3sBqsjr4sYLQgPh6)
+- Make pull requests to one of our projects throughout October
+- Keep an eye on the Leaderboard of Contributors periodically posted on our [Twitter](https://twitter.com/DX_Heroes)
+- Have fun!
+
+Check the [Issues tab](https://github.com/DXHeroes/dx-scanner/issues) first for issues we would highly appreciate your help with. If you have a new feature on your mind, we are excited for what you will create! Creativity has no bounds! 😊
+
+Please follow our [Contribution Guide](CONTRIBUTING.md) 🖤
+
+We are looking forward to your contributions! 💙
+
+About Hacktoberfest: https://hacktoberfest.digitalocean.com/
+
 ## Table of Contents
 
 <!-- toc -->
