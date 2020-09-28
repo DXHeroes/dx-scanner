@@ -6,6 +6,7 @@ import _ from 'lodash';
 import os from 'os';
 import path from 'path';
 import git from 'simple-git/promise';
+import url from 'url';
 import { inspect } from 'util';
 import { ArgumentsProvider } from '.';
 import { LanguageContext } from '../contexts/language/LanguageContext';
@@ -167,7 +168,7 @@ export class Scanner {
     }
 
     if (localPath === undefined && remoteUrl !== undefined && serviceType !== ServiceType.local) {
-      const cloneUrl = new URL(remoteUrl);
+      const cloneUrl = new url.URL(remoteUrl);
 
       localPath = fs.mkdtempSync(path.join(os.tmpdir(), 'dx-scanner'));
 
