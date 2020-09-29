@@ -1,3 +1,16 @@
+# [3.39.0](https://github.com/dxheroes/dx-scanner/compare/v3.38.2...v3.39.0) (2020-09-29)
+
+
+### Bug Fixes
+
+* add username if GH is used and remove unmaintained package url ([a70ed48](https://github.com/dxheroes/dx-scanner/commit/a70ed485bbef7c43eb2e42cba13fda1e420c2811))
+* revert url package ([b3ac44e](https://github.com/dxheroes/dx-scanner/commit/b3ac44e1067232c4793cbb19e8e7e2b49007d8ec))
+
+
+### Features
+
+* use mergify for renovate's PRs ([a4974d1](https://github.com/dxheroes/dx-scanner/commit/a4974d1a1908acd93e3365b07b9415f264fff402))
+
 ## [3.38.2](https://github.com/dxheroes/dx-scanner/compare/v3.38.1...v3.38.2) (2020-09-21)
 
 
