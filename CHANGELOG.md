@@ -1,3 +1,12 @@
+## [3.39.1](https://github.com/dxheroes/dx-scanner/compare/v3.39.0...v3.39.1) (2020-09-29)
+
+
+### Bug Fixes
+
+* dependencies changes ([a493bce](https://github.com/dxheroes/dx-scanner/commit/a493bce1a6719e9360717c812fb33e0d165c2e4e))
+* remove --fixed-strings ([5a6fadc](https://github.com/dxheroes/dx-scanner/commit/5a6fadcf52006a0a4484ea5374c55978e26fd037))
+* **deps:** update all non-major dependencies ([7f8301a](https://github.com/dxheroes/dx-scanner/commit/7f8301a8f63690d9688feb75bc805b432d618c1d))
+
 # [3.39.0](https://github.com/dxheroes/dx-scanner/compare/v3.38.2...v3.39.0) (2020-09-29)
 
 
