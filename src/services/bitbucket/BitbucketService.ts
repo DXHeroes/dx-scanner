@@ -35,8 +35,6 @@ import { DeepRequired } from '../../lib/deepRequired';
 import { InMemoryCache } from '../../scanner/cache';
 import { BitbucketPullRequestState, BitbucketIssueState } from './IBitbucketService';
 import { RepositoryConfig } from '../../scanner/RepositoryConfig';
-import { uniqWith, isEqual } from 'lodash';
-import { AsyncResponse } from 'bitbucket/lib/bitbucket';
 
 const debug = Debug('cli:services:git:bitbucket-service');
 

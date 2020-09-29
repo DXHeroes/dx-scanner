@@ -40,9 +40,8 @@ export class GitInspector implements IGitInspector {
       throw ErrorFactory.newInternalError('sorting not implemented');
     }
 
-    const logOptions: git.LogOptions = {
-      multiLine: true,
-      '--fixed-strings': true,
+    const logOptions: git.Options = {
+      multiLine: 'true',
     };
     if (options.filter !== undefined) {
       if (options.filter.author !== undefined) {
