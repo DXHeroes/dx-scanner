@@ -8,6 +8,16 @@ pull_request_rules:
     actions:
       merge:
         method: merge
+  - name: automatic merge of Renovate's non-major udpates
+    conditions:
+      - author=renovate
+      - head=renovate/all-minor-patch
+      - status-success=continuous-integration/travis-ci/pr
+      - status-success=continuous-integration/travis-ci/push
+      - base=master
+    actions:
+      merge:
+        method: merge
   - name: delete head branch after close
     conditions:
       - closed
