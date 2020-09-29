@@ -169,6 +169,7 @@ export class Scanner {
 
     if (localPath === undefined && remoteUrl !== undefined && serviceType !== ServiceType.local) {
       const cloneUrl = new url.URL(remoteUrl);
+
       localPath = fs.mkdtempSync(path.join(os.tmpdir(), 'dx-scanner'));
 
       if (this.argumentsProvider.auth?.includes(':')) {
@@ -176,8 +177,12 @@ export class Scanner {
         cloneUrl.password = this.argumentsProvider.auth.split(':')[1];
       } else if (this.argumentsProvider.auth) {
         cloneUrl.password = this.argumentsProvider.auth;
+
         if (serviceType === ServiceType.gitlab) {
           cloneUrl.username = 'private-token';
+        }
+        if (serviceType === ServiceType.github) {
+          cloneUrl.username = 'access-token';
         }
       }
 
