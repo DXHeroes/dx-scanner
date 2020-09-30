@@ -66,6 +66,10 @@ jobs:
       - npm -g i .
       - dx-scanner run https://github.com/DXHeroes/dx-scanner --fail=off
     os: linux
+  - stage: runtime test
+    image: dxheroes/dx-scanner:latest
+    script:
+      - dx-scanner run --ci
   - stage: release
     name: Release NPM Package
     node_js: lts/*
