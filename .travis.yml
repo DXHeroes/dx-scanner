@@ -67,9 +67,11 @@ jobs:
       - dx-scanner run https://github.com/DXHeroes/dx-scanner --fail=off
     os: linux
   - stage: runtime test
+    name: Test integration of DXS in Travis
     image: dxheroes/dx-scanner:latest
     script:
       - dx-scanner run --ci
+    os: linux
   - stage: release
     name: Release NPM Package
     node_js: lts/*
