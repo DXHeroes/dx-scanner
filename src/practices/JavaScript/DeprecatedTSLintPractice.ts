@@ -10,7 +10,7 @@ import { PracticeContext } from '../../contexts/practice/PracticeContext';
   suggestion:
     'TSLint you use is deprecated. Use a different linter to catch dangerous code constructs. For example, ESLint - it is the most widely used linter in the JavaScript community.',
   reportOnlyOnce: true,
-  url: 'https://medium.com/palantir/tslint-in-2019-1a144c2317a9',
+  url: 'https://dxkb.io/p/linting',
   dependsOn: { practicing: ['JavaScript.ESLintUsed'] },
 })
 export class DeprecatedTSLintPractice implements IPractice {
