@@ -66,12 +66,6 @@ jobs:
       - npm -g i .
       - dx-scanner run https://github.com/DXHeroes/dx-scanner --fail=off
     os: linux
-  - stage: runtime test
-    name: Test integration of DXS in Travis
-    image: dxheroes/dx-scanner:latest
-    script:
-      - dx-scanner run --ci
-    os: linux
   - stage: release
     name: Release NPM Package
     node_js: lts/*
@@ -84,6 +78,11 @@ jobs:
         - npx semantic-release
       on:
         all_branches: true
+  - language: node_js
+    node_js: 12
+    script:
+      - npm -g install dx-scanner
+      - dx-scanner run --ci
   - stage: build docker image
     name: "Publish Docker Image for Github Action"
     if: branch = master AND type = push
