@@ -41,6 +41,13 @@ jobs:
       - yarn install
       - yarn build
   - stage: test
+    name: Test Travis
+    - language: node_js
+      node_js: 12
+      script:
+        - npm -g install dx-scanner
+        - dx-scanner run --ci
+  - stage: test
     name: Test
     script:
       - yarn test --coverage
@@ -78,11 +85,6 @@ jobs:
         - npx semantic-release
       on:
         all_branches: true
-  - language: node_js
-    node_js: 12
-    script:
-      - npm -g install dx-scanner
-      - dx-scanner run --ci
   - stage: build docker image
     name: "Publish Docker Image for Github Action"
     if: branch = master AND type = push
