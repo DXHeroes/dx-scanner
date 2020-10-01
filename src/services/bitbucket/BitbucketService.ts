@@ -40,7 +40,7 @@ const debug = Debug('cli:services:git:bitbucket-service');
 
 @injectable()
 export class BitbucketService implements IVCSService {
-  private readonly client: APIClient;
+  private client: APIClient;
   private readonly argumentsProvider: ArgumentsProvider;
   private cache: ICache;
   private callCount = 0;
@@ -79,7 +79,10 @@ export class BitbucketService implements IVCSService {
     let auth: AuthBasic;
     if (this.argumentsProvider.auth) {
       auth = { username, password };
-      this.client.authenticate(auth);
+      this.client = Bitbucket({
+        notice: false,
+        auth,
+      });
       this.authenticated = true; // set authentication to instance
     }
   }
