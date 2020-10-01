@@ -90,6 +90,10 @@ export class ScanningStrategyDetector implements IDetector<string, ScanningStrat
     const remotelyDetectedService = await this.determineGitLabRemoteServiceType();
     if (remotelyDetectedService) return remotelyDetectedService;
 
+    //Trying to determine GitHub service type if it's self hosted
+    const remotelyDetectedGitHubService = await this.determineGitHubRemoteServiceType();
+    if (remotelyDetectedGitHubService) return  remotelyDetectedGitHubService;
+
     throw ErrorFactory.newInternalError(
       `Unable to detect scanning strategy. It seems that the service is not implemented yet. (Input path: ${path})`,
     );
@@ -215,6 +219,34 @@ export class ScanningStrategyDetector implements IDetector<string, ScanningStrat
         return serviceType;
       }
 
+      return undefined;
+    }
+  };
+
+  private determineGitHubRemoteServiceType = async (): Promise<ServiceType | undefined> => {
+    let serviceType = undefined;
+
+    try {
+      await this.gitHubService.listRepos();
+      await this.gitHubService.listGroups();
+      serviceType = ServiceType.github;
+    } catch (error) {
+      return undefined;
+    }
+
+    // second check to ensure that it is really a GitHub API
+    try {
+      const response = await this.gitHubService.checkVersion();
+      if (has(response, 'version') && has(response, 'revision')) {
+        return ServiceType.github;
+      }
+    } catch (error) {
+      this.d(error); //debug error
+      if (error.response?.status === 401 || error.response?.status === 403) {
+        // return undefined if we're not sure that the service is Github
+        //  - it prompts user for a credentials
+        return serviceType;
+      }
       return undefined;
     }
   };

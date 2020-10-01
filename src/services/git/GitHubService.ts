@@ -65,6 +65,10 @@ export class GitHubService implements IVCSService {
     this.cache.purge();
   }
 
+  async checkVersion() {
+    return (await this.client.Version.check()).data;
+  }
+
   /**
    * The parent and source objects are present when the repository is a fork.
    *
@@ -555,6 +559,15 @@ export class GitHubService implements IVCSService {
       createdAt: comment.created_at,
       updatedAt: comment.updated_at,
     };
+  }
+  async listRepos() {
+    const { data } = await this.unwrap(this.client.Projects.list());
+    return data;
+  }
+
+  async listGroups() {
+    const { data } = await this.unwrap(this.client.Users.listGroups());
+    return data;
   }
 
   /**
