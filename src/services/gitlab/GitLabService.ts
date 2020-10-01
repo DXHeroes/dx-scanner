@@ -24,6 +24,7 @@ import {
   PullRequestReview,
   Symlink,
   UserInfo,
+  Branch,
 } from '../git/model';
 import { VCSServicesUtils } from '../git/VCSServicesUtils';
 import { CustomAxiosResponse, GitLabClient, PaginationGitLabCustomResponse } from './gitlabClient/gitlabUtils';
@@ -275,6 +276,10 @@ export class GitLabService implements IVCSService {
     const customPagination = this.getPagination(pagination);
 
     return { items, ...customPagination };
+  }
+
+  async listBranches(owner: string, repo: string, options?: ListGetterOptions): Promise<Paginated<Branch>> {
+    throw new Error('Method not implemented yet.');
   }
 
   async listPullRequestReviews(owner: string, repo: string, prNumber: number): Promise<Paginated<PullRequestReview>> {

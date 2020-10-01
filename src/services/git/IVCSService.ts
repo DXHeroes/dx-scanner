@@ -15,6 +15,7 @@ import {
   CreatedUpdatedPullRequestComment,
   PullRequestComment,
   PullCommits,
+  Branch,
 } from './model';
 
 export interface IVCSService {
@@ -48,6 +49,8 @@ export interface IVCSService {
   listIssues(owner: string, repo: string): Promise<Paginated<Issue>>;
   getIssue(owner: string, repo: string, issueNumber: number): Promise<Issue>;
   listIssueComments(owner: string, repo: string, prNumber: number, options?: ListGetterOptions): Promise<Paginated<PullRequestComment>>;
+
+  listBranches(owner: string, repo: string): Promise<Paginated<Branch>>;
 }
 
 export enum VCSServiceType {

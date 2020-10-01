@@ -8,6 +8,8 @@ import { repositoryConfig } from '../scanner/__MOCKS__/RepositoryConfig.mock';
 import { GitHubService } from '../services';
 import { ContributorsCollector } from '../collectors/ContributorsCollector';
 import { GitHubNock } from '../test/helpers/gitHubNock';
+import { BranchesCollector } from '../collectors/BranchesCollector';
+import { GitInspector } from '../inspectors';
 
 describe('DashboardReporter', () => {
   const practicingHighImpactPracticeWithCtx = practiceWithContextFactory();
@@ -21,8 +23,10 @@ describe('DashboardReporter', () => {
     serviceType: ServiceType.github,
   };
   const githubService = new GitHubService(argumentsProviderFactory({ uri: '.' }), repositoryConfig);
+  const gitInspector = new GitInspector('.');
   const contributorsCollector = new ContributorsCollector(githubService);
-  const dataCollector = new DataCollector(contributorsCollector);
+  const branchesCollector = new BranchesCollector(githubService, gitInspector);
+  const dataCollector = new DataCollector(contributorsCollector, branchesCollector);
   const gitHubNock = new GitHubNock('1', 'DXHeroes', 1, 'dx-scanner');
 
   describe('#report', () => {

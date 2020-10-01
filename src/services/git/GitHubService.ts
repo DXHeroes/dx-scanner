@@ -31,6 +31,7 @@ import {
   PullRequestReview,
   RepoContentType,
   Symlink,
+  Branch,
 } from './model';
 import {
   GetContentsResponse,
@@ -451,6 +452,10 @@ export class GitHubService implements IVCSService {
     const pagination = this.getPagination(data.length, headers.link);
 
     return { items, ...pagination };
+  }
+
+  async listBranches(owner: string, repo: string, options?: ListGetterOptions): Promise<Paginated<Branch>> {
+    throw new Error('Method not implemented yet.');
   }
 
   /**

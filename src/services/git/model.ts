@@ -110,6 +110,11 @@ export interface IssueComment {
   authorAssociation: string | undefined;
 }
 
+export interface Branch {
+  name: string;
+  type: string;
+}
+
 export type PullRequestComment = CreatedUpdatedPullRequestComment & {
   authorAssociation: string | undefined;
 };

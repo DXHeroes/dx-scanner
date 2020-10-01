@@ -29,6 +29,7 @@ import {
   Symlink,
   File,
   Directory,
+  Branch,
 } from '../git/model';
 import { VCSServicesUtils } from '../git/VCSServicesUtils';
 import { DeepRequired } from '../../lib/deepRequired';
@@ -369,6 +370,10 @@ export class BitbucketService implements IVCSService {
     return { items, ...pagination };
   }
 
+  async listBranches(owner: string, repo: string, options?: ListGetterOptions): Promise<Paginated<Branch>> {
+    throw new Error('Method not implemented yet.');
+  }
+
   async listPullRequestReviews(owner: string, repo: string, prNumber: number): Promise<Paginated<PullRequestReview>> {
     this.authenticate();
     throw new Error('Method not implemented yet.');
@@ -617,7 +622,7 @@ export class BitbucketService implements IVCSService {
     );
   };
 
-  getPagination<T>(data: { next: string; previous: string; page: number; values: T[] }) {
+  getPagination<T>(data: { next?: string; previous?: string; page?: number; values: T[] }) {
     const hasNextPage = !!data.next;
     const hasPreviousPage = !!data.previous;
     const page = data.page;
