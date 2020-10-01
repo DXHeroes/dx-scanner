@@ -49,8 +49,6 @@ const bindFileAccess = (scanningStrategy: ScanningStrategy, container: Container
   if (scanningStrategy.localPath) {
     container.bind(Types.FileInspectorBasePath).toConstantValue(scanningStrategy.localPath);
     container.bind(Types.IProjectFilesBrowser).to(FileSystemService);
-  }
-  if (scanningStrategy.serviceType === ServiceType.git && scanningStrategy.localPath) {
     container.bind(Types.RepositoryPath).toConstantValue(scanningStrategy.localPath);
     container.bind(Types.IGitInspector).to(GitInspector);
   }
