@@ -21,7 +21,7 @@
 
 ## What is DX Scanner?
 
-DX Scanner is an open source CLI tool that allows you to “measure” Developer Experience directly based on your source code. DX Scanner recommends practices that can help you with improving your product development. You can fix some problems automatically with just one command.
+DX Scanner is an open-source CLI tool that allows you to “measure” Developer Experience directly based on your source code. DX Scanner recommends practices that can help you with improving your product development. You can fix some problems automatically with just one command.
 
 ### What language is supported?
 
@@ -50,7 +50,7 @@ During the event, we will be periodically updating the **"Leaderboard of Contrib
 - Keep an eye on the Leaderboard of Contributors periodically posted on our [Twitter](https://twitter.com/DX_Heroes)
 - Have fun!
 
-Check the [Issues tab](https://github.com/DXHeroes/dx-scanner/contribute) first for issues we would highly appreciate your help with. If you have a new feature on your mind, we are excited for what you will create! Creativity has no bounds! 😊
+Check the [Issues tab](https://github.com/DXHeroes/dx-scanner/contribute) first for issues we would highly appreciate your help with. If you have a new feature on your mind, we are excited about what you will create! Creativity has no bounds! 😊
 
 Please follow our [Contribution Guide](CONTRIBUTING.md) 🖤
 
@@ -77,7 +77,7 @@ About Hacktoberfest: https://hacktoberfest.digitalocean.com/
 <!-- tocstop -->
 ### Which version control system can you use?
 
-Sure you can use `GitHub`. You can also use `GitLab` and `Bitbucket` no matter if it is public or private repo!
+Sure you can use `GitHub`. You can also use `GitLab` and `Bitbucket` no matter if it is a public or private repo!
 
 examples:
 ```
@@ -181,7 +181,7 @@ You can also specify `fixPattern` flag to fix only a subset of *fixable* practic
 dx-scanner run [PATH] --fix --fixPattern=lint
 ```
 
-Please note, that `fixPattern` flag overrides `fix` settings from configuration file. Therefore practices ommited from fixing by configuration file, but included through `fixPattern` will be fixed.
+Please note, that `fixPattern` flag overrides `fix` settings from the configuration file. Therefore practices omitted from fixing by the configuration file, but included through `fixPattern` will be fixed.
 
 ## Configuration ⚙️
 Add ```dxscannerrc.*``` config file to change default configuration settings. It can be a ```.json```, ```.yml```, or even a dotfile!
