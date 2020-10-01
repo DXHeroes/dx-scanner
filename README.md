@@ -58,7 +58,7 @@ We are looking forward to your contributions! 💙
 
 About Hacktoberfest: https://hacktoberfest.digitalocean.com/
 
-## Table of Contents
+## Table of Contents:
 
 <!-- toc -->
 * [Supported version control systems](#Which-version-control-system-can-you-use)
@@ -95,7 +95,7 @@ dx-scanner run https://bitbucket.org/maras333/node-api-with-ts
 - git ([how to install git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git))
 - (optional) yarn ([how to install npm](https://www.npmjs.com/get-npm) and [yarn](https://yarnpkg.com/getting-started/install))
 
-### Installation
+### Installation:
 
 - with NPM
   
@@ -104,7 +104,7 @@ dx-scanner run https://bitbucket.org/maras333/node-api-with-ts
   
   ```yarn global add dx-scanner```
 
-### Usage
+### Usage:
 <!--
 Quick start
 -->
@@ -120,7 +120,7 @@ Example:
 <!--
 Help for command dxs
 -->
-#### Commands
+#### Commands:
 ```
 Usage: dx-scanner [command] [options] 
 
