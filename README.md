@@ -19,7 +19,7 @@
 
 ---
 
-## What is DX Scanner?
+## What is DX Scanner? 🕵️‍
 
 DX Scanner is an open source CLI tool that allows you to “measure” Developer Experience directly based on your source code. DX Scanner recommends practices that can help you with improving your product development. You can fix some problems automatically with just one command.
 
