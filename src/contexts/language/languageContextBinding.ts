@@ -7,6 +7,8 @@ import { LanguageContextFactory, Types } from '../../types';
 import { bindProjectComponentContext } from '../projectComponent/projectComponentContextBinding';
 import { JavaPackageInspector } from '../../inspectors/package/JavaPackageInspector';
 import { JavaComponentDetector } from '../../detectors/Java/JavaComponentDetector';
+import { CPPPackageInspector } from '../../inspectors/package/CPPPackageInspector';
+import { CPPComponentDetector } from '../../detectors/Cpp/CPPComponentDetector';
 import { LanguageContext } from './LanguageContext';
 import { CollaborationInspector } from '../../inspectors/CollaborationInspector';
 import { IssueTrackingInspector } from '../../inspectors/IssueTrackingInspector';
@@ -63,7 +65,11 @@ const bindPackageInspectors = (languageAtPath: LanguageAtPath, container: Contai
   } else if (languageAtPath.language === ProgrammingLanguage.Python) {
     resolveBindingPackageInspector(PythonPackageInspector, container);
   }
+  else if (languageAtPath.language === ProgrammingLanguage.Cpp || languageAtPath.language === ProgrammingLanguage.CPlusPlus) {
+    resolveBindingPackageInspector(CPPPackageInspector, container);
+  }
 };
+
 
 const bindComponentDetectors = (container: Container) => {
   const iterator = componentGenerator();
@@ -87,7 +93,7 @@ const bindCollaborationInspectors = (container: Container) => {
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const resolveBindingPackageInspector = (packageInspector: { new (...args: any[]): PackageInspectorBase }, container: Container) => {
+const resolveBindingPackageInspector = (packageInspector: { new(...args: any[]): PackageInspectorBase }, container: Container) => {
   container.bind(Types.IPackageInspector).to(packageInspector).inSingletonScope();
   // TODO: bind this as InitiableInspector instead of using next line binding
   container.bind(packageInspector).toDynamicValue((ctx) => {
@@ -100,7 +106,7 @@ const resolveBindingPackageInspector = (packageInspector: { new (...args: any[])
 
 const componentGenerator = function* (): Generator<{
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  componentDetector: { new (...args: any[]): IProjectComponentDetector };
+  componentDetector: { new(...args: any[]): IProjectComponentDetector };
   detectedLanguage: ProgrammingLanguage;
 }> {
   yield { componentDetector: JavaScriptComponentDetector, detectedLanguage: ProgrammingLanguage.JavaScript };
@@ -108,6 +114,7 @@ const componentGenerator = function* (): Generator<{
   yield { componentDetector: JavaComponentDetector, detectedLanguage: ProgrammingLanguage.Java };
   yield { componentDetector: JavaComponentDetector, detectedLanguage: ProgrammingLanguage.Kotlin };
   yield { componentDetector: PythonComponentDetector, detectedLanguage: ProgrammingLanguage.Python };
+  yield { componentDetector: CPPComponentDetector, detectedLanguage: ProgrammingLanguage.CPlusPlus }
   return;
 };
 

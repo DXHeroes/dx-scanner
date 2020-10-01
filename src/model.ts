@@ -44,6 +44,9 @@ export interface ProjectComponent {
   framework: ProjectComponentFramework;
 }
 
+
+
+
 export enum ProgrammingLanguage {
   CPlusPlus = 'C++',
   CSharp = 'C#',
@@ -61,6 +64,8 @@ export enum ProgrammingLanguage {
   Elixir = 'Elixir',
   Python = 'Python',
   UNKNOWN = 'UNKNOWN',
+  CPP = "CPP",
+  Cpp = "Cpp"
 }
 
 export type CLIArgs = {

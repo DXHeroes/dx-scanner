@@ -4,7 +4,7 @@ import { ProjectComponent, LanguageAtPath, ProjectComponentFramework, ProjectCom
 import { Types } from '../../types';
 import { IPackageInspector } from '../../inspectors/IPackageInspector';
 @injectable()
-export class CppComponentDetector implements IProjectComponentDetector {
+export class CPPComponentDetector implements IProjectComponentDetector {
     private packageInspector: IPackageInspector;
     constructor(
         @inject(Types.IPackageInspector)
