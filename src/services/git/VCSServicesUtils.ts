@@ -1,10 +1,9 @@
-import _ from 'lodash';
 import qs from 'qs';
 import { IssueState } from '../../inspectors';
 import { PullRequestState } from '../../inspectors/ICollaborationInspector';
 import { BitbucketIssueState, BitbucketPullRequestState } from '../bitbucket/IBitbucketService';
+import { GitLabIssueState, GitLabPullRequestState } from '../gitlab/IGitLabService';
 import { GitHubIssueState, GitHubPullRequestState } from './IGitHubService';
-import { GitLabPullRequestState, GitLabIssueState } from '../gitlab/IGitLabService';
 
 export class VCSServicesUtils {
   static getGithubPRState = (state: PullRequestState | undefined) => {
@@ -91,7 +90,7 @@ export class VCSServicesUtils {
     }
     // put state in quotation marks because of Bitbucket API https://developer.atlassian.com/bitbucket/api/2/reference/meta/filtering#query-issues
     let quotedState: string | string[] = `"${state}"`;
-    if (_.isArray(state)) {
+    if (Array.isArray(state)) {
       quotedState = state.map((state) => {
         return `"${state}"`;
       });
