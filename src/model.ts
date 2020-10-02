@@ -182,6 +182,8 @@ export enum ProjectComponentPlatform {
   iOS = 'iOS',
   Android = 'Android',
   MobileMultiplatform = 'MobileMultiplatform',
+  Rails = 'Ruby on Rails',
+  PostgreSQL = 'PostgreSQL Database',
   UNKNOWN = 'UNKNOWN',
 }
 
