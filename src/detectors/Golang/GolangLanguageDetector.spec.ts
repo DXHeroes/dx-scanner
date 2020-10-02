@@ -33,6 +33,32 @@ describe('GolangLanguageDetector', () => {
     expect(langAtPath[0].path).toEqual(nodePath.sep);
   });
 
+  it('detects golang correctly via go.mod', async () => {
+    const structure: DirectoryJSON = {
+      '/go.mod': '...',
+    };
+
+    virtualFileSystemService.setFileSystem(structure);
+
+    const langAtPath = await detector.detectLanguage();
+    expect(langAtPath.length).toEqual(1);
+    expect(langAtPath[0].language).toEqual(ProgrammingLanguage.Go);
+    expect(langAtPath[0].path).toEqual(nodePath.sep);
+  });
+
+  it('detects golang correctly via go extension', async () => {
+    const structure: DirectoryJSON = {
+      '/*.go': '...',
+    };
+
+    virtualFileSystemService.setFileSystem(structure);
+
+    const langAtPath = await detector.detectLanguage();
+    expect(langAtPath.length).toEqual(1);
+    expect(langAtPath[0].language).toEqual(ProgrammingLanguage.Go);
+    expect(langAtPath[0].path).toEqual(nodePath.sep);
+  });
+
   it("detects it's not a golang file", async () => {
     const structure: DirectoryJSON = {
       '/src/index.none': '...',
@@ -43,18 +69,5 @@ describe('GolangLanguageDetector', () => {
     const langAtPath = await detector.detectLanguage();
     expect(langAtPath.length).toEqual(0);
     expect(langAtPath).toEqual([]);
-  });
-
-  it('detects golang correctly via go file', async () => {
-    const structure: DirectoryJSON = {
-      '/index.go': '...',
-    };
-
-    virtualFileSystemService.setFileSystem(structure);
-
-    const langAtPath = await detector.detectLanguage();
-    expect(langAtPath.length).toEqual(1);
-    expect(langAtPath[0].language).toEqual(ProgrammingLanguage.Go);
-    expect(langAtPath[0].path).toEqual(nodePath.sep);
   });
 });
