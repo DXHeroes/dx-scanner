@@ -287,7 +287,7 @@ practices:
     impact: small
   JavaScript.ESLintWithoutErrorsPractice:
     fix: true
-    ovverride: 
+    override: 
       lintFilesPatterns: ['.internal/**/*.js', '*.js']
       ignorePatterns: []
   LanguageIndependent.ThinPullRequestsPractice:
