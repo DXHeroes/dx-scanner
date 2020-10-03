@@ -9,7 +9,7 @@ import {
 import { injectable } from 'inversify';
 
 @injectable()
-export class BackendJavaDetector implements IProjectComponentDetector {
+export class BackendGolangDetector implements IProjectComponentDetector {
   async detectComponent(langAtPath: LanguageAtPath): Promise<ProjectComponent[]> {
     return [
       {

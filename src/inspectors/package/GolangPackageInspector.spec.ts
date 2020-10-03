@@ -34,16 +34,16 @@ describe('GolangPackageInspector go.mod', () => {
 
   it('Parses the packages correctly', async () => {
     await inspector.init();
-    const pkg = inspector.findPackage('github.com/go-errors/errors');
+    const pkg = inspector.findPackage('github.com/sample/standard');
 
     if (!pkg) {
       fail();
     } else {
-      expect(pkg.name).toEqual('github.com/go-errors/errors');
-      expect(pkg.requestedVersion.value).toEqual('1.0.1');
+      expect(pkg.name).toEqual('github.com/sample/standard');
+      expect(pkg.requestedVersion.value).toEqual('1.2.3');
       expect(pkg.requestedVersion.major).toEqual('1');
-      expect(pkg.requestedVersion.minor).toEqual('0');
-      expect(pkg.requestedVersion.patch).toEqual('1');
+      expect(pkg.requestedVersion.minor).toEqual('2');
+      expect(pkg.requestedVersion.patch).toEqual('3');
     }
   });
 
@@ -54,11 +54,11 @@ describe('GolangPackageInspector go.mod', () => {
       });
 
       it('Returns true if package exists', () => {
-        expect(inspector.hasPackage('github.com/go-errors/errors')).toBe(true);
+        expect(inspector.hasPackage('github.com/sample/standard')).toBe(true);
       });
 
       it('Returns undefined if the package does not exist', async () => {
-        const pkg = inspector.findPackage('github.com/spf13/cobra');
+        const pkg = inspector.findPackage('github.com/sample/no-exist');
         expect(pkg).toBeUndefined();
       });
     });
@@ -67,6 +67,34 @@ describe('GolangPackageInspector go.mod', () => {
       it('returns true if go.mod is valid and present', async () => {
         await inspector.init();
         expect(inspector.hasPackageManagement()).toBe(true);
+      });
+    });
+
+    describe('#hasPackage', () => {
+      beforeEach(async () => {
+        await inspector.init();
+      });
+
+      it('Returns true if package exists', () => {
+        expect(inspector.hasPackage('github.com/sample/standard')).toBe(true);
+      });
+
+      it('Returns false if package does not exists', () => {
+        expect(inspector.hasPackage('github.com/sample/no-exist')).toBe(false);
+      });
+    });
+
+    describe('#hasOneOfPackages', () => {
+      beforeEach(async () => {
+        await inspector.init();
+      });
+
+      it('Returns true if one of the packages exists', () => {
+        expect(inspector.hasOneOfPackages(['github.com/sample/standard', 'github.com/sample/incompatible'])).toBe(true);
+      });
+
+      it('Returns false if none of the packages exists', () => {
+        expect(inspector.hasOneOfPackages(['github.com/sample/no-exist', 'github.com/sample/kappa'])).toBe(false);
       });
     });
 

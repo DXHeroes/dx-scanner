@@ -18,7 +18,6 @@ export class GolangComponentDetector implements IProjectComponentDetector {
         language: langAtPath.language,
         path: langAtPath.path,
         platform: ProjectComponentPlatform.BackEnd,
-        // TODO get repositoryPath from go.mod
         repositoryPath: undefined,
         type: ProjectComponentType.Application,
       },

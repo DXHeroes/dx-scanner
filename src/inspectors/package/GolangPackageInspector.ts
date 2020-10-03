@@ -21,7 +21,8 @@ export class GolangPackageInspector extends PackageInspectorBase {
       this.hasLockfileFile = await this.fileInspector.exists('go.sum');
       const goModString = (await this.fileInspector.readFile('go.mod')).replace(/^(?=\n)$|^\s*|\s*$|\n\n+/gm, '');
       this.packages = [];
-      this.resolveGoModString(goModString);
+      const pkgs = this.resolveGoModString(goModString);
+      this.addPkgs(pkgs, DependencyType.Runtime);
       this.debug('GolangPkgInspector init ended');
     } catch (e) {
       this.packages = undefined;
@@ -33,80 +34,79 @@ export class GolangPackageInspector extends PackageInspectorBase {
     return this.hasLockfileFile;
   }
 
-  private addPkg(pkg: Pkg | undefined, depType: DependencyType) {
-    if (!pkg) {
+  private addPkgs(pkgs: Pkg[] | undefined, depType: DependencyType) {
+    if (!pkgs) {
       return;
     }
     if (!this.packages) {
       this.packages = [];
     }
-    let parsedVersion: PackageVersion | undefined = {
-      value: '',
-      major: '',
-      minor: '',
-      patch: '',
-    };
-    if (!pkg.version) {
-      return;
-    }
-    if (pkg.version.includes('-')) {
-      pkg.version = pkg.version.split('-')[0];
+    for (const pkg of pkgs) {
+      let parsedVersion: PackageVersion | undefined = {
+        value: '',
+        major: '',
+        minor: '',
+        patch: '',
+      };
+      if (!pkg.version) {
+        return;
+      }
+      if (pkg.version.includes('-')) {
+        pkg.version = pkg.version.split('-')[0];
+        parsedVersion = PackageInspectorBase.semverToPackageVersion(pkg.version);
+      }
+      pkg.version = pkg.version.slice(1, pkg.version.length);
       parsedVersion = PackageInspectorBase.semverToPackageVersion(pkg.version);
-    }
-    pkg.version = pkg.version.slice(1, pkg.version.length);
-    parsedVersion = PackageInspectorBase.semverToPackageVersion(pkg.version);
-    if (parsedVersion) {
-      // TODO Also work with lockfileVersions
-      this.packages.push({
-        dependencyType: depType,
-        name: pkg.name,
-        requestedVersion: parsedVersion,
-        lockfileVersion: parsedVersion,
-      });
+      if (parsedVersion) {
+        // TODO Also work with lockfileVersions
+        this.packages.push({
+          dependencyType: depType,
+          name: pkg.name,
+          requestedVersion: parsedVersion,
+          lockfileVersion: parsedVersion,
+        });
+      }
     }
   }
 
-  // TODO own helper for this?
-  private resolveGoModString(goModString: string) {
+  private resolveGoModString(goModString: string): Pkg[] | undefined {
     if (!this.goMod) {
       this.goMod = {
         name: '',
         goVersion: '',
       };
     }
+    const pkgs: Pkg[] = [];
     const lines = goModString.split('\n');
-    // TODO should use enum
-    let mode = 'module';
-    for (const l of lines) {
-      switch (mode) {
-        case 'module':
-          this.goMod.name = l.split(' ')[1];
-          mode = 'go';
-        case 'go':
-          this.goMod.goVersion = l.split(' ')[1];
-          mode = 'pkgs';
+    for (let i = 0; i < lines.length; i++) {
+      const l = lines[i];
+      if (i === 0) {
+        this.goMod.name = l.split(' ')[1];
+      } else if (i === 1) {
+        this.goMod.goVersion = l.split(' ')[1];
         // TODO handle indirect and incompatible
-        case 'pkgs':
-          if (l.endsWith('require')) {
-            const pkgver = l.split(' ');
-            const pkg: Pkg = {
-              name: pkgver[1],
-              version: pkgver[2],
-            };
-            this.addPkg(pkg, DependencyType.Runtime);
-            return;
-          } else {
-            const pkgver = l.split(' ');
-            if (pkgver.length > 1) {
-              const pkg: Pkg = {
-                name: pkgver[0],
-                version: pkgver[1],
-              };
-              this.addPkg(pkg, DependencyType.Runtime);
-            }
+      } else {
+        if (l.endsWith('require')) {
+          const pkgver = l.split(' ');
+          pkgs.push({
+            name: pkgver[1],
+            version: pkgver[2],
+          });
+          return pkgs;
+        } else if (l.endsWith('require (') || l.endsWith(')')) {
+          continue;
+        } else {
+          const pkgver = l.split(' ');
+          if (pkgver.length > 1) {
+            pkgs.push({
+              name: pkgver[0],
+              version: pkgver[1],
+            });
           }
+        }
       }
     }
+    return pkgs;
   }
 }
 
