@@ -1,21 +1,21 @@
-import { GolangPackageInspector } from './GolangPackageInspector';
+import { GoPackageInspector } from './GoPackageInspector';
 import { TestContainerContext, createTestContainer } from '../../inversify.config';
 import { DirectoryJSON } from 'memfs/lib/volume';
-import { goModContents } from '../../detectors/__MOCKS__/Golang/goModContents.mock';
+import { goModContents } from '../../detectors/__MOCKS__/Go/goModContents.mock';
 
-describe('GolangPackageInspector go.mod', () => {
-  let inspector: GolangPackageInspector;
+describe('GoPackageInspector go.mod', () => {
+  let inspector: GoPackageInspector;
   let containerCtx: TestContainerContext;
 
   beforeAll(() => {
     containerCtx = createTestContainer();
-    containerCtx.container.bind('GolangPackageInspector').to(GolangPackageInspector);
-    inspector = containerCtx.container.get('GolangPackageInspector');
+    containerCtx.container.bind('GoPackageInspector').to(GoPackageInspector);
+    inspector = containerCtx.container.get('GoPackageInspector');
   });
 
   beforeEach(async () => {
-    containerCtx.container.rebind('GolangPackageInspector').to(GolangPackageInspector);
-    inspector = containerCtx.container.get('GolangPackageInspector');
+    containerCtx.container.rebind('GoPackageInspector').to(GoPackageInspector);
+    inspector = containerCtx.container.get('GoPackageInspector');
 
     containerCtx.virtualFileSystemService.setFileSystem({
       'go.mod': goModContents,

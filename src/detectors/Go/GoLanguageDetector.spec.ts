@@ -3,17 +3,17 @@ import { ProgrammingLanguage } from '../../model';
 import { FileSystemService } from '../../services/FileSystemService';
 import * as nodePath from 'path';
 import { DirectoryJSON } from 'memfs/lib/volume';
-import { GolangLanguageDetector } from './GolangLanguageDetector';
+import { GoLanguageDetector } from './GoLanguageDetector';
 
-describe('GolangLanguageDetector', () => {
-  let detector: GolangLanguageDetector;
+describe('GoLanguageDetector', () => {
+  let detector: GoLanguageDetector;
   let virtualFileSystemService: FileSystemService;
 
   beforeEach(() => {
     virtualFileSystemService = new FileSystemService({ isVirtual: true });
 
     const fileInspector = new FileInspector(virtualFileSystemService, '/');
-    detector = new GolangLanguageDetector(fileInspector);
+    detector = new GoLanguageDetector(fileInspector);
   });
 
   afterEach(async () => {

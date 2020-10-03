@@ -4,7 +4,7 @@ import { inject } from 'inversify';
 import { Types } from '../../types';
 import { DependencyType, PackageVersion } from '../IPackageInspector';
 
-export class GolangPackageInspector extends PackageInspectorBase {
+export class GoPackageInspector extends PackageInspectorBase {
   private fileInspector: IFileInspector;
   private goMod!: GoMod;
   private hasLockfileFile!: boolean;
@@ -16,14 +16,14 @@ export class GolangPackageInspector extends PackageInspectorBase {
 
   async init(): Promise<void> {
     try {
-      this.debug('GolangPkgInspector init started');
-      // TODO implement for Gopkg.toml
+      this.debug('GoPkgInspector init started');
       this.hasLockfileFile = await this.fileInspector.exists('go.sum');
+      // read the requirements file and remove any white lines in the string, but keep line breaks
       const goModString = (await this.fileInspector.readFile('go.mod')).replace(/^(?=\n)$|^\s*|\s*$|\n\n+/gm, '');
       this.packages = [];
       const pkgs = this.resolveGoModString(goModString);
       this.addPkgs(pkgs, DependencyType.Runtime);
-      this.debug('GolangPkgInspector init ended');
+      this.debug('GoPkgInspector init ended');
     } catch (e) {
       this.packages = undefined;
       this.debug(e);
@@ -58,7 +58,6 @@ export class GolangPackageInspector extends PackageInspectorBase {
       pkg.version = pkg.version.slice(1, pkg.version.length);
       parsedVersion = PackageInspectorBase.semverToPackageVersion(pkg.version);
       if (parsedVersion) {
-        // TODO Also work with lockfileVersions
         this.packages.push({
           dependencyType: depType,
           name: pkg.name,
@@ -84,7 +83,6 @@ export class GolangPackageInspector extends PackageInspectorBase {
         this.goMod.name = l.split(' ')[1];
       } else if (i === 1) {
         this.goMod.goVersion = l.split(' ')[1];
-        // TODO handle indirect and incompatible
       } else {
         if (l.endsWith('require')) {
           const pkgver = l.split(' ');

@@ -5,7 +5,7 @@ import { IPackageInspector } from '../../inspectors/IPackageInspector';
 import { LanguageAtPath, ProjectComponent, ProjectComponentFramework, ProjectComponentPlatform, ProjectComponentType } from '../../model';
 
 @injectable()
-export class GolangComponentDetector implements IProjectComponentDetector {
+export class GoComponentDetector implements IProjectComponentDetector {
   private packageInspector: IPackageInspector;
   constructor(@inject(Types.IPackageInspector) packageInspector: IPackageInspector) {
     this.packageInspector = packageInspector;

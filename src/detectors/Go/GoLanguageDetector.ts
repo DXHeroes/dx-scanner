@@ -9,7 +9,7 @@ import { Metadata } from '../../services/model';
 import * as nodePath from 'path';
 
 @injectable()
-export class GolangLanguageDetector implements ILanguageDetector {
+export class GoLanguageDetector implements ILanguageDetector {
   private fileInspector: IFileInspector;
   constructor(@inject(Types.IFileInspector) fileInspector: IFileInspector) {
     this.fileInspector = fileInspector;

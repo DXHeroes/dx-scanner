@@ -1,20 +1,20 @@
-import { GolangComponentDetector } from './GolangComponentDetector';
+import { GoComponentDetector } from './GoComponentDetector';
 import { ProgrammingLanguage, ProjectComponentPlatform } from '../../model';
-import { GolangPackageInspector } from '../../inspectors/package/GolangPackageInspector';
-jest.mock('../../inspectors/package/GolangPackageInspector');
+import { GoPackageInspector } from '../../inspectors/package/GoPackageInspector';
+jest.mock('../../inspectors/package/GoPackageInspector');
 
-describe('GolangComponentDetector', () => {
-  let detector: GolangComponentDetector;
-  const MockedGolangPackageInspector = <jest.Mock<GolangPackageInspector>>(<unknown>GolangPackageInspector);
-  let mockGolangPackageInspector: GolangPackageInspector;
+describe('GoComponentDetector', () => {
+  let detector: GoComponentDetector;
+  const MockedGoPackageInspector = <jest.Mock<GoPackageInspector>>(<unknown>GoPackageInspector);
+  let mockGoPackageInspector: GoPackageInspector;
 
   beforeAll(async () => {
-    mockGolangPackageInspector = new MockedGolangPackageInspector();
+    mockGoPackageInspector = new MockedGoPackageInspector();
   });
 
   describe('Backend', () => {
-    it('Detects Golang BE', async () => {
-      detector = new GolangComponentDetector(mockGolangPackageInspector);
+    it('Detects Go BE', async () => {
+      detector = new GoComponentDetector(mockGoPackageInspector);
 
       const components = await detector.detectComponent({ language: ProgrammingLanguage.Go, path: '.' });
 
@@ -22,8 +22,8 @@ describe('GolangComponentDetector', () => {
       expect(components[0].path).toEqual('.');
       expect(components[0].platform).toEqual(ProjectComponentPlatform.BackEnd);
     });
-    it('Detects Golang BE application', async () => {
-      detector = new GolangComponentDetector(mockGolangPackageInspector);
+    it('Detects Go BE application', async () => {
+      detector = new GoComponentDetector(mockGoPackageInspector);
 
       const components = await detector.detectComponent({ language: ProgrammingLanguage.Go, path: './cmd' });
 
@@ -31,8 +31,8 @@ describe('GolangComponentDetector', () => {
       expect(components[0].path).toEqual('./cmd');
       expect(components[0].platform).toEqual(ProjectComponentPlatform.BackEnd);
     });
-    it('Detects Golang BE package', async () => {
-      detector = new GolangComponentDetector(mockGolangPackageInspector);
+    it('Detects Go BE package', async () => {
+      detector = new GoComponentDetector(mockGoPackageInspector);
 
       const components = await detector.detectComponent({ language: ProgrammingLanguage.Go, path: './pkg' });
 
