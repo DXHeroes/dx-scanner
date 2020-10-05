@@ -14,7 +14,7 @@
     "lint:fix": "yarn lint --fix",
     "prepack": "yarn build",
     "start": "./bin/run",
-    "test": "jest",
+    "test": "jest --runInBand --logHeapUsage",
     "test:watch": "jest --watch",
     "test:codecov:upload": "codecov -f \"coverage/coverage-final.json\"",
     "validate": "yarn install && yarn build && yarn lint && yarn test",
