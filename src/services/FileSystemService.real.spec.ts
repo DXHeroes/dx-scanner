@@ -366,12 +366,15 @@ describe('FileSystemService - REAL', () => {
 
         const files: string[] = [];
 
-        await fileSystemService.flatTraverse(mockFolderPath, (meta) => {
-          files.push(meta.name);
-          return false;
-        });
+        let response = true;
+        await fileSystemService
+          .flatTraverse(mockFolderPath, (meta) => {
+            files.push(meta.name);
+            return false;
+          })
+          .catch((e) => (response = e));
 
-        expect(files.length).toEqual(1);
+        expect(response).toEqual(false);
       });
 
       it("throws an error if the root doesn't exist", async () => {
