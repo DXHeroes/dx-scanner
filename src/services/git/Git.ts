@@ -95,7 +95,6 @@ export class Git implements IProjectFilesBrowserService {
 
   async flatTraverse(path: string, fn: (meta: Metadata) => void | boolean): Promise<void | boolean> {
     const dirContent = await this.readDirectory(path);
-
     await Promise.all(
       dirContent.map(async (cnt) => {
         const absolutePath = nodePath.posix.join(path, cnt);

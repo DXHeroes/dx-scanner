@@ -245,13 +245,12 @@ describe('Git', () => {
     it('stops on false', async () => {
       gitHubNock.getDirectory('mockFolder', ['mockFile.ts'], ['mockSubFolder']);
       gitHubNock.getFile('mockFolder/mockFile.ts');
-
-      const files: string[] = [];
+      gitHubNock.getDirectory('mockFolder/mockSubFolder', ['mockSubFolderFile.txt'], []);
+      gitHubNock.getFile('mockFolder/mockSubFolder/mockSubFolderFile.txt');
 
       let response = true;
       await git
-        .flatTraverse('mockFolder', (meta) => {
-          files.push(meta.name);
+        .flatTraverse('mockFolder', () => {
           return false;
         })
         .catch((e) => (response = e));
