@@ -197,9 +197,12 @@ export class Scanner {
    */
   private async detectLanguagesAtPaths(context: ScannerContext) {
     let languagesAtPaths: LanguageAtPath[] = [];
-    for (const languageDetector of context.languageDetectors) {
-      languagesAtPaths = [...languagesAtPaths, ...(await languageDetector.detectLanguage())];
+    const languageDetectors = await Promise.all(context.languageDetectors.map((languageDetector) => languageDetector.detectLanguage()));
+
+    for (const languageDetector of languageDetectors) {
+      languagesAtPaths = [...languagesAtPaths, ...languageDetector];
     }
+
     return languagesAtPaths;
   }
 

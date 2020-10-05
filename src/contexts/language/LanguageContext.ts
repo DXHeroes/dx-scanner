@@ -27,9 +27,7 @@ export class LanguageContext extends ContextBase {
     this.initableInspectors = initableInspectors;
   }
   async init(): Promise<void> {
-    for (const initableInspector of this.initableInspectors) {
-      await initableInspector.init();
-    }
+    await Promise.all(this.initableInspectors.map((initableInspector) => initableInspector.init()));
   }
 
   get path(): string {
