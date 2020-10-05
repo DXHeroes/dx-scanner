@@ -95,17 +95,20 @@ export class Git implements IProjectFilesBrowserService {
 
   async flatTraverse(path: string, fn: (meta: Metadata) => void | boolean): Promise<void | boolean> {
     const dirContent = await this.readDirectory(path);
-    for (const cnt of dirContent) {
-      const absolutePath = nodePath.posix.join(path, cnt);
-      const metadata = await this.getMetadata(absolutePath);
 
-      const lambdaResult = fn(metadata);
-      if (lambdaResult === false) return false;
+    await Promise.all(
+      dirContent.map(async (cnt) => {
+        const absolutePath = nodePath.posix.join(path, cnt);
+        const metadata = await this.getMetadata(absolutePath);
 
-      if (metadata.type === MetadataType.dir) {
-        await this.flatTraverse(metadata.path, fn);
-      }
-    }
+        const lambdaResult = fn(metadata);
+        if (lambdaResult === false) return Promise.reject(false);
+
+        if (metadata.type === MetadataType.dir) {
+          return this.flatTraverse(metadata.path, fn);
+        }
+      }),
+    );
   }
 
   async getContributorCount(): Promise<number> {
