@@ -1,3 +1,10 @@
+## [3.39.3](https://github.com/dxheroes/dx-scanner/compare/v3.39.2...v3.39.3) (2020-10-06)
+
+
+### Bug Fixes
+
+* use Array.isArray() as isArray() is deprecated, upgrade pkgs ([acefc72](https://github.com/dxheroes/dx-scanner/commit/acefc72c598b529d7c8903539bd201a98ceccb5d))
+
 ## [3.39.2](https://github.com/dxheroes/dx-scanner/compare/v3.39.1...v3.39.2) (2020-10-06)
 
 
