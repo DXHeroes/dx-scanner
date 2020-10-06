@@ -373,15 +373,13 @@ describe('FileSystemService - VIRTUAL', () => {
 
         const files: string[] = [];
 
-        let response = true;
         await service
           .flatTraverse(mockFolderPath, (meta) => {
             files.push(meta.name);
             return false;
           })
-          .catch((e) => (response = e));
-
-        expect(response).toEqual(false);
+          .then(() => fail("promise didn't fail on false return"))
+          .catch((e) => expect(e).toBe(false));
       });
 
       it("throws an error if the root doesn't exist", async () => {
