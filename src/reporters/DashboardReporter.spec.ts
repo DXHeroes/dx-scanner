@@ -9,10 +9,6 @@ import { GitHubService } from '../services';
 import { ContributorsCollector } from '../collectors/ContributorsCollector';
 import { GitHubNock } from '../test/helpers/gitHubNock';
 
-const mockDataCollector = () => ({
-  collectData: jest.fn(),
-});
-
 describe('DashboardReporter', () => {
   const practicingHighImpactPracticeWithCtx = practiceWithContextFactory();
   const notPracticingHighImpactPracticeWithCtx = practiceWithContextFactory({ evaluation: PracticeEvaluationResult.notPracticing });
