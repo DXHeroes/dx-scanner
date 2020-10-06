@@ -34,6 +34,9 @@ PHP | 🚧
 C++ | 🚧
 C# | 🚧
 Ruby | 🚧
+Android | 🚧
+Swift | 🚧
+Go | 🚧
 
 ## Hacktoberfest 2020 🎉
 
@@ -284,7 +287,7 @@ practices:
     impact: small
   JavaScript.ESLintWithoutErrorsPractice:
     fix: true
-    ovverride: 
+    override: 
       lintFilesPatterns: ['.internal/**/*.js', '*.js']
       ignorePatterns: []
   LanguageIndependent.ThinPullRequestsPractice:
