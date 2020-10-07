@@ -98,7 +98,7 @@ describe('DashboardReporter', () => {
     });
   });
 
-  // TODO move to seperate file when needed
+  // TODO move to separate file when needed
   // implement custom matcher
   // match partial object in the array
   expect.extend({
