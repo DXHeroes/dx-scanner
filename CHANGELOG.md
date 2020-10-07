@@ -1,3 +1,10 @@
+# [3.40.0](https://github.com/dxheroes/dx-scanner/compare/v3.39.3...v3.40.0) (2020-10-07)
+
+
+### Features
+
+* support github-actions in ci pratice ([3aaa238](https://github.com/dxheroes/dx-scanner/commit/3aaa23840bd7296cb402603f7210f5c2b370aef6))
+
 ## [3.39.3](https://github.com/dxheroes/dx-scanner/compare/v3.39.2...v3.39.3) (2020-10-06)
 
 
