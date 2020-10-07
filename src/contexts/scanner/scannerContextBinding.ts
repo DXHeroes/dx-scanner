@@ -12,6 +12,7 @@ import { ScannerContext } from './ScannerContext';
 import { BitbucketService } from '../../services/bitbucket/BitbucketService';
 import { GitLabService } from '../../services/gitlab/GitLabService';
 import { PythonLanguageDetector } from '../../detectors/Python/PythonLanguageDetector';
+import { GoLanguageDetector } from '../../detectors/Go/GoLanguageDetector';
 import { ArgumentsProvider } from '../../scanner';
 import { IReporter, FixReporter, JSONReporter, CLIReporter, CIReporter, HTMLReporter, DashboardReporter } from '../../reporters';
 import { ServiceType, AccessType } from '../../detectors/IScanningStrategy';
@@ -100,4 +101,5 @@ const bindLanguageDetectors = (container: Container) => {
   container.bind(Types.ILanguageDetector).to(JavaScriptLanguageDetector);
   container.bind(Types.ILanguageDetector).to(JavaLanguageDetector);
   container.bind(Types.ILanguageDetector).to(PythonLanguageDetector);
+  container.bind(Types.ILanguageDetector).to(GoLanguageDetector);
 };

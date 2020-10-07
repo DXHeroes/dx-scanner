@@ -1,5 +1,5 @@
 export * from './Cpp/CppLanguageDetector';
-export * from './Golang/GolangLanguageDetector';
+export * from './Go/GoLanguageDetector';
 export * from './Java/JavaComponentDetector';
 export * from './Java/JavaLanguageDetector';
 export * from './JavaScript/JavaScriptComponentDetector';

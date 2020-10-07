@@ -30,13 +30,13 @@ Language | Supported
 JavaScript/TypeScript | ✅
 Java/Kotlin | ✅
 Python | ✅
+Go | ✅
 PHP | 🚧
 C++ | 🚧
 C# | 🚧
 Ruby | 🚧
 Android | 🚧
 Swift | 🚧
-Go | 🚧
 
 ## Hacktoberfest 2020 🎉
 
