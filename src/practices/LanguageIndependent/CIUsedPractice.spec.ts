@@ -26,6 +26,15 @@ describe('CIUsedPractice', () => {
     expect(evaluated).toEqual(PracticeEvaluationResult.practicing);
   });
 
+  it('Returns practicing if there are YAML files inside .github/workflows folder', async () => {
+    containerCtx.virtualFileSystemService.setFileSystem({
+      '/.github/workflows/any-file.yml': '...',
+    });
+
+    const evaluated = await practice.evaluate(containerCtx.practiceContext);
+    expect(evaluated).toEqual(PracticeEvaluationResult.practicing);
+  });
+
   it('Returns practicing if there is a appveyor.yml for a Appveyor CI', async () => {
     containerCtx.virtualFileSystemService.setFileSystem({
       '/appveyor.yml': '...',
@@ -38,6 +47,15 @@ describe('CIUsedPractice', () => {
   it('Returns notPracticing if there is NO .gitlab-ci.yml', async () => {
     containerCtx.virtualFileSystemService.setFileSystem({
       'not.exists': '...',
+    });
+
+    const evaluated = await practice.evaluate(containerCtx.practiceContext);
+    expect(evaluated).toEqual(PracticeEvaluationResult.notPracticing);
+  });
+
+  it('Returns notPracticing if there are NO YAML files inside .github/workflows folder', async () => {
+    containerCtx.virtualFileSystemService.setFileSystem({
+      '/.github/workflows/not.exists': '...',
     });
 
     const evaluated = await practice.evaluate(containerCtx.practiceContext);
