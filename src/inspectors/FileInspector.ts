@@ -126,21 +126,24 @@ export class FileInspector implements IFileInspector {
       }
       const forbiddenDirNames = ['.git', 'node_modules'];
       // debug(dirContents);
-      for (const entry of dirContents) {
-        const entryMetadata = await this.getMetadata(`${path}/${entry}`);
-        if (entryMetadata.type === MetadataType.file) {
-          if (entryMetadata.name.match(fileName)) {
-            result.push(entryMetadata);
+      await Promise.all(
+        dirContents.map(async (entry) => {
+          const entryMetadata = await this.getMetadata(`${path}/${entry}`);
+          if (entryMetadata.type === MetadataType.file) {
+            if (entryMetadata.name.match(fileName)) {
+              result.push(entryMetadata);
+            }
+          } else if (
+            options?.shallow !== true &&
+            entryMetadata.type === MetadataType.dir &&
+            forbiddenDirNames.indexOf(entryMetadata.name) === -1
+          ) {
+            const subResult = await this.scanFor(fileName, entryMetadata.path, options);
+            result = [...result, ...subResult];
           }
-        } else if (
-          options.shallow !== true &&
-          entryMetadata.type === MetadataType.dir &&
-          forbiddenDirNames.indexOf(entryMetadata.name) === -1
-        ) {
-          const subResult = await this.scanFor(fileName, entryMetadata.path, options);
-          result = [...result, ...subResult];
-        }
-      }
+        }),
+      );
+
       return result;
     });
   }
