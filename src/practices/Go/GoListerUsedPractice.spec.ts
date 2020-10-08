@@ -41,7 +41,7 @@ describe('GoLinterUsedPractice', () => {
     expect(result).toEqual(true);
   });
 
-  it('Is applicable if it is not Go', async () => {
+  it('Is not applicable if it is not Go', async () => {
     containerCtx.practiceContext.projectComponent.language = ProgrammingLanguage.TypeScript;
 
     const result = await practice.isApplicable(containerCtx.practiceContext);

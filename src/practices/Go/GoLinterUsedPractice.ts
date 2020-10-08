@@ -5,7 +5,7 @@ import { IPractice } from '../IPractice';
 
 @DxPractice({
   id: 'Go.LinterUsedPractice',
-  name: 'Use a Go Linter Dependency',
+  name: 'Use a Go Linter',
   impact: PracticeImpact.medium,
   suggestion: 'Use Linter to catch dangerous code constructs.',
   reportOnlyOnce: true,
