@@ -224,36 +224,35 @@ describe('Git', () => {
   });
 
   describe('#flatTraverse', () => {
-    it('returns keys of metadata of all results', async () => {
-      gitHubNock.getDirectory('mockFolder', ['mockFile.ts'], ['mockSubFolder']);
-      gitHubNock.getFile('mockFolder/mockFile.ts');
-      gitHubNock.getDirectory('mockFolder/mockSubFolder', ['mockSubFolderFile.txt'], []);
-      gitHubNock.getFile('mockFolder/mockSubFolder/mockSubFolderFile.txt');
-
-      const files: string[] = [];
-
-      await git.flatTraverse('mockFolder', (meta) => {
-        files.push(meta.name);
+    describe('#fetch dir and files', () => {
+      beforeEach(() => {
+        gitHubNock.getDirectory('mockFolder', ['mockFile.ts'], ['mockSubFolder']);
+        gitHubNock.getFile('mockFolder/mockFile.ts');
+        gitHubNock.getDirectory('mockFolder/mockSubFolder', ['mockSubFolderFile.txt'], []);
+        gitHubNock.getFile('mockFolder/mockSubFolder/mockSubFolderFile.txt');
       });
 
-      expect(files.length).toEqual(3);
-      expect(files).toContain('mockFile.ts');
-      expect(files).toContain('mockSubFolder');
-      expect(files).toContain('mockSubFolderFile.txt');
-    });
+      it('returns keys of metadata of all results', async () => {
+        const files: string[] = [];
 
-    it('stops on false', async () => {
-      gitHubNock.getDirectory('mockFolder', ['mockFile.ts'], ['mockSubFolder']);
-      gitHubNock.getFile('mockFolder/mockFile.ts');
+        await git.flatTraverse('mockFolder', (meta) => {
+          files.push(meta.name);
+        });
 
-      const files: string[] = [];
-
-      await git.flatTraverse('mockFolder', (meta) => {
-        files.push(meta.name);
-        return false;
+        expect(files.length).toEqual(3);
+        expect(files).toContain('mockFile.ts');
+        expect(files).toContain('mockSubFolder');
+        expect(files).toContain('mockSubFolderFile.txt');
       });
 
-      expect(files.length).toEqual(1);
+      it('stops on false', async () => {
+        await git
+          .flatTraverse('mockFolder', () => {
+            return false;
+          })
+          .then(() => fail("promise didn't fail"))
+          .catch((e) => expect(e).toBe(false));
+      });
     });
 
     it("throws an error if the root doesn't exist", async () => {

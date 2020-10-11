@@ -1,6 +1,5 @@
 import { inject, injectable } from 'inversify';
 import * as nodePath from 'path';
-import { isArray } from 'util';
 import { PullRequestState } from '../../inspectors/ICollaborationInspector';
 import { ErrorFactory } from '../../lib/errors/ErrorFactory';
 import { Repository, VCSService } from '../../model';
@@ -26,7 +25,7 @@ export class Git implements IProjectFilesBrowserService {
 
   async readDirectory(path: string): Promise<string[]> {
     const result = await this.getRepoContent(await this.followSymLinks(path));
-    if (result !== null && isArray(result)) {
+    if (result !== null && Array.isArray(result)) {
       return result.map((item) => item.name);
     } else {
       throw ErrorFactory.newInternalError(`${path} is not a directory`);
@@ -35,7 +34,7 @@ export class Git implements IProjectFilesBrowserService {
 
   async readFile(path: string): Promise<string> {
     let result = await this.getRepoContent(await this.followSymLinks(path));
-    if (result !== null && !isArray(result)) {
+    if (result !== null && !Array.isArray(result)) {
       result = result as File;
       if (!result.content) return '';
       return Buffer.from(result.content, result.encoding).toString('utf-8');
@@ -49,7 +48,7 @@ export class Git implements IProjectFilesBrowserService {
     if (result === null) {
       throw ErrorFactory.newInternalError(`Could not get content of ${path}`);
     }
-    return !isArray(result);
+    return !Array.isArray(result);
   }
 
   async isDirectory(path: string): Promise<boolean> {
@@ -57,7 +56,7 @@ export class Git implements IProjectFilesBrowserService {
     if (result === null) {
       throw ErrorFactory.newInternalError(`Could not get content of ${path}`);
     }
-    return isArray(result);
+    return Array.isArray(result);
   }
 
   async getMetadata(path: string): Promise<Metadata> {
@@ -72,7 +71,7 @@ export class Git implements IProjectFilesBrowserService {
       throw ErrorFactory.newInternalError(`Could not get content of ${path}`);
     }
 
-    if (isArray(result)) {
+    if (Array.isArray(result)) {
       return {
         path,
         name,
@@ -95,17 +94,19 @@ export class Git implements IProjectFilesBrowserService {
 
   async flatTraverse(path: string, fn: (meta: Metadata) => void | boolean): Promise<void | boolean> {
     const dirContent = await this.readDirectory(path);
-    for (const cnt of dirContent) {
-      const absolutePath = nodePath.posix.join(path, cnt);
-      const metadata = await this.getMetadata(absolutePath);
+    await Promise.all(
+      dirContent.map(async (cnt) => {
+        const absolutePath = nodePath.posix.join(path, cnt);
+        const metadata = await this.getMetadata(absolutePath);
 
-      const lambdaResult = fn(metadata);
-      if (lambdaResult === false) return false;
+        const lambdaResult = fn(metadata);
+        if (lambdaResult === false) return Promise.reject(false);
 
-      if (metadata.type === MetadataType.dir) {
-        await this.flatTraverse(metadata.path, fn);
-      }
-    }
+        if (metadata.type === MetadataType.dir) {
+          return this.flatTraverse(metadata.path, fn);
+        }
+      }),
+    );
   }
 
   async getContributorCount(): Promise<number> {
@@ -139,7 +140,7 @@ export class Git implements IProjectFilesBrowserService {
     const child = await this.getRepoContent(nodePath.posix.join(directory, name));
 
     if (child !== null) {
-      if (isArray(child)) {
+      if (Array.isArray(child)) {
         if (path.length !== 0) {
           path = await this.followSymLinks(path, nodePath.posix.join(directory, name));
         }

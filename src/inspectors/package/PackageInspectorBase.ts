@@ -1,10 +1,9 @@
-import { IPackageInspector, Package, PackageOptions, PackageVersion } from '../IPackageInspector';
-import { IInitiable } from '../../lib/IInitable';
-import { isArray } from 'util';
-import { injectable } from 'inversify';
 import { debug } from 'debug';
-import { valid, coerce } from 'semver';
+import { injectable } from 'inversify';
 import { intersection } from 'lodash';
+import { coerce, valid } from 'semver';
+import { IInitiable } from '../../lib/IInitable';
+import { IPackageInspector, Package, PackageOptions, PackageVersion } from '../IPackageInspector';
 
 @injectable()
 export abstract class PackageInspectorBase implements IPackageInspector, IInitiable {
@@ -18,7 +17,7 @@ export abstract class PackageInspectorBase implements IPackageInspector, IInitia
   }
 
   hasPackageManagement(): boolean {
-    return isArray(this.packages);
+    return Array.isArray(this.packages);
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars

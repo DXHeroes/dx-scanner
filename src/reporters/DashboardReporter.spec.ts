@@ -9,10 +9,6 @@ import { GitHubService } from '../services';
 import { ContributorsCollector } from '../collectors/ContributorsCollector';
 import { GitHubNock } from '../test/helpers/gitHubNock';
 
-const mockDataCollector = () => ({
-  collectData: jest.fn(),
-});
-
 describe('DashboardReporter', () => {
   const practicingHighImpactPracticeWithCtx = practiceWithContextFactory();
   const notPracticingHighImpactPracticeWithCtx = practiceWithContextFactory({ evaluation: PracticeEvaluationResult.notPracticing });
@@ -102,7 +98,7 @@ describe('DashboardReporter', () => {
     });
   });
 
-  // TODO move to seperate file when needed
+  // TODO move to separate file when needed
   // implement custom matcher
   // match partial object in the array
   expect.extend({

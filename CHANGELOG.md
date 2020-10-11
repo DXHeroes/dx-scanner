@@ -1,3 +1,24 @@
+# [3.40.0](https://github.com/dxheroes/dx-scanner/compare/v3.39.3...v3.40.0) (2020-10-07)
+
+
+### Features
+
+* support github-actions in ci pratice ([3aaa238](https://github.com/dxheroes/dx-scanner/commit/3aaa23840bd7296cb402603f7210f5c2b370aef6))
+
+## [3.39.3](https://github.com/dxheroes/dx-scanner/compare/v3.39.2...v3.39.3) (2020-10-06)
+
+
+### Bug Fixes
+
+* use Array.isArray() as isArray() is deprecated, upgrade pkgs ([acefc72](https://github.com/dxheroes/dx-scanner/commit/acefc72c598b529d7c8903539bd201a98ceccb5d))
+
+## [3.39.2](https://github.com/dxheroes/dx-scanner/compare/v3.39.1...v3.39.2) (2020-10-06)
+
+
+### Bug Fixes
+
+* **deps:** update all non-major dependencies ([f14ec12](https://github.com/dxheroes/dx-scanner/commit/f14ec12047b4c81ca8ae4a581e0d0b05c4fe512d))
+
 ## [3.39.1](https://github.com/dxheroes/dx-scanner/compare/v3.39.0...v3.39.1) (2020-09-29)
 
 
@@ -891,7 +912,7 @@
 * params of listPullCommits() and type of param in getPagination() ([6c99b25](https://github.com/dxheroes/dx-scanner/commit/6c99b2521373457e6d022310d64f89c82d112e99))
 * protect creating Axios Instance ([2160b29](https://github.com/dxheroes/dx-scanner/commit/2160b297c1e94d7026739cc26ca7f256a7ab65c3))
 * remove duplicate file ([73798e8](https://github.com/dxheroes/dx-scanner/commit/73798e8da0422eb7b5e9a7bfba423708d4ef0df3))
-* remove unneccessary params ([a2abac0](https://github.com/dxheroes/dx-scanner/commit/a2abac0999d1c2792c753fed97e36de44ecc2a34))
+* remove unnecessary params ([a2abac0](https://github.com/dxheroes/dx-scanner/commit/a2abac0999d1c2792c753fed97e36de44ecc2a34))
 * remove unnecessary comments ([28af4f6](https://github.com/dxheroes/dx-scanner/commit/28af4f681a49bf5e0c09a13391a9cb6954014116))
 * remove unnecessary condition and fix path for host ([95fac97](https://github.com/dxheroes/dx-scanner/commit/95fac976fdd7cd69b06cce6edd71e61ac016161c))
 * remove unnecessary timeouts ([0eef498](https://github.com/dxheroes/dx-scanner/commit/0eef498c7ed4199b23a5950111dcb155eac24585))

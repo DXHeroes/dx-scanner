@@ -7,6 +7,8 @@ import { LanguageContextFactory, Types } from '../../types';
 import { bindProjectComponentContext } from '../projectComponent/projectComponentContextBinding';
 import { JavaPackageInspector } from '../../inspectors/package/JavaPackageInspector';
 import { JavaComponentDetector } from '../../detectors/Java/JavaComponentDetector';
+import { GoPackageInspector } from '../../inspectors/package/GoPackageInspector';
+import { GoComponentDetector } from '../../detectors/Go/GoComponentDetector';
 import { LanguageContext } from './LanguageContext';
 import { CollaborationInspector } from '../../inspectors/CollaborationInspector';
 import { IssueTrackingInspector } from '../../inspectors/IssueTrackingInspector';
@@ -62,6 +64,8 @@ const bindPackageInspectors = (languageAtPath: LanguageAtPath, container: Contai
     resolveBindingPackageInspector(JavaPackageInspector, container);
   } else if (languageAtPath.language === ProgrammingLanguage.Python) {
     resolveBindingPackageInspector(PythonPackageInspector, container);
+  } else if (languageAtPath.language === ProgrammingLanguage.Go) {
+    resolveBindingPackageInspector(GoPackageInspector, container);
   }
 };
 
@@ -108,6 +112,7 @@ const componentGenerator = function* (): Generator<{
   yield { componentDetector: JavaComponentDetector, detectedLanguage: ProgrammingLanguage.Java };
   yield { componentDetector: JavaComponentDetector, detectedLanguage: ProgrammingLanguage.Kotlin };
   yield { componentDetector: PythonComponentDetector, detectedLanguage: ProgrammingLanguage.Python };
+  yield { componentDetector: GoComponentDetector, detectedLanguage: ProgrammingLanguage.Go };
   return;
 };
 

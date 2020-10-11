@@ -3,17 +3,17 @@ import { ProgrammingLanguage } from '../../model';
 import { FileSystemService } from '../../services/FileSystemService';
 import * as nodePath from 'path';
 import { DirectoryJSON } from 'memfs/lib/volume';
-import { GolangLanguageDetector } from './GolangLanguageDetector';
+import { GoLanguageDetector } from './GoLanguageDetector';
 
-describe('GolangLanguageDetector', () => {
-  let detector: GolangLanguageDetector;
+describe('GoLanguageDetector', () => {
+  let detector: GoLanguageDetector;
   let virtualFileSystemService: FileSystemService;
 
   beforeEach(() => {
     virtualFileSystemService = new FileSystemService({ isVirtual: true });
 
     const fileInspector = new FileInspector(virtualFileSystemService, '/');
-    detector = new GolangLanguageDetector(fileInspector);
+    detector = new GoLanguageDetector(fileInspector);
   });
 
   afterEach(async () => {
@@ -23,6 +23,32 @@ describe('GolangLanguageDetector', () => {
   it('detects golang correctly via Gopkg.toml', async () => {
     const structure: DirectoryJSON = {
       '/Gopkg.toml': '...',
+    };
+
+    virtualFileSystemService.setFileSystem(structure);
+
+    const langAtPath = await detector.detectLanguage();
+    expect(langAtPath.length).toEqual(1);
+    expect(langAtPath[0].language).toEqual(ProgrammingLanguage.Go);
+    expect(langAtPath[0].path).toEqual(nodePath.sep);
+  });
+
+  it('detects golang correctly via go.mod', async () => {
+    const structure: DirectoryJSON = {
+      '/go.mod': '...',
+    };
+
+    virtualFileSystemService.setFileSystem(structure);
+
+    const langAtPath = await detector.detectLanguage();
+    expect(langAtPath.length).toEqual(1);
+    expect(langAtPath[0].language).toEqual(ProgrammingLanguage.Go);
+    expect(langAtPath[0].path).toEqual(nodePath.sep);
+  });
+
+  it('detects golang correctly via go extension', async () => {
+    const structure: DirectoryJSON = {
+      '/*.go': '...',
     };
 
     virtualFileSystemService.setFileSystem(structure);
@@ -43,18 +69,5 @@ describe('GolangLanguageDetector', () => {
     const langAtPath = await detector.detectLanguage();
     expect(langAtPath.length).toEqual(0);
     expect(langAtPath).toEqual([]);
-  });
-
-  it('detects golang correctly via go file', async () => {
-    const structure: DirectoryJSON = {
-      '/index.go': '...',
-    };
-
-    virtualFileSystemService.setFileSystem(structure);
-
-    const langAtPath = await detector.detectLanguage();
-    expect(langAtPath.length).toEqual(1);
-    expect(langAtPath[0].language).toEqual(ProgrammingLanguage.Go);
-    expect(langAtPath[0].path).toEqual(nodePath.sep);
   });
 });
