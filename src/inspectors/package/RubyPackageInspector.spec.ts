@@ -19,7 +19,7 @@ describe('RubyPackageInspector', () => {
     inspector = containerCtx.container.get('RubyPackageInspector');
 
     containerCtx.virtualFileSystemService.setFileSystem({
-      'Gemfile': gemfileContents,
+      Gemfile: gemfileContents,
     });
   });
 

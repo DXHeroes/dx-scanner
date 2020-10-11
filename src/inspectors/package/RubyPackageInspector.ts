@@ -20,16 +20,17 @@ export class RubyPackageInspector extends PackageInspectorBase {
       const gemfileString = (await this.fileInspector.readFile('Gemfile')).replace(/^(?=\n)$|^\s*|\s*$|\n\n+/gm, '');
       const gemfileLines = gemfileString.split('\n');
       const gemfilePackages = gemfileLines
-        .map( line => line.split(' ') )
-        .map( splitLine => splitLine.map( part => part.replace(/"/g, '').replace(/,/g, '')))
-        .filter( splitLine => splitLine[0] == 'gem' && splitLine[1])
-        .map( splitLine => { return {
-          packageName: splitLine[1],
-          version: this.parseVersion(splitLine.slice(2))
-        }
-      });
+        .map((line) => line.split(' '))
+        .map((splitLine) => splitLine.map((part) => part.replace(/"/g, '').replace(/,/g, '')))
+        .filter((splitLine) => splitLine[0] === 'gem' && splitLine[1])
+        .map((splitLine) => {
+          return {
+            packageName: splitLine[1],
+            version: this.parseVersion(splitLine.slice(2)),
+          };
+        });
       for (const parsedPackage of gemfilePackages) {
-        if(parsedPackage.version) {
+        if (parsedPackage.version) {
           this.parsedDependencies.push({ packageName: parsedPackage.packageName, version: parsedPackage.version });
         }
       }
@@ -45,22 +46,19 @@ export class RubyPackageInspector extends PackageInspectorBase {
 
   private parseVersion(lineRemainder: string[]): PackageVersion | undefined {
     const noVersion = PackageInspectorBase.semverToPackageVersion('0.0.0');
-    if(lineRemainder === []) {
-      // no version information provided
-      return noVersion;
+    if (lineRemainder === []) {
+      return noVersion; // no version information provided
     }
-    for( const lineSegment of lineRemainder) {
+    for (const lineSegment of lineRemainder) {
       const segmentSemVer = PackageInspectorBase.semverToPackageVersion(lineSegment);
-      if(segmentSemVer) {
+      if (segmentSemVer) {
         return segmentSemVer;
       }
-      if(lineSegment.slice(0,1) === "#") {
-        // begin comment & no version information
-        return noVersion;
+      if (lineSegment.startsWith('#')) {
+        return noVersion; // begin comment & no version information found
       }
-    };
-    // no version information found
-    return noVersion;
+    }
+    return noVersion; // no version information found
   }
 
   private addPackages(dependencies: ParsedDependency[] | undefined, depType: DependencyType) {
