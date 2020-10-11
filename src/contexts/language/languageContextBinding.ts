@@ -18,6 +18,7 @@ import { PackageInspectorBase } from '../../inspectors/package/PackageInspectorB
 import { IProjectComponentDetector } from '../../detectors/IProjectComponentDetector';
 import { ScanningStrategy } from '../../detectors';
 import { ProjectFilesBrowserService } from '../../services';
+import { AndroidComponentDetector } from '../../detectors/Android/AndroidComponentDetector';
 
 export const bindLanguageContext = (container: Container) => {
   container.bind(Types.LanguageContextFactory).toFactory(
@@ -113,6 +114,8 @@ const componentGenerator = function* (): Generator<{
   yield { componentDetector: JavaComponentDetector, detectedLanguage: ProgrammingLanguage.Kotlin };
   yield { componentDetector: PythonComponentDetector, detectedLanguage: ProgrammingLanguage.Python };
   yield { componentDetector: GoComponentDetector, detectedLanguage: ProgrammingLanguage.Go };
+  yield { componentDetector: AndroidComponentDetector, detectedLanguage: ProgrammingLanguage.Java };
+  yield { componentDetector: AndroidComponentDetector, detectedLanguage: ProgrammingLanguage.Kotlin };
   return;
 };
 
