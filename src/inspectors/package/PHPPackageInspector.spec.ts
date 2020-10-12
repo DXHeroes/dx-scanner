@@ -72,11 +72,11 @@ describe('PHPPackageInspector', () => {
       });
 
       it('Returns true if package exists', () => {
-        expect(inspector.hasPackage('nock')).toBe(true);
+        expect(inspector.hasPackage('justinrainbow/json-schema')).toBe(true);
       });
 
       it('Returns false if package does not exists', () => {
-        expect(inspector.hasPackage('rock')).toBe(false);
+        expect(inspector.hasPackage('notjustinrainbow/json-schema')).toBe(false);
       });
     });
 
@@ -86,7 +86,7 @@ describe('PHPPackageInspector', () => {
       });
 
       it('Returns true if one of the packages exists', () => {
-        expect(inspector.hasOneOfPackages(['nock', 'rock'])).toBe(true);
+        expect(inspector.hasOneOfPackages(['justinrainbow/json-schema', 'rock'])).toBe(true);
       });
 
       it('Returns false if none of the packages exists', () => {

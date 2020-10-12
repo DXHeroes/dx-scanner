@@ -23,6 +23,7 @@ export class PHPPackageInspector extends PackageInspectorBase {
       this.hasLockfileFile = (await this.fileInspector.exists('composer.lock'));
       this.composerJson = JSON.parse(composerJsonString);
       this.packages = [];
+      console.log(this.composerJson['require']);
       this.addPackages(this.composerJson['require'], DependencyType.Runtime);
       this.addPackages(this.composerJson['require-dev'], DependencyType.Dev);
       this.debug(this.composerJson);
@@ -39,8 +40,11 @@ export class PHPPackageInspector extends PackageInspectorBase {
       return;
     }
     for (const packageName of keys(dependencies)) {
-      const packageVersion = dependencies[packageName];
+      let packageVersion = dependencies[packageName];
+      console.log(packageVersion);
+      packageVersion = packageVersion.includes(' || ') ? packageVersion.split(' || ')[packageVersion.split(' || ').length - 1] : packageVersion;
       const parsedVersion = PackageInspectorBase.semverToPackageVersion(packageVersion);
+      console.log(parsedVersion);
       if (!this.packages) {
         this.packages = [];
       }
@@ -69,9 +73,6 @@ export interface composerJSON {
   homepage: string | undefined;
   license: string | undefined;
   authors: Contributor[] | undefined;
-  engineStrinct: boolean | undefined;
-  engines: { [name: string]: string } | undefined;
-  scripts: { [name: string]: string } | undefined;
   require: { [name: string]: string } | undefined;
   'require-dev': { [name: string]: string } | undefined;
   config: PHPConfig | undefined;
