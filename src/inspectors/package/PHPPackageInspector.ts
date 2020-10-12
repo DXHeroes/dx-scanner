@@ -21,15 +21,16 @@ export class PHPPackageInspector extends PackageInspectorBase {
       this.debug('PHPPackageInspector init started');
       const composerJsonString = await this.fileInspector.readFile('composer.json');
       this.hasLockfileFile = (await this.fileInspector.exists('composer.lock'));
-      this.composerJson = JSON.parse(composerJsonString);
-      this.packages = [];
+      this.composerJson = JSON.parse(composerJsonString.replaceAll('\\', '/'));
       console.log(this.composerJson['require']);
+      this.packages = [];
       this.addPackages(this.composerJson['require'], DependencyType.Runtime);
       this.addPackages(this.composerJson['require-dev'], DependencyType.Dev);
       this.debug(this.composerJson);
       this.debug(this.packages);
       this.debug('PHPPackageInspector init ended');
     } catch (e) {
+      console.log(e);
       this.packages = undefined;
       this.debug(e);
     }
