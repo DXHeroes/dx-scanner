@@ -14,6 +14,8 @@ import { CollaborationInspector } from '../../inspectors/CollaborationInspector'
 import { IssueTrackingInspector } from '../../inspectors/IssueTrackingInspector';
 import { PythonComponentDetector } from '../../detectors/Python/PythonComponentDetector';
 import { PythonPackageInspector } from '../../inspectors/package/PythonPackageInspector';
+import { PHPComponentDetector } from '../../detectors/PHP/PHPComponentDetector';
+import { PHPPackageInspector } from '../../inspectors/package/PHPPackageInspector';
 import { PackageInspectorBase } from '../../inspectors/package/PackageInspectorBase';
 import { IProjectComponentDetector } from '../../detectors/IProjectComponentDetector';
 import { ScanningStrategy } from '../../detectors';
@@ -66,6 +68,8 @@ const bindPackageInspectors = (languageAtPath: LanguageAtPath, container: Contai
     resolveBindingPackageInspector(PythonPackageInspector, container);
   } else if (languageAtPath.language === ProgrammingLanguage.Go) {
     resolveBindingPackageInspector(GoPackageInspector, container);
+  } else if (languageAtPath.language === ProgrammingLanguage.PHP) {
+    resolveBindingPackageInspector(PHPPackageInspector, container);
   }
 };
 
@@ -113,6 +117,7 @@ const componentGenerator = function* (): Generator<{
   yield { componentDetector: JavaComponentDetector, detectedLanguage: ProgrammingLanguage.Kotlin };
   yield { componentDetector: PythonComponentDetector, detectedLanguage: ProgrammingLanguage.Python };
   yield { componentDetector: GoComponentDetector, detectedLanguage: ProgrammingLanguage.Go };
+  yield { componentDetector: PHPComponentDetector, detectedLanguage: ProgrammingLanguage.PHP };
   return;
 };
 

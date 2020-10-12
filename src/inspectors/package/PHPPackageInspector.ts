@@ -40,7 +40,6 @@ export class PHPPackageInspector extends PackageInspectorBase {
     }
     for (const packageName of keys(dependencies)) {
       let packageVersion = dependencies[packageName];
-      packageVersion = packageVersion.includes(' || ') ? packageVersion.split(' || ')[packageVersion.split(' || ').length - 1] : packageVersion;
       const parsedVersion = PackageInspectorBase.semverToPackageVersion(packageVersion);
       if (!this.packages) {
         this.packages = [];
@@ -79,18 +78,20 @@ export interface composerJSON {
   'minimum-stability': string | undefined;
   'prefer-stable': boolean | undefined;
   support: { [name: string]: string } | undefined;
+  scripts: { [name: string]: string } | undefined;
+  bin: string[] | undefined;
+  [name: string]: any | undefined;
 }
 
 interface Contributor {
-  name: string | undefined;
-  email: string | undefined;
-  url: string | undefined;
+  [name: string]: string | undefined;
 }
 
 interface PHPConfig {
   platform: { [name: string]: string } | undefined;
   'preferred-install': string | undefined;
   'sort-packages': boolean | undefined;
+  [name: string]: any | undefined;
 }
 
 interface PHPAutoload {
