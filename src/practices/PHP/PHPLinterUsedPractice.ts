@@ -13,14 +13,23 @@ import { IPractice } from '../IPractice';
 })
 export class PHPLinterUsedPractice implements IPractice {
   async isApplicable(ctx: PracticeContext): Promise<boolean> {
-    return (
-      ctx.projectComponent.language === ProgrammingLanguage.PHP
-    );
+    return ctx.projectComponent.language === ProgrammingLanguage.PHP;
   }
 
   async evaluate(ctx: PracticeContext): Promise<PracticeEvaluationResult> {
     if (ctx.packageInspector) {
-      if (ctx.packageInspector.hasOneOfPackages(['overtrue/phplint', 'squizlabs/php_codesniffer', 'friendsofphp/php-cs-fixer', 'phpmd/phpmd', 'phpstan/phpstan', 'php-parallel-lint/php-parallel-lint', 'pdepend/pdepend', 'phan/phan'])) {
+      if (
+        ctx.packageInspector.hasOneOfPackages([
+          'overtrue/phplint',
+          'squizlabs/php_codesniffer',
+          'friendsofphp/php-cs-fixer',
+          'phpmd/phpmd',
+          'phpstan/phpstan',
+          'php-parallel-lint/php-parallel-lint',
+          'pdepend/pdepend',
+          'phan/phan',
+        ])
+      ) {
         return PracticeEvaluationResult.practicing;
       } else {
         return PracticeEvaluationResult.notPracticing;

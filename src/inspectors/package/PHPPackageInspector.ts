@@ -39,7 +39,7 @@ export class PHPPackageInspector extends PackageInspectorBase {
       return;
     }
     for (const packageName of keys(dependencies)) {
-      let packageVersion = dependencies[packageName];
+      const packageVersion = dependencies[packageName];
       const parsedVersion = PackageInspectorBase.semverToPackageVersion(packageVersion);
       if (!this.packages) {
         this.packages = [];
