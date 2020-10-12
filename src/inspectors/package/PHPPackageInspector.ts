@@ -20,9 +20,8 @@ export class PHPPackageInspector extends PackageInspectorBase {
     try {
       this.debug('PHPPackageInspector init started');
       const composerJsonString = await this.fileInspector.readFile('composer.json');
-      this.hasLockfileFile = (await this.fileInspector.exists('composer.lock'));
-      this.composerJson = JSON.parse(composerJsonString.replaceAll('\\', '/'));
-      console.log(this.composerJson['require']);
+      this.hasLockfileFile = await this.fileInspector.exists('composer.lock');
+      this.composerJson = JSON.parse(composerJsonString.replace(/\\/g, '/'));
       this.packages = [];
       this.addPackages(this.composerJson['require'], DependencyType.Runtime);
       this.addPackages(this.composerJson['require-dev'], DependencyType.Dev);
@@ -30,7 +29,6 @@ export class PHPPackageInspector extends PackageInspectorBase {
       this.debug(this.packages);
       this.debug('PHPPackageInspector init ended');
     } catch (e) {
-      console.log(e);
       this.packages = undefined;
       this.debug(e);
     }
@@ -42,10 +40,8 @@ export class PHPPackageInspector extends PackageInspectorBase {
     }
     for (const packageName of keys(dependencies)) {
       let packageVersion = dependencies[packageName];
-      console.log(packageVersion);
       packageVersion = packageVersion.includes(' || ') ? packageVersion.split(' || ')[packageVersion.split(' || ').length - 1] : packageVersion;
       const parsedVersion = PackageInspectorBase.semverToPackageVersion(packageVersion);
-      console.log(parsedVersion);
       if (!this.packages) {
         this.packages = [];
       }

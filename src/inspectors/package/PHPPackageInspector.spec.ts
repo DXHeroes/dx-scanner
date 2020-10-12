@@ -61,7 +61,7 @@ describe('PHPPackageInspector', () => {
       });
 
       it('Returns undefined if the package does not exist', async () => {
-        const pkg = inspector.findPackage('notjustinrainbow/json-schema');
+        const pkg = inspector.findPackage('rock');
         expect(pkg).toBeUndefined();
       });
     });
@@ -76,7 +76,7 @@ describe('PHPPackageInspector', () => {
       });
 
       it('Returns false if package does not exists', () => {
-        expect(inspector.hasPackage('notjustinrainbow/json-schema')).toBe(false);
+        expect(inspector.hasPackage('rock')).toBe(false);
       });
     });
 
@@ -95,7 +95,7 @@ describe('PHPPackageInspector', () => {
     });
 
     describe('#hasPackageManagement', () => {
-      it('returns true if package.json is valid and present', async () => {
+      it('returns true if composer.json is valid and present', async () => {
         await inspector.init();
         expect(inspector.hasPackageManagement()).toBe(true);
       });
