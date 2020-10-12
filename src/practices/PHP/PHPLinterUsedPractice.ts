@@ -20,15 +20,7 @@ export class PHPLinterUsedPractice implements IPractice {
 
   async evaluate(ctx: PracticeContext): Promise<PracticeEvaluationResult> {
     if (ctx.packageInspector) {
-      const phpLinters = [
-        'php -l',
-        'phplint',
-        'phpcs',
-        'php-cs-fixer',
-        'phpmd',
-        'phpstan'
-      ];
-      if (ctx.packageInspector.hasOneOfPackages(phpLinters)) {
+      if (ctx.packageInspector.hasOneOfPackages(['php -l', 'phplint', 'phpcs', 'php-cs-fixer', 'phpmd', 'phpstan'])) {
         return PracticeEvaluationResult.practicing;
       } else {
         return PracticeEvaluationResult.notPracticing;

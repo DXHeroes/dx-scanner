@@ -16,7 +16,7 @@ export class PHPLanguageDetector implements ILanguageDetector {
 
   async detectLanguage(): Promise<LanguageAtPath[]> {
     const result: LanguageAtPath[] = [];
-    const packageFiles = await this.fileInspector.scanFor(fileNameRegExp('composer.phar'), '/');
+    const packageFiles = await this.fileInspector.scanFor(fileNameRegExp('composer.json'), '/');
 
     if (packageFiles.length > 0) {
       for (const path of packageFiles.map((file) => nodePath.dirname(file.path))) {
