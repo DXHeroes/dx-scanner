@@ -413,7 +413,7 @@ export class GitLabService implements IVCSService {
         //get user info and create contributor object
         .map(async (commit) => {
           return {
-            user: await this.getUserInfo(commit.committer_name),
+            user: await this.getUserInfo(commit.committer_name, commit.committer_email),
             contributions: commits.filter((value) => value.committer_name === commit.committer_name).length,
           };
         }),
@@ -444,11 +444,14 @@ export class GitLabService implements IVCSService {
     throw new Error('Method not implemented yet for GitLab.');
   }
 
-  private async getUserInfo(owner: string) {
+  private async getUserInfo(owner: string, email?: string) {
     let userInfo;
 
     try {
       userInfo = await this.unwrap(this.client.Users.getUser(owner));
+      if (email && userInfo.data.length === 0) {
+        userInfo = await this.unwrap(this.client.Users.searchUsersByEmail(email));
+      }
       return {
         id: userInfo.data[0].id.toString(),
         login: userInfo.data[0].username,
