@@ -4,12 +4,12 @@ FROM node:12.16-alpine
 COPY entrypoint.sh ../entrypoint.sh
 
 RUN apk update && apk add  -q   \
-  ca-certificates \
-  git && \
-  yarn global add dx-scanner \
-  && dx-scanner --version && \
-  mkdir /usr/app && \
-  chmod +x ../entrypoint.sh
+ ca-certificates \
+ git \
+ && yarn global add dx-scanner \
+ && dx-scanner --version \
+ && mkdir /usr/app \
+ && chmod +x ../entrypoint.sh
 
 WORKDIR /usr/app
 
