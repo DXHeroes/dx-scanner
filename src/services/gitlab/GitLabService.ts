@@ -413,7 +413,12 @@ export class GitLabService implements IVCSService {
         //get user info and create contributor object
         .map(async (commit) => {
           return {
-            user: await this.getUserInfo(commit.committer_name, commit.committer_email),
+            user: (await this.searchUser(commit.committer_email, commit.committer_name)) || {
+              //QUICK FIX!!!
+              id: commit.short_id,
+              login: commit.committer_name,
+              url: commit.committer_email,
+            },
             contributions: commits.filter((value) => value.committer_name === commit.committer_name).length,
           };
         }),
@@ -444,14 +449,11 @@ export class GitLabService implements IVCSService {
     throw new Error('Method not implemented yet for GitLab.');
   }
 
-  private async getUserInfo(owner: string, email?: string) {
+  private async getUserInfo(owner: string) {
     let userInfo;
 
     try {
       userInfo = await this.unwrap(this.client.Users.getUser(owner));
-      if (email && userInfo.data.length === 0) {
-        userInfo = await this.unwrap(this.client.Users.searchUsersByEmail(email));
-      }
       return {
         id: userInfo.data[0].id.toString(),
         login: userInfo.data[0].username,
@@ -465,6 +467,23 @@ export class GitLabService implements IVCSService {
         login: userInfo.data.name,
         url: userInfo.data.web_url,
       };
+    }
+  }
+
+  private async searchUser(email: string, name: string) {
+    let userInfo;
+    try {
+      userInfo = await this.unwrap(this.client.Users.searchUsersByEmail(email));
+      if (userInfo.data.length === 0) {
+        userInfo = await this.unwrap(this.client.Users.searchUsersByName(name));
+      }
+      return {
+        id: userInfo.data[0].id.toString(),
+        login: userInfo.data[0].username,
+        url: userInfo.data[0].web_url,
+      };
+    } catch (error) {
+      return;
     }
   }
 

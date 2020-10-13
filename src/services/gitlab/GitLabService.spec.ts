@@ -195,8 +195,8 @@ describe('GitLab Service', () => {
   });
 
   it('returns contributors in own interface', async () => {
-    gitLabNock.listRepoCommitsResponse([gitLabCommitsResponseFactory({ committer_name: 'gitlab-org' })], false);
-    gitLabNock.getUserInfo();
+    gitLabNock.listRepoCommitsResponse([gitLabCommitsResponseFactory({ committer_email: 'gitlab-org' })], false);
+    gitLabNock.searchUser();
 
     const response = await service.listContributors('gitlab-org', 'gitlab');
     expect(response).toMatchObject(getContributorsServiceResponse);
