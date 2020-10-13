@@ -1,3 +1,10 @@
+## [3.40.1](https://github.com/dxheroes/dx-scanner/compare/v3.40.0...v3.40.1) (2020-10-13)
+
+
+### Bug Fixes
+
+* get user info by email ([ab5bb3a](https://github.com/dxheroes/dx-scanner/commit/ab5bb3ad6f5453f9af72c9f2d6380546f780ccad))
+
 # [3.40.0](https://github.com/dxheroes/dx-scanner/compare/v3.39.3...v3.40.0) (2020-10-07)
 
 
