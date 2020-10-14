@@ -5,6 +5,7 @@ import { bitbucketListIssuesResponseFactory } from '../factories/responses/bitbu
 import { bitbucketListPRsResponseFactory } from '../factories/responses/bitbucket/listPrsResponseFactory';
 import { bitbucketListPullCommitsResponseFactory } from '../factories/responses/bitbucket/listPullCommitsResponseFactory';
 import { bitbucketListCommitResponseFactory } from '../factories/responses/bitbucket/listRepoCommitsResponseFactory';
+import { bitbucketListIssuesErrorResponseFactory } from '../factories/responses/bitbucket/listIssuesErrorResponseFactory';
 import { BitbucketPullRequestState, BitbucketIssueState } from '../../services/bitbucket/IBitbucketService';
 import { VCSServicesUtils } from '../../services/git/VCSServicesUtils';
 import Bitbucket from 'bitbucket';
@@ -21,7 +22,7 @@ export class BitbucketNock {
     this.url = 'https://api.bitbucket.org/2.0';
   }
 
-  private static get(url: string, params: nock.DataMatcherMap = {}, persist = true): nock.Interceptor {
+  private static get(url: string, params: nock.DataMatcherMap | boolean = {}, persist = true): nock.Interceptor {
     const urlObj = new URL(url);
 
     const scope = nock(urlObj.origin);
@@ -30,7 +31,7 @@ export class BitbucketNock {
     }
 
     const interceptor = scope.get(urlObj.pathname);
-    if (Object.keys(params)) {
+    if (params) {
       interceptor.query(params);
     }
 
@@ -91,6 +92,12 @@ export class BitbucketNock {
     const response = bitbucketListIssuesResponseFactory(issues);
 
     return BitbucketNock.get(baseUrl, queryParams).reply(200, response);
+  }
+
+  listIssuesErrorResponse() {
+    const baseUrl = `${this.url}/repositories/${this.user}/${this.repoName}/issues`;
+    const response = bitbucketListIssuesErrorResponseFactory();
+    return BitbucketNock.get(baseUrl, true).reply(404, response);
   }
 
   getIssueResponse(issue: Bitbucket.Schema.Issue) {

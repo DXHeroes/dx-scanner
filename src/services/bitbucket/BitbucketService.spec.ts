@@ -170,6 +170,13 @@ describe('Bitbucket Service', () => {
     expect(response.totalCount).toEqual(3);
   });
 
+  it('throws an error if issue tracker is disabled', async () => {
+    bitbucketNock.listIssuesErrorResponse();
+    await expect(() => service.listIssues('pypy', 'pypy', { filter: { state: IssueState.all } })).rejects.toMatchObject({
+      message: 'Request failed with status code 404',
+    });
+  });
+
   it('returns issue in own interface', async () => {
     const mockIssue = bitbucketIssueResponseFactory({ state: BitbucketIssueState.new });
     bitbucketNock.getIssueResponse(mockIssue);
