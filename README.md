@@ -231,7 +231,7 @@ Specify Versions of Dependencies | <span style="color:red">high</span> | ❌ | �
 Store Environment Variables Using .properties Files | <span style="color:yellow">medium</span> | ❌ | ❌ | ✅ | ❌ | ❌
 Use Java Code Styles | <span style="color:green">small</span> | ❌ | ❌ | ✅ | ❌ | ❌
 Use Java Logger Configuration Files | <span style="color:green">small</span> | ❌ | ❌ | ✅ | ❌ | ❌
-Use a PHP Linter | <span style="color:yellow">medium</span> | ❌ | ✅ | ❌ | ❌ | ✅
+Use a PHP Linter | <span style="color:yellow">medium</span> | ❌ | ❌ | ❌ | ❌ | ✅
 Security vulnerabilities detected | <span style="color:red">high</span> | ❌ | ✅ | ❌ | ❌ | ❌
 </details>
 

@@ -23,7 +23,7 @@ export class PHPPackageInspector extends PackageInspectorBase {
       this.hasLockfileFile = await this.fileInspector.exists('composer.lock');
       this.composerJson = JSON.parse(composerJsonString.replace(/\\/g, '/'));
       this.packages = [];
-      this.addPackages(this.composerJson['require'], DependencyType.Runtime);
+      this.addPackages(this.composerJson.require, DependencyType.Runtime);
       this.addPackages(this.composerJson['require-dev'], DependencyType.Dev);
       this.debug(this.composerJson);
       this.debug(this.packages);
