@@ -68,7 +68,7 @@ export class GitLabNock {
 
     return GitLabNock.get(url).reply(200, response);
   }
-  searchUser() {
+  searchUser(email: string) {
     const url = `${this.url}/users`;
 
     const response = [
@@ -81,7 +81,7 @@ export class GitLabNock {
         web_url: 'https://gitlab.com/Homolova',
       },
     ];
-    const params = { search: this.user };
+    const params = { search: email };
 
     return GitLabNock.get(url, params).reply(200, response);
   }

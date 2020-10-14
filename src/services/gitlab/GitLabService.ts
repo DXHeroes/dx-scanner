@@ -414,10 +414,7 @@ export class GitLabService implements IVCSService {
         .map(async (commit) => {
           return {
             user: (await this.searchUser(commit.committer_email, commit.committer_name)) || {
-              //QUICK FIX!!!
-              id: commit.short_id,
               login: commit.committer_name,
-              url: commit.committer_email,
             },
             contributions: commits.filter((value) => value.committer_name === commit.committer_name).length,
           };
