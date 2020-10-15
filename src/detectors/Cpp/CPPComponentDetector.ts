@@ -3,12 +3,13 @@ import { IProjectComponentDetector } from '../IProjectComponentDetector';
 import { ProjectComponent, LanguageAtPath, ProjectComponentFramework, ProjectComponentPlatform, ProjectComponentType } from '../../model';
 import { Types } from '../../types';
 import { IPackageInspector } from '../../inspectors/IPackageInspector';
+
 @injectable()
-export class CppComponentDetector implements IProjectComponentDetector {
+export class CPPComponentDetector implements IProjectComponentDetector {
     private packageInspector: IPackageInspector;
     constructor(
         @inject(Types.IPackageInspector)
-        packageInspector: IPackageInspector,
+        packageInspector: IPackageInspector
     ) {
         this.packageInspector = packageInspector;
     }

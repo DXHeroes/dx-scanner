@@ -7,6 +7,7 @@ import { LanguageContextFactory, Types } from '../../types';
 import { bindProjectComponentContext } from '../projectComponent/projectComponentContextBinding';
 import { JavaPackageInspector } from '../../inspectors/package/JavaPackageInspector';
 import { JavaComponentDetector } from '../../detectors/Java/JavaComponentDetector';
+import { CPPComponentDetector } from '../../detectors/Cpp/CPPComponentDetector';
 import { LanguageContext } from './LanguageContext';
 import { CollaborationInspector } from '../../inspectors/CollaborationInspector';
 import { IssueTrackingInspector } from '../../inspectors/IssueTrackingInspector';
@@ -16,7 +17,6 @@ import { PackageInspectorBase } from '../../inspectors/package/PackageInspectorB
 import { IProjectComponentDetector } from '../../detectors/IProjectComponentDetector';
 import { ScanningStrategy } from '../../detectors';
 import { ProjectFilesBrowserService } from '../../services';
-
 export const bindLanguageContext = (container: Container) => {
   container.bind(Types.LanguageContextFactory).toFactory(
     (ctx): LanguageContextFactory => {
@@ -27,33 +27,26 @@ export const bindLanguageContext = (container: Container) => {
     },
   );
 };
-
 const createLanguageContainer = (languageAtPath: LanguageAtPath, rootContainer: Container): Container => {
   const container = rootContainer.createChild();
   container.bind(Types.LanguageAtPath).toConstantValue(languageAtPath);
   const scanningStrategy = container.get<ScanningStrategy>(Types.ScanningStrategy);
-
   const projectFilesBrowserService = container.get<ProjectFilesBrowserService>(Types.IProjectFilesBrowser);
   const fileInspector = container.get<FileInspector>(Types.IFileInspector);
   const fileInspectorForRoot = new FileInspector(projectFilesBrowserService, scanningStrategy.rootPath || fileInspector.basePath);
   container.bind(Types.IRootFileInspector).toConstantValue(fileInspectorForRoot);
-
   bindFileAccess(languageAtPath, container);
   bindComponentDetectors(container);
   bindProjectComponentContext(container);
   bindPackageInspectors(languageAtPath, container);
   bindCollaborationInspectors(container);
-
   container.bind(LanguageContext).toSelf();
   return container;
 };
-
 const bindFileAccess = (languageAtPath: LanguageAtPath, container: Container) => {
   container.bind(Types.FileInspectorBasePath).toConstantValue(languageAtPath.path);
-
   container.bind(Types.IFileInspector).to(FileInspector).inSingletonScope();
 };
-
 const bindPackageInspectors = (languageAtPath: LanguageAtPath, container: Container) => {
   // do not refactor to switch cases => it changes the behaviour unexpectedly in some tests
   if (languageAtPath.language === ProgrammingLanguage.JavaScript || languageAtPath.language === ProgrammingLanguage.TypeScript) {
@@ -62,6 +55,9 @@ const bindPackageInspectors = (languageAtPath: LanguageAtPath, container: Contai
     resolveBindingPackageInspector(JavaPackageInspector, container);
   } else if (languageAtPath.language === ProgrammingLanguage.Python) {
     resolveBindingPackageInspector(PythonPackageInspector, container);
+  }
+  else if (languageAtPath.language === ProgrammingLanguage.CPlusPlus) {
+    resolveBindingPackageInspector(CPPPackageInspector, container);
   }
 };
 
@@ -75,19 +71,17 @@ const bindComponentDetectors = (container: Container) => {
       .whenTargetTagged(DETECT_LANGUAGE_TAG, current.value.detectedLanguage);
     current = iterator.next();
   }
-
   container.bind(Types.ProjectComponentDetectorFactory).toFactory((ctx) => {
     return getProjectComponentDetectorFactory(ctx.container as Container);
   });
 };
-
 const bindCollaborationInspectors = (container: Container) => {
   container.bind(Types.ICollaborationInspector).to(CollaborationInspector).inSingletonScope();
   container.bind(Types.IIssueTrackingInspector).to(IssueTrackingInspector).inSingletonScope();
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const resolveBindingPackageInspector = (packageInspector: { new (...args: any[]): PackageInspectorBase }, container: Container) => {
+const resolveBindingPackageInspector = (packageInspector: { new(...args: any[]): PackageInspectorBase }, container: Container) => {
   container.bind(Types.IPackageInspector).to(packageInspector).inSingletonScope();
   // TODO: bind this as InitiableInspector instead of using next line binding
   container.bind(packageInspector).toDynamicValue((ctx) => {
@@ -100,7 +94,7 @@ const resolveBindingPackageInspector = (packageInspector: { new (...args: any[])
 
 const componentGenerator = function* (): Generator<{
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  componentDetector: { new (...args: any[]): IProjectComponentDetector };
+  componentDetector: { new(...args: any[]): IProjectComponentDetector };
   detectedLanguage: ProgrammingLanguage;
 }> {
   yield { componentDetector: JavaScriptComponentDetector, detectedLanguage: ProgrammingLanguage.JavaScript };
@@ -108,6 +102,7 @@ const componentGenerator = function* (): Generator<{
   yield { componentDetector: JavaComponentDetector, detectedLanguage: ProgrammingLanguage.Java };
   yield { componentDetector: JavaComponentDetector, detectedLanguage: ProgrammingLanguage.Kotlin };
   yield { componentDetector: PythonComponentDetector, detectedLanguage: ProgrammingLanguage.Python };
+  yield { componentDetector: CPPComponentDetector, detectedLanguage: ProgrammingLanguage.CPlusPlus }
   return;
 };
 
@@ -119,7 +114,6 @@ export const DETECT_LANGUAGE_TAG = 'language';
 export const detectsLanguage = (language: ProgrammingLanguage) => {
   return tagged(DETECT_LANGUAGE_TAG, language);
 };
-
 export const getProjectComponentDetectorFactory = (container: Container) => {
   return (language: ProgrammingLanguage) => {
     const detectors = container.getAllTagged(Types.IProjectComponentDetector, DETECT_LANGUAGE_TAG, language);
