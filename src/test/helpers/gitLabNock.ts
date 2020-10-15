@@ -68,6 +68,23 @@ export class GitLabNock {
 
     return GitLabNock.get(url).reply(200, response);
   }
+  searchUser(email: string) {
+    const url = `${this.url}/users`;
+
+    const response = [
+      {
+        id: 3045721,
+        name: 'Adela',
+        username: 'Homolova',
+        state: 'active',
+        avatar_url: 'https://secure.gravatar.com/avatar/3e007e2a4f00c4a02ba6bc28431f4a20?s=80&d=identicon',
+        web_url: 'https://gitlab.com/Homolova',
+      },
+    ];
+    const params = { search: email };
+
+    return GitLabNock.get(url, params).reply(200, response);
+  }
 
   listPullRequestsResponse(
     pullRequests: MergeRequest[],
