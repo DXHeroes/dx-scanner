@@ -1,3 +1,11 @@
+## [3.41.1](https://github.com/dxheroes/dx-scanner/compare/v3.41.0...v3.41.1) (2020-10-15)
+
+
+### Bug Fixes
+
+* Minor refactor to make commands more consistent ([a0a8ab9](https://github.com/dxheroes/dx-scanner/commit/a0a8ab97611d67d78f97d5a7fdbcae3da61b4cdc))
+* Reduce unnecessary Docker image layers ([075e812](https://github.com/dxheroes/dx-scanner/commit/075e81226dcbbe8a7f981033ac541f382b27afd0))
+
 # [3.41.0](https://github.com/dxheroes/dx-scanner/compare/v3.40.1...v3.41.0) (2020-10-14)
 
 
