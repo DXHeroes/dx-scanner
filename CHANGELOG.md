@@ -1,3 +1,11 @@
+## [3.41.2](https://github.com/dxheroes/dx-scanner/compare/v3.41.1...v3.41.2) (2020-10-15)
+
+
+### Bug Fixes
+
+* do not send unknown values ([92b0c4e](https://github.com/dxheroes/dx-scanner/commit/92b0c4eab228d2fbd91633844e2a7ee59e22250c))
+* find user by email ([d684d8a](https://github.com/dxheroes/dx-scanner/commit/d684d8aa5e7611b7f85509072c2d659ee3be1916))
+
 ## [3.41.1](https://github.com/dxheroes/dx-scanner/compare/v3.41.0...v3.41.1) (2020-10-15)
 
 
