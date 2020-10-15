@@ -1,3 +1,17 @@
+# [3.41.0](https://github.com/dxheroes/dx-scanner/compare/v3.40.1...v3.41.0) (2020-10-14)
+
+
+### Features
+
+* add linter practice for Go ([c47a54e](https://github.com/dxheroes/dx-scanner/commit/c47a54ef91f2c8a8ef13374ec137faa5d4af174b))
+
+## [3.40.1](https://github.com/dxheroes/dx-scanner/compare/v3.40.0...v3.40.1) (2020-10-13)
+
+
+### Bug Fixes
+
+* get user info by email ([ab5bb3a](https://github.com/dxheroes/dx-scanner/commit/ab5bb3ad6f5453f9af72c9f2d6380546f780ccad))
+
 # [3.40.0](https://github.com/dxheroes/dx-scanner/compare/v3.39.3...v3.40.0) (2020-10-07)
 
 
