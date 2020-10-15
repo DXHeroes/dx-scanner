@@ -24,6 +24,7 @@ export class PHPPackageInspector extends PackageInspectorBase {
       this.composerJson = JSON.parse(composerJsonString.replace(/\\/g, '/'));
       this.packages = [];
       this.addPackages(this.composerJson.require, DependencyType.Runtime);
+      // 'require-dev' must be in kebab-case
       this.addPackages(this.composerJson['require-dev'], DependencyType.Dev);
       this.debug(this.composerJson);
       this.debug(this.packages);
@@ -70,12 +71,16 @@ export interface composerJSON {
   license: string | undefined;
   authors: Contributor[] | undefined;
   require: { [name: string]: string } | undefined;
+  // 'require-dev' must be in kebab-case
   'require-dev': { [name: string]: string } | undefined;
   config: PHPConfig | undefined;
   extra: { [name: string]: string } | undefined;
   autoload: PHPAutoload | undefined;
+  // 'autoload-dev' must be in kebab-case
   'autoload-dev': PHPAutoload | undefined;
-  'minimum-stability': string | undefined;
+  // 'minimum-stability' must be in kebab-case
+  'minimum-stability': string | undefined; 
+  // 'prefer-stable' must be in kebab-case
   'prefer-stable': boolean | undefined;
   support: { [name: string]: string } | undefined;
   scripts: { [name: string]: string } | undefined;
@@ -89,7 +94,9 @@ interface Contributor {
 
 interface PHPConfig {
   platform: { [name: string]: string } | undefined;
+  // 'preferred-install' must be in kebab-case
   'preferred-install': string | undefined;
+  // 'sort-packages' must be in kebab-case
   'sort-packages': boolean | undefined;
   [name: string]: any | undefined;
 }
