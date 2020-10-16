@@ -4,7 +4,7 @@ import { PracticeEvaluationResult } from '../../model';
 import { TestContainerContext, createTestContainer } from '../../inversify.config';
 import { IPackageInspector } from '../../inspectors/IPackageInspector';
 
-describe('ESLintUsedPractice', () => {
+describe('SwiftLintUsedPractice', () => {
   let practice: SwiftLintUsedPractice;
   let containerCtx: TestContainerContext;
   let packageInspector: IPackageInspector;
