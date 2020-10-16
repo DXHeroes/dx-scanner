@@ -114,19 +114,17 @@ export class FileSystemService implements IProjectFilesBrowserService {
   }
 
   async flatTraverse(path: string, fn: (meta: Metadata) => void | boolean) {
-    // <typeof fs> is small hack because TS thinks
-    //   that it's different interface by default
-    const dirContent = await (<typeof fs>this.fileSystem).promises.readdir(path);
-    for (const cnt of dirContent) {
-      const absolutePath = nodePath.resolve(path, cnt);
-      const metadata = await this.getMetadata(absolutePath);
+    const dirContent = await this.readDirectory(path);
 
-      const lambdaResult = fn(metadata);
-      if (lambdaResult === false) return false;
+    await Promise.all(
+      dirContent.map(async (cnt) => {
+        const absolutePath = nodePath.resolve(path, cnt);
+        const metadata = await this.getMetadata(absolutePath);
 
-      if (metadata.type === MetadataType.dir) {
-        await this.flatTraverse(metadata.path, fn);
-      }
-    }
+        const lambdaResult = fn(metadata);
+        if (lambdaResult === false) return Promise.reject(false);
+        if (metadata.type === MetadataType.dir) return this.flatTraverse(metadata.path, fn);
+      }),
+    );
   }
 }

@@ -413,7 +413,9 @@ export class GitLabService implements IVCSService {
         //get user info and create contributor object
         .map(async (commit) => {
           return {
-            user: await this.getUserInfo(commit.committer_name),
+            user: (await this.searchUser(commit.committer_email, commit.committer_name)) || {
+              login: commit.committer_name,
+            },
             contributions: commits.filter((value) => value.committer_name === commit.committer_name).length,
           };
         }),
@@ -462,6 +464,23 @@ export class GitLabService implements IVCSService {
         login: userInfo.data.name,
         url: userInfo.data.web_url,
       };
+    }
+  }
+
+  private async searchUser(email: string, name: string) {
+    let userInfo;
+    try {
+      userInfo = await this.unwrap(this.client.Users.searchUsersByEmail(email));
+      if (userInfo.data.length === 0) {
+        userInfo = await this.unwrap(this.client.Users.searchUsersByName(name));
+      }
+      return {
+        id: userInfo.data[0].id.toString(),
+        login: userInfo.data[0].username,
+        url: userInfo.data[0].web_url,
+      };
+    } catch (error) {
+      return;
     }
   }
 

@@ -536,16 +536,16 @@ export class BitbucketService implements IVCSService {
     return (
       commits
         //filter duplicate committer names
-        .filter((commit, index, array) => array.findIndex((t) => t.author.user.nickname === commit.author.user.nickname) === index)
+        .filter((commit, index, array) => array.findIndex((t) => t.author?.user?.nickname === commit.author?.user?.nickname) === index)
         //create contributor object
         .map((commit) => {
           return {
             user: {
-              id: commit.author.user.uuid,
-              url: commit.author.user.links.html.href,
-              login: commit.author.user.nickname,
+              id: commit.author?.user?.uuid || '',
+              url: commit.author?.user?.links?.html?.href || '',
+              login: commit.author?.user?.nickname || '',
             },
-            contributions: commits.filter((value) => value.author.user.nickname === commit.author.user.nickname).length,
+            contributions: commits.filter((value) => value.author?.user?.nickname === commit.author?.user?.nickname).length,
           };
         })
     );
@@ -585,10 +585,10 @@ export class BitbucketService implements IVCSService {
   }
 
   private async paginateCommits(params: Params.RepositoriesListCommits) {
-    let response = <DeepRequired<Response<BitbucketCommit>>>await this.unwrap(this.client.repositories.listCommits(params));
+    let response = <Response<BitbucketCommit>>await this.unwrap(this.client.repositories.listCommits(params));
     let values = response.data.values;
     while (this.client.hasNextPage(response.data)) {
-      response = <DeepRequired<Response<BitbucketCommit>>>await this.unwrap(this.client.request(response.data.next, params));
+      response = <Response<BitbucketCommit>>await this.unwrap(this.client.request(response.data.next, params));
       values = values.concat(response.data.values);
     }
     return values;

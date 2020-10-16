@@ -6,6 +6,22 @@ import { Links } from './model';
 export class Users extends GitLabClient {
   api = this.createAxiosInstance();
 
+  async searchUsersByEmail(email: string): Promise<CustomAxiosResponse<User[]>> {
+    const endpoint = `users`;
+    const params = { search: email };
+
+    const response = await this.api.get(endpoint, { params });
+    return parseResponse(response);
+  }
+
+  async searchUsersByName(name: string): Promise<CustomAxiosResponse<User[]>> {
+    const endpoint = `users`;
+    const params = { search: name };
+
+    const response = await this.api.get(endpoint, { params });
+    return parseResponse(response);
+  }
+
   async getUser(userName: string): Promise<CustomAxiosResponse<User[]>> {
     const endpoint = `users`;
     const params = { username: userName };

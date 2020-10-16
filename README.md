@@ -30,13 +30,13 @@ Language | Supported
 JavaScript/TypeScript | ✅
 Java/Kotlin | ✅
 Python | ✅
+Go | ✅
 PHP | 🚧
 C++ | 🚧
 C# | 🚧
 Ruby | 🚧
 Android | 🚧
 Swift | 🚧
-Go | 🚧
 
 ## Hacktoberfest 2020 🎉
 
@@ -181,7 +181,7 @@ You can also specify `fixPattern` flag to fix only a subset of *fixable* practic
 dx-scanner run [PATH] --fix --fixPattern=lint
 ```
 
-Please note, that `fixPattern` flag overrides `fix` settings from configuration file. Therefore practices ommited from fixing by configuration file, but included through `fixPattern` will be fixed.
+Please note, that `fixPattern` flag overrides `fix` settings from configuration file. Therefore practices omitted from fixing by configuration file, but included through `fixPattern` will be fixed.
 
 ## Configuration ⚙️
 Add ```dxscannerrc.*``` config file to change default configuration settings. It can be a ```.json```, ```.yml```, or even a dotfile!

@@ -1,3 +1,68 @@
+# [3.42.0](https://github.com/dxheroes/dx-scanner/compare/v3.41.3...v3.42.0) (2020-10-16)
+
+
+### Features
+
+* add funding file to get sponsor button on github ([7f00fd6](https://github.com/dxheroes/dx-scanner/commit/7f00fd6440febc6680d48c0dbb560da112e81725))
+
+## [3.41.3](https://github.com/dxheroes/dx-scanner/compare/v3.41.2...v3.41.3) (2020-10-15)
+
+
+### Bug Fixes
+
+* **deps:** update all non-major dependencies ([a402ccf](https://github.com/dxheroes/dx-scanner/commit/a402ccffbb4552a07e162bd8d5c4661e5b70ee15))
+
+## [3.41.2](https://github.com/dxheroes/dx-scanner/compare/v3.41.1...v3.41.2) (2020-10-15)
+
+
+### Bug Fixes
+
+* do not send unknown values ([92b0c4e](https://github.com/dxheroes/dx-scanner/commit/92b0c4eab228d2fbd91633844e2a7ee59e22250c))
+* find user by email ([d684d8a](https://github.com/dxheroes/dx-scanner/commit/d684d8aa5e7611b7f85509072c2d659ee3be1916))
+
+## [3.41.1](https://github.com/dxheroes/dx-scanner/compare/v3.41.0...v3.41.1) (2020-10-15)
+
+
+### Bug Fixes
+
+* Minor refactor to make commands more consistent ([a0a8ab9](https://github.com/dxheroes/dx-scanner/commit/a0a8ab97611d67d78f97d5a7fdbcae3da61b4cdc))
+* Reduce unnecessary Docker image layers ([075e812](https://github.com/dxheroes/dx-scanner/commit/075e81226dcbbe8a7f981033ac541f382b27afd0))
+
+# [3.41.0](https://github.com/dxheroes/dx-scanner/compare/v3.40.1...v3.41.0) (2020-10-14)
+
+
+### Features
+
+* add linter practice for Go ([c47a54e](https://github.com/dxheroes/dx-scanner/commit/c47a54ef91f2c8a8ef13374ec137faa5d4af174b))
+
+## [3.40.1](https://github.com/dxheroes/dx-scanner/compare/v3.40.0...v3.40.1) (2020-10-13)
+
+
+### Bug Fixes
+
+* get user info by email ([ab5bb3a](https://github.com/dxheroes/dx-scanner/commit/ab5bb3ad6f5453f9af72c9f2d6380546f780ccad))
+
+# [3.40.0](https://github.com/dxheroes/dx-scanner/compare/v3.39.3...v3.40.0) (2020-10-07)
+
+
+### Features
+
+* support github-actions in ci pratice ([3aaa238](https://github.com/dxheroes/dx-scanner/commit/3aaa23840bd7296cb402603f7210f5c2b370aef6))
+
+## [3.39.3](https://github.com/dxheroes/dx-scanner/compare/v3.39.2...v3.39.3) (2020-10-06)
+
+
+### Bug Fixes
+
+* use Array.isArray() as isArray() is deprecated, upgrade pkgs ([acefc72](https://github.com/dxheroes/dx-scanner/commit/acefc72c598b529d7c8903539bd201a98ceccb5d))
+
+## [3.39.2](https://github.com/dxheroes/dx-scanner/compare/v3.39.1...v3.39.2) (2020-10-06)
+
+
+### Bug Fixes
+
+* **deps:** update all non-major dependencies ([f14ec12](https://github.com/dxheroes/dx-scanner/commit/f14ec12047b4c81ca8ae4a581e0d0b05c4fe512d))
+
 ## [3.39.1](https://github.com/dxheroes/dx-scanner/compare/v3.39.0...v3.39.1) (2020-09-29)
 
 
@@ -891,7 +956,7 @@
 * params of listPullCommits() and type of param in getPagination() ([6c99b25](https://github.com/dxheroes/dx-scanner/commit/6c99b2521373457e6d022310d64f89c82d112e99))
 * protect creating Axios Instance ([2160b29](https://github.com/dxheroes/dx-scanner/commit/2160b297c1e94d7026739cc26ca7f256a7ab65c3))
 * remove duplicate file ([73798e8](https://github.com/dxheroes/dx-scanner/commit/73798e8da0422eb7b5e9a7bfba423708d4ef0df3))
-* remove unneccessary params ([a2abac0](https://github.com/dxheroes/dx-scanner/commit/a2abac0999d1c2792c753fed97e36de44ecc2a34))
+* remove unnecessary params ([a2abac0](https://github.com/dxheroes/dx-scanner/commit/a2abac0999d1c2792c753fed97e36de44ecc2a34))
 * remove unnecessary comments ([28af4f6](https://github.com/dxheroes/dx-scanner/commit/28af4f681a49bf5e0c09a13391a9cb6954014116))
 * remove unnecessary condition and fix path for host ([95fac97](https://github.com/dxheroes/dx-scanner/commit/95fac976fdd7cd69b06cce6edd71e61ac016161c))
 * remove unnecessary timeouts ([0eef498](https://github.com/dxheroes/dx-scanner/commit/0eef498c7ed4199b23a5950111dcb155eac24585))

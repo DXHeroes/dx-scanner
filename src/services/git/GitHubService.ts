@@ -2,7 +2,7 @@ import { Octokit } from '@octokit/rest';
 import type { OctokitResponse } from '@octokit/types';
 import Debug from 'debug';
 import { inject, injectable } from 'inversify';
-import { inspect, isArray } from 'util';
+import { inspect } from 'util';
 import { ListGetterOptions } from '../../inspectors/common/ListGetterOptions';
 import { Paginated } from '../../inspectors/common/Paginated';
 import { PullRequestState } from '../../inspectors/ICollaborationInspector';
@@ -338,7 +338,7 @@ export class GitHubService implements IVCSService {
         return null;
       }
 
-      if (isArray(response.data)) {
+      if (Array.isArray(response.data)) {
         return response.data.map((item) => ({
           name: item.name,
           path: item.path,
