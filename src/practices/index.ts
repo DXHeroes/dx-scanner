@@ -40,6 +40,7 @@ import { JavaSpecifiedDependencyVersions } from './Java/JavaSpecifiedDependencyV
 import { JavaLog4JConfiguredPractice } from './Java/JavaLog4JConfiguredPractice';
 import { JavaPropertiesUsedPractice } from './Java/JavaPropertiesUsedPractice';
 import { CSharpLinterUsedPractice } from './C#/CsharpLinterUsedPractice';
+import { GoLinterUsedPractice } from './Go/GoLinterUsedPractice';
 
 // register practices here
 export const practices = [
@@ -85,4 +86,5 @@ export const practices = [
   JavaLog4JConfiguredPractice,
   JavaPropertiesUsedPractice,
   CSharpLinterUsedPractice,
+  GoLinterUsedPractice,
 ];

@@ -1,4 +1,4 @@
-import { blue, bold, cyan, green, grey, italic, red, reset, yellow } from 'colors';
+import { blue, bold, cyan, green, italic, red, reset, yellow } from 'colors';
 import { inject, injectable } from 'inversify';
 import { keyBy } from 'lodash';
 import { ScanningStrategy } from '../detectors';

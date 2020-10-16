@@ -119,4 +119,8 @@ export class GitInspector implements IGitInspector {
       }),
     );
   }
+
+  async getStatus() {
+    return this.git.status();
+  }
 }

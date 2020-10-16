@@ -1,5 +1,6 @@
 import { Paginated } from './common/Paginated';
 import { ListGetterOptions } from './common/ListGetterOptions';
+import { StatusResult } from 'simple-git';
 
 /**
  * An interface of Git repository inspectors.
@@ -30,6 +31,11 @@ export interface IGitInspector {
    * @throws Throws an arror if there is no repository (the path does not exist, the path is not a repository).
    */
   getAllTags(): Promise<Tag[]>;
+
+  /**
+   * Get repository status info
+   */
+  getStatus(): Promise<StatusResult>;
 }
 
 /**

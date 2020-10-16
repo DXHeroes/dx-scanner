@@ -44,7 +44,7 @@ export class DoesPullRequestsPractice extends PracticeBase {
           closedAt: pr.mergedAt ? null : pr.closedAt,
           mergedAt: pr.mergedAt,
           authorName: pr.user.login,
-          authorUrl: pr.user.url,
+          authorUrl: pr.user.url!,
         };
       }),
     );

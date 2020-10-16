@@ -2,7 +2,7 @@ import { Octokit } from '@octokit/rest';
 import type { OctokitResponse } from '@octokit/types';
 import Debug from 'debug';
 import { inject, injectable } from 'inversify';
-import { inspect, isArray } from 'util';
+import { inspect } from 'util';
 import { ListGetterOptions } from '../../inspectors/common/ListGetterOptions';
 import { Paginated } from '../../inspectors/common/Paginated';
 import { PullRequestState } from '../../inspectors/ICollaborationInspector';
@@ -31,6 +31,7 @@ import {
   PullRequestReview,
   RepoContentType,
   Symlink,
+  Branch,
 } from './model';
 import {
   GetContentsResponse,
@@ -338,7 +339,7 @@ export class GitHubService implements IVCSService {
         return null;
       }
 
-      if (isArray(response.data)) {
+      if (Array.isArray(response.data)) {
         return response.data.map((item) => ({
           name: item.name,
           path: item.path,
@@ -451,6 +452,10 @@ export class GitHubService implements IVCSService {
     const pagination = this.getPagination(data.length, headers.link);
 
     return { items, ...pagination };
+  }
+
+  async listBranches(owner: string, repo: string, options?: ListGetterOptions): Promise<Paginated<Branch>> {
+    throw new Error('Method not implemented yet.');
   }
 
   /**

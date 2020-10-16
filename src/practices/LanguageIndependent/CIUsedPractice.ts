@@ -25,7 +25,13 @@ export class CIUsedPractice implements IPractice {
     }
 
     const filesInRootRegex = new RegExp(/\.gitlab\-ci\.yml|\.travis\.yml|\.jenkins\.yml|appveyor\.yml|azure\-pipelines\.yml/, 'i');
-    const filesInFoldersToSearch: { fileName: string; path: string }[] = [{ fileName: 'config.yml', path: '.circleci' }];
+    const filesInFoldersToSearch: { fileName: string | RegExp; path: string }[] = [
+      { fileName: 'config.yml', path: '.circleci' },
+      {
+        fileName: new RegExp('.+\\.(yml|yaml)$'),
+        path: '/.github/workflows',
+      },
+    ];
 
     const filesInRoot = await ctx.root.fileInspector.scanFor(filesInRootRegex, '/', { shallow: true, ignoreErrors: true });
     let filesInFolders: Metadata[] = [];

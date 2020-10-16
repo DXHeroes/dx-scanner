@@ -6,8 +6,8 @@ export enum GitService {
 
 export interface UserInfo {
   login: string;
-  id: string;
-  url: string;
+  id?: string;
+  url?: string;
 }
 
 export interface PullRequest {
@@ -108,6 +108,11 @@ export interface IssueComment {
   createdAt: string;
   updatedAt: string | undefined;
   authorAssociation: string | undefined;
+}
+
+export interface Branch {
+  name: string;
+  type: string;
 }
 
 export type PullRequestComment = CreatedUpdatedPullRequestComment & {

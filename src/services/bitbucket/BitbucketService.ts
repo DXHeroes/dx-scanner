@@ -29,6 +29,7 @@ import {
   Symlink,
   File,
   Directory,
+  Branch,
 } from '../git/model';
 import { VCSServicesUtils } from '../git/VCSServicesUtils';
 import { DeepRequired } from '../../lib/deepRequired';
@@ -369,6 +370,34 @@ export class BitbucketService implements IVCSService {
     return { items, ...pagination };
   }
 
+  async listBranches(owner: string, repo: string, options?: ListGetterOptions): Promise<Paginated<Branch>> {
+    this.authenticate();
+
+    const [responseBranches, responseBranchingModel] = await Promise.all([
+      this.client.refs.listBranches({
+        repo_slug: repo,
+        workspace: owner,
+        page: options?.pagination?.page?.toString(),
+        pagelen: options?.pagination?.perPage,
+      }),
+      this.client.branching_model.get({
+        repo_slug: repo,
+        workspace: owner,
+      }),
+    ]);
+    const items: Branch[] =
+      responseBranches.data.values?.map((val) => ({
+        name: val.name || '',
+        type: val.name === responseBranchingModel.data.development?.branch?.name ? 'default' : 'unknown',
+      })) || [];
+    const pagination = this.getPagination({
+      ...responseBranches.data,
+      values: responseBranches.data.values?.filter(Boolean) as Schema.Branch[],
+    });
+
+    return { items, ...pagination };
+  }
+
   async listPullRequestReviews(owner: string, repo: string, prNumber: number): Promise<Paginated<PullRequestReview>> {
     this.authenticate();
     throw new Error('Method not implemented yet.');
@@ -536,16 +565,16 @@ export class BitbucketService implements IVCSService {
     return (
       commits
         //filter duplicate committer names
-        .filter((commit, index, array) => array.findIndex((t) => t.author.user.nickname === commit.author.user.nickname) === index)
+        .filter((commit, index, array) => array.findIndex((t) => t.author?.user?.nickname === commit.author?.user?.nickname) === index)
         //create contributor object
         .map((commit) => {
           return {
             user: {
-              id: commit.author.user.uuid,
-              url: commit.author.user.links.html.href,
-              login: commit.author.user.nickname,
+              id: commit.author?.user?.uuid || '',
+              url: commit.author?.user?.links?.html?.href || '',
+              login: commit.author?.user?.nickname || '',
             },
-            contributions: commits.filter((value) => value.author.user.nickname === commit.author.user.nickname).length,
+            contributions: commits.filter((value) => value.author?.user?.nickname === commit.author?.user?.nickname).length,
           };
         })
     );
@@ -585,10 +614,10 @@ export class BitbucketService implements IVCSService {
   }
 
   private async paginateCommits(params: Params.RepositoriesListCommits) {
-    let response = <DeepRequired<Response<BitbucketCommit>>>await this.unwrap(this.client.repositories.listCommits(params));
+    let response = <Response<BitbucketCommit>>await this.unwrap(this.client.repositories.listCommits(params));
     let values = response.data.values;
     while (this.client.hasNextPage(response.data)) {
-      response = <DeepRequired<Response<BitbucketCommit>>>await this.unwrap(this.client.request(response.data.next, params));
+      response = <Response<BitbucketCommit>>await this.unwrap(this.client.request(response.data.next, params));
       values = values.concat(response.data.values);
     }
     return values;
@@ -617,7 +646,7 @@ export class BitbucketService implements IVCSService {
     );
   };
 
-  getPagination<T>(data: { next: string; previous: string; page: number; values: T[] }) {
+  getPagination<T>(data: { next?: string; previous?: string; page?: number; values: T[] }) {
     const hasNextPage = !!data.next;
     const hasPreviousPage = !!data.previous;
     const page = data.page;

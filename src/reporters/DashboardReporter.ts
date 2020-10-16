@@ -51,7 +51,7 @@ export class DashboardReporter implements IReporter {
 
     const report: DataReportDto = {
       componentsWithDxScore: [],
-      collectorsData: await this.dataCollector.collectData(this.scanningStrategy.remoteUrl!),
+      collectorsData: await this.dataCollector.collectData(this.scanningStrategy),
       version: pjson.version,
       id: uuid.v4(),
       dxScore: { value: dxScore.value, points: dxScore.points },
