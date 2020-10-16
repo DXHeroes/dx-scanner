@@ -34,7 +34,7 @@ describe('PHPLanguageDetector', () => {
 
   it('detects php correctly via composer file', async () => {
     const structure: DirectoryJSON = {
-      '/composer.phar': '...',
+      '/composer.json': '...',
     };
 
     virtualFileSystemService.setFileSystem(structure);
