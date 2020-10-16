@@ -1,3 +1,10 @@
+## [3.42.1](https://github.com/dxheroes/dx-scanner/compare/v3.42.0...v3.42.1) (2020-10-16)
+
+
+### Bug Fixes
+
+* **deps:** update dependency update-notifier to v5 ([251e577](https://github.com/dxheroes/dx-scanner/commit/251e577807beb190f4a8d274d9fb6d2ef1a74e74))
+
 # [3.42.0](https://github.com/dxheroes/dx-scanner/compare/v3.41.3...v3.42.0) (2020-10-16)
 
 
