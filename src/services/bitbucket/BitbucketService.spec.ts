@@ -170,10 +170,16 @@ describe('Bitbucket Service', () => {
     expect(response.totalCount).toEqual(3);
   });
 
-  it('throws an error if issue tracker is disabled', async () => {
+  it('returns empty response if issue tracker is disabled', async () => {
     bitbucketNock.listIssuesErrorResponse();
-    await expect(() => service.listIssues('pypy', 'pypy', { filter: { state: IssueState.all } })).rejects.toMatchObject({
-      message: 'Request failed with status code 404',
+    const response = await service.listIssues('pypy', 'pypy', { filter: { state: IssueState.all } });
+    expect(response).toEqual({
+      items: [],
+      hasNextPage: false,
+      hasPreviousPage: false,
+      page: 1,
+      perPage: 0,
+      totalCount: 0,
     });
   });
 
