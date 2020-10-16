@@ -1,3 +1,10 @@
+# [3.42.0](https://github.com/dxheroes/dx-scanner/compare/v3.41.3...v3.42.0) (2020-10-16)
+
+
+### Features
+
+* add funding file to get sponsor button on github ([7f00fd6](https://github.com/dxheroes/dx-scanner/commit/7f00fd6440febc6680d48c0dbb560da112e81725))
+
 ## [3.41.3](https://github.com/dxheroes/dx-scanner/compare/v3.41.2...v3.41.3) (2020-10-15)
 
 
