@@ -286,12 +286,28 @@ export class BitbucketService implements IVCSService {
       pagelen: options?.pagination?.perPage,
     };
 
-    const response = <DeepRequired<Response<Schema.PaginatedIssues>>>await this.unwrap(
-      axios.get(apiUrl, {
-        params,
-        paramsSerializer: qs.stringify,
-      }),
-    );
+    let response;
+    try {
+      response = <DeepRequired<Response<Schema.PaginatedIssues>>>await this.unwrap(
+        axios.get(apiUrl, {
+          params,
+          paramsSerializer: qs.stringify,
+        }),
+      );
+    } catch (err) {
+      const errorMessage = err?.response?.data?.error?.message;
+      if (errorMessage === 'Repository has no issue tracker.') {
+        return {
+          items: [],
+          totalCount: 0,
+          hasNextPage: false,
+          hasPreviousPage: false,
+          page: 1,
+          perPage: 0,
+        };
+      }
+      throw err;
+    }
 
     const items = response.data.values.map((val) => ({
       user: {

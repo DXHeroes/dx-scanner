@@ -170,6 +170,19 @@ describe('Bitbucket Service', () => {
     expect(response.totalCount).toEqual(3);
   });
 
+  it('returns empty response if issue tracker is disabled', async () => {
+    bitbucketNock.listIssuesErrorResponse();
+    const response = await service.listIssues('pypy', 'pypy', { filter: { state: IssueState.all } });
+    expect(response).toEqual({
+      items: [],
+      hasNextPage: false,
+      hasPreviousPage: false,
+      page: 1,
+      perPage: 0,
+      totalCount: 0,
+    });
+  });
+
   it('returns issue in own interface', async () => {
     const mockIssue = bitbucketIssueResponseFactory({ state: BitbucketIssueState.new });
     bitbucketNock.getIssueResponse(mockIssue);
