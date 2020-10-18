@@ -46,7 +46,7 @@ export class RubyPackageInspector extends PackageInspectorBase {
   }
 
   private parseVersion(lineRemainder: string[]): PackageVersion | undefined {
-    var highestSemVer = undefined;
+    let highestSemVer = undefined;
     for (const lineSegment of lineRemainder) {
       if (lineSegment.startsWith('#')) {
         return highestSemVer; // begin comments, return what we have so far
@@ -54,13 +54,13 @@ export class RubyPackageInspector extends PackageInspectorBase {
       const segmentSemVer = PackageInspectorBase.semverToPackageVersion(lineSegment);
       if (segmentSemVer !== undefined) {
         if (highestSemVer === undefined) {
-          highestSemVer = segmentSemVer
+          highestSemVer = segmentSemVer;
         } else {
-          const cSegment = coerce(segmentSemVer.value)
-          const cHighest = coerce(highestSemVer.value)
-          if(cSegment && cHighest) {
+          const cSegment = coerce(segmentSemVer.value);
+          const cHighest = coerce(highestSemVer.value);
+          if (cSegment && cHighest) {
             if (gte(cSegment, cHighest)) {
-              highestSemVer = segmentSemVer
+              highestSemVer = segmentSemVer;
             }
           }
         }
