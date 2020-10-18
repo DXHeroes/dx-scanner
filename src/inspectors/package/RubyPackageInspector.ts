@@ -2,6 +2,7 @@ import { PackageInspectorBase } from './PackageInspectorBase';
 import { IFileInspector, DependencyType, PackageVersion } from '..';
 import { inject } from 'inversify';
 import { Types } from '../../types';
+import { gte, coerce } from 'semver';
 
 export class RubyPackageInspector extends PackageInspectorBase {
   private fileInspector: IFileInspector;
@@ -45,20 +46,27 @@ export class RubyPackageInspector extends PackageInspectorBase {
   }
 
   private parseVersion(lineRemainder: string[]): PackageVersion | undefined {
-    const noVersion = PackageInspectorBase.semverToPackageVersion('0.0.0');
-    if (lineRemainder === []) {
-      return noVersion; // no version information provided
-    }
+    var highestSemVer = undefined;
     for (const lineSegment of lineRemainder) {
-      const segmentSemVer = PackageInspectorBase.semverToPackageVersion(lineSegment);
-      if (segmentSemVer) {
-        return segmentSemVer;
-      }
       if (lineSegment.startsWith('#')) {
-        return noVersion; // begin comment & no version information found
+        return highestSemVer; // begin comments, return what we have so far
+      }
+      const segmentSemVer = PackageInspectorBase.semverToPackageVersion(lineSegment);
+      if (segmentSemVer !== undefined) {
+        if (highestSemVer === undefined) {
+          highestSemVer = segmentSemVer
+        } else {
+          const cSegment = coerce(segmentSemVer.value)
+          const cHighest = coerce(highestSemVer.value)
+          if(cSegment && cHighest) {
+            if (gte(cSegment, cHighest)) {
+              highestSemVer = segmentSemVer
+            }
+          }
+        }
       }
     }
-    return noVersion; // no version information found
+    return highestSemVer;
   }
 
   private addPackages(dependencies: ParsedDependency[] | undefined, depType: DependencyType) {
