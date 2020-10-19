@@ -13,9 +13,11 @@ import { BitbucketService } from '../../services/bitbucket/BitbucketService';
 import { GitLabService } from '../../services/gitlab/GitLabService';
 import { PythonLanguageDetector } from '../../detectors/Python/PythonLanguageDetector';
 import { GoLanguageDetector } from '../../detectors/Go/GoLanguageDetector';
+import { PHPLanguageDetector } from '../../detectors/PHP/PHPLanguageDetector';
 import { ArgumentsProvider } from '../../scanner';
 import { IReporter, FixReporter, JSONReporter, CLIReporter, CIReporter, HTMLReporter, DashboardReporter } from '../../reporters';
 import { ServiceType, AccessType } from '../../detectors/IScanningStrategy';
+import { BranchesCollector } from '../../collectors/BranchesCollector';
 import { ContributorsCollector } from '../../collectors/ContributorsCollector';
 import { DataCollector } from '../../collectors/DataCollector';
 
@@ -48,8 +50,6 @@ const bindFileAccess = (scanningStrategy: ScanningStrategy, container: Container
   if (scanningStrategy.localPath) {
     container.bind(Types.FileInspectorBasePath).toConstantValue(scanningStrategy.localPath);
     container.bind(Types.IProjectFilesBrowser).to(FileSystemService);
-  }
-  if (scanningStrategy.serviceType === ServiceType.git && scanningStrategy.localPath) {
     container.bind(Types.RepositoryPath).toConstantValue(scanningStrategy.localPath);
     container.bind(Types.IGitInspector).to(GitInspector);
   }
@@ -68,6 +68,7 @@ const bindFileAccess = (scanningStrategy: ScanningStrategy, container: Container
 const bindCollectors = (container: Container, args: ArgumentsProvider, accessType: AccessType | undefined) => {
   if (accessType === AccessType.public || (accessType === AccessType.private && args.apiToken)) {
     container.bind(ContributorsCollector).toSelf().inSingletonScope();
+    container.bind(BranchesCollector).toSelf().inSingletonScope();
     container.bind(DataCollector).toSelf().inSingletonScope();
   }
 };
@@ -102,4 +103,5 @@ const bindLanguageDetectors = (container: Container) => {
   container.bind(Types.ILanguageDetector).to(JavaLanguageDetector);
   container.bind(Types.ILanguageDetector).to(PythonLanguageDetector);
   container.bind(Types.ILanguageDetector).to(GoLanguageDetector);
+  container.bind(Types.ILanguageDetector).to(PHPLanguageDetector);
 };

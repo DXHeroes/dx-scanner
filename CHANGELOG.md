@@ -1,3 +1,40 @@
+# [3.43.0](https://github.com/dxheroes/dx-scanner/compare/v3.42.1...v3.43.0) (2020-10-16)
+
+
+### Bug Fixes
+
+* **bitbucket:** Handle disabled issue tracker ([0c774f7](https://github.com/dxheroes/dx-scanner/commit/0c774f7cc8aa84dac9628ff8be2d725dc04717a1))
+* address review comments for [#452](https://github.com/dxheroes/dx-scanner/issues/452) ([7c76dc0](https://github.com/dxheroes/dx-scanner/commit/7c76dc0338a91b76395521d4fcbbc9e02dfcf7db))
+* fix linting errors in commit 1395228 ([8f95b37](https://github.com/dxheroes/dx-scanner/commit/8f95b3757fb70244dca8a20df4a86ce1c5b25b1e))
+* fixed composer.json parsing ([22bc648](https://github.com/dxheroes/dx-scanner/commit/22bc648faf1fa41e73568d111b92006e8b407593))
+* fixed JSON parsing error for composer.json ([e3eb8d9](https://github.com/dxheroes/dx-scanner/commit/e3eb8d9cde103d7f2f67558ad35c1da40fff06d3))
+* fixed tests not passing with PHPPackageInspector ([912c281](https://github.com/dxheroes/dx-scanner/commit/912c281afb4aebd2c2adb74b8b50cf764698c488))
+
+
+### Features
+
+* added PHP support to README ([f6888bc](https://github.com/dxheroes/dx-scanner/commit/f6888bc982fc5420ff093dd443639e852be6fafc))
+* added PHPComponentDetector and updated context bindings ([235b0fc](https://github.com/dxheroes/dx-scanner/commit/235b0fccab418bbd88c2863be4e41a6f5757062b))
+* added PHPLinterUsedPractice ([8834776](https://github.com/dxheroes/dx-scanner/commit/883477671bceb10e88514f5b040d183b7143a638))
+* added PHPPackageInspector ([94e8b38](https://github.com/dxheroes/dx-scanner/commit/94e8b38ab539900b099767a074a2d1868cffbe77))
+* added tests for php linter used practice ([497cdd4](https://github.com/dxheroes/dx-scanner/commit/497cdd41529f527483fe9a609c1730604924b318))
+* used linter for swift ([51b8d2d](https://github.com/dxheroes/dx-scanner/commit/51b8d2d7e320cb5e025324a3fed875473faa39d7))
+* used linter for swift ([27008f8](https://github.com/dxheroes/dx-scanner/commit/27008f81937994bb0095449c808832834e6d198c))
+
+## [3.42.1](https://github.com/dxheroes/dx-scanner/compare/v3.42.0...v3.42.1) (2020-10-16)
+
+
+### Bug Fixes
+
+* **deps:** update dependency update-notifier to v5 ([251e577](https://github.com/dxheroes/dx-scanner/commit/251e577807beb190f4a8d274d9fb6d2ef1a74e74))
+
+# [3.42.0](https://github.com/dxheroes/dx-scanner/compare/v3.41.3...v3.42.0) (2020-10-16)
+
+
+### Features
+
+* add funding file to get sponsor button on github ([7f00fd6](https://github.com/dxheroes/dx-scanner/commit/7f00fd6440febc6680d48c0dbb560da112e81725))
+
 ## [3.41.3](https://github.com/dxheroes/dx-scanner/compare/v3.41.2...v3.41.3) (2020-10-15)
 
 

@@ -29,6 +29,7 @@ import {
   Symlink,
   File,
   Directory,
+  Branch,
 } from '../git/model';
 import { VCSServicesUtils } from '../git/VCSServicesUtils';
 import { DeepRequired } from '../../lib/deepRequired';
@@ -285,12 +286,28 @@ export class BitbucketService implements IVCSService {
       pagelen: options?.pagination?.perPage,
     };
 
-    const response = <DeepRequired<Response<Schema.PaginatedIssues>>>await this.unwrap(
-      axios.get(apiUrl, {
-        params,
-        paramsSerializer: qs.stringify,
-      }),
-    );
+    let response;
+    try {
+      response = <DeepRequired<Response<Schema.PaginatedIssues>>>await this.unwrap(
+        axios.get(apiUrl, {
+          params,
+          paramsSerializer: qs.stringify,
+        }),
+      );
+    } catch (err) {
+      const errorMessage = err?.response?.data?.error?.message;
+      if (errorMessage === 'Repository has no issue tracker.') {
+        return {
+          items: [],
+          totalCount: 0,
+          hasNextPage: false,
+          hasPreviousPage: false,
+          page: 1,
+          perPage: 0,
+        };
+      }
+      throw err;
+    }
 
     const items = response.data.values.map((val) => ({
       user: {
@@ -365,6 +382,34 @@ export class BitbucketService implements IVCSService {
       id: val.id,
     }));
     const pagination = this.getPagination(response.data);
+
+    return { items, ...pagination };
+  }
+
+  async listBranches(owner: string, repo: string, options?: ListGetterOptions): Promise<Paginated<Branch>> {
+    this.authenticate();
+
+    const [responseBranches, responseBranchingModel] = await Promise.all([
+      this.client.refs.listBranches({
+        repo_slug: repo,
+        workspace: owner,
+        page: options?.pagination?.page?.toString(),
+        pagelen: options?.pagination?.perPage,
+      }),
+      this.client.branching_model.get({
+        repo_slug: repo,
+        workspace: owner,
+      }),
+    ]);
+    const items: Branch[] =
+      responseBranches.data.values?.map((val) => ({
+        name: val.name || '',
+        type: val.name === responseBranchingModel.data.development?.branch?.name ? 'default' : 'unknown',
+      })) || [];
+    const pagination = this.getPagination({
+      ...responseBranches.data,
+      values: responseBranches.data.values?.filter(Boolean) as Schema.Branch[],
+    });
 
     return { items, ...pagination };
   }
@@ -617,7 +662,7 @@ export class BitbucketService implements IVCSService {
     );
   };
 
-  getPagination<T>(data: { next: string; previous: string; page: number; values: T[] }) {
+  getPagination<T>(data: { next?: string; previous?: string; page?: number; values: T[] }) {
     const hasNextPage = !!data.next;
     const hasPreviousPage = !!data.previous;
     const page = data.page;
