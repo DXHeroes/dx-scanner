@@ -8,7 +8,7 @@ import { PracticeContext } from '../../contexts/practice/PracticeContext';
   name: 'Create a Changelog File',
   impact: PracticeImpact.high,
   suggestion:
-    'The main purpose of changelog is to show the differences, across multiple commits to communicate clearly to users.',
+    'Add a Changelog file to tell other people what changed in the last release.',
   reportOnlyOnce: true,
   url: 'https://www.freecodecamp.org/news/a-beginners-guide-to-git-what-is-a-changelog-and-how-to-generate-it/',
 })
