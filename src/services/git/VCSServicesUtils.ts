@@ -3,17 +3,20 @@ import { IssueState } from '../../inspectors';
 import { PullRequestState } from '../../inspectors/ICollaborationInspector';
 import { BitbucketIssueState, BitbucketPullRequestState } from '../bitbucket/IBitbucketService';
 import { GitLabIssueState, GitLabPullRequestState } from '../gitlab/IGitLabService';
-import { GitHubIssueState, GitHubPullRequestState } from './IGitHubService';
+import { GitHubGqlPullRequestState, GitHubIssueState, GitHubPullRequestState } from './IGitHubService';
 
 export class VCSServicesUtils {
-  static getGithubPRState = (state: PullRequestState | undefined) => {
+  static getGithubPRState = (state: PullRequestState | undefined, gql = false) => {
     switch (state) {
       case PullRequestState.open:
         return GitHubPullRequestState.open;
       case PullRequestState.closed:
         return GitHubPullRequestState.closed;
       case PullRequestState.all:
-        return GitHubPullRequestState.all;
+        // GitHub Graphql API has a different params for PR state
+        return gql
+          ? [GitHubGqlPullRequestState.open, GitHubGqlPullRequestState.merged, GitHubGqlPullRequestState.closed]
+          : GitHubPullRequestState.all;
       default:
         return undefined;
     }

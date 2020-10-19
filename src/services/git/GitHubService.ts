@@ -1,3 +1,4 @@
+import { graphql } from '@octokit/graphql';
 import { Octokit } from '@octokit/rest';
 import type { OctokitResponse } from '@octokit/types';
 import Debug from 'debug';
@@ -16,6 +17,7 @@ import { RepositoryConfig } from '../../scanner/RepositoryConfig';
 import { Types } from '../../types';
 import { IVCSService } from './IVCSService';
 import {
+  Branch,
   Commit,
   Contributor,
   ContributorStats,
@@ -31,14 +33,12 @@ import {
   PullRequestReview,
   RepoContentType,
   Symlink,
-  Branch,
 } from './model';
 import {
   GetContentsResponse,
   IssuesListCommentsParams,
   IssuesListForRepoParams,
   PullsListCommitsParams,
-  PullsListParams,
   ReposGetResponseData,
 } from './OctokitTypes';
 import { VCSServicesUtils } from './VCSServicesUtils';
@@ -49,6 +49,7 @@ export class GitHubService implements IVCSService {
   private readonly client: Octokit;
   private cache: ICache;
   private callCount = 0;
+  private readonly graphqlWithAuth;
   private readonly repositoryConfig: RepositoryConfig;
 
   constructor(
@@ -60,6 +61,7 @@ export class GitHubService implements IVCSService {
     this.client = new Octokit({
       auth: argumentsProvider.auth,
     });
+    this.graphqlWithAuth = graphql.defaults({ headers: { authorization: `token ${argumentsProvider.auth}` } });
   }
 
   purgeCache() {
@@ -84,52 +86,113 @@ export class GitHubService implements IVCSService {
     repo: string,
     options?: { withDiffStat?: boolean } & ListGetterOptions<{ state?: PullRequestState }>,
   ): Promise<Paginated<PullRequest>> {
-    const state = VCSServicesUtils.getGithubPRState(options?.filter?.state);
+    const state = VCSServicesUtils.getGithubPRState(options?.filter?.state, true);
 
-    const params: PullsListParams = { owner, repo };
-    if (state) params.state = state;
-    if (options?.pagination?.page) params.page = options.pagination.page;
-    if (options?.pagination?.perPage) params.per_page = options.pagination.perPage;
-
-    const { data, headers } = await this.unwrap(this.client.pulls.list(params));
-
-    const items = await Promise.all(
-      data.map(async (val) => {
-        const pullRequest = {
-          user: {
-            id: val.user.id.toString(),
-            login: val.user.login,
-            url: val.user.html_url,
-          },
-          title: val.title,
-          url: val.html_url,
-          body: val.body,
-          sha: val.merge_commit_sha,
-          createdAt: val.created_at,
-          updatedAt: val.updated_at,
-          closedAt: val.closed_at,
-          mergedAt: val.merged_at,
-          state: val.state,
-          id: val.number, // Lists details of a pull request by providing its number. - https://developer.github.com/v3/pulls/
-          base: {
-            repo: {
-              url: val.base.repo.url,
-              name: val.base.repo.name,
-              id: val.base.repo.id.toString(),
-              owner: { url: val.base.repo.owner.url, id: val.base.repo.owner.id.toString(), login: val.base.repo.owner.login },
-            },
-          },
-        };
-        // Get number of changes, additions and deletions in PullRequest if the withDiffStat is true
-        if (options?.withDiffStat) {
-          const lines = await this.getPullsDiffStat(owner, repo, val.number);
-          return { ...pullRequest, lines };
+    // TODO - debug the rateLimit
+    // TODO - implement pagination
+    const { repository, rateLimit } = await this.graphqlWithAuth(
+      `
+      query ($owner: String!, $repo: String!, $states: [PullRequestState!]) {
+        repository(owner: $owner, name: $repo) {
+          pullRequests(states: $states, last: 100) {
+            totalCount
+            pageInfo {
+              startCursor
+              endCursor
+              hasNextPage
+              hasPreviousPage
+            }
+            edges {
+              cursor
+              node {
+                author {
+                  login
+                  url
+                  ... on User {
+                    id
+                  }
+                }
+                number
+                title
+                body
+                mergeCommit {
+                  id
+                }
+                createdAt
+                updatedAt
+                closedAt
+                mergedAt
+                state
+                baseRepository {
+                  url
+                  name
+                  id
+                  owner {
+                    url
+                    id
+                    login
+                  }
+                }
+                additions
+                deletions
+              }
+            }
+          }
         }
-        return pullRequest;
-      }),
+        rateLimit {
+          limit
+          cost
+          remaining
+          resetAt
+        }
+      }
+    `,
+      { owner, repo, states: state },
     );
 
-    const pagination = this.getPagination(data.length, headers.link);
+    const pullRequests = repository.pullRequests;
+
+    const items = pullRequests.edges.map((pr: any) => {
+      const pullRequest = {
+        user: {
+          id: pr.node.author.id,
+          login: pr.node.author.login,
+          url: pr.node.author.url,
+        },
+        title: pr.node.title,
+        url: pr.node.url,
+        body: pr.node.body,
+        sha: pr.node.mergeCommit?.id,
+        createdAt: pr.node.createdAt,
+        updatedAt: pr.node.updatedAt,
+        closedAt: pr.node.closedAt,
+        mergedAt: pr.node.mergedAt,
+        state: pr.node.state,
+        id: pr.node.number, // Lists details of a pull request by providing its number. - https://developer.github.com/v3/pulls/
+        base: {
+          repo: {
+            url: pr.node.baseRepository.url,
+            name: pr.node.baseRepository.name,
+            id: pr.node.baseRepository.id,
+            owner: {
+              url: pr.node.baseRepository.owner.url,
+              id: pr.node.baseRepository.owner.id,
+              login: pr.node.baseRepository.owner.login,
+            },
+          },
+        },
+        lines: { additions: pr.node.additions, deletions: pr.node.deletions, changes: pr.node.additions + pr.node.deletions },
+      };
+
+      return pullRequest;
+    });
+
+    const pagination = this.getPagination(
+      pullRequests.totalCount,
+      undefined,
+      pullRequests.pageInfo.hasNextPage,
+      pullRequests.pageInfo.hasPreviousPage,
+    );
 
     return { items, ...pagination };
   }
@@ -597,14 +660,14 @@ export class GitHubService implements IVCSService {
     };
   }
 
-  getPagination(totalCount: number, link?: string) {
+  getPagination(totalCount: number, link?: string, hasNextPage?: boolean, hasPreviousPage?: boolean) {
     const parsedLink = VCSServicesUtils.parseGitHubHeaderLink(link);
 
     if (!parsedLink) {
       return {
         totalCount,
-        hasNextPage: false,
-        hasPreviousPage: false,
+        hasNextPage: hasNextPage ? hasNextPage : false,
+        hasPreviousPage: hasPreviousPage ? hasPreviousPage : false,
         page: 1,
         perPage: totalCount,
       };
