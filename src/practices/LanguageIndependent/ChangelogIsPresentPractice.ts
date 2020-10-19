@@ -10,7 +10,7 @@ import { PracticeContext } from '../../contexts/practice/PracticeContext';
   suggestion:
     'The main purpose of changelog is to show the differences, across multiple commits to communicate clearly to users.',
   reportOnlyOnce: true,
-  url: 'https://dxkb.io/p/changelog',
+  url: 'https://www.freecodecamp.org/news/a-beginners-guide-to-git-what-is-a-changelog-and-how-to-generate-it/',
 })
 export class ChangelogIsPresentPractice implements IPractice {
   async isApplicable(): Promise<boolean> {
