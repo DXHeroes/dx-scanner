@@ -1,25 +1,24 @@
+import { PracticeContext } from '../../contexts/practice/PracticeContext';
 import { PracticeEvaluationResult, PracticeImpact, ProgrammingLanguage } from '../../model';
 import { DxPractice } from '../DxPracticeDecorator';
-import { PracticeContext } from '../../contexts/practice/PracticeContext';
 import { IPractice } from '../IPractice';
 
 @DxPractice({
-  id: 'Swift.SwiftLintUsed',
-  name: 'Use SwiftLint',
+  id: 'CPP.LinterUsedPractice',
+  name: 'Use a C++ Linter',
   impact: PracticeImpact.medium,
-  suggestion: 'Use Linter to catch dangerous code constructs. SwiftLint is the most widely used Linter in the Swift community.',
+  suggestion: 'Use Linter to catch bugs and dangerous code constructs.',
   reportOnlyOnce: true,
-  url: 'https://dxkb.io/p/linting',
+  url: 'https://github.com/caramelomartins/awesome-linters#cc',
 })
-export class SwiftLintUsedPractice implements IPractice {
+export class CPPLinterUsedPractice implements IPractice {
   async isApplicable(ctx: PracticeContext): Promise<boolean> {
-    return ctx.projectComponent.language === ProgrammingLanguage.Swift;
+    return ctx.projectComponent.language === ProgrammingLanguage.CPlusPlus;
   }
 
   async evaluate(ctx: PracticeContext): Promise<PracticeEvaluationResult> {
     if (ctx.packageInspector) {
-      const swiftlintRegex = new RegExp('swiftlint');
-      if (ctx.packageInspector.hasPackage(swiftlintRegex)) {
+      if (ctx.packageInspector.hasOneOfPackages(['cppcheck.sourceforge.net/', 'github.com/oclint/oclint'])) {
         return PracticeEvaluationResult.practicing;
       } else {
         return PracticeEvaluationResult.notPracticing;

@@ -79,7 +79,7 @@ export interface composerJSON {
   // 'autoload-dev' must be in kebab-case
   'autoload-dev': PHPAutoload | undefined;
   // 'minimum-stability' must be in kebab-case
-  'minimum-stability': string | undefined; 
+  'minimum-stability': string | undefined;
   // 'prefer-stable' must be in kebab-case
   'prefer-stable': boolean | undefined;
   support: { [name: string]: string } | undefined;
