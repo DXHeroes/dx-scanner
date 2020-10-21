@@ -9,7 +9,7 @@ import { IPractice } from '../IPractice';
   impact: PracticeImpact.medium,
   suggestion: 'Use Linter to catch bugs and dangerous code constructs.',
   reportOnlyOnce: true,
-  url: 'https://github.com/caramelomartins/awesome-linters#cc',
+  url: 'https://dxkb.io/p/linting',
 })
 export class CPPLinterUsedPractice implements IPractice {
   async isApplicable(ctx: PracticeContext): Promise<boolean> {
