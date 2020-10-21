@@ -2,6 +2,9 @@ import { Git } from './Git';
 import { GitHubNock } from '../../test/helpers/gitHubNock';
 import { GitHubService } from './GitHubService';
 import { argumentsProviderFactory } from '../../test/factories/ArgumentsProviderFactory';
+import { listPullRequestsParamas } from './gqlQueries/listPullRequests';
+import nock from 'nock';
+import { gqlPullsResponse, oneGqlPullRequest } from './__MOCKS__/gitHubServiceMockFolder/gqlPullsResponse.mock';
 
 describe('Git', () => {
   let service: GitHubService, git: Git, gitHubNock: GitHubNock;
@@ -9,14 +12,14 @@ describe('Git', () => {
   const repositoryConfig = {
     remoteUrl: 'https://github.com/octocat/Hello-World',
     baseUrl: 'https://github.com',
-    host: 'githum.com',
+    host: 'github.com',
     protocol: 'https',
   };
 
   beforeAll(() => {
     service = new GitHubService(argumentsProviderFactory({ uri: '.' }), repositoryConfig);
-    git = new Git({ url: 'https://github.com/DXHeroes/dx-scanner.git' }, service);
-    gitHubNock = new GitHubNock('1', 'DXHeroes', 1, 'dx-scanner');
+    git = new Git({ url: 'https://github.com/octocat/Hello-World.git' }, service);
+    gitHubNock = new GitHubNock('1', 'octocat', 1, 'Hello-World');
   });
 
   beforeEach(() => {
@@ -293,16 +296,33 @@ describe('Git', () => {
 
   describe('#getPullRequestCount', () => {
     it('returns the number of both open and closed pull requests', async () => {
-      gitHubNock.getPulls({
-        pulls: [
-          { number: 1, state: 'open', title: '1', body: '1', head: 'head', base: 'base' },
-          { number: 2, state: 'closed', title: '2', body: '2', head: 'head', base: 'base' },
-        ],
-        queryState: 'all',
+      const queryBody = {
+        query: listPullRequestsParamas,
+        variables: {
+          owner: 'octocat',
+          repo: 'Hello-World',
+          states: ['OPEN', 'MERGED', 'CLOSED'],
+        },
+      };
+      const pulls = gqlPullsResponse({
+        data: {
+          repository: {
+            pullRequests: {
+              totalCount: 3,
+              edges: [
+                oneGqlPullRequest({ node: { state: 'OPEN' } }),
+                oneGqlPullRequest({ node: { state: 'MERGED' } }),
+                oneGqlPullRequest({ node: { state: 'CLOSED' } }),
+              ],
+            },
+          },
+        },
       });
 
+      nock('https://api.github.com').post('/graphql', queryBody).reply(200, pulls);
+
       const result = await git.getPullRequestCount();
-      expect(result).toEqual(2);
+      expect(result).toEqual(3);
     });
   });
 });

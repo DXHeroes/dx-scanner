@@ -15,6 +15,7 @@ import { ICache } from '../../scanner/cache/ICache';
 import { InMemoryCache } from '../../scanner/cache/InMemoryCache';
 import { RepositoryConfig } from '../../scanner/RepositoryConfig';
 import { Types } from '../../types';
+import { listPullRequestsParamas } from './gqlQueries/listPullRequests';
 import { IVCSService } from './IVCSService';
 import {
   Branch,
@@ -90,79 +91,22 @@ export class GitHubService implements IVCSService {
 
     // TODO - debug the rateLimit
     // TODO - implement pagination
-    const { repository, rateLimit } = await this.graphqlWithAuth(
-      `
-      query ($owner: String!, $repo: String!, $states: [PullRequestState!]) {
-        repository(owner: $owner, name: $repo) {
-          pullRequests(states: $states, last: 100) {
-            totalCount
-            pageInfo {
-              startCursor
-              endCursor
-              hasNextPage
-              hasPreviousPage
-            }
-            edges {
-              cursor
-              node {
-                author {
-                  login
-                  url
-                  ... on User {
-                    id
-                  }
-                }
-                number
-                title
-                body
-                mergeCommit {
-                  id
-                }
-                createdAt
-                updatedAt
-                closedAt
-                mergedAt
-                state
-                baseRepository {
-                  url
-                  name
-                  id
-                  owner {
-                    url
-                    id
-                    login
-                  }
-                }
-                additions
-                deletions
-              }
-            }
-          }
-        }
-        rateLimit {
-          limit
-          cost
-          remaining
-          resetAt
-        }
-      }
-    `,
-      { owner, repo, states: state },
-    );
+    const { repository, rateLimit } = await this.graphqlWithAuth(listPullRequestsParamas, { owner, repo, states: state });
 
     const pullRequests = repository.pullRequests;
 
     const items = pullRequests.edges.map((pr: any) => {
-      const pullRequest = {
+      const pullRequest: PullRequest = {
         user: {
-          id: pr.node.author.id,
-          login: pr.node.author.login,
-          url: pr.node.author.url,
+          // author can be null if the user have been deleted
+          id: pr.node.author?.id,
+          login: pr.node.author?.login,
+          url: pr.node.author?.url,
         },
         title: pr.node.title,
         url: pr.node.url,
         body: pr.node.body,
-        sha: pr.node.mergeCommit?.id,
+        sha: pr.node.mergeCommit?.id || null,
         createdAt: pr.node.createdAt,
         updatedAt: pr.node.updatedAt,
         closedAt: pr.node.closedAt,

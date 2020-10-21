@@ -30,23 +30,24 @@ describe('Collaboration Inspector', () => {
     inspector = <CollaborationInspector>containerCtx.practiceContext.collaborationInspector;
   });
 
-  it('returns paginated pull requests', async () => {
-    new GitHubNock('1', 'octocat', 1296269, 'Hello-World').getPulls({
-      pulls: [
-        {
-          number: 1,
-          state: 'open',
-          title: 'Edited README via GitHub',
-          body: 'Please pull these awesome changes',
-          head: 'new-topic',
-          base: 'master',
-        },
-      ],
-    });
+  // TODO - after adding pagination
+  // it('returns paginated pull requests', async () => {
+  //   new GitHubNock('1', 'octocat', 1296269, 'Hello-World').getPulls({
+  //     pulls: [
+  //       {
+  //         number: 1,
+  //         state: 'open',
+  //         title: 'Edited README via GitHub',
+  //         body: 'Please pull these awesome changes',
+  //         head: 'new-topic',
+  //         base: 'master',
+  //       },
+  //     ],
+  //   });
 
-    const response = await inspector.listPullRequests('octocat', 'Hello-World');
-    expect(response).toMatchObject(getPullsServiceResponse);
-  });
+  //   const response = await inspector.listPullRequests('octocat', 'Hello-World');
+  //   expect(response).toMatchObject(getPullsServiceResponse);
+  // });
 
   it('returns one pull request', async () => {
     new GitHubNock('583231', 'octocat', 1296269, 'Hello-World').getPull(1, 'closed', 'Edited README via GitHub', '', 'patch-1', 'master');

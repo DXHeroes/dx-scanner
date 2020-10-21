@@ -9,9 +9,9 @@ export class VCSServicesUtils {
   static getGithubPRState = (state: PullRequestState | undefined, gql = false) => {
     switch (state) {
       case PullRequestState.open:
-        return GitHubPullRequestState.open;
+        return gql ? GitHubGqlPullRequestState.open : GitHubPullRequestState.open;
       case PullRequestState.closed:
-        return GitHubPullRequestState.closed;
+        return gql ? GitHubGqlPullRequestState.closed : GitHubPullRequestState.closed;
       case PullRequestState.all:
         // GitHub Graphql API has a different params for PR state
         return gql
