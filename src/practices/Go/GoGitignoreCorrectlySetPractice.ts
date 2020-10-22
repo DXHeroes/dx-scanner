@@ -41,8 +41,24 @@ export class GoGitignoreCorrectlySetPractice extends PracticeBase {
     this.parsedGitignore = parsedGitignore;
 
     // node_modules
-    const binaryFilesRegex = parsedGitignore.find((value: string) =>
-      /.exe$|.exe~$|.dll$|.so$|.dylib$|.test$/.test(value),
+
+    const exeFileRegex = this.parsedGitignore.find((value: string) =>
+      /.exe$/.test(value),
+    );
+    const exeTiltFileRegex = this.parsedGitignore.find((value: string) =>
+      /.exe~$/.test(value),
+    );
+    const dllFileRegex = this.parsedGitignore.find((value: string) =>
+      /.dll$/.test(value),
+    );
+    const soFileRegex = this.parsedGitignore.find((value: string) =>
+      /.so$/.test(value),
+    );
+    const dylibFileRegex = this.parsedGitignore.find((value: string) =>
+      /.dylib$/.test(value),
+    );
+    const testFileRegex = this.parsedGitignore.find((value: string) =>
+      /.test$/.test(value),
     );
     // misc
     const coverageRegex = parsedGitignore.find((value: string) =>
@@ -52,7 +68,16 @@ export class GoGitignoreCorrectlySetPractice extends PracticeBase {
       /vendor/.test(value),
     );
 
-    if (binaryFilesRegex && dependencyRegex && coverageRegex) {
+    if (
+      exeFileRegex &&
+      exeTiltFileRegex &&
+      dllFileRegex &&
+      dylibFileRegex &&
+      soFileRegex &&
+      testFileRegex &&
+      dependencyRegex &&
+      coverageRegex
+    ) {
       return PracticeEvaluationResult.practicing;
     }
 
@@ -66,8 +91,24 @@ export class GoGitignoreCorrectlySetPractice extends PracticeBase {
       : ctx.root.fileInspector;
     if (!inspector) return;
     // node_modules
-    const binaryFilesRegex = this.parsedGitignore.find((value: string) =>
-      /.exe$|.exe~$|.dll$|.so$|.dylib$|.test$/.test(value),
+
+    const exeFileRegex = this.parsedGitignore.find((value: string) =>
+      /.exe$/.test(value),
+    );
+    const exeTiltFileRegex = this.parsedGitignore.find((value: string) =>
+      /.exe~$/.test(value),
+    );
+    const dllFileRegex = this.parsedGitignore.find((value: string) =>
+      /.dll$/.test(value),
+    );
+    const soFileRegex = this.parsedGitignore.find((value: string) =>
+      /.so$/.test(value),
+    );
+    const dylibFileRegex = this.parsedGitignore.find((value: string) =>
+      /.dylib$/.test(value),
+    );
+    const testFileRegex = this.parsedGitignore.find((value: string) =>
+      /.test$/.test(value),
     );
     // misc
     const coverageRegex = this.parsedGitignore.find((value: string) =>
@@ -77,8 +118,13 @@ export class GoGitignoreCorrectlySetPractice extends PracticeBase {
       /vendor/.test(value),
     );
     const fixes = [
-      binaryFilesRegex ? undefined : '.exe\n.exe~\n.dll\n.so\n.dylib\n.test\n',
-      coverageRegex ? undefined : '.out',
+      exeFileRegex ? undefined : '*.exe',
+      exeTiltFileRegex ? undefined : '*.exe~',
+      dllFileRegex ? undefined : '*.dll',
+      soFileRegex ? undefined : '*.so',
+      dylibFileRegex ? undefined : '*.dylib',
+      testFileRegex ? undefined : '*.test',
+      coverageRegex ? undefined : '*.out',
       dependencyRegex ? undefined : 'vendor/',
     ]
       .filter(Boolean)
