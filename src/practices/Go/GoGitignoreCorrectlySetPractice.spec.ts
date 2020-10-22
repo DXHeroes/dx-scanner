@@ -109,7 +109,9 @@ describe('GoGitignoreCorrectlySetPractice', () => {
       const fixedGitignore = await containerCtx.virtualFileSystemService.readFile(
         '.gitignore',
       );
-      expect(fixedGitignore).toBe('/node_modules\n/coverage\n\n*.log\n');
+      expect(fixedGitignore).toBe(
+        '*.exe\n*.exe~\n*.dll\n*.so\n*.dylib\n*.test\n*.out\nvendor/\n',
+      );
     });
   });
 });
