@@ -61,24 +61,6 @@ describe('GoGitignoreCorrectlySetPractice', () => {
     expect(evaluated).toEqual(PracticeEvaluationResult.unknown);
   });
 
-  it('Returns practicing even if there are no lockfiles in .gitignore', async () => {
-    containerCtx.virtualFileSystemService.setFileSystem({
-      '.gitignore': basicGitignore,
-    });
-
-    const evaluated = await practice.evaluate(containerCtx.practiceContext);
-    expect(evaluated).toEqual(PracticeEvaluationResult.practicing);
-  });
-
-  it('Returns practicing if there is only one lockfile in .gitignore', async () => {
-    containerCtx.virtualFileSystemService.setFileSystem({
-      '.gitignore': `${basicGitignore}\nyarn.lock`,
-    });
-
-    const evaluated = await practice.evaluate(containerCtx.practiceContext);
-    expect(evaluated).toEqual(PracticeEvaluationResult.practicing);
-  });
-
   describe('Fixer', () => {
     afterEach(async () => {
       containerCtx.virtualFileSystemService.clearFileSystem();
@@ -100,7 +82,8 @@ describe('GoGitignoreCorrectlySetPractice', () => {
     });
     it('Appends to .gitignore if entry is missing', async () => {
       containerCtx.virtualFileSystemService.setFileSystem({
-        '.gitignore': '/node_modules\n/coverage\n',
+        '.gitignore':
+          '*.exe\n*.exe~\n*.dll\n*.so\n*.dylib\n*.test\n*.out\nvendor/\n',
       });
 
       await practice.evaluate(containerCtx.practiceContext);
