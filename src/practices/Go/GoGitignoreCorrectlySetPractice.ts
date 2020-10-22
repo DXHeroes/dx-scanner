@@ -94,7 +94,7 @@ export class GoGitignoreCorrectlySetPractice extends PracticeBase {
       {
         type: ReportDetailType.text,
         text:
-          'You should ignore one of the lock files (package-lock.json or yarn.lock), node_modules folder, coverage folder and log files (*.log)',
+          'You should ignore the binaries for programs and plugins(.exe and others).Test binaries should also be ignored as well as .out file too along with the dependency directories',
       },
     ];
   }
