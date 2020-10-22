@@ -1,3 +1,10 @@
+# [3.44.0](https://github.com/dxheroes/dx-scanner/compare/v3.43.0...v3.44.0) (2020-10-19)
+
+
+### Features
+
+* add ruby gitignore practice ([be7e244](https://github.com/dxheroes/dx-scanner/commit/be7e244db4c37ac728683e23265667eb714fa74b))
+
 # [3.43.0](https://github.com/dxheroes/dx-scanner/compare/v3.42.1...v3.43.0) (2020-10-16)
 
 
