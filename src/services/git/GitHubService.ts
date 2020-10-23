@@ -1,10 +1,8 @@
 import { graphql } from '@octokit/graphql';
 import { Octokit } from '@octokit/rest';
 import type { OctokitResponse } from '@octokit/types';
-import { option } from 'commander';
 import Debug from 'debug';
 import { inject, injectable } from 'inversify';
-import { start } from 'repl';
 import { inspect } from 'util';
 import { GitHubGqlPullRequestState } from '.';
 import { ListGetterOptions } from '../../inspectors/common/ListGetterOptions';
@@ -107,7 +105,7 @@ export class GitHubService implements IVCSService {
     };
 
     while (hasPreviousPage) {
-      const { repository, rateLimit } = await this.graphqlWithAuth(listPullRequestsParamas, { ...queryParams });
+      const { repository } = await this.unwrapGql(this.graphqlWithAuth(listPullRequestsParamas, { ...queryParams }));
       pullRequests = repository.pullRequests;
 
       const prs: PullRequest[] = pullRequests.edges.map((pr: any) => {
@@ -665,12 +663,40 @@ export class GitHubService implements IVCSService {
   }
 
   /**
-   * Debug GitHub response
+   * Debug GitHub REST response
    * - count API calls and inform about remaining rate limit
    */
   private debugGitHubResponse = <T>(response: OctokitResponse<T>) => {
     this.callCount++;
     debug(`GitHub API Hit: ${this.callCount}. Remaining ${response.headers['x-ratelimit-remaining']} hits. (${response.headers.link})`);
+  };
+
+  /**
+   * Debug GitHub GQL request promise
+   */
+  private unwrapGql(gqlPromise: Promise<any>): Promise<any> {
+    return gqlPromise
+      .then((response) => {
+        this.debugGitHubGqlResponse(response.rateLimit);
+        return response;
+      })
+      .catch((error) => {
+        if (error.response) {
+          debug(`${error.response.status} => ${inspect(error.response.data)}`);
+        } else {
+          debug(inspect(error));
+        }
+        throw error;
+      });
+  }
+
+  /**
+   * Debug GitHub GQL response
+   * - count API calls and inform about remaining rate limit
+   */
+  private debugGitHubGqlResponse = (rateLimit: any) => {
+    this.callCount += rateLimit.cost;
+    debug(`GitHub API Hit: ${this.callCount}. Remaining ${rateLimit.remaining} hits. Reset at ${rateLimit.resetAt}`);
   };
 }
 
