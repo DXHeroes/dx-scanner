@@ -16,6 +16,9 @@ import { BitbucketNock } from '../test/helpers/bitbucketNock';
 import { PullRequestState } from '.';
 import { bitbucketPullRequestResponseFactory } from '../test/factories/responses/bitbucket/prResponseFactory';
 import { BitbucketPullRequestState } from '../services/bitbucket/IBitbucketService';
+import nock from 'nock';
+import { listPullRequestsParamas } from '../services/git/gqlQueries/listPullRequests';
+import { gqlPullsResponse } from '../services/git/__MOCKS__/gitHubServiceMockFolder/gqlPullsResponse.mock';
 
 describe('Collaboration Inspector', () => {
   let inspector: CollaborationInspector;
@@ -30,24 +33,23 @@ describe('Collaboration Inspector', () => {
     inspector = <CollaborationInspector>containerCtx.practiceContext.collaborationInspector;
   });
 
-  // TODO - after adding pagination
-  // it('returns paginated pull requests', async () => {
-  //   new GitHubNock('1', 'octocat', 1296269, 'Hello-World').getPulls({
-  //     pulls: [
-  //       {
-  //         number: 1,
-  //         state: 'open',
-  //         title: 'Edited README via GitHub',
-  //         body: 'Please pull these awesome changes',
-  //         head: 'new-topic',
-  //         base: 'master',
-  //       },
-  //     ],
-  //   });
+  it('returns paginated pull requests', async () => {
+    const pagination = { perPage: 1 };
+    const queryBody = {
+      query: listPullRequestsParamas,
+      variables: {
+        owner: 'octocat',
+        repo: 'Hello-World',
+        count: 1,
+        states: ['OPEN', 'MERGED', 'CLOSED'],
+      },
+    };
 
-  //   const response = await inspector.listPullRequests('octocat', 'Hello-World');
-  //   expect(response).toMatchObject(getPullsServiceResponse);
-  // });
+    nock('https://api.github.com').post('/graphql', queryBody).reply(200, gqlPullsResponse());
+
+    const response = await inspector.listPullRequests('octocat', 'Hello-World', { pagination });
+    expect(response).toMatchObject(getPullsServiceResponse);
+  });
 
   it('returns one pull request', async () => {
     new GitHubNock('583231', 'octocat', 1296269, 'Hello-World').getPull(1, 'closed', 'Edited README via GitHub', '', 'patch-1', 'master');
