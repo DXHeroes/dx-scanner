@@ -81,7 +81,7 @@ export class GitHubService implements IVCSService {
   }
 
   /**
-   * Lists all pull requests in the repo.
+   * Lists all pull requests in the repo using GraphQL.
    */
   async listPullRequests(
     owner: string,
@@ -89,9 +89,6 @@ export class GitHubService implements IVCSService {
     options?: { withDiffStat?: boolean } & ListGetterOptions<{ state?: PullRequestState }>,
   ): Promise<Paginated<PullRequest>> {
     const state = VCSServicesUtils.getGithubGqlPRState(options?.filter?.state);
-
-    // TODO - debug the rateLimit
-    // TODO - implement pagination
 
     let hasPreviousPage = true;
     let pullRequests;
@@ -143,7 +140,7 @@ export class GitHubService implements IVCSService {
 
         return pullRequest;
       });
-      hasPreviousPage = pullRequests.hasPreviousPage;
+      hasPreviousPage = pullRequests.pageInfo.hasPreviousPage;
       queryParams.startCursor = pullRequests.pageInfo.startCursor;
       items = items.concat(prs);
     }

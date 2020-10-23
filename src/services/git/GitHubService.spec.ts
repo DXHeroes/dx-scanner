@@ -114,6 +114,37 @@ describe('GitHub Service', () => {
       expect(response).toMatchObject(getPullsServiceResponse);
     });
 
+    it('returns two pulls in own interface one per page', async () => {
+      const pagination = { perPage: 1 };
+      const queryBody = {
+        query: listPullRequestsParamas,
+        variables: {
+          owner: 'octocat',
+          repo: 'Hello-World',
+          count: 1,
+          states: ['OPEN', 'MERGED', 'CLOSED'],
+        },
+      };
+      const queryBodyScnd = {
+        query: listPullRequestsParamas,
+        variables: {
+          owner: 'octocat',
+          repo: 'Hello-World',
+          count: 1,
+          states: ['OPEN', 'MERGED', 'CLOSED'],
+          startCursor: 'Y3Vyc29yOnYyOpHODUTjBQ==',
+        },
+      };
+
+      nock('https://api.github.com')
+        .post('/graphql', queryBody)
+        .reply(200, gqlPullsResponse({ data: { repository: { pullRequests: { pageInfo: { hasPreviousPage: true } } } } }));
+      nock('https://api.github.com').post('/graphql', queryBodyScnd).reply(200, gqlPullsResponse());
+
+      const response = await service.listPullRequests('octocat', 'Hello-World', { pagination });
+      expect(response.items.length).toEqual(2);
+    });
+
     it('returns open pulls', async () => {
       const queryBody = {
         query: listPullRequestsParamas,
