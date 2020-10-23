@@ -61,4 +61,22 @@ describe('ReadmeIsCorrectlySet', () => {
     const evaluated = await practice.evaluate(containerCtx.practiceContext);
     expect(evaluated).toEqual(PracticeEvaluationResult.notPracticing);
   });
+
+  it('Return Practicing even if readme is all markdown', async () => {
+    containerCtx.virtualFileSystemService.setFileSystem({
+      '/readme.md': '# Readme\n## getting starTed\n## contribution\n### installation\n## License\n### prerequisites',
+    });
+
+    const evaluated = await practice.evaluate(containerCtx.practiceContext);
+    expect(evaluated).toEqual(PracticeEvaluationResult.practicing);
+  });
+
+  it('Return Practicing even if readme is all html', async () => {
+    containerCtx.virtualFileSystemService.setFileSystem({
+      '/readme.md': '<h1> Readme\n<h2> getting starTed\n<h2> contribution\n<h3> installation\n<h2> License\n<h3> prerequisites',
+    });
+
+    const evaluated = await practice.evaluate(containerCtx.practiceContext);
+    expect(evaluated).toEqual(PracticeEvaluationResult.practicing);
+  });
 });
