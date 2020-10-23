@@ -301,6 +301,7 @@ describe('Git', () => {
         variables: {
           owner: 'octocat',
           repo: 'Hello-World',
+          count: 100,
           states: ['OPEN', 'MERGED', 'CLOSED'],
         },
       };
@@ -308,7 +309,6 @@ describe('Git', () => {
         data: {
           repository: {
             pullRequests: {
-              totalCount: 3,
               edges: [
                 oneGqlPullRequest({ node: { state: 'OPEN' } }),
                 oneGqlPullRequest({ node: { state: 'MERGED' } }),

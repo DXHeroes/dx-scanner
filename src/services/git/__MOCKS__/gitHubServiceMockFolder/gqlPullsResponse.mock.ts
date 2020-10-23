@@ -6,7 +6,6 @@ export const gqlPullsResponse = (params?: any) => {
       data: {
         repository: {
           pullRequests: {
-            totalCount: 1,
             pageInfo: {
               hasNextPage: false,
               hasPreviousPage: false,

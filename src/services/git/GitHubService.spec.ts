@@ -62,6 +62,8 @@ describe('GitHub Service', () => {
         variables: {
           owner: 'octocat',
           repo: 'Hello-World',
+          count: 100,
+          states: ['OPEN', 'MERGED', 'CLOSED'],
         },
       };
 
@@ -77,6 +79,7 @@ describe('GitHub Service', () => {
         variables: {
           owner: 'octocat',
           repo: 'Hello-World',
+          count: 100,
           states: 'OPEN',
         },
       };
@@ -94,25 +97,22 @@ describe('GitHub Service', () => {
       expect(response).toMatchObject(getPullsServiceResponseWithDiffStat);
     });
 
-    // TODO - test after implement pagination for GQL
-    // it('returns one pull in own interface', async () => {
-    //   const pagination = { page: 1, perPage: 1 };
-    //   new GitHubNock('1', 'octocat', 1296269, 'Hello-World').getPulls({
-    //     pulls: [
-    //       {
-    //         number: 1,
-    //         state: 'open',
-    //         title: 'Edited README via GitHub',
-    //         body: 'Please pull these awesome changes',
-    //         head: 'new-topic',
-    //         base: 'master',
-    //       },
-    //     ],
-    //     pagination,
-    //   });
-    //   const response = await service.listPullRequests('octocat', 'Hello-World', { pagination });
-    //   expect(response).toMatchObject(getPullsServiceResponse);
-    // });
+    it('returns one pull in own interface', async () => {
+      const pagination = { perPage: 1 };
+      const queryBody = {
+        query: listPullRequestsParamas,
+        variables: {
+          owner: 'octocat',
+          repo: 'Hello-World',
+          count: 1,
+          states: ['OPEN', 'MERGED', 'CLOSED'],
+        },
+      };
+
+      nock('https://api.github.com').post('/graphql', queryBody).reply(200, gqlPullsResponse());
+      const response = await service.listPullRequests('octocat', 'Hello-World', { pagination });
+      expect(response).toMatchObject(getPullsServiceResponse);
+    });
 
     it('returns open pulls', async () => {
       const queryBody = {
@@ -120,6 +120,7 @@ describe('GitHub Service', () => {
         variables: {
           owner: 'octocat',
           repo: 'Hello-World',
+          count: 100,
           states: 'OPEN',
         },
       };
@@ -136,6 +137,7 @@ describe('GitHub Service', () => {
         variables: {
           owner: 'octocat',
           repo: 'Hello-World',
+          count: 100,
           states: 'CLOSED',
         },
       };
@@ -154,6 +156,7 @@ describe('GitHub Service', () => {
         variables: {
           owner: 'octocat',
           repo: 'Hello-World',
+          count: 100,
           states: ['OPEN', 'MERGED', 'CLOSED'],
         },
       };

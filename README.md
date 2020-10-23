@@ -197,7 +197,7 @@ You can switch off practices that you do not want to scan, change their impact l
 Practice | Impact | Language Independent | JavaScript/TypeScript | Java/Kotlin | Python | PHP
 ------------- | ------------- | ------------- | ------------- | ------------- | ------------- | ------------- 
 Create a Readme File | <span style="color:red">high</span> | ✅ | ✅ | ✅ | ✅ | ✅
-Create a Changelog File | <span style="color:red">high</span> | ✅ | ✅ | ✅ | ✅
+Create a Changelog File | <span style="color:red">high</span> | ✅ | ✅ | ✅ | ✅ | ✅
 Create a License File | <span style="color:yellow">medium</span> | ✅ | ✅ | ✅ | ✅ | ✅
 Create a Lockfile | <span style="color:red">high</span> | ✅ | ✅ | ✅ | ✅ | ✅
 Create a .gitignore | <span style="color:red">high</span> | ✅ | ✅ | ✅ | ✅ | ✅

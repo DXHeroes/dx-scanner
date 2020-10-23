@@ -6,17 +6,29 @@ import { GitLabIssueState, GitLabPullRequestState } from '../gitlab/IGitLabServi
 import { GitHubGqlPullRequestState, GitHubIssueState, GitHubPullRequestState } from './IGitHubService';
 
 export class VCSServicesUtils {
-  static getGithubPRState = (state: PullRequestState | undefined, gql = false) => {
+  static getGithubPRState = (state: PullRequestState | undefined) => {
     switch (state) {
       case PullRequestState.open:
-        return gql ? GitHubGqlPullRequestState.open : GitHubPullRequestState.open;
+        return GitHubPullRequestState.open;
       case PullRequestState.closed:
-        return gql ? GitHubGqlPullRequestState.closed : GitHubPullRequestState.closed;
+        return GitHubPullRequestState.closed;
       case PullRequestState.all:
-        // GitHub Graphql API has a different params for PR state
-        return gql
-          ? [GitHubGqlPullRequestState.open, GitHubGqlPullRequestState.merged, GitHubGqlPullRequestState.closed]
-          : GitHubPullRequestState.all;
+        return GitHubPullRequestState.all;
+      default:
+        return undefined;
+    }
+  };
+
+  // GitHub Graphql API has a different params for PR state than REST API
+  static getGithubGqlPRState = (state: PullRequestState | undefined) => {
+    switch (state) {
+      case PullRequestState.open:
+        return GitHubGqlPullRequestState.open;
+      case PullRequestState.closed:
+        return GitHubGqlPullRequestState.closed;
+      case PullRequestState.all:
+        return [GitHubGqlPullRequestState.open, GitHubGqlPullRequestState.merged, GitHubGqlPullRequestState.closed];
+
       default:
         return undefined;
     }
