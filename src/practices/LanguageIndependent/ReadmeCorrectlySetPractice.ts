@@ -37,12 +37,12 @@ export class ReadmeIsCorrectlySet extends PracticeBase {
 
     const parsedReadme = this.parseReadme(content);
 
-    const heading = parsedReadme.filter((value: string) => /^(?:<h1>|#\s+)/.test(value)).length;
-    const gettingStarted = parsedReadme.find((value: string) => /^(?:<h2>|##\s+).*(Getting\s+Started)/i.test(value));
-    const prerequisites = parsedReadme.find((value: string) => /^(?:<h3>|###\s+).*(Prerequisites)/i.test(value));
-    const install = parsedReadme.find((value: string) => /^(?:<h3>|###\s+).*(Install)(?:ing|ation)/i.test(value));
-    const contribute = parsedReadme.find((value: string) => /^(?:<h2>|##\s+).*(Contribut)(?:ing|ion)/i.test(value));
-    const license = parsedReadme.find((value: string) => /^(?:<h2>|##\s+).*(License)/i.test(value));
+    const heading = parsedReadme.filter((value: string) => /^(?:<h1>|#[^#])/.test(value)).length;
+    const gettingStarted = parsedReadme.find((value: string) => /^(?:<h[2-6]>|#{2}).*(Getting\s+Started)/i.test(value));
+    const prerequisites = parsedReadme.find((value: string) => /^(?:<h[2-6]>|#{2}).*(Prerequisites)/i.test(value));
+    const install = parsedReadme.find((value: string) => /^(?:<h[2-6]>|#{2}).*(Install)(?:ing|ation)/i.test(value));
+    const contribute = parsedReadme.find((value: string) => /^(?:<h[2-6]>|#{2}).*(Contribut)(?:ing|ion)/i.test(value));
+    const license = parsedReadme.find((value: string) => /^(?:<h[2-6]>|#{2}).*(License)/i.test(value));
 
     if (heading === 1 && gettingStarted && prerequisites && install && contribute && license) {
       return PracticeEvaluationResult.practicing;
