@@ -2,8 +2,7 @@ import { ReadmeIsCorrectlySet } from './ReadmeCorrectlySetPractice';
 import { PracticeEvaluationResult } from '../../model';
 import { TestContainerContext, createTestContainer } from '../../inversify.config';
 
-const readmeContent = `
-# Readme
+const readmeContent = `# Readme
 ## getting starTed
 ## contribution
 ### installing
