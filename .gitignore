@@ -1,5 +1,6 @@
 *-debug.log
 *-error.log
+dxscanner.log
 *.ignore
 /.nyc_output
 /build
