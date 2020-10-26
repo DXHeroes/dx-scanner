@@ -82,7 +82,7 @@ export default class Run {
     console.info(msg);
 
     if (scanResult.shouldExitOnEnd) {
-      process.exitCode = 1;
+      process.exit(1);
     }
   }
 }

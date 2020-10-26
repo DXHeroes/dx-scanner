@@ -1,3 +1,4 @@
+import os from 'os';
 import fs from 'fs';
 import path from 'path';
 import util from 'util';
@@ -5,7 +6,7 @@ import util from 'util';
 class LogFile {
   public enabled: boolean = false;
   public fname: string = path.join(process.cwd(), 'dxscanner.log');
-  private file: fs.WriteStream | null = null;
+  private file: number | null = null;
 
   /**
    * Writes the given value to the log file.
@@ -14,8 +15,19 @@ class LogFile {
    */
   public write(obj: any) {
     if (!this.enabled) return;
-    if (this.file === null) this.file = fs.createWriteStream(this.fname);
-    this.file.write(typeof(obj) === 'string' ? obj : this.format(obj));
+
+    if (this.file === null) {
+      this.file = fs.openSync(this.fname, 'w');
+
+      process.on('exit', () => {
+        if (typeof this.file === 'number') {
+          fs.writeSync(this.file, '<End of log>' + os.EOL);
+          fs.closeSync(this.file);
+        }
+      });
+    }
+
+    fs.write(this.file, typeof obj === 'string' ? obj : this.format(obj), () => {});
   }
 
   /**
@@ -54,23 +66,11 @@ class LogFile {
     this.write('[info] ' + this.format(obj) + '\n');
   }
 
-  /**
-   * Flushes and closes the log file
-   * Nothing can be added to the log after calling this method.
-   * @memberof LogFile
-   */
-  public close() {
-    this.file?.close();
-  }
-
   private format(obj: any): string {
     return util.format(obj);
   }
 }
 
 const logfile = new LogFile();
-
-// TODO: fix closing the stream on process exit
-process.on('beforeExit', logfile.close);
 
 export default logfile;

@@ -106,7 +106,6 @@ class DXScannerCommand {
 }
 
 process.on('uncaughtException', errorHandler);
-process.on('exit', () => console.log('exit'));
 
 export default DXScannerCommand;
 
