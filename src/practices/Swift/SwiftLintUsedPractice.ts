@@ -13,9 +13,7 @@ import { IPractice } from '../IPractice';
 })
 export class SwiftLintUsedPractice implements IPractice {
   async isApplicable(ctx: PracticeContext): Promise<boolean> {
-    return (
-      ctx.projectComponent.language === ProgrammingLanguage.Swift
-    );
+    return ctx.projectComponent.language === ProgrammingLanguage.Swift;
   }
 
   async evaluate(ctx: PracticeContext): Promise<PracticeEvaluationResult> {

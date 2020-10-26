@@ -1,31 +1,34 @@
-import { GitHubService } from './GitHubService';
+import _ from 'lodash';
+import nock from 'nock';
+import { PullRequestState } from '../../inspectors';
+import { argumentsProviderFactory } from '../../test/factories/ArgumentsProviderFactory';
 import { GitHubNock } from '../../test/helpers/gitHubNock';
+import { GitHubService } from './GitHubService';
+import { listPullRequestsParamas } from './gqlQueries/listPullRequests';
+import { File } from './model';
 import {
-  getPullsServiceResponse,
-  getPullRequestsReviewsResponse,
-  getPullsReviewsServiceResponse,
-  getRepoCommitsResponse,
   getCommitResponse,
   getCommitServiceResponse,
   getContributorsServiceResponse,
   getContributorsStatsResponse,
   getContributorsStatsServiceResponse,
-  getRepoContentServiceResponseFile,
-  getRepoContentServiceResponseDir,
-  getIssuesResponse,
-  getIssuesServiceResponse,
   getIssueCommentsResponse,
   getIssueCommentsServiceResponse,
-  getPullsFilesResponse,
-  getPullsFilesServiceResponse,
+  getIssuesResponse,
+  getIssuesServiceResponse,
   getPullCommitsResponse,
   getPullCommitsServiceResponse,
+  getPullRequestsReviewsResponse,
+  getPullsFilesResponse,
+  getPullsFilesServiceResponse,
+  getPullsReviewsServiceResponse,
+  getPullsServiceResponse,
+  getRepoCommitsResponse,
+  getRepoContentServiceResponseDir,
+  getRepoContentServiceResponseFile,
 } from './__MOCKS__/gitHubServiceMockFolder';
-import { PullRequestState } from '../../inspectors';
-import { File } from './model';
 import { getRepoCommitsServiceResponse } from './__MOCKS__/gitHubServiceMockFolder/getRepoCommitsServiceResponse.mock';
-import { argumentsProviderFactory } from '../../test/factories/ArgumentsProviderFactory';
-import _ from 'lodash';
+import { gqlPullsResponse, oneGqlPullRequest } from './__MOCKS__/gitHubServiceMockFolder/gqlPullsResponse.mock';
 
 describe('GitHub Service', () => {
   let service: GitHubService;
@@ -54,127 +57,159 @@ describe('GitHub Service', () => {
     });
 
     it('returns pulls in own interface', async () => {
-      new GitHubNock('1', 'octocat', 1296269, 'Hello-World').getPulls({
-        pulls: [
-          {
-            number: 1,
-            state: 'open',
-            title: 'Edited README via GitHub',
-            body: 'Please pull these awesome changes',
-            head: 'new-topic',
-            base: 'master',
-          },
-        ],
-      });
+      const queryBody = {
+        query: listPullRequestsParamas,
+        variables: {
+          owner: 'octocat',
+          repo: 'Hello-World',
+          count: 100,
+          states: ['OPEN', 'MERGED', 'CLOSED'],
+        },
+      };
+
+      nock('https://api.github.com').post('/graphql', queryBody).reply(200, gqlPullsResponse());
 
       const response = await service.listPullRequests('octocat', 'Hello-World');
       expect(response).toMatchObject(getPullsServiceResponse);
     });
 
     it('returns pulls in own interface with diffStat', async () => {
-      const params = {
-        number: 1,
-        state: 'open',
-        title: 'Edited README via GitHub',
-        body: 'Please pull these awesome changes',
-        head: 'new-topic',
-        base: 'master',
-        lines: {
-          additions: 1,
-          deletions: 0,
+      const queryBody = {
+        query: listPullRequestsParamas,
+        variables: {
+          owner: 'octocat',
+          repo: 'Hello-World',
+          count: 100,
+          states: 'OPEN',
         },
       };
 
-      new GitHubNock('1', 'octocat', 1296269, 'Hello-World').getPulls({ pulls: [params] });
-      new GitHubNock('1', 'octocat', 1296269, 'Hello-World').getPull(
-        1,
-        params.state,
-        params.title,
-        params.body,
-        params.head,
-        params.base,
-        undefined,
-        undefined,
-        undefined,
-        params.lines,
-      );
+      nock('https://api.github.com').post('/graphql', queryBody).reply(200, gqlPullsResponse());
 
-      const response = await service.listPullRequests('octocat', 'Hello-World', { withDiffStat: true });
+      const response = await service.listPullRequests('octocat', 'Hello-World', {
+        withDiffStat: true,
+        filter: { state: PullRequestState.open },
+      });
 
-      const lines = { additions: 1, deletions: 0, changes: 1 };
+      const lines = { additions: 1, deletions: 1, changes: 2 };
       const getPullsServiceResponseWithDiffStat = _.cloneDeep(getPullsServiceResponse);
       getPullsServiceResponseWithDiffStat.items[0] = { ...getPullsServiceResponseWithDiffStat.items[0], lines };
       expect(response).toMatchObject(getPullsServiceResponseWithDiffStat);
     });
 
     it('returns one pull in own interface', async () => {
-      const pagination = { page: 1, perPage: 1 };
-      new GitHubNock('1', 'octocat', 1296269, 'Hello-World').getPulls({
-        pulls: [
-          {
-            number: 1,
-            state: 'open',
-            title: 'Edited README via GitHub',
-            body: 'Please pull these awesome changes',
-            head: 'new-topic',
-            base: 'master',
-          },
-        ],
-        pagination,
-      });
+      const pagination = { perPage: 1 };
+      const queryBody = {
+        query: listPullRequestsParamas,
+        variables: {
+          owner: 'octocat',
+          repo: 'Hello-World',
+          count: 1,
+          states: ['OPEN', 'MERGED', 'CLOSED'],
+        },
+      };
+
+      nock('https://api.github.com').post('/graphql', queryBody).reply(200, gqlPullsResponse());
       const response = await service.listPullRequests('octocat', 'Hello-World', { pagination });
       expect(response).toMatchObject(getPullsServiceResponse);
     });
 
-    it('returns open pulls by default', async () => {
-      new GitHubNock('1', 'octocat', 1296269, 'Hello-World').getPulls({
-        pulls: [
-          {
-            number: 1347,
-            state: 'open',
-            title: 'new-feature',
-            body: 'Please pull these awesome changes',
-            head: 'new-topic',
-            base: 'master',
-          },
-        ],
-      });
+    it('returns two pulls in own interface one per page', async () => {
+      const pagination = { perPage: 1 };
+      const queryBody = {
+        query: listPullRequestsParamas,
+        variables: {
+          owner: 'octocat',
+          repo: 'Hello-World',
+          count: 1,
+          states: ['OPEN', 'MERGED', 'CLOSED'],
+        },
+      };
+      const queryBodyScnd = {
+        query: listPullRequestsParamas,
+        variables: {
+          owner: 'octocat',
+          repo: 'Hello-World',
+          count: 1,
+          states: ['OPEN', 'MERGED', 'CLOSED'],
+          startCursor: 'Y3Vyc29yOnYyOpHODUTjBQ==',
+        },
+      };
 
-      const response = await service.listPullRequests('octocat', 'Hello-World');
-      expect(response.items.map((item) => item.state)).toMatchObject(['open']);
+      nock('https://api.github.com')
+        .post('/graphql', queryBody)
+        .reply(200, gqlPullsResponse({ data: { repository: { pullRequests: { pageInfo: { hasPreviousPage: true } } } } }));
+      nock('https://api.github.com').post('/graphql', queryBodyScnd).reply(200, gqlPullsResponse());
+
+      const response = await service.listPullRequests('octocat', 'Hello-World', { pagination });
+      expect(response.items.length).toEqual(2);
     });
 
     it('returns open pulls', async () => {
-      new GitHubNock('1', 'octocat', 1296269, 'Hello-World').getPulls({
-        pulls: [{ number: 1347, state: 'open', title: 'new-feature', body: '', head: 'new-topic', base: 'master' }],
-        queryState: 'open',
-      });
+      const queryBody = {
+        query: listPullRequestsParamas,
+        variables: {
+          owner: 'octocat',
+          repo: 'Hello-World',
+          count: 100,
+          states: 'OPEN',
+        },
+      };
+
+      nock('https://api.github.com').post('/graphql', queryBody).reply(200, gqlPullsResponse());
 
       const response = await service.listPullRequests('octocat', 'Hello-World', { filter: { state: PullRequestState.open } });
-      expect(response.items.map((item) => item.state)).toMatchObject(['open']);
+      expect(response.items.map((item) => item.state)).toMatchObject(['OPEN']);
     });
 
     it('returns closed pulls', async () => {
-      new GitHubNock('1', 'octocat', 1296269, 'Hello-World').getPulls({
-        pulls: [{ number: 1347, state: 'closed', title: 'new-feature', body: '', head: 'new-topic', base: 'master' }],
-        queryState: 'closed',
-      });
+      const queryBody = {
+        query: listPullRequestsParamas,
+        variables: {
+          owner: 'octocat',
+          repo: 'Hello-World',
+          count: 100,
+          states: 'CLOSED',
+        },
+      };
+
+      nock('https://api.github.com')
+        .post('/graphql', queryBody)
+        .reply(200, gqlPullsResponse({ data: { repository: { pullRequests: { edges: [{ node: { state: 'CLOSED' } }] } } } }));
 
       const response = await service.listPullRequests('octocat', 'Hello-World', { filter: { state: PullRequestState.closed } });
-      expect(response.items.map((item) => item.state)).toMatchObject(['closed']);
+      expect(response.items.map((item) => item.state)).toMatchObject(['CLOSED']);
     });
 
     it('returns all pulls', async () => {
-      new GitHubNock('1', 'octocat', 1296269, 'Hello-World').getPulls({
-        pulls: [
-          { number: 1347, state: 'open', title: 'new-feature', body: '', head: 'new-topic', base: 'master' },
-          { number: 1348, state: 'closed', title: 'new-feature', body: '', head: 'new-topic', base: 'master' },
-        ],
-        queryState: 'all',
+      const queryBody = {
+        query: listPullRequestsParamas,
+        variables: {
+          owner: 'octocat',
+          repo: 'Hello-World',
+          count: 100,
+          states: ['OPEN', 'MERGED', 'CLOSED'],
+        },
+      };
+
+      const pulls = gqlPullsResponse({
+        data: {
+          repository: {
+            pullRequests: {
+              edges: [
+                oneGqlPullRequest({ node: { state: 'OPEN' } }),
+                oneGqlPullRequest({ node: { state: 'CLOSED' } }),
+                oneGqlPullRequest({ node: { state: 'MERGED' } }),
+              ],
+            },
+          },
+        },
       });
 
+      nock('https://api.github.com').post('/graphql', queryBody).reply(200, pulls);
+
       const response = await service.listPullRequests('octocat', 'Hello-World', { filter: { state: PullRequestState.all } });
-      expect(response.items.map((item) => item.state)).toMatchObject(['open', 'closed']);
+      expect(response.items.map((item) => item.state)).toMatchObject(['OPEN', 'CLOSED', 'MERGED']);
     });
   });
 

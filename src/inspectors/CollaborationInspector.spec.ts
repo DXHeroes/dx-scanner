@@ -16,6 +16,9 @@ import { BitbucketNock } from '../test/helpers/bitbucketNock';
 import { PullRequestState } from '.';
 import { bitbucketPullRequestResponseFactory } from '../test/factories/responses/bitbucket/prResponseFactory';
 import { BitbucketPullRequestState } from '../services/bitbucket/IBitbucketService';
+import nock from 'nock';
+import { listPullRequestsParamas } from '../services/git/gqlQueries/listPullRequests';
+import { gqlPullsResponse } from '../services/git/__MOCKS__/gitHubServiceMockFolder/gqlPullsResponse.mock';
 
 describe('Collaboration Inspector', () => {
   let inspector: CollaborationInspector;
@@ -31,20 +34,20 @@ describe('Collaboration Inspector', () => {
   });
 
   it('returns paginated pull requests', async () => {
-    new GitHubNock('1', 'octocat', 1296269, 'Hello-World').getPulls({
-      pulls: [
-        {
-          number: 1,
-          state: 'open',
-          title: 'Edited README via GitHub',
-          body: 'Please pull these awesome changes',
-          head: 'new-topic',
-          base: 'master',
-        },
-      ],
-    });
+    const pagination = { perPage: 1 };
+    const queryBody = {
+      query: listPullRequestsParamas,
+      variables: {
+        owner: 'octocat',
+        repo: 'Hello-World',
+        count: 1,
+        states: ['OPEN', 'MERGED', 'CLOSED'],
+      },
+    };
 
-    const response = await inspector.listPullRequests('octocat', 'Hello-World');
+    nock('https://api.github.com').post('/graphql', queryBody).reply(200, gqlPullsResponse());
+
+    const response = await inspector.listPullRequests('octocat', 'Hello-World', { pagination });
     expect(response).toMatchObject(getPullsServiceResponse);
   });
 

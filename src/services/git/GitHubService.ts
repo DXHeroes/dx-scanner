@@ -1,8 +1,10 @@
+import { graphql } from '@octokit/graphql';
 import { Octokit } from '@octokit/rest';
 import type { OctokitResponse } from '@octokit/types';
 import Debug from 'debug';
 import { inject, injectable } from 'inversify';
 import { inspect } from 'util';
+import { GitHubGqlPullRequestState } from '.';
 import { ListGetterOptions } from '../../inspectors/common/ListGetterOptions';
 import { Paginated } from '../../inspectors/common/Paginated';
 import { PullRequestState } from '../../inspectors/ICollaborationInspector';
@@ -14,8 +16,10 @@ import { ICache } from '../../scanner/cache/ICache';
 import { InMemoryCache } from '../../scanner/cache/InMemoryCache';
 import { RepositoryConfig } from '../../scanner/RepositoryConfig';
 import { Types } from '../../types';
+import { listPullRequestsParamas } from './gqlQueries/listPullRequests';
 import { IVCSService } from './IVCSService';
 import {
+  Branch,
   Commit,
   Contributor,
   ContributorStats,
@@ -31,14 +35,12 @@ import {
   PullRequestReview,
   RepoContentType,
   Symlink,
-  Branch,
 } from './model';
 import {
   GetContentsResponse,
   IssuesListCommentsParams,
   IssuesListForRepoParams,
   PullsListCommitsParams,
-  PullsListParams,
   ReposGetResponseData,
 } from './OctokitTypes';
 import { VCSServicesUtils } from './VCSServicesUtils';
@@ -49,6 +51,7 @@ export class GitHubService implements IVCSService {
   private readonly client: Octokit;
   private cache: ICache;
   private callCount = 0;
+  private readonly graphqlWithAuth;
   private readonly repositoryConfig: RepositoryConfig;
 
   constructor(
@@ -60,6 +63,7 @@ export class GitHubService implements IVCSService {
     this.client = new Octokit({
       auth: argumentsProvider.auth,
     });
+    this.graphqlWithAuth = graphql.defaults({ headers: { authorization: `token ${argumentsProvider.auth}` } });
   }
 
   purgeCache() {
@@ -77,59 +81,77 @@ export class GitHubService implements IVCSService {
   }
 
   /**
-   * Lists all pull requests in the repo.
+   * Lists all pull requests in the repo using GraphQL.
    */
   async listPullRequests(
     owner: string,
     repo: string,
     options?: { withDiffStat?: boolean } & ListGetterOptions<{ state?: PullRequestState }>,
   ): Promise<Paginated<PullRequest>> {
-    const state = VCSServicesUtils.getGithubPRState(options?.filter?.state);
+    const state = VCSServicesUtils.getGithubGqlPRState(options?.filter?.state);
 
-    const params: PullsListParams = { owner, repo };
-    if (state) params.state = state;
-    if (options?.pagination?.page) params.page = options.pagination.page;
-    if (options?.pagination?.perPage) params.per_page = options.pagination.perPage;
+    let hasPreviousPage = true;
+    let pullRequests;
+    let items: PullRequest[] = [];
 
-    const { data, headers } = await this.unwrap(this.client.pulls.list(params));
+    const queryParams: ListPrParamsGql = {
+      owner,
+      repo,
+      count: options?.pagination?.perPage || 100,
+      states: state || VCSServicesUtils.getGithubGqlPRState(PullRequestState.all),
+    };
 
-    const items = await Promise.all(
-      data.map(async (val) => {
-        const pullRequest = {
+    while (hasPreviousPage) {
+      const { repository } = await this.unwrapGql(this.graphqlWithAuth(listPullRequestsParamas, { ...queryParams }));
+      pullRequests = repository.pullRequests;
+
+      const prs: PullRequest[] = pullRequests.edges.map((pr: any) => {
+        const pullRequest: PullRequest = {
           user: {
-            id: val.user.id.toString(),
-            login: val.user.login,
-            url: val.user.html_url,
+            // author can be null if the user have been deleted
+            id: pr.node.author?.id,
+            login: pr.node.author?.login,
+            url: pr.node.author?.url,
           },
-          title: val.title,
-          url: val.html_url,
-          body: val.body,
-          sha: val.merge_commit_sha,
-          createdAt: val.created_at,
-          updatedAt: val.updated_at,
-          closedAt: val.closed_at,
-          mergedAt: val.merged_at,
-          state: val.state,
-          id: val.number, // Lists details of a pull request by providing its number. - https://developer.github.com/v3/pulls/
+          title: pr.node.title,
+          url: pr.node.url,
+          body: pr.node.body,
+          sha: pr.node.mergeCommit?.id || null,
+          createdAt: pr.node.createdAt,
+          updatedAt: pr.node.updatedAt,
+          closedAt: pr.node.closedAt,
+          mergedAt: pr.node.mergedAt,
+          state: pr.node.state,
+          id: pr.node.number, // Lists details of a pull request by providing its number. - https://developer.github.com/v3/pulls/
           base: {
             repo: {
-              url: val.base.repo.url,
-              name: val.base.repo.name,
-              id: val.base.repo.id.toString(),
-              owner: { url: val.base.repo.owner.url, id: val.base.repo.owner.id.toString(), login: val.base.repo.owner.login },
+              url: pr.node.baseRepository.url,
+              name: pr.node.baseRepository.name,
+              id: pr.node.baseRepository.id,
+              owner: {
+                url: pr.node.baseRepository.owner.url,
+                id: pr.node.baseRepository.owner.id,
+                login: pr.node.baseRepository.owner.login,
+              },
             },
           },
+          lines: { additions: pr.node.additions, deletions: pr.node.deletions, changes: pr.node.additions + pr.node.deletions },
         };
-        // Get number of changes, additions and deletions in PullRequest if the withDiffStat is true
-        if (options?.withDiffStat) {
-          const lines = await this.getPullsDiffStat(owner, repo, val.number);
-          return { ...pullRequest, lines };
-        }
-        return pullRequest;
-      }),
-    );
 
-    const pagination = this.getPagination(data.length, headers.link);
+        return pullRequest;
+      });
+      hasPreviousPage = pullRequests.pageInfo.hasPreviousPage;
+      queryParams.startCursor = pullRequests.pageInfo.startCursor;
+
+      items = items.concat(prs);
+    }
+
+    const pagination = this.getPagination(
+      items.length,
+      undefined,
+      pullRequests.pageInfo.hasNextPage,
+      pullRequests.pageInfo.hasPreviousPage,
+    );
 
     return { items, ...pagination };
   }
@@ -597,14 +619,14 @@ export class GitHubService implements IVCSService {
     };
   }
 
-  getPagination(totalCount: number, link?: string) {
+  getPagination(totalCount: number, link?: string, hasNextPage?: boolean, hasPreviousPage?: boolean) {
     const parsedLink = VCSServicesUtils.parseGitHubHeaderLink(link);
 
     if (!parsedLink) {
       return {
         totalCount,
-        hasNextPage: false,
-        hasPreviousPage: false,
+        hasNextPage: hasNextPage ? hasNextPage : false,
+        hasPreviousPage: hasPreviousPage ? hasPreviousPage : false,
         page: 1,
         perPage: totalCount,
       };
@@ -639,11 +661,47 @@ export class GitHubService implements IVCSService {
   }
 
   /**
-   * Debug GitHub response
+   * Debug GitHub REST response
    * - count API calls and inform about remaining rate limit
    */
   private debugGitHubResponse = <T>(response: OctokitResponse<T>) => {
     this.callCount++;
     debug(`GitHub API Hit: ${this.callCount}. Remaining ${response.headers['x-ratelimit-remaining']} hits. (${response.headers.link})`);
   };
+
+  /**
+   * Debug GitHub GQL request promise
+   */
+  private unwrapGql(gqlPromise: Promise<any>): Promise<any> {
+    return gqlPromise
+      .then((response) => {
+        this.debugGitHubGqlResponse(response.rateLimit);
+        return response;
+      })
+      .catch((error) => {
+        if (error.response) {
+          debug(`${error.response.status} => ${inspect(error.response.data)}`);
+        } else {
+          debug(inspect(error));
+        }
+        throw error;
+      });
+  }
+
+  /**
+   * Debug GitHub GQL response
+   * - count API calls and inform about remaining rate limit
+   */
+  private debugGitHubGqlResponse = (rateLimit: any) => {
+    this.callCount += rateLimit.cost;
+    debug(`GitHub API Hit: ${this.callCount}. Remaining ${rateLimit.remaining} hits. Reset at ${rateLimit.resetAt}`);
+  };
+}
+
+interface ListPrParamsGql {
+  owner: string;
+  repo: string;
+  states?: GitHubGqlPullRequestState | GitHubGqlPullRequestState[] | undefined;
+  count: number;
+  startCursor?: string;
 }

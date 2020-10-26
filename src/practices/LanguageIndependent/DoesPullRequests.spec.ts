@@ -1,9 +1,11 @@
+import nock from 'nock';
 import { createTestContainer, TestContainerContext } from '../../inversify.config';
 import { PracticeEvaluationResult } from '../../model';
-import { DoesPullRequestsPractice } from './DoesPullRequests';
-import { GitHubNock } from '../../test/helpers/gitHubNock';
+import { listPullRequestsParamas } from '../../services/git/gqlQueries/listPullRequests';
 import { getRepoCommitsResponse } from '../../services/git/__MOCKS__/gitHubServiceMockFolder/getRepoCommitsResponse.mock';
-import { PullRequestState } from '../../inspectors/ICollaborationInspector';
+import { gqlPullsResponse } from '../../services/git/__MOCKS__/gitHubServiceMockFolder/gqlPullsResponse.mock';
+import { GitHubNock } from '../../test/helpers/gitHubNock';
+import { DoesPullRequestsPractice } from './DoesPullRequests';
 
 describe('DoesPullRequests', () => {
   let practice: DoesPullRequestsPractice;
@@ -23,12 +25,26 @@ describe('DoesPullRequests', () => {
 
   it('return practicing if there is at least one PR which is newer than last commit in master minus 30 days', async () => {
     containerCtx.practiceContext.projectComponent.repositoryPath = 'https://github.com/octocat/Hello-World';
-    new GitHubNock('1', 'octocat', 1296269, 'Hello-World').getPulls({
-      pulls: [
-        { number: 1347, state: 'open', title: 'new-feature', body: 'Please pull these awesome changes', head: 'new-topic', base: 'master' },
-      ],
-      queryState: PullRequestState.all,
-    });
+    const queryBody = {
+      query: listPullRequestsParamas,
+      variables: {
+        owner: 'octocat',
+        repo: 'Hello-World',
+        count: 100,
+        states: ['OPEN', 'MERGED', 'CLOSED'],
+      },
+    };
+
+    nock('https://api.github.com')
+      .post('/graphql', queryBody)
+      .reply(
+        200,
+        gqlPullsResponse({
+          data: {
+            repository: { pullRequests: { edges: [{ node: { createdAt: '2011-01-13T04:42:41Z', updatedAt: '2011-01-13T04:42:41Z' } }] } },
+          },
+        }),
+      );
     new GitHubNock('1', 'octocat', 1, 'Hello-World').getCommits().reply(200, getRepoCommitsResponse);
 
     const evaluated = await practice.evaluate(containerCtx.practiceContext);
@@ -38,7 +54,27 @@ describe('DoesPullRequests', () => {
 
   it('return notPracticing if there is no PR which is newer than last commit in master minus 30 days', async () => {
     containerCtx.practiceContext.projectComponent.repositoryPath = 'https://github.com/octocat/Hello-World';
-    new GitHubNock('1', 'octocat', 1296269, 'Hello-World').getPulls({ pulls: [], queryState: PullRequestState.all });
+    const queryBody = {
+      query: listPullRequestsParamas,
+      variables: {
+        owner: 'octocat',
+        repo: 'Hello-World',
+        count: 100,
+        states: ['OPEN', 'MERGED', 'CLOSED'],
+      },
+    };
+
+    nock('https://api.github.com')
+      .post('/graphql', queryBody)
+      .reply(
+        200,
+        gqlPullsResponse({
+          data: {
+            repository: { pullRequests: { edges: [{ node: { createdAt: '2010-01-13T04:42:41Z', updatedAt: '2010-01-13T04:42:41Z' } }] } },
+          },
+        }),
+      );
+
     new GitHubNock('1', 'octocat', 1, 'Hello-World').getCommits().reply(200, getRepoCommitsResponse);
 
     const evaluated = await practice.evaluate(containerCtx.practiceContext);
@@ -47,20 +83,26 @@ describe('DoesPullRequests', () => {
 
   it('return notPracticing if there is PR older than 30 days than the last commit in master', async () => {
     containerCtx.practiceContext.projectComponent.repositoryPath = 'https://github.com/octocat/Hello-World';
-    new GitHubNock('1', 'octocat', 1296269, 'Hello-World').getPulls({
-      pulls: [
-        {
-          number: 1348,
-          state: 'opened',
-          title: 'new-feature',
-          body: '',
-          head: 'new-topic',
-          base: 'master',
-          created_at: '2000-03-06T23:06:50Z',
-        },
-      ],
-      queryState: PullRequestState.all,
-    });
+    const queryBody = {
+      query: listPullRequestsParamas,
+      variables: {
+        owner: 'octocat',
+        repo: 'Hello-World',
+        count: 100,
+        states: ['OPEN', 'MERGED', 'CLOSED'],
+      },
+    };
+
+    nock('https://api.github.com')
+      .post('/graphql', queryBody)
+      .reply(
+        200,
+        gqlPullsResponse({
+          data: {
+            repository: { pullRequests: { edges: [{ node: { createdAt: '2010-01-13T04:42:41Z', updatedAt: '2010-01-13T04:42:41Z' } }] } },
+          },
+        }),
+      );
     new GitHubNock('1', 'octocat', 1, 'Hello-World').getCommits().reply(200, getRepoCommitsResponse);
 
     const evaluated = await practice.evaluate(containerCtx.practiceContext);

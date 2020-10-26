@@ -86,5 +86,5 @@ export const practices = [
   JavaLog4JConfiguredPractice,
   JavaPropertiesUsedPractice,
   GoLinterUsedPractice,
-  PHPLinterUsedPractice
+  PHPLinterUsedPractice,
 ];

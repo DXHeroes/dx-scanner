@@ -66,7 +66,7 @@ describe('CSharpGitignoreCorrectlySetPractice', () => {
     });
 
     it('Does not change correct .gitignore', async () => {
-      const gitignore = `${basicGitignore}\npackage-lock.json\n`;
+      const gitignore = basicGitignore;
       containerCtx.virtualFileSystemService.setFileSystem({
         '.gitignore': gitignore,
       });
