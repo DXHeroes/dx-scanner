@@ -43,7 +43,7 @@ describe('GoGitignoreCorrectlySetPractice', () => {
     expect(evaluated).toEqual(PracticeEvaluationResult.practicing);
   });
 
-  it('Returns notPracticing if the .gitignore is NOT set correctly', async () => {
+  it('Returns practicing if the .gitignore is NOT set correctly', async () => {
     containerCtx.virtualFileSystemService.setFileSystem({
       '.gitignore': '...',
     });
