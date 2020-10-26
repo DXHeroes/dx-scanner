@@ -477,7 +477,18 @@ export class GitHubService implements IVCSService {
   }
 
   async listBranches(owner: string, repo: string, options?: ListGetterOptions): Promise<Paginated<Branch>> {
-    throw new Error('Method not implemented yet.');
+    const [branchesResponse, repoResponse] = await Promise.all([
+      this.unwrap(this.client.repos.listBranches({ owner, repo })),
+      this.unwrap(this.client.repos.get({ owner, repo })),
+    ]);
+    const { data, headers } = branchesResponse;
+
+    const items = data.map((val) => ({
+      name: val.name,
+      type: repoResponse.data.default_branch === val.name ? 'default' : 'unknown',
+    }));
+    const pagination = this.getPagination(data.length, headers.link);
+    return { items, ...pagination };
   }
 
   /**
