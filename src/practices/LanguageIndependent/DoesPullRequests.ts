@@ -31,6 +31,7 @@ export class DoesPullRequestsPractice extends PracticeBase {
     const pullRequests = await ctx.collaborationInspector.listPullRequests(ownerAndRepoName.owner, ownerAndRepoName.repoName, {
       filter: { state: PullRequestState.all },
     });
+
     const repoCommits = await ctx.collaborationInspector.listRepoCommits(ownerAndRepoName.owner, ownerAndRepoName.repoName);
     this.setData(
       pullRequests.items.map((pr) => {

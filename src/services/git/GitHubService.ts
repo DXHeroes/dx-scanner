@@ -142,6 +142,7 @@ export class GitHubService implements IVCSService {
       });
       hasPreviousPage = pullRequests.pageInfo.hasPreviousPage;
       queryParams.startCursor = pullRequests.pageInfo.startCursor;
+
       items = items.concat(prs);
     }
 
