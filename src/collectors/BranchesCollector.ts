@@ -21,8 +21,6 @@ export class BranchesCollector {
       this.contentRepositoryBrowser.listBranches(ownerAndRepoName.owner, ownerAndRepoName.repoName),
       this.gitInspector.getStatus(),
     ]);
-    // TODO: test local
-    // TODO: test github
     // TODO: test gitlab
     const defaultBranch = branches.items.find((branch) => branch.type === 'default');
 

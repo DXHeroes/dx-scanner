@@ -1,3 +1,20 @@
+# [3.45.0](https://github.com/dxheroes/dx-scanner/compare/v3.44.0...v3.45.0) (2020-10-26)
+
+
+### Bug Fixes
+
+* add possibility to paginate list of pull requests ([f2a9444](https://github.com/dxheroes/dx-scanner/commit/f2a94440b310f5fa83da94f0f18ea8f974503064))
+* add tests for paginated requests ([5d0ae2d](https://github.com/dxheroes/dx-scanner/commit/5d0ae2d61f7213a76250cf05f14c6172bc8012f9))
+* change the logic since the logic in GQL pagination is different ([ce41014](https://github.com/dxheroes/dx-scanner/commit/ce410149be48203197fc75d41c0841cba3bdf77c))
+* migrate listPullRequests() from REST to GraphQL ([4b9a1bf](https://github.com/dxheroes/dx-scanner/commit/4b9a1bf788db0c838fb2309400183fe58a55f4b7))
+* remove commented code ([cba0f74](https://github.com/dxheroes/dx-scanner/commit/cba0f7493849e7020edea12dfd2483f3699fc20d))
+* rename Go linter practice file ([1d963b7](https://github.com/dxheroes/dx-scanner/commit/1d963b7c4da5ab0762f58bb561029e1a42324f1d))
+
+
+### Features
+
+* debug GQL rate limit ([70773fd](https://github.com/dxheroes/dx-scanner/commit/70773fd44d24fed1ec6c5d36a2be5d57a8d00644))
+
 # [3.44.0](https://github.com/dxheroes/dx-scanner/compare/v3.43.0...v3.44.0) (2020-10-19)
 
 

@@ -44,7 +44,7 @@ We are celebrating **Hacktoberfest 2020!** DX Scanner is a perfect project to pr
 
 During the event, we will be periodically updating the **"Leaderboard of Contributors"** - table with the most active contributors. The Leaderboard will be posted to our [Twitter](https://twitter.com/DX_Heroes). By the end of the event, **Top 3 contributors** will receive a **permanent Badge of Honor** with links to their socials/websites on this repository. On top of that, **the contributor with the most merged pull requests** will receive **exclusive DX Heroes merchandise!**
 
-#### How to participate in the Leaderboard of Contributors? 
+#### How to participate in the Leaderboard of Contributors?
 - First, please kindly fill out this [DX Heroes Hacktoberfest 2020 Participant Form](https://forms.gle/o3sBqsjr4sYLQgPh6)
 - Make pull requests to one of our projects throughout October
 - Keep an eye on the Leaderboard of Contributors periodically posted on our [Twitter](https://twitter.com/DX_Heroes)
@@ -73,7 +73,7 @@ About Hacktoberfest: https://hacktoberfest.digitalocean.com/
   * [Practices](#Practices)
   * [GitHub CI Action](#GitHub-Ci-Action)
 * [Support](#support-%EF%B8%8F-%EF%B8%8F)
-* [Contributing](#Contributing--)  
+* [Contributing](#Contributing--)
 <!-- tocstop -->
 ### Which version control system can you use?
 
@@ -98,10 +98,10 @@ dx-scanner run https://bitbucket.org/maras333/node-api-with-ts
 ### Installation
 
 - with NPM
-  
-  ```npm install -g dx-scanner``` 
-- with Yarn 
-  
+
+  ```npm install -g dx-scanner```
+- with Yarn
+
   ```yarn global add dx-scanner```
 
 ### Usage
@@ -122,7 +122,7 @@ Help for command dxs
 -->
 #### Commands
 ```
-Usage: dx-scanner [command] [options] 
+Usage: dx-scanner [command] [options]
 
 Options:
   -V, --version         output the version number
@@ -188,21 +188,22 @@ Add ```dxscannerrc.*``` config file to change default configuration settings. It
 
 You can also run ```dx-scanner init``` to initialize config automatically.
 
-### Practices   
+### Practices
 You can switch off practices that you do not want to scan, change their impact level, and even override their default values. To do so, refer to the id of the practice and specify your configuration.
 
 <details>
 <summary>List of All Practices 🔍</summary>
 
 Practice | Impact | Language Independent | JavaScript/TypeScript | Java/Kotlin | Python | PHP
-------------- | ------------- | ------------- | ------------- | ------------- | ------------- | ------------- 
+------------- | ------------- | ------------- | ------------- | ------------- | ------------- | -------------
 Create a Readme File | <span style="color:red">high</span> | ✅ | ✅ | ✅ | ✅ | ✅
-Create a Changelog File | <span style="color:red">high</span> | ✅ | ✅ | ✅ | ✅
+Create a Changelog File | <span style="color:red">high</span> | ✅ | ✅ | ✅ | ✅ | ✅
 Create a License File | <span style="color:yellow">medium</span> | ✅ | ✅ | ✅ | ✅ | ✅
 Create a Lockfile | <span style="color:red">high</span> | ✅ | ✅ | ✅ | ✅ | ✅
 Create a .gitignore | <span style="color:red">high</span> | ✅ | ✅ | ✅ | ✅ | ✅
 Write in Typescript | <span style="color:yellow">medium</span> | ❌ | ✅ | ❌ | ❌ | ❌
 Set .gitignore Correctly | <span style="color:red">high</span> | ❌ | ✅ | ✅ | ❌ | ❌
+Set Readme File Correctly | <span style="color:red">high</span> | ✅ | ✅ | ✅ | ✅ | ✅
 Use Continuous Integration | <span style="color:red">high</span> | ✅ | ✅ | ✅ | ✅ | ✅
 Use Docker | <span style="color:green">small</span> | ✅ | ✅ | ✅ | ✅ | ✅
 Use .editorconfig | <span style="color:green">small</span> | ✅ | ✅ | ✅ | ✅ | ✅
@@ -289,7 +290,7 @@ practices:
     impact: small
   JavaScript.ESLintWithoutErrorsPractice:
     fix: true
-    override: 
+    override:
       lintFilesPatterns: ['.internal/**/*.js', '*.js']
       ignorePatterns: []
   LanguageIndependent.ThinPullRequestsPractice:
@@ -328,7 +329,7 @@ high = 100 points
 
 medium = 75 points
 
-small = 50 points 
+small = 50 points
 
 hint = 25 points
 ```
