@@ -8,6 +8,7 @@ import Practices from './commands/practices';
 import _ from 'lodash';
 import updateNotifier from 'update-notifier';
 import { errorHandler } from './lib/errors';
+import logfile from './lib/logfile';
 // eslint-disable-next-line @typescript-eslint/no-require-imports, @typescript-eslint/no-var-requires
 const pjson = require('../package.json');
 
@@ -20,6 +21,7 @@ class DXScannerCommand {
       .version(pjson.version)
       .name('dx-scanner')
       .usage('[command] [options] ')
+      .option('-l --log', 'Write an execution log to ./dxscanner.log', this.enableLogfile)
       .on('--help', () => {
         console.log('');
         console.log('Aliases:');
@@ -84,7 +86,9 @@ class DXScannerCommand {
 
   private static validateFailInput = (value: string | undefined) => {
     if (value && !_.includes(PracticeImpact, value)) {
-      console.error('Invalid value for --fail: %s\nValid values are: %s\n', value, Object.keys(PracticeImpact).concat('all').join(', '));
+      const msg = `Invalid value for --fail: ${value}\nValid values are: ${Object.keys(PracticeImpact).concat('all').join(', ')}\n`;
+      logfile.error(msg);
+      console.error(msg);
       process.exit(1);
     }
 
@@ -94,9 +98,15 @@ class DXScannerCommand {
   private static notifyUpdate = () => {
     updateNotifier({ pkg: pjson, updateCheckInterval: 0, shouldNotifyInNpmScript: true }).notify();
   };
+
+  private static async enableLogfile() {
+    logfile.enabled = true;
+    logfile.log('DX Scanner execution log ' + new Date().toLocaleTimeString());
+  }
 }
 
 process.on('uncaughtException', errorHandler);
+process.on('exit', () => console.log('exit'));
 
 export default DXScannerCommand;
 

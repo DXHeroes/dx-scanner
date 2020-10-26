@@ -1,4 +1,4 @@
-import debug from 'debug';
+import debug from '../lib/debugWrapper';
 import { inject, injectable } from 'inversify';
 import { has } from 'lodash';
 import { ArgumentsProvider } from '../scanner';

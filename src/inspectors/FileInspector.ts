@@ -1,6 +1,6 @@
 import { IFileInspector } from './IFileInspector';
 import { Metadata, MetadataType, ProjectFilesBrowserService } from '../services/model';
-import debug from 'debug';
+import debug from '../lib/debugWrapper';
 import { injectable, optional, inject } from 'inversify';
 import { Types } from '../types';
 import * as nodePath from 'path';

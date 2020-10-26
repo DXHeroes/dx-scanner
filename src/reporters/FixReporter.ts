@@ -2,6 +2,7 @@ import { blue, bold, cyan, green, italic, red, reset, yellow } from 'colors';
 import { inject, injectable } from 'inversify';
 import { keyBy } from 'lodash';
 import { ScanningStrategy } from '../detectors';
+import logfile from '../lib/logfile';
 import { PracticeEvaluationResult } from '../model';
 import { ArgumentsProvider } from '../scanner';
 import { GitServiceUtils } from '../services/git/GitServiceUtils';
@@ -27,6 +28,7 @@ export class FixReporter implements IReporter {
     practicesAndComponentsAfterFix: PracticeWithContextForReporter[],
   ): Promise<void> {
     const reportString = this.buildReport(practicesAndComponents, practicesAndComponentsAfterFix);
+    logfile.log(reportString);
     console.log(reportString);
   }
 

@@ -1,10 +1,12 @@
 import { createRootContainer } from '../inversify.config';
 import { Scanner } from '../scanner';
-import { PracticeImpact } from '../model';
+import { PracticeImpact, CLIArgs } from '../model';
+import debug from '../lib/debugWrapper';
 import path from 'path';
 
 export default class Init {
-  static async run(): Promise<void> {
+  static async run(cmd: CLIArgs): Promise<void> {
+    debug('cli')(cmd);
     const scanPath = process.cwd();
 
     const container = createRootContainer({

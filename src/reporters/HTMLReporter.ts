@@ -10,6 +10,7 @@ import { FileSystemService, GitServiceUtils } from '../services';
 import { Types } from '../types';
 import path from 'path';
 import { ScanningStrategy } from '../detectors';
+import logfile from '../lib/logfile';
 
 @injectable()
 export class HTMLReporter implements IReporter {
@@ -35,7 +36,9 @@ export class HTMLReporter implements IReporter {
     else reportPath = <string>this.argumentsProvider.html;
 
     await this.fileSystemService.writeFile(path.resolve(process.cwd(), reportPath), reportHTML);
-    console.log('Report was saved to ' + reportPath);
+    const msg = 'Report was saved to ' + reportPath;
+    logfile.log(msg);
+    console.log(msg);
   }
 
   buildReport(practicesAndComponents: PracticeWithContextForReporter[]): string {

@@ -1,5 +1,5 @@
 import { cli } from 'cli-ux';
-import debug from 'debug';
+import debug from '../lib/debugWrapper';
 import fs from 'fs';
 import { inject, injectable, multiInject } from 'inversify';
 import _ from 'lodash';
@@ -91,6 +91,7 @@ export class Scanner {
     this.d(`Components (${projectComponents.length}):`, inspect(projectComponents));
     const practicesWithContext = await this.detectPractices(projectComponents);
     this.d(`Practices (${practicesWithContext.length}):`, inspect(practicesWithContext));
+
     let practicesAfterFix: PracticeWithContext[] | undefined;
     if (this.argumentsProvider.fix) {
       if (isLocal) {
@@ -106,6 +107,10 @@ export class Scanner {
         this.allDetectedComponents!.length,
       )}; Practices: ${inspect(practicesWithContext.length)}.`,
     );
+
+    if (practicesWithContext.length > 0 && practicesWithContext[0].componentContext.configProvider.config)
+      debug('config')('Project configuration: \n' + inspect(practicesWithContext[0].componentContext.configProvider.config));
+    else debug('config')('No project configuration found');
 
     return { shouldExitOnEnd: this.shouldExitOnEnd };
   }

@@ -2,7 +2,7 @@ import { Bitbucket, APIClient, Schema, Params } from 'bitbucket';
 import { Response } from 'bitbucket/src/request/types';
 import { AuthBasic } from 'bitbucket/src/plugins/auth/types';
 import { grey } from 'colors';
-import Debug from 'debug';
+import Debug from '../../lib/debugWrapper';
 import GitUrlParse from 'git-url-parse';
 import { inject, injectable } from 'inversify';
 import { inspect } from 'util';

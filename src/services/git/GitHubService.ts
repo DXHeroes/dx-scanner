@@ -1,6 +1,6 @@
 import { Octokit } from '@octokit/rest';
 import type { OctokitResponse } from '@octokit/types';
-import Debug from 'debug';
+import Debug from '../../lib/debugWrapper';
 import { inject, injectable } from 'inversify';
 import { inspect } from 'util';
 import { ListGetterOptions } from '../../inspectors/common/ListGetterOptions';
