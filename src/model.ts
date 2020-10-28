@@ -60,6 +60,7 @@ export enum ProgrammingLanguage {
   Haskell = 'Haskell',
   Elixir = 'Elixir',
   Python = 'Python',
+  Rust = 'Rust',
   UNKNOWN = 'UNKNOWN',
 }
 

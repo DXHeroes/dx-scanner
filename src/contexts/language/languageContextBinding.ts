@@ -16,10 +16,12 @@ import { PythonComponentDetector } from '../../detectors/Python/PythonComponentD
 import { PythonPackageInspector } from '../../inspectors/package/PythonPackageInspector';
 import { PHPComponentDetector } from '../../detectors/PHP/PHPComponentDetector';
 import { PHPPackageInspector } from '../../inspectors/package/PHPPackageInspector';
+import { RustPackageInspector } from '../../inspectors/package/RustPackageInspector';
 import { PackageInspectorBase } from '../../inspectors/package/PackageInspectorBase';
 import { IProjectComponentDetector } from '../../detectors/IProjectComponentDetector';
 import { ScanningStrategy } from '../../detectors';
 import { ProjectFilesBrowserService } from '../../services';
+import { RustComponentDetector } from '../../detectors/Rust/RustComponentDetector';
 
 export const bindLanguageContext = (container: Container) => {
   container.bind(Types.LanguageContextFactory).toFactory(
@@ -70,6 +72,8 @@ const bindPackageInspectors = (languageAtPath: LanguageAtPath, container: Contai
     resolveBindingPackageInspector(GoPackageInspector, container);
   } else if (languageAtPath.language === ProgrammingLanguage.PHP) {
     resolveBindingPackageInspector(PHPPackageInspector, container);
+  } else if (languageAtPath.language == ProgrammingLanguage.Rust) {
+    resolveBindingPackageInspector(RustPackageInspector, container);
   }
 };
 
@@ -118,6 +122,7 @@ const componentGenerator = function* (): Generator<{
   yield { componentDetector: PythonComponentDetector, detectedLanguage: ProgrammingLanguage.Python };
   yield { componentDetector: GoComponentDetector, detectedLanguage: ProgrammingLanguage.Go };
   yield { componentDetector: PHPComponentDetector, detectedLanguage: ProgrammingLanguage.PHP };
+  yield { componentDetector: RustComponentDetector, detectedLanguage: ProgrammingLanguage.Rust };
   return;
 };
 

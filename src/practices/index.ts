@@ -41,6 +41,7 @@ import { JavaLog4JConfiguredPractice } from './Java/JavaLog4JConfiguredPractice'
 import { JavaPropertiesUsedPractice } from './Java/JavaPropertiesUsedPractice';
 import { GoLinterUsedPractice } from './Go/GoLinterUsedPractice';
 import { PHPLinterUsedPractice } from './PHP/PHPLinterUsedPractice';
+import { RustGitignoreCorrectlySetPractice } from './Rust/RustGitignoreCorrectlySetPractice';
 
 // register practices here
 export const practices = [
@@ -87,4 +88,5 @@ export const practices = [
   JavaPropertiesUsedPractice,
   GoLinterUsedPractice,
   PHPLinterUsedPractice,
+  RustGitignoreCorrectlySetPractice,
 ];
