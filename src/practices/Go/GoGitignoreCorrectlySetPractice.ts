@@ -66,11 +66,6 @@ export class GoGitignoreCorrectlySetPractice extends PracticeBase {
       /.out$/.test(value),
     );
 
-    // Dependency directories regex
-    const dependencyRegex = parsedGitignore.find((value: string) =>
-      /vendor/.test(value),
-    );
-
     if (
       exeFileRegex &&
       exeTiltFileRegex &&
@@ -78,7 +73,6 @@ export class GoGitignoreCorrectlySetPractice extends PracticeBase {
       dylibFileRegex &&
       soFileRegex &&
       testFileRegex &&
-      dependencyRegex &&
       coverageRegex
     ) {
       return PracticeEvaluationResult.practicing;
@@ -121,11 +115,6 @@ export class GoGitignoreCorrectlySetPractice extends PracticeBase {
       /.out$/.test(value),
     );
 
-    // Dependency directories regex
-    const dependencyRegex = this.parsedGitignore.find((value: string) =>
-      /vendor/.test(value),
-    );
-
     const fixes = [
       exeFileRegex ? undefined : '*.exe',
       exeTiltFileRegex ? undefined : '*.exe~',
@@ -134,7 +123,6 @@ export class GoGitignoreCorrectlySetPractice extends PracticeBase {
       dylibFileRegex ? undefined : '*.dylib',
       testFileRegex ? undefined : '*.test',
       coverageRegex ? undefined : '*.out',
-      dependencyRegex ? undefined : 'vendor/',
     ]
       .filter(Boolean)
       .concat(''); // append newline if we add something
@@ -149,7 +137,7 @@ export class GoGitignoreCorrectlySetPractice extends PracticeBase {
       {
         type: ReportDetailType.text,
         text:
-          'You should ignore the binaries for programs and plugins(.exe and others).Test binaries should also be ignored as well as .out file too along with the dependency directories',
+          'You should ignore the binaries for programs and plugins(.exe and others).Test binaries should also be ignored as well as .out file also.',
       },
     ];
   }

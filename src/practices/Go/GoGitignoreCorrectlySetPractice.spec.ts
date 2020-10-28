@@ -6,16 +6,7 @@ import {
   createTestContainer,
 } from '../../inversify.config';
 
-const basicGitignore = `
-*.exe
-*.exe~
-*.dll
-*.so
-*.dylib
-*.test
-*.out
-vendor/
-`;
+const basicGitignore = `*.exe\n*.exe~\n*.dll\n*.so\n*.dylib\n*.test\n*.out\n`;
 
 describe('GoGitignoreCorrectlySetPractice', () => {
   let practice: GoGitignoreCorrectlySetPractice;
@@ -43,7 +34,7 @@ describe('GoGitignoreCorrectlySetPractice', () => {
     expect(evaluated).toEqual(PracticeEvaluationResult.practicing);
   });
 
-  it('Returns practicing if the .gitignore is NOT set correctly', async () => {
+  it('Returns notPracticing if the .gitignore is NOT set correctly', async () => {
     containerCtx.virtualFileSystemService.setFileSystem({
       '.gitignore': '...',
     });
@@ -69,7 +60,7 @@ describe('GoGitignoreCorrectlySetPractice', () => {
     it('Appends to .gitignore if entry is missing', async () => {
       containerCtx.virtualFileSystemService.setFileSystem({
         '.gitignore':
-          '*.exe\n*.exe~\n*.dll\n*.so\n*.dylib\n*.test\n*.out\nvendor/\n',
+          '*.exe\n*.exe~\n*.dll\n*.so\n*.dylib\n*.test\n*.out\n',
       });
 
       await practice.evaluate(containerCtx.practiceContext);
@@ -79,7 +70,7 @@ describe('GoGitignoreCorrectlySetPractice', () => {
         '.gitignore',
       );
       expect(fixedGitignore).toBe(
-        '*.exe\n*.exe~\n*.dll\n*.so\n*.dylib\n*.test\n*.out\nvendor/\n',
+        '*.exe\n*.exe~\n*.dll\n*.so\n*.dylib\n*.test\n*.out\n',
       );
     });
   });
