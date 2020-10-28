@@ -37,10 +37,11 @@ C# | 🚧
 Ruby | 🚧
 Android | 🚧
 Swift | 🚧
+Rust | 🚧
 
 ## Hacktoberfest 2020 🎉
 
-We are celebrating **Hacktoberfest 2020!** DX Scanner is a perfect project to progress your programming skills. Our senior developers will provide feedback, if your pull request will not be merged. You can use this feedback to further improve your skills.
+We are celebrating **Hacktoberfest 2020!** DX Scanner is a perfect project to progress your programming skills. Our senior developers will provide feedback even if your pull request will not be merged. You can use this feedback to further improve your skills.
 
 During the event, we will be periodically updating the **"Leaderboard of Contributors"** - table with the most active contributors. The Leaderboard will be posted to our [Twitter](https://twitter.com/DX_Heroes). By the end of the event, **Top 3 contributors** will receive a **permanent Badge of Honor** with links to their socials/websites on this repository. On top of that, **the contributor with the most merged pull requests** will receive **exclusive DX Heroes merchandise!**
 
