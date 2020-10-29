@@ -21,7 +21,7 @@ export class PythonLinterUsedPractice implements IPractice {
       return PracticeEvaluationResult.unknown;
     }
 
-    if (ctx.packageInspector.hasOneOfPackages(['pylint', 'pyflakes', 'flake8-bugbear', 'flake8', 'pycodestyle', 'it'])) {
+    if (ctx.packageInspector.hasOneOfPackages(['pylint', 'pyflakes', 'flake8', 'pycodestyle'])) {
       return PracticeEvaluationResult.practicing;
     }
     return PracticeEvaluationResult.notPracticing;
