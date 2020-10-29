@@ -72,7 +72,7 @@ const bindPackageInspectors = (languageAtPath: LanguageAtPath, container: Contai
     resolveBindingPackageInspector(GoPackageInspector, container);
   } else if (languageAtPath.language === ProgrammingLanguage.PHP) {
     resolveBindingPackageInspector(PHPPackageInspector, container);
-  } else if (languageAtPath.language == ProgrammingLanguage.Rust) {
+  } else if (languageAtPath.language === ProgrammingLanguage.Rust) {
     resolveBindingPackageInspector(RustPackageInspector, container);
   }
 };

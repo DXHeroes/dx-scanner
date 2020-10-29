@@ -6,28 +6,28 @@ import { IFileInspector } from '../IFileInspector';
 import * as TOML from '@iarna/toml';
 import { DependencyType, Package, PackageVersion } from '../IPackageInspector';
 
-const isRecord = function(v: unknown): v is Record<string, unknown> {
+const isRecord = function (v: unknown): v is Record<string, unknown> {
   return typeof v === 'object' && v !== null;
 };
 const isString = function (v: unknown): v is string {
   return typeof v === 'string';
 };
-const isOptString = function(v: unknown): v is string | undefined {
+const isOptString = function (v: unknown): v is string | undefined {
   return typeof v === 'string' || v === undefined;
 };
-const isOptBool = function(v: unknown): v is boolean | undefined {
+const isOptBool = function (v: unknown): v is boolean | undefined {
   return typeof v === 'boolean' || v === undefined;
 };
-const isOptStringArray = function(v: unknown): v is string[] | undefined {
+const isOptStringArray = function (v: unknown): v is string[] | undefined {
   return v === undefined || (Array.isArray(v) && v.every((e) => typeof e === 'string'));
 };
 
 /**
  * Similar to `lodash.conformsTo` but runs the check on `undefined` instead of failing.
  */
-function conformsOptional(check: Record<string, (v: unknown) => boolean>, value: Record<string, unknown>): boolean {
+const conformsOptional = function (check: Record<string, (v: unknown) => boolean>, value: Record<string, unknown>): boolean {
   return Object.keys(check).every((key) => check[key](value[key]));
-}
+};
 
 @injectable()
 export class RustPackageInspector extends PackageInspectorBase {

@@ -114,7 +114,7 @@ describe('RustComponentDetector', () => {
       mockRustPackageInspector.cargoManifest = {
         package: {
           name: '',
-          version: ''
+          version: '',
         },
         bin: [
           {
@@ -125,7 +125,7 @@ describe('RustComponentDetector', () => {
         target: {},
         dependencies: [],
         'dev-dependencies': [],
-        'build-dependencies': []
+        'build-dependencies': [],
       };
 
       const components = await detector.detectComponent({

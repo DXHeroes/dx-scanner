@@ -1,5 +1,4 @@
 import { RustGitignoreCorrectlySetPractice } from './RustGitignoreCorrectlySetPractice';
-import { gitignoreContent } from '../../detectors/__MOCKS__/CSharp/gitignoreContent.mock';
 import { PracticeEvaluationResult } from '../../model';
 import { TestContainerContext, createTestContainer } from '../../inversify.config';
 
