@@ -6,25 +6,25 @@ import { RustLanguageDetector } from './RustLanguageDetector';
 import * as nodePath from 'path';
 
 describe('RustLanguageDetector', () => {
-  let vfs: FileSystemService;
+  let vfss: FileSystemService;
   let detector: RustLanguageDetector;
 
   beforeEach(() => {
-    vfs = new FileSystemService({ isVirtual: true });
+    vfss = new FileSystemService({ isVirtual: true });
 
-    const fileInspector = new FileInspector(vfs, '/');
+    const fileInspector = new FileInspector(vfss, '/');
     detector = new RustLanguageDetector(fileInspector);
   });
 
   afterEach(() => {
-    vfs.clearFileSystem();
+    vfss.clearFileSystem();
   });
 
   it('detects Rust correctly by Cargo.toml', async () => {
     const structure: DirectoryJSON = {
       '/project/Cargo.toml': '...',
     };
-    vfs.setFileSystem(structure);
+    vfss.setFileSystem(structure);
 
     const langAtPath = await detector.detectLanguage();
     expect(langAtPath.length).toEqual(1);
@@ -38,7 +38,7 @@ describe('RustLanguageDetector', () => {
       '/project/foo/module.rs': '...',
       '/project/foo/module/submodule.rs': '...',
     };
-    vfs.setFileSystem(structure);
+    vfss.setFileSystem(structure);
 
     const langAtPath = await detector.detectLanguage();
     expect(langAtPath.length).toEqual(1);
@@ -52,7 +52,7 @@ describe('RustLanguageDetector', () => {
       '/project/src/module.rs': '...',
       '/project/src/module/submodule.rs': '...',
     };
-    vfs.setFileSystem(structure);
+    vfss.setFileSystem(structure);
 
     const langAtPath = await detector.detectLanguage();
     expect(langAtPath.length).toEqual(1);
@@ -66,7 +66,7 @@ describe('RustLanguageDetector', () => {
       '/project/src/module/submodule.rs': '...',
       '/project/src/module/another.rs': '...',
     };
-    vfs.setFileSystem(structure);
+    vfss.setFileSystem(structure);
 
     const langAtPath = await detector.detectLanguage();
     expect(langAtPath.length).toEqual(1);
@@ -80,7 +80,7 @@ describe('RustLanguageDetector', () => {
       '/project/src/module/submodule.notrs': '...',
       '/project/src/module/another.notrs': '...',
     };
-    vfs.setFileSystem(structure);
+    vfss.setFileSystem(structure);
 
     const langAtPath = await detector.detectLanguage();
     expect(langAtPath).toEqual([]);

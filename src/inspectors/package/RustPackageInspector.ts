@@ -6,26 +6,26 @@ import { IFileInspector } from '../IFileInspector';
 import * as TOML from '@iarna/toml';
 import { DependencyType, Package, PackageVersion } from '../IPackageInspector';
 
-const isRecord = function (v: unknown): v is Record<string, unknown> {
+const isRecord = (v: unknown): v is Record<string, unknown> => {
   return typeof v === 'object' && v !== null;
 };
-const isString = function (v: unknown): v is string {
+const isString = (v: unknown): v is string => {
   return typeof v === 'string';
 };
-const isOptString = function (v: unknown): v is string | undefined {
+const isOptString = (v: unknown): v is string | undefined => {
   return typeof v === 'string' || v === undefined;
 };
-const isOptBool = function (v: unknown): v is boolean | undefined {
+const isOptBool = (v: unknown): v is boolean | undefined => {
   return typeof v === 'boolean' || v === undefined;
 };
-const isOptStringArray = function (v: unknown): v is string[] | undefined {
+const isOptStringArray = (v: unknown): v is string[] | undefined => {
   return v === undefined || (Array.isArray(v) && v.every((e) => typeof e === 'string'));
 };
 
 /**
  * Similar to `lodash.conformsTo` but runs the check on `undefined` instead of failing.
  */
-const conformsOptional = function (check: Record<string, (v: unknown) => boolean>, value: Record<string, unknown>): boolean {
+const conformsOptional = (check: Record<string, (v: unknown) => boolean>, value: Record<string, unknown>): boolean => {
   return Object.keys(check).every((key) => check[key](value[key]));
 };
 
@@ -73,7 +73,7 @@ export class RustPackageInspector extends PackageInspectorBase {
             profile: cargoManifestToml['profile'],
           };
 
-          this.packages = RustPackageInspector.extractPackages(this.cargoManifest, this.cargoLock);
+          this.packages = RustPackageInspector.addPackages(this.cargoManifest, this.cargoLock);
         }
       }
 
@@ -311,7 +311,7 @@ export class RustPackageInspector extends PackageInspectorBase {
     );
   }
 
-  private static extractPackages(manifest: CargoManifest, lockFile?: CargoLock): Package[] {
+  private static addPackages(manifest: CargoManifest, lockFile?: CargoLock): Package[] {
     const parseDep = (type: DependencyType, dep: ManifestDependency) => {
       const name = dep.package ?? dep.name;
 
@@ -363,7 +363,7 @@ export interface BinaryInfo {
   path: string;
 }
 
-interface DependecySet {
+export interface DependecySet {
   dependencies: ReadonlyArray<ManifestDependency>;
   'dev-dependencies': ReadonlyArray<ManifestDependency>;
   'build-dependencies': ReadonlyArray<ManifestDependency>;
@@ -403,7 +403,7 @@ export interface CargoWorkspaceManifest {
   };
 }
 
-interface CargoLockPackage {
+export interface CargoLockPackage {
   name: string;
   version: string;
   source?: string;

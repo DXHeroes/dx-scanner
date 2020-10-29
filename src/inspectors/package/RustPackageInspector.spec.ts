@@ -22,7 +22,7 @@ describe('RustPackageInspector', () => {
     containerCtx.virtualFileSystemService.clearFileSystem();
   });
 
-  it('inits and loads packages', async () => {
+  it('inits correctly even with empty fs', async () => {
     containerCtx.virtualFileSystemService.setFileSystem({});
 
     await inspector.init();

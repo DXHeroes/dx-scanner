@@ -2,14 +2,14 @@ import { RustGitignoreCorrectlySetPractice } from './RustGitignoreCorrectlySetPr
 import { PracticeEvaluationResult } from '../../model';
 import { TestContainerContext, createTestContainer } from '../../inversify.config';
 
-const GITIGNORE_MISSING = `
+const invalidGitignore = `
 # foo
 foo/
 
 bar/*.baz
 `;
 
-const GITIGNORE_PRESENT = `
+const basicGitignore = `
 # foo
 foo/
 
@@ -34,7 +34,7 @@ describe('RustGitignoreIsCorrectlySetPractice', () => {
 
   it('detects practicing if .gitignore is set correctly', async () => {
     containerCtx.virtualFileSystemService.setFileSystem({
-      '.gitignore': GITIGNORE_PRESENT,
+      '.gitignore': basicGitignore,
     });
 
     const evaluated = await practice.evaluate(containerCtx.practiceContext);
@@ -43,7 +43,7 @@ describe('RustGitignoreIsCorrectlySetPractice', () => {
 
   it('detects notPracticing if .gitignore is not set correctly', async () => {
     containerCtx.virtualFileSystemService.setFileSystem({
-      '.gitignore': GITIGNORE_MISSING,
+      '.gitignore': invalidGitignore,
     });
 
     const evaluated = await practice.evaluate(containerCtx.practiceContext);
@@ -57,25 +57,25 @@ describe('RustGitignoreIsCorrectlySetPractice', () => {
 
   it('does not fix correct .gitignore', async () => {
     containerCtx.virtualFileSystemService.setFileSystem({
-      '.gitignore': GITIGNORE_PRESENT,
+      '.gitignore': basicGitignore,
     });
 
     await practice.evaluate(containerCtx.practiceContext);
     await practice.fix(containerCtx.fixerContext);
 
     const fixedGitignore = await containerCtx.virtualFileSystemService.readFile('.gitignore');
-    expect(fixedGitignore).toBe(GITIGNORE_PRESENT);
+    expect(fixedGitignore).toBe(basicGitignore);
   });
 
   it('appends to .gitignore if entry is missing', async () => {
     containerCtx.virtualFileSystemService.setFileSystem({
-      '.gitignore': GITIGNORE_MISSING,
+      '.gitignore': invalidGitignore,
     });
 
     await practice.evaluate(containerCtx.practiceContext);
     await practice.fix(containerCtx.fixerContext);
 
     const fixedGitignore = await containerCtx.virtualFileSystemService.readFile('.gitignore');
-    expect(fixedGitignore).toBe(`${GITIGNORE_MISSING}\n# added by \`dx-scanner --fix\`\ntarget/\n**/*.rs.bk`);
+    expect(fixedGitignore).toBe(`${invalidGitignore}\n# added by \`dx-scanner --fix\`\ntarget/\n**/*.rs.bk`);
   });
 });

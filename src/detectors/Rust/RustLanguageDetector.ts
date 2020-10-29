@@ -4,7 +4,7 @@ import { LanguageAtPath, ProgrammingLanguage } from '../../model';
 import { IFileInspector } from '../../inspectors/IFileInspector';
 import { Types } from '../../types';
 import { fileExtensionRegExp, fileNameRegExp, sharedSubpath } from '../utils';
-import lo from 'lodash';
+import _ from 'lodash';
 import * as nodePath from 'path';
 
 @injectable()
@@ -33,7 +33,7 @@ export class RustLanguageDetector implements ILanguageDetector {
     // And specially: `foo/src/foo.rs, foo/src/bar.rs` => `foo/` (skips `src`)
     const rustSourcesPromise = this.fileInspector
       .scanFor(fileExtensionRegExp(['rs']), '/')
-      .then((files) => lo.uniq(files.map((f) => nodePath.dirname(f.path))))
+      .then((files) => _.uniq(files.map((f) => nodePath.dirname(f.path))))
       .then((uniqueDirs) => {
         if (uniqueDirs.length === 0) {
           return [];
@@ -56,7 +56,7 @@ export class RustLanguageDetector implements ILanguageDetector {
     const rustSources = await rustSourcesPromise;
     // remove from `rustSources` all such paths that already have
     // a `Cargo.toml` anywhere in their ancestor path
-    lo.pullAllWith(rustSources, manifestFiles, (source, manifest) => sharedSubpath([manifest.path, source.path]) === manifest.path);
+    _.pullAllWith(rustSources, manifestFiles, (source, manifest) => sharedSubpath([manifest.path, source.path]) === manifest.path);
 
     result.push(...manifestFiles, ...rustSources);
 

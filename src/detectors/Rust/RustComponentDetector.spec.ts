@@ -143,7 +143,7 @@ describe('RustComponentDetector', () => {
       });
     });
 
-    it('detects Rust rust application and library in all possible forms', async () => {
+    it('detects Rust application and library in all possible forms', async () => {
       const structure: DirectoryJSON = {
         '/project/src/lib.rs': '...',
         '/project/src/main.rs': '...',
