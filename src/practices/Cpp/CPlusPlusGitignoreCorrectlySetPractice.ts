@@ -14,7 +14,7 @@ import { FixerContext } from '../../contexts/fixer/FixerContext';
   url: 'https://github.com/github/gitignore/blob/master/C%2B%2B.gitignore',
   dependsOn: { practicing: ['LanguageIndependent.GitignoreIsPresent'] },
 })
-export class JsGitignoreCorrectlySetPractice extends PracticeBase {
+export class CPlusPlusGitignoreCorrectlySetPractice extends PracticeBase {
   private parsedGitignore: string[] = [];
 
   async isApplicable(ctx: PracticeContext): Promise<boolean> {
@@ -69,7 +69,8 @@ export class JsGitignoreCorrectlySetPractice extends PracticeBase {
     const outRegex = parsedGitignore.find((value:string) => /\.out$/.test(value));
     const appRegex = parsedGitignore.find((value:string) => /\.app$/.test(value));
 
-    if (prerequisitesRegex &&
+    if (
+      prerequisitesRegex &&
       sloRegex &&
       loRegex &&
       oRegex &&
