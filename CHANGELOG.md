@@ -1,3 +1,10 @@
+## [3.45.1](https://github.com/dxheroes/dx-scanner/compare/v3.45.0...v3.45.1) (2020-11-02)
+
+
+### Bug Fixes
+
+* **deps:** update all non-major dependencies ([002502c](https://github.com/dxheroes/dx-scanner/commit/002502cd2b390c7dc3ab340dbed76e7d1557e910))
+
 # [3.45.0](https://github.com/dxheroes/dx-scanner/compare/v3.44.0...v3.45.0) (2020-10-26)
 
 
