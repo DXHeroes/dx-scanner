@@ -1,3 +1,11 @@
+# [3.46.0](https://github.com/dxheroes/dx-scanner/compare/v3.45.1...v3.46.0) (2020-11-05)
+
+
+### Features
+
+* linter used python practice ([c8aeba2](https://github.com/dxheroes/dx-scanner/commit/c8aeba296cd79c0b81dd4527524c3d08da5dcfe8))
+* linter used python practice tests ([886e5bf](https://github.com/dxheroes/dx-scanner/commit/886e5bf19f4575b12d38fd67b90863f0b9cf2bf2))
+
 ## [3.45.1](https://github.com/dxheroes/dx-scanner/compare/v3.45.0...v3.45.1) (2020-11-02)
 
 
