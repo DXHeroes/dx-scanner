@@ -2,12 +2,14 @@ import { PullRequestState } from '../../inspectors';
 import { argumentsProviderFactory } from '../../test/factories/ArgumentsProviderFactory';
 import { gitLabCommitsResponseFactory } from '../../test/factories/responses/gitLab/commitsFactory';
 import { gitLabIssueResponseFactory, issueOfUser } from '../../test/factories/responses/gitLab/issueResponseFactory';
+import { gitLabBranchResponseFactory } from '../../test/factories/responses/gitLab/branchResponseFactory';
 import { gitLabPullRequestResponseFactory } from '../../test/factories/responses/gitLab/prResponseFactory';
 import { gitLabRepoCommitsResponseFactory } from '../../test/factories/responses/gitLab/repoCommitResponseFactory';
 import { GitLabNock } from '../../test/helpers/gitLabNock';
 import { getIssueResponse } from '../git/__MOCKS__/gitLabServiceMockFolder/getIssueResponse';
 import { getPullCommitsResponse } from '../git/__MOCKS__/gitLabServiceMockFolder/getPullCommitsResponse';
 import { getPullRequestResponse } from '../git/__MOCKS__/gitLabServiceMockFolder/getPullRequestResponse';
+import { listBranchesResponse } from '../git/__MOCKS__/gitLabServiceMockFolder/listBranchesResponse';
 import { getRepoCommit } from '../git/__MOCKS__/gitLabServiceMockFolder/getRepoCommitResponse';
 import { listIssueCommentsResponse } from '../git/__MOCKS__/gitLabServiceMockFolder/listIssueComments';
 import { listIssuesResponse, mockListIssuesResponseForUser } from '../git/__MOCKS__/gitLabServiceMockFolder/listIssuesResponse';
@@ -157,6 +159,16 @@ describe('GitLab Service', () => {
 
     const response = await service.checkVersion();
     expect(response).toMatchObject({ version: '1.0.0', revision: '225c2e' });
+  });
+
+  it('Returns branches in own interface', async () => {
+    const mockBranch = gitLabBranchResponseFactory({});
+
+    gitLabNock.listBranchesResponse([mockBranch], { pagination: { page: 1, perPage: 1 } });
+    gitLabNock.getGroupInfo();
+
+    const response = await service.listBranches('gitlab-org', 'gitlab', { pagination: { page: 1, perPage: 1 } });
+    expect(response).toMatchObject(listBranchesResponse(undefined, { page: 1, perPage: 1 }));
   });
 
   it('Returns 401 if the host name exists but AT is not provided', async () => {
