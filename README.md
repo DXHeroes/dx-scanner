@@ -208,7 +208,7 @@ Use Continuous Integration | <span style="color:red">high</span> | ✅ | ✅ | �
 Use Docker | <span style="color:green">small</span> | ✅ | ✅ | ✅ | ✅ | ✅
 Use .editorconfig | <span style="color:green">small</span> | ✅ | ✅ | ✅ | ✅ | ✅
 Format your code automatically | <span style="color:green">small</span> | ❌ | ✅ | ❌ | ❌ | ❌
-Use ESLint | <span style="color:yellow">medium</span> | ❌ | ✅ | ❌ | ❌ | ❌
+Use a Linter | <span style="color:yellow">medium</span> | ❌ | ✅ | ✅ | ✅ | ✅
 ESLint Without Errors | <span style="color:yellow">medium</span> | ❌ | ✅ | ❌ | ❌ | ❌
 Use a different linter | <span style="color:yellow">medium</span> | ❌ | ✅ | ❌ | ❌ | ❌
 Use JS Frontend Testing Framework | <span style="color:yellow">medium</span> | ❌ | ✅ | ❌ | ❌ | ❌
@@ -227,13 +227,11 @@ Write Commit Messages by Convention | <span style="color:green">small</span> | �
 Use Mocking Frameworks for Tests  | <span style="color:green">small</span> | ❌ | ✅ | ✅ | ❌ | ❌
 Use Testing Frameworks | <span style="color:red">high</span> | ❌ | ❌ | ✅ | ❌ | ❌
 Use a Java Logging Dependency | <span style="color:green">small</span> | ❌ | ❌ | ✅ | ❌ | ❌
-Use a Java Linter Dependency | <span style="color:green">small</span> | ❌ | ❌ | ✅ | ❌ | ❌
 Use Java Class Naming Convention | <span style="color:green">small</span> | ❌ | ❌ | ✅ | ❌ | ❌
 Specify Versions of Dependencies | <span style="color:red">high</span> | ❌ | ❌ | ✅ | ❌ | ❌
 Store Environment Variables Using .properties Files | <span style="color:yellow">medium</span> | ❌ | ❌ | ✅ | ❌ | ❌
 Use Java Code Styles | <span style="color:green">small</span> | ❌ | ❌ | ✅ | ❌ | ❌
 Use Java Logger Configuration Files | <span style="color:green">small</span> | ❌ | ❌ | ✅ | ❌ | ❌
-Use a PHP Linter | <span style="color:yellow">medium</span> | ❌ | ❌ | ❌ | ❌ | ✅
 Security vulnerabilities detected | <span style="color:red">high</span> | ❌ | ✅ | ❌ | ❌ | ❌
 </details>
 
