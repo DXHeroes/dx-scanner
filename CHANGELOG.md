@@ -1,3 +1,11 @@
+## [3.46.1](https://github.com/dxheroes/dx-scanner/compare/v3.46.0...v3.46.1) (2020-11-10)
+
+
+### Bug Fixes
+
+* **deps:** update all non-major dependencies ([a79318f](https://github.com/dxheroes/dx-scanner/commit/a79318f41417d777a67f7142ad7bf6ca85ad0ea5))
+* **deps:** update dependency npm-check-updates to v10 ([e175885](https://github.com/dxheroes/dx-scanner/commit/e175885dd0d2ec78977e6f0f133bb7318ca2647a))
+
 # [3.46.0](https://github.com/dxheroes/dx-scanner/compare/v3.45.1...v3.46.0) (2020-11-05)
 
 
