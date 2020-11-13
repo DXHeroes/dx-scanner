@@ -12,5 +12,5 @@ export type ArgumentsProvider = {
   fixPattern: string | undefined;
   html: string | boolean;
   apiToken: string | undefined;
-  apiUrl: string | undefined;
+  apiUrl: string;
 };
