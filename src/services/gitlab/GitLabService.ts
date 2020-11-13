@@ -1,4 +1,4 @@
-import Debug from '../../lib/debugWrapper';
+import Debug from 'debug';
 import { inject, injectable } from 'inversify';
 import { inspect } from 'util';
 import { IVCSService, ServicePagination } from '..';

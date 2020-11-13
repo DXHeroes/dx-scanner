@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { injectable } from 'inversify';
-import debug from '../../../lib/debugWrapper';
+import debug from 'debug';
 import https from 'https';
 
 @injectable()

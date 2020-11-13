@@ -1,5 +1,5 @@
 import { cli } from 'cli-ux';
-import debug from '../lib/debugWrapper';
+import debug from 'debug';
 import fs from 'fs';
 import { inject, injectable, multiInject } from 'inversify';
 import _ from 'lodash';

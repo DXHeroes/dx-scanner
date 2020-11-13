@@ -1,21 +1,21 @@
 /* eslint-disable no-process-env */
 import 'reflect-metadata';
 import cli from 'cli-ux';
-import debug from '../lib/debugWrapper';
+import debug from 'debug';
 import { sync as commandExistsSync } from 'command-exists';
 import { createRootContainer } from '../inversify.config';
 import { Scanner, ScannerUtils } from '../scanner';
 import { CLIArgs } from '../model';
 import { ErrorFactory } from '../lib/errors/ErrorFactory';
-import logfile from '../lib/logfile';
+import { logfile } from '../lib/logfile';
 
 export default class Run {
   static async run(path = process.cwd(), cmd: CLIArgs): Promise<void> {
     if (!commandExistsSync('git')) {
       const msg =
         "'git' command dependency not installed. See https://git-scm.com/book/en/v2/Getting-Started-Installing-Git for installation instructions";
-      logfile.warn(msg);
       cli.warn(msg);
+      logfile.log('warning: ' + msg);
       return;
     }
     debug('cli')(cmd);
@@ -78,8 +78,8 @@ export default class Run {
     const hrend = process.hrtime(hrstart);
 
     const msg = `Scan duration ${hrend[0]}s.`;
-    logfile.info(msg);
-    console.info(msg);
+    logfile.log(msg);
+    cli.log(msg);
 
     if (scanResult.shouldExitOnEnd) {
       process.exit(1);

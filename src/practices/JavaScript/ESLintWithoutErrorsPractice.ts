@@ -1,4 +1,4 @@
-import debug from '../../lib/debugWrapper';
+import debug from 'debug';
 import { ESLint } from 'eslint';
 import yaml from 'js-yaml';
 import _ from 'lodash';

@@ -2,18 +2,19 @@ import os from 'os';
 import fs from 'fs';
 import path from 'path';
 import util from 'util';
+import debug from 'debug';
 
-class LogFile {
+class Logfile {
   public enabled: boolean = false;
   public fname: string = path.join(process.cwd(), 'dxscanner.log');
   private file: number | null = null;
 
   /**
-   * Writes the given value to the log file.
-   * @param {*} obj The value to write
+   * Writes the given string to the log file.
+   * @param {*} content The string to write
    * @memberof LogFile
    */
-  public write(obj: any) {
+  public write(content: string) {
     if (!this.enabled) return;
 
     if (this.file === null) {
@@ -21,56 +22,46 @@ class LogFile {
 
       process.on('exit', () => {
         if (typeof this.file === 'number') {
-          fs.writeSync(this.file, '<End of log>' + os.EOL);
           fs.closeSync(this.file);
         }
       });
     }
 
-    fs.write(this.file, typeof obj === 'string' ? obj : this.format(obj), () => {});
+    fs.write(this.file, content, () => {});
   }
 
   /**
    * Writes the given value to the log file, followed by a newline.
-   * @param {*} obj The value to write
+   * @param {*} args The values to write
    * @memberof LogFile
    */
-  public log(obj: any) {
-    this.write(this.format(obj) + '\n');
-  }
-
-  /**
-   * Writes the given value to the log file, each line prepended with [error].
-   * @param {*} obj The value to write
-   * @memberof LogFile
-   */
-  public error(obj: any) {
-    this.write('[error] ' + this.format(obj) + '\n');
-  }
-
-  /**
-   * Writes the given value to the log file, each line prepended with [warn].
-   * @param {*} obj The value to write
-   * @memberof LogFile
-   */
-  public warn(obj: any) {
-    this.write('[warn] ' + this.format(obj) + '\n');
-  }
-
-  /**
-   * Writes the given value to the log file, each line prepended with [info].
-   * @param {*} obj The value to write
-   * @memberof LogFile
-   */
-  public info(obj: any) {
-    this.write('[info] ' + this.format(obj) + '\n');
-  }
-
-  private format(obj: any): string {
-    return util.format(obj);
+  public log(format: any, ...args: any[]) {
+    this.write(util.format(format, ...args) + '\n');
   }
 }
 
-const logfile = new LogFile();
+/**
+ * The Logfile instance, contains methods for writing to the logfile directly
+ */
+export const logfile = new Logfile();
 
-export default logfile;
+/**
+ * Enables the logfile methods and
+ * intercepts calls to `debug` to also write to `dxscanner.log`
+ */
+export function enableLogfile(): void {
+  logfile.enabled = true;
+
+  const removeANSIPattern = [
+		'[\\u001B\\u009B][[\\]()#;?]*(?:(?:(?:[a-zA-Z\\d]*(?:;[-a-zA-Z\\d\\/#&.:=?%@~_]*)*)?\\u0007)',
+		'(?:(?:\\d{1,4}(?:;\\d{0,4})*)?[\\dA-PR-TZcf-ntqry=><~]))'
+  ].join('|');
+  const removeANSIRe = new RegExp(removeANSIPattern, 'g');
+  const removeANSI = (s: string): string => s.replace(removeANSIRe, '');
+
+  debug.log = function(...args: any[]) {
+    const formatted = util.format(args[0], ...args.slice(1)) + '\n';
+    logfile.write(removeANSI(formatted));
+    process.stderr.write(formatted);
+  }
+}

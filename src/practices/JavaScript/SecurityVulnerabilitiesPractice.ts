@@ -1,4 +1,4 @@
-import debug from '../../lib/debugWrapper';
+import debug from 'debug';
 import shell from 'shelljs';
 import { PracticeContext } from '../../contexts/practice/PracticeContext';
 import { PracticeEvaluationResult, PracticeImpact, ProgrammingLanguage } from '../../model';

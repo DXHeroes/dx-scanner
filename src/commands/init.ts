@@ -1,7 +1,7 @@
 import { createRootContainer } from '../inversify.config';
 import { Scanner } from '../scanner';
 import { PracticeImpact, CLIArgs } from '../model';
-import debug from '../lib/debugWrapper';
+import debug from 'debug';
 import path from 'path';
 
 export default class Init {

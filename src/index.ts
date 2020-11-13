@@ -8,12 +8,16 @@ import Practices from './commands/practices';
 import _ from 'lodash';
 import updateNotifier from 'update-notifier';
 import { errorHandler } from './lib/errors';
-import logfile from './lib/logfile';
+import { enableLogfile, logfile } from './lib/logfile';
+import debug from 'debug';
+import { cli } from 'cli-ux';
 // eslint-disable-next-line @typescript-eslint/no-require-imports, @typescript-eslint/no-var-requires
 const pjson = require('../package.json');
 
 class DXScannerCommand {
   static async run(): Promise<void> {
+    debug.enable('info,warn,error,errorHandler');
+
     const cmder = new commander.Command();
 
     // default cmd config
@@ -21,7 +25,10 @@ class DXScannerCommand {
       .version(pjson.version)
       .name('dx-scanner')
       .usage('[command] [options] ')
-      .option('-l --log', 'Write an execution log to ./dxscanner.log', this.enableLogfile)
+      .option('-l --log', 'Write an execution log to ./dxscanner.log', () => {
+        enableLogfile();
+        logfile.log('DX Scanner execution log ' + new Date().toLocaleTimeString());
+      })
       .on('--help', () => {
         console.log('');
         console.log('Aliases:');
@@ -86,9 +93,7 @@ class DXScannerCommand {
 
   private static validateFailInput = (value: string | undefined) => {
     if (value && !_.includes(PracticeImpact, value)) {
-      const msg = `Invalid value for --fail: ${value}\nValid values are: ${Object.keys(PracticeImpact).concat('all').join(', ')}\n`;
-      logfile.error(msg);
-      console.error(msg);
+      debug('error')(`Invalid value for --fail: ${value}\nValid values are: ${Object.keys(PracticeImpact).concat('all').join(', ')}\n`);
       process.exit(1);
     }
 
@@ -98,11 +103,6 @@ class DXScannerCommand {
   private static notifyUpdate = () => {
     updateNotifier({ pkg: pjson, updateCheckInterval: 0, shouldNotifyInNpmScript: true }).notify();
   };
-
-  private static async enableLogfile() {
-    logfile.enabled = true;
-    logfile.log('DX Scanner execution log ' + new Date().toLocaleTimeString());
-  }
 }
 
 process.on('uncaughtException', errorHandler);

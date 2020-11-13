@@ -4,7 +4,7 @@ import { Types } from '../types';
 import _ from 'lodash';
 import { inspect } from 'util';
 import { ArgumentsProvider } from '../scanner';
-import logfile from '../lib/logfile';
+import debug from 'debug';
 
 @injectable()
 export class JSONReporter implements IReporter {
@@ -16,9 +16,7 @@ export class JSONReporter implements IReporter {
 
   async report(practicesAndComponents: PracticeWithContextForReporter[]): Promise<void> {
     const reportString = this.buildReport(practicesAndComponents);
-    const msg = inspect(reportString, { showHidden: false, depth: null });
-    logfile.log(msg);
-    console.log(msg);
+    debug.log(inspect(reportString, { showHidden: false, depth: null }));
   }
 
   buildReport(practicesAndComponents: PracticeWithContextForReporter[]): JSONReport {

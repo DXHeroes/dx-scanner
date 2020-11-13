@@ -2,9 +2,8 @@
 import { ServiceError } from './ServiceError';
 import { ErrorCode } from './model';
 import { assertNever } from '../assertNever';
-import debug from '../../lib/debugWrapper';
+import debug from 'debug';
 import cli from 'cli-ux';
-import logfile from '../logfile';
 const d = debug('errorHandler');
 
 export const errorHandler = (error: Error) => {
@@ -13,7 +12,7 @@ export const errorHandler = (error: Error) => {
   if (error instanceof ServiceError) {
     switch (error.code) {
       case ErrorCode.AUTHORIZATION_ERROR:
-        console.error(error.message);
+        d(error.message);
         d(error.stack);
         process.exit(1); //mandatory (as per the Node.js docs)
       case ErrorCode.SERVICE_ERROR:
@@ -21,13 +20,13 @@ export const errorHandler = (error: Error) => {
       case ErrorCode.INTERNAL_ERROR:
       case ErrorCode.ARGUMENT_ERROR:
       case ErrorCode.PRACTICE_EVALUATION_ERROR:
-        logfile.error(error);
+        d(error);
         cli.error(error);
       default:
         assertNever(error.code);
     }
   }
 
-  logfile.error(error);
+  d(error);
   throw error;
 };

@@ -1,8 +1,8 @@
 import { blue, bold, Color, cyan, green, grey, italic, red, reset, underline, yellow } from 'colors';
+import debug from 'debug';
 import { inject, injectable } from 'inversify';
 import { ScanningStrategy } from '../detectors';
 import { assertNever } from '../lib/assertNever';
-import logfile from '../lib/logfile';
 import { PracticeEvaluationResult, PracticeImpact, PracticeMetadata } from '../model';
 import { PracticeDetail } from '../practices/IPractice';
 import { ArgumentsProvider } from '../scanner';
@@ -26,9 +26,7 @@ export class CLIReporter implements IReporter {
   }
 
   async report(practicesAndComponents: PracticeWithContextForReporter[]): Promise<void> {
-    const reportString = this.buildReport(practicesAndComponents);
-    logfile.log(reportString);
-    console.log(reportString);
+    debug.log(this.buildReport(practicesAndComponents));
   }
 
   buildReport(practicesAndComponents: PracticeWithContextForReporter[]): string {
