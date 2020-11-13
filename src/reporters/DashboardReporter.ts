@@ -34,7 +34,7 @@ export class DashboardReporter implements IReporter {
     const reportData = await this.buildReport(practicesAndComponents);
     try {
       // send data
-      await axios.post('https://provider.dxscanner.io/api/v1/data-report', reportData, {
+      await axios.post(`${this.argumentsProvider.apiUrl}/data-report`, reportData, {
         headers: this.argumentsProvider.apiToken && { Authorization: this.argumentsProvider.apiToken },
       });
       // TODO: enable logs later, when account is available

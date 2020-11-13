@@ -19,6 +19,7 @@ export default class Practices {
       fixPattern: undefined,
       html: cmd.html,
       apiToken: undefined,
+      apiUrl: undefined,
     });
 
     const scanner = container.get(Scanner);
