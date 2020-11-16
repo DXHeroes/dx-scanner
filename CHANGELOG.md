@@ -1,3 +1,10 @@
+## [3.46.2](https://github.com/dxheroes/dx-scanner/compare/v3.46.1...v3.46.2) (2020-11-16)
+
+
+### Bug Fixes
+
+* return  practiceEvaluation result ([a686ebd](https://github.com/dxheroes/dx-scanner/commit/a686ebd8c777f75d237150868952e4575e956007))
+
 ## [3.46.1](https://github.com/dxheroes/dx-scanner/compare/v3.46.0...v3.46.1) (2020-11-10)
 
 
