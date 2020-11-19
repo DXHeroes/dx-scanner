@@ -9,7 +9,7 @@ LABEL "com.github.actions.color"="green"
 RUN yarn global add dx-scanner
 
 # Copies your code file from your action repository to the filesystem path `/` of the container
-COPY entrypoint.sh /entry.sh
+COPY foo.sh /entry.sh
 RUN chmod +x /entry.sh
 
 
