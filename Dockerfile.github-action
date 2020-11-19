@@ -9,9 +9,9 @@ LABEL "com.github.actions.color"="green"
 RUN yarn global add dx-scanner
 
 # Copies your code file from your action repository to the filesystem path `/` of the container
-COPY entrypoint.sh /entrypoint.sh
-# RUN chmod +x /entrypoint.sh
+COPY entrypoint.sh /entry.sh
+RUN chmod +x /entry.sh
 
 
 # Code file to execute when the docker container starts up (`entrypoint.sh`)
-ENTRYPOINT ["/entrypoint.sh"]
+ENTRYPOINT ["/entry.sh"]
