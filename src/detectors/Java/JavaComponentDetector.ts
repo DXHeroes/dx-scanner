@@ -12,12 +12,14 @@ export class JavaComponentDetector implements IProjectComponentDetector {
   }
 
   async detectComponent(langAtPath: LanguageAtPath): Promise<ProjectComponent[]> {
+    const hasSomeAndroidPackage = this.packageInspector.hasPackage(new RegExp('com.android.support:*'));
+
     return [
       {
         framework: ProjectComponentFramework.UNKNOWN,
         language: langAtPath.language,
         path: langAtPath.path,
-        platform: ProjectComponentPlatform.BackEnd,
+        platform: hasSomeAndroidPackage ? ProjectComponentPlatform.Android : ProjectComponentPlatform.BackEnd,
         repositoryPath: undefined,
         type: ProjectComponentType.Application,
       },
