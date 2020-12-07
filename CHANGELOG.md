@@ -1,3 +1,10 @@
+## [3.46.3](https://github.com/dxheroes/dx-scanner/compare/v3.46.2...v3.46.3) (2020-12-07)
+
+
+### Bug Fixes
+
+* pr author can be null ([cbe9b01](https://github.com/dxheroes/dx-scanner/commit/cbe9b016c9c195bea1cf1ca78693c2d412a1518f))
+
 ## [3.46.2](https://github.com/dxheroes/dx-scanner/compare/v3.46.1...v3.46.2) (2020-11-16)
 
 
