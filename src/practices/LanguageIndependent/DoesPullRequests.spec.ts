@@ -52,6 +52,37 @@ describe('DoesPullRequests', () => {
     expect(practice.data.statistics?.pullRequests).toBeDefined();
   });
 
+  it('return practicing if there is at least one PR which is newer than last commit in master minus 30 days, author can be null', async () => {
+    containerCtx.practiceContext.projectComponent.repositoryPath = 'https://github.com/octocat/Hello-World';
+    const queryBody = {
+      query: listPullRequestsParamas,
+      variables: {
+        owner: 'octocat',
+        repo: 'Hello-World',
+        count: 100,
+        states: ['OPEN', 'MERGED', 'CLOSED'],
+      },
+    };
+
+    nock('https://api.github.com')
+      .post('/graphql', queryBody)
+      .reply(
+        200,
+        gqlPullsResponse({
+          data: {
+            repository: {
+              pullRequests: { edges: [{ node: { author: null, createdAt: '2011-01-13T04:42:41Z', updatedAt: '2011-01-13T04:42:41Z' } }] },
+            },
+          },
+        }),
+      );
+    new GitHubNock('1', 'octocat', 1, 'Hello-World').getCommits().reply(200, getRepoCommitsResponse);
+
+    const evaluated = await practice.evaluate(containerCtx.practiceContext);
+    expect(evaluated).toEqual(PracticeEvaluationResult.practicing);
+    expect(practice.data.statistics?.pullRequests).toBeDefined();
+  });
+
   it('return notPracticing if there is no PR which is newer than last commit in master minus 30 days', async () => {
     containerCtx.practiceContext.projectComponent.repositoryPath = 'https://github.com/octocat/Hello-World';
     const queryBody = {
