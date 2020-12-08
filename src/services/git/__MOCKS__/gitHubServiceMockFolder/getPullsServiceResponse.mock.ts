@@ -11,7 +11,6 @@ export const getPullsServiceResponse: Paginated<PullRequest> = {
       },
       title: 'Add comma in Hello World.',
       url: 'https://github.com/octocat/Hello-World/pull/453',
-      body: "Hello, I'm doing a test for a demo.",
       sha: null,
       createdAt: '2018-10-13T01:14:27Z',
       updatedAt: '2018-10-13T01:14:27Z',

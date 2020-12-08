@@ -2,9 +2,10 @@ import { Git } from './Git';
 import { GitHubNock } from '../../test/helpers/gitHubNock';
 import { GitHubService } from './GitHubService';
 import { argumentsProviderFactory } from '../../test/factories/ArgumentsProviderFactory';
-import { listPullRequestsParamas } from './gqlQueries/listPullRequests';
+import { generateSearchQuery, listPullRequestsQuery } from './gqlQueries/listPullRequests';
 import nock from 'nock';
 import { gqlPullsResponse, oneGqlPullRequest } from './__MOCKS__/gitHubServiceMockFolder/gqlPullsResponse.mock';
+import { GitHubGqlPullRequestState } from '.';
 
 describe('Git', () => {
   let service: GitHubService, git: Git, gitHubNock: GitHubNock;
@@ -296,25 +297,24 @@ describe('Git', () => {
 
   describe('#getPullRequestCount', () => {
     it('returns the number of both open and closed pull requests', async () => {
+      const lastMonth = new Date();
+      lastMonth.setMonth(new Date().getMonth() - 1);
+      const searchQuery = generateSearchQuery('octocat', 'Hello-World', lastMonth, GitHubGqlPullRequestState.all);
+
       const queryBody = {
-        query: listPullRequestsParamas,
+        query: listPullRequestsQuery(searchQuery),
         variables: {
-          owner: 'octocat',
-          repo: 'Hello-World',
           count: 100,
-          states: ['OPEN', 'MERGED', 'CLOSED'],
         },
       };
       const pulls = gqlPullsResponse({
         data: {
-          repository: {
-            pullRequests: {
-              edges: [
-                oneGqlPullRequest({ node: { state: 'OPEN' } }),
-                oneGqlPullRequest({ node: { state: 'MERGED' } }),
-                oneGqlPullRequest({ node: { state: 'CLOSED' } }),
-              ],
-            },
+          search: {
+            edges: [
+              oneGqlPullRequest({ node: { state: 'OPEN' } }),
+              oneGqlPullRequest({ node: { state: 'MERGED' } }),
+              oneGqlPullRequest({ node: { state: 'CLOSED' } }),
+            ],
           },
         },
       });

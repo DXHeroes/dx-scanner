@@ -14,7 +14,6 @@ export const getPullServiceResponse: PullRequest = {
     },
   },
   title: 'Edited README via GitHub',
-  body: '',
   sha: 'e5bd3914e2e596debea16f433f57875b5b90bcd6',
   closedAt: '2011-01-26T19:01:12Z',
   createdAt: '2011-01-26T19:01:12Z',
