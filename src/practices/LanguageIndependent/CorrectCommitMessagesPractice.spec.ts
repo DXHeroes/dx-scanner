@@ -6,6 +6,7 @@ import { CorrectCommitMessagesPractice } from './CorrectCommitMessagesPractice';
 import { Paginated } from '../../inspectors/common/Paginated';
 import { Commit } from '../../services/git/model';
 import _ from 'lodash';
+import { listRepoCommits } from '../../services/git/__MOCKS__/gitLabServiceMockFolder/listRepoCommitsResponse';
 
 describe('CorrectCommitMessagesPractice', () => {
   let practice: CorrectCommitMessagesPractice;
@@ -63,9 +64,12 @@ describe('CorrectCommitMessagesPractice', () => {
     expect(evaluated).toEqual(PracticeEvaluationResult.practicing);
   });
 
-  it('returns not practicing if the commit messages are incorrect', async () => {
+  it('returns not practicing if more than 20% of commit messages are incorrect', async () => {
     mockCollaborationInspector.listRepoCommits = async () => {
-      return changeRepoCommitsMessages('foo: some message');
+      return listRepoCommits([
+        changeRepoCommitsMessages('fix(something): correct commit message').items[0],
+        ...changeRepoCommitsMessages('foo: some wrong message').items,
+      ]);
     };
 
     const evaluated = await practice.evaluate({
