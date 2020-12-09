@@ -146,7 +146,6 @@ export class GitLabService implements IVCSService {
       title: data.title,
       url: data.web_url,
       sha: data.sha,
-      body: data.description,
       createdAt: data.created_at.toString(),
       updatedAt: data.updated_at.toString(),
       closedAt: data.closed_at ? data.closed_at?.toString() : null,

@@ -74,9 +74,8 @@ export class ThinPullRequestsPractice implements IPractice {
     let response: Paginated<PullRequest>;
     let items: PullRequest[] = [];
     let page = 1;
-    let hasPreviousPage = true;
-
-    while (hasPreviousPage && items.length <= this.measurePullRequestCount) {
+    let hasNextPage = true;
+    while (hasNextPage && items.length <= this.measurePullRequestCount) {
       response = await ctx.collaborationInspector!.listPullRequests(owner, repo, {
         withDiffStat: true,
         pagination: { page },
@@ -84,7 +83,7 @@ export class ThinPullRequestsPractice implements IPractice {
       });
 
       items = _.merge(items, response.items); // merge all results
-      hasPreviousPage = response.hasPreviousPage;
+      hasNextPage = response.hasNextPage;
       page++;
     }
 

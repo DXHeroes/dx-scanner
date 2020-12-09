@@ -11,14 +11,14 @@ import {
   getPullCommitsServiceResponse,
 } from '../services/git/__MOCKS__/gitHubServiceMockFolder';
 import { Types } from '../types';
-import { BitbucketService } from '../services';
+import { BitbucketService, GitHubGqlPullRequestState } from '../services';
 import { BitbucketNock } from '../test/helpers/bitbucketNock';
 import { PullRequestState } from '.';
 import { bitbucketPullRequestResponseFactory } from '../test/factories/responses/bitbucket/prResponseFactory';
 import { BitbucketPullRequestState } from '../services/bitbucket/IBitbucketService';
 import nock from 'nock';
-import { listPullRequestsParamas } from '../services/git/gqlQueries/listPullRequests';
 import { gqlPullsResponse } from '../services/git/__MOCKS__/gitHubServiceMockFolder/gqlPullsResponse.mock';
+import { generateSearchQuery, listPullRequestsQuery } from '../services/git/gqlQueries/listPullRequests';
 
 describe('Collaboration Inspector', () => {
   let inspector: CollaborationInspector;
@@ -35,13 +35,14 @@ describe('Collaboration Inspector', () => {
 
   it('returns paginated pull requests', async () => {
     const pagination = { perPage: 1 };
+    const lastMonth = new Date();
+    lastMonth.setMonth(new Date().getMonth() - 1);
+    const searchQuery = generateSearchQuery('octocat', 'Hello-World', lastMonth, GitHubGqlPullRequestState.all);
+
     const queryBody = {
-      query: listPullRequestsParamas,
+      query: listPullRequestsQuery(searchQuery),
       variables: {
-        owner: 'octocat',
-        repo: 'Hello-World',
         count: 1,
-        states: ['OPEN', 'MERGED', 'CLOSED'],
       },
     };
 
