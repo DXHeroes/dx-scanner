@@ -1,3 +1,16 @@
+# [3.47.0](https://github.com/dxheroes/dx-scanner/compare/v3.46.3...v3.47.0) (2020-12-09)
+
+
+### Bug Fixes
+
+* change evaluation of CorrectCommitMessagesPractice ([36726b2](https://github.com/dxheroes/dx-scanner/commit/36726b2e50a071a0a77692fe7952ed27fb865b84))
+* missing state param in enum ([e2a310c](https://github.com/dxheroes/dx-scanner/commit/e2a310c8d18d0199cf3582d13b63f72dcc7c236a))
+
+
+### Features
+
+* filter prs by date ([446cc69](https://github.com/dxheroes/dx-scanner/commit/446cc692b13692974eb02acbd28280531a07534c))
+
 ## [3.46.3](https://github.com/dxheroes/dx-scanner/compare/v3.46.2...v3.46.3) (2020-12-07)
 
 
