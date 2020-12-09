@@ -82,6 +82,7 @@ export class RubyPackageInspector extends PackageInspectorBase {
           dependencyType: depType,
           name: dependency.packageName,
           requestedVersion: dependency.version,
+		// TODO - detect lockfileVersion from lockfile as lockfileVersion doesn't have to be the same as the requested version
           lockfileVersion: dependency.version,
         });
       }
