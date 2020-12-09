@@ -6,7 +6,7 @@ export enum GitHubPullRequestState {
 
 export enum GitHubGqlPullRequestState {
   open = 'is:open',
-  closed = 'is:closed',
+  closed = 'is:closed is:unmerged', //is:closed = CLOSED AND MERGED, is:unmerged = CLOSED and OPEN
   all = '',
 }
 
