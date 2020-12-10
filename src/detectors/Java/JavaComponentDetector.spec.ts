@@ -33,4 +33,34 @@ describe('JavaComponentDetector', () => {
       expect(components[0].platform).toEqual(ProjectComponentPlatform.BackEnd);
     });
   });
+
+  describe('Android', () => {
+    afterEach(() => {
+      jest.clearAllMocks();
+    });
+
+    it('Detects Java Android', async () => {
+      detector = new JavaComponentDetector(mockJavaPackageInspector);
+      const spyHasPackage = jest.spyOn(mockJavaPackageInspector, 'hasPackage').mockReturnValueOnce(true);
+
+      const components = await detector.detectComponent({ language: ProgrammingLanguage.Java, path: './src' });
+
+      expect(spyHasPackage).toHaveBeenCalledWith(new RegExp('com.android.*'));
+      expect(components[0].language).toEqual(ProgrammingLanguage.Java);
+      expect(components[0].path).toEqual('./src');
+      expect(components[0].platform).toEqual(ProjectComponentPlatform.Android);
+    });
+
+    it('Detects Kotlin Android', async () => {
+      detector = new JavaComponentDetector(mockJavaPackageInspector);
+      const spyHasPackage = jest.spyOn(mockJavaPackageInspector, 'hasPackage').mockReturnValueOnce(true);
+
+      const components = await detector.detectComponent({ language: ProgrammingLanguage.Kotlin, path: './src' });
+
+      expect(spyHasPackage).toHaveBeenCalledWith(new RegExp('com.android.*'));
+      expect(components[0].language).toEqual(ProgrammingLanguage.Kotlin);
+      expect(components[0].path).toEqual('./src');
+      expect(components[0].platform).toEqual(ProjectComponentPlatform.Android);
+    });
+  });
 });
