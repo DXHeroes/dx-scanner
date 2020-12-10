@@ -228,6 +228,7 @@ describe('FileSystemService - REAL', () => {
       await expect(fileSystemService.createDirectory(mockFilePath)).rejects.toThrow('EEXIST');
     });
 
+    // skip for now, because it was breaking the github action: https://github.com/DXHeroes/dx-scanner/issues/486
     it.skip('throws an error if the target is a broken symbolc link', async () => {
       const mockFilePath = path.resolve(__dirname, '__MOCKS__/mockFolder/mockFileSLbroken.ln');
 
@@ -295,6 +296,7 @@ describe('FileSystemService - REAL', () => {
         expect(result.type).toEqual('file');
       });
 
+      // skip for now, because it was breaking the github action: https://github.com/DXHeroes/dx-scanner/issues/486
       it.skip('it returns metadata for broken Symlink but only as a File', async () => {
         const mockFilePathSL = path.resolve(__dirname, '__MOCKS__/mockFolder/mockFileSLbroken.ln');
         const result = await fileSystemService.getMetadata(mockFilePathSL);
