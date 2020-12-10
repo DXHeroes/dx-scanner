@@ -54,6 +54,7 @@ Swift | 🚧
   * [GitHub CI Action](#GitHub-Ci-Action)
 * [Support](#support-%EF%B8%8F-%EF%B8%8F)
 * [Contributing](#Contributing--)
+  * [Roadmap](#Roadmap)
 <!-- tocstop -->
 ### Which version control system can you use?
 
@@ -320,6 +321,10 @@ Didn't you find what you expected? Contact us via our public [Slack!](https://bi
 
 ## Contributing 👩‍💻 👨‍💻
 Feel free to contribute to our DX Scanner. Please follow the [Contribution Guide](CONTRIBUTING.md).
+
+### Roadmap 
+
+See our [public roadmap](https://roadmap.dxheroes.io).
 
 ## License 📝
 
