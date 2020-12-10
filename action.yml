@@ -11,5 +11,6 @@ runs:
   image: 'Dockerfile'
   args:
     - ${{ inputs.github_token }}
-  entrypoint: 'entrypoint.sh'
+  entrypoint:
+    - 'entrypoint.sh'
 
