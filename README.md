@@ -5,6 +5,7 @@
 </p>
 
 [![Slack](https://img.shields.io/badge/slack-@DeveloperExperience-%234A154B.svg?logo=slack)](https://bit.ly/slack_developer_experience)
+[![Pipeliner Roadmap](https://img.shields.io/badge/public%20roadmap-https%3A%2F%2Froadmap.dxheroes.io-%23108DE4)](https://roadmap.dxheroes.io)
 
 [![Version](https://img.shields.io/npm/v/dx-scanner.svg)](https://npmjs.org/package/dx-scanner)
 [![Travis (.org)](https://img.shields.io/travis/DXHeroes/dx-scanner/master)](https://travis-ci.org/DXHeroes/dx-scanner)
