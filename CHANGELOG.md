@@ -1,3 +1,10 @@
+## [3.47.1](https://github.com/dxheroes/dx-scanner/compare/v3.47.0...v3.47.1) (2020-12-10)
+
+
+### Bug Fixes
+
+* remove broken symlink tests ([d8cceb1](https://github.com/dxheroes/dx-scanner/commit/d8cceb1292f4df4f942848cb1aa927fe2c55564e))
+
 # [3.47.0](https://github.com/dxheroes/dx-scanner/compare/v3.46.3...v3.47.0) (2020-12-09)
 
 
