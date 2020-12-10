@@ -44,8 +44,8 @@ export class DoesPullRequestsPractice extends PracticeBase {
           //if mergedAt is null and closedAt is not null pr was closed, if both are not null pr is opened, if mergedAt is not null and closedAt is null pr was merged
           closedAt: pr.mergedAt ? null : pr.closedAt,
           mergedAt: pr.mergedAt,
-          authorName: pr.user.login,
-          authorUrl: pr.user.url!,
+          authorName: pr.user.login || null,
+          authorUrl: pr.user.url || null,
         };
       }),
     );

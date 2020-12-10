@@ -1,7 +1,7 @@
 {
   "name": "dx-scanner",
   "description": "Scan your project for possible DX recommendations.",
-  "version": "3.46.2",
+  "version": "3.47.0",
   "author": "DX Heroes LTD <info@dxheroes.io> (https://dxheroes.io)",
   "homepage": "https://github.com/dxheroes/dx-scanner",
   "repository": "ssh://git@github.com/dxheroes/dx-scanner.git",
@@ -102,7 +102,7 @@
     "nock": "13.0.4",
     "prettier": "2.1.2",
     "rimraf": "3.0.2",
-    "semantic-release": "17.2.2",
+    "semantic-release": "17.2.3",
     "semantic-release-slack-bot": "1.6.2",
     "ts-jest": "26.4.4",
     "ts-node": "9.0.0",

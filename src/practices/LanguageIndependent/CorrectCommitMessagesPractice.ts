@@ -56,6 +56,9 @@ export class CorrectCommitMessagesPractice extends PracticeBase implements IPrac
       },
     ];
 
-    return invalidMessages.length > 0 ? PracticeEvaluationResult.notPracticing : PracticeEvaluationResult.practicing;
+    // return practicing, if more than 80% of commits are correct
+    return invalidMessages.length / repoCommits.items.length < 0.8
+      ? PracticeEvaluationResult.practicing
+      : PracticeEvaluationResult.notPracticing;
   }
 }
