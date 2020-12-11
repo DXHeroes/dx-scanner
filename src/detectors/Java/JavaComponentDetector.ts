@@ -3,23 +3,30 @@ import { injectable, inject } from 'inversify';
 import { Types } from '../../types';
 import { IPackageInspector } from '../../inspectors/IPackageInspector';
 import { LanguageAtPath, ProjectComponent, ProjectComponentFramework, ProjectComponentPlatform, ProjectComponentType } from '../../model';
+import { IFileInspector } from '../../inspectors';
 
 @injectable()
 export class JavaComponentDetector implements IProjectComponentDetector {
   private packageInspector: IPackageInspector;
-  constructor(@inject(Types.IPackageInspector) packageInspector: IPackageInspector) {
+  private fileInspector: IFileInspector;
+  constructor(
+    @inject(Types.IPackageInspector) packageInspector: IPackageInspector,
+    @inject(Types.IFileInspector) fileInspector: IFileInspector,
+  ) {
     this.packageInspector = packageInspector;
+    this.fileInspector = fileInspector;
   }
 
   async detectComponent(langAtPath: LanguageAtPath): Promise<ProjectComponent[]> {
-    const hasSomeAndroidPackage = this.packageInspector.hasPackage(new RegExp('com.android.*'));
+    const manifests = await this.fileInspector.scanFor('AndroidManifest.xml', '/');
+    const isAndroid = manifests.length > 0;
 
     return [
       {
         framework: ProjectComponentFramework.UNKNOWN,
         language: langAtPath.language,
         path: langAtPath.path,
-        platform: hasSomeAndroidPackage ? ProjectComponentPlatform.Android : ProjectComponentPlatform.BackEnd,
+        platform: isAndroid ? ProjectComponentPlatform.Android : ProjectComponentPlatform.BackEnd,
         repositoryPath: undefined,
         type: ProjectComponentType.Application,
       },
