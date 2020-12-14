@@ -1,10 +1,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { ServiceError } from './ServiceError';
-import { ErrorCode } from './model';
-import { assertNever } from '../assertNever';
-import debug from 'debug';
 import cli from 'cli-ux';
-const d = debug('errorHandler');
+import { debugLog } from '../../detectors/utils';
+import { assertNever } from '../assertNever';
+import { ErrorCode } from './model';
+import { ServiceError } from './ServiceError';
+const d = debugLog('errorHandler');
 
 export const errorHandler = (error: Error) => {
   cli.action.stop();

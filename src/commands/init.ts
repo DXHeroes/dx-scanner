@@ -1,12 +1,12 @@
-import { createRootContainer } from '../inversify.config';
-import { Scanner } from '../scanner';
-import { PracticeImpact, CLIArgs } from '../model';
-import debug from 'debug';
 import path from 'path';
+import { debugLog } from '../detectors/utils';
+import { createRootContainer } from '../inversify.config';
+import { CLIArgs, PracticeImpact } from '../model';
+import { Scanner } from '../scanner';
 
 export default class Init {
   static async run(cmd: CLIArgs): Promise<void> {
-    debug('cli')(cmd);
+    debugLog('cli')(cmd);
     const scanPath = process.cwd();
 
     const container = createRootContainer({

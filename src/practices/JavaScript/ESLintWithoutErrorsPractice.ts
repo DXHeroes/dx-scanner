@@ -1,4 +1,3 @@
-import debug from 'debug';
 import { ESLint } from 'eslint';
 import yaml from 'js-yaml';
 import _ from 'lodash';
@@ -6,6 +5,7 @@ import * as nodePath from 'path';
 import shell from 'shelljs';
 import { FixerContext } from '../../contexts/fixer/FixerContext';
 import { PracticeContext } from '../../contexts/practice/PracticeContext';
+import { debugLog } from '../../detectors/utils';
 import { PracticeEvaluationResult, PracticeImpact, ProgrammingLanguage } from '../../model';
 import { LinterIssueDto, LinterIssueSeverity } from '../../reporters';
 import { PracticeConfig } from '../../scanner/IConfigProvider';
@@ -54,7 +54,7 @@ export class ESLintWithoutErrorsPractice extends PracticeBase {
       });
       lintFilesPatterns = _.merge(lintFilesPatterns, lintFilesPatternsOverride);
     }
-    const securityVulnerabilitiesPracticeDebug = debug('ESLintWithoutErrorsPractice');
+    const securityVulnerabilitiesPracticeDebug = debugLog('ESLintWithoutErrorsPractice');
 
     // Get the eslint config and ignore for a component.
     const eslintConfig = await ctx.fileInspector.scanFor(/\.eslintrc/, '/', { shallow: true });
@@ -106,7 +106,7 @@ export class ESLintWithoutErrorsPractice extends PracticeBase {
           resolvePluginsRelativeTo: `${ctx.fileInspector.basePath}/node_modules`,
         };
       } catch (error) {
-        const eSLintWithoutErrorsPracticeDebug = debug('ESLintWithoutErrorsPractice');
+        const eSLintWithoutErrorsPracticeDebug = debugLog('ESLintWithoutErrorsPractice');
         eSLintWithoutErrorsPracticeDebug(`Loading .eslintrc file failed with this error: ${error.stack}`);
 
         content = await ctx.fileInspector.readFile(eslintConfig[0].path);

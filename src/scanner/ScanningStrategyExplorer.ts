@@ -1,7 +1,7 @@
-import debug from 'debug';
 import { inject, injectable } from 'inversify';
 import git from 'simple-git/promise';
 import { ArgumentsProvider } from '.';
+import { debugLog } from '../detectors/utils';
 import { ScanningStrategyDetectorUtils } from '../detectors/utils/ScanningStrategyDetectorUtils';
 import { GitServiceUtils } from '../services';
 import { Types } from '../types';
@@ -10,12 +10,12 @@ import { RepositoryConfig } from './RepositoryConfig';
 @injectable()
 export class ScanningStrategyExplorer {
   private readonly argumentsProvider: ArgumentsProvider;
-  private readonly d: debug.Debugger;
+  private readonly d: any;
 
   constructor(@inject(Types.ArgumentsProvider) argumentsProvider: ArgumentsProvider) {
     this.argumentsProvider = argumentsProvider;
 
-    this.d = debug('ScanningStrategyExplorer');
+    this.d = debugLog('ScanningStrategyExplorer');
   }
 
   async explore(): Promise<RepositoryConfig> {

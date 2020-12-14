@@ -228,7 +228,7 @@ describe('FileSystemService - REAL', () => {
       await expect(fileSystemService.createDirectory(mockFilePath)).rejects.toThrow('EEXIST');
     });
 
-    it('throws an error if the target is a broken symbolc link', async () => {
+    it('throws an error if the target is a broken symbolic link', async () => {
       const mockFilePath = path.resolve(__dirname, '__MOCKS__/mockFolder/mockFileSLbroken.ln');
 
       await expect(fileSystemService.createDirectory(mockFilePath)).rejects.toThrow('EEXIST');

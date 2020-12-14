@@ -1,13 +1,13 @@
 /* eslint-disable no-process-env */
-import 'reflect-metadata';
 import cli from 'cli-ux';
-import debug from 'debug';
 import { sync as commandExistsSync } from 'command-exists';
+import 'reflect-metadata';
+import { debugLog } from '../detectors/utils';
 import { createRootContainer } from '../inversify.config';
-import { Scanner, ScannerUtils } from '../scanner';
-import { CLIArgs } from '../model';
 import { ErrorFactory } from '../lib/errors/ErrorFactory';
 import { logfile } from '../lib/logfile';
+import { CLIArgs } from '../model';
+import { Scanner, ScannerUtils } from '../scanner';
 
 export default class Run {
   static async run(path = process.cwd(), cmd: CLIArgs): Promise<void> {
@@ -18,7 +18,7 @@ export default class Run {
       logfile.log('warning: ' + msg);
       return;
     }
-    debug('cli')(cmd);
+    debugLog('cli')(cmd);
     const scanPath = path;
 
     const { json, details, fail } = cmd;

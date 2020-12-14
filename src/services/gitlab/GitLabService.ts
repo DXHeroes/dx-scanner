@@ -1,13 +1,16 @@
-import Debug from 'debug';
 import { inject, injectable } from 'inversify';
+import _ from 'lodash';
 import { inspect } from 'util';
 import { IVCSService, ServicePagination } from '..';
-import { IssueState, ListGetterOptions, Paginated, PullRequestState, PaginationParams } from '../../inspectors';
+import { debugLog } from '../../detectors/utils';
+import { IssueState, ListGetterOptions, Paginated, PaginationParams, PullRequestState } from '../../inspectors';
 import { ArgumentsProvider } from '../../scanner';
 import { InMemoryCache } from '../../scanner/cache';
 import { ICache } from '../../scanner/cache/ICache';
+import { RepositoryConfig } from '../../scanner/RepositoryConfig';
 import { Types } from '../../types';
 import {
+  Branch,
   Commit,
   Contributor,
   ContributorStats,
@@ -24,13 +27,10 @@ import {
   PullRequestReview,
   Symlink,
   UserInfo,
-  Branch,
 } from '../git/model';
 import { VCSServicesUtils } from '../git/VCSServicesUtils';
 import { CustomAxiosResponse, GitLabClient, PaginationGitLabCustomResponse } from './gitlabClient/gitlabUtils';
-import { RepositoryConfig } from '../../scanner/RepositoryConfig';
-import _ from 'lodash';
-const debug = Debug('cli:services:git:gitlab-service');
+const d = debugLog('cli:services:git:gitlab-service');
 
 @injectable()
 export class GitLabService implements IVCSService {
@@ -516,9 +516,9 @@ export class GitLabService implements IVCSService {
       })
       .catch((error) => {
         if (error.response) {
-          debug(`${error.response.status} => ${inspect(error.response.data)}`);
+          d(`${error.response.status} => ${inspect(error.response.data)}`);
         } else {
-          debug(inspect(error));
+          d(inspect(error));
         }
         throw error;
       });
@@ -530,6 +530,6 @@ export class GitLabService implements IVCSService {
    */
   private debugGitLabResponse = <T>(response: CustomAxiosResponse<T>) => {
     this.callCount++;
-    debug(`GitLab API Hit: ${this.callCount}. Remaining ${response.headers['RateLimit-Remaining']} hits.`);
+    d(`GitLab API Hit: ${this.callCount}. Remaining ${response.headers['RateLimit-Remaining']} hits.`);
   };
 }
