@@ -92,7 +92,7 @@ describe('JsGitignoreCorrectlySetPractice', () => {
       await practice.fix(containerCtx.fixerContext);
 
       const fixedGitignore = await containerCtx.virtualFileSystemService.readFile('.gitignore');
-      expect(fixedGitignore).toBe('/node_modules\n/coverage\n\n*.log\n');
+      expect(fixedGitignore).toBe('/node_modules\n/coverage\n\n# added by `dx-scanner --fix`\n*.log\n');
     });
   });
 });
