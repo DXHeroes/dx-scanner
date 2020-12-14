@@ -1,3 +1,16 @@
+# [3.48.0](https://github.com/dxheroes/dx-scanner/compare/v3.47.1...v3.48.0) (2020-12-14)
+
+
+### Bug Fixes
+
+* fix some review comments ([774e718](https://github.com/dxheroes/dx-scanner/commit/774e7187e781ab70ed8640cadf92dec2eb00cfe9))
+
+
+### Features
+
+* add Rust language support and gitignore practice ([a297687](https://github.com/dxheroes/dx-scanner/commit/a297687ad1b177018ed2cc5cf490a856ea04784d))
+* refactor practices into GitignoreCorrectlySetPracticeBase ([966648f](https://github.com/dxheroes/dx-scanner/commit/966648f32931efc8bccfb08d5a875ff2d3d72ecc))
+
 ## [3.47.1](https://github.com/dxheroes/dx-scanner/compare/v3.47.0...v3.47.1) (2020-12-10)
 
 
