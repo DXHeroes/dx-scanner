@@ -22,9 +22,7 @@ export class JavaLanguageDetector implements ILanguageDetector {
     const ktFiles: Metadata[] = await this.fileInspector.scanFor(fileExtensionRegExp(['kt', 'kts']), '/');
     const hasKtFiles = ktFiles.length > 0;
     if (!isMaven) {
-      packageFiles = hasKtFiles
-        ? await this.fileInspector.scanFor(fileNameRegExp('build.gradle.kts'), '/')
-        : await this.fileInspector.scanFor(fileNameRegExp('build.gradle'), '/');
+      packageFiles = await this.fileInspector.scanFor(fileNameRegExp(hasKtFiles ? 'build.gradle(.kts)?' : 'build.gradle'), '/');
     }
     if (packageFiles.length > 0) {
       for (const path of packageFiles.map((file) => nodePath.dirname(file.path))) {
