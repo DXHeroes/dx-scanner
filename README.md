@@ -38,6 +38,7 @@ C# | 🚧
 Ruby | 🚧
 Android | 🚧
 Swift | 🚧
+Rust | 🚧
 
 ## Table of Contents
 

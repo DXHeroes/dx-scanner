@@ -30,6 +30,7 @@
     "@octokit/graphql": "4.5.7",
     "@octokit/plugin-rest-endpoint-methods": "4.2.1",
     "@octokit/rest": "18.0.9",
+    "@iarna/toml": "2.2.5",
     "@types/eslint": "7.2.4",
     "@types/table": "6.0.0",
     "axios": "0.21.0",
