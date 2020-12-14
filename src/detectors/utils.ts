@@ -1,5 +1,7 @@
+import debug from 'debug';
 import { intersection, keys } from 'lodash';
 import * as nodePath from 'path';
+import { logfile } from '../lib/logfile';
 import { PackageManagement } from '../model';
 
 export const fileExtensionRegExp = (extensions: string[]): RegExp => {
@@ -47,4 +49,15 @@ export const hasOneOfPackages = (packages: string[], packageManagement?: Package
     return true;
   }
   return false;
+};
+
+export const debugLog = (namespace: string) => {
+  return (...args: unknown[]) => {
+    const d = debug(namespace);
+    if (args.length > 0) {
+      d('', ...args);
+    }
+
+    logfile.log(namespace, ...args);
+  };
 };

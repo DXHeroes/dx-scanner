@@ -16,8 +16,6 @@ const pjson = require('../package.json');
 
 class DXScannerCommand {
   static async run(): Promise<void> {
-    debug.enable('info,warn,error,errorHandler');
-
     const cmder = new commander.Command();
 
     // default cmd config
@@ -27,7 +25,7 @@ class DXScannerCommand {
       .usage('[command] [options] ')
       .option('-l --log', 'Write an execution log to ./dxscanner.log', () => {
         enableLogfile();
-        logfile.log('DX Scanner execution log ' + new Date().toLocaleTimeString());
+        logfile.log(`DX Scanner execution log\nLocal time: ${new Date().toLocaleTimeString()}\nUTC: ${new Date().toUTCString()}`);
       })
       .on('--help', () => {
         console.log('');

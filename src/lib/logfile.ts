@@ -1,12 +1,12 @@
-import os from 'os';
+
+import debug from 'debug';
 import fs from 'fs';
 import path from 'path';
 import util from 'util';
-import debug from 'debug';
 
 class Logfile {
   public enabled: boolean = false;
-  public fname: string = path.join(process.cwd(), 'dxscanner.log');
+  public fname: string = path.join(process.cwd(), `dxscanner${Date.now()}.log`);
   private file: number | null = null;
 
   /**
