@@ -1,6 +1,7 @@
 import nock from 'nock';
 import { ListGetterOptions } from '../../inspectors';
 import { Issue } from '../../services/gitlab/gitlabClient/resources/Issues';
+import { Branch } from '../../services/gitlab/gitlabClient/resources/Branches';
 import { Commit, MergeRequest } from '../../services/gitlab/gitlabClient/resources/MergeRequests';
 import { Project } from '../../services/gitlab/gitlabClient/resources/Projects';
 import { GitLabIssueState, GitLabPullRequestState } from '../../services/gitlab/IGitLabService';
@@ -280,5 +281,26 @@ export class GitLabNock {
     const baseUrl = `${this.url}/version`;
 
     return GitLabNock.get(baseUrl);
+  }
+
+  listBranchesResponse(issues: Branch[], options?: ListGetterOptions<{ state: GitLabIssueState }>) {
+    const encodedProjectUrl = encodeURIComponent(`${this.user}/${this.repoName}`);
+    const baseUrl = `${this.url}/projects/${encodedProjectUrl}/repository/branches`;
+
+    const queryParams: {
+      page?: number;
+      per_page?: number;
+    } = {};
+
+    if (options?.pagination?.page) {
+      queryParams.page = options?.pagination?.page;
+      this.pagination['x-page'] = options.pagination.page.toString();
+    }
+    if (options?.pagination?.perPage) {
+      queryParams.per_page = options?.pagination?.perPage;
+      this.pagination['x-page'] = options.pagination.perPage.toString();
+    }
+
+    return GitLabNock.get(baseUrl, queryParams).reply(200, issues, this.pagination);
   }
 }

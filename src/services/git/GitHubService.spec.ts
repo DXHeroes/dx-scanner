@@ -4,7 +4,7 @@ import { PullRequestState } from '../../inspectors';
 import { argumentsProviderFactory } from '../../test/factories/ArgumentsProviderFactory';
 import { GitHubNock } from '../../test/helpers/gitHubNock';
 import { GitHubService } from './GitHubService';
-import { listPullRequestsParamas } from './gqlQueries/listPullRequests';
+import { listPullRequestsQuery, generateSearchQuery } from './gqlQueries/listPullRequests';
 import { File } from './model';
 import {
   getCommitResponse,
@@ -29,6 +29,7 @@ import {
 } from './__MOCKS__/gitHubServiceMockFolder';
 import { getRepoCommitsServiceResponse } from './__MOCKS__/gitHubServiceMockFolder/getRepoCommitsServiceResponse.mock';
 import { gqlPullsResponse, oneGqlPullRequest } from './__MOCKS__/gitHubServiceMockFolder/gqlPullsResponse.mock';
+import { GitHubGqlPullRequestState } from './IGitHubService';
 
 describe('GitHub Service', () => {
   let service: GitHubService;
@@ -57,13 +58,13 @@ describe('GitHub Service', () => {
     });
 
     it('returns pulls in own interface', async () => {
+      const lastMonth = new Date();
+      lastMonth.setMonth(new Date().getMonth() - 1);
+      const searchQuery = generateSearchQuery('octocat', 'Hello-World', lastMonth, GitHubGqlPullRequestState.all);
       const queryBody = {
-        query: listPullRequestsParamas,
+        query: listPullRequestsQuery(searchQuery),
         variables: {
-          owner: 'octocat',
-          repo: 'Hello-World',
           count: 100,
-          states: ['OPEN', 'MERGED', 'CLOSED'],
         },
       };
 
@@ -74,13 +75,14 @@ describe('GitHub Service', () => {
     });
 
     it('returns pulls in own interface with diffStat', async () => {
+      const lastMonth = new Date();
+      lastMonth.setMonth(new Date().getMonth() - 1);
+      const searchQuery = generateSearchQuery('octocat', 'Hello-World', lastMonth, GitHubGqlPullRequestState.open);
+
       const queryBody = {
-        query: listPullRequestsParamas,
+        query: listPullRequestsQuery(searchQuery),
         variables: {
-          owner: 'octocat',
-          repo: 'Hello-World',
           count: 100,
-          states: 'OPEN',
         },
       };
 
@@ -99,13 +101,14 @@ describe('GitHub Service', () => {
 
     it('returns one pull in own interface', async () => {
       const pagination = { perPage: 1 };
+      const lastMonth = new Date();
+      lastMonth.setMonth(new Date().getMonth() - 1);
+      const searchQuery = generateSearchQuery('octocat', 'Hello-World', lastMonth, GitHubGqlPullRequestState.all);
+
       const queryBody = {
-        query: listPullRequestsParamas,
+        query: listPullRequestsQuery(searchQuery),
         variables: {
-          owner: 'octocat',
-          repo: 'Hello-World',
           count: 1,
-          states: ['OPEN', 'MERGED', 'CLOSED'],
         },
       };
 
@@ -116,29 +119,27 @@ describe('GitHub Service', () => {
 
     it('returns two pulls in own interface one per page', async () => {
       const pagination = { perPage: 1 };
+      const lastMonth = new Date();
+      lastMonth.setMonth(new Date().getMonth() - 1);
+      const searchQuery = generateSearchQuery('octocat', 'Hello-World', lastMonth, GitHubGqlPullRequestState.all);
+
       const queryBody = {
-        query: listPullRequestsParamas,
+        query: listPullRequestsQuery(searchQuery),
         variables: {
-          owner: 'octocat',
-          repo: 'Hello-World',
           count: 1,
-          states: ['OPEN', 'MERGED', 'CLOSED'],
         },
       };
       const queryBodyScnd = {
-        query: listPullRequestsParamas,
+        query: listPullRequestsQuery(searchQuery),
         variables: {
-          owner: 'octocat',
-          repo: 'Hello-World',
           count: 1,
-          states: ['OPEN', 'MERGED', 'CLOSED'],
-          startCursor: 'Y3Vyc29yOnYyOpHODUTjBQ==',
+          startCursor: 'Y3Vyc29yOnYyOpHOHh1zPQ==',
         },
       };
 
       nock('https://api.github.com')
         .post('/graphql', queryBody)
-        .reply(200, gqlPullsResponse({ data: { repository: { pullRequests: { pageInfo: { hasPreviousPage: true } } } } }));
+        .reply(200, gqlPullsResponse({ data: { search: { pageInfo: { hasNextPage: true } } } }));
       nock('https://api.github.com').post('/graphql', queryBodyScnd).reply(200, gqlPullsResponse());
 
       const response = await service.listPullRequests('octocat', 'Hello-World', { pagination });
@@ -146,13 +147,14 @@ describe('GitHub Service', () => {
     });
 
     it('returns open pulls', async () => {
+      const lastMonth = new Date();
+      lastMonth.setMonth(new Date().getMonth() - 1);
+      const searchQuery = generateSearchQuery('octocat', 'Hello-World', lastMonth, GitHubGqlPullRequestState.open);
+
       const queryBody = {
-        query: listPullRequestsParamas,
+        query: listPullRequestsQuery(searchQuery),
         variables: {
-          owner: 'octocat',
-          repo: 'Hello-World',
           count: 100,
-          states: 'OPEN',
         },
       };
 
@@ -163,45 +165,45 @@ describe('GitHub Service', () => {
     });
 
     it('returns closed pulls', async () => {
+      const lastMonth = new Date();
+      lastMonth.setMonth(new Date().getMonth() - 1);
+      const searchQuery = generateSearchQuery('octocat', 'Hello-World', lastMonth, GitHubGqlPullRequestState.closed);
+
       const queryBody = {
-        query: listPullRequestsParamas,
+        query: listPullRequestsQuery(searchQuery),
         variables: {
-          owner: 'octocat',
-          repo: 'Hello-World',
           count: 100,
-          states: 'CLOSED',
         },
       };
 
       nock('https://api.github.com')
         .post('/graphql', queryBody)
-        .reply(200, gqlPullsResponse({ data: { repository: { pullRequests: { edges: [{ node: { state: 'CLOSED' } }] } } } }));
+        .reply(200, gqlPullsResponse({ data: { search: { edges: [{ node: { state: 'CLOSED' } }] } } }));
 
       const response = await service.listPullRequests('octocat', 'Hello-World', { filter: { state: PullRequestState.closed } });
       expect(response.items.map((item) => item.state)).toMatchObject(['CLOSED']);
     });
 
     it('returns all pulls', async () => {
+      const lastMonth = new Date();
+      lastMonth.setMonth(new Date().getMonth() - 1);
+      const searchQuery = generateSearchQuery('octocat', 'Hello-World', lastMonth, GitHubGqlPullRequestState.all);
+
       const queryBody = {
-        query: listPullRequestsParamas,
+        query: listPullRequestsQuery(searchQuery),
         variables: {
-          owner: 'octocat',
-          repo: 'Hello-World',
           count: 100,
-          states: ['OPEN', 'MERGED', 'CLOSED'],
         },
       };
 
       const pulls = gqlPullsResponse({
         data: {
-          repository: {
-            pullRequests: {
-              edges: [
-                oneGqlPullRequest({ node: { state: 'OPEN' } }),
-                oneGqlPullRequest({ node: { state: 'CLOSED' } }),
-                oneGqlPullRequest({ node: { state: 'MERGED' } }),
-              ],
-            },
+          search: {
+            edges: [
+              oneGqlPullRequest({ node: { state: 'OPEN' } }),
+              oneGqlPullRequest({ node: { state: 'CLOSED' } }),
+              oneGqlPullRequest({ node: { state: 'MERGED' } }),
+            ],
           },
         },
       });

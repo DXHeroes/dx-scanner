@@ -85,7 +85,7 @@ describe('RubyGitignoreCorrectlySetPractice', () => {
       await practice.fix(containerCtx.fixerContext);
 
       const fixedGitignore = await containerCtx.virtualFileSystemService.readFile('.gitignore');
-      expect(fixedGitignore).toBe('*.gem\n/coverage/\n\n/tmp/\n/.config\n*.rbc\n');
+      expect(fixedGitignore).toBe('*.gem\n/coverage/\n\n# added by `dx-scanner --fix`\n/tmp/\n/.config\n*.rbc\n');
     });
   });
 });

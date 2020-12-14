@@ -4,7 +4,6 @@ import type { OctokitResponse } from '@octokit/types';
 import Debug from 'debug';
 import { inject, injectable } from 'inversify';
 import { inspect } from 'util';
-import { GitHubGqlPullRequestState } from '.';
 import { ListGetterOptions } from '../../inspectors/common/ListGetterOptions';
 import { Paginated } from '../../inspectors/common/Paginated';
 import { PullRequestState } from '../../inspectors/ICollaborationInspector';
@@ -16,7 +15,7 @@ import { ICache } from '../../scanner/cache/ICache';
 import { InMemoryCache } from '../../scanner/cache/InMemoryCache';
 import { RepositoryConfig } from '../../scanner/RepositoryConfig';
 import { Types } from '../../types';
-import { listPullRequestsParamas } from './gqlQueries/listPullRequests';
+import { listPullRequestsQuery, generateSearchQuery } from './gqlQueries/listPullRequests';
 import { IVCSService } from './IVCSService';
 import {
   Branch,
@@ -90,20 +89,22 @@ export class GitHubService implements IVCSService {
   ): Promise<Paginated<PullRequest>> {
     const state = VCSServicesUtils.getGithubGqlPRState(options?.filter?.state);
 
-    let hasPreviousPage = true;
+    let hasNextPage = true;
     let pullRequests;
     let items: PullRequest[] = [];
 
+    const lastMonth = new Date();
+    lastMonth.setMonth(new Date().getMonth() - 1);
+
     const queryParams: ListPrParamsGql = {
-      owner,
-      repo,
       count: options?.pagination?.perPage || 100,
-      states: state || VCSServicesUtils.getGithubGqlPRState(PullRequestState.all),
     };
 
-    while (hasPreviousPage) {
-      const { repository } = await this.unwrapGql(this.graphqlWithAuth(listPullRequestsParamas, { ...queryParams }));
-      pullRequests = repository.pullRequests;
+    while (hasNextPage) {
+      const { search } = await this.unwrapGql(
+        this.graphqlWithAuth(listPullRequestsQuery(generateSearchQuery(owner, repo, lastMonth, state)), { ...queryParams }),
+      );
+      pullRequests = search;
 
       const prs: PullRequest[] = pullRequests.edges.map((pr: any) => {
         const pullRequest: PullRequest = {
@@ -115,7 +116,6 @@ export class GitHubService implements IVCSService {
           },
           title: pr.node.title,
           url: pr.node.url,
-          body: pr.node.body,
           sha: pr.node.mergeCommit?.id || null,
           createdAt: pr.node.createdAt,
           updatedAt: pr.node.updatedAt,
@@ -140,8 +140,8 @@ export class GitHubService implements IVCSService {
 
         return pullRequest;
       });
-      hasPreviousPage = pullRequests.pageInfo.hasPreviousPage;
-      queryParams.startCursor = pullRequests.pageInfo.startCursor;
+      hasNextPage = pullRequests.pageInfo.hasNextPage;
+      queryParams.startCursor = pullRequests.pageInfo.endCursor;
 
       items = items.concat(prs);
     }
@@ -710,9 +710,6 @@ export class GitHubService implements IVCSService {
 }
 
 interface ListPrParamsGql {
-  owner: string;
-  repo: string;
-  states?: GitHubGqlPullRequestState | GitHubGqlPullRequestState[] | undefined;
   count: number;
   startCursor?: string;
 }

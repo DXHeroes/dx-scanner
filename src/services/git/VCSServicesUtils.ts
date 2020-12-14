@@ -27,10 +27,9 @@ export class VCSServicesUtils {
       case PullRequestState.closed:
         return GitHubGqlPullRequestState.closed;
       case PullRequestState.all:
-        return [GitHubGqlPullRequestState.open, GitHubGqlPullRequestState.merged, GitHubGqlPullRequestState.closed];
-
+        return GitHubGqlPullRequestState.all;
       default:
-        return undefined;
+        return GitHubGqlPullRequestState.all;
     }
   };
 

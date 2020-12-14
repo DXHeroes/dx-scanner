@@ -19,6 +19,7 @@ export default class Init {
       fixPattern: undefined,
       html: false,
       apiToken: undefined,
+      apiUrl: 'https://provider.dxscanner.io/api/v1',
     });
     const scanner = container.get(Scanner);
 

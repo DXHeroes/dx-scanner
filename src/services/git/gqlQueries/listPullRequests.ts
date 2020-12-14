@@ -1,16 +1,21 @@
-export const listPullRequestsParamas = `
-query ($owner: String!, $repo: String!, $count: Int!, $states: [PullRequestState!],  $startCursor: String) {
-  repository(owner: $owner, name: $repo) {
-    pullRequests(last: $count, states: $states, before: $startCursor) {
-      pageInfo {
-        startCursor
-        endCursor
-        hasNextPage
-        hasPreviousPage
-      }
-      edges {
-        cursor
-        node {
+import { GitHubGqlPullRequestState } from '..';
+
+export const generateSearchQuery = (owner: string, repo: string, from: Date, state: GitHubGqlPullRequestState) =>
+  `"repo:${owner + '/' + repo} is:pr ${state} created:>${from.toISOString().slice(0, 10)}"`;
+export const listPullRequestsQuery = (searchQuery: string) => {
+  return `
+  query ($count: Int!, $startCursor: String) {
+  search(last: $count, after: $startCursor, query: ${searchQuery}, type:ISSUE) {
+    pageInfo {
+      startCursor
+      endCursor
+      hasNextPage
+      hasPreviousPage
+    }
+    edges {
+      cursor
+      node {
+        ... on PullRequest {
           author {
             login
             url
@@ -21,7 +26,6 @@ query ($owner: String!, $repo: String!, $count: Int!, $states: [PullRequestState
           url
           number
           title
-          body
           mergeCommit {
             id
           }
@@ -54,3 +58,4 @@ query ($owner: String!, $repo: String!, $count: Int!, $states: [PullRequestState
   }
 }
 `;
+};

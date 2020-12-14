@@ -5,9 +5,9 @@ export enum GitHubPullRequestState {
 }
 
 export enum GitHubGqlPullRequestState {
-  open = 'OPEN',
-  closed = 'CLOSED',
-  merged = 'MERGED',
+  open = 'is:open',
+  closed = 'is:closed', //is:closed = CLOSED AND MERGED
+  all = '',
 }
 
 export enum GitHubIssueState {

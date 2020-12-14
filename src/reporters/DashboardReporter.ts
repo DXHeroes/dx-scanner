@@ -34,13 +34,12 @@ export class DashboardReporter implements IReporter {
     const reportData = await this.buildReport(practicesAndComponents);
     try {
       // send data
-      await axios.post('https://provider.dxscanner.io/api/v1/data-report', reportData, {
+      await axios.post(`${this.argumentsProvider.apiUrl}/data-report`, reportData, {
         headers: this.argumentsProvider.apiToken && { Authorization: this.argumentsProvider.apiToken },
       });
-      // TODO: enable logs later, when account is available
-      // console.log('You can see DX data in your DX account now.\n');
+      console.log('You can see DX data in your DX account now.\n');
     } catch (error) {
-      // console.log('Your DX data has not been sent to your account.\n');
+      console.error('Your DX data has not been sent to your account.\n');
     }
   }
 
@@ -183,6 +182,6 @@ export type PullRequestDto = {
   updatedAt: string | null;
   closedAt: string | null;
   mergedAt: string | null;
-  authorName: string;
-  authorUrl: string;
+  authorName: string | null;
+  authorUrl: string | null;
 };

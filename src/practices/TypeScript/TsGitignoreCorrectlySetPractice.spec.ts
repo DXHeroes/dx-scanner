@@ -120,7 +120,7 @@ describe('TsGitignoreCorrectlySetPractice', () => {
       await practice.fix(containerCtx.fixerContext);
 
       const fixedGitignore = await containerCtx.virtualFileSystemService.readFile('.gitignore');
-      expect(fixedGitignore).toBe('/node_modules\n/coverage\n/lib\n\n*.log\n');
+      expect(fixedGitignore).toBe('/node_modules\n/coverage\n/lib\n\n# added by `dx-scanner --fix`\n*.log\n');
     });
     it('Correctly ignores build folder', async () => {
       containerCtx.virtualFileSystemService.setFileSystem({
@@ -131,7 +131,7 @@ describe('TsGitignoreCorrectlySetPractice', () => {
       await practice.fix(containerCtx.fixerContext);
 
       const fixedGitignore = await containerCtx.virtualFileSystemService.readFile('.gitignore');
-      expect(fixedGitignore).toBe('/node_modules\n/coverage\n*.log\n\n/lib\n');
+      expect(fixedGitignore).toBe('/node_modules\n/coverage\n*.log\n\n# added by `dx-scanner --fix`\n/lib\n');
     });
     it('Correctly ignores build file', async () => {
       (load as jest.Mock).mockReturnValue({
@@ -149,7 +149,7 @@ describe('TsGitignoreCorrectlySetPractice', () => {
       await practice.fix(containerCtx.fixerContext);
 
       const fixedGitignore = await containerCtx.virtualFileSystemService.readFile('.gitignore');
-      expect(fixedGitignore).toBe('/node_modules\n/coverage\n*.log\n\ndist.ts\n');
+      expect(fixedGitignore).toBe('/node_modules\n/coverage\n*.log\n\n# added by `dx-scanner --fix`\ndist.ts\n');
     });
   });
 });
