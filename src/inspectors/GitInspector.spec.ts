@@ -59,8 +59,9 @@ describe('GitInspector', () => {
       const expected = (await testDir.gitLog()).latest;
       expect(items).toStrictEqual([
         {
-          sha: expected.hash,
-          date: new Date(expected.date),
+          sha: expected?.hash,
+          // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
+          date: new Date(expected!.date),
           message: 'msg\n',
           author: { name: 'test', email: 'test@example.com' },
           commiter: undefined,
@@ -79,8 +80,9 @@ describe('GitInspector', () => {
 
       expect(items).toStrictEqual([
         {
-          sha: expected.hash,
-          date: new Date(expected.date),
+          sha: expected?.hash,
+          // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
+          date: new Date(expected!.date),
           message: 'msg2\n',
           author: { name: 'test2', email: 'test2@example.com' },
           commiter: undefined,
@@ -96,12 +98,13 @@ describe('GitInspector', () => {
       const commit2 = (await testDir.gitLog()).latest;
       const gitInspector = new GitInspector(testDir.path);
 
-      const { items } = await gitInspector.getCommits({ filter: { sha: commit1.hash } });
+      const { items } = await gitInspector.getCommits({ filter: { sha: commit1?.hash } });
 
       expect(items).toStrictEqual([
         {
-          sha: commit2.hash,
-          date: new Date(commit2.date),
+          sha: commit2?.hash,
+          // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
+          date: new Date(commit2!.date),
           message: 'msg2\n',
           author: { name: 'test', email: 'test@example.com' },
           commiter: undefined,
@@ -121,8 +124,9 @@ describe('GitInspector', () => {
 
       expect(items).toStrictEqual([
         {
-          sha: expected.hash,
-          date: new Date(expected.date),
+          sha: expected?.hash,
+          // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
+          date: new Date(expected!.date),
           message: 'msg2\n',
           author: { name: 'test', email: 'test@example.com' },
           commiter: undefined,
@@ -138,12 +142,14 @@ describe('GitInspector', () => {
       const expected = (await testDir.gitLog()).latest;
       const gitInspector = new GitInspector(testDir.path);
 
-      const { items } = await gitInspector.getCommits({ filter: { since: new Date(expected.date) } });
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
+      const { items } = await gitInspector.getCommits({ filter: { since: new Date(expected!.date) } });
 
       expect(items).toStrictEqual([
         {
-          sha: expected.hash,
-          date: new Date(expected.date),
+          sha: expected?.hash,
+          // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
+          date: new Date(expected!.date),
           message: 'msg2\n',
           author: { name: 'test', email: 'test@example.com' },
           commiter: undefined,
@@ -159,12 +165,14 @@ describe('GitInspector', () => {
       await testDir.gitCommit('msg2');
       const gitInspector = new GitInspector(testDir.path);
 
-      const { items } = await gitInspector.getCommits({ filter: { until: new Date(expected.date) } });
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
+      const { items } = await gitInspector.getCommits({ filter: { until: new Date(expected!.date) } });
 
       expect(items).toStrictEqual([
         {
-          sha: expected.hash,
-          date: new Date(expected.date),
+          sha: expected?.hash,
+          // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
+          date: new Date(expected!.date),
           message: 'msg1\n',
           author: { name: 'test', email: 'test@example.com' },
           commiter: undefined,
@@ -188,15 +196,17 @@ describe('GitInspector', () => {
 
       expect(items).toStrictEqual([
         {
-          sha: expected2.hash,
-          date: new Date(expected2.date),
+          sha: expected2?.hash,
+          // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
+          date: new Date(expected2!.date),
           message: 'msg4\n',
           author: { name: 'test', email: 'test@example.com' },
           commiter: undefined,
         },
         {
-          sha: expected1.hash,
-          date: new Date(expected1.date),
+          sha: expected1?.hash,
+          // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
+          date: new Date(expected1!.date),
           message: 'msg3\n',
           author: { name: 'test', email: 'test@example.com' },
           commiter: undefined,
@@ -214,8 +224,9 @@ describe('GitInspector', () => {
       const expected = (await testDir.gitLog()).latest;
       expect(items).toStrictEqual([
         {
-          sha: expected.hash,
-          date: new Date(expected.date),
+          sha: expected?.hash,
+          // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
+          date: new Date(expected!.date),
           message: 'msg\n',
           author: { name: 'test', email: 'test@example.com' },
           commiter: undefined,
@@ -490,7 +501,7 @@ describe('GitInspector', () => {
 
       const tags = gitInspector.getAllTags();
 
-      const commit = (await testDir.gitLog()).latest.hash;
+      const commit = (await testDir.gitLog()).latest?.hash;
       await expect(tags).resolves.toStrictEqual([{ tag: '1.0.0', commit }]);
     });
 
