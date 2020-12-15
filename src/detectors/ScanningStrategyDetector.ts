@@ -20,7 +20,7 @@ export class ScanningStrategyDetector implements IDetector<string, ScanningStrat
   private gitLabService: GitLabService;
   private readonly argumentsProvider: ArgumentsProvider;
   private readonly repositoryConfig: RepositoryConfig;
-  private readonly d: any;
+  private readonly d: (...args: unknown[]) => void;
   private isOnline = false;
 
   constructor(

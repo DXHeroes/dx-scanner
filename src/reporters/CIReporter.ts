@@ -25,7 +25,7 @@ export class CIReporter implements IReporter {
   private readonly bitbucketService: BitbucketService;
   private readonly gitLabService: GitLabService;
   private config: CIReporterConfig | undefined;
-  private readonly d: any;
+  private readonly d: (...args: unknown[]) => void;
 
   constructor(
     @inject(Types.ArgumentsProvider) argumentsProvider: ArgumentsProvider,

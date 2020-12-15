@@ -10,7 +10,7 @@ export abstract class PackageInspectorBase implements IPackageInspector, IInitia
   packages: Package[] | undefined;
   abstract init(): Promise<void>;
   abstract hasLockfile(): boolean | undefined;
-  protected debug: any;
+  protected debug: (...args: unknown[]) => void;
 
   constructor() {
     this.debug = debugLog('package-inspector');

@@ -10,7 +10,7 @@ import { RepositoryConfig } from './RepositoryConfig';
 @injectable()
 export class ScanningStrategyExplorer {
   private readonly argumentsProvider: ArgumentsProvider;
-  private readonly d: any;
+  private readonly d: (...args: unknown[]) => void;
 
   constructor(@inject(Types.ArgumentsProvider) argumentsProvider: ArgumentsProvider) {
     this.argumentsProvider = argumentsProvider;

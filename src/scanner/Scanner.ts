@@ -39,7 +39,7 @@ export class Scanner {
   private readonly fileSystemService: FileSystemService;
   private readonly practices: IPracticeWithMetadata[];
   private readonly argumentsProvider: ArgumentsProvider;
-  private readonly d: any;
+  private readonly d: (...args: unknown[]) => void;
   private shouldExitOnEnd = false;
   private allDetectedComponents: ProjectComponentAndLangContext[] | undefined;
 
