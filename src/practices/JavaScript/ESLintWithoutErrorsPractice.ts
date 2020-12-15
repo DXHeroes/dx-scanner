@@ -38,7 +38,7 @@ export class ESLintWithoutErrorsPractice extends PracticeBase {
 
   private async runEslint(ctx: PracticeContext, { fix } = { fix: false }) {
     if (!ctx.fileInspector) {
-      return;
+      return PracticeEvaluationResult.unknown;
     }
 
     let ignorePatterns = ['lib', 'build', 'dist'];

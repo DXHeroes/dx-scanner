@@ -1,8 +1,8 @@
-import { IPractice } from '../IPractice';
 import { PracticeEvaluationResult, PracticeImpact, ProgrammingLanguage } from '../../model';
 import { DxPractice } from '../DxPracticeDecorator';
 import { PracticeContext } from '../../contexts/practice/PracticeContext';
-import { ErrorFactory } from '../../lib/errors';
+import { GitignoreCorrectlySetPracticeBase } from '../common/GitignoreCorrectlySetPracticeBase';
+import { ReportDetailType } from '../../reporters/ReporterData';
 
 @DxPractice({
   id: 'Java.GitignoreCorrectlySet',
@@ -13,67 +13,62 @@ import { ErrorFactory } from '../../lib/errors';
   url: 'https://github.com/github/gitignore/blob/master/Java.gitignore',
   dependsOn: { practicing: ['LanguageIndependent.GitignoreIsPresent'] },
 })
-export class JavaGitignoreCorrectlySetPractice implements IPractice {
-  async isApplicable(ctx: PracticeContext): Promise<boolean> {
-    return ctx.projectComponent.language === ProgrammingLanguage.Java || ctx.projectComponent.language === ProgrammingLanguage.Kotlin;
-  }
+export class JavaGitignoreCorrectlySetPractice extends GitignoreCorrectlySetPracticeBase {
+  private javaArchitecture: 'Maven' | 'Gradle' | undefined;
 
-  async evaluate(ctx: PracticeContext): ReturnType<IPractice['evaluate']> {
-    if (!ctx.fileInspector) {
-      throw ErrorFactory.newInternalError('File inspector not found');
-    }
-
-    const parseGitignore = (gitignoreFile: string) => {
-      return gitignoreFile
-        .toString()
-        .split(/\r?\n/)
-        .filter((content) => content.trim() !== '' && !content.startsWith('#'));
+  constructor() {
+    const checkArch = (arch: 'Maven' | 'Gradle' | undefined, regex: RegExp, fix: string) => (ctx: PracticeContext, v: string) => {
+      if (this.javaArchitecture !== arch || regex.test(v)) {
+        return undefined;
+      } else {
+        return fix;
+      }
     };
 
-    const content = await ctx.fileInspector.readFile('.gitignore');
-    const parsedGitignore = parseGitignore(content);
-
-    const compiledClassRegex = parsedGitignore.find((value: string) => /\*\.class/.test(value));
-    const logRegex = parsedGitignore.find((value: string) => /\*\.log/.test(value));
-    const jarRegex = parsedGitignore.find((value: string) => /\*\.jar/.test(value));
-    const warRegex = parsedGitignore.find((value: string) => /\*\.war/.test(value));
-
-    if (!(compiledClassRegex && logRegex && jarRegex && warRegex)) {
-      return PracticeEvaluationResult.notPracticing;
-    }
-
-    if (await ctx.fileInspector.exists('pom.xml')) {
-      return (await this.resolveGitignorePractice(parsedGitignore, 'Maven'))
-        ? PracticeEvaluationResult.practicing
-        : PracticeEvaluationResult.notPracticing;
-    } else if ((await ctx.fileInspector.exists('build.gradle')) || (await ctx.fileInspector.exists('build.gradle.kts'))) {
-      return (await this.resolveGitignorePractice(parsedGitignore, 'Gradle'))
-        ? PracticeEvaluationResult.practicing
-        : PracticeEvaluationResult.notPracticing;
-    }
-    return PracticeEvaluationResult.practicing;
+    super();
+    this.applicableLanguages = [ProgrammingLanguage.Java, ProgrammingLanguage.Kotlin];
+    this.ruleChecks = [
+      // common
+      { regex: /\*\.class/, fix: '*.class' },
+      { regex: /\*\.war/, fix: '*.war' },
+      { regex: /\*\.jar/, fix: '*.jar' },
+      { regex: /\*\.log/, fix: '*.log' },
+      // maven
+      { check: checkArch('Maven', /\.mvn/, '*.mvn') },
+      { check: checkArch('Maven', /buildNumber\.properties/, 'buildNumber.properties') },
+      { check: checkArch('Maven', /target/, 'target/') },
+      { check: checkArch('Maven', /pom\.xml\.tag/, 'pom.xml.tag') },
+      { check: checkArch('Maven', /pom\.xml\.next/, 'pom.xml.next') },
+      { check: checkArch('Maven', /release\.properties/, 'release.properties') },
+      // gradle
+      { check: checkArch('Gradle', /\.gradle/, '*.gradle') },
+      { check: checkArch('Gradle', /gradle-app\.setting/, 'gradle-app.setting') },
+      { check: checkArch('Gradle', /!gradle-wrapper\.jar/, '!gradle-wrapper.jar') },
+      { check: checkArch('Gradle', /\.gradletasknamecache/, '.gradletasknamecache') },
+    ];
   }
 
-  private async resolveGitignorePractice(parsedGitignore: string[], javaArchitecture: string) {
-    if (javaArchitecture === 'Maven') {
-      const mvnRegex = parsedGitignore.find((value: string) => /\.mvn/.test(value));
-      const buildNumberRegex = parsedGitignore.find((value: string) => /buildNumber/.test(value));
-      const targetRegex = parsedGitignore.find((value: string) => /target/.test(value));
-      const pomTagRegex = parsedGitignore.find((value: string) => /pom\.xml\.tag/.test(value));
-      const pomNextRegex = parsedGitignore.find((value: string) => /pom\.xml\.next/.test(value));
-      const releaseRegex = parsedGitignore.find((value: string) => /release\.properties/.test(value));
-      if (mvnRegex && buildNumberRegex && targetRegex && pomTagRegex && pomNextRegex && releaseRegex) {
-        return true;
-      }
-    } else if (javaArchitecture === 'Gradle') {
-      const gradleRegex = parsedGitignore.find((value: string) => /\.gradle/.test(value));
-      const gradleAppRegex = parsedGitignore.find((value: string) => /gradle-app\.setting/.test(value));
-      const gradleWrapperRegex = parsedGitignore.find((value: string) => /!gradle-wrapper\.jar/.test(value));
-      const taskNameCacheRegex = parsedGitignore.find((value: string) => /\.gradletasknamecache/.test(value));
-      if (gradleRegex && gradleAppRegex && gradleWrapperRegex && taskNameCacheRegex) {
-        return true;
-      }
+  async evaluate(ctx: PracticeContext): Promise<PracticeEvaluationResult> {
+    const fileInspector = GitignoreCorrectlySetPracticeBase.checkFileInspector(ctx);
+    if (!fileInspector) {
+      return PracticeEvaluationResult.unknown;
     }
-    return false;
+
+    if (await fileInspector.exists('pom.xml')) {
+      this.javaArchitecture = 'Maven';
+    } else if ((await fileInspector.exists('build.gradle')) || (await fileInspector.exists('build.gradle.kts'))) {
+      this.javaArchitecture = 'Gradle';
+    }
+
+    return super.evaluate(ctx);
+  }
+
+  protected setData() {
+    this.data.details = [
+      {
+        type: ReportDetailType.text,
+        text: 'You should ignore generated java artifacts (.class, .jar, .war) and maven- or gradle-specific files.',
+      },
+    ];
   }
 }

@@ -5,6 +5,7 @@
 </p>
 
 [![Slack](https://img.shields.io/badge/slack-@DeveloperExperience-%234A154B.svg?logo=slack)](https://bit.ly/slack_developer_experience)
+[![Pipeliner Roadmap](https://img.shields.io/badge/public%20roadmap-https%3A%2F%2Froadmap.dxheroes.io-%23108DE4)](https://roadmap.dxheroes.io)
 
 [![Version](https://img.shields.io/npm/v/dx-scanner.svg)](https://npmjs.org/package/dx-scanner)
 [![Travis (.org)](https://img.shields.io/travis/DXHeroes/dx-scanner/master)](https://travis-ci.org/DXHeroes/dx-scanner)
@@ -37,26 +38,7 @@ C# | 🚧
 Ruby | 🚧
 Android | 🚧
 Swift | 🚧
-
-## Hacktoberfest 2020 🎉
-
-We are celebrating **Hacktoberfest 2020!** DX Scanner is a perfect project to progress your programming skills. Our senior developers will provide feedback, if your pull request will not be merged. You can use this feedback to further improve your skills.
-
-During the event, we will be periodically updating the **"Leaderboard of Contributors"** - table with the most active contributors. The Leaderboard will be posted to our [Twitter](https://twitter.com/DX_Heroes). By the end of the event, **Top 3 contributors** will receive a **permanent Badge of Honor** with links to their socials/websites on this repository. On top of that, **the contributor with the most merged pull requests** will receive **exclusive DX Heroes merchandise!**
-
-#### How to participate in the Leaderboard of Contributors? 
-- First, please kindly fill out this [DX Heroes Hacktoberfest 2020 Participant Form](https://forms.gle/o3sBqsjr4sYLQgPh6)
-- Make pull requests to one of our projects throughout October
-- Keep an eye on the Leaderboard of Contributors periodically posted on our [Twitter](https://twitter.com/DX_Heroes)
-- Have fun!
-
-Check the [Issues tab](https://github.com/DXHeroes/dx-scanner/contribute) first for issues we would highly appreciate your help with. If you have a new feature on your mind, we are excited for what you will create! Creativity has no bounds! 😊
-
-Please follow our [Contribution Guide](CONTRIBUTING.md) 🖤
-
-We are looking forward to your contributions! 💙
-
-About Hacktoberfest: https://hacktoberfest.digitalocean.com/
+Rust | 🚧
 
 ## Table of Contents
 
@@ -73,7 +55,8 @@ About Hacktoberfest: https://hacktoberfest.digitalocean.com/
   * [Practices](#Practices)
   * [GitHub CI Action](#GitHub-Ci-Action)
 * [Support](#support-%EF%B8%8F-%EF%B8%8F)
-* [Contributing](#Contributing--)  
+* [Contributing](#Contributing--)
+  * [Roadmap](#Roadmap)
 <!-- tocstop -->
 ### Which version control system can you use?
 
@@ -98,10 +81,10 @@ dx-scanner run https://bitbucket.org/maras333/node-api-with-ts
 ### Installation
 
 - with NPM
-  
-  ```npm install -g dx-scanner``` 
-- with Yarn 
-  
+
+  ```npm install -g dx-scanner```
+- with Yarn
+
   ```yarn global add dx-scanner```
 
 ### Usage
@@ -122,7 +105,7 @@ Help for command dxs
 -->
 #### Commands
 ```
-Usage: dx-scanner [command] [options] 
+Usage: dx-scanner [command] [options]
 
 Options:
   -V, --version         output the version number
@@ -149,6 +132,7 @@ Scan your project for possible DX recommendations
 Options:
   -a --authorization <authorization>  credentials to the repository (in format "token" or "username:token"; can be set as ENV variable DXSCANNER_GIT_SERVICE_TOKEN)
   -t --apiToken <apiToken>            credentials to DX Scanner, can be set as ENV variable DXSCANNER_API_TOKEN
+  --apiUrl <apiUrl>                   URL of DX Scanner API, can be set as ENV variable DXSCANNER_API_URL (default: https://provider.dxscanner.io/api/v1)
   --ci                                CI mode (default: false)
   -d --details                        print details in reports
   --fail <impact>                     exits process with code 1 for any non-practicing condition of given level (high|medium|small|hint|off|all) (default: "high")
@@ -188,25 +172,27 @@ Add ```dxscannerrc.*``` config file to change default configuration settings. It
 
 You can also run ```dx-scanner init``` to initialize config automatically.
 
-### Practices   
+### Practices
 You can switch off practices that you do not want to scan, change their impact level, and even override their default values. To do so, refer to the id of the practice and specify your configuration.
 
 <details>
 <summary>List of All Practices 🔍</summary>
 
 Practice | Impact | Language Independent | JavaScript/TypeScript | Java/Kotlin | Python | PHP
-------------- | ------------- | ------------- | ------------- | ------------- | ------------- | ------------- 
+------------- | ------------- | ------------- | ------------- | ------------- | ------------- | -------------
 Create a Readme File | <span style="color:red">high</span> | ✅ | ✅ | ✅ | ✅ | ✅
+Create a Changelog File | <span style="color:red">high</span> | ✅ | ✅ | ✅ | ✅ | ✅
 Create a License File | <span style="color:yellow">medium</span> | ✅ | ✅ | ✅ | ✅ | ✅
 Create a Lockfile | <span style="color:red">high</span> | ✅ | ✅ | ✅ | ✅ | ✅
 Create a .gitignore | <span style="color:red">high</span> | ✅ | ✅ | ✅ | ✅ | ✅
 Write in Typescript | <span style="color:yellow">medium</span> | ❌ | ✅ | ❌ | ❌ | ❌
 Set .gitignore Correctly | <span style="color:red">high</span> | ❌ | ✅ | ✅ | ❌ | ❌
+Set Readme File Correctly | <span style="color:red">high</span> | ✅ | ✅ | ✅ | ✅ | ✅
 Use Continuous Integration | <span style="color:red">high</span> | ✅ | ✅ | ✅ | ✅ | ✅
 Use Docker | <span style="color:green">small</span> | ✅ | ✅ | ✅ | ✅ | ✅
 Use .editorconfig | <span style="color:green">small</span> | ✅ | ✅ | ✅ | ✅ | ✅
 Format your code automatically | <span style="color:green">small</span> | ❌ | ✅ | ❌ | ❌ | ❌
-Use ESLint | <span style="color:yellow">medium</span> | ❌ | ✅ | ❌ | ❌ | ❌
+Use a Linter | <span style="color:yellow">medium</span> | ❌ | ✅ | ✅ | ✅ | ✅
 ESLint Without Errors | <span style="color:yellow">medium</span> | ❌ | ✅ | ❌ | ❌ | ❌
 Use a different linter | <span style="color:yellow">medium</span> | ❌ | ✅ | ❌ | ❌ | ❌
 Use JS Frontend Testing Framework | <span style="color:yellow">medium</span> | ❌ | ✅ | ❌ | ❌ | ❌
@@ -225,13 +211,11 @@ Write Commit Messages by Convention | <span style="color:green">small</span> | �
 Use Mocking Frameworks for Tests  | <span style="color:green">small</span> | ❌ | ✅ | ✅ | ❌ | ❌
 Use Testing Frameworks | <span style="color:red">high</span> | ❌ | ❌ | ✅ | ❌ | ❌
 Use a Java Logging Dependency | <span style="color:green">small</span> | ❌ | ❌ | ✅ | ❌ | ❌
-Use a Java Linter Dependency | <span style="color:green">small</span> | ❌ | ❌ | ✅ | ❌ | ❌
 Use Java Class Naming Convention | <span style="color:green">small</span> | ❌ | ❌ | ✅ | ❌ | ❌
 Specify Versions of Dependencies | <span style="color:red">high</span> | ❌ | ❌ | ✅ | ❌ | ❌
 Store Environment Variables Using .properties Files | <span style="color:yellow">medium</span> | ❌ | ❌ | ✅ | ❌ | ❌
 Use Java Code Styles | <span style="color:green">small</span> | ❌ | ❌ | ✅ | ❌ | ❌
 Use Java Logger Configuration Files | <span style="color:green">small</span> | ❌ | ❌ | ✅ | ❌ | ❌
-Use a PHP Linter | <span style="color:yellow">medium</span> | ❌ | ❌ | ❌ | ❌ | ✅
 Security vulnerabilities detected | <span style="color:red">high</span> | ❌ | ✅ | ❌ | ❌ | ❌
 </details>
 
@@ -288,7 +272,7 @@ practices:
     impact: small
   JavaScript.ESLintWithoutErrorsPractice:
     fix: true
-    override: 
+    override:
       lintFilesPatterns: ['.internal/**/*.js', '*.js']
       ignorePatterns: []
   LanguageIndependent.ThinPullRequestsPractice:
@@ -327,7 +311,7 @@ high = 100 points
 
 medium = 75 points
 
-small = 50 points 
+small = 50 points
 
 hint = 25 points
 ```
@@ -339,6 +323,10 @@ Didn't you find what you expected? Contact us via our public [Slack!](https://bi
 
 ## Contributing 👩‍💻 👨‍💻
 Feel free to contribute to our DX Scanner. Please follow the [Contribution Guide](CONTRIBUTING.md).
+
+### Roadmap 
+
+See our [public roadmap](https://roadmap.dxheroes.io).
 
 ## License 📝
 

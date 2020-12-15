@@ -75,7 +75,6 @@ export class ThinPullRequestsPractice implements IPractice {
     let items: PullRequest[] = [];
     let page = 1;
     let hasNextPage = true;
-
     while (hasNextPage && items.length <= this.measurePullRequestCount) {
       response = await ctx.collaborationInspector!.listPullRequests(owner, repo, {
         withDiffStat: true,

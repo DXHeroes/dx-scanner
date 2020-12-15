@@ -7,7 +7,7 @@ import { GitLabService } from '../services/gitlab/GitLabService';
 import { Types } from '../types';
 import { IDetector } from './IDetector';
 import { ScanningStrategyDetectorUtils } from './utils/ScanningStrategyDetectorUtils';
-import { ErrorFactory } from '../lib/errors';
+import { ErrorFactory, ErrorCode } from '../lib/errors';
 import { AccessType, ServiceType } from './IScanningStrategy';
 import git from 'simple-git/promise';
 import nodePath from 'path';
@@ -43,10 +43,18 @@ export class ScanningStrategyDetector implements IDetector<string, ScanningStrat
     let remoteUrl: RemoteUrl;
     let rootPath: string | undefined;
     let localPath: string | undefined;
+    let serviceType: ServiceType | undefined;
 
     const path = ScanningStrategyDetectorUtils.normalizePath(this.argumentsProvider.uri);
 
-    const serviceType = await this.determineInputType(this.repositoryConfig.remoteUrl || path);
+    try {
+      serviceType = await this.determineInputType(this.repositoryConfig.remoteUrl || path);
+    } catch (e) {
+      if (e.code === ErrorCode.INTERNAL_ERROR) {
+        serviceType = await this.determineInputType(path);
+        this.repositoryConfig.remoteUrl = undefined;
+      }
+    }
     this.d('serviceType', serviceType);
 
     // try to determine remote origin if input is local file system

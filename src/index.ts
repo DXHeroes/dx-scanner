@@ -49,6 +49,11 @@ class DXScannerCommand {
         'credentials to DX Scanner, can be set as ENV variable DXSCANNER_API_TOKEN',
         process.env.DXSCANNER_API_TOKEN,
       )
+      .option(
+        '--apiUrl <apiUrl>',
+        'URL of DX Scanner API, can be set as ENV variable DXSCANNER_API_URL',
+        process.env.DXSCANNER_API_URL || 'https://provider.dxscanner.io/api/v1',
+      )
       .option('--ci', 'CI mode', process.env.CI === 'true')
       .option('-d --details', 'print details in reports')
       .option(
