@@ -691,9 +691,9 @@ export class GitHubService implements IVCSService {
       })
       .catch((error) => {
         if (error.response) {
-          debug(`${error.response.status} => ${inspect(error.response.data)}`);
+          d(`${error.response.status} => ${inspect(error.response.data)}`);
         } else {
-          debug(inspect(error));
+          d(inspect(error));
         }
         throw error;
       });
@@ -705,7 +705,7 @@ export class GitHubService implements IVCSService {
    */
   private debugGitHubGqlResponse = (rateLimit: any) => {
     this.callCount += rateLimit.cost;
-    debug(`GitHub API Hit: ${this.callCount}. Remaining ${rateLimit.remaining} hits. Reset at ${rateLimit.resetAt}`);
+    d(`GitHub API Hit: ${this.callCount}. Remaining ${rateLimit.remaining} hits. Reset at ${rateLimit.resetAt}`);
   };
 }
 
