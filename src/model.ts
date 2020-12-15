@@ -60,6 +60,7 @@ export enum ProgrammingLanguage {
   Haskell = 'Haskell',
   Elixir = 'Elixir',
   Python = 'Python',
+  Rust = 'Rust',
   UNKNOWN = 'UNKNOWN',
 }
 
@@ -74,6 +75,7 @@ export type CLIArgs = {
   fixPattern: string;
   html: string;
   apiToken?: string;
+  apiUrl: string;
 };
 
 // Old model starts here

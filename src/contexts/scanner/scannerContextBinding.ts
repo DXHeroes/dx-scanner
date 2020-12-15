@@ -20,6 +20,7 @@ import { ServiceType, AccessType } from '../../detectors/IScanningStrategy';
 import { BranchesCollector } from '../../collectors/BranchesCollector';
 import { ContributorsCollector } from '../../collectors/ContributorsCollector';
 import { DataCollector } from '../../collectors/DataCollector';
+import { RustLanguageDetector } from '../../detectors/Rust/RustLanguageDetector';
 
 export const bindScanningContext = (container: Container) => {
   container.bind(Types.ScannerContextFactory).toFactory(
@@ -104,4 +105,5 @@ const bindLanguageDetectors = (container: Container) => {
   container.bind(Types.ILanguageDetector).to(PythonLanguageDetector);
   container.bind(Types.ILanguageDetector).to(GoLanguageDetector);
   container.bind(Types.ILanguageDetector).to(PHPLanguageDetector);
+  container.bind(Types.ILanguageDetector).to(RustLanguageDetector);
 };

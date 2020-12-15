@@ -16,6 +16,7 @@ export const argumentsProviderFactory = (params: Partial<ArgumentsProvider> = {}
       fixPattern: undefined,
       html: false,
       apiToken: undefined,
+      apiUrl: 'https://provider.dxscanner.io/api/v1',
     },
     params,
   );

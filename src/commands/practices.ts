@@ -22,6 +22,7 @@ export default class Practices {
       fixPattern: undefined,
       html: cmd.html,
       apiToken: undefined,
+      apiUrl: 'https://provider.dxscanner.io/api/v1',
     });
 
     const scanner = container.get(Scanner);

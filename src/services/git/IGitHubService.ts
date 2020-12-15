@@ -4,6 +4,12 @@ export enum GitHubPullRequestState {
   all = 'all',
 }
 
+export enum GitHubGqlPullRequestState {
+  open = 'is:open',
+  closed = 'is:closed', //is:closed = CLOSED AND MERGED
+  all = '',
+}
+
 export enum GitHubIssueState {
   open = 'open',
   closed = 'closed',

@@ -213,6 +213,31 @@ describe('ScanningStrategyDetector', () => {
       });
     });
 
+    it('local path with remote unsupported VCS', async () => {
+      const repoPath = 'http://www.example.com/my/own/project.git';
+      nock.disableNetConnect();
+
+      mockedGit.mockImplementation(() => {
+        return {
+          checkIsRepo: () => true,
+          revparse: () => '/local/path',
+          getRemotes: () => [{ name: 'origin', refs: { fetch: repoPath, push: repoPath } }],
+        };
+      });
+
+      const scanningStrategyDetector = await createScanningStrategyDetector({ uri: '/local/path', auth: 'fake_token' });
+      const result = await scanningStrategyDetector.detect();
+
+      expect(result).toEqual(<ScanningStrategy>{
+        accessType: undefined,
+        localPath: '/local/path',
+        rootPath: '/local/path',
+        remoteUrl: undefined,
+        isOnline: false,
+        serviceType: ServiceType.local,
+      });
+    });
+
     it('local path with remote private GitHub, error 402', async () => {
       const repoPath = 'git@github.com:DXHeroes/dx-scanner-private.git';
       new GitHubNock('1', 'DXHeroes', 1, 'dx-scanner-private').getRepo('').reply(402);

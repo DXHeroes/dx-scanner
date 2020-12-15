@@ -1,3 +1,90 @@
+# [3.48.0](https://github.com/dxheroes/dx-scanner/compare/v3.47.1...v3.48.0) (2020-12-14)
+
+
+### Bug Fixes
+
+* fix some review comments ([774e718](https://github.com/dxheroes/dx-scanner/commit/774e7187e781ab70ed8640cadf92dec2eb00cfe9))
+
+
+### Features
+
+* add Rust language support and gitignore practice ([a297687](https://github.com/dxheroes/dx-scanner/commit/a297687ad1b177018ed2cc5cf490a856ea04784d))
+* refactor practices into GitignoreCorrectlySetPracticeBase ([966648f](https://github.com/dxheroes/dx-scanner/commit/966648f32931efc8bccfb08d5a875ff2d3d72ecc))
+
+## [3.47.1](https://github.com/dxheroes/dx-scanner/compare/v3.47.0...v3.47.1) (2020-12-10)
+
+
+### Bug Fixes
+
+* remove broken symlink tests ([d8cceb1](https://github.com/dxheroes/dx-scanner/commit/d8cceb1292f4df4f942848cb1aa927fe2c55564e))
+
+# [3.47.0](https://github.com/dxheroes/dx-scanner/compare/v3.46.3...v3.47.0) (2020-12-09)
+
+
+### Bug Fixes
+
+* change evaluation of CorrectCommitMessagesPractice ([36726b2](https://github.com/dxheroes/dx-scanner/commit/36726b2e50a071a0a77692fe7952ed27fb865b84))
+* missing state param in enum ([e2a310c](https://github.com/dxheroes/dx-scanner/commit/e2a310c8d18d0199cf3582d13b63f72dcc7c236a))
+
+
+### Features
+
+* filter prs by date ([446cc69](https://github.com/dxheroes/dx-scanner/commit/446cc692b13692974eb02acbd28280531a07534c))
+
+## [3.46.3](https://github.com/dxheroes/dx-scanner/compare/v3.46.2...v3.46.3) (2020-12-07)
+
+
+### Bug Fixes
+
+* pr author can be null ([cbe9b01](https://github.com/dxheroes/dx-scanner/commit/cbe9b016c9c195bea1cf1ca78693c2d412a1518f))
+
+## [3.46.2](https://github.com/dxheroes/dx-scanner/compare/v3.46.1...v3.46.2) (2020-11-16)
+
+
+### Bug Fixes
+
+* return  practiceEvaluation result ([a686ebd](https://github.com/dxheroes/dx-scanner/commit/a686ebd8c777f75d237150868952e4575e956007))
+
+## [3.46.1](https://github.com/dxheroes/dx-scanner/compare/v3.46.0...v3.46.1) (2020-11-10)
+
+
+### Bug Fixes
+
+* **deps:** update all non-major dependencies ([a79318f](https://github.com/dxheroes/dx-scanner/commit/a79318f41417d777a67f7142ad7bf6ca85ad0ea5))
+* **deps:** update dependency npm-check-updates to v10 ([e175885](https://github.com/dxheroes/dx-scanner/commit/e175885dd0d2ec78977e6f0f133bb7318ca2647a))
+
+# [3.46.0](https://github.com/dxheroes/dx-scanner/compare/v3.45.1...v3.46.0) (2020-11-05)
+
+
+### Features
+
+* linter used python practice ([c8aeba2](https://github.com/dxheroes/dx-scanner/commit/c8aeba296cd79c0b81dd4527524c3d08da5dcfe8))
+* linter used python practice tests ([886e5bf](https://github.com/dxheroes/dx-scanner/commit/886e5bf19f4575b12d38fd67b90863f0b9cf2bf2))
+
+## [3.45.1](https://github.com/dxheroes/dx-scanner/compare/v3.45.0...v3.45.1) (2020-11-02)
+
+
+### Bug Fixes
+
+* **deps:** update all non-major dependencies ([002502c](https://github.com/dxheroes/dx-scanner/commit/002502cd2b390c7dc3ab340dbed76e7d1557e910))
+
+# [3.45.0](https://github.com/dxheroes/dx-scanner/compare/v3.44.0...v3.45.0) (2020-10-26)
+
+
+### Bug Fixes
+
+* add possibility to paginate list of pull requests ([f2a9444](https://github.com/dxheroes/dx-scanner/commit/f2a94440b310f5fa83da94f0f18ea8f974503064))
+* add tests for paginated requests ([5d0ae2d](https://github.com/dxheroes/dx-scanner/commit/5d0ae2d61f7213a76250cf05f14c6172bc8012f9))
+* change the logic since the logic in GQL pagination is different ([ce41014](https://github.com/dxheroes/dx-scanner/commit/ce410149be48203197fc75d41c0841cba3bdf77c))
+* migrate listPullRequests() from REST to GraphQL ([4b9a1bf](https://github.com/dxheroes/dx-scanner/commit/4b9a1bf788db0c838fb2309400183fe58a55f4b7))
+* remove commented code ([cba0f74](https://github.com/dxheroes/dx-scanner/commit/cba0f7493849e7020edea12dfd2483f3699fc20d))
+* rename Go linter practice file ([1d963b7](https://github.com/dxheroes/dx-scanner/commit/1d963b7c4da5ab0762f58bb561029e1a42324f1d))
+
+
+### Features
+
+* debug GQL rate limit ([70773fd](https://github.com/dxheroes/dx-scanner/commit/70773fd44d24fed1ec6c5d36a2be5d57a8d00644))
+
 # [3.44.0](https://github.com/dxheroes/dx-scanner/compare/v3.43.0...v3.44.0) (2020-10-19)
 
 

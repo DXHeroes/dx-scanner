@@ -66,7 +66,7 @@ describe('CSharpGitignoreCorrectlySetPractice', () => {
     });
 
     it('Does not change correct .gitignore', async () => {
-      const gitignore = `${basicGitignore}\npackage-lock.json\n`;
+      const gitignore = basicGitignore;
       containerCtx.virtualFileSystemService.setFileSystem({
         '.gitignore': gitignore,
       });
@@ -86,7 +86,7 @@ describe('CSharpGitignoreCorrectlySetPractice', () => {
       await practice.fix(containerCtx.fixerContext);
 
       const fixedGitignore = await containerCtx.virtualFileSystemService.readFile('.gitignore');
-      expect(fixedGitignore).toBe('bin/\nobj/\n*.log\n*.user\n\n[Cc]ache/\n*.suo\n');
+      expect(fixedGitignore).toBe('bin/\nobj/\n*.log\n*.user\n\n# added by `dx-scanner --fix`\n[Cc]ache/\n*.suo\n');
     });
   });
 });

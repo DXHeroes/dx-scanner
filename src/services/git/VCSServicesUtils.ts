@@ -3,7 +3,7 @@ import { IssueState } from '../../inspectors';
 import { PullRequestState } from '../../inspectors/ICollaborationInspector';
 import { BitbucketIssueState, BitbucketPullRequestState } from '../bitbucket/IBitbucketService';
 import { GitLabIssueState, GitLabPullRequestState } from '../gitlab/IGitLabService';
-import { GitHubIssueState, GitHubPullRequestState } from './IGitHubService';
+import { GitHubGqlPullRequestState, GitHubIssueState, GitHubPullRequestState } from './IGitHubService';
 
 export class VCSServicesUtils {
   static getGithubPRState = (state: PullRequestState | undefined) => {
@@ -16,6 +16,20 @@ export class VCSServicesUtils {
         return GitHubPullRequestState.all;
       default:
         return undefined;
+    }
+  };
+
+  // GitHub Graphql API has a different params for PR state than REST API
+  static getGithubGqlPRState = (state: PullRequestState | undefined) => {
+    switch (state) {
+      case PullRequestState.open:
+        return GitHubGqlPullRequestState.open;
+      case PullRequestState.closed:
+        return GitHubGqlPullRequestState.closed;
+      case PullRequestState.all:
+        return GitHubGqlPullRequestState.all;
+      default:
+        return GitHubGqlPullRequestState.all;
     }
   };
 

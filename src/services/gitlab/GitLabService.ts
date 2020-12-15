@@ -146,7 +146,6 @@ export class GitLabService implements IVCSService {
       title: data.title,
       url: data.web_url,
       sha: data.sha,
-      body: data.description,
       createdAt: data.created_at.toString(),
       updatedAt: data.updated_at.toString(),
       closedAt: data.closed_at ? data.closed_at?.toString() : null,
@@ -279,7 +278,10 @@ export class GitLabService implements IVCSService {
   }
 
   async listBranches(owner: string, repo: string, options?: ListGetterOptions): Promise<Paginated<Branch>> {
-    throw new Error('Method not implemented yet.');
+    const { data, pagination } = await this.unwrap(this.client.Branches.list(`${owner}/${repo}`, options?.pagination));
+    const customPagination = this.getPagination(pagination);
+    const items = data.map((val) => ({ ...val, type: val.default ? 'default' : 'unknown' }));
+    return Promise.resolve({ items, ...customPagination });
   }
 
   async listPullRequestReviews(owner: string, repo: string, prNumber: number): Promise<Paginated<PullRequestReview>> {
