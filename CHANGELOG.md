@@ -1,3 +1,11 @@
+## [3.48.1](https://github.com/dxheroes/dx-scanner/compare/v3.48.0...v3.48.1) (2020-12-16)
+
+
+### Bug Fixes
+
+* update only non breaking dependencies ([3775b4a](https://github.com/dxheroes/dx-scanner/commit/3775b4a21204876a96b1255918146540dc919252))
+* **deps:** update all non-major dependencies ([b3ed6a7](https://github.com/dxheroes/dx-scanner/commit/b3ed6a7e6956a0e00fb38002b6659fd3fe2b83bd))
+
 # [3.48.0](https://github.com/dxheroes/dx-scanner/compare/v3.47.1...v3.48.0) (2020-12-14)
 
 
