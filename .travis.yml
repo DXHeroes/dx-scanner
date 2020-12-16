@@ -85,7 +85,7 @@ jobs:
     env:
       - CONTAINER_NAME=docker.pkg.github.com/dxheroes/dx-scanner/release
     script:
-      - docker build -f Dockerfile.github-action -t $CONTAINER_NAME .
+      - docker build -f action/Dockerfile -t $CONTAINER_NAME .
       - docker login -u dxheroes -p $DOCKER_GITHUB_PASSWORD docker.pkg.github.com
       - docker push $CONTAINER_NAME
   # - stage: build docker image
