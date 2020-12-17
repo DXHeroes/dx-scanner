@@ -6,6 +6,8 @@ LABEL "com.github.actions.description"="Measure Developer Experience directly ba
 LABEL "com.github.actions.icon"="user-check"
 LABEL "com.github.actions.color"="green"
 
+ENV DEBUG scanner
+
 RUN yarn global add dx-scanner
 
 RUN apt-get update && apt-get install git -y --no-install-recommends
