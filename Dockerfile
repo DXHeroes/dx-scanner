@@ -10,8 +10,8 @@ ENV DEBUG scanner
 
 RUN apt-get update && apt-get install ca-certificates git -y --no-install-recommends
 
-# RUN yarn global add https://github.com/vlasy/dx-scanner#79e083bf4561b98579fb21d27ff5e2ba6f16fd7c
-RUN yarn global add dx-scanner
+RUN yarn global add https://github.com/vlasy/dx-scanner#eff18ffeaf14aeda8d6bc9de1ab3b26147ac2544
+# RUN yarn global add dx-scanner
 
 # Copies your code file from your action repository to the filesystem path `/` of the container
 COPY entrypoint.sh /entrypoint.sh
