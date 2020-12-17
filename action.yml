@@ -13,5 +13,5 @@ runs:
   using: 'docker'
   image: 'Dockerfile'
   args:
-    - ${{ inputs.github_token }}
+    - ${{ inputs.path }}
 
