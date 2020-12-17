@@ -70,9 +70,7 @@
     "uuid": "8.3.1",
     "xml2js": "0.4.23",
     "yeoman-environment": "2.10.3",
-    "yeoman-gen-run": "1.2.3"
-  },
-  "devDependencies": {
+    "yeoman-gen-run": "1.2.3",
     "@semantic-release/changelog": "5.0.1",
     "@semantic-release/git": "9.0.0",
     "@types/command-exists": "1.2.0",
@@ -108,6 +106,9 @@
     "ts-jest": "26.4.4",
 
     "typescript": "4.0.5"
+  },
+  "devDependencies": {
+
   },
   "engines": {
     "node": ">=12",
