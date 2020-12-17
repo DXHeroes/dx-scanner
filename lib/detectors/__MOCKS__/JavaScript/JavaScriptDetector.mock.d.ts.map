@@ -1,0 +1,1 @@
+{"version":3,"file":"JavaScriptDetector.mock.d.ts","sourceRoot":"","sources":["../../../../src/detectors/__MOCKS__/JavaScript/JavaScriptDetector.mock.ts"],"names":[],"mappings":"AACA,OAAO,EAAE,iBAAiB,EAAE,MAAM,yBAAyB,CAAC;AAC5D,OAAO,EAAE,cAAc,EAAuB,MAAM,gBAAgB,CAAC;AAErE,qBACa,kBAAmB,YAAW,iBAAiB;IACpD,cAAc,IAAI,OAAO,CAAC,cAAc,EAAE,CAAC;CAGlD"}

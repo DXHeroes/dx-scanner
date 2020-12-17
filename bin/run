@@ -5,7 +5,7 @@ const fs = require('fs');
 const path = require('path');
 const project = path.join(__dirname, '../tsconfig.json');
 const dev = fs.existsSync(project);
-
+dev=false;
 if (dev) {
   require('ts-node').register({ project });
   console.warn("WARNING: You're running DX Scanner in development mode.")

@@ -1,0 +1,1 @@
+{"version":3,"file":"DashboardReporter.spec.d.ts","sourceRoot":"","sources":["../../src/reporters/DashboardReporter.spec.ts"],"names":[],"mappings":"AA+HA,OAAO,CAAC,MAAM,CAAC;IAEb,UAAU,IAAI,CAAC;QACb,UAAU,QAAQ,CAAC,CAAC;YAElB,eAAe,CAAC,MAAM,EAAE,MAAM,CAAC,MAAM,EAAE,GAAG,CAAC,GAAG,OAAO,CAAC,MAAM,CAAC,MAAM,EAAE,OAAO,CAAC,CAAC,CAAC;SAChF;KACF;CACF"}

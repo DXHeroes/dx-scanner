@@ -1,0 +1,1 @@
+{"version":3,"file":"IGitHubService.d.ts","sourceRoot":"","sources":["../../../src/services/git/IGitHubService.ts"],"names":[],"mappings":"AAAA,oBAAY,sBAAsB;IAChC,IAAI,SAAS;IACb,MAAM,WAAW;IACjB,GAAG,QAAQ;CACZ;AAED,oBAAY,yBAAyB;IACnC,IAAI,YAAY;IAChB,MAAM,cAAc;IACpB,GAAG,KAAK;CACT;AAED,oBAAY,gBAAgB;IAC1B,IAAI,SAAS;IACb,MAAM,WAAW;IACjB,GAAG,QAAQ;CACZ"}

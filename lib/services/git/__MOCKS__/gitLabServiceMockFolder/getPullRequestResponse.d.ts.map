@@ -1,0 +1,1 @@
+{"version":3,"file":"getPullRequestResponse.d.ts","sourceRoot":"","sources":["../../../../../src/services/git/__MOCKS__/gitLabServiceMockFolder/getPullRequestResponse.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,WAAW,EAAE,MAAM,aAAa,CAAC;AAG1C,eAAO,MAAM,sBAAsB,iDAAoC,WAgCtE,CAAC"}

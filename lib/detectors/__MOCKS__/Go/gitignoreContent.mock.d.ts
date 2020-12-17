@@ -1,0 +1,2 @@
+export declare const gitignoreContent = " \n# Binaries for programs and plugins\n*.exe\n*.exe~\n*.dll\n*.so\n*.dylib\n\n# Test binary, built with `go test -c`\n*.test\n\n# Output of the go coverage tool, specifically when used with LiteIDE\n*.out\n\n# Dependency directories (remove the comment below to include it)\n# vendor/\n";
+//# sourceMappingURL=gitignoreContent.mock.d.ts.map

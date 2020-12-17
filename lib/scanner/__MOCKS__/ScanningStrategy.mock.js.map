@@ -1,0 +1,1 @@
+{"version":3,"file":"ScanningStrategy.mock.js","sourceRoot":"","sources":["../../../src/scanner/__MOCKS__/ScanningStrategy.mock.ts"],"names":[],"mappings":";;;AAAA,yEAA4E;AAE/D,QAAA,gBAAgB,GAAG;IAC9B,UAAU,EAAE,8BAAU,CAAC,MAAM;IAC7B,SAAS,EAAE,GAAG;IACd,QAAQ,EAAE,SAAS;IACnB,SAAS,EAAE,oCAAoC;IAC/C,QAAQ,EAAE,IAAI;IACd,WAAW,EAAE,+BAAW,CAAC,MAAM;CAChC,CAAC"}

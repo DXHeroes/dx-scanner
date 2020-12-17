@@ -1,0 +1,1 @@
+{"version":3,"file":"getContributorsStatsServiceResponse.mock.d.ts","sourceRoot":"","sources":["../../../../../src/services/git/__MOCKS__/gitHubServiceMockFolder/getContributorsStatsServiceResponse.mock.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,gBAAgB,EAAE,MAAM,aAAa,CAAC;AAC/C,OAAO,EAAE,SAAS,EAAE,MAAM,yCAAyC,CAAC;AAEpE,eAAO,MAAM,mCAAmC,EAAE,SAAS,CAAC,gBAAgB,CAiB3E,CAAC"}

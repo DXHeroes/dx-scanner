@@ -1,0 +1,1 @@
+{"version":3,"file":"IProjectComponentDetector.d.ts","sourceRoot":"","sources":["../../src/detectors/IProjectComponentDetector.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,cAAc,EAAE,gBAAgB,EAAE,MAAM,UAAU,CAAC;AAE5D,MAAM,WAAW,yBAAyB;IACxC,eAAe,CAAC,UAAU,EAAE,cAAc,GAAG,OAAO,CAAC,gBAAgB,EAAE,CAAC,CAAC;CAC1E"}

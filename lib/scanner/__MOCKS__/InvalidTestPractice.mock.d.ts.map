@@ -1,0 +1,1 @@
+{"version":3,"file":"InvalidTestPractice.mock.d.ts","sourceRoot":"","sources":["../../../src/scanner/__MOCKS__/InvalidTestPractice.mock.ts"],"names":[],"mappings":"AACA,OAAO,EAAkB,wBAAwB,EAAE,MAAM,aAAa,CAAC;AACvE,OAAO,EAAE,SAAS,EAAE,MAAM,2BAA2B,CAAC;AAEtD,qBASa,mBAAoB,YAAW,SAAS;IAC7C,YAAY,IAAI,OAAO,CAAC,OAAO,CAAC;IAIhC,QAAQ,IAAI,OAAO,CAAC,wBAAwB,CAAC;CAGpD"}

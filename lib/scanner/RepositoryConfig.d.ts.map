@@ -1,0 +1,1 @@
+{"version":3,"file":"RepositoryConfig.d.ts","sourceRoot":"","sources":["../../src/scanner/RepositoryConfig.ts"],"names":[],"mappings":"AAAA,MAAM,WAAW,gBAAgB;IAC/B,SAAS,EAAE,MAAM,GAAG,SAAS,CAAC;IAC9B,IAAI,EAAE,MAAM,GAAG,SAAS,CAAC;IACzB,QAAQ,EAAE,MAAM,GAAG,SAAS,CAAC;IAC7B,OAAO,EAAE,MAAM,GAAG,SAAS,CAAC;CAC7B"}

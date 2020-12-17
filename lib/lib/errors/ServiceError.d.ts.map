@@ -1,0 +1,1 @@
+{"version":3,"file":"ServiceError.d.ts","sourceRoot":"","sources":["../../../src/lib/errors/ServiceError.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,SAAS,EAAE,MAAM,SAAS,CAAC;AAEpC,qBAAa,YAAa,SAAQ,KAAK;IACrC,QAAQ,CAAC,IAAI,EAAE,SAAS,CAAC;gBAEb,MAAM,EAAE,kBAAkB;IAStC,IAAI,IAAI,WAEP;CACF;AAED,MAAM,WAAW,kBAAkB;IACjC,IAAI,EAAE,SAAS,CAAC;IAChB,OAAO,EAAE,MAAM,CAAC;CACjB"}

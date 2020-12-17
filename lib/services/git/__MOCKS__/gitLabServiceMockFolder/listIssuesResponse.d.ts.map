@@ -1,0 +1,1 @@
+{"version":3,"file":"listIssuesResponse.d.ts","sourceRoot":"","sources":["../../../../../src/services/git/__MOCKS__/gitLabServiceMockFolder/listIssuesResponse.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,SAAS,EAAE,gBAAgB,EAAE,MAAM,yCAAyC,CAAC;AACtF,OAAO,EAAE,KAAK,EAAE,MAAM,aAAa,CAAC;AAEpC,eAAO,MAAM,kBAAkB,8EAAqD,UAAU,KAAK,CAwClG,CAAC;AAEF,eAAO,MAAM,6BAA6B,EAAE,KAAK,EAehD,CAAC"}

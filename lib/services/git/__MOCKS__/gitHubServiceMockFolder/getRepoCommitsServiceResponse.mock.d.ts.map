@@ -1,0 +1,1 @@
+{"version":3,"file":"getRepoCommitsServiceResponse.mock.d.ts","sourceRoot":"","sources":["../../../../../src/services/git/__MOCKS__/gitHubServiceMockFolder/getRepoCommitsServiceResponse.mock.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,SAAS,EAAE,MAAM,yCAAyC,CAAC;AACpE,OAAO,EAAE,MAAM,EAAE,MAAM,aAAa,CAAC;AAErC,eAAO,MAAM,6BAA6B,EAAE,SAAS,CAAC,MAAM,CAqD3D,CAAC"}
