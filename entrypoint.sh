@@ -1,6 +1,11 @@
 #!/bin/bash
 set -e
 
+echo "1"
+echo $1
+echo "at"
+echo $@
+
 if [[ $1 != "${1%bash}" || $1 != "${1%sh}" ]]; then
   exec "$@"
 fi
