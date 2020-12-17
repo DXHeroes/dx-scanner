@@ -6,7 +6,7 @@ LABEL "com.github.actions.description"="Measure Developer Experience directly ba
 LABEL "com.github.actions.icon"="user-check"
 LABEL "com.github.actions.color"="green"
 
-ENV DEBUG scanner
+# ENV DEBUG scanner
 
 RUN apt-get update && apt-get install ca-certificates git -y --no-install-recommends
 
