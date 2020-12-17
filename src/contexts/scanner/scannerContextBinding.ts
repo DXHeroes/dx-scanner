@@ -47,6 +47,7 @@ const createScanningContainer = (scanningStrategy: ScanningStrategy, discoveryCo
 };
 
 const bindFileAccess = (scanningStrategy: ScanningStrategy, container: Container) => {
+  console.log({ scanningStrategy });
   if (scanningStrategy.localPath) {
     container.bind(Types.FileInspectorBasePath).toConstantValue(scanningStrategy.localPath);
     container.bind(Types.IProjectFilesBrowser).to(FileSystemService);
