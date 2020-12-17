@@ -8,7 +8,7 @@ LABEL "com.github.actions.color"="green"
 
 ENV DEBUG scanner
 
-RUN apt-get update && apt-get install git -y --no-install-recommends
+RUN apt-get update && apt-get install ca-certificates git -y --no-install-recommends
 
 RUN yarn global add https://github.com/vlasy/dx-scanner#2d4dec7ae3a05ca5c75ab73858bb1a23366218c9
 
