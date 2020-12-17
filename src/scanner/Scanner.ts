@@ -80,6 +80,7 @@ export class Scanner {
     }
     const isLocal = !scanStrategy.localPath;
     scanStrategy = await this.preprocessData(scanStrategy);
+    console.log('TEST LOG');
     this.d(`Scan strategy (after preprocessing): ${inspect(scanStrategy)}`);
     const scannerContext = discoveryContext.getScanningContext(scanStrategy);
     const languagesAtPaths = await this.detectLanguagesAtPaths(scannerContext);
