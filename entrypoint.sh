@@ -5,6 +5,8 @@ echo "1"
 echo $1
 echo "at"
 echo $@
+echo "wrksp"
+echo $GITHUB_WORKSPACE
 
 if [[ $1 != "${1%bash}" || $1 != "${1%sh}" ]]; then
   exec "$@"
