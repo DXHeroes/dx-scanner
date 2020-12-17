@@ -8,7 +8,7 @@ inputs:
     description: 'Github API token (https://github.com/settings/tokens/new)'
   path:
     description: 'Path to scan'
-    default: /github/workspace
+    default: ${{ github.workspace }}
 runs:
   using: 'docker'
   image: 'Dockerfile'
