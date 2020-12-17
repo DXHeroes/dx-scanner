@@ -70,6 +70,7 @@ export class Scanner {
 
     let scanStrategy = await discoveryContext.scanningStrategyDetector.detect();
     this.d(`Scan strategy: ${inspect(scanStrategy)}`);
+    this.d(`Scan strategy detected: ${inspect(scanStrategy)}`);
     if (determineRemote && (scanStrategy.serviceType === undefined || scanStrategy.accessType === AccessType.unknown)) {
       return {
         shouldExitOnEnd: this.shouldExitOnEnd,
