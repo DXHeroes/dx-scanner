@@ -10,5 +10,5 @@ runs:
   using: 'docker'
   image: 'action/Dockerfile'
   args:
-    - ${{ inputs.github_token }}
+    - ${{ github.workspace }}
 
