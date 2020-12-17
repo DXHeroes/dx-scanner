@@ -10,7 +10,7 @@ ENV DEBUG scanner
 
 RUN apt-get update && apt-get install ca-certificates git -y --no-install-recommends
 
-RUN yarn global add https://github.com/vlasy/dx-scanner#3992d37c04172c88125aae1767ea99c7a4c2fca3
+RUN yarn global add https://github.com/vlasy/dx-scanner#4d1f45a199ec9323fadf51304ce7d20f0f38cad1
 # RUN yarn global add dx-scanner
 
 # Copies your code file from your action repository to the filesystem path `/` of the container
