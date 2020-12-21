@@ -45,17 +45,27 @@ export class RustPackageInspector extends PackageInspectorBase {
     try {
       this.debug('RustPackageInspector init started');
 
-      const cargoLockString = await this.fileInspector
-        .readFile('Cargo.lock')
-        .catch((err) => (err.code === 'ENOENT' ? Promise.resolve(undefined) : Promise.reject(err)));
+      let cargoLockString = undefined;
+      try {
+        cargoLockString = await this.fileInspector.readFile('Cargo.lock');
+      } catch (err) {
+        if (err.code !== 'ENOENT') {
+          throw err;
+        }
+      }
       if (cargoLockString !== undefined) {
         const cargoLockToml = TOML.parse(cargoLockString);
         this.cargoLock = RustPackageInspector.parseLock(cargoLockToml);
       }
 
-      const cargoManifestString = await this.fileInspector
-        .readFile('Cargo.toml')
-        .catch((err) => (err.code === 'ENOENT' ? Promise.resolve(undefined) : Promise.reject(err)));
+      let cargoManifestString = undefined;
+      try {
+        cargoManifestString = await this.fileInspector.readFile('Cargo.toml');
+      } catch (err) {
+        if (err.code !== 'ENOENT') {
+          throw err;
+        }
+      }
       if (cargoManifestString !== undefined) {
         const cargoManifestToml = TOML.parse(cargoManifestString);
 
