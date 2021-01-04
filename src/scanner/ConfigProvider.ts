@@ -33,7 +33,7 @@ export class ConfigProvider implements IConfigProvider {
       parsedContent = JSON.parse(content);
     }
     if (configFile.extension === '.yml' || configFile.extension === '.yaml') {
-      parsedContent = yaml.safeLoad(content);
+      parsedContent = yaml.load(content);
     }
 
     this.config = parsedContent;
