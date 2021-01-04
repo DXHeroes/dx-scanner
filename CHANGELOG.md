@@ -1,3 +1,10 @@
+## [3.48.3](https://github.com/dxheroes/dx-scanner/compare/v3.48.2...v3.48.3) (2021-01-04)
+
+
+### Bug Fixes
+
+* Dockerfile chmod for entrypoint not versioned ([7d14690](https://github.com/dxheroes/dx-scanner/commit/7d14690e0003e168576df04f695b19e1db545391))
+
 ## [3.48.2](https://github.com/dxheroes/dx-scanner/compare/v3.48.1...v3.48.2) (2021-01-04)
 
 
