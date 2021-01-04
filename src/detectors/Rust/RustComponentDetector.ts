@@ -76,7 +76,7 @@ export class RustComponentDetector implements IProjectComponentDetector {
       });
     }
 
-    if (result.length == 0) {
+    if (result.length === 0) {
       throw ErrorFactory.newInternalError(
         `Could not detect neither a library nor a binary Rust crate at given language path: ${langAtPath.path}`,
       );
