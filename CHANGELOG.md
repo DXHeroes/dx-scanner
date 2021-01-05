@@ -1,3 +1,10 @@
+## [3.48.5](https://github.com/dxheroes/dx-scanner/compare/v3.48.4...v3.48.5) (2021-01-05)
+
+
+### Bug Fixes
+
+* **rust component detector:** use triple equality ([5f4c2b9](https://github.com/dxheroes/dx-scanner/commit/5f4c2b96ff846ca007baca830be0abaf0765377d))
+
 ## [3.48.4](https://github.com/dxheroes/dx-scanner/compare/v3.48.3...v3.48.4) (2021-01-05)
 
 
