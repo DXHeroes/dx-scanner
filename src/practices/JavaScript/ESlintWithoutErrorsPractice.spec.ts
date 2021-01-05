@@ -122,27 +122,4 @@ describe('ESLintWithoutErrorsPractice', () => {
     const result = await practice.evaluate(containerCtx.practiceContext);
     expect(result).toEqual(PracticeEvaluationResult.practicing);
   });
-
-  it('Throw error if it is not correct yaml file', async () => {
-    const report = getEsLintReport();
-
-    const mockFileSystem: DirectoryJSON = {
-      '/.eslintrc.yml': `badYaml: true
-      env:
-        es6:`,
-    };
-    containerCtx.virtualFileSystemService.setFileSystem(mockFileSystem);
-
-    mockedEslint.mockImplementation(() => {
-      return {
-        lintFiles: () => report,
-      };
-    });
-    try {
-      await practice.evaluate(containerCtx.practiceContext);
-      fail('It failed');
-    } catch (error) {
-      expect(error.name).toEqual('YAMLException');
-    }
-  });
 });
