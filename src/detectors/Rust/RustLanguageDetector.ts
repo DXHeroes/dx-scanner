@@ -18,42 +18,42 @@ export class RustLanguageDetector implements ILanguageDetector {
   async detectLanguage(): Promise<LanguageAtPath[]> {
     const result: LanguageAtPath[] = [];
 
-    const manifestFilesPromise = this.fileInspector.scanFor(fileNameRegExp('Cargo.toml'), '/').then((arr) =>
-      arr.map((file) => {
+    let manifestFiles: LanguageAtPath[];
+    {
+      const arr = await this.fileInspector.scanFor(fileNameRegExp('Cargo.toml'), '/');
+      manifestFiles = arr.map((file) => {
         return {
           language: ProgrammingLanguage.Rust,
           path: nodePath.dirname(file.path),
         };
-      }),
-    );
+      });
+    }
 
     // * `foo/bar.rs` => `foo/`
     // * `foo/bar/baz.rs, foo/bar/qux.rs` => `foo/bar/`
     // * `foo/bar.rs, `baz/qux.rs` => `.`
     // And specially: `foo/src/foo.rs, foo/src/bar.rs` => `foo/` (skips `src`)
-    const rustSourcesPromise = this.fileInspector
-      .scanFor(fileExtensionRegExp(['rs']), '/')
-      .then((files) => _.uniq(files.map((f) => nodePath.dirname(f.path))))
-      .then((uniqueDirs) => {
-        if (uniqueDirs.length === 0) {
-          return [];
-        }
+    let rustSources: LanguageAtPath[];
+    {
+      const files = await this.fileInspector.scanFor(fileExtensionRegExp(['rs']), '/');
+      const uniqueDirs = _.uniq(files.map((f) => nodePath.dirname(f.path)));
 
+      if (uniqueDirs.length === 0) {
+        rustSources = [];
+      } else {
         let commonPath = sharedSubpath(uniqueDirs);
         if (nodePath.basename(commonPath) === 'src') {
           commonPath = nodePath.dirname(commonPath);
         }
 
-        return [
+        rustSources = [
           {
             language: ProgrammingLanguage.Rust,
             path: commonPath,
           },
         ];
-      });
-
-    const manifestFiles = await manifestFilesPromise;
-    const rustSources = await rustSourcesPromise;
+      }
+    }
     // remove from `rustSources` all such paths that already have
     // a `Cargo.toml` anywhere in their ancestor path
     _.pullAllWith(rustSources, manifestFiles, (source, manifest) => sharedSubpath([manifest.path, source.path]) === manifest.path);

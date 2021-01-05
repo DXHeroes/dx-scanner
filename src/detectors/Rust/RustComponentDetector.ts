@@ -4,6 +4,8 @@ import { Types } from '../../types';
 import { LanguageAtPath, ProjectComponent, ProjectComponentFramework, ProjectComponentPlatform, ProjectComponentType } from '../../model';
 import { IFileInspector, RustPackageInspector } from '../../inspectors';
 import _ from 'lodash';
+import nodePath from 'path';
+import { ErrorFactory } from '../../lib/errors';
 
 @injectable()
 export class RustComponentDetector implements IProjectComponentDetector {
@@ -20,54 +22,39 @@ export class RustComponentDetector implements IProjectComponentDetector {
     // * `src/bin/*.rs`
     // * `src/bin/*/main.rs`
     // * a `bin` entry in the manifest
-    const hasBinaryFile = Promise.all([
-      this.fileInspector.exists('src/main.rs'),
-      this.fileInspector
-        .readDirectory('src/bin')
-        .then(async (entries) => {
-          for (const entry of entries) {
-            const entryPath = `src/bin/${entry}`;
-            if (
-              (entry.endsWith('.rs') && (await this.fileInspector.isFile(entryPath))) ||
-              (await this.fileInspector.isFile(`${entryPath}/main.rs`))
-            ) {
-              return true;
-            }
-          }
+    const hasMain = await this.fileInspector.exists(nodePath.join('src', 'main.rs'));
+    let hasSrcBin = false;
+    try {
+      const binFolderEntries = await this.fileInspector.readDirectory(nodePath.join('src', 'bin'));
+      for (const entry of binFolderEntries) {
+        const entryPath = nodePath.join('src', 'bin', entry);
 
-          return false;
-        })
-        .catch((err) => (err.code === 'ENOENT' ? Promise.resolve(false) : Promise.reject(err))),
-      Promise.resolve(_.get(this.packageInspector.cargoManifest, 'bin.length', 0) > 0),
-    ]).then((a) => a.some((i) => i));
+        const isRsFile = entry.endsWith('.rs') && (await this.fileInspector.isFile(entryPath));
+        if (isRsFile) {
+          hasSrcBin = true;
+          break;
+        }
 
-    // const hasMain = await this.fileInspector.exists('src/main.rs');
-    // let hasSrcBin = false;
-    // try {
-    //     const binFolderEntries = await this.fileInspector.readDirectory('src/bin');
-    //     for (const entry of binFolderEntries) {
-    //       const entryPath = `src/bin/${entry}`;
-    //       if (
-    //         (entry.endsWith('.rs') && (await this.fileInspector.isFile(entryPath))) ||
-    //         (await this.fileInspector.isFile(`${entryPath}/main.rs`))
-    //       ) {
-    //         hasSrcBin = true;
-    //       }
-    //     }
-    // } catch (e) {
-    //     if (e.code === 'ENOENT') {
-    //         // ignore
-    //     } else {
-    //         throw e;
-    //     }
-    // }
-    // const hasManifestBin = _.get(this.packageInspector.cargoManifest, 'bin.length', 0) > 0;
-    // const hasBinaryFile = hasMain || hasSrcBin || hasManifestBin;
+        const hasNestedMain = await this.fileInspector.isFile(nodePath.join(entryPath, 'main.rs'));
+        if (hasNestedMain) {
+          hasSrcBin = true;
+          break;
+        }
+      }
+    } catch (e) {
+      if (e.code === 'ENOENT') {
+        // ignore
+      } else {
+        throw e;
+      }
+    }
+    const hasManifestBin = _.get(this.packageInspector.cargoManifest, 'bin.length', 0) > 0;
+    const hasBinaryFile = hasMain || hasSrcBin || hasManifestBin;
 
     // Cargo outputs a library if and only if `src/lib.rs` exists
-    const hasLib = this.fileInspector.exists('src/lib.rs');
+    const hasLib = await this.fileInspector.exists(nodePath.join('src', 'lib.rs'));
 
-    if (await hasLib) {
+    if (hasLib) {
       result.push({
         framework: ProjectComponentFramework.UNKNOWN,
         language: langAtPath.language,
@@ -78,7 +65,7 @@ export class RustComponentDetector implements IProjectComponentDetector {
       });
     }
 
-    if (await hasBinaryFile) {
+    if (hasBinaryFile) {
       result.push({
         framework: ProjectComponentFramework.UNKNOWN,
         language: langAtPath.language,
@@ -87,6 +74,12 @@ export class RustComponentDetector implements IProjectComponentDetector {
         repositoryPath: undefined,
         type: ProjectComponentType.Application,
       });
+    }
+
+    if (result.length === 0) {
+      throw ErrorFactory.newInternalError(
+        `Could not detect neither a library nor a binary Rust crate at given language path: ${langAtPath.path}`,
+      );
     }
 
     return result;

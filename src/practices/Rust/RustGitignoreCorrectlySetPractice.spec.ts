@@ -76,6 +76,6 @@ describe('RustGitignoreIsCorrectlySetPractice', () => {
     await practice.fix(containerCtx.fixerContext);
 
     const fixedGitignore = await containerCtx.virtualFileSystemService.readFile('.gitignore');
-    expect(fixedGitignore).toBe(`${invalidGitignore}\n# added by \`dx-scanner --fix\`\ntarget/\n**/*.rs.bk`);
+    expect(fixedGitignore).toBe(`${invalidGitignore}\n# added by \`dx-scanner --fix\`\ntarget/\n**/*.rs.bk\n`);
   });
 });
