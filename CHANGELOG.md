@@ -1,3 +1,10 @@
+## [3.48.6](https://github.com/dxheroes/dx-scanner/compare/v3.48.5...v3.48.6) (2021-01-05)
+
+
+### Bug Fixes
+
+* eslintrc yml not properly loaded ([c1448de](https://github.com/dxheroes/dx-scanner/commit/c1448deabd63a98ee21e840b6148327306424943))
+
 ## [3.48.5](https://github.com/dxheroes/dx-scanner/compare/v3.48.4...v3.48.5) (2021-01-05)
 
 
