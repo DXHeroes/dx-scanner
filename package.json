@@ -50,7 +50,7 @@
     "gradle-to-js": "2.0.0",
     "inquirer": "7.3.3",
     "inversify": "5.0.5",
-    "js-yaml": "3.14.1",
+    "js-yaml": "4.0.0",
     "lodash": "4.17.20",
     "memfs": "3.2.0",
     "moment": "2.29.1",

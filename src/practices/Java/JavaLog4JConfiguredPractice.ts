@@ -44,7 +44,7 @@ export class JavaLog4JConfiguredPractice implements IPractice {
                 break;
               case '.yaml':
               case '.yml':
-                parsedContents = yaml.safeLoad(fileContents);
+                parsedContents = yaml.load(fileContents);
                 break;
               case '.properties':
                 parsedContents = await properties.parse(fileContents, { namespaces: true });

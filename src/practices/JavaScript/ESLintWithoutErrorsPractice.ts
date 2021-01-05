@@ -110,7 +110,7 @@ export class ESLintWithoutErrorsPractice extends PracticeBase {
         eSLintWithoutErrorsPracticeDebug(`Loading .eslintrc file failed with this error: ${error.stack}`);
 
         content = await ctx.fileInspector.readFile(eslintConfig[0].path);
-        baseConfig = yaml.safeLoad(content);
+        baseConfig = yaml.load(content);
       }
     }
 
