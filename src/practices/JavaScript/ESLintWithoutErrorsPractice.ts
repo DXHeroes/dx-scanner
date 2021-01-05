@@ -94,7 +94,7 @@ export class ESLintWithoutErrorsPractice extends PracticeBase {
       try {
         //load config file according to its extension
         if (eslintConfig[0].extension === '.yml' || eslintConfig[0].extension === '.yaml') {
-          baseConfig = yaml.safeLoad(await ctx.fileInspector.readFile(eslintConfig[0].path));
+          baseConfig = yaml.load(await ctx.fileInspector.readFile(eslintConfig[0].path));
         } else {
           // eslint-disable-next-line @typescript-eslint/no-require-imports
           baseConfig = require(nodePath.resolve(ctx.fileInspector.basePath!, eslintConfig[0].path));
