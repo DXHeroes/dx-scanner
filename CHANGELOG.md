@@ -1,3 +1,12 @@
+## [3.48.4](https://github.com/dxheroes/dx-scanner/compare/v3.48.3...v3.48.4) (2021-01-05)
+
+
+### Bug Fixes
+
+* **deps:** update dependency js-yaml to v4 ([9139bf3](https://github.com/dxheroes/dx-scanner/commit/9139bf336f40ed53fe77eb166396889a8b33a82e))
+* **deps:** update dependency js-yaml to v4 ([e19a972](https://github.com/dxheroes/dx-scanner/commit/e19a972b4dfd1364ccefeb12c78824cc7c91bec1))
+* add authorization arg specifier ([26b21f4](https://github.com/dxheroes/dx-scanner/commit/26b21f4fbf6e8b4275e5355030a3eddbaeee5d99))
+
 ## [3.48.3](https://github.com/dxheroes/dx-scanner/compare/v3.48.2...v3.48.3) (2021-01-04)
 
 
