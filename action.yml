@@ -10,5 +10,6 @@ runs:
   using: 'docker'
   image: 'action/Dockerfile'
   args:
+    - --authorization
     - ${{ inputs.github_token }}
 
