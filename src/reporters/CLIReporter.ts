@@ -1,8 +1,9 @@
-import { blue, bold, Color, cyan, green, grey, italic, red, reset, underline, yellow } from 'colors';
+import { blue, bold, Color, cyan, green, grey, italic, magenta, red, reset, underline, yellow } from 'colors';
 import debug from 'debug';
 import { inject, injectable } from 'inversify';
 import { ScanningStrategy } from '../detectors';
 import { assertNever } from '../lib/assertNever';
+import { logfile } from '../lib/logfile';
 import { PracticeEvaluationResult, PracticeImpact, PracticeMetadata } from '../model';
 import { PracticeDetail } from '../practices/IPractice';
 import { ArgumentsProvider } from '../scanner';
@@ -118,6 +119,7 @@ export class CLIReporter implements IReporter {
 
     if (!this.argumentsProvider.details)
       lines.push(green(`You can run the command with option ${italic('-d')} or ${italic('--details')} to show detailed informations.\n`));
+    if (logfile.enabled) lines.push(magenta(`See the debug log in the file ${logfile.fname}\n`));
 
     return lines.join('\n');
   }

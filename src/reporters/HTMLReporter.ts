@@ -11,6 +11,7 @@ import { Types } from '../types';
 import path from 'path';
 import { ScanningStrategy } from '../detectors';
 import debug from 'debug';
+import { logfile } from '../lib/logfile';
 
 @injectable()
 export class HTMLReporter implements IReporter {
@@ -81,6 +82,9 @@ export class HTMLReporter implements IReporter {
     lines.push('We can help you with both. :-)</p>');
     lines.push('<a href="https://dxheroes.io">https://dxheroes.io</a><br />');
     lines.push('<a href="https://bit.ly/slack_developer_experience" target="_blank">Join us on Slack!</a>');
+    if (logfile.enabled) {
+      lines.push(`<p>See the debug log in the file ${logfile.fname}</p>`);
+    }
     lines.push('</div>');
 
     return `
