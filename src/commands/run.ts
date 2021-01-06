@@ -18,6 +18,7 @@ export default class Run {
       logfile.log('warning: ' + msg);
       return;
     }
+    logfile.getSecrets(cmd.authorization, cmd.apiToken);
     debugLog('cli')(cmd);
     const scanPath = path;
 

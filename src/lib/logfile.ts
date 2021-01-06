@@ -1,13 +1,29 @@
-
 import debug from 'debug';
 import fs from 'fs';
 import path from 'path';
 import util from 'util';
 
-class Logfile {
+export class Logfile {
+  private authorization?: string;
+  private apiToken?: string;
+
+  constructor() {
+    this.authorization;
+    this.apiToken;
+  }
+
   public enabled: boolean = false;
   public fname: string = path.join(process.cwd(), `dxscanner${Date.now()}.log`);
   private file: number | null = null;
+
+  /**
+   * Get secrets to be redacted.
+   * @param authorization
+   * @param apiToken
+   */
+  public getSecrets(authorization?: string, apiToken?: string) {
+    (this.authorization = authorization), (this.apiToken = apiToken);
+  }
 
   /**
    * Writes the given string to the log file.
@@ -26,6 +42,10 @@ class Logfile {
         }
       });
     }
+
+    if (this.apiToken) content = content.replace(new RegExp(this.apiToken, 'g'), '[REDACTED]');
+    if (this.authorization)
+      content = content.replace(new RegExp(this.authorization, 'g'), '[REDACTED]');
 
     fs.write(this.file, content, () => {});
   }
@@ -53,15 +73,15 @@ export function enableLogfile(): void {
   logfile.enabled = true;
 
   const removeANSIPattern = [
-		'[\\u001B\\u009B][[\\]()#;?]*(?:(?:(?:[a-zA-Z\\d]*(?:;[-a-zA-Z\\d\\/#&.:=?%@~_]*)*)?\\u0007)',
-		'(?:(?:\\d{1,4}(?:;\\d{0,4})*)?[\\dA-PR-TZcf-ntqry=><~]))'
+    '[\\u001B\\u009B][[\\]()#;?]*(?:(?:(?:[a-zA-Z\\d]*(?:;[-a-zA-Z\\d\\/#&.:=?%@~_]*)*)?\\u0007)',
+    '(?:(?:\\d{1,4}(?:;\\d{0,4})*)?[\\dA-PR-TZcf-ntqry=><~]))',
   ].join('|');
   const removeANSIRe = new RegExp(removeANSIPattern, 'g');
   const removeANSI = (s: string): string => s.replace(removeANSIRe, '');
 
-  debug.log = function(...args: any[]) {
+  debug.log = function (...args: any[]) {
     const formatted = util.format(args[0], ...args.slice(1)) + '\n';
     logfile.write(removeANSI(formatted));
     process.stderr.write(formatted);
-  }
+  };
 }
