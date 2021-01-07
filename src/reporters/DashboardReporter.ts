@@ -88,7 +88,8 @@ export class DashboardReporter implements IReporter {
         securityIssues,
         updatedDependencies,
         linterIssues,
-        pullRequests,
+        //Remove duplicate prs
+        pullRequests: pullRequests.filter((pr: PullRequestDto, index: number, array: PullRequestDto[]) => array.indexOf(pr) === index),
       };
 
       report.componentsWithDxScore.push(componentWithScore);
