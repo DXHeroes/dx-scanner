@@ -22,7 +22,7 @@ class DXScannerCommand {
       .version(pjson.version)
       .name('dx-scanner')
       .usage('[command] [options] ')
-      .option('-l --log', 'Write an execution log to ./dxscanner.log', () => {
+      .option('-l --log', 'Write a debug and dxs output log to ./dxscanner.log', () => {
         enableLogfile();
         logfile.log(`DX Scanner execution log\nLocal time: ${new Date().toLocaleTimeString()}\nUTC: ${new Date().toUTCString()}\n`);
       })

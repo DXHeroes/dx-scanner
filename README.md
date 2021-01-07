@@ -109,6 +109,7 @@ Usage: dx-scanner [command] [options]
 
 Options:
   -V, --version         output the version number
+  -l --log              Write a debug and dxs output log to ./dxscanner.log
   -h, --help            display help for command
 
 Commands:
