@@ -50,7 +50,7 @@ export class GitHubService implements IVCSService {
   private readonly client: Octokit;
   private cache: ICache;
   private callCount = 0;
-  private readonly graphqlWithAuth;
+  private readonly graphqlWithAuth: any;
   private readonly repositoryConfig: RepositoryConfig;
 
   constructor(
@@ -285,18 +285,21 @@ export class GitHubService implements IVCSService {
    * Lists contributors to the specified repository and sorts them by the number of commits per contributor in descending order.
    */
   async listContributors(owner: string, repo: string): Promise<Contributor[]> {
-    const contributors = await this.client.paginate(this.client.repos.listContributors, { owner, repo }, (response) => {
+    const contributors = await this.client.paginate(this.client.repos.getContributorsStats, { owner, repo }, (response) => {
       this.debugGitHubResponse(response);
       return response.data;
     });
-    return contributors.map((contributor) => ({
-      user: {
-        id: contributor.id.toString(),
-        login: contributor.login,
-        url: contributor.url,
-      },
-      contributions: contributor.contributions,
-    }));
+
+    return contributors.map((contributorStats) => {
+      return {
+        user: {
+          id: contributorStats.author.id.toString(),
+          login: contributorStats.author.login,
+          url: contributorStats.author.url,
+        },
+        contributions: contributorStats.total,
+      };
+    });
   }
 
   /**
