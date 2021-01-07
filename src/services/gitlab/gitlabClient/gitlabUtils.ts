@@ -10,6 +10,7 @@ import { Projects } from './resources/Projects';
 import { Users } from './resources/UsersOrGroups';
 import { Version } from './resources/Version';
 import { Branches } from './resources/Branches';
+import { Contributors } from './resources/Contributors';
 
 interface Constructor {
   new (...args: any): any;
@@ -32,7 +33,7 @@ export const bundler = <T extends { [name: string]: Constructor }, P extends key
 };
 
 // Initialize Gitlab Client
-export const GitLabClient = bundler({ MergeRequests, Issues, Commits, Projects, Users, Version, Branches });
+export const GitLabClient = bundler({ MergeRequests, Issues, Commits, Projects, Users, Version, Branches, Contributors });
 export type GitLabClient = InstanceType<typeof GitLabClient>;
 
 export const parseResponse = <T>(response: AxiosResponse<T>): CustomAxiosResponse<T> => {

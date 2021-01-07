@@ -31,7 +31,7 @@ describe('DashboardReporter', () => {
 
   describe('#report', () => {
     it('one practicing practice', async () => {
-      gitHubNock.getContributors([
+      gitHubNock.getContributorsStats([
         { id: '251370', login: 'Spaceghost' },
         { id: '583231', login: 'octocat' },
       ]);
@@ -47,7 +47,7 @@ describe('DashboardReporter', () => {
     });
 
     it('one practicing practice and one not practicing in two components', async () => {
-      gitHubNock.getContributors([
+      gitHubNock.getContributorsStats([
         { id: '251370', login: 'Spaceghost' },
         { id: '583231', login: 'octocat' },
       ]);
@@ -79,7 +79,7 @@ describe('DashboardReporter', () => {
     });
 
     it('one not practicing practice', async () => {
-      gitHubNock.getContributors([
+      gitHubNock.getContributorsStats([
         { id: '251370', login: 'Spaceghost' },
         { id: '583231', login: 'octocat' },
       ]);
