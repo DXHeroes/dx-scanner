@@ -412,30 +412,27 @@ export class GitLabService implements IVCSService {
   }
 
   async listContributors(owner: string, repo: string, options?: ListGetterOptions): Promise<Contributor[]> {
-    const commits = await this.getAllCommits(`${owner}/${repo}`, options?.pagination);
+    const contributors = await this.getAllContributors(`${owner}/${repo}`, options?.pagination);
     const items = await Promise.all(
-      commits
-        //filter duplicate committer names
-        .filter((commit, index, array) => array.findIndex((c) => c.committer_name === commit.committer_name) === index)
+      contributors
         //get user info and create contributor object
-        .map(async (commit) => {
+        .map(async (contributor) => {
           return {
-            user: (await this.searchUser(commit.committer_email, commit.committer_name)) || {
-              login: commit.committer_name,
+            user: (await this.searchUser(contributor.email, contributor.name)) || {
+              login: contributor.name,
             },
-            contributions: commits.filter((value) => value.committer_name === commit.committer_name).length,
+            contributions: contributor.commits,
           };
         }),
     );
     return items;
   }
-
-  private async getAllCommits(projectId: string, pagination?: PaginationParams) {
-    let response = await this.unwrap(this.client.Commits.list(projectId, pagination));
+  private async getAllContributors(projectId: string, pagination?: PaginationParams) {
+    let response = await this.unwrap(this.client.Contributors.list(projectId, pagination));
     let data = response.data;
     while (response.pagination.next) {
       const updatedPagination = _.merge(pagination, { page: response.pagination.next });
-      response = await this.unwrap(this.client.Commits.list(projectId, updatedPagination));
+      response = await this.unwrap(this.client.Contributors.list(projectId, updatedPagination));
       data = data.concat(response.data);
     }
     return data;
