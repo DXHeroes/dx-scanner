@@ -415,13 +415,6 @@ export class GitLabService implements IVCSService {
     const contributors = await this.getAllContributors(`${owner}/${repo}`, options?.pagination);
     const items = await Promise.all(
       contributors
-        //filter duplicate committer names or committer emails - we want to make sure that we don't count some contributor twice
-        // .filter(
-        //   (contributor, index, array) =>
-        //     array.findIndex((c) => {
-        //       return c.name === contributor.name || c.email === contributor.email;
-        //     }) === index,
-        // )
         //get user info and create contributor object
         .map(async (contributor) => {
           return {
