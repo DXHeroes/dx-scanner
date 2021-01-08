@@ -1,3 +1,11 @@
+## [3.48.7](https://github.com/dxheroes/dx-scanner/compare/v3.48.6...v3.48.7) (2021-01-08)
+
+
+### Bug Fixes
+
+* entrypoint chmod ([a8a2444](https://github.com/dxheroes/dx-scanner/commit/a8a244467fb44c8ba6c5464c7f7a6ca8f801a52d))
+* typo in entrypoint ([cdf338e](https://github.com/dxheroes/dx-scanner/commit/cdf338ee43fd76e57b82ae12f50efccf4cac7cc5))
+
 ## [3.48.6](https://github.com/dxheroes/dx-scanner/compare/v3.48.5...v3.48.6) (2021-01-05)
 
 
