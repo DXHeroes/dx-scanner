@@ -11,7 +11,7 @@ RUN mkdir /usr/app
 WORKDIR /usr/app
 
 # Copies your code file from your action repository to the filesystem path `/` of the container
-COPY entrypoint.sh /usr/appentrypoint.sh
+COPY entrypoint.sh /usr/app/entrypoint.sh
 
 RUN chmod +x /usr/app/entrypoint.sh
 
