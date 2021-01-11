@@ -1,3 +1,16 @@
+# [3.49.0](https://github.com/dxheroes/dx-scanner/compare/v3.48.8...v3.49.0) (2021-01-11)
+
+
+### Bug Fixes
+
+* do not use any ([fd10a40](https://github.com/dxheroes/dx-scanner/commit/fd10a400b0c4f516c2688fcda67fcc8ee81edd85))
+* use d instead of debug ([142f30f](https://github.com/dxheroes/dx-scanner/commit/142f30f69dc2250a848ed0af4db6f3eb4ce96d70))
+
+
+### Features
+
+* Add logfile option\nLogfile contains information useful for debugging ([f86bf24](https://github.com/dxheroes/dx-scanner/commit/f86bf240facfcf88e306d51485e407e32ff529f4))
+
 ## [3.48.8](https://github.com/dxheroes/dx-scanner/compare/v3.48.7...v3.48.8) (2021-01-11)
 
 
