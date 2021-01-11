@@ -1,3 +1,12 @@
+## [3.48.8](https://github.com/dxheroes/dx-scanner/compare/v3.48.7...v3.48.8) (2021-01-11)
+
+
+### Bug Fixes
+
+* contributors count ([44ac1bb](https://github.com/dxheroes/dx-scanner/commit/44ac1bbf123979088b894710f1ae38130b6d7daf))
+* duplicate prs ([dc2dd65](https://github.com/dxheroes/dx-scanner/commit/dc2dd65acc59c8ebdf02b88246c0c6ccae385ff1))
+* entrypoint script ([4c9d3ac](https://github.com/dxheroes/dx-scanner/commit/4c9d3ac9e69ea65456775881c9b9ac4cde158551))
+
 ## [3.48.7](https://github.com/dxheroes/dx-scanner/compare/v3.48.6...v3.48.7) (2021-01-08)
 
 
