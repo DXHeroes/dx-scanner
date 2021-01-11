@@ -1,10 +1,13 @@
+import debug from 'debug';
+import { debugLog } from '../detectors/utils';
 import { createRootContainer } from '../inversify.config';
-import { Scanner } from '../scanner';
-import { PracticeImpact, CLIArgs } from '../model';
+import { CLIArgs, PracticeImpact } from '../model';
 import { ReporterData } from '../reporters/ReporterData';
+import { Scanner } from '../scanner';
 
 export default class Practices {
   static async run(cmd: CLIArgs): Promise<void> {
+    debugLog('cli')(cmd);
     const scanPath = process.cwd();
 
     const container = createRootContainer({
@@ -34,11 +37,11 @@ export default class Practices {
       };
     });
 
-    if (cmd.json) {
-      // print practices in JSON format
-      console.log(JSON.stringify(practicesToReport, null, 2));
-    } else {
-      console.log(ReporterData.table(['Practice ID', 'Practice Name', 'Practice Impact', 'URL'], practicesToReport));
-    }
+    debug.log(
+      cmd.json
+        ? // print practices in JSON format
+          JSON.stringify(practicesToReport, null, 2)
+        : ReporterData.table(['Practice ID', 'Practice Name', 'Practice Impact', 'URL'], practicesToReport),
+    );
   }
 }

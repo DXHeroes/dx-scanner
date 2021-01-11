@@ -234,7 +234,7 @@ describe('FileSystemService - VIRTUAL', () => {
       await expect(service.createDirectory(mockFilePath)).rejects.toThrow("EEXIST: file already exists, mkdir '" + mockFilePath + "'");
     });
 
-    it('throws an error if the target is a broken symbolc link', async () => {
+    it('throws an error if the target is a broken symbolic link', async () => {
       const mockFilePath = path.resolve('/mockFolder/mockFileSLbroken.ln');
 
       await expect(service.createDirectory(mockFilePath)).rejects.toThrow("EEXIST: file already exists, mkdir '" + mockFilePath + "'");

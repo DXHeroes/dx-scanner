@@ -1,5 +1,4 @@
 import { cli } from 'cli-ux';
-import debug from 'debug';
 import fs from 'fs';
 import { inject, injectable, multiInject } from 'inversify';
 import _ from 'lodash';
@@ -15,7 +14,7 @@ import { ProjectComponentContext } from '../contexts/projectComponent/ProjectCom
 import { ScannerContext } from '../contexts/scanner/ScannerContext';
 import { ScanningStrategy } from '../detectors';
 import { AccessType, ServiceType } from '../detectors/IScanningStrategy';
-import { sharedSubpath } from '../detectors/utils';
+import { debugLog, sharedSubpath } from '../detectors/utils';
 import { ErrorFactory } from '../lib/errors';
 import {
   LanguageAtPath,
@@ -40,7 +39,7 @@ export class Scanner {
   private readonly fileSystemService: FileSystemService;
   private readonly practices: IPracticeWithMetadata[];
   private readonly argumentsProvider: ArgumentsProvider;
-  private readonly d: debug.Debugger;
+  private readonly d: (...args: unknown[]) => void;
   private shouldExitOnEnd = false;
   private allDetectedComponents: ProjectComponentAndLangContext[] | undefined;
 
@@ -58,7 +57,7 @@ export class Scanner {
     this.practices = practices;
     this.argumentsProvider = argumentsProvider;
 
-    this.d = debug('scanner');
+    this.d = debugLog('scanner');
     this.allDetectedComponents = undefined;
   }
 
@@ -91,6 +90,7 @@ export class Scanner {
     this.d(`Components (${projectComponents.length}):`, inspect(projectComponents));
     const practicesWithContext = await this.detectPractices(projectComponents);
     this.d(`Practices (${practicesWithContext.length}):`, inspect(practicesWithContext));
+
     let practicesAfterFix: PracticeWithContext[] | undefined;
     if (this.argumentsProvider.fix) {
       if (isLocal) {
@@ -106,6 +106,10 @@ export class Scanner {
         this.allDetectedComponents!.length,
       )}; Practices: ${inspect(practicesWithContext.length)}.`,
     );
+
+    if (practicesWithContext.length > 0 && practicesWithContext[0].componentContext.configProvider.config)
+      debugLog('config')('Project configuration: \n' + inspect(practicesWithContext[0].componentContext.configProvider.config));
+    else debugLog('config')('No project configuration found');
 
     return { shouldExitOnEnd: this.shouldExitOnEnd };
   }
@@ -338,7 +342,7 @@ export class Scanner {
         evaluation = await practice.evaluate({ ...practiceContext, config: practiceConfig });
       } catch (error) {
         evaluationError = error.toString();
-        const practiceDebug = debug('practices');
+        const practiceDebug = debugLog('practices');
         practiceDebug(`The ${practice.getMetadata().name} practice failed with this error:\n${error.stack}`);
       }
 

@@ -1,9 +1,9 @@
 import { graphql } from '@octokit/graphql';
 import { Octokit } from '@octokit/rest';
 import type { OctokitResponse } from '@octokit/types';
-import Debug from 'debug';
 import { inject, injectable } from 'inversify';
 import { inspect } from 'util';
+import { debugLog } from '../../detectors/utils';
 import { ListGetterOptions } from '../../inspectors/common/ListGetterOptions';
 import { Paginated } from '../../inspectors/common/Paginated';
 import { PullRequestState } from '../../inspectors/ICollaborationInspector';
@@ -43,7 +43,7 @@ import {
   ReposGetResponseData,
 } from './OctokitTypes';
 import { VCSServicesUtils } from './VCSServicesUtils';
-const debug = Debug('cli:services:git:github-service');
+const d = debugLog('cli:services:git:github-service');
 
 @injectable()
 export class GitHubService implements IVCSService {
@@ -316,7 +316,7 @@ export class GitHubService implements IVCSService {
     await this.unwrap(
       this.client.repos.getContributorsStats({ owner, repo }).then((r) => {
         if (r.status === 202) {
-          debug('Waiting for GitHub stats to be recomputed');
+          d('Waiting for GitHub stats to be recomputed');
           return delay(10_000).then(() => r);
         } else {
           return r;
@@ -666,9 +666,9 @@ export class GitHubService implements IVCSService {
       })
       .catch((error) => {
         if (error.response) {
-          debug(`${error.response.status} => ${inspect(error.response.data)}`);
+          d(`${error.response.status} => ${inspect(error.response.data)}`);
         } else {
-          debug(inspect(error));
+          d(inspect(error));
         }
         throw error;
       });
@@ -680,7 +680,7 @@ export class GitHubService implements IVCSService {
    */
   private debugGitHubResponse = <T>(response: OctokitResponse<T>) => {
     this.callCount++;
-    debug(`GitHub API Hit: ${this.callCount}. Remaining ${response.headers['x-ratelimit-remaining']} hits. (${response.headers.link})`);
+    d(`GitHub API Hit: ${this.callCount}. Remaining ${response.headers['x-ratelimit-remaining']} hits. (${response.headers.link})`);
   };
 
   /**
@@ -694,9 +694,9 @@ export class GitHubService implements IVCSService {
       })
       .catch((error) => {
         if (error.response) {
-          debug(`${error.response.status} => ${inspect(error.response.data)}`);
+          d(`${error.response.status} => ${inspect(error.response.data)}`);
         } else {
-          debug(inspect(error));
+          d(inspect(error));
         }
         throw error;
       });
@@ -708,7 +708,7 @@ export class GitHubService implements IVCSService {
    */
   private debugGitHubGqlResponse = (rateLimit: any) => {
     this.callCount += rateLimit.cost;
-    debug(`GitHub API Hit: ${this.callCount}. Remaining ${rateLimit.remaining} hits. Reset at ${rateLimit.resetAt}`);
+    d(`GitHub API Hit: ${this.callCount}. Remaining ${rateLimit.remaining} hits. Reset at ${rateLimit.resetAt}`);
   };
 }
 

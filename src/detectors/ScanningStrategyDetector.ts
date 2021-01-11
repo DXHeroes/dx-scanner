@@ -1,4 +1,3 @@
-import debug from 'debug';
 import { inject, injectable } from 'inversify';
 import { has } from 'lodash';
 import { ArgumentsProvider } from '../scanner';
@@ -12,6 +11,7 @@ import { ErrorFactory, ErrorCode } from '../lib/errors';
 import { AccessType, ServiceType } from './IScanningStrategy';
 import git from 'simple-git/promise';
 import nodePath from 'path';
+import { debugLog } from './utils';
 
 @injectable()
 export class ScanningStrategyDetector implements IDetector<string, ScanningStrategy> {
@@ -20,7 +20,7 @@ export class ScanningStrategyDetector implements IDetector<string, ScanningStrat
   private gitLabService: GitLabService;
   private readonly argumentsProvider: ArgumentsProvider;
   private readonly repositoryConfig: RepositoryConfig;
-  private readonly d: debug.Debugger;
+  private readonly d: (...args: unknown[]) => void;
   private isOnline = false;
 
   constructor(
@@ -35,7 +35,7 @@ export class ScanningStrategyDetector implements IDetector<string, ScanningStrat
     this.gitLabService = gitLabService;
     this.argumentsProvider = argumentsProvider;
     this.repositoryConfig = repositoryConfig;
-    this.d = debug('scanningStrategyDetector');
+    this.d = debugLog('scanningStrategyDetector');
   }
 
   async detect(): Promise<ScanningStrategy> {
