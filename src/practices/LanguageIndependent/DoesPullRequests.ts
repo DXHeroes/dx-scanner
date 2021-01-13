@@ -6,6 +6,7 @@ import { DxPractice } from '../DxPracticeDecorator';
 import { PullRequestState } from '../../inspectors/ICollaborationInspector';
 import { PracticeBase } from '../PracticeBase';
 import { PullRequestDto } from '../../reporters';
+import { ErrorFactory } from '../../lib/errors';
 
 @DxPractice({
   id: 'LanguageIndependent.DoesPullRequests',
@@ -21,8 +22,11 @@ export class DoesPullRequestsPractice extends PracticeBase {
   }
 
   async evaluate(ctx: PracticeContext): Promise<PracticeEvaluationResult> {
-    if (ctx.fileInspector === undefined || ctx.collaborationInspector === undefined) {
+    if (!ctx.fileInspector) {
       return PracticeEvaluationResult.unknown;
+    }
+    if (!ctx.collaborationInspector) {
+      throw ErrorFactory.newAuthorizationError('You probably provided bad acess token to your repository or did not provided at all.');
     }
 
     const repoName = GitServiceUtils.getRepoName(ctx.projectComponent.repositoryPath, ctx.projectComponent.path);
