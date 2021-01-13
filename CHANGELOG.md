@@ -1,3 +1,11 @@
+## [3.49.1](https://github.com/dxheroes/dx-scanner/compare/v3.49.0...v3.49.1) (2021-01-13)
+
+
+### Bug Fixes
+
+* filter git lab contributors ([68ddd72](https://github.com/dxheroes/dx-scanner/commit/68ddd723718b380049263134c9c203c82b118e4e))
+* gitignore is correctly set practice ([a047158](https://github.com/dxheroes/dx-scanner/commit/a0471589ac25af1f929d57df0ff4a63fc0829a63))
+
 # [3.49.0](https://github.com/dxheroes/dx-scanner/compare/v3.48.8...v3.49.0) (2021-01-11)
 
 
