@@ -59,7 +59,7 @@ export class TsGitignoreCorrectlySetPractice extends GitignoreCorrectlySetPracti
   }
 
   async evaluate(ctx: PracticeContext): Promise<PracticeEvaluationResult> {
-    const fileInspector = GitignoreCorrectlySetPracticeBase.checkFileInspector(ctx);
+    const fileInspector = await GitignoreCorrectlySetPracticeBase.checkFileInspector(ctx);
     if (!fileInspector) {
       return PracticeEvaluationResult.unknown;
     }
