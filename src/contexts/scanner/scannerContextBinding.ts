@@ -67,7 +67,7 @@ const bindFileAccess = (scanningStrategy: ScanningStrategy, container: Container
 };
 
 const bindCollectors = (container: Container, args: ArgumentsProvider, accessType: AccessType | undefined) => {
-  if (accessType === AccessType.public || (accessType === AccessType.private && args.apiToken)) {
+  if ((accessType !== AccessType.public && args.apiToken) || accessType === AccessType.public) {
     container.bind(ContributorsCollector).toSelf().inSingletonScope();
     container.bind(BranchesCollector).toSelf().inSingletonScope();
     container.bind(DataCollector).toSelf().inSingletonScope();
