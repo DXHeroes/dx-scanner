@@ -19,9 +19,11 @@ import { PHPPackageInspector } from '../../inspectors/package/PHPPackageInspecto
 import { RustPackageInspector } from '../../inspectors/package/RustPackageInspector';
 import { PackageInspectorBase } from '../../inspectors/package/PackageInspectorBase';
 import { IProjectComponentDetector } from '../../detectors/IProjectComponentDetector';
-import { ScanningStrategy } from '../../detectors';
+import { AccessType, ScanningStrategy } from '../../detectors';
 import { ProjectFilesBrowserService } from '../../services';
 import { RustComponentDetector } from '../../detectors/Rust/RustComponentDetector';
+import { access } from 'fs';
+import { ArgumentsProvider } from '../../scanner';
 
 export const bindLanguageContext = (container: Container) => {
   container.bind(Types.LanguageContextFactory).toFactory(
@@ -48,7 +50,11 @@ const createLanguageContainer = (languageAtPath: LanguageAtPath, rootContainer: 
   bindComponentDetectors(container);
   bindProjectComponentContext(container);
   bindPackageInspectors(languageAtPath, container);
-  bindCollaborationInspectors(container);
+
+  const args = container.get<ArgumentsProvider>(Types.ArgumentsProvider);
+  if (scanningStrategy.accessType === AccessType.public || (scanningStrategy.accessType === AccessType.private && args.apiToken)) {
+    bindCollaborationInspectors(container);
+  }
 
   container.bind(LanguageContext).toSelf();
   return container;

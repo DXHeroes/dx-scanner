@@ -1,11 +1,11 @@
-import { injectable, inject } from 'inversify';
-import { IIssueTrackingInspector, IssueState } from './IIssueTrackingInspector';
-import { Paginated } from './common/Paginated';
+import { inject, injectable } from 'inversify';
+import { ListGetterOptions } from '.';
+import { VCSService } from '../model';
+import { ICache, InMemoryCache } from '../scanner/cache';
 import { Issue, IssueComment } from '../services/git/model';
 import { Types } from '../types';
-import { VCSService } from '../model';
-import { ListGetterOptions } from '.';
-import { ICache, InMemoryCache } from '../scanner/cache';
+import { Paginated } from './common/Paginated';
+import { IIssueTrackingInspector, IssueState } from './IIssueTrackingInspector';
 
 @injectable()
 export class IssueTrackingInspector implements IIssueTrackingInspector {

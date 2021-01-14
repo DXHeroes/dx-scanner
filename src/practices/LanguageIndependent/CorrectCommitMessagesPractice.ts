@@ -7,6 +7,7 @@ import { DxPractice } from '../DxPracticeDecorator';
 import { IPractice } from '../IPractice';
 import { PracticeBase } from '../PracticeBase';
 import { ReportDetailType } from '../../reporters/ReporterData';
+import { ErrorFactory } from '../../lib/errors';
 
 @DxPractice({
   id: 'LanguageIndependent.CorrectCommitMessages',
@@ -24,8 +25,11 @@ export class CorrectCommitMessagesPractice extends PracticeBase implements IPrac
   }
 
   async evaluate(ctx: PracticeContext): Promise<PracticeEvaluationResult> {
-    if (!ctx.fileInspector || !ctx.collaborationInspector) {
+    if (!ctx.fileInspector) {
       return PracticeEvaluationResult.unknown;
+    }
+    if (!ctx.collaborationInspector) {
+      throw ErrorFactory.newAuthorizationError('You probably provided bad acess token to your repository or did not provided at all.');
     }
 
     const repoName = GitServiceUtils.getRepoName(ctx.projectComponent.repositoryPath, ctx.projectComponent.path);

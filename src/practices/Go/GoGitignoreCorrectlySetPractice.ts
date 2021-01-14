@@ -1,9 +1,5 @@
 import { PracticeContext } from '../../contexts/practice/PracticeContext';
-import {
-  PracticeEvaluationResult,
-  PracticeImpact,
-  ProgrammingLanguage,
-} from '../../model';
+import { PracticeEvaluationResult, PracticeImpact, ProgrammingLanguage } from '../../model';
 import { DxPractice } from '../DxPracticeDecorator';
 import { PracticeBase } from '../PracticeBase';
 import { ReportDetailType } from '../../reporters/ReporterData';
@@ -41,40 +37,18 @@ export class GoGitignoreCorrectlySetPractice extends PracticeBase {
     this.parsedGitignore = parsedGitignore;
 
     // Binaries for programs and plugins regex
-    const exeFileRegex = this.parsedGitignore.find((value: string) =>
-      /.exe$/.test(value),
-    );
-    const exeTiltFileRegex = this.parsedGitignore.find((value: string) =>
-      /.exe~$/.test(value),
-    );
-    const dllFileRegex = this.parsedGitignore.find((value: string) =>
-      /.dll$/.test(value),
-    );
-    const soFileRegex = this.parsedGitignore.find((value: string) =>
-      /.so$/.test(value),
-    );
-    const dylibFileRegex = this.parsedGitignore.find((value: string) =>
-      /.dylib$/.test(value),
-    );
+    const exeFileRegex = this.parsedGitignore.find((value: string) => /.exe$/.test(value));
+    const exeTiltFileRegex = this.parsedGitignore.find((value: string) => /.exe~$/.test(value));
+    const dllFileRegex = this.parsedGitignore.find((value: string) => /.dll$/.test(value));
+    const soFileRegex = this.parsedGitignore.find((value: string) => /.so$/.test(value));
+    const dylibFileRegex = this.parsedGitignore.find((value: string) => /.dylib$/.test(value));
 
     // Test binary, built with `go test -c` regex
-    const testFileRegex = this.parsedGitignore.find((value: string) =>
-      /.test$/.test(value),
-    );
+    const testFileRegex = this.parsedGitignore.find((value: string) => /.test$/.test(value));
     // Output of the go coverage tool regex
-    const coverageRegex = parsedGitignore.find((value: string) =>
-      /.out$/.test(value),
-    );
+    const coverageRegex = parsedGitignore.find((value: string) => /.out$/.test(value));
 
-    if (
-      exeFileRegex &&
-      exeTiltFileRegex &&
-      dllFileRegex &&
-      dylibFileRegex &&
-      soFileRegex &&
-      testFileRegex &&
-      coverageRegex
-    ) {
+    if (exeFileRegex && exeTiltFileRegex && dllFileRegex && dylibFileRegex && soFileRegex && testFileRegex && coverageRegex) {
       return PracticeEvaluationResult.practicing;
     }
 
@@ -83,37 +57,21 @@ export class GoGitignoreCorrectlySetPractice extends PracticeBase {
   }
 
   async fix(ctx: FixerContext) {
-    const inspector = ctx.fileInspector?.basePath
-      ? ctx.fileInspector
-      : ctx.root.fileInspector;
+    const inspector = ctx.fileInspector?.basePath ? ctx.fileInspector : ctx.root.fileInspector;
     if (!inspector) return;
 
     // Binaries for programs and plugins regex
-    const exeFileRegex = this.parsedGitignore.find((value: string) =>
-      /.exe$/.test(value),
-    );
-    const exeTiltFileRegex = this.parsedGitignore.find((value: string) =>
-      /.exe~$/.test(value),
-    );
-    const dllFileRegex = this.parsedGitignore.find((value: string) =>
-      /.dll$/.test(value),
-    );
-    const soFileRegex = this.parsedGitignore.find((value: string) =>
-      /.so$/.test(value),
-    );
-    const dylibFileRegex = this.parsedGitignore.find((value: string) =>
-      /.dylib$/.test(value),
-    );
+    const exeFileRegex = this.parsedGitignore.find((value: string) => /.exe$/.test(value));
+    const exeTiltFileRegex = this.parsedGitignore.find((value: string) => /.exe~$/.test(value));
+    const dllFileRegex = this.parsedGitignore.find((value: string) => /.dll$/.test(value));
+    const soFileRegex = this.parsedGitignore.find((value: string) => /.so$/.test(value));
+    const dylibFileRegex = this.parsedGitignore.find((value: string) => /.dylib$/.test(value));
 
     // Test binary, built with `go test -c` regex
-    const testFileRegex = this.parsedGitignore.find((value: string) =>
-      /.test$/.test(value),
-    );
+    const testFileRegex = this.parsedGitignore.find((value: string) => /.test$/.test(value));
 
     // Output of the go coverage tool regex
-    const coverageRegex = this.parsedGitignore.find((value: string) =>
-      /.out$/.test(value),
-    );
+    const coverageRegex = this.parsedGitignore.find((value: string) => /.out$/.test(value));
 
     const fixes = [
       exeFileRegex ? undefined : '*.exe',
