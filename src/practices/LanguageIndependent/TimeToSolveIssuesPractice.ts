@@ -1,5 +1,6 @@
 import moment from 'moment';
 import { PracticeContext } from '../../contexts/practice/PracticeContext';
+import { ErrorFactory } from '../../lib/errors';
 import { PracticeEvaluationResult, PracticeImpact } from '../../model';
 import { GitServiceUtils } from '../../services/git/GitServiceUtils';
 import { DxPractice } from '../DxPracticeDecorator';
@@ -19,8 +20,11 @@ export class TimeToSolveIssuesPractice implements IPractice {
   }
 
   async evaluate(ctx: PracticeContext): Promise<PracticeEvaluationResult> {
-    if (ctx.fileInspector === undefined || ctx.issueTrackingInspector === undefined) {
+    if (!ctx.fileInspector) {
       return PracticeEvaluationResult.unknown;
+    }
+    if (!ctx.issueTrackingInspector) {
+      throw ErrorFactory.newAuthorizationError('You probably provided bad acess token to your repository or did not provided at all.');
     }
 
     const repoName = GitServiceUtils.getRepoName(ctx.projectComponent.repositoryPath, ctx.projectComponent.path);

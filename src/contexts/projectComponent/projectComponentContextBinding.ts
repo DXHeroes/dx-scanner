@@ -5,6 +5,7 @@ import { PracticeContextFactory, ProjectComponentContextFactory, Types } from '.
 import { ConfigProvider } from '../../scanner/ConfigProvider';
 import { PracticeContext } from '../practice/PracticeContext';
 import { ProjectComponentContext } from './ProjectComponentContext';
+import { ICollaborationInspector, IIssueTrackingInspector } from '../../inspectors';
 
 export const bindProjectComponentContext = (container: Container) => {
   container.bind(Types.ProjectComponentContextFactory).toFactory(
@@ -25,17 +26,21 @@ const createProjectComponentContainer = (projectComponent: ProjectComponent, roo
     (ctx): PracticeContextFactory => {
       return (projectComponent: ProjectComponent): PracticeContext => {
         let gitInspector: IGitInspector | undefined;
+        let issueTrackingInspector: IIssueTrackingInspector | undefined;
+        let collaborationInspector: ICollaborationInspector | undefined;
 
         try {
           gitInspector = ctx.container.get(Types.IGitInspector);
+          issueTrackingInspector = ctx.container.get(Types.IIssueTrackingInspector);
+          collaborationInspector = ctx.container.get(Types.ICollaborationInspector);
         } catch {}
 
         return {
           projectComponent: projectComponent,
           packageInspector: ctx.container.get(Types.IPackageInspector),
           gitInspector,
-          issueTrackingInspector: projectComponent.repositoryPath ? ctx.container.get(Types.IIssueTrackingInspector) : undefined,
-          collaborationInspector: projectComponent.repositoryPath ? ctx.container.get(Types.ICollaborationInspector) : undefined,
+          issueTrackingInspector,
+          collaborationInspector,
           fileInspector: ctx.container.get(Types.IFileInspector),
           root: {
             fileInspector: ctx.container.get(Types.IRootFileInspector),

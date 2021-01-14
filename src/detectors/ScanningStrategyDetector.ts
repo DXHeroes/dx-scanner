@@ -92,11 +92,11 @@ export class ScanningStrategyDetector implements IDetector<string, ScanningStrat
     if (ScanningStrategyDetectorUtils.isBitbucketPath(path)) return ServiceType.bitbucket;
     if (ScanningStrategyDetectorUtils.isGitLabPath(path)) return ServiceType.gitlab;
 
-    if (ScanningStrategyDetectorUtils.isLocalPath(path)) return ServiceType.local;
-
     // Try to determine gitLab service type if it's self-hosted
     const remotelyDetectedService = await this.determineGitLabRemoteServiceType();
     if (remotelyDetectedService) return remotelyDetectedService;
+
+    if (ScanningStrategyDetectorUtils.isLocalPath(path)) return ServiceType.local;
 
     throw ErrorFactory.newInternalError(
       `Unable to detect scanning strategy. It seems that the service is not implemented yet. (Input path: ${path})`,

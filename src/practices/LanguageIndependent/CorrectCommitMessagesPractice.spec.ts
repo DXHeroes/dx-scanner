@@ -91,9 +91,10 @@ describe('CorrectCommitMessagesPractice', () => {
     expect(evaluated).toEqual(PracticeEvaluationResult.notPracticing);
   });
 
-  it('returns unknown if there is no collaborationInspector', async () => {
-    const evaluated = await practice.evaluate({ ...containerCtx.practiceContext, collaborationInspector: undefined });
-    expect(evaluated).toEqual(PracticeEvaluationResult.unknown);
+  it('throw error if there is no collaborationInspector', async () => {
+    await expect(practice.evaluate({ ...containerCtx.practiceContext, collaborationInspector: undefined })).rejects.toThrow(
+      'You probably provided bad acess token to your repository or did not provided at all.',
+    );
   });
 
   it('returns always true, as it is always applicable', async () => {
