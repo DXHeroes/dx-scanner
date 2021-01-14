@@ -1,3 +1,11 @@
+## [3.49.2](https://github.com/dxheroes/dx-scanner/compare/v3.49.1...v3.49.2) (2021-01-14)
+
+
+### Bug Fixes
+
+* do not fail when services are unknown ([9db3676](https://github.com/dxheroes/dx-scanner/commit/9db3676dd2dc11abc35b6fe2d53d4ff45a31fd24))
+* try to define service first before local ([2f3c620](https://github.com/dxheroes/dx-scanner/commit/2f3c6200f11de4922b919a3f18a6aa4c9c7151ae))
+
 ## [3.49.1](https://github.com/dxheroes/dx-scanner/compare/v3.49.0...v3.49.1) (2021-01-13)
 
 
