@@ -49,7 +49,7 @@ export class JavaGitignoreCorrectlySetPractice extends GitignoreCorrectlySetPrac
   }
 
   async evaluate(ctx: PracticeContext): Promise<PracticeEvaluationResult> {
-    const fileInspector = GitignoreCorrectlySetPracticeBase.checkFileInspector(ctx);
+    const fileInspector = await GitignoreCorrectlySetPracticeBase.checkFileInspector(ctx);
     if (!fileInspector) {
       return PracticeEvaluationResult.unknown;
     }
