@@ -93,7 +93,7 @@ const bindReporters = (
     container.bind<IReporter>(Types.IReporter).to(CIReporter);
   }
 
-  if (accessType === AccessType.public || (accessType === AccessType.private && args.apiToken)) {
+  if ((accessType !== AccessType.public && args.apiToken) || accessType === AccessType.public) {
     container.bind<IReporter>(Types.IReporter).to(DashboardReporter);
   }
 };
