@@ -1,3 +1,17 @@
+# [3.50.0](https://github.com/dxheroes/dx-scanner/compare/v3.49.2...v3.50.0) (2021-01-15)
+
+
+### Bug Fixes
+
+* bugs ([#513](https://github.com/dxheroes/dx-scanner/issues/513)) ([206ca29](https://github.com/dxheroes/dx-scanner/commit/206ca292234e6baee39a4200cf3fe67971a75aa7))
+* update condition for binding collectors ([362defc](https://github.com/dxheroes/dx-scanner/commit/362defc7e172a381ad63406912a535e6148dcac3))
+* version ([c7c3d1f](https://github.com/dxheroes/dx-scanner/commit/c7c3d1fa5589bb801e17de1b4f28d808f6a44340))
+
+
+### Features
+
+* upgrade libs ([f0571cf](https://github.com/dxheroes/dx-scanner/commit/f0571cf0a120a3fc56f31c8b5b904bce5f0d8054))
+
 ## [3.49.3](https://github.com/dxheroes/dx-scanner/compare/v3.49.2...v3.49.3) (2021-01-15)
 
 
