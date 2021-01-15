@@ -291,7 +291,7 @@ export class GitHubService implements IVCSService {
     });
     return contributors.map((contributor) => ({
       user: {
-        id: contributor.id.toString(),
+        id: contributor.id?.toString(),
         login: contributor.login,
         url: contributor.url,
       },
