@@ -1,3 +1,13 @@
+## [3.49.3](https://github.com/dxheroes/dx-scanner/compare/v3.49.2...v3.49.3) (2021-01-15)
+
+
+### Bug Fixes
+
+* filter out stats without author ([6a77356](https://github.com/dxheroes/dx-scanner/commit/6a7735681d0c4d513896fae26ab52a90fbe78bac))
+* missing id for author ([088d52f](https://github.com/dxheroes/dx-scanner/commit/088d52f5854979e2eb43768edf7c1fc87829db85))
+* missing id for contributor ([f7b500a](https://github.com/dxheroes/dx-scanner/commit/f7b500a8983ccb32167a0aa60e999085705b9182))
+* update condition for binding collectors ([362defc](https://github.com/dxheroes/dx-scanner/commit/362defc7e172a381ad63406912a535e6148dcac3))
+
 ## [3.49.2](https://github.com/dxheroes/dx-scanner/compare/v3.49.1...v3.49.2) (2021-01-14)
 
 
