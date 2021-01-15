@@ -1,3 +1,5 @@
+## [3.49.3](https://github.com/dxheroes/dx-scanner/compare/v3.49.2...v3.49.3) (2021-01-15)
+
 ## [3.49.2](https://github.com/dxheroes/dx-scanner/compare/v3.49.1...v3.49.2) (2021-01-14)
 
 
