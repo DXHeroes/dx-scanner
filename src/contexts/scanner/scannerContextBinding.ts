@@ -106,4 +106,3 @@ const bindLanguageDetectors = (container: Container) => {
   container.bind(Types.ILanguageDetector).to(PHPLanguageDetector);
   container.bind(Types.ILanguageDetector).to(RustLanguageDetector);
 };
-//
