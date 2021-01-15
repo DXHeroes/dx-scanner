@@ -7,8 +7,7 @@ import { PracticeContext } from '../../contexts/practice/PracticeContext';
   id: 'LanguageIndependent.ChangelogIsPresent',
   name: 'Create a Changelog File',
   impact: PracticeImpact.high,
-  suggestion:
-    'Add a Changelog file to tell other people what changed in the last release.',
+  suggestion: 'Add a Changelog file to tell other people what changed in the last release.',
   reportOnlyOnce: true,
   url: 'https://www.freecodecamp.org/news/a-beginners-guide-to-git-what-is-a-changelog-and-how-to-generate-it/',
 })

@@ -1,20 +1,20 @@
 /* eslint-disable no-process-env */
-import { IReporter, PracticeWithContextForReporter } from './IReporter';
-import { injectable, inject } from 'inversify';
-import { Types } from '../types';
-import { ArgumentsProvider } from '../scanner';
-import { VCSServiceType, GitHubService, IVCSService, BitbucketService } from '../services';
-import { CIReporterUtils, CIReporterConfig } from './CIReporterUtils';
-import { assertNever } from '../lib/assertNever';
-import { debug } from 'debug';
-import { CreatedUpdatedPullRequestComment, PullRequestComment } from '../services/git/model';
-import { CIReportBuilder } from './builders/CIReportBuilder';
-import { ScanningStrategyDetectorUtils } from '../detectors/utils/ScanningStrategyDetectorUtils';
+import { inject, injectable } from 'inversify';
 import _ from 'lodash';
-import { GitLabService } from '../services/gitlab/GitLabService';
-import { GitLabClient } from '../services/gitlab/gitlabClient/gitlabUtils';
-import { RepositoryConfig } from '../scanner/RepositoryConfig';
 import { ScanningStrategy } from '../detectors';
+import { debugLog } from '../detectors/utils';
+import { ScanningStrategyDetectorUtils } from '../detectors/utils/ScanningStrategyDetectorUtils';
+import { assertNever } from '../lib/assertNever';
+import { ArgumentsProvider } from '../scanner';
+import { RepositoryConfig } from '../scanner/RepositoryConfig';
+import { BitbucketService, GitHubService, IVCSService, VCSServiceType } from '../services';
+import { CreatedUpdatedPullRequestComment, PullRequestComment } from '../services/git/model';
+import { GitLabClient } from '../services/gitlab/gitlabClient/gitlabUtils';
+import { GitLabService } from '../services/gitlab/GitLabService';
+import { Types } from '../types';
+import { CIReportBuilder } from './builders/CIReportBuilder';
+import { CIReporterConfig, CIReporterUtils } from './CIReporterUtils';
+import { IReporter, PracticeWithContextForReporter } from './IReporter';
 
 @injectable()
 export class CIReporter implements IReporter {
@@ -25,7 +25,7 @@ export class CIReporter implements IReporter {
   private readonly bitbucketService: BitbucketService;
   private readonly gitLabService: GitLabService;
   private config: CIReporterConfig | undefined;
-  private readonly d: debug.Debugger;
+  private readonly d: (...args: unknown[]) => void;
 
   constructor(
     @inject(Types.ArgumentsProvider) argumentsProvider: ArgumentsProvider,
@@ -35,7 +35,7 @@ export class CIReporter implements IReporter {
     @inject(BitbucketService) bitbucketService: BitbucketService,
     @inject(GitLabService) gitLabService: GitLabService,
   ) {
-    this.d = debug('CIReporter');
+    this.d = debugLog('CIReporter');
     this.argumentsProvider = argumentsProvider;
     this.repositoryConfig = repositoryConfig;
     this.scanningStrategy = scanningStrategy;

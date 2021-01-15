@@ -150,10 +150,11 @@ describe('DoesPullRequests', () => {
     expect(applicable).toEqual(true);
   });
 
-  it('return unknown if there is no collaborationInspector', async () => {
+  it('throw error if there is no collaborationInspector', async () => {
     containerCtx.practiceContext.collaborationInspector = undefined;
 
-    const evaluated = await practice.evaluate(containerCtx.practiceContext);
-    expect(evaluated).toEqual(PracticeEvaluationResult.unknown);
+    await expect(practice.evaluate(containerCtx.practiceContext)).rejects.toThrow(
+      'You probably provided bad acess token to your repository or did not provided at all.',
+    );
   });
 });

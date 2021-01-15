@@ -1,4 +1,3 @@
-import debug from 'debug';
 import { inject, injectable } from 'inversify';
 import { has } from 'lodash';
 import { ArgumentsProvider } from '../scanner';
@@ -12,6 +11,7 @@ import { ErrorFactory, ErrorCode } from '../lib/errors';
 import { AccessType, ServiceType } from './IScanningStrategy';
 import git from 'simple-git/promise';
 import nodePath from 'path';
+import { debugLog } from './utils';
 
 @injectable()
 export class ScanningStrategyDetector implements IDetector<string, ScanningStrategy> {
@@ -20,7 +20,7 @@ export class ScanningStrategyDetector implements IDetector<string, ScanningStrat
   private gitLabService: GitLabService;
   private readonly argumentsProvider: ArgumentsProvider;
   private readonly repositoryConfig: RepositoryConfig;
-  private readonly d: debug.Debugger;
+  private readonly d: (...args: unknown[]) => void;
   private isOnline = false;
 
   constructor(
@@ -35,7 +35,7 @@ export class ScanningStrategyDetector implements IDetector<string, ScanningStrat
     this.gitLabService = gitLabService;
     this.argumentsProvider = argumentsProvider;
     this.repositoryConfig = repositoryConfig;
-    this.d = debug('scanningStrategyDetector');
+    this.d = debugLog('scanningStrategyDetector');
   }
 
   async detect(): Promise<ScanningStrategy> {
@@ -92,11 +92,11 @@ export class ScanningStrategyDetector implements IDetector<string, ScanningStrat
     if (ScanningStrategyDetectorUtils.isBitbucketPath(path)) return ServiceType.bitbucket;
     if (ScanningStrategyDetectorUtils.isGitLabPath(path)) return ServiceType.gitlab;
 
-    if (ScanningStrategyDetectorUtils.isLocalPath(path)) return ServiceType.local;
-
     // Try to determine gitLab service type if it's self-hosted
     const remotelyDetectedService = await this.determineGitLabRemoteServiceType();
     if (remotelyDetectedService) return remotelyDetectedService;
+
+    if (ScanningStrategyDetectorUtils.isLocalPath(path)) return ServiceType.local;
 
     throw ErrorFactory.newInternalError(
       `Unable to detect scanning strategy. It seems that the service is not implemented yet. (Input path: ${path})`,

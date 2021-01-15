@@ -1,3 +1,49 @@
+## [3.49.2](https://github.com/dxheroes/dx-scanner/compare/v3.49.1...v3.49.2) (2021-01-14)
+
+
+### Bug Fixes
+
+* do not fail when services are unknown ([9db3676](https://github.com/dxheroes/dx-scanner/commit/9db3676dd2dc11abc35b6fe2d53d4ff45a31fd24))
+* try to define service first before local ([2f3c620](https://github.com/dxheroes/dx-scanner/commit/2f3c6200f11de4922b919a3f18a6aa4c9c7151ae))
+
+## [3.49.1](https://github.com/dxheroes/dx-scanner/compare/v3.49.0...v3.49.1) (2021-01-13)
+
+
+### Bug Fixes
+
+* filter git lab contributors ([68ddd72](https://github.com/dxheroes/dx-scanner/commit/68ddd723718b380049263134c9c203c82b118e4e))
+* gitignore is correctly set practice ([a047158](https://github.com/dxheroes/dx-scanner/commit/a0471589ac25af1f929d57df0ff4a63fc0829a63))
+
+# [3.49.0](https://github.com/dxheroes/dx-scanner/compare/v3.48.8...v3.49.0) (2021-01-11)
+
+
+### Bug Fixes
+
+* do not use any ([fd10a40](https://github.com/dxheroes/dx-scanner/commit/fd10a400b0c4f516c2688fcda67fcc8ee81edd85))
+* use d instead of debug ([142f30f](https://github.com/dxheroes/dx-scanner/commit/142f30f69dc2250a848ed0af4db6f3eb4ce96d70))
+
+
+### Features
+
+* Add logfile option\nLogfile contains information useful for debugging ([f86bf24](https://github.com/dxheroes/dx-scanner/commit/f86bf240facfcf88e306d51485e407e32ff529f4))
+
+## [3.48.8](https://github.com/dxheroes/dx-scanner/compare/v3.48.7...v3.48.8) (2021-01-11)
+
+
+### Bug Fixes
+
+* contributors count ([44ac1bb](https://github.com/dxheroes/dx-scanner/commit/44ac1bbf123979088b894710f1ae38130b6d7daf))
+* duplicate prs ([dc2dd65](https://github.com/dxheroes/dx-scanner/commit/dc2dd65acc59c8ebdf02b88246c0c6ccae385ff1))
+* entrypoint script ([4c9d3ac](https://github.com/dxheroes/dx-scanner/commit/4c9d3ac9e69ea65456775881c9b9ac4cde158551))
+
+## [3.48.7](https://github.com/dxheroes/dx-scanner/compare/v3.48.6...v3.48.7) (2021-01-08)
+
+
+### Bug Fixes
+
+* entrypoint chmod ([a8a2444](https://github.com/dxheroes/dx-scanner/commit/a8a244467fb44c8ba6c5464c7f7a6ca8f801a52d))
+* typo in entrypoint ([cdf338e](https://github.com/dxheroes/dx-scanner/commit/cdf338ee43fd76e57b82ae12f50efccf4cac7cc5))
+
 ## [3.48.6](https://github.com/dxheroes/dx-scanner/compare/v3.48.5...v3.48.6) (2021-01-05)
 
 

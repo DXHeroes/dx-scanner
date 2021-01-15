@@ -93,8 +93,14 @@ export abstract class GitignoreCorrectlySetPracticeBase extends PracticeBase {
     return this.applicableLanguages.includes(ctx.projectComponent.language);
   }
 
-  protected static checkFileInspector(ctx: PracticeContext): IFileInspector | undefined {
-    const inspector = ctx.fileInspector?.basePath ? ctx.fileInspector : ctx.root.fileInspector;
+  protected static async checkFileInspector(ctx: PracticeContext): Promise<IFileInspector | undefined> {
+    let inspector;
+    if (await ctx.fileInspector?.exists('.gitignore')) {
+      inspector = ctx.fileInspector;
+    } else {
+      //gitignore correctly set practice depends on gitignore is present practice - so we know there is a gitignore somewhere
+      inspector = ctx.root.fileInspector;
+    }
     // if (!inspector) {
     // TODO: Log this?
     // }
@@ -106,7 +112,7 @@ export abstract class GitignoreCorrectlySetPracticeBase extends PracticeBase {
    * Evaluates the current component by checking whether each `check` in `this.ruleChecks` matches at least one rule in the parsed `.gitignore` rules.
    */
   async evaluate(ctx: PracticeContext): Promise<PracticeEvaluationResult> {
-    const fileInspector = GitignoreCorrectlySetPracticeBase.checkFileInspector(ctx);
+    const fileInspector = await GitignoreCorrectlySetPracticeBase.checkFileInspector(ctx);
     if (!fileInspector) {
       return PracticeEvaluationResult.unknown;
     }
@@ -129,7 +135,7 @@ export abstract class GitignoreCorrectlySetPracticeBase extends PracticeBase {
    * Fixes the `.gitignore` file by collecting `fix` fields from `this.ruleChecks` which didn't pass the check and appends them at the end of the file.
    */
   async fix(ctx: FixerContext) {
-    const fileInspector = GitignoreCorrectlySetPracticeBase.checkFileInspector(ctx);
+    const fileInspector = await GitignoreCorrectlySetPracticeBase.checkFileInspector(ctx);
     if (!fileInspector) {
       return;
     }

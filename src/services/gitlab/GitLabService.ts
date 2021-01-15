@@ -1,13 +1,16 @@
-import Debug from 'debug';
 import { inject, injectable } from 'inversify';
+import _ from 'lodash';
 import { inspect } from 'util';
 import { IVCSService, ServicePagination } from '..';
-import { IssueState, ListGetterOptions, Paginated, PullRequestState, PaginationParams } from '../../inspectors';
+import { debugLog } from '../../detectors/utils';
+import { IssueState, ListGetterOptions, Paginated, PaginationParams, PullRequestState } from '../../inspectors';
 import { ArgumentsProvider } from '../../scanner';
 import { InMemoryCache } from '../../scanner/cache';
 import { ICache } from '../../scanner/cache/ICache';
+import { RepositoryConfig } from '../../scanner/RepositoryConfig';
 import { Types } from '../../types';
 import {
+  Branch,
   Commit,
   Contributor,
   ContributorStats,
@@ -24,13 +27,9 @@ import {
   PullRequestReview,
   Symlink,
   UserInfo,
-  Branch,
 } from '../git/model';
 import { VCSServicesUtils } from '../git/VCSServicesUtils';
 import { CustomAxiosResponse, GitLabClient, PaginationGitLabCustomResponse } from './gitlabClient/gitlabUtils';
-import { RepositoryConfig } from '../../scanner/RepositoryConfig';
-import _ from 'lodash';
-const debug = Debug('cli:services:git:gitlab-service');
 
 @injectable()
 export class GitLabService implements IVCSService {
@@ -40,11 +39,13 @@ export class GitLabService implements IVCSService {
   private readonly argumentsProvider: ArgumentsProvider;
   private readonly host: string;
   private readonly repositoryConfig: RepositoryConfig;
+  private readonly d: (...args: unknown[]) => void;
 
   constructor(
     @inject(Types.ArgumentsProvider) argumentsProvider: ArgumentsProvider,
     @inject(Types.RepositoryConfig) repositoryConfig: RepositoryConfig,
   ) {
+    this.d = debugLog('cli:services:git:gitlab-service');
     this.argumentsProvider = argumentsProvider;
     this.repositoryConfig = repositoryConfig;
     this.host = repositoryConfig.host!;
@@ -412,30 +413,35 @@ export class GitLabService implements IVCSService {
   }
 
   async listContributors(owner: string, repo: string, options?: ListGetterOptions): Promise<Contributor[]> {
-    const commits = await this.getAllCommits(`${owner}/${repo}`, options?.pagination);
-    const items = await Promise.all(
-      commits
-        //filter duplicate committer names
-        .filter((commit, index, array) => array.findIndex((c) => c.committer_name === commit.committer_name) === index)
+    const contributors = await this.getAllContributors(`${owner}/${repo}`, options?.pagination);
+    //get user info and create contributor object
+    return Promise.all(
+      contributors
+        //filter duplicate committer names or committer emails - we want to make sure that we don't count some contributor twice
+        .filter(
+          (contributor, index, array) =>
+            array.findIndex((c) => {
+              return c.name === contributor.name || c.email === contributor.email;
+            }) === index,
+        )
         //get user info and create contributor object
-        .map(async (commit) => {
+        .map(async (contributor) => {
           return {
-            user: (await this.searchUser(commit.committer_email, commit.committer_name)) || {
-              login: commit.committer_name,
+            user: (await this.searchUser(contributor.email, contributor.name)) || {
+              login: contributor.name,
             },
-            contributions: commits.filter((value) => value.committer_name === commit.committer_name).length,
+            //count real number of commits
+            contributions: contributors.filter((c) => c.name === contributor.name).reduce((sum, c) => sum + c.commits, 0),
           };
         }),
     );
-    return items;
   }
-
-  private async getAllCommits(projectId: string, pagination?: PaginationParams) {
-    let response = await this.unwrap(this.client.Commits.list(projectId, pagination));
+  private async getAllContributors(projectId: string, pagination?: PaginationParams) {
+    let response = await this.unwrap(this.client.Contributors.list(projectId, pagination));
     let data = response.data;
     while (response.pagination.next) {
       const updatedPagination = _.merge(pagination, { page: response.pagination.next });
-      response = await this.unwrap(this.client.Commits.list(projectId, updatedPagination));
+      response = await this.unwrap(this.client.Contributors.list(projectId, updatedPagination));
       data = data.concat(response.data);
     }
     return data;
@@ -518,9 +524,9 @@ export class GitLabService implements IVCSService {
       })
       .catch((error) => {
         if (error.response) {
-          debug(`${error.response.status} => ${inspect(error.response.data)}`);
+          this.d(`${error.response.status} => ${inspect(error.response.data)}`);
         } else {
-          debug(inspect(error));
+          this.d(inspect(error));
         }
         throw error;
       });
@@ -532,6 +538,6 @@ export class GitLabService implements IVCSService {
    */
   private debugGitLabResponse = <T>(response: CustomAxiosResponse<T>) => {
     this.callCount++;
-    debug(`GitLab API Hit: ${this.callCount}. Remaining ${response.headers['RateLimit-Remaining']} hits.`);
+    this.d(`GitLab API Hit: ${this.callCount}. Remaining ${response.headers['RateLimit-Remaining']} hits.`);
   };
 }

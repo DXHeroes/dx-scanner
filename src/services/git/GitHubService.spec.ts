@@ -239,7 +239,7 @@ describe('GitHub Service', () => {
   });
 
   it('returns contributors in own interface', async () => {
-    new GitHubNock('1', 'octocat', 1, 'Hello-World').getContributors([
+    new GitHubNock('1', 'octocat', 1, 'Hello-World').getContributorsStats([
       { id: '251370', login: 'Spaceghost' },
       { id: '583231', login: 'octocat' },
     ]);

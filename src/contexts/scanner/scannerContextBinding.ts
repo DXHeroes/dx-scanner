@@ -1,26 +1,25 @@
 import { Container } from 'inversify';
-import { JavaScriptLanguageDetector } from '../../detectors/JavaScript/JavaScriptLanguageDetector';
-import { JavaLanguageDetector } from '../../detectors/Java/JavaLanguageDetector';
-import { ScanningStrategy } from '../../detectors/ScanningStrategyDetector';
-import { FileInspector } from '../../inspectors/FileInspector';
-import { GitInspector } from '../../inspectors/GitInspector';
-import { FileSystemService } from '../../services/FileSystemService';
-import { GitHubService } from '../../services/git/GitHubService';
-import { ScannerContextFactory, Types } from '../../types';
-import { bindLanguageContext } from '../language/languageContextBinding';
-import { ScannerContext } from './ScannerContext';
-import { BitbucketService } from '../../services/bitbucket/BitbucketService';
-import { GitLabService } from '../../services/gitlab/GitLabService';
-import { PythonLanguageDetector } from '../../detectors/Python/PythonLanguageDetector';
-import { GoLanguageDetector } from '../../detectors/Go/GoLanguageDetector';
-import { PHPLanguageDetector } from '../../detectors/PHP/PHPLanguageDetector';
-import { ArgumentsProvider } from '../../scanner';
-import { IReporter, FixReporter, JSONReporter, CLIReporter, CIReporter, HTMLReporter, DashboardReporter } from '../../reporters';
-import { ServiceType, AccessType } from '../../detectors/IScanningStrategy';
 import { BranchesCollector } from '../../collectors/BranchesCollector';
 import { ContributorsCollector } from '../../collectors/ContributorsCollector';
 import { DataCollector } from '../../collectors/DataCollector';
+import { GoLanguageDetector } from '../../detectors/Go/GoLanguageDetector';
+import { AccessType, ServiceType } from '../../detectors/IScanningStrategy';
+import { JavaLanguageDetector } from '../../detectors/Java/JavaLanguageDetector';
+import { JavaScriptLanguageDetector } from '../../detectors/JavaScript/JavaScriptLanguageDetector';
+import { PHPLanguageDetector } from '../../detectors/PHP/PHPLanguageDetector';
+import { PythonLanguageDetector } from '../../detectors/Python/PythonLanguageDetector';
 import { RustLanguageDetector } from '../../detectors/Rust/RustLanguageDetector';
+import { ScanningStrategy } from '../../detectors/ScanningStrategyDetector';
+import { FileInspector } from '../../inspectors/FileInspector';
+import { GitInspector } from '../../inspectors/GitInspector';
+import { CIReporter, CLIReporter, DashboardReporter, FixReporter, HTMLReporter, IReporter, JSONReporter } from '../../reporters';
+import { ArgumentsProvider } from '../../scanner';
+import { GitHubService, BitbucketService } from '../../services';
+import { FileSystemService } from '../../services/FileSystemService';
+import { GitLabService } from '../../services/gitlab/GitLabService';
+import { ScannerContextFactory, Types } from '../../types';
+import { bindLanguageContext } from '../language/languageContextBinding';
+import { ScannerContext } from './ScannerContext';
 
 export const bindScanningContext = (container: Container) => {
   container.bind(Types.ScannerContextFactory).toFactory(
@@ -67,7 +66,7 @@ const bindFileAccess = (scanningStrategy: ScanningStrategy, container: Container
 };
 
 const bindCollectors = (container: Container, args: ArgumentsProvider, accessType: AccessType | undefined) => {
-  if (accessType === AccessType.public || (accessType === AccessType.private && args.apiToken)) {
+  if ((accessType !== AccessType.public && args.apiToken) || accessType === AccessType.public) {
     container.bind(ContributorsCollector).toSelf().inSingletonScope();
     container.bind(BranchesCollector).toSelf().inSingletonScope();
     container.bind(DataCollector).toSelf().inSingletonScope();

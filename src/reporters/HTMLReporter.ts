@@ -10,6 +10,8 @@ import { FileSystemService, GitServiceUtils } from '../services';
 import { Types } from '../types';
 import path from 'path';
 import { ScanningStrategy } from '../detectors';
+import debug from 'debug';
+import { logfile } from '../lib/logfile';
 
 @injectable()
 export class HTMLReporter implements IReporter {
@@ -35,7 +37,7 @@ export class HTMLReporter implements IReporter {
     else reportPath = <string>this.argumentsProvider.html;
 
     await this.fileSystemService.writeFile(path.resolve(process.cwd(), reportPath), reportHTML);
-    console.log('Report was saved to ' + reportPath);
+    debug.log('Report was saved to ' + reportPath);
   }
 
   buildReport(practicesAndComponents: PracticeWithContextForReporter[]): string {
@@ -80,6 +82,9 @@ export class HTMLReporter implements IReporter {
     lines.push('We can help you with both. :-)</p>');
     lines.push('<a href="https://dxheroes.io">https://dxheroes.io</a><br />');
     lines.push('<a href="https://bit.ly/slack_developer_experience" target="_blank">Join us on Slack!</a>');
+    if (logfile.enabled) {
+      lines.push(`<p>See the debug log in the file ${logfile.fname}</p>`);
+    }
     lines.push('</div>');
 
     return `

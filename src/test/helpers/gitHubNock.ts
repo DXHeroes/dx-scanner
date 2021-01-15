@@ -124,6 +124,15 @@ export class GitHubNock {
     return body;
   }
 
+  getContributorsStats(contributors: { id: string; login: string }[], persist = true): ContributorsStats[] {
+    const url = this.repository.contributors_stats_url;
+    const code = 200;
+    const body = contributors.map(({ id, login }) => new ContributorsStats(new UserItem(id, login), 1));
+
+    GitHubNock.get(url, {}, persist).reply(code, body);
+    return body;
+  }
+
   private getContents<T>(path: string, contents: T, persist = true): T {
     const url = this.repository.contents_url.replace('{+path}', encodeURIComponent(path));
     const params = {};
@@ -211,6 +220,7 @@ export class Repository {
   compare_url: string;
   contents_url: string;
   contributors_url: string;
+  contributors_stats_url: string;
   deployments_url: string;
   downloads_url: string;
   events_url: string;
@@ -291,6 +301,7 @@ export class Repository {
     this.compare_url = `${this.url}/compare/{base}...{head}`;
     this.contents_url = `${this.url}/contents/{+path}`;
     this.contributors_url = `${this.url}/contributors`;
+    this.contributors_stats_url = `${this.url}/stats/contributors`;
     this.deployments_url = `${this.url}/deployments`;
     this.downloads_url = `${this.url}/downloads`;
     this.events_url = `${this.url}/events`;
@@ -442,6 +453,16 @@ export class UserItem {
 
 export class Contributor extends UserItem {
   contributions = 1;
+}
+
+export class ContributorsStats {
+  author: UserItem;
+  total: number;
+  weeks = [];
+  constructor(author: UserItem, total: number) {
+    this.author = author;
+    this.total = total;
+  }
 }
 
 export class BranchItem {

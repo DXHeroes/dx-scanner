@@ -12,6 +12,8 @@ import { gitLabListPullCommitsResponseFactory } from '../factories/responses/git
 import { gitLabPullRequestResponseFactory } from '../factories/responses/gitLab/prResponseFactory';
 import { gitLabRepoCommitsResponseFactory } from '../factories/responses/gitLab/repoCommitResponseFactory';
 import { gitLabRepoInfoResponseFactory } from '../factories/responses/gitLab/repoInfoResponseFactory';
+import { gitLabListContributorsResponseFactory } from '../factories/responses/gitLab/listContributorsResponseFactory';
+import { Contributor } from '../../services/gitlab/gitlabClient/resources/Contributors';
 
 export class GitLabNock {
   user: string;
@@ -268,6 +270,32 @@ export class GitLabNock {
     const response = gitLabListProjectsResponseFactory();
 
     return GitLabNock.get(baseUrl).reply(200, response);
+  }
+
+  listContributors(statusCode?: number, contributor?: Partial<Contributor>, hasNextPage = false, options?: ListGetterOptions) {
+    const encodedProjectUrl = encodeURIComponent(`${this.user}/${this.repoName}`);
+    const baseUrl = `${this.url}/projects/${encodedProjectUrl}/repository/contributors`;
+
+    const queryParams: {
+      page?: number;
+      per_page?: number;
+    } = {};
+
+    const pagination = this.pagination;
+    if (options?.pagination?.page) {
+      queryParams.page = options?.pagination?.page;
+      pagination['x-page'] = options.pagination.page.toString();
+    }
+    if (options?.pagination?.perPage) {
+      queryParams.per_page = options?.pagination?.perPage;
+      pagination['x-page'] = options.pagination.perPage.toString();
+    }
+    if (!hasNextPage) {
+      pagination['x-next-page'] = '';
+    }
+
+    const response = [gitLabListContributorsResponseFactory(contributor)];
+    return GitLabNock.get(baseUrl, queryParams).reply(statusCode || 200, response, pagination);
   }
 
   listGroups() {

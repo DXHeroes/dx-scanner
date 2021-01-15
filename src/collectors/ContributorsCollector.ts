@@ -1,7 +1,7 @@
-import { injectable, inject } from 'inversify';
-import { Types } from '../types';
-import { IVCSService, GitServiceUtils } from '../services';
+import { inject, injectable } from 'inversify';
 import { ScanningStrategy } from '../detectors';
+import { GitServiceUtils, IVCSService } from '../services';
+import { Types } from '../types';
 
 @injectable()
 export class ContributorsCollector {

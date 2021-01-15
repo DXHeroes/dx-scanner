@@ -21,6 +21,12 @@ describe('ScanningStrategyDetector', () => {
 
   describe('#detect', () => {
     it('local path without remote', async () => {
+      const nock = new GitLabNock('DXHeroes', 'dx-scanner', 'gitlab.com');
+      nock.listProjects();
+      nock.listGroups();
+      nock.checkVersion();
+      nock.getRepoResponse(404);
+
       mockedGit.mockImplementation(() => {
         return {
           checkIsRepo: () => true,
@@ -67,6 +73,12 @@ describe('ScanningStrategyDetector', () => {
     });
 
     it('local path that is not a git repository', async () => {
+      const nock = new GitLabNock('DXHeroes', 'dx-scanner', 'gitlab.com');
+      nock.listProjects();
+      nock.listGroups();
+      nock.checkVersion();
+      nock.getRepoResponse(404);
+
       mockedGit.mockImplementation(() => {
         return {
           checkIsRepo: () => false,
