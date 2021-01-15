@@ -290,16 +290,18 @@ export class GitHubService implements IVCSService {
       return response.data;
     });
 
-    return contributors.map((contributorStats) => {
-      return {
-        user: {
-          id: contributorStats.author.id.toString(),
-          login: contributorStats.author.login,
-          url: contributorStats.author.url,
-        },
-        contributions: contributorStats.total,
-      };
-    });
+    return contributors
+      .filter((contributorStats) => contributorStats.author)
+      .map((contributorStats) => {
+        return {
+          user: {
+            id: contributorStats.author.id.toString(),
+            login: contributorStats.author.login,
+            url: contributorStats.author.url,
+          },
+          contributions: contributorStats.total,
+        };
+      });
   }
 
   /**
