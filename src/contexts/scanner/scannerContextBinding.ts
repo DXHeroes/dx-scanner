@@ -1,7 +1,7 @@
 import { Container } from 'inversify';
 import { BranchesCollector } from '../../collectors/BranchesCollector';
 import { ContributorsCollector } from '../../collectors/ContributorsCollector';
-import { DataCollector } from '../../collectors/DataCollector';
+import { ServiceDataCollector } from '../../collectors/ServiceDataCollector';
 import { GoLanguageDetector } from '../../detectors/Go/GoLanguageDetector';
 import { AccessType, ServiceType } from '../../detectors/IScanningStrategy';
 import { JavaLanguageDetector } from '../../detectors/Java/JavaLanguageDetector';
@@ -66,10 +66,10 @@ const bindFileAccess = (scanningStrategy: ScanningStrategy, container: Container
 };
 
 const bindCollectors = (container: Container, args: ArgumentsProvider, accessType: AccessType | undefined) => {
-  if ((accessType !== AccessType.public && args.apiToken) || accessType === AccessType.public) {
+  if ((accessType === AccessType.private && args.apiToken) || accessType === AccessType.public) {
     container.bind(ContributorsCollector).toSelf().inSingletonScope();
     container.bind(BranchesCollector).toSelf().inSingletonScope();
-    container.bind(DataCollector).toSelf().inSingletonScope();
+    container.bind(ServiceDataCollector).toSelf().inSingletonScope();
   }
 };
 

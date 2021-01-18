@@ -5,7 +5,7 @@ import { Contributor } from '../services/git/model';
 import { ScanningStrategy } from '../detectors';
 
 @injectable()
-export class DataCollector {
+export class ServiceDataCollector {
   private readonly contributorsCollector: ContributorsCollector;
   private readonly branchesCollector: BranchesCollector;
   //TODO: add tech stack collector
@@ -16,7 +16,7 @@ export class DataCollector {
     this.contributorsCollector = contributorsCollector;
     this.branchesCollector = branchesCollector;
   }
-  async collectData(scanningStrategy: ScanningStrategy): Promise<CollectorsData> {
+  async collectData(scanningStrategy: ScanningStrategy): Promise<ServiceCollectorsData> {
     // TODO: temporary try/catch until the listBranches is implemented in all VCS connectors
     let branches = { current: 'unknown', default: 'unknown' };
     try {
@@ -29,7 +29,7 @@ export class DataCollector {
   }
 }
 
-export type CollectorsData = {
+export type ServiceCollectorsData = {
   contributors: Contributor[];
   branches: {
     default: string;
