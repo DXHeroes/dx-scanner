@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { inject, injectable } from 'inversify';
+import { inject, injectable, optional } from 'inversify';
 import * as uuid from 'uuid';
 import { DXScoreResult, ReporterUtils } from '.';
 import { ScanningStrategy } from '../detectors';
@@ -10,7 +10,7 @@ import { IReporter, PracticeWithContextForReporter } from './IReporter';
 import { PkgToUpdate } from '../practices/utils/DependenciesVersionEvaluationUtils';
 import { ServiceType } from '../detectors/IScanningStrategy';
 import { GitServiceUtils } from '../services';
-import { DataCollector, CollectorsData } from '../collectors/DataCollector';
+import { ServiceDataCollector, ServiceCollectorsData } from '../collectors/ServiceDataCollector';
 // eslint-disable-next-line @typescript-eslint/no-require-imports, @typescript-eslint/no-var-requires
 const pjson = require('../../package.json');
 
@@ -18,12 +18,12 @@ const pjson = require('../../package.json');
 export class DashboardReporter implements IReporter {
   private readonly argumentsProvider: ArgumentsProvider;
   private readonly scanningStrategy: ScanningStrategy;
-  private readonly dataCollector: DataCollector;
+  private readonly dataCollector: ServiceDataCollector | undefined;
 
   constructor(
     @inject(Types.ArgumentsProvider) argumentsProvider: ArgumentsProvider,
     @inject(Types.ScanningStrategy) scanningStrategy: ScanningStrategy,
-    @inject(DataCollector) dataCollector: DataCollector,
+    @inject(ServiceDataCollector) @optional() dataCollector: ServiceDataCollector | undefined,
   ) {
     this.argumentsProvider = argumentsProvider;
     this.scanningStrategy = scanningStrategy;
@@ -50,7 +50,7 @@ export class DashboardReporter implements IReporter {
 
     const report: DataReportDto = {
       componentsWithDxScore: [],
-      collectorsData: await this.dataCollector.collectData(this.scanningStrategy),
+      collectorsData: await this.dataCollector?.collectData(this.scanningStrategy),
       version: pjson.version,
       id: uuid.v4(),
       dxScore: { value: dxScore.value, points: dxScore.points },
@@ -101,7 +101,7 @@ export class DashboardReporter implements IReporter {
 
 export type DataReportDto = {
   componentsWithDxScore: ComponentDto[];
-  collectorsData: CollectorsData;
+  collectorsData: ServiceCollectorsData | undefined;
   version: string;
   id: string;
   dxScore: DxScoreDto;

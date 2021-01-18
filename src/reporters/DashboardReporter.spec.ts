@@ -3,7 +3,7 @@ import { argumentsProviderFactory } from '../test/factories/ArgumentsProviderFac
 import { practiceWithContextFactory } from '../test/factories/PracticeWithContextFactory';
 import { DashboardReporter } from './DashboardReporter';
 import { AccessType, ServiceType } from '../detectors/IScanningStrategy';
-import { DataCollector } from '../collectors/DataCollector';
+import { ServiceDataCollector } from '../collectors/ServiceDataCollector';
 import { repositoryConfig } from '../scanner/__MOCKS__/RepositoryConfig.mock';
 import { GitHubService } from '../services';
 import { ContributorsCollector } from '../collectors/ContributorsCollector';
@@ -26,7 +26,7 @@ describe('DashboardReporter', () => {
   const gitInspector = new GitInspector('.');
   const contributorsCollector = new ContributorsCollector(githubService);
   const branchesCollector = new BranchesCollector(githubService, gitInspector);
-  const dataCollector = new DataCollector(contributorsCollector, branchesCollector);
+  const dataCollector = new ServiceDataCollector(contributorsCollector, branchesCollector);
   const gitHubNock = new GitHubNock('1', 'DXHeroes', 1, 'dx-scanner');
 
   describe('#report', () => {
