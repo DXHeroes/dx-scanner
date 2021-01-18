@@ -1,3 +1,10 @@
+## [3.50.1](https://github.com/dxheroes/dx-scanner/compare/v3.50.0...v3.50.1) (2021-01-18)
+
+
+### Bug Fixes
+
+* make ServiceDataCollector optional ([dcd5533](https://github.com/dxheroes/dx-scanner/commit/dcd5533aa378cc92272a54d43f1c4fb2457968f0))
+
 # [3.50.0](https://github.com/dxheroes/dx-scanner/compare/v3.49.2...v3.50.0) (2021-01-15)
 
 
