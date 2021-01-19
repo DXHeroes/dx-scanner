@@ -11,6 +11,8 @@ import { PkgToUpdate } from '../practices/utils/DependenciesVersionEvaluationUti
 import { ServiceType } from '../detectors/IScanningStrategy';
 import { GitServiceUtils } from '../services';
 import { ServiceDataCollector, ServiceCollectorsData } from '../collectors/ServiceDataCollector';
+import { debugLog } from '../detectors/utils';
+import debug from 'debug';
 // eslint-disable-next-line @typescript-eslint/no-require-imports, @typescript-eslint/no-var-requires
 const pjson = require('../../package.json');
 
@@ -19,6 +21,7 @@ export class DashboardReporter implements IReporter {
   private readonly argumentsProvider: ArgumentsProvider;
   private readonly scanningStrategy: ScanningStrategy;
   private readonly dataCollector: ServiceDataCollector | undefined;
+  private readonly d: (...args: unknown[]) => void;
 
   constructor(
     @inject(Types.ArgumentsProvider) argumentsProvider: ArgumentsProvider,
@@ -28,6 +31,7 @@ export class DashboardReporter implements IReporter {
     this.argumentsProvider = argumentsProvider;
     this.scanningStrategy = scanningStrategy;
     this.dataCollector = dataCollector;
+    this.d = debugLog('DashboardReporter');
   }
 
   async report(practicesAndComponents: PracticeWithContextForReporter[]): Promise<void> {
@@ -37,9 +41,10 @@ export class DashboardReporter implements IReporter {
       await axios.post(`${this.argumentsProvider.apiUrl}/data-report`, reportData, {
         headers: this.argumentsProvider.apiToken && { Authorization: this.argumentsProvider.apiToken },
       });
-      console.log('You can see DX data in your DX account now.\n');
+      debug.log('You can see DX data in your DX account now.\n');
     } catch (error) {
-      console.error('Your DX data has not been sent to your account.\n');
+      this.d(error);
+      debug.log('Your DX data has not been sent to your account.\n');
     }
   }
 
