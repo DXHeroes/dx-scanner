@@ -1,3 +1,10 @@
+## [3.50.2](https://github.com/dxheroes/dx-scanner/compare/v3.50.1...v3.50.2) (2021-01-19)
+
+
+### Bug Fixes
+
+* add debug in dashboard reporter ([79cfc4e](https://github.com/dxheroes/dx-scanner/commit/79cfc4ee4ec17091f086255f66e4207a096d0a96))
+
 ## [3.50.1](https://github.com/dxheroes/dx-scanner/compare/v3.50.0...v3.50.1) (2021-01-18)
 
 
