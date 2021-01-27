@@ -6,7 +6,7 @@ import { PackageManagerUtils, PackageManagerType } from '../utils/PackageManager
 import shell from 'shelljs';
 
 @DxPractice({
-  id: 'LanguageIndependent.LockfileIsPresent',
+  id: 'JavaScript.LockfileIsPresent',
   name: 'Create a Lockfile',
   impact: PracticeImpact.high,
   suggestion: 'Commit a lockfile to git to have a reliable assembly across environments',
