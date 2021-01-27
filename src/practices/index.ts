@@ -1,7 +1,7 @@
 import { TypeScriptUsedPractice } from './JavaScript/TypeScriptUsedPractice';
 import { PrettierUsedPractice } from './JavaScript/PrettierUsedPractice';
 import { ESLintUsedPractice } from './JavaScript/ESLintUsedPractice';
-import { LockfileIsPresentPractice } from './PackageManagement/LockfileIsPresentPractice';
+import { JsLockfileIsPresentPractice } from './JavaScript/JsLockfileIsPresentPractice';
 import { JsFrontendTestingFrameworkUsedPractice } from './JavaScript/JsFrontendTestingFrameworkUsedPractice';
 import { JsLoggerUsedPractice } from './JavaScript/JsLoggerUsedPractice';
 import { LicenseIsPresentPractice } from './LanguageIndependent/LicenseIsPresentPractice';
@@ -49,7 +49,7 @@ export const practices = [
   PrettierUsedPractice,
   ESLintUsedPractice,
   ESLintWithoutErrorsPractice,
-  LockfileIsPresentPractice,
+  JsLockfileIsPresentPractice,
   JsFrontendTestingFrameworkUsedPractice,
   JsBackendTestingFrameworkUsedPractice,
   JsLoggerUsedPractice,

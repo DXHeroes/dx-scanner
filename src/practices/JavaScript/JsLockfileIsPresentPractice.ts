@@ -1,5 +1,5 @@
 import { IPractice } from '../IPractice';
-import { PracticeEvaluationResult, PracticeImpact } from '../../model';
+import { PracticeEvaluationResult, PracticeImpact, ProgrammingLanguage } from '../../model';
 import { DxPractice } from '../DxPracticeDecorator';
 import { PracticeContext } from '../../contexts/practice/PracticeContext';
 import { PackageManagerUtils, PackageManagerType } from '../utils/PackageManagerUtils';
@@ -13,9 +13,11 @@ import shell from 'shelljs';
   reportOnlyOnce: true,
   url: 'https://dxkb.io/p/lockfile',
 })
-export class LockfileIsPresentPractice implements IPractice {
-  async isApplicable(): Promise<boolean> {
-    return true;
+export class JsLockfileIsPresentPractice implements IPractice {
+  async isApplicable(ctx: PracticeContext): Promise<boolean> {
+    return (
+      ctx.projectComponent.language === ProgrammingLanguage.JavaScript || ctx.projectComponent.language === ProgrammingLanguage.TypeScript
+    );
   }
 
   async evaluate(ctx: PracticeContext): Promise<PracticeEvaluationResult> {
