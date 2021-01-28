@@ -5,6 +5,7 @@ import _ from 'lodash';
 import os from 'os';
 import path from 'path';
 import git from 'simple-git/promise';
+import GitUrlParse from 'git-url-parse';
 import url from 'url';
 import { inspect } from 'util';
 import { ArgumentsProvider } from '.';
@@ -187,6 +188,9 @@ export class Scanner {
         }
         if (serviceType === ServiceType.github) {
           cloneUrl.username = 'access-token';
+        }
+        if (serviceType === ServiceType.bitbucket) {
+          cloneUrl.username = GitUrlParse(this.argumentsProvider.uri).owner;
         }
       }
 

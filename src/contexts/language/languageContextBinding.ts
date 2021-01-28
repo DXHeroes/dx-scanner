@@ -22,7 +22,6 @@ import { IProjectComponentDetector } from '../../detectors/IProjectComponentDete
 import { AccessType, ScanningStrategy } from '../../detectors';
 import { ProjectFilesBrowserService } from '../../services';
 import { RustComponentDetector } from '../../detectors/Rust/RustComponentDetector';
-import { access } from 'fs';
 import { ArgumentsProvider } from '../../scanner';
 
 export const bindLanguageContext = (container: Container) => {
@@ -52,7 +51,7 @@ const createLanguageContainer = (languageAtPath: LanguageAtPath, rootContainer: 
   bindPackageInspectors(languageAtPath, container);
 
   const args = container.get<ArgumentsProvider>(Types.ArgumentsProvider);
-  if (scanningStrategy.accessType === AccessType.public || (scanningStrategy.accessType === AccessType.private && args.apiToken)) {
+  if (scanningStrategy.accessType === AccessType.public || (scanningStrategy.accessType === AccessType.private && args.auth)) {
     bindCollaborationInspectors(container);
   }
 
