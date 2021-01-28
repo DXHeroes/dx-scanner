@@ -435,7 +435,7 @@ export class BitbucketService implements IVCSService {
         url: `https://bitbucket.org/${val.repository.full_name}/commits/${val.hash}`,
         message: val.message,
         author: {
-          name: val.author.user.nickname,
+          name: val.author?.user?.nickname || this.extractNameFromString(val.author.raw), //In some cases API does not return user object so we use name from raw property
           email: this.extractEmailFromString(val.author.raw) || '',
           date: val.date,
         },
@@ -586,9 +586,9 @@ export class BitbucketService implements IVCSService {
         .map((commit) => {
           return {
             user: {
-              id: commit.author?.user?.uuid || '',
-              url: commit.author?.user?.links?.html?.href || '',
-              login: commit.author?.user?.nickname || '',
+              id: commit.author?.user?.uuid,
+              url: commit.author?.user?.links?.html?.href,
+              login: commit.author?.user?.nickname || this.extractNameFromString(commit.author?.raw),
             },
             contributions: commits.filter((value) => value.author?.user?.nickname === commit.author?.user?.nickname).length,
           };
@@ -677,6 +677,11 @@ export class BitbucketService implements IVCSService {
     const email = text.match(emailRegex);
     if (email) return email[0];
     return undefined;
+  };
+
+  private extractNameFromString = (text: string | undefined): string => {
+    if (!text) return 'Unkonwn';
+    return text.split('<')[0].trim();
   };
 }
 
