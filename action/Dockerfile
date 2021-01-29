@@ -6,7 +6,7 @@ LABEL "com.github.actions.description"="Measure Developer Experience directly ba
 LABEL "com.github.actions.icon"="user-check"
 LABEL "com.github.actions.color"="green"
 
-RUN yarn global add dx-scanner
+RUN yarn global add https://github.com/vlasy/dx-scanner#fff196679a622717cad79da4dd4d42a55653e968
 
 RUN apt-get update && apt-get install git -y --no-install-recommends
 
