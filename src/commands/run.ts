@@ -85,7 +85,7 @@ export default class Run {
     cli.log(msg);
 
     if (scanResult.shouldExitOnEnd) {
-      process.exit(1);
+      process.exit(cmd.ci ? 0 : 1); // could be written as +!cmd.ci but I'm not here to show off
     }
   }
 }
