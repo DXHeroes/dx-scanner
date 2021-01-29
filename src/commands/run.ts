@@ -79,6 +79,10 @@ export default class Run {
 
     console.info('Scan duration %ds.', hrend[0]);
 
+    console.log({scanResult});
+    console.log({cmd});
+    console.log(scanResult.shouldExitOnEnd);
+    console.log(cmd.ci);
     if (scanResult.shouldExitOnEnd) {
       process.exit(cmd.ci ? 0 : 1);
     }
