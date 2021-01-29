@@ -1,3 +1,12 @@
+## [3.50.3](https://github.com/dxheroes/dx-scanner/compare/v3.50.2...v3.50.3) (2021-01-29)
+
+
+### Bug Fixes
+
+* authors nickname ([559dc14](https://github.com/dxheroes/dx-scanner/commit/559dc149d0a0252912b04d39d33e61d61e5679f7))
+* binding logic ([a3d4ae7](https://github.com/dxheroes/dx-scanner/commit/a3d4ae70840055f1eb039b8bee9c3489e8b6491e))
+* git clone for bitbucket ([b154a76](https://github.com/dxheroes/dx-scanner/commit/b154a76b69d950973d663d66d825d249af96c481))
+
 ## [3.50.2](https://github.com/dxheroes/dx-scanner/compare/v3.50.1...v3.50.2) (2021-01-19)
 
 
