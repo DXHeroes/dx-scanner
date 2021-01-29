@@ -1,3 +1,10 @@
+# [3.51.0](https://github.com/dxheroes/dx-scanner/compare/v3.50.3...v3.51.0) (2021-01-29)
+
+
+### Features
+
+* output zero exit code when practices fail on CI ([192bd88](https://github.com/dxheroes/dx-scanner/commit/192bd88b7f677a28e0995f03a2fc75854c8aa73d))
+
 ## [3.50.3](https://github.com/dxheroes/dx-scanner/compare/v3.50.2...v3.50.3) (2021-01-29)
 
 
