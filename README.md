@@ -136,7 +136,7 @@ Options:
   --apiUrl <apiUrl>                   URL of DX Scanner API, can be set as ENV variable DXSCANNER_API_URL (default: https://provider.dxscanner.io/api/v1)
   --ci                                CI mode (default: false)
   -d --details                        print details in reports
-  --fail <impact>                     exits process with code 1 for any non-practicing condition of given level (high|medium|small|hint|off|all) (default: "high")
+  --fail <impact>                     exits process with code 1 for any non-practicing condition of given level (high|medium|small|hint|off|all) (default: "off")
   --fix                               tries to fix problems automatically (default: false)
   --fixPattern <pattern>              fix only rules with IDs matching the regex
   -j --json                           print report in JSON (default: false)

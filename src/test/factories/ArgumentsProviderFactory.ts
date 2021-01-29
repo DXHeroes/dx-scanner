@@ -9,7 +9,7 @@ export const argumentsProviderFactory = (params: Partial<ArgumentsProvider> = {}
       auth: undefined,
       json: false,
       details: false,
-      fail: PracticeImpact.high,
+      fail: PracticeImpact.off,
       recursive: true,
       ci: false,
       fix: false,
