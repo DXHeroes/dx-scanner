@@ -10,7 +10,7 @@ LABEL "com.github.actions.color"="green"
 
 RUN apt-get update && apt-get install ca-certificates git -y --no-install-recommends
 
-RUN yarn global add https://github.com/vlasy/dx-scanner#fff196679a622717cad79da4dd4d42a55653e968
+RUN yarn global add https://github.com/vlasy/dx-scanner#666cf02d8fd90a2383cedb6cba1c6cc991fa402f
 # RUN yarn global add dx-scanner
 
 # Copies your code file from your action repository to the filesystem path `/` of the container
