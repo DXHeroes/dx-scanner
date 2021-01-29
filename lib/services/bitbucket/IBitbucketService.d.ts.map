@@ -1,0 +1,1 @@
+{"version":3,"file":"IBitbucketService.d.ts","sourceRoot":"","sources":["../../../src/services/bitbucket/IBitbucketService.ts"],"names":[],"mappings":"AAAA,oBAAY,yBAAyB;IACnC,IAAI,SAAS;IACb,MAAM,WAAW;IACjB,QAAQ,aAAa;IACrB,UAAU,eAAe;CAC1B;AAED,oBAAY,mBAAmB;IAC7B,GAAG,QAAQ;IACX,MAAM,WAAW;IACjB,SAAS,cAAc;IACvB,QAAQ,aAAa;IACrB,OAAO,YAAY;CACpB"}

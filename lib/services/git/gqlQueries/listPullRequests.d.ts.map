@@ -1,0 +1,1 @@
+{"version":3,"file":"listPullRequests.d.ts","sourceRoot":"","sources":["../../../../src/services/git/gqlQueries/listPullRequests.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,yBAAyB,EAAE,MAAM,IAAI,CAAC;AAE/C,eAAO,MAAM,mBAAmB,UAAW,MAAM,QAAQ,MAAM,QAAQ,IAAI,SAAS,yBAAyB,WAClB,CAAC;AAC5F,eAAO,MAAM,qBAAqB,gBAAiB,MAAM,WAwDxD,CAAC"}

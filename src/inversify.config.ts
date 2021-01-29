@@ -67,6 +67,7 @@ export const createTestContainer = (
 
   // FileSystemService as default ProjectBrowser
   container.bind(Types.RepositoryConfig).toConstantValue(repositoryConfig);
+  console.log('bind test browser');
   container.bind(Types.IProjectFilesBrowser).toConstantValue(vfss);
   container.bind(Types.IContentRepositoryBrowser).to(GitHubService);
   container.bind(Types.IFileInspector).to(FileInspector);
@@ -85,6 +86,7 @@ export const createTestContainer = (
   const fileInspector = container.get<IFileInspector>(Types.IFileInspector);
   const issueTrackingInspector = container.get<IssueTrackingInspector>(Types.IIssueTrackingInspector);
   const collaborationInspector = container.get<CollaborationInspector>(Types.ICollaborationInspector);
+  console.log('getting fs service');
   const virtualFileSystemService = container.get<FileSystemService>(Types.IProjectFilesBrowser);
   const packageInspector = container.get<IPackageInspector>(Types.IPackageInspector);
 

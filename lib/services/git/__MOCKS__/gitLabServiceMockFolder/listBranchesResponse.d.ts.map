@@ -1,0 +1,1 @@
+{"version":3,"file":"listBranchesResponse.d.ts","sourceRoot":"","sources":["../../../../../src/services/git/__MOCKS__/gitLabServiceMockFolder/listBranchesResponse.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,SAAS,EAAE,gBAAgB,EAAE,MAAM,yCAAyC,CAAC;AACtF,OAAO,EAAE,MAAM,EAAE,MAAM,aAAa,CAAC;AAGrC,eAAO,MAAM,oBAAoB,+EAAsD,UAAU,MAAM,CAgBtG,CAAC"}

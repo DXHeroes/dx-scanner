@@ -1,0 +1,1 @@
+{"version":3,"file":"getPullRequestsResponse.d.ts","sourceRoot":"","sources":["../../../../../src/services/git/__MOCKS__/bitbucketServiceMockFolder/getPullRequestsResponse.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,SAAS,EAAE,MAAM,yCAAyC,CAAC;AACpE,OAAO,EAAE,WAAW,EAAE,MAAM,aAAa,CAAC;AAE1C,eAAO,MAAM,uBAAuB,yCAA4B,UAAU,WAAW,CAqCpF,CAAC"}

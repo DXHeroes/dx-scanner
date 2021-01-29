@@ -1,0 +1,1 @@
+{"version":3,"file":"listPullCommitsResponseFactory.d.ts","sourceRoot":"","sources":["../../../../../src/test/factories/responses/bitbucket/listPullCommitsResponseFactory.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,eAAe,EAAE,MAAM,sBAAsB,CAAC;AACvD,OAAO,SAAS,MAAM,WAAW,CAAC;AAElC,eAAO,MAAM,uCAAuC,WAAW,UAAU,MAAM,CAAC,MAAM,EAAE,KAAQ,eAS/F,CAAC"}

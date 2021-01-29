@@ -1,0 +1,1 @@
+{"version":3,"file":"listIssueComments.d.ts","sourceRoot":"","sources":["../../../../../src/services/git/__MOCKS__/gitLabServiceMockFolder/listIssueComments.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,SAAS,EAAE,gBAAgB,EAAE,MAAM,yCAAyC,CAAC;AACtF,OAAO,EAAE,YAAY,EAAE,MAAM,aAAa,CAAC;AAE3C,eAAO,MAAM,yBAAyB,qFAA4D,UAAU,YAAY,CAyBvH,CAAC"}

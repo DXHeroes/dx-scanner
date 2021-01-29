@@ -1,0 +1,1 @@
+{"version":3,"file":"versionResponseFactory.js","sourceRoot":"","sources":["../../../../../src/test/factories/responses/gitLab/versionResponseFactory.ts"],"names":[],"mappings":";;;;;;AAAA,oDAAuB;AAGV,QAAA,4BAA4B,GAAG,CAAC,MAAiC,EAAmB,EAAE;IACjG,OAAO,gBAAC,CAAC,KAAK,CAAC,EAAE,OAAO,EAAE,OAAO,EAAE,QAAQ,EAAE,QAAQ,EAAE,EAAE,MAAM,CAAC,CAAC;AACnE,CAAC,CAAC"}

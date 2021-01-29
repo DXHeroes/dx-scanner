@@ -1,0 +1,2 @@
+export declare const requirementsTXTContents = "\nconnexion == 1.1.15\nsetuptools >= 21.0.0\ntqdm>= 1.2.1\nwerkzeug==0.16.1\nrequests==2.22.0\npython-dateutil==2.6.0\nconfluent-kafka==1.3.0\nnames==0.3.0\nsshuttle==0.78.5\nfirebase-admin==3.2.1\ngoogle-cloud-vision==0.42.0\n";
+//# sourceMappingURL=requirementsTXTContents.mock.d.ts.map

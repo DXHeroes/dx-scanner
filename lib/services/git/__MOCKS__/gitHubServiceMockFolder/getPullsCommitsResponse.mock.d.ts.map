@@ -1,0 +1,1 @@
+{"version":3,"file":"getPullsCommitsResponse.mock.d.ts","sourceRoot":"","sources":["../../../../../src/services/git/__MOCKS__/gitHubServiceMockFolder/getPullsCommitsResponse.mock.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,QAAQ,EAAE,MAAM,qCAAqC,CAAC;AAE/D,eAAO,MAAM,sBAAsB;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;GA0ClC,CAAC"}

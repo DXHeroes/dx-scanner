@@ -1,0 +1,1 @@
+{"version":3,"file":"getPullCommitsResponse.d.ts","sourceRoot":"","sources":["../../../../../src/services/git/__MOCKS__/gitLabServiceMockFolder/getPullCommitsResponse.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,WAAW,EAAE,MAAM,aAAa,CAAC;AAC1C,OAAO,EAAE,SAAS,EAAE,gBAAgB,EAAE,MAAM,yCAAyC,CAAC;AAEtF,eAAO,MAAM,sBAAsB,oFAA2D,UAAU,WAAW,CAoClH,CAAC"}

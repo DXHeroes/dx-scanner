@@ -1,0 +1,1 @@
+{"version":3,"file":"listPullRequestComments.d.ts","sourceRoot":"","sources":["../../../../../src/services/git/__MOCKS__/gitLabServiceMockFolder/listPullRequestComments.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,SAAS,EAAE,gBAAgB,EAAE,MAAM,yCAAyC,CAAC;AACtF,OAAO,EAAE,kBAAkB,EAAE,MAAM,aAAa,CAAC;AAEjD,eAAO,MAAM,+BAA+B,2FAGzC,UAAU,kBAAkB,CAyB9B,CAAC"}

@@ -1,0 +1,1 @@
+{"version":3,"file":"listIssueCommentsResponseFactory.d.ts","sourceRoot":"","sources":["../../../../../src/test/factories/responses/bitbucket/listIssueCommentsResponseFactory.ts"],"names":[],"mappings":"AAAA,OAAO,SAAS,MAAM,WAAW,CAAC;AAElC,eAAO,MAAM,yCAAyC,WAC7C,UAAU,MAAM,CAAC,YAAY,EAAE,KACrC,UAAU,MAAM,CAAC,sBASnB,CAAC"}

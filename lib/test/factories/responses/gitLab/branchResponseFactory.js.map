@@ -1,0 +1,1 @@
+{"version":3,"file":"branchResponseFactory.js","sourceRoot":"","sources":["../../../../../src/test/factories/responses/gitLab/branchResponseFactory.ts"],"names":[],"mappings":";;;;;;AAAA,oDAAuB;AAGV,QAAA,2BAA2B,GAAG,CAAC,MAAuB,EAAU,EAAE;IAC7E,OAAO,gBAAC,CAAC,KAAK,CACZ;QACE,IAAI,EAAE,QAAQ;QACd,OAAO,EAAE,IAAI;KACd,EACD,MAAM,CACP,CAAC;AACJ,CAAC,CAAC"}

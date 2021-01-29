@@ -1,0 +1,1 @@
+{"version":3,"file":"getIssuesServiceResponse.mock.d.ts","sourceRoot":"","sources":["../../../../../src/services/git/__MOCKS__/gitHubServiceMockFolder/getIssuesServiceResponse.mock.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,KAAK,EAAE,MAAM,aAAa,CAAC;AACpC,OAAO,EAAE,SAAS,EAAE,MAAM,yCAAyC,CAAC;AAEpE,eAAO,MAAM,wBAAwB,EAAE,SAAS,CAAC,KAAK,CA8BrD,CAAC"}

@@ -1,0 +1,2 @@
+export declare const goModContents = "module github.com/DXheroes/dx-scanner\n\ngo 1.15\n\nrequire (\n\tgithub.com/sample/standard v1.2.3\n\tgithub.com/sample/incompatible v3.2.1+incompatible\n\tgithub.com/sample/indirect v0.0.0-20200302205851-738671d3881b // indirect\n)\n";
+//# sourceMappingURL=goModContents.mock.d.ts.map

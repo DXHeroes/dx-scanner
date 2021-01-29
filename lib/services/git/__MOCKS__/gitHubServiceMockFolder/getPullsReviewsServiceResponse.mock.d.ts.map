@@ -1,0 +1,1 @@
+{"version":3,"file":"getPullsReviewsServiceResponse.mock.d.ts","sourceRoot":"","sources":["../../../../../src/services/git/__MOCKS__/gitHubServiceMockFolder/getPullsReviewsServiceResponse.mock.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,iBAAiB,EAAE,MAAM,aAAa,CAAC;AAChD,OAAO,EAAE,SAAS,EAAE,MAAM,yCAAyC,CAAC;AAEpE,eAAO,MAAM,8BAA8B,EAAE,SAAS,CAAC,iBAAiB,CAoCvE,CAAC"}

@@ -20,10 +20,14 @@ import { ServiceType, AccessType } from '../../detectors/IScanningStrategy';
 import { BranchesCollector } from '../../collectors/BranchesCollector';
 import { ContributorsCollector } from '../../collectors/ContributorsCollector';
 import { DataCollector } from '../../collectors/DataCollector';
+import debug from 'debug';
+
+const d = debug('scanner');
 
 export const bindScanningContext = (container: Container) => {
   container.bind(Types.ScannerContextFactory).toFactory(
     (): ScannerContextFactory => {
+      d('bindScanningContext');
       return (scanningStrategy: ScanningStrategy) => {
         const scanningContextContainer = createScanningContainer(scanningStrategy, container);
         return scanningContextContainer.get(ScannerContext);
@@ -33,6 +37,7 @@ export const bindScanningContext = (container: Container) => {
 };
 
 const createScanningContainer = (scanningStrategy: ScanningStrategy, discoveryContainer: Container): Container => {
+  d('createScanningContainer');
   const container = discoveryContainer.createChild();
   container.bind(Types.ScanningStrategy).toConstantValue(scanningStrategy);
   const args = container.get<ArgumentsProvider>(Types.ArgumentsProvider);
@@ -47,6 +52,9 @@ const createScanningContainer = (scanningStrategy: ScanningStrategy, discoveryCo
 };
 
 const bindFileAccess = (scanningStrategy: ScanningStrategy, container: Container) => {
+  d('bindFileAccess');
+  d(JSON.stringify(scanningStrategy));
+  console.log({ scanningStrategy });
   if (scanningStrategy.localPath) {
     container.bind(Types.FileInspectorBasePath).toConstantValue(scanningStrategy.localPath);
     container.bind(Types.IProjectFilesBrowser).to(FileSystemService);

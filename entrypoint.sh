@@ -1,6 +1,15 @@
 #!/bin/bash
 set -e
 
+echo "1"
+echo $1
+echo "at"
+echo $@
+echo "wrksp"
+echo $GITHUB_WORKSPACE
+echo "iinput"
+echo $INPUT_PATH
+
 if [[ $1 != "${1%bash}" || $1 != "${1%sh}" ]]; then
   exec "$@"
 fi

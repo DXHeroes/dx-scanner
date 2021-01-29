@@ -1,0 +1,1 @@
+{"version":3,"file":"FixerContext.d.ts","sourceRoot":"","sources":["../../../src/contexts/fixer/FixerContext.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,eAAe,EAAE,MAAM,6BAA6B,CAAC;AAC9D,OAAO,EAAE,iBAAiB,EAAE,MAAM,eAAe,CAAC;AAClD,OAAO,EAAE,gBAAgB,EAAE,MAAM,0CAA0C,CAAC;AAE5E,MAAM,WAAW,YAAa,SAAQ,eAAe;IACnD,iBAAiB,CAAC,EAAE,iBAAiB,CAAC;IACtC,gBAAgB,CAAC,EAAE,gBAAgB,CAAC;CACrC"}

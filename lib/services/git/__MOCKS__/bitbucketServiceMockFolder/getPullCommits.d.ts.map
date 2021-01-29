@@ -1,0 +1,1 @@
+{"version":3,"file":"getPullCommits.d.ts","sourceRoot":"","sources":["../../../../../src/services/git/__MOCKS__/bitbucketServiceMockFolder/getPullCommits.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,WAAW,EAAE,MAAM,aAAa,CAAC;AAC1C,OAAO,EAAE,SAAS,EAAE,MAAM,yCAAyC,CAAC;AAEpE,eAAO,MAAM,sBAAsB,yCAA4B,UAAU,WAAW,CAwBnF,CAAC"}

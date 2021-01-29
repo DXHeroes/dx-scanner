@@ -8,7 +8,8 @@ inputs:
     description: 'Github API token (https://github.com/settings/tokens/new)'
 runs:
   using: 'docker'
-  image: 'action/Dockerfile'
+  image: 'Dockerfile'
   args:
+    - --authorization
     - ${{ inputs.github_token }}
 

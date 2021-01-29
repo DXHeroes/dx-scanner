@@ -1,0 +1,1 @@
+{"version":3,"file":"getRepoCommits.d.ts","sourceRoot":"","sources":["../../../../../src/services/git/__MOCKS__/bitbucketServiceMockFolder/getRepoCommits.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,SAAS,EAAE,MAAM,yCAAyC,CAAC;AACpE,OAAO,EAAE,MAAM,EAAE,MAAM,aAAa,CAAC;AAErC,eAAO,MAAM,cAAc,oCAAuB,UAAU,MAAM,CAgCjE,CAAC"}

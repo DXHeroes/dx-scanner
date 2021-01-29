@@ -1,0 +1,1 @@
+{"version":3,"file":"getContributorsServiceResponse.mock.js","sourceRoot":"","sources":["../../../../../src/services/git/__MOCKS__/bitbucketServiceMockFolder/getContributorsServiceResponse.mock.ts"],"names":[],"mappings":";;;AAEa,QAAA,8BAA8B,GAAkB;IAC3D;QACE,aAAa,EAAE,CAAC;QAChB,IAAI,EAAE;YACJ,EAAE,EAAE,wCAAwC;YAC5C,KAAK,EAAE,UAAU;YACjB,GAAG,EAAE,mEAAmE;SACzE;KACF;CACF,CAAC"}

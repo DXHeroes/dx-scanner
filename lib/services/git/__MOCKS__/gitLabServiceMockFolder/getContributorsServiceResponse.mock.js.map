@@ -1,0 +1,1 @@
+{"version":3,"file":"getContributorsServiceResponse.mock.js","sourceRoot":"","sources":["../../../../../src/services/git/__MOCKS__/gitLabServiceMockFolder/getContributorsServiceResponse.mock.ts"],"names":[],"mappings":";;;AAEa,QAAA,8BAA8B,GAAkB;IAC3D;QACE,aAAa,EAAE,CAAC;QAChB,IAAI,EAAE,EAAE,EAAE,EAAE,SAAS,EAAE,KAAK,EAAE,UAAU,EAAE,GAAG,EAAE,6BAA6B,EAAE;KAC/E;CACF,CAAC"}

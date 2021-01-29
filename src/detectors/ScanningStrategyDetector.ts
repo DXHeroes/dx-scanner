@@ -47,6 +47,7 @@ export class ScanningStrategyDetector implements IDetector<string, ScanningStrat
 
     const path = ScanningStrategyDetectorUtils.normalizePath(this.argumentsProvider.uri);
 
+    console.log({ path, uri: this.argumentsProvider.uri });
     try {
       serviceType = await this.determineInputType(this.repositoryConfig.remoteUrl || path);
     } catch (e) {
@@ -77,6 +78,7 @@ export class ScanningStrategyDetector implements IDetector<string, ScanningStrat
       }
     }
 
+    console.log({ localPath, rootPath });
     return {
       serviceType,
       accessType,

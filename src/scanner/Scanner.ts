@@ -64,12 +64,13 @@ export class Scanner {
 
   async scan({ determineRemote } = { determineRemote: true }): Promise<ScanResult> {
     const repositoryConfig = await this.scanStrategyExplorer.explore();
-    this.d(`Repository Config: ${inspect(repositoryConfig)}`);
+    this.d(`Resitory Config: ${inspect(repositoryConfig)}`);
 
     const discoveryContext = this.discoveryContextFactory(repositoryConfig);
 
     let scanStrategy = await discoveryContext.scanningStrategyDetector.detect();
-    this.d(`Scan strategy: ${inspect(scanStrategy)}`);
+    this.d(`Scan stgy: ${inspect(scanStrategy)}`);
+    this.d(`Scan strategy detected: ${inspect(scanStrategy)}`);
     if (determineRemote && (scanStrategy.serviceType === undefined || scanStrategy.accessType === AccessType.unknown)) {
       return {
         shouldExitOnEnd: this.shouldExitOnEnd,
@@ -80,6 +81,9 @@ export class Scanner {
     }
     const isLocal = !scanStrategy.localPath;
     scanStrategy = await this.preprocessData(scanStrategy);
+    console.error(process.env.PWD);
+    console.error(process.cwd());
+    console.error('TEST LOG');
     this.d(`Scan strategy (after preprocessing): ${inspect(scanStrategy)}`);
     const scannerContext = discoveryContext.getScanningContext(scanStrategy);
     const languagesAtPaths = await this.detectLanguagesAtPaths(scannerContext);

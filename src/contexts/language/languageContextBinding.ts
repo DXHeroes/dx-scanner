@@ -37,6 +37,7 @@ const createLanguageContainer = (languageAtPath: LanguageAtPath, rootContainer: 
   container.bind(Types.LanguageAtPath).toConstantValue(languageAtPath);
   const scanningStrategy = container.get<ScanningStrategy>(Types.ScanningStrategy);
 
+  console.log('create language container');
   const projectFilesBrowserService = container.get<ProjectFilesBrowserService>(Types.IProjectFilesBrowser);
   const fileInspector = container.get<FileInspector>(Types.IFileInspector);
   const fileInspectorForRoot = new FileInspector(projectFilesBrowserService, scanningStrategy.rootPath || fileInspector.basePath);
