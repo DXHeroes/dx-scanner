@@ -1,3 +1,11 @@
+## [3.51.1](https://github.com/dxheroes/dx-scanner/compare/v3.51.0...v3.51.1) (2021-02-01)
+
+
+### Bug Fixes
+
+* make lockfile practice only for js and ts ([660cd0b](https://github.com/dxheroes/dx-scanner/commit/660cd0b5f531d00a2d182b19634c8d3ff9e62dbd))
+* practice id ([0862f20](https://github.com/dxheroes/dx-scanner/commit/0862f200f433c592c99c9dae1c2daa9c5b88357c))
+
 # [3.51.0](https://github.com/dxheroes/dx-scanner/compare/v3.50.3...v3.51.0) (2021-01-29)
 
 
