@@ -1,5 +1,5 @@
-import { LockfileIsPresentPractice } from './LockfileIsPresentPractice';
-import { PracticeEvaluationResult } from '../../model';
+import { JsLockfileIsPresentPractice } from './JsLockfileIsPresentPractice';
+import { PracticeEvaluationResult, ProgrammingLanguage } from '../../model';
 import { TestContainerContext, createTestContainer } from '../../inversify.config';
 import shelljs from 'shelljs';
 import { sync as commandExists } from 'command-exists';
@@ -16,11 +16,11 @@ jest.mock('command-exists', () => ({
 
 describe('LockfileIsPresentPractice', () => {
   let containerCtx: TestContainerContext;
-  let practice: LockfileIsPresentPractice;
+  let practice: JsLockfileIsPresentPractice;
 
   beforeAll(() => {
     containerCtx = createTestContainer();
-    containerCtx.container.bind('LockfileIsPresentPractice').to(LockfileIsPresentPractice);
+    containerCtx.container.bind('LockfileIsPresentPractice').to(JsLockfileIsPresentPractice);
     practice = containerCtx.container.get('LockfileIsPresentPractice');
   });
 
@@ -60,9 +60,22 @@ describe('LockfileIsPresentPractice', () => {
     expect(evaluated).toEqual(PracticeEvaluationResult.unknown);
   });
 
-  it('Is always applicable', async () => {
-    const result = await practice.isApplicable();
+  it('Is applicable to JS', async () => {
+    containerCtx.practiceContext.projectComponent.language = ProgrammingLanguage.JavaScript;
+    const result = await practice.isApplicable(containerCtx.practiceContext);
     expect(result).toEqual(true);
+  });
+
+  it('Is applicable to TS', async () => {
+    containerCtx.practiceContext.projectComponent.language = ProgrammingLanguage.TypeScript;
+    const result = await practice.isApplicable(containerCtx.practiceContext);
+    expect(result).toEqual(true);
+  });
+
+  it('Is not applicable to other languages', async () => {
+    containerCtx.practiceContext.projectComponent.language = ProgrammingLanguage.Python;
+    const result = await practice.isApplicable(containerCtx.practiceContext);
+    expect(result).toEqual(false);
   });
 
   describe('fixer', () => {
