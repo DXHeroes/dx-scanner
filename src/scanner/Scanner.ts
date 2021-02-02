@@ -194,7 +194,7 @@ export class Scanner {
         }
       }
 
-      await git().silent(true).clone(cloneUrl.href, localPath);
+      await git().silent(true).clone(cloneUrl.href, localPath, { '--depth': '100' });
     }
 
     return { serviceType, accessType, remoteUrl, localPath, rootPath: rootPath || localPath, isOnline };
