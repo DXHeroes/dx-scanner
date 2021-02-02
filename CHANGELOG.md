@@ -1,3 +1,10 @@
+# [3.52.0](https://github.com/dxheroes/dx-scanner/compare/v3.51.1...v3.52.0) (2021-02-02)
+
+
+### Features
+
+* simple git clone depth set to 100 ([57abc40](https://github.com/dxheroes/dx-scanner/commit/57abc40c4a30bc5ff8093aee974cf619b932f7ab))
+
 ## [3.51.1](https://github.com/dxheroes/dx-scanner/compare/v3.51.0...v3.51.1) (2021-02-01)
 
 
