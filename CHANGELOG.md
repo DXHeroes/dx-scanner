@@ -1,3 +1,10 @@
+# [3.53.0](https://github.com/dxheroes/dx-scanner/compare/v3.52.0...v3.53.0) (2021-02-04)
+
+
+### Features
+
+* change default value of --fail flag ([7f3644e](https://github.com/dxheroes/dx-scanner/commit/7f3644eb03288433eb835b29091164d651c0e8d5))
+
 # [3.52.0](https://github.com/dxheroes/dx-scanner/compare/v3.51.1...v3.52.0) (2021-02-02)
 
 
