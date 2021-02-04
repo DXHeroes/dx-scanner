@@ -1,0 +1,151 @@
+name: Node.js CI
+
+on: push
+
+jobs:
+  install:
+    name: Install dependencies
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os:
+          - ubuntu-latest
+          - windows-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/cache@v1
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+      - name: Use Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '12'
+      - run: yarn install
+  build:
+    name: Build dx-scanner
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [10.x, 12.x, 14.x, 15.x]
+    needs: install
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/cache@v1
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v2
+        with:
+          node-version: ${{ matrix.node-version }}
+      - run: yarn build
+  test:
+    name: Tests
+    runs-on: ubuntu-latest
+    needs: install
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/cache@v1
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+      - name: Use Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '12'
+      - run: yarn test --coverage
+      - run: bin/run --help
+      - run: yarn test:codecov:upload
+      - run: bin/run run . --fail=high
+  linter:
+    name: Lint
+    runs-on: ubuntu-latest
+    needs: install
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/cache@v1
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+      - name: Use Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '12'
+      - run: yarn lint
+      - run: yarn codecov
+  live-test:
+    name: Live tests
+    if: github.ref == 'refs/heads/master' # run only on master
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os:
+          - ubuntu-latest
+          - windows-latest
+    needs: [build, test, linter]
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/cache@v1
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+      - name: Use Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '12'
+      - run: npm -g i .
+      - run: dx-scanner run https://github.com/DXHeroes/dx-scanner --fail=off
+  release:
+    name: Release NPM Package
+    runs-on: ubuntu-latest
+    needs: live-test
+    steps:
+      - name: Use Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: 'lts/*'
+      - run: npx semantic-release
+  docker:
+    name: Build and publish Github Action
+    if: github.ref == 'refs/heads/master' && github.event_name == 'push' # run only on master push
+    runs-on: ubuntu-latest
+    needs: live-test
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/cache@v1
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+        env:
+          CONTAINER_NAME: docker.pkg.github.com/dxheroes/dx-scanner/release
+      - name: Use Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '12'
+      - name: Login to DockerHub
+        uses: docker/login-action@v1
+        with:
+          username: dxheroes
+          password: ${{ secrets.DOCKER_GITHUB_PASSWORD }}
+      - name: Build and push
+        id: docker_build
+        uses: docker/build-push-action@v2
+        with:
+          push: true
+          tags: $CONTAINER_NAME
+          file: Dockerfile.github-action
+      - name: Image digest
+        run: echo ${{ steps.docker_build.outputs.digest }}
