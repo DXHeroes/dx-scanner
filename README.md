@@ -17,6 +17,7 @@
 [![All Contributors](https://img.shields.io/badge/all_contributors-5-orange.svg)](#contributors-)
 [![NPM](https://img.shields.io/npm/l/dx-scanner)](LICENSE)
 ![TypeScript](https://img.shields.io/badge/%3C%2F%3E-Typescript-blue)
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2FDXHeroes%2Fdx-scanner.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2FDXHeroes%2Fdx-scanner?ref=badge_shield)
 
 ---
 
@@ -332,6 +333,9 @@ See our [public roadmap](https://roadmap.dxheroes.io).
 ## License 📝
 
 The DX Scanner open source project is licensed under the [MIT](LICENSE).
+
+
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2FDXHeroes%2Fdx-scanner.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2FDXHeroes%2Fdx-scanner?ref=badge_large)
 
 ## Contributors ✨
 
