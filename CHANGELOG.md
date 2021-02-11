@@ -1,3 +1,15 @@
+# [3.54.0](https://github.com/dxheroes/dx-scanner/compare/v3.53.0...v3.54.0) (2021-02-11)
+
+
+### Bug Fixes
+
+* disable release GH action for now ([8446a11](https://github.com/dxheroes/dx-scanner/commit/8446a11bf093a689b58ade59fdfabde6068473d0))
+
+
+### Features
+
+* add GH actions build ([17bfed9](https://github.com/dxheroes/dx-scanner/commit/17bfed9e171965fd406bcfeba48c3fb33ee176b9))
+
 # [3.53.0](https://github.com/dxheroes/dx-scanner/compare/v3.52.0...v3.53.0) (2021-02-04)
 
 
