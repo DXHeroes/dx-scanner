@@ -55,7 +55,7 @@
     "memfs": "3.2.0",
     "moment": "2.29.1",
     "node-filter-async": "2.0.0",
-    "npm-check-updates": "10.2.5",
+    "npm-check-updates": "11.1.9",
     "prettier-default-config": "0.2.3",
     "properties": "1.2.1",
     "qs": "6.9.4",
