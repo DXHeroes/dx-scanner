@@ -1,3 +1,11 @@
+## [3.54.2](https://github.com/dxheroes/dx-scanner/compare/v3.54.1...v3.54.2) (2021-03-01)
+
+
+### Bug Fixes
+
+* **deps:** update commitlint monorepo to v12 ([ac6da4a](https://github.com/dxheroes/dx-scanner/commit/ac6da4ad364dc6e7e9f7dd834d35c32a56460992))
+* **deps:** update dependency npm-check-updates to v11 ([04e0cb8](https://github.com/dxheroes/dx-scanner/commit/04e0cb899639ff353667442b08d768377132526d))
+
 ## [3.54.1](https://github.com/dxheroes/dx-scanner/compare/v3.54.0...v3.54.1) (2021-02-26)
 
 
