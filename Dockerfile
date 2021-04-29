@@ -1,4 +1,4 @@
-FROM node:12-slim
+FROM node:12.16-alpine
 
 RUN apk update && apk add  -q \
  ca-certificates \

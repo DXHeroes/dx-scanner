@@ -142,6 +142,8 @@ export class CIReporter implements IReporter {
   private async detectConfiguration(): Promise<CIReporterConfig | undefined> {
     // eslint-disable-next-line no-process-env
     const ev = process.env;
+    this.d('Detecting CI environment');
+    this.d(ev);
 
     if (ev.TRAVIS && ev.TRAVIS_REPO_SLUG) {
       // detect Travis config
