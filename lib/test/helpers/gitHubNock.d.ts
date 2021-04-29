@@ -35,6 +35,10 @@ export declare class GitHubNock {
         id: string;
         login: string;
     }[], persist?: boolean): Contributor[];
+    getContributorsStats(contributors: {
+        id: string;
+        login: string;
+    }[], persist?: boolean): ContributorsStats[];
     private getContents;
     private getPullsInternal;
     getCommits(persist?: boolean): nock.Interceptor;
@@ -64,6 +68,7 @@ export declare class Repository {
     compare_url: string;
     contents_url: string;
     contributors_url: string;
+    contributors_stats_url: string;
     deployments_url: string;
     downloads_url: string;
     events_url: string;
@@ -181,6 +186,12 @@ export declare class UserItem {
 }
 export declare class Contributor extends UserItem {
     contributions: number;
+}
+export declare class ContributorsStats {
+    author: UserItem;
+    total: number;
+    weeks: never[];
+    constructor(author: UserItem, total: number);
 }
 export declare class BranchItem {
     label: string;

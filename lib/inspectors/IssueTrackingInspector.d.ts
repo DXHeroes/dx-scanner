@@ -1,8 +1,8 @@
-import { IIssueTrackingInspector, IssueState } from './IIssueTrackingInspector';
-import { Paginated } from './common/Paginated';
-import { Issue, IssueComment } from '../services/git/model';
-import { VCSService } from '../model';
 import { ListGetterOptions } from '.';
+import { VCSService } from '../model';
+import { Issue, IssueComment } from '../services/git/model';
+import { Paginated } from './common/Paginated';
+import { IIssueTrackingInspector, IssueState } from './IIssueTrackingInspector';
 export declare class IssueTrackingInspector implements IIssueTrackingInspector {
     private service;
     private cache;

@@ -54,6 +54,7 @@ export declare enum ProgrammingLanguage {
     Haskell = "Haskell",
     Elixir = "Elixir",
     Python = "Python",
+    Rust = "Rust",
     UNKNOWN = "UNKNOWN"
 }
 export declare type CLIArgs = {

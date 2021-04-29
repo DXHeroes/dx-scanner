@@ -5,6 +5,7 @@ import { Branch } from '../../services/gitlab/gitlabClient/resources/Branches';
 import { Commit, MergeRequest } from '../../services/gitlab/gitlabClient/resources/MergeRequests';
 import { Project } from '../../services/gitlab/gitlabClient/resources/Projects';
 import { GitLabIssueState, GitLabPullRequestState } from '../../services/gitlab/IGitLabService';
+import { Contributor } from '../../services/gitlab/gitlabClient/resources/Contributors';
 export declare class GitLabNock {
     user: string;
     repoName: string;
@@ -30,6 +31,7 @@ export declare class GitLabNock {
     listPullRequestCommentsResponse(prNumber: number, options?: ListGetterOptions): nock.Scope;
     getRepoResponse(statusCode?: number, project?: Partial<Project>): nock.Scope;
     listProjects(): nock.Scope;
+    listContributors(statusCode?: number, contributor?: Partial<Contributor>, hasNextPage?: boolean, options?: ListGetterOptions): nock.Scope;
     listGroups(): nock.Scope;
     checkVersion(): nock.Interceptor;
     listBranchesResponse(issues: Branch[], options?: ListGetterOptions<{

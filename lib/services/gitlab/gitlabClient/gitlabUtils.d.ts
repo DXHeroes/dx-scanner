@@ -8,6 +8,7 @@ import { Projects } from './resources/Projects';
 import { Users } from './resources/UsersOrGroups';
 import { Version } from './resources/Version';
 import { Branches } from './resources/Branches';
+import { Contributors } from './resources/Contributors';
 interface Constructor {
     new (...args: any): any;
 }
@@ -32,7 +33,8 @@ export declare const GitLabClient: Bundle<{
     Users: typeof Users;
     Version: typeof Version;
     Branches: typeof Branches;
-}, "MergeRequests" | "Issues" | "Commits" | "Projects" | "Users" | "Version" | "Branches">;
+    Contributors: typeof Contributors;
+}, "MergeRequests" | "Issues" | "Commits" | "Projects" | "Users" | "Version" | "Branches" | "Contributors">;
 export declare type GitLabClient = InstanceType<typeof GitLabClient>;
 export declare const parseResponse: <T>(response: AxiosResponse<T>) => CustomAxiosResponse<T>;
 export interface PaginationGitLabCustomResponse {

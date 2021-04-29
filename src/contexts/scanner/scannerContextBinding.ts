@@ -24,7 +24,7 @@ import { ScannerContext } from './ScannerContext';
 export const bindScanningContext = (container: Container) => {
   container.bind(Types.ScannerContextFactory).toFactory(
     (): ScannerContextFactory => {
-      d('bindScanningContext');
+      //d('bindScanningContext');
       return (scanningStrategy: ScanningStrategy) => {
         const scanningContextContainer = createScanningContainer(scanningStrategy, container);
         return scanningContextContainer.get(ScannerContext);
@@ -34,7 +34,7 @@ export const bindScanningContext = (container: Container) => {
 };
 
 const createScanningContainer = (scanningStrategy: ScanningStrategy, discoveryContainer: Container): Container => {
-  d('createScanningContainer');
+  //d('createScanningContainer');
   const container = discoveryContainer.createChild();
   container.bind(Types.ScanningStrategy).toConstantValue(scanningStrategy);
   const args = container.get<ArgumentsProvider>(Types.ArgumentsProvider);
@@ -49,8 +49,8 @@ const createScanningContainer = (scanningStrategy: ScanningStrategy, discoveryCo
 };
 
 const bindFileAccess = (scanningStrategy: ScanningStrategy, container: Container) => {
-  d('bindFileAccess');
-  d(JSON.stringify(scanningStrategy));
+  //d('bindFileAccess');
+  //d(JSON.stringify(scanningStrategy));
   console.log({ scanningStrategy });
   if (scanningStrategy.localPath) {
     container.bind(Types.FileInspectorBasePath).toConstantValue(scanningStrategy.localPath);

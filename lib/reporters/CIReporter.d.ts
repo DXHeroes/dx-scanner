@@ -1,10 +1,10 @@
-import { IReporter, PracticeWithContextForReporter } from './IReporter';
+import { ScanningStrategy } from '../detectors';
 import { ArgumentsProvider } from '../scanner';
-import { GitHubService, BitbucketService } from '../services';
+import { RepositoryConfig } from '../scanner/RepositoryConfig';
+import { BitbucketService, GitHubService } from '../services';
 import { CreatedUpdatedPullRequestComment } from '../services/git/model';
 import { GitLabService } from '../services/gitlab/GitLabService';
-import { RepositoryConfig } from '../scanner/RepositoryConfig';
-import { ScanningStrategy } from '../detectors';
+import { IReporter, PracticeWithContextForReporter } from './IReporter';
 export declare class CIReporter implements IReporter {
     private readonly argumentsProvider;
     private readonly repositoryConfig;

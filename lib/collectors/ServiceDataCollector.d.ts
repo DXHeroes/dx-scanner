@@ -2,17 +2,17 @@ import { ContributorsCollector } from './ContributorsCollector';
 import { BranchesCollector } from './BranchesCollector';
 import { Contributor } from '../services/git/model';
 import { ScanningStrategy } from '../detectors';
-export declare class DataCollector {
+export declare class ServiceDataCollector {
     private readonly contributorsCollector;
     private readonly branchesCollector;
     constructor(contributorsCollector: ContributorsCollector, branchesCollector: BranchesCollector);
-    collectData(scanningStrategy: ScanningStrategy): Promise<CollectorsData>;
+    collectData(scanningStrategy: ScanningStrategy): Promise<ServiceCollectorsData>;
 }
-export declare type CollectorsData = {
+export declare type ServiceCollectorsData = {
     contributors: Contributor[];
     branches: {
         default: string;
         current: string;
     };
 };
-//# sourceMappingURL=DataCollector.d.ts.map
+//# sourceMappingURL=ServiceDataCollector.d.ts.map

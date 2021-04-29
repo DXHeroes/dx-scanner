@@ -1,12 +1,12 @@
 import { PracticeEvaluationResult } from '../../model';
 import { PracticeContext } from '../../contexts/practice/PracticeContext';
-import { PracticeBase } from '../PracticeBase';
-import { FixerContext } from '../../contexts/fixer/FixerContext';
-export declare class TsGitignoreCorrectlySetPractice extends PracticeBase {
-    private parsedGitignore;
-    isApplicable(ctx: PracticeContext): Promise<boolean>;
+import { GitignoreCorrectlySetPracticeBase } from '../common/GitignoreCorrectlySetPracticeBase';
+export declare class TsGitignoreCorrectlySetPractice extends GitignoreCorrectlySetPracticeBase {
+    private tsconfig;
+    private tsconfigOutdir;
+    private tsconfigOutfile;
+    constructor();
     evaluate(ctx: PracticeContext): Promise<PracticeEvaluationResult>;
-    fix(ctx: FixerContext): Promise<void>;
-    private setData;
+    protected setData(): void;
 }
 //# sourceMappingURL=TsGitignoreCorrectlySetPractice.d.ts.map

@@ -1,11 +1,11 @@
 import { Schema } from 'bitbucket';
 import { Response } from 'bitbucket/src/request/types';
 import { IVCSService } from '..';
-import { ArgumentsProvider } from '../../scanner';
-import { ListGetterOptions, PullRequestState, Paginated } from '../../inspectors';
+import { ListGetterOptions, Paginated, PullRequestState } from '../../inspectors';
 import { IssueState } from '../../inspectors/IIssueTrackingInspector';
-import { PullRequest, PullFiles, PullCommits, Issue, IssueComment, PullRequestReview, Commit, PullRequestComment, CreatedUpdatedPullRequestComment, Contributor, ContributorStats, Symlink, File, Directory, Branch } from '../git/model';
+import { ArgumentsProvider } from '../../scanner';
 import { RepositoryConfig } from '../../scanner/RepositoryConfig';
+import { Branch, Commit, Contributor, ContributorStats, CreatedUpdatedPullRequestComment, Directory, File, Issue, IssueComment, PullCommits, PullFiles, PullRequest, PullRequestComment, PullRequestReview, Symlink } from '../git/model';
 export declare class BitbucketService implements IVCSService {
     private client;
     private readonly argumentsProvider;
@@ -73,6 +73,7 @@ export declare class BitbucketService implements IVCSService {
         perPage: number;
     };
     private extractEmailFromString;
+    private extractNameFromString;
 }
 export interface BitbucketCommit {
     next: string;

@@ -1,5 +1,5 @@
-import { IFileInspector } from './IFileInspector';
 import { Metadata, ProjectFilesBrowserService } from '../services/model';
+import { IFileInspector } from './IFileInspector';
 export declare class FileInspector implements IFileInspector {
     readonly basePath: string | undefined;
     private projectFilesBrowser;

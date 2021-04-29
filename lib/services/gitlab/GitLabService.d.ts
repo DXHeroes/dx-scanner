@@ -1,9 +1,9 @@
 import { IVCSService } from '..';
 import { IssueState, ListGetterOptions, Paginated, PullRequestState } from '../../inspectors';
 import { ArgumentsProvider } from '../../scanner';
-import { Commit, Contributor, ContributorStats, CreatedUpdatedPullRequestComment, Directory, File, Issue, IssueComment, Lines, PullCommits, PullFiles, PullRequest, PullRequestComment, PullRequestReview, Symlink, Branch } from '../git/model';
-import { CustomAxiosResponse } from './gitlabClient/gitlabUtils';
 import { RepositoryConfig } from '../../scanner/RepositoryConfig';
+import { Branch, Commit, Contributor, ContributorStats, CreatedUpdatedPullRequestComment, Directory, File, Issue, IssueComment, Lines, PullCommits, PullFiles, PullRequest, PullRequestComment, PullRequestReview, Symlink } from '../git/model';
+import { CustomAxiosResponse } from './gitlabClient/gitlabUtils';
 export declare class GitLabService implements IVCSService {
     private client;
     private cache;
@@ -11,6 +11,7 @@ export declare class GitLabService implements IVCSService {
     private readonly argumentsProvider;
     private readonly host;
     private readonly repositoryConfig;
+    private readonly d;
     constructor(argumentsProvider: ArgumentsProvider, repositoryConfig: RepositoryConfig);
     purgeCache(): void;
     checkVersion(): Promise<import("./gitlabClient/resources/Version").VersionResponse>;
@@ -53,7 +54,7 @@ export declare class GitLabService implements IVCSService {
     listRepos(): Promise<import("./gitlabClient/resources/Projects").Project[]>;
     listGroups(): Promise<import("./gitlabClient/resources/UsersOrGroups").Group[]>;
     listContributors(owner: string, repo: string, options?: ListGetterOptions): Promise<Contributor[]>;
-    private getAllCommits;
+    private getAllContributors;
     listContributorsStats(owner: string, repo: string): Promise<Paginated<ContributorStats>>;
     getRepoContent(owner: string, repo: string, path: string): Promise<File | Symlink | Directory | null>;
     getPullsDiffStat(owner: string, repo: string, prNumber: number): Promise<Lines>;

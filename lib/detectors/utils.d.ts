@@ -6,4 +6,5 @@ export declare const fileNameRegExp: (name: string) => RegExp;
  */
 export declare const sharedSubpath: (paths: string[]) => string;
 export declare const hasOneOfPackages: (packages: string[], packageManagement?: PackageManagement | undefined) => boolean;
+export declare const debugLog: (namespace: string) => (...args: unknown[]) => void;
 //# sourceMappingURL=utils.d.ts.map

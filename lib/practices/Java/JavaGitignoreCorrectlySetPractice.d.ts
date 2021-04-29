@@ -1,8 +1,10 @@
-import { IPractice } from '../IPractice';
+import { PracticeEvaluationResult } from '../../model';
 import { PracticeContext } from '../../contexts/practice/PracticeContext';
-export declare class JavaGitignoreCorrectlySetPractice implements IPractice {
-    isApplicable(ctx: PracticeContext): Promise<boolean>;
-    evaluate(ctx: PracticeContext): ReturnType<IPractice['evaluate']>;
-    private resolveGitignorePractice;
+import { GitignoreCorrectlySetPracticeBase } from '../common/GitignoreCorrectlySetPracticeBase';
+export declare class JavaGitignoreCorrectlySetPractice extends GitignoreCorrectlySetPracticeBase {
+    private javaArchitecture;
+    constructor();
+    evaluate(ctx: PracticeContext): Promise<PracticeEvaluationResult>;
+    protected setData(): void;
 }
 //# sourceMappingURL=JavaGitignoreCorrectlySetPractice.d.ts.map

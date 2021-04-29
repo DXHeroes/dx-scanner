@@ -5,8 +5,8 @@ declare class DXScannerCommand {
     private static notifyUpdate;
 }
 export default DXScannerCommand;
-export * from './reporters/DashboardReporter';
+export { ServiceCollectorsData as CollectorsData } from './collectors/ServiceDataCollector';
 export { ServiceType } from './detectors';
-export { CollectorsData } from './collectors/DataCollector';
-export { ProgrammingLanguage, ProjectComponent, ProjectComponentPlatform, ProjectComponentFramework, ProjectComponentType } from './model';
+export { ProgrammingLanguage, ProjectComponent, ProjectComponentFramework, ProjectComponentPlatform, ProjectComponentType } from './model';
+export * from './reporters/DashboardReporter';
 //# sourceMappingURL=index.d.ts.map

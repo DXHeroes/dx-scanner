@@ -1,5 +1,5 @@
-import { IVCSService } from '../services';
 import { ScanningStrategy } from '../detectors';
+import { IVCSService } from '../services';
 export declare class ContributorsCollector {
     private readonly contentRepositoryBrowser;
     constructor(contentRepositoryBrowser: IVCSService);

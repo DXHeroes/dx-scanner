@@ -4,18 +4,19 @@ import { ProjectComponent } from '../model';
 import { ArgumentsProvider } from '../scanner';
 import { IReporter, PracticeWithContextForReporter } from './IReporter';
 import { ServiceType } from '../detectors/IScanningStrategy';
-import { DataCollector, CollectorsData } from '../collectors/DataCollector';
+import { ServiceDataCollector, ServiceCollectorsData } from '../collectors/ServiceDataCollector';
 export declare class DashboardReporter implements IReporter {
     private readonly argumentsProvider;
     private readonly scanningStrategy;
     private readonly dataCollector;
-    constructor(argumentsProvider: ArgumentsProvider, scanningStrategy: ScanningStrategy, dataCollector: DataCollector);
+    private readonly d;
+    constructor(argumentsProvider: ArgumentsProvider, scanningStrategy: ScanningStrategy, dataCollector: ServiceDataCollector | undefined);
     report(practicesAndComponents: PracticeWithContextForReporter[]): Promise<void>;
     buildReport(practicesAndComponents: PracticeWithContextForReporter[]): Promise<DataReportDto>;
 }
 export declare type DataReportDto = {
     componentsWithDxScore: ComponentDto[];
-    collectorsData: CollectorsData;
+    collectorsData: ServiceCollectorsData | undefined;
     version: string;
     id: string;
     dxScore: DxScoreDto;

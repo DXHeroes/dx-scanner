@@ -1,11 +1,10 @@
-/// <reference types="debug" />
 import { IInitiable } from '../../lib/IInitable';
 import { IPackageInspector, Package, PackageOptions, PackageVersion } from '../IPackageInspector';
 export declare abstract class PackageInspectorBase implements IPackageInspector, IInitiable {
     packages: Package[] | undefined;
     abstract init(): Promise<void>;
     abstract hasLockfile(): boolean | undefined;
-    protected debug: debug.Debugger;
+    protected debug: (...args: unknown[]) => void;
     constructor();
     hasPackageManagement(): boolean;
     findPackages(searchTerm: string | RegExp): Package[];
