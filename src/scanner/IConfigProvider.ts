@@ -32,7 +32,7 @@ enum Practices {
   'JavaScript.TypeScriptUsedPractice' = 'JavaScript.TypeScriptUsedPractice',
   'JavaScript.PrettierUsedPractice' = 'JavaScript.PrettierUsedPractice',
   'JavaScript.ESLintUsedPractice' = 'JavaScript.ESLintUsedPractice',
-  'LanguageIndependent.LockfileIsPresentPractice' = 'LanguageIndependent.LockfileIsPresentPractice',
+  'JavaScript.LockfileIsPresentPractice' = 'JavaScript.LockfileIsPresentPractice',
   'JavaScript.JsFrontendTestingFrameworkUsedPractice' = 'JavaScript.JsFrontendTestingFrameworkUsedPractice',
   'JavaScript.JsBackendTestingFrameworkUsedPractice' = 'JavaScript.JsBackendTestingFrameworkUsedPractice',
   'JavaScript.JsLoggerUsedPractice' = 'JavaScript.JsLoggerUsedPractice',

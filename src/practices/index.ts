@@ -1,7 +1,7 @@
 import { TypeScriptUsedPractice } from './JavaScript/TypeScriptUsedPractice';
 import { PrettierUsedPractice } from './JavaScript/PrettierUsedPractice';
 import { ESLintUsedPractice } from './JavaScript/ESLintUsedPractice';
-import { LockfileIsPresentPractice } from './PackageManagement/LockfileIsPresentPractice';
+import { JsLockfileIsPresentPractice } from './JavaScript/JsLockfileIsPresentPractice';
 import { JsFrontendTestingFrameworkUsedPractice } from './JavaScript/JsFrontendTestingFrameworkUsedPractice';
 import { JsLoggerUsedPractice } from './JavaScript/JsLoggerUsedPractice';
 import { LicenseIsPresentPractice } from './LanguageIndependent/LicenseIsPresentPractice';
@@ -41,6 +41,7 @@ import { JavaLog4JConfiguredPractice } from './Java/JavaLog4JConfiguredPractice'
 import { JavaPropertiesUsedPractice } from './Java/JavaPropertiesUsedPractice';
 import { GoLinterUsedPractice } from './Go/GoLinterUsedPractice';
 import { PHPLinterUsedPractice } from './PHP/PHPLinterUsedPractice';
+import { RustGitignoreCorrectlySetPractice } from './Rust/RustGitignoreCorrectlySetPractice';
 
 // register practices here
 export const practices = [
@@ -48,7 +49,7 @@ export const practices = [
   PrettierUsedPractice,
   ESLintUsedPractice,
   ESLintWithoutErrorsPractice,
-  LockfileIsPresentPractice,
+  JsLockfileIsPresentPractice,
   JsFrontendTestingFrameworkUsedPractice,
   JsBackendTestingFrameworkUsedPractice,
   JsLoggerUsedPractice,
@@ -87,4 +88,5 @@ export const practices = [
   JavaPropertiesUsedPractice,
   GoLinterUsedPractice,
   PHPLinterUsedPractice,
+  RustGitignoreCorrectlySetPractice,
 ];

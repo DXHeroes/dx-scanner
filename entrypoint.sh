@@ -1,25 +1,17 @@
 #!/bin/bash
 set -e
 
-echo "1"
-echo $1
-echo "at"
-echo $@
-echo "wrksp"
-echo $GITHUB_WORKSPACE
-echo "iinput"
-echo $INPUT_PATH
-
-if [[ $1 != "${1%bash}" || $1 != "${1%sh}" ]]; then
-  exec "$@"
+if [ "$#" -eq 0 ] || [ "${1#-}" != "$1" ]; then
+  echo dx-scanner run --ci -r $@
+  set -- dx-scanner run --ci -r "$@"
 fi
 
 echo "Run DX Scanner"
 
 if [[ $1 != "${1#dx-scanner}" || $1 != "${1#dxs}" || $1 != "${1#dxscanner}" ]]; then
+  echo  $@
+  exec "$@"
+fi
+
   echo $@
   exec "$@"
-else
-  echo dx-scanner run --ci -r $@
-  exec dx-scanner run --ci -r "$@"
-fi

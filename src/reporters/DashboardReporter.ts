@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { inject, injectable } from 'inversify';
+import { inject, injectable, optional } from 'inversify';
 import * as uuid from 'uuid';
 import { DXScoreResult, ReporterUtils } from '.';
 import { ScanningStrategy } from '../detectors';
@@ -10,7 +10,9 @@ import { IReporter, PracticeWithContextForReporter } from './IReporter';
 import { PkgToUpdate } from '../practices/utils/DependenciesVersionEvaluationUtils';
 import { ServiceType } from '../detectors/IScanningStrategy';
 import { GitServiceUtils } from '../services';
-import { DataCollector, CollectorsData } from '../collectors/DataCollector';
+import { ServiceDataCollector, ServiceCollectorsData } from '../collectors/ServiceDataCollector';
+import { debugLog } from '../detectors/utils';
+import debug from 'debug';
 // eslint-disable-next-line @typescript-eslint/no-require-imports, @typescript-eslint/no-var-requires
 const pjson = require('../../package.json');
 
@@ -18,16 +20,18 @@ const pjson = require('../../package.json');
 export class DashboardReporter implements IReporter {
   private readonly argumentsProvider: ArgumentsProvider;
   private readonly scanningStrategy: ScanningStrategy;
-  private readonly dataCollector: DataCollector;
+  private readonly dataCollector: ServiceDataCollector | undefined;
+  private readonly d: (...args: unknown[]) => void;
 
   constructor(
     @inject(Types.ArgumentsProvider) argumentsProvider: ArgumentsProvider,
     @inject(Types.ScanningStrategy) scanningStrategy: ScanningStrategy,
-    @inject(DataCollector) dataCollector: DataCollector,
+    @inject(ServiceDataCollector) @optional() dataCollector: ServiceDataCollector | undefined,
   ) {
     this.argumentsProvider = argumentsProvider;
     this.scanningStrategy = scanningStrategy;
     this.dataCollector = dataCollector;
+    this.d = debugLog('DashboardReporter');
   }
 
   async report(practicesAndComponents: PracticeWithContextForReporter[]): Promise<void> {
@@ -37,9 +41,10 @@ export class DashboardReporter implements IReporter {
       await axios.post(`${this.argumentsProvider.apiUrl}/data-report`, reportData, {
         headers: this.argumentsProvider.apiToken && { Authorization: this.argumentsProvider.apiToken },
       });
-      console.log('You can see DX data in your DX account now.\n');
+      debug.log('You can see DX data in your DX account now.\n');
     } catch (error) {
-      console.error('Your DX data has not been sent to your account.\n');
+      this.d(error);
+      debug.log('Your DX data has not been sent to your account.\n');
     }
   }
 
@@ -50,7 +55,7 @@ export class DashboardReporter implements IReporter {
 
     const report: DataReportDto = {
       componentsWithDxScore: [],
-      collectorsData: await this.dataCollector.collectData(this.scanningStrategy),
+      collectorsData: await this.dataCollector?.collectData(this.scanningStrategy),
       version: pjson.version,
       id: uuid.v4(),
       dxScore: { value: dxScore.value, points: dxScore.points },
@@ -88,7 +93,8 @@ export class DashboardReporter implements IReporter {
         securityIssues,
         updatedDependencies,
         linterIssues,
-        pullRequests,
+        //Remove duplicate prs
+        pullRequests: pullRequests.filter((pr: PullRequestDto, index: number, array: PullRequestDto[]) => array.indexOf(pr) === index),
       };
 
       report.componentsWithDxScore.push(componentWithScore);
@@ -100,7 +106,7 @@ export class DashboardReporter implements IReporter {
 
 export type DataReportDto = {
   componentsWithDxScore: ComponentDto[];
-  collectorsData: CollectorsData;
+  collectorsData: ServiceCollectorsData | undefined;
   version: string;
   id: string;
   dxScore: DxScoreDto;

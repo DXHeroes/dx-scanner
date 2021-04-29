@@ -1,22 +1,19 @@
 FROM node:12-slim
 
-LABEL maintainer="Prokop Simek, Adéla Homolová"
-LABEL "com.github.actions.name"="DX Scanner Action"
-LABEL "com.github.actions.description"="Measure Developer Experience directly based on your source code. DX Scanner recommends practices that can help you with improving your product development."
-LABEL "com.github.actions.icon"="user-check"
-LABEL "com.github.actions.color"="green"
+RUN apk update && apk add  -q \
+ ca-certificates \
+ git
 
-# ENV DEBUG scanner
+RUN yarn global add https://github.com/vlasy/dx-scanner#666cf02d8fd90a2383cedb6cba1c6cc991fa402f \
+ && dx-scanner --version
 
-RUN apt-get update && apt-get install ca-certificates git -y --no-install-recommends
-
-RUN yarn global add https://github.com/vlasy/dx-scanner#666cf02d8fd90a2383cedb6cba1c6cc991fa402f
-# RUN yarn global add dx-scanner
+RUN mkdir /usr/app
+WORKDIR /usr/app
 
 # Copies your code file from your action repository to the filesystem path `/` of the container
-COPY entrypoint.sh /entrypoint.sh
-RUN chmod +x /entrypoint.sh
+COPY entrypoint.sh /usr/app/entrypoint.sh
 
+RUN chmod +x /usr/app/entrypoint.sh
 
 # Code file to execute when the docker container starts up (`entrypoint.sh`)
-ENTRYPOINT ["/entrypoint.sh"]
+ENTRYPOINT ["/usr/app/entrypoint.sh"]

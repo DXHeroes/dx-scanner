@@ -1,4 +1,3 @@
-import debug from 'debug';
 import { ESLint } from 'eslint';
 import yaml from 'js-yaml';
 import _ from 'lodash';
@@ -6,6 +5,7 @@ import * as nodePath from 'path';
 import shell from 'shelljs';
 import { FixerContext } from '../../contexts/fixer/FixerContext';
 import { PracticeContext } from '../../contexts/practice/PracticeContext';
+import { debugLog } from '../../detectors/utils';
 import { PracticeEvaluationResult, PracticeImpact, ProgrammingLanguage } from '../../model';
 import { LinterIssueDto, LinterIssueSeverity } from '../../reporters';
 import { PracticeConfig } from '../../scanner/IConfigProvider';
@@ -54,7 +54,7 @@ export class ESLintWithoutErrorsPractice extends PracticeBase {
       });
       lintFilesPatterns = _.merge(lintFilesPatterns, lintFilesPatternsOverride);
     }
-    const securityVulnerabilitiesPracticeDebug = debug('ESLintWithoutErrorsPractice');
+    const securityVulnerabilitiesPracticeDebug = debugLog('ESLintWithoutErrorsPractice');
 
     // Get the eslint config and ignore for a component.
     const eslintConfig = await ctx.fileInspector.scanFor(/\.eslintrc/, '/', { shallow: true });
@@ -67,7 +67,7 @@ export class ESLintWithoutErrorsPractice extends PracticeBase {
     };
 
     if (eslintConfig.length > 0) {
-      let baseConfig, content;
+      let baseConfig;
       const packageManager = await PackageManagerUtils.getPackageManagerInstalled(ctx.fileInspector);
 
       if (packageManager === PackageManagerType.unknown) {
@@ -77,7 +77,7 @@ export class ESLintWithoutErrorsPractice extends PracticeBase {
         this.setData([]);
         return PracticeEvaluationResult.unknown;
       }
-
+      //install dependencies
       shell.cd(ctx.fileInspector?.basePath);
 
       const npmCmd = 'npm install';
@@ -92,8 +92,14 @@ export class ESLintWithoutErrorsPractice extends PracticeBase {
       }
 
       try {
-        // eslint-disable-next-line @typescript-eslint/no-require-imports
-        baseConfig = require(nodePath.resolve(ctx.fileInspector.basePath!, eslintConfig[0].path));
+        //load config file according to its extension
+        if (eslintConfig[0].extension === '.yml' || eslintConfig[0].extension === '.yaml') {
+          baseConfig = yaml.load(await ctx.fileInspector.readFile(eslintConfig[0].path));
+        } else {
+          // eslint-disable-next-line @typescript-eslint/no-require-imports
+          baseConfig = require(nodePath.resolve(ctx.fileInspector.basePath!, eslintConfig[0].path));
+        }
+
         const plugins = _.clone(baseConfig.plugins);
 
         _.unset(baseConfig, 'plugins');
@@ -101,16 +107,18 @@ export class ESLintWithoutErrorsPractice extends PracticeBase {
         options = {
           ...options,
           baseConfig,
-          overrideConfig: { plugins, ignorePatterns },
+          overrideConfig: {
+            plugins,
+            ignorePatterns,
+            //make sure that eslint knows path to tsconfig
+            parserOptions: { tsconfigRootDir: ctx.fileInspector.basePath },
+          },
           overrideConfigFile: eslintConfig[0].path,
           resolvePluginsRelativeTo: `${ctx.fileInspector.basePath}/node_modules`,
         };
       } catch (error) {
-        const eSLintWithoutErrorsPracticeDebug = debug('ESLintWithoutErrorsPractice');
+        const eSLintWithoutErrorsPracticeDebug = debugLog('ESLintWithoutErrorsPractice');
         eSLintWithoutErrorsPracticeDebug(`Loading .eslintrc file failed with this error: ${error.stack}`);
-
-        content = await ctx.fileInspector.readFile(eslintConfig[0].path);
-        baseConfig = yaml.safeLoad(content);
       }
     }
 

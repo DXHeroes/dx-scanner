@@ -1,13 +1,15 @@
 /* eslint-disable no-process-env */
-import 'reflect-metadata';
 import * as commander from 'commander';
-import Run from './commands/run';
-import { PracticeImpact } from './model';
+import _ from 'lodash';
+import 'reflect-metadata';
+import updateNotifier from 'update-notifier';
 import Init from './commands/init';
 import Practices from './commands/practices';
-import _ from 'lodash';
-import updateNotifier from 'update-notifier';
+import Run from './commands/run';
+import { debugLog } from './detectors/utils';
 import { errorHandler } from './lib/errors';
+import { enableLogfile, logfile } from './lib/logfile';
+import { PracticeImpact } from './model';
 // eslint-disable-next-line @typescript-eslint/no-require-imports, @typescript-eslint/no-var-requires
 const pjson = require('../package.json');
 
@@ -20,6 +22,10 @@ class DXScannerCommand {
       .version(pjson.version)
       .name('dx-scanner')
       .usage('[command] [options] ')
+      .option('-l --log', 'Write a debug and dxs output log to ./dxscanner.log', () => {
+        enableLogfile();
+        logfile.log(`DX Scanner execution log\nLocal time: ${new Date().toLocaleTimeString()}\nUTC: ${new Date().toUTCString()}\n`);
+      })
       .on('--help', () => {
         console.log('');
         console.log('Aliases:');
@@ -89,7 +95,7 @@ class DXScannerCommand {
 
   private static validateFailInput = (value: string | undefined) => {
     if (value && !_.includes(PracticeImpact, value)) {
-      console.error('Invalid value for --fail: %s\nValid values are: %s\n', value, Object.keys(PracticeImpact).concat('all').join(', '));
+      debugLog('error')(`Invalid value for --fail: ${value}\nValid values are: ${Object.keys(PracticeImpact).concat('all').join(', ')}\n`);
       process.exit(1);
     }
 
@@ -105,7 +111,7 @@ process.on('uncaughtException', errorHandler);
 
 export default DXScannerCommand;
 
-export * from './reporters/DashboardReporter';
+export { ServiceCollectorsData as CollectorsData } from './collectors/ServiceDataCollector';
 export { ServiceType } from './detectors';
-export { CollectorsData } from './collectors/DataCollector';
-export { ProgrammingLanguage, ProjectComponent, ProjectComponentPlatform, ProjectComponentFramework, ProjectComponentType } from './model';
+export { ProgrammingLanguage, ProjectComponent, ProjectComponentFramework, ProjectComponentPlatform, ProjectComponentType } from './model';
+export * from './reporters/DashboardReporter';

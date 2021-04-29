@@ -1,10 +1,7 @@
 import { GoGitignoreCorrectlySetPractice } from './GoGitignoreCorrectlySetPractice';
 import { gitignoreContent } from '../../detectors/__MOCKS__/Go/gitignoreContent.mock';
 import { PracticeEvaluationResult } from '../../model';
-import {
-  TestContainerContext,
-  createTestContainer,
-} from '../../inversify.config';
+import { TestContainerContext, createTestContainer } from '../../inversify.config';
 
 const basicGitignore = `*.exe\n*.exe~\n*.dll\n*.so\n*.dylib\n*.test\n*.out\n`;
 
@@ -14,9 +11,7 @@ describe('GoGitignoreCorrectlySetPractice', () => {
 
   beforeAll(() => {
     containerCtx = createTestContainer();
-    containerCtx.container
-      .bind('GoGitignoreCorrectlySetPractice')
-      .to(GoGitignoreCorrectlySetPractice);
+    containerCtx.container.bind('GoGitignoreCorrectlySetPractice').to(GoGitignoreCorrectlySetPractice);
     practice = containerCtx.container.get('GoGitignoreCorrectlySetPractice');
   });
 
@@ -59,19 +54,14 @@ describe('GoGitignoreCorrectlySetPractice', () => {
 
     it('Appends to .gitignore if entry is missing', async () => {
       containerCtx.virtualFileSystemService.setFileSystem({
-        '.gitignore':
-          '*.exe\n*.exe~\n*.dll\n*.so\n*.dylib\n*.test\n*.out\n',
+        '.gitignore': '*.exe\n*.exe~\n*.dll\n*.so\n*.dylib\n*.test\n*.out\n',
       });
 
       await practice.evaluate(containerCtx.practiceContext);
       await practice.fix(containerCtx.fixerContext);
 
-      const fixedGitignore = await containerCtx.virtualFileSystemService.readFile(
-        '.gitignore',
-      );
-      expect(fixedGitignore).toBe(
-        '*.exe\n*.exe~\n*.dll\n*.so\n*.dylib\n*.test\n*.out\n',
-      );
+      const fixedGitignore = await containerCtx.virtualFileSystemService.readFile('.gitignore');
+      expect(fixedGitignore).toBe('*.exe\n*.exe~\n*.dll\n*.so\n*.dylib\n*.test\n*.out\n');
     });
   });
 });

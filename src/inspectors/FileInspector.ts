@@ -1,12 +1,12 @@
-import { IFileInspector } from './IFileInspector';
-import { Metadata, MetadataType, ProjectFilesBrowserService } from '../services/model';
-import debug from 'debug';
-import { injectable, optional, inject } from 'inversify';
-import { Types } from '../types';
+import { inject, injectable, optional } from 'inversify';
 import * as nodePath from 'path';
+import { debugLog } from '../detectors/utils';
 import { ICache } from '../scanner/cache/ICache';
 import { InMemoryCache } from '../scanner/cache/InMemoryCache';
 import { FileSystemService } from '../services';
+import { Metadata, MetadataType, ProjectFilesBrowserService } from '../services/model';
+import { Types } from '../types';
+import { IFileInspector } from './IFileInspector';
 
 @injectable()
 export class FileInspector implements IFileInspector {
@@ -116,7 +116,7 @@ export class FileInspector implements IFileInspector {
         }
       }
 
-      debug(`Scanning for ${fileName.toString()} in ${path}`);
+      debugLog(`Scanning for ${fileName.toString()} in ${path}`);
       if (options.ignoreSubPaths) {
         options.ignoreSubPaths.forEach((pathToIgnore) => {
           if (path.startsWith(this.normalizePath(pathToIgnore))) {

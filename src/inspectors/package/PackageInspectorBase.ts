@@ -1,7 +1,7 @@
-import { debug } from 'debug';
 import { injectable } from 'inversify';
 import { intersection } from 'lodash';
 import { coerce, valid } from 'semver';
+import { debugLog } from '../../detectors/utils';
 import { IInitiable } from '../../lib/IInitable';
 import { IPackageInspector, Package, PackageOptions, PackageVersion } from '../IPackageInspector';
 
@@ -10,10 +10,10 @@ export abstract class PackageInspectorBase implements IPackageInspector, IInitia
   packages: Package[] | undefined;
   abstract init(): Promise<void>;
   abstract hasLockfile(): boolean | undefined;
-  protected debug: debug.Debugger;
+  protected debug: (...args: unknown[]) => void;
 
   constructor() {
-    this.debug = debug('package-inspector');
+    this.debug = debugLog('package-inspector');
   }
 
   hasPackageManagement(): boolean {

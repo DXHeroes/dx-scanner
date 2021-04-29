@@ -69,8 +69,9 @@ describe('TimeToSolveIssuesPractice', () => {
     expect(response).toBe(true);
   });
 
-  it('returns unknown if there is no issueTrackingInspector', async () => {
-    const evaluated = await practice.evaluate({ ...containerCtx.practiceContext, issueTrackingInspector: undefined });
-    expect(evaluated).toEqual(PracticeEvaluationResult.unknown);
+  it('throw error if there is no issueTrackingInspector', async () => {
+    await expect(practice.evaluate({ ...containerCtx.practiceContext, issueTrackingInspector: undefined })).rejects.toThrow(
+      'You probably provided bad acess token to your repository or did not provided at all.',
+    );
   });
 });

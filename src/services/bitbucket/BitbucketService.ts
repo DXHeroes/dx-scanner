@@ -1,43 +1,43 @@
-import { Bitbucket, APIClient, Schema, Params } from 'bitbucket';
-import { Response } from 'bitbucket/src/request/types';
+import axios from 'axios';
+import { APIClient, Bitbucket, Params, Schema } from 'bitbucket';
 import { AuthBasic } from 'bitbucket/src/plugins/auth/types';
+import { Response } from 'bitbucket/src/request/types';
 import { grey } from 'colors';
-import Debug from 'debug';
 import GitUrlParse from 'git-url-parse';
 import { inject, injectable } from 'inversify';
-import { inspect } from 'util';
-import axios from 'axios';
 import qs from 'qs';
+import { inspect } from 'util';
 import { IVCSService } from '..';
-import { ArgumentsProvider } from '../../scanner';
-import { ICache } from '../../scanner/cache/ICache';
-import { Types } from '../../types';
-import { ListGetterOptions, PullRequestState, Paginated } from '../../inspectors';
+import { debugLog } from '../../detectors/utils';
+import { ListGetterOptions, Paginated, PullRequestState } from '../../inspectors';
 import { IssueState } from '../../inspectors/IIssueTrackingInspector';
+import { DeepRequired } from '../../lib/deepRequired';
+import { ArgumentsProvider } from '../../scanner';
+import { InMemoryCache } from '../../scanner/cache';
+import { ICache } from '../../scanner/cache/ICache';
+import { RepositoryConfig } from '../../scanner/RepositoryConfig';
+import { Types } from '../../types';
 import {
-  PullRequest,
-  PullFiles,
-  PullCommits,
-  Issue,
-  IssueComment,
-  PullRequestReview,
+  Branch,
   Commit,
-  PullRequestComment,
-  CreatedUpdatedPullRequestComment,
   Contributor,
   ContributorStats,
-  Symlink,
-  File,
+  CreatedUpdatedPullRequestComment,
   Directory,
-  Branch,
+  File,
+  Issue,
+  IssueComment,
+  PullCommits,
+  PullFiles,
+  PullRequest,
+  PullRequestComment,
+  PullRequestReview,
+  Symlink,
 } from '../git/model';
 import { VCSServicesUtils } from '../git/VCSServicesUtils';
-import { DeepRequired } from '../../lib/deepRequired';
-import { InMemoryCache } from '../../scanner/cache';
-import { BitbucketPullRequestState, BitbucketIssueState } from './IBitbucketService';
-import { RepositoryConfig } from '../../scanner/RepositoryConfig';
+import { BitbucketIssueState, BitbucketPullRequestState } from './IBitbucketService';
 
-const debug = Debug('cli:services:git:bitbucket-service');
+const d = debugLog('cli:services:git:bitbucket-service');
 
 @injectable()
 export class BitbucketService implements IVCSService {
@@ -435,7 +435,7 @@ export class BitbucketService implements IVCSService {
         url: `https://bitbucket.org/${val.repository.full_name}/commits/${val.hash}`,
         message: val.message,
         author: {
-          name: val.author.user.nickname,
+          name: val.author?.user?.nickname || this.extractNameFromString(val.author.raw), //In some cases API does not return user object so we use name from raw property
           email: this.extractEmailFromString(val.author.raw) || '',
           date: val.date,
         },
@@ -586,9 +586,9 @@ export class BitbucketService implements IVCSService {
         .map((commit) => {
           return {
             user: {
-              id: commit.author?.user?.uuid || '',
-              url: commit.author?.user?.links?.html?.href || '',
-              login: commit.author?.user?.nickname || '',
+              id: commit.author?.user?.uuid,
+              url: commit.author?.user?.links?.html?.href,
+              login: commit.author?.user?.nickname || this.extractNameFromString(commit.author?.raw),
             },
             contributions: commits.filter((value) => value.author?.user?.nickname === commit.author?.user?.nickname).length,
           };
@@ -647,9 +647,9 @@ export class BitbucketService implements IVCSService {
       })
       .catch((error) => {
         if (error.response) {
-          debug(`${error.response.status} => ${inspect(error.response.data)}`);
+          d(`${error.response.status} => ${inspect(error.response.data)}`);
         } else {
-          debug(inspect(error));
+          d(inspect(error));
         }
         throw error;
       });
@@ -657,7 +657,7 @@ export class BitbucketService implements IVCSService {
 
   private debugBitbucketResponse = <T>(response: Response<T>) => {
     this.callCount++;
-    debug(
+    d(
       grey(`Bitbucket API Hit: ${this.callCount}. Remaining ${response.headers['x-ratelimit-remaining']} hits. (${response.headers.link})`),
     );
   };
@@ -677,6 +677,11 @@ export class BitbucketService implements IVCSService {
     const email = text.match(emailRegex);
     if (email) return email[0];
     return undefined;
+  };
+
+  private extractNameFromString = (text: string | undefined): string => {
+    if (!text) return 'Unkonwn';
+    return text.split('<')[0].trim();
   };
 }
 

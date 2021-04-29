@@ -1,3 +1,218 @@
+## [3.54.2](https://github.com/dxheroes/dx-scanner/compare/v3.54.1...v3.54.2) (2021-03-01)
+
+
+### Bug Fixes
+
+* **deps:** update commitlint monorepo to v12 ([ac6da4a](https://github.com/dxheroes/dx-scanner/commit/ac6da4ad364dc6e7e9f7dd834d35c32a56460992))
+* **deps:** update dependency npm-check-updates to v11 ([04e0cb8](https://github.com/dxheroes/dx-scanner/commit/04e0cb899639ff353667442b08d768377132526d))
+
+## [3.54.1](https://github.com/dxheroes/dx-scanner/compare/v3.54.0...v3.54.1) (2021-02-26)
+
+
+### Bug Fixes
+
+* **deps:** update dependency commander to v7 ([8613552](https://github.com/dxheroes/dx-scanner/commit/86135525ecd39e9b38d34a9953f599cddea7b2fc))
+
+# [3.54.0](https://github.com/dxheroes/dx-scanner/compare/v3.53.0...v3.54.0) (2021-02-11)
+
+
+### Bug Fixes
+
+* disable release GH action for now ([8446a11](https://github.com/dxheroes/dx-scanner/commit/8446a11bf093a689b58ade59fdfabde6068473d0))
+
+
+### Features
+
+* add GH actions build ([17bfed9](https://github.com/dxheroes/dx-scanner/commit/17bfed9e171965fd406bcfeba48c3fb33ee176b9))
+
+# [3.53.0](https://github.com/dxheroes/dx-scanner/compare/v3.52.0...v3.53.0) (2021-02-04)
+
+
+### Features
+
+* change default value of --fail flag ([7f3644e](https://github.com/dxheroes/dx-scanner/commit/7f3644eb03288433eb835b29091164d651c0e8d5))
+
+# [3.52.0](https://github.com/dxheroes/dx-scanner/compare/v3.51.1...v3.52.0) (2021-02-02)
+
+
+### Features
+
+* simple git clone depth set to 100 ([57abc40](https://github.com/dxheroes/dx-scanner/commit/57abc40c4a30bc5ff8093aee974cf619b932f7ab))
+
+## [3.51.1](https://github.com/dxheroes/dx-scanner/compare/v3.51.0...v3.51.1) (2021-02-01)
+
+
+### Bug Fixes
+
+* make lockfile practice only for js and ts ([660cd0b](https://github.com/dxheroes/dx-scanner/commit/660cd0b5f531d00a2d182b19634c8d3ff9e62dbd))
+* practice id ([0862f20](https://github.com/dxheroes/dx-scanner/commit/0862f200f433c592c99c9dae1c2daa9c5b88357c))
+
+# [3.51.0](https://github.com/dxheroes/dx-scanner/compare/v3.50.3...v3.51.0) (2021-01-29)
+
+
+### Features
+
+* output zero exit code when practices fail on CI ([192bd88](https://github.com/dxheroes/dx-scanner/commit/192bd88b7f677a28e0995f03a2fc75854c8aa73d))
+
+## [3.50.3](https://github.com/dxheroes/dx-scanner/compare/v3.50.2...v3.50.3) (2021-01-29)
+
+
+### Bug Fixes
+
+* authors nickname ([559dc14](https://github.com/dxheroes/dx-scanner/commit/559dc149d0a0252912b04d39d33e61d61e5679f7))
+* binding logic ([a3d4ae7](https://github.com/dxheroes/dx-scanner/commit/a3d4ae70840055f1eb039b8bee9c3489e8b6491e))
+* git clone for bitbucket ([b154a76](https://github.com/dxheroes/dx-scanner/commit/b154a76b69d950973d663d66d825d249af96c481))
+
+## [3.50.2](https://github.com/dxheroes/dx-scanner/compare/v3.50.1...v3.50.2) (2021-01-19)
+
+
+### Bug Fixes
+
+* add debug in dashboard reporter ([79cfc4e](https://github.com/dxheroes/dx-scanner/commit/79cfc4ee4ec17091f086255f66e4207a096d0a96))
+
+## [3.50.1](https://github.com/dxheroes/dx-scanner/compare/v3.50.0...v3.50.1) (2021-01-18)
+
+
+### Bug Fixes
+
+* make ServiceDataCollector optional ([dcd5533](https://github.com/dxheroes/dx-scanner/commit/dcd5533aa378cc92272a54d43f1c4fb2457968f0))
+
+# [3.50.0](https://github.com/dxheroes/dx-scanner/compare/v3.49.2...v3.50.0) (2021-01-15)
+
+
+### Bug Fixes
+
+* bugs ([#513](https://github.com/dxheroes/dx-scanner/issues/513)) ([206ca29](https://github.com/dxheroes/dx-scanner/commit/206ca292234e6baee39a4200cf3fe67971a75aa7))
+* update condition for binding collectors ([362defc](https://github.com/dxheroes/dx-scanner/commit/362defc7e172a381ad63406912a535e6148dcac3))
+* version ([c7c3d1f](https://github.com/dxheroes/dx-scanner/commit/c7c3d1fa5589bb801e17de1b4f28d808f6a44340))
+
+
+### Features
+
+* upgrade libs ([f0571cf](https://github.com/dxheroes/dx-scanner/commit/f0571cf0a120a3fc56f31c8b5b904bce5f0d8054))
+
+## [3.49.3](https://github.com/dxheroes/dx-scanner/compare/v3.49.2...v3.49.3) (2021-01-15)
+
+
+### Bug Fixes
+
+* bugs ([#513](https://github.com/dxheroes/dx-scanner/issues/513)) ([206ca29](https://github.com/dxheroes/dx-scanner/commit/206ca292234e6baee39a4200cf3fe67971a75aa7))
+* update condition for binding collectors ([362defc](https://github.com/dxheroes/dx-scanner/commit/362defc7e172a381ad63406912a535e6148dcac3))
+* version ([c7c3d1f](https://github.com/dxheroes/dx-scanner/commit/c7c3d1fa5589bb801e17de1b4f28d808f6a44340))
+
+## [3.49.3](https://github.com/dxheroes/dx-scanner/compare/v3.49.2...v3.49.3) (2021-01-15)
+
+## [3.49.2](https://github.com/dxheroes/dx-scanner/compare/v3.49.1...v3.49.2) (2021-01-14)
+
+
+### Bug Fixes
+
+* do not fail when services are unknown ([9db3676](https://github.com/dxheroes/dx-scanner/commit/9db3676dd2dc11abc35b6fe2d53d4ff45a31fd24))
+* try to define service first before local ([2f3c620](https://github.com/dxheroes/dx-scanner/commit/2f3c6200f11de4922b919a3f18a6aa4c9c7151ae))
+
+## [3.49.1](https://github.com/dxheroes/dx-scanner/compare/v3.49.0...v3.49.1) (2021-01-13)
+
+
+### Bug Fixes
+
+* filter git lab contributors ([68ddd72](https://github.com/dxheroes/dx-scanner/commit/68ddd723718b380049263134c9c203c82b118e4e))
+* gitignore is correctly set practice ([a047158](https://github.com/dxheroes/dx-scanner/commit/a0471589ac25af1f929d57df0ff4a63fc0829a63))
+
+# [3.49.0](https://github.com/dxheroes/dx-scanner/compare/v3.48.8...v3.49.0) (2021-01-11)
+
+
+### Bug Fixes
+
+* do not use any ([fd10a40](https://github.com/dxheroes/dx-scanner/commit/fd10a400b0c4f516c2688fcda67fcc8ee81edd85))
+* use d instead of debug ([142f30f](https://github.com/dxheroes/dx-scanner/commit/142f30f69dc2250a848ed0af4db6f3eb4ce96d70))
+
+
+### Features
+
+* Add logfile option\nLogfile contains information useful for debugging ([f86bf24](https://github.com/dxheroes/dx-scanner/commit/f86bf240facfcf88e306d51485e407e32ff529f4))
+
+## [3.48.8](https://github.com/dxheroes/dx-scanner/compare/v3.48.7...v3.48.8) (2021-01-11)
+
+
+### Bug Fixes
+
+* contributors count ([44ac1bb](https://github.com/dxheroes/dx-scanner/commit/44ac1bbf123979088b894710f1ae38130b6d7daf))
+* duplicate prs ([dc2dd65](https://github.com/dxheroes/dx-scanner/commit/dc2dd65acc59c8ebdf02b88246c0c6ccae385ff1))
+* entrypoint script ([4c9d3ac](https://github.com/dxheroes/dx-scanner/commit/4c9d3ac9e69ea65456775881c9b9ac4cde158551))
+
+## [3.48.7](https://github.com/dxheroes/dx-scanner/compare/v3.48.6...v3.48.7) (2021-01-08)
+
+
+### Bug Fixes
+
+* entrypoint chmod ([a8a2444](https://github.com/dxheroes/dx-scanner/commit/a8a244467fb44c8ba6c5464c7f7a6ca8f801a52d))
+* typo in entrypoint ([cdf338e](https://github.com/dxheroes/dx-scanner/commit/cdf338ee43fd76e57b82ae12f50efccf4cac7cc5))
+
+## [3.48.6](https://github.com/dxheroes/dx-scanner/compare/v3.48.5...v3.48.6) (2021-01-05)
+
+
+### Bug Fixes
+
+* eslintrc yml not properly loaded ([c1448de](https://github.com/dxheroes/dx-scanner/commit/c1448deabd63a98ee21e840b6148327306424943))
+
+## [3.48.5](https://github.com/dxheroes/dx-scanner/compare/v3.48.4...v3.48.5) (2021-01-05)
+
+
+### Bug Fixes
+
+* **rust component detector:** use triple equality ([5f4c2b9](https://github.com/dxheroes/dx-scanner/commit/5f4c2b96ff846ca007baca830be0abaf0765377d))
+
+## [3.48.4](https://github.com/dxheroes/dx-scanner/compare/v3.48.3...v3.48.4) (2021-01-05)
+
+
+### Bug Fixes
+
+* **deps:** update dependency js-yaml to v4 ([9139bf3](https://github.com/dxheroes/dx-scanner/commit/9139bf336f40ed53fe77eb166396889a8b33a82e))
+* **deps:** update dependency js-yaml to v4 ([e19a972](https://github.com/dxheroes/dx-scanner/commit/e19a972b4dfd1364ccefeb12c78824cc7c91bec1))
+* add authorization arg specifier ([26b21f4](https://github.com/dxheroes/dx-scanner/commit/26b21f4fbf6e8b4275e5355030a3eddbaeee5d99))
+
+## [3.48.3](https://github.com/dxheroes/dx-scanner/compare/v3.48.2...v3.48.3) (2021-01-04)
+
+
+### Bug Fixes
+
+* Dockerfile chmod for entrypoint not versioned ([7d14690](https://github.com/dxheroes/dx-scanner/commit/7d14690e0003e168576df04f695b19e1db545391))
+
+## [3.48.2](https://github.com/dxheroes/dx-scanner/compare/v3.48.1...v3.48.2) (2021-01-04)
+
+
+### Bug Fixes
+
+* **deps:** update all non-major dependencies ([72b16b4](https://github.com/dxheroes/dx-scanner/commit/72b16b47859bacbfda3d74d22c0c391d22947f15))
+
+## [3.48.1](https://github.com/dxheroes/dx-scanner/compare/v3.48.0...v3.48.1) (2020-12-16)
+
+
+### Bug Fixes
+
+* update only non breaking dependencies ([3775b4a](https://github.com/dxheroes/dx-scanner/commit/3775b4a21204876a96b1255918146540dc919252))
+* **deps:** update all non-major dependencies ([b3ed6a7](https://github.com/dxheroes/dx-scanner/commit/b3ed6a7e6956a0e00fb38002b6659fd3fe2b83bd))
+
+# [3.48.0](https://github.com/dxheroes/dx-scanner/compare/v3.47.1...v3.48.0) (2020-12-14)
+
+
+### Bug Fixes
+
+* fix some review comments ([774e718](https://github.com/dxheroes/dx-scanner/commit/774e7187e781ab70ed8640cadf92dec2eb00cfe9))
+
+
+### Features
+
+* add Rust language support and gitignore practice ([a297687](https://github.com/dxheroes/dx-scanner/commit/a297687ad1b177018ed2cc5cf490a856ea04784d))
+* refactor practices into GitignoreCorrectlySetPracticeBase ([966648f](https://github.com/dxheroes/dx-scanner/commit/966648f32931efc8bccfb08d5a875ff2d3d72ecc))
+
+## [3.47.1](https://github.com/dxheroes/dx-scanner/compare/v3.47.0...v3.47.1) (2020-12-10)
+
+
+### Bug Fixes
+
+* remove broken symlink tests ([d8cceb1](https://github.com/dxheroes/dx-scanner/commit/d8cceb1292f4df4f942848cb1aa927fe2c55564e))
+
 # [3.47.0](https://github.com/dxheroes/dx-scanner/compare/v3.46.3...v3.47.0) (2020-12-09)
 
 

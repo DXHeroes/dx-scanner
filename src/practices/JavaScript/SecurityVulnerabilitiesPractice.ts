@@ -1,12 +1,12 @@
-import debug from 'debug';
 import shell from 'shelljs';
 import { PracticeContext } from '../../contexts/practice/PracticeContext';
+import { debugLog } from '../../detectors/utils';
 import { PracticeEvaluationResult, PracticeImpact, ProgrammingLanguage } from '../../model';
 import { SecurityIssueDto, SecurityIssueSummaryDto } from '../../reporters';
 import { ReportDetailType } from '../../reporters/ReporterData';
 import { DxPractice } from '../DxPracticeDecorator';
 import { PracticeBase } from '../PracticeBase';
-import { parseYarnAudit, parseNpmAudit } from '../PracticeUtils';
+import { parseNpmAudit, parseYarnAudit } from '../PracticeUtils';
 import { PackageManagerType, PackageManagerUtils } from '../utils/PackageManagerUtils';
 
 export interface NpmAuditOutput {
@@ -14,7 +14,7 @@ export interface NpmAuditOutput {
   error?: Record<string, unknown>;
 }
 
-const securityVulnerabilitiesPracticeDebug = debug('SecurityVulnerabilitiesPractice');
+const securityVulnerabilitiesPracticeDebug = debugLog('SecurityVulnerabilitiesPractice');
 
 @DxPractice({
   id: 'JavaScript.SecurityVulnerabilities',

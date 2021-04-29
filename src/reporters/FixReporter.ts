@@ -1,4 +1,5 @@
 import { blue, bold, cyan, green, italic, red, reset, yellow } from 'colors';
+import debug from 'debug';
 import { inject, injectable } from 'inversify';
 import { keyBy } from 'lodash';
 import { ScanningStrategy } from '../detectors';
@@ -26,8 +27,7 @@ export class FixReporter implements IReporter {
     practicesAndComponents: PracticeWithContextForReporter[],
     practicesAndComponentsAfterFix: PracticeWithContextForReporter[],
   ): Promise<void> {
-    const reportString = this.buildReport(practicesAndComponents, practicesAndComponentsAfterFix);
-    console.log(reportString);
+    debug.log(this.buildReport(practicesAndComponents, practicesAndComponentsAfterFix));
   }
 
   buildReport(

@@ -1,22 +1,25 @@
 /* eslint-disable no-process-env */
-import 'reflect-metadata';
 import cli from 'cli-ux';
-import debug from 'debug';
 import { sync as commandExistsSync } from 'command-exists';
+import 'reflect-metadata';
+import { debugLog } from '../detectors/utils';
 import { createRootContainer } from '../inversify.config';
-import { Scanner, ScannerUtils } from '../scanner';
-import { CLIArgs } from '../model';
 import { ErrorFactory } from '../lib/errors/ErrorFactory';
+import { logfile } from '../lib/logfile';
+import { CLIArgs } from '../model';
+import { Scanner, ScannerUtils } from '../scanner';
 
 export default class Run {
   static async run(path = process.cwd(), cmd: CLIArgs): Promise<void> {
     if (!commandExistsSync('git')) {
-      cli.warn(
-        "'git' command dependency not installed. See https://git-scm.com/book/en/v2/Getting-Started-Installing-Git for installation instructions",
-      );
+      const msg =
+        "'git' command dependency not installed. See https://git-scm.com/book/en/v2/Getting-Started-Installing-Git for installation instructions";
+      cli.warn(msg);
+      logfile.log('warning: ' + msg);
       return;
     }
-    debug('cli')(cmd);
+    logfile.getSecrets(cmd.authorization, cmd.apiToken);
+    debugLog('cli')(cmd);
     const scanPath = path;
 
     const { json, details, fail } = cmd;
@@ -77,14 +80,16 @@ export default class Run {
 
     const hrend = process.hrtime(hrstart);
 
-    console.info('Scan duration %ds.', hrend[0]);
+    const msg = `Scan duration ${hrend[0]}s.`;
+    logfile.log(msg);
+    cli.log(msg);
 
     console.log({scanResult});
     console.log({cmd});
     console.log(scanResult.shouldExitOnEnd);
     console.log(cmd.ci);
     if (scanResult.shouldExitOnEnd) {
-      process.exit(cmd.ci ? 0 : 1);
+      process.exit(cmd.ci ? 0 : 1); // could be written as +!cmd.ci but I'm not here to show off
     }
   }
 }

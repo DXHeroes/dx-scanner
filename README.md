@@ -33,9 +33,10 @@ Java/Kotlin | ✅
 Python | ✅
 Go | ✅
 PHP | ✅
+Ruby | ✅
+Rust | ✅
 C++ | 🚧
 C# | 🚧
-Ruby | 🚧
 Android | 🚧
 Swift | 🚧
 
@@ -108,6 +109,7 @@ Usage: dx-scanner [command] [options]
 
 Options:
   -V, --version         output the version number
+  -l --log              Write a debug and dxs output log to ./dxscanner.log
   -h, --help            display help for command
 
 Commands:
@@ -134,7 +136,7 @@ Options:
   --apiUrl <apiUrl>                   URL of DX Scanner API, can be set as ENV variable DXSCANNER_API_URL (default: https://provider.dxscanner.io/api/v1)
   --ci                                CI mode (default: false)
   -d --details                        print details in reports
-  --fail <impact>                     exits process with code 1 for any non-practicing condition of given level (high|medium|small|hint|off|all) (default: "high")
+  --fail <impact>                     exits process with code 1 for any non-practicing condition of given level (high|medium|small|hint|off|all) (default: "off")
   --fix                               tries to fix problems automatically (default: false)
   --fixPattern <pattern>              fix only rules with IDs matching the regex
   -j --json                           print report in JSON (default: false)
