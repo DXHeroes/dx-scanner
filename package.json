@@ -48,7 +48,7 @@
     "git-url-parse": "11.4.3",
     "gitignore": "0.6.0",
     "gradle-to-js": "2.0.0",
-    "inquirer": "7.3.3",
+    "inquirer": "8.0.0",
     "inversify": "5.0.5",
     "js-yaml": "4.0.0",
     "lodash": "4.17.20",
