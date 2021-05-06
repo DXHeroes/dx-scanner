@@ -28,7 +28,7 @@
     "@commitlint/config-conventional": "12.0.1",
     "@commitlint/lint": "12.0.1",
     "@octokit/graphql": "4.5.8",
-    "@octokit/plugin-rest-endpoint-methods": "4.2.1",
+    "@octokit/plugin-rest-endpoint-methods": "5.1.1",
     "@octokit/rest": "18.0.9",
     "@iarna/toml": "2.2.5",
     "@types/eslint": "7.2.6",
