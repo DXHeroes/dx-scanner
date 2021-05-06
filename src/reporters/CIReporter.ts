@@ -191,7 +191,7 @@ export class CIReporter implements IReporter {
       this.d('Is Google Cloud Build');
       return {
         service: VCSServiceType.github,
-        pullRequestId: Number(ev.CLOUDBUILD_PR_NUMBER),
+        pullRequestId: parseInt(ev.CLOUDBUILD_PR_NUMBER),
         repository: {
           owner: repositoryInfo.owner,
           name: repositoryInfo.repoName,
