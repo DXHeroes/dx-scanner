@@ -1,3 +1,15 @@
+# [3.55.0](https://github.com/dxheroes/dx-scanner/compare/v3.54.2...v3.55.0) (2021-05-06)
+
+
+### Bug Fixes
+
+* use parseInt to convert PR number for Cloud Build ([f388909](https://github.com/dxheroes/dx-scanner/commit/f388909e289fa5a626c767d8e11390373bbca3bc))
+
+
+### Features
+
+* Cloud Build integration for CI Reporter ([15d9bd0](https://github.com/dxheroes/dx-scanner/commit/15d9bd09a5d4496deb8869de350302aa9da6feae))
+
 ## [3.54.2](https://github.com/dxheroes/dx-scanner/compare/v3.54.1...v3.54.2) (2021-03-01)
 
 
