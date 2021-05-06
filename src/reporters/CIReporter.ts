@@ -7,7 +7,7 @@ import { ScanningStrategyDetectorUtils } from '../detectors/utils/ScanningStrate
 import { assertNever } from '../lib/assertNever';
 import { ArgumentsProvider } from '../scanner';
 import { RepositoryConfig } from '../scanner/RepositoryConfig';
-import { BitbucketService, GitHubService, IVCSService, VCSServiceType } from '../services';
+import { BitbucketService, GitHubService, IVCSService, VCSServiceType, GitServiceUtils } from '../services';
 import { CreatedUpdatedPullRequestComment, PullRequestComment } from '../services/git/model';
 import { GitLabClient } from '../services/gitlab/gitlabClient/gitlabUtils';
 import { GitLabService } from '../services/gitlab/GitLabService';
@@ -180,6 +180,21 @@ export class CIReporter implements IReporter {
         repository: {
           owner: ev.CI_PROJECT_NAMESPACE!,
           name: ev.CI_PROJECT_NAME!,
+        },
+      };
+    } else if (ev.CLOUDBUILD_PR_NUMBER && ev.CLOUDBUILD_HEAD_REPO_URL) {
+      if (!ScanningStrategyDetectorUtils.isGitHubPath(ev.CLOUDBUILD_HEAD_REPO_URL)) {
+        this.d('Cloud Build integration works only for Github repositories');
+        return undefined;
+      }
+      const repositoryInfo = GitServiceUtils.parseUrl(ev.CLOUDBUILD_HEAD_REPO_URL);
+      this.d('Is Google Cloud Buld');
+      return {
+        service: VCSServiceType.github,
+        pullRequestId: Number(ev.CLOUDBUILD_PR_NUMBER),
+        repository: {
+          owner: repositoryInfo.owner,
+          name: repositoryInfo.repoName,
         },
       };
     } else {
