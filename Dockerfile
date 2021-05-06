@@ -4,7 +4,7 @@ RUN apk update && apk add  -q \
  ca-certificates \
  git
 
-RUN yarn global add https://github.com/vlasy/dx-scanner#f085f866 \
+RUN yarn global add https://github.com/vlasy/dx-scanner#4085dc8b \
  && dx-scanner --version
 
 RUN mkdir /usr/app
