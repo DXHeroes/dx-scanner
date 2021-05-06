@@ -43,20 +43,27 @@ Swift | 🚧
 ## Table of Contents
 
 <!-- toc -->
-* [Supported version control systems](#Which-version-control-system-can-you-use)
-* [Getting Started](#Getting-Started-)
-  * [Installation](#Installation)
-  * [Usage](#Usage)
-    * [Commands](#Commands)
-    * [Options for dx-scanner run](#options-for-dx-scanner-run)
-    * [Auto-fixer](#Auto-fixer)
-* [Supported Languages](#What-language-is-supported)
-* [Configuration](#configuration-%EF%B8%8F)
-  * [Practices](#Practices)
-  * [GitHub CI Action](#GitHub-Ci-Action)
-* [Support](#support-%EF%B8%8F-%EF%B8%8F)
-* [Contributing](#Contributing--)
-  * [Roadmap](#Roadmap)
+- [What is DX Scanner?](#what-is-dx-scanner)
+  - [What language is supported?](#what-language-is-supported)
+- [Table of Contents](#table-of-contents)
+  - [Which version control system can you use?](#which-version-control-system-can-you-use)
+- [Getting Started 🏁](#getting-started-)
+  - [Dependencies](#dependencies)
+  - [Installation](#installation)
+  - [Usage](#usage)
+    - [Commands](#commands)
+    - [Options for `dx-scanner run`](#options-for-dx-scanner-run)
+    - [Auto-fixer](#auto-fixer)
+- [Configuration ⚙️](#configuration-️)
+  - [Practices](#practices)
+  - [Github CI Action](#github-ci-action)
+  - [Google Cloud Build](#google-cloud-build)
+- [Score Computation 💯](#score-computation-)
+- [Support 🦸‍♀️ 🦸‍♂️](#support-️-️)
+- [Contributing 👩‍💻 👨‍💻](#contributing--)
+  - [Roadmap](#roadmap)
+- [License 📝](#license-)
+- [Contributors ✨](#contributors-)
 <!-- tocstop -->
 ### Which version control system can you use?
 
@@ -303,6 +310,13 @@ jobs:
 ```
 
 [Generate your Github personal token](https://github.com/settings/tokens/new) and [set it as an encrypted secret](https://help.github.com/en/actions/automating-your-workflow-with-github-actions/creating-and-using-encrypted-secrets) named `GITHUB_TOKEN`.
+
+### Google Cloud Build
+
+For the Google Cloud Build integration with Github Pull Requests, you have to define two environment variables in your `cloudbuild.yaml` file
+
+- `CLOUDBUILD_PR_NUMBER` - ID of the PR - this is the value of Cloud Build's `$_PR_NUMBER` variable - e.g. `7`
+- `CLOUDBUILD_HEAD_REPO_URL` - URL of the repository - this is the value of Cloud Build's `$_HEAD_REPO_URL` variable - e.g. `https://github.com/DXHeroes/dx-scanner/`
 
 ## Score Computation 💯
 The impact of each practice is represented by a specific value. DX Scanner uses these values to calculate the overall DX Score.
