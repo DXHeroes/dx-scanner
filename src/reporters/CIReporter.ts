@@ -188,7 +188,7 @@ export class CIReporter implements IReporter {
         return undefined;
       }
       const repositoryInfo = GitServiceUtils.parseUrl(ev.CLOUDBUILD_HEAD_REPO_URL);
-      this.d('Is Google Cloud Buld');
+      this.d('Is Google Cloud Build');
       return {
         service: VCSServiceType.github,
         pullRequestId: Number(ev.CLOUDBUILD_PR_NUMBER),
