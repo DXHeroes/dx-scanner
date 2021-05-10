@@ -3582,10 +3582,12 @@ eslint-config-prettier@7.1.0:
   resolved "https://registry.yarnpkg.com/eslint-config-prettier/-/eslint-config-prettier-7.1.0.tgz#5402eb559aa94b894effd6bddfa0b1ca051c858f"
   integrity sha512-9sm5/PxaFG7qNJvJzTROMM1Bk1ozXVTKI0buKOyb0Bsr1hrwi0H/TzxF/COtf1uxikIK8SwhX7K6zg78jAzbeA==
 
-eslint-plugin-eslint-plugin@2.3.0:
-  version "2.3.0"
-  resolved "https://registry.yarnpkg.com/eslint-plugin-eslint-plugin/-/eslint-plugin-eslint-plugin-2.3.0.tgz#1b6ffd13b74da5656e27106b79567b162984fc41"
-  integrity sha512-xER9XjfTLrAgoUzPguPKoreDGtXt2vUnwqAqdElNrkcSbl5K1rGtSOmhgbiqCb7UN4spnjNhIZplHMNWY6Kz/w==
+eslint-plugin-eslint-plugin@3.0.3:
+  version "3.0.3"
+  resolved "https://registry.yarnpkg.com/eslint-plugin-eslint-plugin/-/eslint-plugin-eslint-plugin-3.0.3.tgz#3356adec58bd4904f98001779f61eff5b7006ec8"
+  integrity sha512-vVNx9qexy0iQwqtOzzJPFAfC6j6i4L6QE//JqwJOnAC5aUHJA4yFQy56kX9JOJ2rx3iKlpTt3h/adErgbqU/SA==
+  dependencies:
+    eslint-utils "^2.1.0"
 
 eslint-plugin-prettier@3.3.0:
   version "3.3.0"
