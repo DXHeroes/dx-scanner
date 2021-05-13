@@ -1,6 +1,5 @@
 import { Paginated, PaginationParams } from '../../../../inspectors/common/Paginated';
 import { Branch } from '../../model';
-import _ from 'lodash';
 
 export const listBranchesResponse = (items?: Branch[], pagination?: PaginationParams): Paginated<Branch> => {
   const defaultItems = [

@@ -50,7 +50,7 @@ export class GitHubService implements IVCSService {
   private readonly client: Octokit;
   private cache: ICache;
   private callCount = 0;
-  private readonly graphqlWithAuth: any;
+  private readonly graphqlWithAuth: typeof graphql;
   private readonly repositoryConfig: RepositoryConfig;
 
   constructor(

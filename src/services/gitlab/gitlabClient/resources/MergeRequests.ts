@@ -173,8 +173,8 @@ export interface MergeRequest {
   merge_status: string;
   sha: string;
   merge_commit_sha: string;
-  squash_commit_sha?: any;
-  discussion_locked?: any;
+  squash_commit_sha?: string;
+  discussion_locked?: boolean;
   should_remove_source_branch?: boolean;
   force_remove_source_branch: boolean;
   reference: string;
@@ -190,7 +190,7 @@ export interface Commit {
   id: string;
   short_id: string;
   created_at: Date;
-  parent_ids: any[];
+  parent_ids: string[];
   title: string;
   message: string;
   author_name: string;
@@ -226,6 +226,6 @@ export interface Position {
   old_path: string;
   new_path: string;
   position_type: string;
-  old_line?: any;
+  old_line?: number;
   new_line: number;
 }

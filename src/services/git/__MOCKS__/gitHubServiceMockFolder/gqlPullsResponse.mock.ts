@@ -1,6 +1,6 @@
 import _ from 'lodash';
 
-export const gqlPullsResponse = (params?: any) => {
+export const gqlPullsResponse = (params?: Record<string, unknown>) => {
   return _.merge(
     {
       data: {
@@ -58,7 +58,7 @@ export const gqlPullsResponse = (params?: any) => {
   );
 };
 
-export const oneGqlPullRequest = (params?: any) => {
+export const oneGqlPullRequest = (params?: Record<string, unknown>) => {
   return _.merge(
     {
       cursor: 'Y3Vyc29yOnYyOpHODUTjBQ==',

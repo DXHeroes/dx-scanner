@@ -223,7 +223,7 @@ export class BitbucketService implements IVCSService {
     return pullRequest;
   }
 
-  async listPullRequestFiles(owner: string, repo: string, prNumber: number): Promise<Paginated<PullFiles>> {
+  async listPullRequestFiles(_owner: string, _repo: string, _prNumber: number): Promise<Paginated<PullFiles>> {
     this.authenticate();
     throw new Error('Method not implemented yet.');
   }
@@ -414,7 +414,7 @@ export class BitbucketService implements IVCSService {
     return { items, ...pagination };
   }
 
-  async listPullRequestReviews(owner: string, repo: string, prNumber: number): Promise<Paginated<PullRequestReview>> {
+  async listPullRequestReviews(_owner: string, _repo: string, _prNumber: number): Promise<Paginated<PullRequestReview>> {
     this.authenticate();
     throw new Error('Method not implemented yet.');
   }
@@ -596,12 +596,12 @@ export class BitbucketService implements IVCSService {
     );
   }
 
-  async listContributorsStats(owner: string, repo: string): Promise<Paginated<ContributorStats>> {
+  async listContributorsStats(_owner: string, _repo: string): Promise<Paginated<ContributorStats>> {
     this.authenticate();
     throw new Error('Method not implemented yet.');
   }
 
-  async getRepoContent(owner: string, repo: string, path: string): Promise<File | Symlink | Directory | null> {
+  async getRepoContent(_owner: string, _repo: string, _path: string): Promise<File | Symlink | Directory | null> {
     this.authenticate();
     throw new Error('Method not implemented yet.');
   }
