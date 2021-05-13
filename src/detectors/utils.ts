@@ -3,14 +3,16 @@ import { intersection, keys } from 'lodash';
 import * as nodePath from 'path';
 import { logfile } from '../lib/logfile';
 import { PackageManagement } from '../model';
+import { isArray } from 'util';
 
 export const fileExtensionRegExp = (extensions: string[]): RegExp => {
   const regExpString = `.*\\.(${extensions.join('|').replace('.', '\\.')})$`;
   return new RegExp(regExpString, 'i');
 };
 
-export const fileNameRegExp = (name: string): RegExp => {
-  return new RegExp(`^${name.replace('.', '\\.')}$`, 'i');
+export const fileNameRegExp = (name: string | string[]): RegExp => {
+  const names = isArray(name) ? name : [name];
+  return new RegExp(`^(${names.map((name) => name.replace('.', '\\.')).join('|')})$`, 'i');
 };
 
 /**
