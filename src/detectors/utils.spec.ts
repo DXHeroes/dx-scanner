@@ -1,4 +1,4 @@
-import { sharedSubpath, hasOneOfPackages } from './utils';
+import { sharedSubpath, hasOneOfPackages, fileNameRegExp } from './utils';
 import { PackageManagement, PackageManagementFramework } from '../model';
 import * as nodePath from 'path';
 
@@ -65,6 +65,20 @@ describe('DetectorUtils', () => {
       };
       const result = hasOneOfPackages(pkg, pkgManag);
       expect(result).toEqual(false);
+    });
+  });
+
+  describe('#fileNameRegExp', () => {
+    it('detects one file', () => {
+      const regexp = fileNameRegExp('package.json');
+      const result = ['package.json', 'readme.md'].map((fileName) => regexp.test(fileName));
+      expect(result).toStrictEqual([true, false]);
+    });
+
+    it('detects multiple files', () => {
+      const regexp = fileNameRegExp(['package.json', 'changelog']);
+      const result = ['license.md', 'changelog', 'package.json', 'readme.md'].map((fileName) => regexp.test(fileName));
+      expect(result).toStrictEqual([false, true, true, false]);
     });
   });
 });
