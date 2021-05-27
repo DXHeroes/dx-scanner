@@ -39,7 +39,7 @@ describe('DashboardReporter', () => {
         practicingHighImpactPracticeWithCtx,
       ]);
 
-      await expect(result.componentsWithDxScore).toContainObject({
+      expect(result.componentsWithDxScore).toContainObject({
         dxScore: { points: { total: 100, max: 100, percentage: 100 }, value: '100% | 1/1' },
       });
       expect(result.id).toBeDefined;
@@ -56,7 +56,7 @@ describe('DashboardReporter', () => {
         notPracticingHighImpactPracticeWithCtx,
       ]);
 
-      await expect(result.componentsWithDxScore).toContainObject({
+      expect(result.componentsWithDxScore).toContainObject({
         dxScore: {
           value: '50% | 1/2',
           points: {
@@ -87,7 +87,7 @@ describe('DashboardReporter', () => {
         notPracticingHighImpactPracticeWithCtx,
       ]);
 
-      await expect(result.componentsWithDxScore).toContainObject({
+      expect(result.componentsWithDxScore).toContainObject({
         dxScore: {
           value: '0% | 0/1',
           points: {
@@ -130,7 +130,7 @@ declare global {
   namespace jest {
     interface Matchers<R> {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      toContainObject(object: Record<string, any>): Promise<Record<string, unknown>>;
+      toContainObject(object: Record<string, any>): R;
     }
   }
 }
