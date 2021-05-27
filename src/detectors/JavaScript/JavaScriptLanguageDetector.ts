@@ -3,7 +3,7 @@ import { injectable, inject } from 'inversify';
 import { LanguageAtPath, ProgrammingLanguage } from '../../model';
 import { IFileInspector } from '../../inspectors/IFileInspector';
 import { Types } from '../../types';
-import { fileNameRegExp, fileExtensionRegExp, sharedSubpath } from '../utils';
+import { fileExtensionRegExp, sharedSubpath, fileNameRegExp } from '../utils';
 import { uniq } from 'lodash';
 import * as nodePath from 'path';
 
@@ -16,7 +16,7 @@ export class JavaScriptLanguageDetector implements ILanguageDetector {
 
   async detectLanguage(): Promise<LanguageAtPath[]> {
     const result: LanguageAtPath[] = [];
-    const packageFiles = await this.fileInspector.scanFor(fileNameRegExp('package.json'), '/');
+    const packageFiles = await this.fileInspector.scanFor(fileNameRegExp(['package.json', 'bower.json']), '/');
     const hasTsFiles = (await this.fileInspector.scanFor(fileExtensionRegExp(['tsx', 'ts']), '/')).length > 0;
     if (packageFiles.length > 0) {
       for (const path of packageFiles.map((file) => nodePath.dirname(file.path))) {
