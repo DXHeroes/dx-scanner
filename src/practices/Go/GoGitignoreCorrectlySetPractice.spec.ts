@@ -3,8 +3,6 @@ import { gitignoreContent } from '../../detectors/__MOCKS__/Go/gitignoreContent.
 import { PracticeEvaluationResult } from '../../model';
 import { TestContainerContext, createTestContainer } from '../../inversify.config';
 
-const basicGitignore = `*.exe\n*.exe~\n*.dll\n*.so\n*.dylib\n*.test\n*.out\n`;
-
 describe('GoGitignoreCorrectlySetPractice', () => {
   let practice: GoGitignoreCorrectlySetPractice;
   let containerCtx: TestContainerContext;

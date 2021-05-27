@@ -12,11 +12,11 @@ export abstract class PracticeBase<T = Record<string, unknown>> implements IPrac
     this.data = {};
   }
 
-  async isApplicable(ctx: PracticeContext): Promise<boolean> {
+  async isApplicable(_ctx: PracticeContext): Promise<boolean> {
     return true;
   }
 
-  async evaluate(ctx: PracticeContext): Promise<PracticeEvaluationResult> {
+  async evaluate(_ctx: PracticeContext): Promise<PracticeEvaluationResult> {
     throw ErrorFactory.newInternalError('Method not implemented.');
   }
 }

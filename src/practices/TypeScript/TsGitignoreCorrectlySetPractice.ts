@@ -15,7 +15,7 @@ import { GitignoreCorrectlySetPracticeBase } from '../common/GitignoreCorrectlyS
   dependsOn: { practicing: ['LanguageIndependent.GitignoreIsPresent'] },
 })
 export class TsGitignoreCorrectlySetPractice extends GitignoreCorrectlySetPracticeBase {
-  private tsconfig: any;
+  private tsconfig: typeof import('tsconfig') | undefined;
   private tsconfigOutdir: string | undefined;
   private tsconfigOutfile: string | undefined;
 
@@ -69,7 +69,7 @@ export class TsGitignoreCorrectlySetPractice extends GitignoreCorrectlySetPracti
      */
     // eslint-disable-next-line @typescript-eslint/no-require-imports
     this.tsconfig = require('tsconfig');
-    const tsConfig = await this.tsconfig.load(fileInspector.basePath || '.');
+    const tsConfig = await this.tsconfig!.load(fileInspector.basePath || '.');
     this.tsconfigOutdir = undefined;
     this.tsconfigOutfile = undefined;
     if (tsConfig) {

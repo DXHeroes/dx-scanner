@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 // https://github.com/jdalrymple/gitbeaker/blob/master/src/core/infrastructure/Utils.ts
 
 import { ClientOptions } from './GitLabClient';
@@ -29,7 +30,7 @@ export const bundler = <T extends { [name: string]: Constructor }, P extends key
     Object.entries(services || {}).forEach(([name, Ser]) => {
       this[name] = new Ser(options);
     });
-  } as any) as Bundle<T, P>;
+  } as unknown) as Bundle<T, P>;
 };
 
 // Initialize Gitlab Client
@@ -61,7 +62,7 @@ export interface PaginationGitLabCustomResponse {
 }
 
 export interface CustomAxiosResponse<T> {
-  headers: any;
+  headers: { [key: string]: string };
   data: T;
   pagination: PaginationGitLabCustomResponse;
 }

@@ -68,9 +68,9 @@ export interface Issue {
   merge_requests_count: number;
   upvotes: number;
   downvotes: number;
-  due_date?: any;
+  due_date?: string;
   confidential: boolean;
-  discussion_locked?: any;
+  discussion_locked?: boolean;
   web_url: string;
   time_stats: TimeStats;
   task_completion_status: TaskCompletionStatus;
@@ -78,15 +78,23 @@ export interface Issue {
   has_tasks: boolean;
   _links: Links;
   references: References;
-  moved_to_id?: any;
-  epic_iid?: any;
-  epic?: any;
+  moved_to_id?: number;
+  epic_iid?: number;
+  epic?: Epic;
+}
+
+export interface Epic {
+  id: number;
+  iid: number;
+  title: string;
+  url: string;
+  group_id: number;
 }
 
 export interface IssueComment {
   id: number;
   body: string;
-  attachment?: any;
+  attachment?: unknown;
   author: User;
   created_at: Date;
   updated_at: Date;

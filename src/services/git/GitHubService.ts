@@ -50,7 +50,7 @@ export class GitHubService implements IVCSService {
   private readonly client: Octokit;
   private cache: ICache;
   private callCount = 0;
-  private readonly graphqlWithAuth: any;
+  private readonly graphqlWithAuth: typeof graphql;
   private readonly repositoryConfig: RepositoryConfig;
 
   constructor(
@@ -106,6 +106,7 @@ export class GitHubService implements IVCSService {
       );
       pullRequests = search;
 
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const prs: PullRequest[] = pullRequests.edges.map((pr: any) => {
         const pullRequest: PullRequest = {
           user: {
@@ -481,7 +482,7 @@ export class GitHubService implements IVCSService {
     return { items, ...pagination };
   }
 
-  async listBranches(owner: string, repo: string, options?: ListGetterOptions): Promise<Paginated<Branch>> {
+  async listBranches(owner: string, repo: string, _options?: ListGetterOptions): Promise<Paginated<Branch>> {
     const [branchesResponse, repoResponse] = await Promise.all([
       this.unwrap(this.client.repos.listBranches({ owner, repo })),
       this.unwrap(this.client.repos.get({ owner, repo })),
@@ -688,6 +689,7 @@ export class GitHubService implements IVCSService {
   /**
    * Debug GitHub GQL request promise
    */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   private unwrapGql(gqlPromise: Promise<any>): Promise<any> {
     return gqlPromise
       .then((response) => {
@@ -708,7 +710,7 @@ export class GitHubService implements IVCSService {
    * Debug GitHub GQL response
    * - count API calls and inform about remaining rate limit
    */
-  private debugGitHubGqlResponse = (rateLimit: any) => {
+  private debugGitHubGqlResponse = (rateLimit: { limit: number; cost: number; remaining: number; resetAt: Date }) => {
     this.callCount += rateLimit.cost;
     d(`GitHub API Hit: ${this.callCount}. Remaining ${rateLimit.remaining} hits. Reset at ${rateLimit.resetAt}`);
   };

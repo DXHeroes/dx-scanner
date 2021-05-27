@@ -171,7 +171,7 @@ export class GitLabService implements IVCSService {
     return pullRequest;
   }
 
-  async listPullRequestFiles(owner: string, repo: string, prNumber: number): Promise<Paginated<PullFiles>> {
+  async listPullRequestFiles(_owner: string, _repo: string, _prNumber: number): Promise<Paginated<PullFiles>> {
     throw new Error('Method not implemented yet.');
   }
 
@@ -285,7 +285,7 @@ export class GitLabService implements IVCSService {
     return Promise.resolve({ items, ...customPagination });
   }
 
-  async listPullRequestReviews(owner: string, repo: string, prNumber: number): Promise<Paginated<PullRequestReview>> {
+  async listPullRequestReviews(_owner: string, _repo: string, _prNumber: number): Promise<Paginated<PullRequestReview>> {
     throw new Error('Method not implemented yet.');
   }
 
@@ -447,15 +447,15 @@ export class GitLabService implements IVCSService {
     return data;
   }
 
-  async listContributorsStats(owner: string, repo: string): Promise<Paginated<ContributorStats>> {
+  async listContributorsStats(_owner: string, _repo: string): Promise<Paginated<ContributorStats>> {
     throw new Error('Method not implemented yet.');
   }
 
-  async getRepoContent(owner: string, repo: string, path: string): Promise<File | Symlink | Directory | null> {
+  async getRepoContent(_owner: string, _repo: string, _path: string): Promise<File | Symlink | Directory | null> {
     throw new Error('Method not implemented yet.');
   }
 
-  async getPullsDiffStat(owner: string, repo: string, prNumber: number): Promise<Lines> {
+  async getPullsDiffStat(_owner: string, _repo: string, _prNumber: number): Promise<Lines> {
     throw new Error('Method not implemented yet for GitLab.');
   }
 

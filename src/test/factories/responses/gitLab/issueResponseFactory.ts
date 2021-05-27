@@ -103,9 +103,9 @@ export const issueOfUser: Issue = {
   merge_requests_count: 0,
   upvotes: 0,
   downvotes: 0,
-  due_date: null,
+  due_date: undefined,
   confidential: false,
-  discussion_locked: null,
+  discussion_locked: undefined,
   web_url: 'https://gitlab.com/Homolova/ted_ontouml_kom/issues/1',
   time_stats: {
     time_estimate: 0,
@@ -129,5 +129,5 @@ export const issueOfUser: Issue = {
     relative: '#1',
     full: 'Homolova/ted_ontouml_kom#1',
   },
-  moved_to_id: null,
+  moved_to_id: undefined,
 };
