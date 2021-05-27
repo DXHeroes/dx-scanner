@@ -4,6 +4,7 @@ import { Types } from '../../types';
 import { keys } from 'lodash';
 import { DependencyType } from '../IPackageInspector';
 import { IFileInspector } from '../IFileInspector';
+import { Package as composerJSON } from './generated/composer-schema';
 
 @injectable()
 export class PHPPackageInspector extends PackageInspectorBase {
@@ -60,47 +61,4 @@ export class PHPPackageInspector extends PackageInspectorBase {
   hasLockfile(): boolean | undefined {
     return this.hasLockfileFile;
   }
-}
-
-export interface composerJSON {
-  name: string;
-  type: string;
-  description: string | undefined;
-  keywords: string[] | undefined;
-  homepage: string | undefined;
-  license: string | undefined;
-  authors: Contributor[] | undefined;
-  require: { [name: string]: string } | undefined;
-  // 'require-dev' must be in kebab-case
-  'require-dev': { [name: string]: string } | undefined;
-  config: PHPConfig | undefined;
-  extra: { [name: string]: string } | undefined;
-  autoload: PHPAutoload | undefined;
-  // 'autoload-dev' must be in kebab-case
-  'autoload-dev': PHPAutoload | undefined;
-  // 'minimum-stability' must be in kebab-case
-  'minimum-stability': string | undefined;
-  // 'prefer-stable' must be in kebab-case
-  'prefer-stable': boolean | undefined;
-  support: { [name: string]: string } | undefined;
-  scripts: { [name: string]: string } | undefined;
-  bin: string[] | undefined;
-  [name: string]: any | undefined;
-}
-
-interface Contributor {
-  [name: string]: string | undefined;
-}
-
-interface PHPConfig {
-  platform: { [name: string]: string } | undefined;
-  // 'preferred-install' must be in kebab-case
-  'preferred-install': string | undefined;
-  // 'sort-packages' must be in kebab-case
-  'sort-packages': boolean | undefined;
-  [name: string]: any | undefined;
-}
-
-interface PHPAutoload {
-  [name: string]: { [name: string]: string } | undefined;
 }
