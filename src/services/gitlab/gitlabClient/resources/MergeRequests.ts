@@ -168,7 +168,7 @@ export interface MergeRequest {
   target_project_id: number;
   labels: string[];
   work_in_progress: boolean;
-  milestone?: any;
+  milestone?: unknown;
   merge_when_pipeline_succeeds: boolean;
   merge_status: string;
   sha: string;
@@ -205,7 +205,7 @@ export interface MergeComment {
   id: number;
   type: string;
   body: string;
-  attachment?: any;
+  attachment?: unknown;
   author: User;
   created_at: Date;
   updated_at: Date;

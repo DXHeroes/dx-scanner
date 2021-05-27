@@ -94,7 +94,7 @@ export interface Epic {
 export interface IssueComment {
   id: number;
   body: string;
-  attachment?: any;
+  attachment?: unknown;
   author: User;
   created_at: Date;
   updated_at: Date;
