@@ -26,6 +26,10 @@ export default class Run {
     let { authorization } = cmd;
     const { apiToken, apiUrl } = cmd;
 
+    if (cmd.recursive === undefined) {
+      cmd.recursive = cmd.ci ? true : false; // default is true for CI mode, false otherwise
+    }
+
     const hrstart = process.hrtime();
 
     cli.action.start(`Scanning URI: ${scanPath}`);

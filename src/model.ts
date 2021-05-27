@@ -68,7 +68,7 @@ export type CLIArgs = {
   authorization?: string;
   json: boolean;
   details: boolean;
-  recursive: boolean;
+  recursive?: boolean;
   ci: boolean;
   fail: PracticeImpact;
   fix: boolean;
