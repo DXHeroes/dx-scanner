@@ -1,3 +1,12 @@
+# [3.56.0](https://github.com/dxheroes/dx-scanner/compare/v3.55.0...v3.56.0) (2021-05-27)
+
+
+### Features
+
+* Add support for detecting multiple filenames ([3037a60](https://github.com/dxheroes/dx-scanner/commit/3037a60178bc5650679ccabc5b3938f13761e267))
+* add tests for multiple filenames match ([8fb6af3](https://github.com/dxheroes/dx-scanner/commit/8fb6af32e317d363234cf493ce220c57b6bd3090))
+* detect bower projects ([80637e2](https://github.com/dxheroes/dx-scanner/commit/80637e24772b8f920bf48248fc8d30c5c4d8eb90))
+
 # [3.55.0](https://github.com/dxheroes/dx-scanner/compare/v3.54.2...v3.55.0) (2021-05-06)
 
 
