@@ -1,3 +1,11 @@
+# [3.57.0](https://github.com/dxheroes/dx-scanner/compare/v3.56.0...v3.57.0) (2021-06-01)
+
+
+### Features
+
+* add CI mode info to Readme ([8ab52e5](https://github.com/dxheroes/dx-scanner/commit/8ab52e58d954a0827dec27f22e59f2971de1b231))
+* use recursive scan when running in CI mode by default ([109652e](https://github.com/dxheroes/dx-scanner/commit/109652e111a785fee68720ce2d928510ff640134))
+
 # [3.56.0](https://github.com/dxheroes/dx-scanner/compare/v3.55.0...v3.56.0) (2021-05-27)
 
 
