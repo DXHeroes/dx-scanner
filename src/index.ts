@@ -68,7 +68,8 @@ class DXScannerCommand {
       .option('--fixPattern <pattern>', 'fix only rules with IDs matching the regex')
       .option('-j --json', 'print report in JSON', false)
       .option('--html [path]', 'save report in HTML', false)
-      .option('-r --recursive', 'scan all components recursively in all sub folders', false)
+      .option('-r --recursive', 'scan all components recursively in all sub folders')
+      .option('--no-recursive', 'disable recursive scan in CI mode')
       .action(Run.run)
       .on('--help', () => {
         console.log('');

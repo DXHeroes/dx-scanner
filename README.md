@@ -53,6 +53,7 @@ Swift | 🚧
 * [Supported Languages](#What-language-is-supported)
 * [Configuration](#configuration-%EF%B8%8F)
   * [Practices](#Practices)
+  * [CI Mode](#CI-mode)
   * [GitHub CI Action](#GitHub-Ci-Action)
 * [Support](#support-%EF%B8%8F-%EF%B8%8F)
 * [Contributing](#Contributing--)
@@ -142,6 +143,7 @@ Options:
   -j --json                           print report in JSON (default: false)
   --html [path]                       save report in HTML file (default: false, default path: ./report.html)
   -r --recursive                      scan all components recursively in all sub folders (default: false)
+  --no-recursive                      disable recursive scan in CI mode
   -h, --help                          output usage information
 
 Examples:
@@ -281,6 +283,11 @@ practices:
     override:
       measurePullRequestCount: 500
 ```
+
+### CI Mode
+When running DX Scanner with `--ci` flag, it runs in CI Mode. In CI Mode, DX SCanner uses `CIReporter` for its output and runs recursively by default (i.e. the `--recursive` flag is turned on).
+
+If you want to disable recursive scan in CI mode, use the `--no-recursive` flag.
 
 ### Github CI Action
 
