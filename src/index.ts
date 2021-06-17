@@ -116,3 +116,4 @@ export { ServiceCollectorsData as CollectorsData } from './collectors/ServiceDat
 export { ServiceType } from './detectors';
 export { ProgrammingLanguage, ProjectComponent, ProjectComponentFramework, ProjectComponentPlatform, ProjectComponentType } from './model';
 export * from './reporters/DashboardReporter';
+export * from './reporters/DashboardReporterEnums';
