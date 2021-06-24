@@ -13,6 +13,7 @@ import { GitServiceUtils } from '../services';
 import { ServiceDataCollector, ServiceCollectorsData } from '../collectors/ServiceDataCollector';
 import { debugLog } from '../detectors/utils';
 import debug from 'debug';
+import { UpdatedDependencySeverity, SecurityIssueSeverity, LinterIssueSeverity } from './DashboardReporterEnums';
 // eslint-disable-next-line @typescript-eslint/no-require-imports, @typescript-eslint/no-var-requires
 const pjson = require('../../package.json');
 
@@ -144,14 +145,6 @@ export type SecurityIssueSummaryDto = {
   code: number;
 };
 
-export enum SecurityIssueSeverity {
-  Info = 'info',
-  Low = 'low',
-  Moderate = 'moderate',
-  High = 'high',
-  Critical = 'critical',
-}
-
 //updated dependencies
 export type UpdatedDependencyDto = {
   library: string;
@@ -160,12 +153,6 @@ export type UpdatedDependencyDto = {
   severity: UpdatedDependencySeverity;
 };
 
-export enum UpdatedDependencySeverity {
-  Low = 'low',
-  Moderate = 'moderate',
-  High = 'high',
-}
-
 //linter issues
 export type LinterIssueDto = {
   filePath: string;
@@ -173,11 +160,6 @@ export type LinterIssueDto = {
   type: string;
   severity: LinterIssueSeverity;
 };
-
-export enum LinterIssueSeverity {
-  Warning = 'warning',
-  Error = 'error',
-}
 
 //pull requests
 export type PullRequestDto = {

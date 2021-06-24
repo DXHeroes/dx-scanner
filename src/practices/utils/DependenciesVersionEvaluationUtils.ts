@@ -1,5 +1,6 @@
 import { SemverLevel, Package, PackageInspectorBase } from '../../inspectors';
-import { UpdatedDependencySeverity, UpdatedDependencyDto } from '../../reporters/DashboardReporter';
+import { UpdatedDependencyDto } from '../../reporters/DashboardReporter';
+import { UpdatedDependencySeverity } from '../../reporters/DashboardReporterEnums';
 
 export class DependenciesVersionEvaluationUtils {
   static packagesToBeUpdated(pkgsWithNewVersion: { [key: string]: string }, semverLevel: SemverLevel, pkgs: Package[]) {

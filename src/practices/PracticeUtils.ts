@@ -1,6 +1,5 @@
 import shell from 'shelljs';
-import { SecurityIssueDto } from '..';
-import { SecurityIssueSummaryDto } from '../reporters';
+import { SecurityIssueSummaryDto, SecurityIssueDto } from '../reporters';
 
 export const parseYarnAudit = async (
   result: shell.ShellString,

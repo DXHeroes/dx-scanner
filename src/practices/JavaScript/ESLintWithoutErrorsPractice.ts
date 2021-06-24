@@ -7,11 +7,12 @@ import { FixerContext } from '../../contexts/fixer/FixerContext';
 import { PracticeContext } from '../../contexts/practice/PracticeContext';
 import { debugLog } from '../../detectors/utils';
 import { PracticeEvaluationResult, PracticeImpact, ProgrammingLanguage } from '../../model';
-import { LinterIssueDto, LinterIssueSeverity } from '../../reporters';
+import { LinterIssueDto } from '../../reporters';
 import { PracticeConfig } from '../../scanner/IConfigProvider';
 import { DxPractice } from '../DxPracticeDecorator';
 import { PracticeBase } from '../PracticeBase';
 import { PackageManagerType, PackageManagerUtils } from '../utils/PackageManagerUtils';
+import { LinterIssueSeverity } from '../../reporters/DashboardReporterEnums';
 
 interface PracticeOverride extends PracticeConfig {
   override: {
