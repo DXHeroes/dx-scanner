@@ -11,7 +11,8 @@ import { PracticeImpact } from './model';
 const pjson = require('../package.json');
 
 type AvailableCommands = 'practices' | 'init' | 'run';
-const deferLoad = (cmdName: AvailableCommands) => async (...args: unknown[]) => (await import(`./commands/${cmdName}`)).run(...args);
+const deferLoad = (cmdName: AvailableCommands) => async (...args: unknown[]) =>
+  (await import(`./commands/${cmdName}`)).default.run(...args);
 
 class DXScannerCommand {
   static async run(): Promise<void> {
