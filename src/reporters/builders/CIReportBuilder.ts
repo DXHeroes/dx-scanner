@@ -97,12 +97,6 @@ export class CIReportBuilder implements IReportBuilder {
     if (practice.url) practiceLineTexts.push(`<a href="${practice.url}">${practice.url}</a>`);
     lines.push(practiceLineTexts.join(' '));
 
-    // render detailed info for a practice
-    if (practice.data?.details) {
-      const linesWithDetail = practice.data.details.map((d) => this.renderDetail(d)).join(' ');
-      lines.push(`\n\n${linesWithDetail}`);
-    }
-
     // render line for changed impact if the impact of practice has been changed
     if (practice.impact !== practiceWithContext.overridenImpact) {
       lines.push(`  <b>Impact changed from ${practice.impact} to ${practiceWithContext.overridenImpact}.</b>`);
