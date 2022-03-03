@@ -3,15 +3,16 @@ import * as commander from 'commander';
 import _ from 'lodash';
 import 'reflect-metadata';
 import updateNotifier from 'update-notifier';
-import Init from './commands/init';
-import Practices from './commands/practices';
-import Run from './commands/run';
 import { debugLog } from './detectors/utils';
 import { errorHandler } from './lib/errors';
 import { enableLogfile, logfile } from './lib/logfile';
 import { PracticeImpact } from './model';
 // eslint-disable-next-line @typescript-eslint/no-require-imports, @typescript-eslint/no-var-requires
 const pjson = require('../package.json');
+
+type AvailableCommands = 'practices' | 'init' | 'run';
+const deferLoad = (cmdName: AvailableCommands) => async (...args: unknown[]) =>
+  (await import(`./commands/${cmdName}`)).default.run(...args);
 
 class DXScannerCommand {
   static async run(): Promise<void> {
@@ -70,7 +71,7 @@ class DXScannerCommand {
       .option('--html [path]', 'save report in HTML', false)
       .option('-r --recursive', 'scan all components recursively in all sub folders')
       .option('--no-recursive', 'disable recursive scan in CI mode')
-      .action(Run.run)
+      .action(deferLoad('run'))
       .on('--help', () => {
         console.log('');
         console.log('Examples:');
@@ -80,14 +81,14 @@ class DXScannerCommand {
       });
 
     // cmd: init
-    cmder.command('init').description('Initialize DX Scanner configuration').action(Init.run);
+    cmder.command('init').description('Initialize DX Scanner configuration').action(deferLoad('init'));
 
     // cmd: practices
     cmder
       .command('practices')
       .description('List all practices id with name and impact')
       .option('-j --json', 'print practices in JSON')
-      .action(Practices.run);
+      .action(deferLoad('practices'));
 
     await cmder.parseAsync(process.argv);
 
@@ -113,6 +114,18 @@ process.on('uncaughtException', errorHandler);
 export default DXScannerCommand;
 
 export { ServiceCollectorsData as CollectorsData } from './collectors/ServiceDataCollector';
-export { ServiceType } from './detectors';
+
+export {
+  LinterIssueDto,
+  DataReportDto,
+  ComponentDto,
+  DxScoreDto,
+  SecurityIssueDto,
+  SecurityIssueSummaryDto,
+  UpdatedDependencyDto,
+  PullRequestDto,
+} from './reporters/DashboardReporter';
+export { ServiceType } from './detectors/IScanningStrategy';
+
 export { ProgrammingLanguage, ProjectComponent, ProjectComponentFramework, ProjectComponentPlatform, ProjectComponentType } from './model';
-export * from './reporters/DashboardReporter';
+export * from './reporters/DashboardReporterEnums';
