@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import cli from 'cli-ux';
+import { CliUx } from '@oclif/core';
 import { debugLog } from '../../detectors/utils';
 import { assertNever } from '../assertNever';
 import { ErrorCode } from './model';
@@ -7,7 +7,7 @@ import { ServiceError } from './ServiceError';
 const d = debugLog('errorHandler');
 
 export const errorHandler = (error: Error) => {
-  cli.action.stop();
+  CliUx.ux.action.stop();
 
   if (error instanceof ServiceError) {
     switch (error.code) {
@@ -21,7 +21,7 @@ export const errorHandler = (error: Error) => {
       case ErrorCode.ARGUMENT_ERROR:
       case ErrorCode.PRACTICE_EVALUATION_ERROR:
         d(error);
-        cli.error(error);
+        CliUx.ux.error(error);
       default:
         assertNever(error.code);
     }
