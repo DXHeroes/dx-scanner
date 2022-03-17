@@ -63,7 +63,7 @@
     "reflect-metadata": "0.1.13",
     "semver": "7.3.4",
     "shelljs": "0.8.4",
-    "simple-git": "2.31.0",
+    "simple-git": "3.3.0",
     "table": "6.0.7",
     "toposort": "2.0.2",
     "tsconfig": "7.0.0",
