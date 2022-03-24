@@ -1,4 +1,7 @@
-import { blue, bold, Color, cyan, green, grey, italic, magenta, red, reset, underline, yellow } from 'colors';
+import ansiAlign from 'ansi-align';
+import wrapAnsi from 'wrap-ansi';
+import boxen from 'boxen';
+import { blue, bold, Color, cyan, green, grey, italic, magenta, red, reset, underline, yellow, white } from 'colors';
 import debug from 'debug';
 import { inject, injectable } from 'inversify';
 import { ScanningStrategy } from '../detectors';
@@ -12,6 +15,10 @@ import { Types } from '../types';
 import { IReporter, PracticeWithContextForReporter } from './IReporter';
 import { ReportDetailType, ReporterData } from './ReporterData';
 import { ReporterUtils } from './ReporterUtils';
+
+const prependLinesWith = (text: string, symbol: string) => {
+  return `${symbol}${text.replace(/\n/g, `\n${symbol}`)}`;
+};
 
 @injectable()
 export class CLIReporter implements IReporter {
@@ -36,21 +43,32 @@ export class CLIReporter implements IReporter {
     const componentsWithPractices = ReporterUtils.getComponentsWithPractices(practicesAndComponents, this.scanningStrategy);
     const dxScore = ReporterUtils.computeDXScore(practicesAndComponents, this.scanningStrategy);
 
-    lines.push(bold(blue('----------------------------')));
+    lines.push(bold(blue(boxen('DX Scanner Result', { padding: 1 }))));
+    /* lines.push(bold(blue('----------------------------')));
     lines.push(bold(blue('|                          |')));
     lines.push(bold(blue('|     DX Scanner Result    |')));
-    lines.push(bold(blue('|                          |')));
+    lines.push(bold(blue('|                          |'))); */
 
     let componentPath: string;
 
     for (const cwp of componentsWithPractices) {
       componentPath = GitServiceUtils.getComponentPath(cwp.component, this.scanningStrategy);
 
-      lines.push(bold(blue('----------------------------')));
-      lines.push('');
-      lines.push(bold(blue(`Developer Experience Report for ${italic(componentPath)}`)));
-      lines.push(cyan(bold(`DX Score: ${dxScore.components.find((c) => c.path === cwp.component.path)!.value}`)));
-      lines.push('');
+      // lines.push(bold(blue('----------------------------')));
+      // lines.push('');
+      // lines.push(bold(blue(`Developer Experience Report for ${italic(componentPath)}`)));
+      // lines.push(cyan(bold(`DX Score: ${dxScore.components.find((c) => c.path === cwp.component.path)!.value}`)));
+      // lines.push('');
+      lines.push(
+        boxen(
+          ansiAlign(
+            `${cyan(bold(`DX Score is ${dxScore.components.find((c) => c.path === cwp.component.path)!.value}`))}\nFor repository ${italic(
+              componentPath,
+            )}`,
+          ),
+          { padding: 2 },
+        ),
+      );
 
       for (const key in PracticeImpact) {
         const impact = PracticeImpact[key as keyof typeof PracticeImpact];
@@ -105,10 +123,7 @@ export class CLIReporter implements IReporter {
       }
     }
 
-    lines.push('----------------------------');
-    lines.push('');
-    lines.push(bold(cyan(`Your overall score is ${dxScore.value}.`)));
-    lines.push('');
+    lines.push(bold(cyan(boxen(`Your overall score is ${dxScore.value}.`, { padding: 1 }))));
     lines.push(italic(blue('Implementation is not adoption.')));
     lines.push(italic(blue('We can help you with both. :-)')));
     lines.push(italic(blue('- https://dxheroes.io')));
@@ -154,6 +169,7 @@ export class CLIReporter implements IReporter {
 
     for (const practiceWithContext of practices) {
       lines.push(this.linesForPractice(practiceWithContext.practice, color));
+      lines.push('');
 
       if (this.argumentsProvider.details && practiceWithContext.practice.data?.details) {
         const linesWithDetail = practiceWithContext.practice.data.details.map((d) => this.renderDetail(d)).join(' ');
@@ -171,12 +187,15 @@ export class CLIReporter implements IReporter {
 
   private linesForPractice(practice: PracticeMetadata, color: Color): string {
     const findingPath = '';
-    const practiceLineTexts = [reset(color(`- ${bold(practice.name)} - ${italic(practice.suggestion)}`))];
+    const practiceLineTexts = [wrapAnsi(reset(white(`${color('⏹')} ${bold(practice.name)}`)), 80)];
+    practiceLineTexts.push('\n');
+    practiceLineTexts.push(white.dim(prependLinesWith(wrapAnsi(`${practice.suggestion}`, 80), color('| '))));
     if (practice.url) {
-      practiceLineTexts.push(color(`${findingPath}${practice.url}`));
+      practiceLineTexts.push('\n');
+      practiceLineTexts.push(prependLinesWith(wrapAnsi(reset(`${findingPath}${practice.url}`), 80), color('| ')));
     }
 
-    return practiceLineTexts.join(' ');
+    return practiceLineTexts.join('');
   }
 
   private lineForChangedImpact(practiceWithContext: PracticeWithContextForReporter, color: Color) {
