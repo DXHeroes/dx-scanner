@@ -44,21 +44,12 @@ export class CLIReporter implements IReporter {
     const dxScore = ReporterUtils.computeDXScore(practicesAndComponents, this.scanningStrategy);
 
     lines.push(bold(blue(boxen('DX Scanner Result', { padding: 1 }))));
-    /* lines.push(bold(blue('----------------------------')));
-    lines.push(bold(blue('|                          |')));
-    lines.push(bold(blue('|     DX Scanner Result    |')));
-    lines.push(bold(blue('|                          |'))); */
 
     let componentPath: string;
 
     for (const cwp of componentsWithPractices) {
       componentPath = GitServiceUtils.getComponentPath(cwp.component, this.scanningStrategy);
 
-      // lines.push(bold(blue('----------------------------')));
-      // lines.push('');
-      // lines.push(bold(blue(`Developer Experience Report for ${italic(componentPath)}`)));
-      // lines.push(cyan(bold(`DX Score: ${dxScore.components.find((c) => c.path === cwp.component.path)!.value}`)));
-      // lines.push('');
       lines.push(
         boxen(
           ansiAlign(
