@@ -81,18 +81,18 @@ export class CLIReporter implements IReporter {
         (p) => p.isOn && p.evaluation === PracticeEvaluationResult.unknown,
       );
       if (practicesAndComponentsUnknown.length > 0) {
-        lines.push(bold(red('Evaluation of these practices failed:')));
+        lines.push(bold(yellow('⚠ Evaluation of these practices failed:')));
         lines.push('');
 
         for (const p of practicesAndComponentsUnknown) {
-          lines.push(red(`- ${bold(p.practice.name)} (Reason: ${p.evaluationError})`));
+          lines.push(`- ${bold(p.practice.name)} (Reason: ${p.evaluationError})`);
         }
         lines.push('');
       }
 
       const practicesAndComponentsOff = cwp.practicesAndComponents.filter((p) => !p.isOn);
       if (practicesAndComponentsOff.length > 0) {
-        lines.push(bold(red('You have turned off these practices:')));
+        lines.push(bold(red('! You have turned off these practices:')));
         lines.push('');
 
         for (const p of practicesAndComponentsOff) {
@@ -105,19 +105,12 @@ export class CLIReporter implements IReporter {
         p.practice.fix && p.evaluation === PracticeEvaluationResult.notPracticing;
       const fixablePractices = cwp.practicesAndComponents.filter(fixablePractice);
       if (fixablePractices.length) {
-        lines.push(
-          bold(
-            yellow(
-              `These practices might be automatically fixed (re-run the command with ${italic('--fix')} option and on a ${bold(
-                'local',
-              )} folder):`,
-            ),
-          ),
-        );
+        lines.push(bold(green('These practices might be automatically fixed')));
+        lines.push(`(re-run the command with ${italic('--fix')} option and on a ${bold('local')} folder):`);
         lines.push('');
 
         for (const p of fixablePractices) {
-          lines.push(yellow(`- ${p.practice.name}`));
+          lines.push(`- ${bold(p.practice.name)}`);
         }
         lines.push('');
       }
@@ -181,6 +174,7 @@ export class CLIReporter implements IReporter {
       }
     }
 
+    lines.push(white.dim('='.repeat(80)));
     lines.push('');
     return lines.join('\n');
   }
@@ -189,7 +183,7 @@ export class CLIReporter implements IReporter {
     const findingPath = '';
     const practiceLineTexts = [wrapAnsi(reset(white(`${color('⏹')} ${bold(practice.name)}`)), 80)];
     practiceLineTexts.push('\n');
-    practiceLineTexts.push(white.dim(prependLinesWith(wrapAnsi(`${practice.suggestion}`, 80), color('| '))));
+    practiceLineTexts.push(prependLinesWith(wrapAnsi(white(`${practice.suggestion}`), 80), color('| ')));
     if (practice.url) {
       practiceLineTexts.push('\n');
       practiceLineTexts.push(prependLinesWith(wrapAnsi(reset(`${findingPath}${practice.url}`), 80), color('| ')));
