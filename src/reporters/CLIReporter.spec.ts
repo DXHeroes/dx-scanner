@@ -12,7 +12,7 @@ describe('CLIReporter', () => {
     it('one practicing practice', () => {
       const result = new CLIReporter(argumentsProviderFactory(), scanningStrategy).buildReport([practicingHighImpactPracticeWithCtx]);
 
-      expect(result).toContain('DX Score: 100% | 1/1');
+      expect(result).toContain('DX Score is 100% | 1/1');
     });
 
     it('one practicing practice and one not practicing', () => {
@@ -21,7 +21,7 @@ describe('CLIReporter', () => {
         notPracticingHighImpactPracticeWithCtx,
       ]);
 
-      expect(result).toContain('DX Score: 50% | 1/2');
+      expect(result).toContain('DX Score is 50% | 1/2');
     });
 
     it('all impacted practices', () => {
