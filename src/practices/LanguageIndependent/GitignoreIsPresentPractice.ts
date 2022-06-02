@@ -1,4 +1,4 @@
-import cli from 'cli-ux';
+import { CliUx } from '@oclif/core';
 import fs, { unlink } from 'fs';
 import gi from 'gitignore';
 import inquirer from 'inquirer';
@@ -58,7 +58,7 @@ export class GitignoreIsPresentPractice implements IPractice {
     } else if (!ctx.argumentsProvider?.ci) {
       // get type from user
       const name = 'Pick a gitignore template';
-      type = (await cli.action.pauseAsync(() => inquirer.prompt({ name, type: 'list', choices: availableTypes })))[name];
+      type = (await CliUx.ux.action.pauseAsync(() => inquirer.prompt({ name, type: 'list', choices: availableTypes })))[name];
     } else {
       return;
     }

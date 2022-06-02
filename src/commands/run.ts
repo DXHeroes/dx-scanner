@@ -1,5 +1,5 @@
 /* eslint-disable no-process-env */
-import cli from 'cli-ux';
+import { CliUx } from '@oclif/core';
 import { sync as commandExistsSync } from 'command-exists';
 import 'reflect-metadata';
 import { debugLog } from '../detectors/utils';
@@ -14,7 +14,7 @@ export default class Run {
     if (!commandExistsSync('git')) {
       const msg =
         "'git' command dependency not installed. See https://git-scm.com/book/en/v2/Getting-Started-Installing-Git for installation instructions";
-      cli.warn(msg);
+      CliUx.ux.warn(msg);
       logfile.log('warning: ' + msg);
       return;
     }
@@ -32,7 +32,7 @@ export default class Run {
 
     const hrstart = process.hrtime();
 
-    cli.action.start(`Scanning URI: ${scanPath}`);
+    CliUx.ux.action.start(`Scanning URI: ${scanPath}`);
 
     const container = createRootContainer({
       uri: scanPath,
@@ -80,13 +80,13 @@ export default class Run {
 
       scanResult = await scanner.scan({ determineRemote: false });
     }
-    cli.action.stop();
+    CliUx.ux.action.stop();
 
     const hrend = process.hrtime(hrstart);
 
     const msg = `Scan duration ${hrend[0]}s.`;
     logfile.log(msg);
-    cli.log(msg);
+    CliUx.ux.log(msg);
 
     if (scanResult.shouldExitOnEnd) {
       process.exit(cmd.ci ? 0 : 1); // could be written as +!cmd.ci but I'm not here to show off

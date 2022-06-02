@@ -6,7 +6,7 @@ import { FixerContext } from '../../contexts/fixer/FixerContext';
 import { PracticeConfig } from '../../scanner/IConfigProvider';
 import yeoman from 'yeoman-environment';
 import { runGenerator } from 'yeoman-gen-run';
-import cli from 'cli-ux';
+import { CliUx } from '@oclif/core';
 import { AccessType } from '../../detectors/IScanningStrategy';
 
 const env = yeoman.createEnv(undefined, { console });
@@ -66,9 +66,9 @@ export class LicenseIsPresentPractice implements IPractice {
         answers: { license, options: { nolog: true } },
       });
     } else {
-      await cli.action.pauseAsync(
+      await CliUx.ux.action.pauseAsync(
         () =>
-          new Promise((resolve) => {
+          new Promise<void>((resolve) => {
             env.run('license', () => {
               resolve();
             });

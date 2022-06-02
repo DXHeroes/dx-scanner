@@ -29,15 +29,17 @@
     "@commitlint/config-conventional": "12.0.1",
     "@commitlint/lint": "12.0.1",
     "@iarna/toml": "2.2.5",
+    "@oclif/core": "1.5.0",
     "@octokit/graphql": "4.5.8",
     "@octokit/plugin-rest-endpoint-methods": "4.2.1",
     "@octokit/rest": "18.0.9",
     "@types/eslint": "7.2.6",
     "@types/table": "6.0.0",
+    "ansi-align": "3.0.1",
     "axios": "0.21.1",
     "bitbucket": "2.4.2",
+    "boxen": "5.1.2",
     "camelcase": "6.2.0",
-    "cli-ux": "5.5.1",
     "colors": "1.4.0",
     "command-exists": "1.2.9",
     "commander": "7.1.0",
@@ -69,6 +71,7 @@
     "tsconfig": "7.0.0",
     "update-notifier": "5.0.1",
     "uuid": "8.3.2",
+    "wrap-ansi": "7",
     "xml2js": "0.4.23",
     "yeoman-environment": "2.10.3",
     "yeoman-gen-run": "1.2.3"
@@ -91,6 +94,7 @@
     "@types/toposort": "2.0.3",
     "@types/update-notifier": "5.0.0",
     "@types/uuid": "8.3.0",
+    "@types/wrap-ansi": "8.0.1",
     "@types/xml2js": "0.4.7",
     "@types/yeoman-environment": "2.10.2",
     "@types/yeoman-generator": "4.11.3",
@@ -109,7 +113,7 @@
     "semantic-release-slack-bot": "2.1.0",
     "ts-jest": "26.4.4",
     "ts-node": "9.1.1",
-    "typescript": "4.0.5"
+    "typescript": "4.6"
   },
   "engines": {
     "node": ">=12",

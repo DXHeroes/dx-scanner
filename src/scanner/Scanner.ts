@@ -1,4 +1,4 @@
-import { cli } from 'cli-ux';
+import { CliUx } from '@oclif/core';
 import fs from 'fs';
 import { inject, injectable, multiInject } from 'inversify';
 import _ from 'lodash';
@@ -84,7 +84,7 @@ export class Scanner {
     const scannerContext = discoveryContext.getScanningContext(scanStrategy);
     const languagesAtPaths = await this.detectLanguagesAtPaths(scannerContext);
     if (!languagesAtPaths.length) {
-      cli.warn('No language was detected. Score will be 0%.');
+      CliUx.ux.warn('No language was detected. Score will be 0%.');
     }
     this.d(`LanguagesAtPaths (${languagesAtPaths.length}):`, inspect(languagesAtPaths));
     const projectComponents = await this.detectProjectComponents(languagesAtPaths, scannerContext, scanStrategy);
@@ -95,7 +95,7 @@ export class Scanner {
     let practicesAfterFix: PracticeWithContext[] | undefined;
     if (this.argumentsProvider.fix) {
       if (isLocal) {
-        cli.warn('`fix` command only works for local folder, not for online repositories');
+        CliUx.ux.warn('`fix` command only works for local folder, not for online repositories');
       } else {
         await this.fix(practicesWithContext);
         practicesAfterFix = await this.detectPractices(projectComponents);
@@ -120,7 +120,7 @@ export class Scanner {
    */
   async init(scanPath: string): Promise<void> {
     const filePath = scanPath + '.dxscannerrc';
-    cli.action.start(`Initializing configuration: ${filePath}.yaml`);
+    CliUx.ux.action.start(`Initializing configuration: ${filePath}.yaml`);
     // check if .dxscannerrc.yaml already exists
     const fileExists: boolean = await this.fileSystemService.exists(`${filePath}`);
     const yamlExists: boolean = await this.fileSystemService.exists(`${filePath}.yaml`);
@@ -130,10 +130,10 @@ export class Scanner {
     if (!yamlExists && !fileExists && !ymlExists && !jsonExists) {
       await this.createConfiguration(filePath);
     } else {
-      cli.warn('You already have a dx-scanner config.');
+      CliUx.ux.warn('You already have a dx-scanner config.');
     }
 
-    cli.action.stop();
+    CliUx.ux.action.stop();
   }
 
   async fix(practicesWithContext: PracticeWithContext[], scanningStrategy?: ScanningStrategy): Promise<void> {
@@ -304,7 +304,7 @@ export class Scanner {
     }
 
     if (this.allDetectedComponents!.length > 1 && !this.argumentsProvider.recursive) {
-      cli.info(
+      CliUx.ux.info(
         `Found more than 1 component. To scan all ${
           this.allDetectedComponents!.length
         } components run the scanner with an argument --recursive\n`,

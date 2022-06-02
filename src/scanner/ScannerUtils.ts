@@ -10,7 +10,7 @@ import { PracticeWithContext, ScanResult } from './Scanner';
 import { PracticeWithContextForReporter } from '../reporters/IReporter';
 import { ArgumentsProvider } from '.';
 import { ScanningStrategyDetectorUtils } from '../detectors/utils/ScanningStrategyDetectorUtils';
-import cli from 'cli-ux';
+import { CliUx } from '@oclif/core';
 import { ServiceType } from '../detectors/IScanningStrategy';
 
 /**
@@ -162,7 +162,7 @@ export class ScannerUtils {
       promptMsg = 'Insert your credentials';
     }
 
-    const authorization = await cli.prompt(promptMsg, {
+    const authorization = await CliUx.ux.prompt(promptMsg, {
       type: 'hide',
       required: false,
     });
