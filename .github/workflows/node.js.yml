@@ -22,14 +22,14 @@ jobs:
       - name: Use Node.js
         uses: actions/setup-node@v2
         with:
-          node-version: '12'
+          node-version: '16'
       - run: yarn install
   build:
     name: Build dx-scanner
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node-version: [10.x, 12.x, 14.x, 15.x]
+        node-version: [10.x, 12.x, 14.x, 16.x, 18.x]
     needs: install
     steps:
       - uses: actions/checkout@v2
@@ -59,7 +59,7 @@ jobs:
       - name: Use Node.js
         uses: actions/setup-node@v2
         with:
-          node-version: '12'
+          node-version: '16'
       - run: yarn test --coverage
       - run: bin/run --help
       - run: yarn test:codecov:upload
@@ -79,7 +79,7 @@ jobs:
       - name: Use Node.js
         uses: actions/setup-node@v2
         with:
-          node-version: '12'
+          node-version: '16'
       - run: yarn lint
       - run: yarn codecov
   live-test:
@@ -103,7 +103,7 @@ jobs:
       - name: Use Node.js
         uses: actions/setup-node@v2
         with:
-          node-version: '12'
+          node-version: '16'
       - run: npm -g i .
       - run: dx-scanner run https://github.com/DXHeroes/dx-scanner --fail=off
   # TODO: Enable once the Travis build is removed
@@ -135,7 +135,7 @@ jobs:
       - name: Use Node.js
         uses: actions/setup-node@v2
         with:
-          node-version: '12'
+          node-version: '16'
       - name: Login to DockerHub
         uses: docker/login-action@v1
         with:
