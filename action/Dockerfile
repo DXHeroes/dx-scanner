@@ -1,4 +1,4 @@
-FROM node:12-slim
+FROM node:16-slim
 
 LABEL maintainer="Prokop Simek, Adéla Homolová"
 LABEL "com.github.actions.name"="DX Scanner Action"
