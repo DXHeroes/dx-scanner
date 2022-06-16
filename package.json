@@ -112,7 +112,7 @@
     "semantic-release": "17.3.2",
     "semantic-release-slack-bot": "2.1.0",
     "ts-jest": "26.4.4",
-    "ts-node": "9.1.1",
+    "ts-node": "10.8.1",
     "typescript": "4.6"
   },
   "engines": {
