@@ -53,6 +53,7 @@
     "gradle-to-js": "2.0.1",
     "inquirer": "7.3.3",
     "inversify": "5.1.1",
+    "is-plain-object": "5.0.0",
     "js-yaml": "4.1.0",
     "lodash": "4.17.20",
     "memfs": "3.4.6",
