@@ -97,7 +97,7 @@
     "@types/wrap-ansi": "8.0.1",
     "@types/xml2js": "0.4.7",
     "@types/yeoman-environment": "2.10.2",
-    "@types/yeoman-generator": "4.11.3",
+    "@types/yeoman-generator": "5.2.10",
     "@typescript-eslint/eslint-plugin": "4.11.1",
     "@typescript-eslint/parser": "4.11.1",
     "codecov": "3.8.1",

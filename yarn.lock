@@ -1571,17 +1571,17 @@
     "@types/yeoman-environment" "*"
     rxjs ">=6.4.0"
 
-"@types/yeoman-generator@4.11.3":
-  version "4.11.3"
-  resolved "https://registry.yarnpkg.com/@types/yeoman-generator/-/yeoman-generator-4.11.3.tgz#3b4c0040cf0c28237dd9f535a15c620d3f68c5f4"
-  integrity sha512-bZRBRahUEs10YhPC4zTKwX5h1mfoFT4Qvav+z0WyT37SgKK9IgIozn8/k6IF9h9PNkxpAhFcER5llwdzCyFZnw==
+"@types/yeoman-generator@5.2.10":
+  version "5.2.10"
+  resolved "https://registry.yarnpkg.com/@types/yeoman-generator/-/yeoman-generator-5.2.10.tgz#5b6a30d6f208bff985b5c8c9c5590a615f58b76c"
+  integrity sha512-Biim11Yamd2NYSt0nxYwmqf1sFwJX3LAEMnaavbwhtp8rSIz8/TaqTemJnZgm0Hwh7za5q9GPNw8EgVsYB/tlA==
   dependencies:
     "@types/debug" "*"
     "@types/ejs" "*"
     "@types/inquirer" "*"
     "@types/mem-fs-editor" "*"
     "@types/yeoman-environment" "*"
-    rxjs ">=6.4.0"
+    rxjs "^6.4.0"
 
 "@typescript-eslint/eslint-plugin@4.11.1":
   version "4.11.1"
