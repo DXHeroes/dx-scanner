@@ -110,7 +110,7 @@
     "nock": "13.2.7",
     "prettier": "2.7.1",
     "rimraf": "3.0.2",
-    "semantic-release": "17.3.2",
+    "semantic-release": "19.0.3",
     "semantic-release-slack-bot": "2.1.1",
     "ts-jest": "28.0.5",
     "ts-node": "10.8.1",
