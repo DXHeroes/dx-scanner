@@ -12,6 +12,7 @@ export const getEsLintReport = (params?: Partial<ESLint.LintResult[]>): ESLint.L
         fixableErrorCount: 0,
         fixableWarningCount: 0,
         usedDeprecatedRules: [],
+        fatalErrorCount: 0,
       },
     ],
     params,
