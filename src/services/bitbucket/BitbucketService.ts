@@ -231,7 +231,7 @@ export class BitbucketService implements IVCSService {
   async listPullCommits(owner: string, repo: string, prNumber: number, options?: ListGetterOptions): Promise<Paginated<PullCommits>> {
     this.authenticate();
     const params: Params.PullrequestsListCommits = {
-      pull_request_id: prNumber.toString(),
+      pull_request_id: prNumber,
       repo_slug: repo,
       workspace: owner,
     };
@@ -456,7 +456,7 @@ export class BitbucketService implements IVCSService {
   async getCommit(owner: string, repo: string, commitSha: string): Promise<Commit> {
     this.authenticate();
     const params: Params.CommitsGet = {
-      node: commitSha,
+      commit: commitSha,
       repo_slug: repo,
       workspace: owner,
     };
@@ -551,8 +551,8 @@ export class BitbucketService implements IVCSService {
     this.authenticate();
     const response = <DeepRequired<Response<Schema.Comment>>>await this.unwrap(
       this.client.pullrequests.updateComment({
-        pull_request_id: `${pullRequestId}`,
-        comment_id: `${commentId}`,
+        pull_request_id: pullRequestId,
+        comment_id: commentId,
         repo_slug: repo,
         workspace: owner,
         _body: { type: 'pullrequest_comment', content: { raw: body, markup: 'markdown' } },
@@ -611,7 +611,7 @@ export class BitbucketService implements IVCSService {
    */
   async getPullsDiffStat(owner: string, repo: string, prNumber: number) {
     const diffStatData = (
-      await this.unwrap(this.client.pullrequests.getDiffStat({ repo_slug: repo, workspace: owner, pull_request_id: prNumber.toString() }))
+      await this.unwrap(this.client.pullrequests.getDiffStat({ repo_slug: repo, workspace: owner, pull_request_id: prNumber }))
     ).data;
 
     let linesRemoved = 0,

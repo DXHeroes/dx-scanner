@@ -68,6 +68,7 @@ describe('ESLintWithoutErrorsPractice', () => {
         fixableErrorCount: 1,
         fixableWarningCount: 0,
         usedDeprecatedRules: [],
+        fatalErrorCount: 0,
       },
     ]);
 

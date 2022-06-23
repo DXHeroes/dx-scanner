@@ -40,7 +40,7 @@ export class DashboardReporter implements IReporter {
     try {
       // send data
       await axios.post(`${this.argumentsProvider.apiUrl}/data-report`, reportData, {
-        headers: this.argumentsProvider.apiToken && { Authorization: this.argumentsProvider.apiToken },
+        headers: this.argumentsProvider.apiToken !== undefined ? { Authorization: this.argumentsProvider.apiToken } : undefined,
       });
       debug.log('You can see DX data in your DX account now.\n');
     } catch (error) {
