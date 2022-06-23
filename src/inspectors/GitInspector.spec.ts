@@ -1,7 +1,7 @@
 import { GitInspector } from './GitInspector';
 import { Types } from '../types';
 import fs from 'fs';
-import git from 'simple-git/promise';
+import git from 'simple-git';
 import os from 'os';
 import path from 'path';
 import rimraf from 'rimraf';

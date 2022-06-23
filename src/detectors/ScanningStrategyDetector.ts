@@ -9,7 +9,7 @@ import { IDetector } from './IDetector';
 import { ScanningStrategyDetectorUtils } from './utils/ScanningStrategyDetectorUtils';
 import { ErrorFactory, ErrorCode } from '../lib/errors';
 import { AccessType, ServiceType } from './IScanningStrategy';
-import git from 'simple-git/promise';
+import git from 'simple-git';
 import nodePath from 'path';
 import { debugLog } from './utils';
 

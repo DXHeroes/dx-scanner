@@ -1,5 +1,5 @@
 import { inject, injectable } from 'inversify';
-import git from 'simple-git/promise';
+import git from 'simple-git';
 import { ArgumentsProvider } from '.';
 import { debugLog } from '../detectors/utils';
 import { ScanningStrategyDetectorUtils } from '../detectors/utils/ScanningStrategyDetectorUtils';

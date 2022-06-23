@@ -1,7 +1,7 @@
 import { IGitInspector, Commit, Author, Tag } from './IGitInspector';
 import { ListGetterOptions } from './common/ListGetterOptions';
 import { ErrorFactory } from '../lib/errors';
-import git from 'simple-git/promise';
+import git, { SimpleGit, Options } from 'simple-git';
 import { isEqual, uniqWith } from 'lodash';
 import { injectable, inject } from 'inversify';
 import { Types } from '../types';
@@ -15,7 +15,7 @@ export class GitInspector implements IGitInspector {
   /**
    * The repository to be inspected.
    */
-  private readonly git: git.SimpleGit;
+  private readonly git: SimpleGit;
 
   /**
    * Create an instance of GitInspector.
@@ -40,7 +40,7 @@ export class GitInspector implements IGitInspector {
       throw ErrorFactory.newInternalError('sorting not implemented');
     }
 
-    const logOptions: git.Options = {
+    const logOptions: Options = {
       multiLine: 'true',
     };
     if (options.filter !== undefined) {

@@ -4,7 +4,7 @@ import { inject, injectable, multiInject } from 'inversify';
 import _ from 'lodash';
 import os from 'os';
 import path from 'path';
-import git from 'simple-git/promise';
+import git from 'simple-git';
 import GitUrlParse from 'git-url-parse';
 import url from 'url';
 import { inspect } from 'util';
