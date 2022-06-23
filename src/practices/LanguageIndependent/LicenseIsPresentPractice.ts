@@ -69,7 +69,7 @@ export class LicenseIsPresentPractice implements IPractice {
       await CliUx.ux.action.pauseAsync(
         () =>
           new Promise<void>((resolve) => {
-            env.run('license', () => {
+            void env.run('license', () => {
               resolve();
             });
           }),
