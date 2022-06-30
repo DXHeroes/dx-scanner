@@ -55,7 +55,7 @@
     "inversify": "5.1.1",
     "is-plain-object": "5.0.0",
     "js-yaml": "4.1.0",
-    "lodash": "4.17.20",
+    "lodash": "4.17.21",
     "memfs": "3.4.6",
     "moment": "2.29.3",
     "node-filter-async": "2.0.0",
