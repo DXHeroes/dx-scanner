@@ -8,6 +8,7 @@ import rimraf from 'rimraf';
 import util from 'util';
 import { Container } from 'inversify';
 import { delay } from '../lib/delay';
+import { debug } from 'console';
 
 describe('GitInspector', () => {
   let testDir: TestDir;
@@ -26,6 +27,12 @@ describe('GitInspector', () => {
     container.bind(GitInspector).toSelf();
 
     expect(() => container.get(GitInspector)).not.toThrow();
+  });
+
+  it('throws an error if the path does not exist', () => {
+    expect(() => new GitInspector(path.join(testDir.path, 'non-existing-dir'))).toThrow(
+      'Cannot use simple-git on a directory that does not exist',
+    );
   });
 
   describe('#getCommits', () => {
@@ -302,12 +309,6 @@ describe('GitInspector', () => {
       expect(hasPreviousPage).toStrictEqual(false);
     });
 
-    it('throws an error if the path does not exist', async () => {
-      const gitInspector = new GitInspector(path.join(testDir.path, 'non-existing-dir'));
-
-      await expect(gitInspector.getCommits({})).rejects.toThrow('Cannot use simple-git on a directory that does not exist');
-    });
-
     it('throws an error if the path is not a repository', async () => {
       const gitInspector = new GitInspector(testDir.path);
 
@@ -456,12 +457,6 @@ describe('GitInspector', () => {
       expect(hasPreviousPage).toStrictEqual(false);
     });
 
-    it('throws an error if the path does not exist', async () => {
-      const gitInspector = new GitInspector(path.join(testDir.path, 'non-existing-dir'));
-
-      await expect(gitInspector.getAuthors({})).rejects.toThrow('Cannot use simple-git on a directory that does not exist');
-    });
-
     it('throws an error if the path is not a repository', async () => {
       const gitInspector = new GitInspector(testDir.path);
 
@@ -503,12 +498,6 @@ describe('GitInspector', () => {
 
       const commit = (await testDir.gitLog()).latest?.hash;
       await expect(tags).resolves.toStrictEqual([{ tag: '1.0.0', commit }]);
-    });
-
-    it('throws an error if the path does not exist', async () => {
-      const gitInspector = new GitInspector(path.join(testDir.path, 'non-existing-dir'));
-
-      await expect(gitInspector.getAllTags()).rejects.toThrow('Cannot use simple-git on a directory that does not exist');
     });
 
     it('throws an error if the path is not a repository', async () => {
