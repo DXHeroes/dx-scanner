@@ -1,5 +1,5 @@
 import nock from 'nock';
-import git from 'simple-git/promise';
+import git from 'simple-git';
 import { createTestContainer } from '../inversify.config';
 import { GitHubNock } from '../test/helpers/gitHubNock';
 import { ScanningStrategyDetector, ScanningStrategy } from './ScanningStrategyDetector';
@@ -9,7 +9,7 @@ import { argumentsProviderFactory } from '../test/factories/ArgumentsProviderFac
 import { ArgumentsProvider } from '../scanner';
 import { ServiceType, AccessType } from './IScanningStrategy';
 import { GitLabNock } from '../test/helpers/gitLabNock';
-jest.mock('simple-git/promise');
+jest.mock('simple-git');
 
 describe('ScanningStrategyDetector', () => {
   const mockedGit = <jest.Mock>(<unknown>git);
