@@ -143,7 +143,7 @@ jobs:
           password: ${{ secrets.DOCKER_GITHUB_PASSWORD }}
       - name: Build and push
         id: docker_build
-        uses: docker/build-push-action@v2
+        uses: docker/build-push-action@v3
         with:
           push: true
           tags: $CONTAINER_NAME
