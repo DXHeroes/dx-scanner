@@ -8821,10 +8821,10 @@ scoped-regex@^1.0.0:
   resolved "https://registry.yarnpkg.com/scoped-regex/-/scoped-regex-1.0.0.tgz#a346bb1acd4207ae70bd7c0c7ca9e566b6baddb8"
   integrity sha1-o0a7Gs1CB65wvXwMfKnlZra63bg=
 
-semantic-release-slack-bot@2.1.1:
-  version "2.1.1"
-  resolved "https://registry.yarnpkg.com/semantic-release-slack-bot/-/semantic-release-slack-bot-2.1.1.tgz#22fd5f10640c468c83af8f2deae7b89bb9d571f7"
-  integrity sha512-keNqVsZ+Ntm1F8O5yqoX3DmIsH1gK+CDmPhcjLAHTOtmJSul2kRFzEnAac1O8LltF9BQ2wW5OJ3BXcFWXt49aw==
+semantic-release-slack-bot@3.5.3:
+  version "3.5.3"
+  resolved "https://registry.yarnpkg.com/semantic-release-slack-bot/-/semantic-release-slack-bot-3.5.3.tgz#eaf638509210e01bbd401dcbc2af17ed36549348"
+  integrity sha512-QoLRfZPkgkER2s/DiIu0qA9pYu4am8ASu7xq3omCXl2oJ+fKdb1Rentgezzv7RefMXhO2q2aah1aqutWnSnlhw==
   dependencies:
     "@semantic-release/error" "^2.2.0"
     micromatch "4.0.2"
