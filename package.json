@@ -30,7 +30,7 @@
     "@commitlint/lint": "17.0.0",
     "@iarna/toml": "2.2.5",
     "@oclif/core": "1.9.3",
-    "@octokit/graphql": "4.5.8",
+    "@octokit/graphql": "5.0.6",
     "@octokit/plugin-rest-endpoint-methods": "4.2.1",
     "@octokit/rest": "18.0.9",
     "@types/eslint": "7.29.0",
