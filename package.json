@@ -57,7 +57,7 @@
     "js-yaml": "4.1.0",
     "lodash": "4.17.21",
     "memfs": "3.4.6",
-    "moment": "2.29.3",
+    "moment": "2.29.4",
     "node-filter-async": "2.0.0",
     "npm-check-updates": "11.8.5",
     "prettier-default-config": "0.2.3",
