@@ -105,7 +105,7 @@
     "eslint-config-prettier": "8.5.0",
     "eslint-plugin-prettier": "3.4.1",
     "jest": "28.1.1",
-    "jest-mock-extended": "1.0.18",
+    "jest-mock-extended": "3.0.7",
     "json-schema-to-typescript": "10.1.5",
     "nock": "13.2.7",
     "prettier": "2.7.1",
