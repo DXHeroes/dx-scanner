@@ -62,7 +62,7 @@
     "npm-check-updates": "11.8.5",
     "prettier-default-config": "0.2.3",
     "properties": "1.2.1",
-    "qs": "6.10.5",
+    "qs": "6.11.0",
     "reflect-metadata": "0.1.13",
     "semver": "7.3.7",
     "shelljs": "0.8.5",
