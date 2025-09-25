@@ -89,7 +89,7 @@
     "@types/lodash": "4.14.182",
     "@types/node": "12.20.55",
     "@types/qs": "6.9.7",
-    "@types/rimraf": "3.0.2",
+    "@types/rimraf": "4.0.5",
     "@types/semver": "7.3.10",
     "@types/shelljs": "0.8.11",
     "@types/toposort": "2.0.3",
