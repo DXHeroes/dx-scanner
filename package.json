@@ -93,7 +93,7 @@
     "@types/semver": "7.3.10",
     "@types/shelljs": "0.8.11",
     "@types/toposort": "2.0.3",
-    "@types/update-notifier": "5.1.0",
+    "@types/update-notifier": "6.0.8",
     "@types/uuid": "8.3.4",
     "@types/wrap-ansi": "8.0.1",
     "@types/xml2js": "0.4.11",
