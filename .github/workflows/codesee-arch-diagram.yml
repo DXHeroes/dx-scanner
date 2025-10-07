@@ -39,13 +39,13 @@ jobs:
         uses: actions/setup-node@v3
         if: ${{ fromJSON(steps.detect-languages.outputs.languages).javascript }}
         with:
-          node-version: '14'
+          node-version: '14.21.3'
 
       - name: Configure Python 3.x
         uses: actions/setup-python@v4
         if: ${{ fromJSON(steps.detect-languages.outputs.languages).python }}
         with:
-          python-version: '3.x'
+          python-version: '3.14.0'
           architecture: 'x64'
 
       - name: Configure Ruby '3.x'
