@@ -52,7 +52,7 @@ jobs:
         uses: ruby/setup-ruby@v1
         if: ${{ fromJSON(steps.detect-languages.outputs.languages).ruby }}
         with:
-          ruby-version: '3.0'
+          ruby-version: '3.4.7'
 
       # CodeSee Maps Rust support uses a static binary so there's no setup step required.
 
